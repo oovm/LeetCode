@@ -3,6 +3,11 @@ function y = isPalindrome(x)
         y = false;
         return;
     end
-    str = num2str(x);
-    y = strcmp(str, str(end:-1:1));
+    rev = 0;
+    n = x;
+    while n > rev
+        rev = rev * 10 + mod(n, 10);
+        n = (n - mod(n, 10)) / 10;
+    end
+    y = (n == rev) || (n == (rev - mod(rev, 10)) / 10);
 end
