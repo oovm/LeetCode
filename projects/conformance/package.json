@@ -23,9 +23,9 @@
         "rebuild:bun": "pnpm rebuild bun"
     },
     "optionalDependencies": {
-        "@sxo/core": "^0.0.7",
-        "@sxo/mathematica": "^0.0.7",
-        "@sxo/matlab": "^0.0.7"
+        "@sxo/core": "^0.0.8",
+        "@sxo/mathematica": "^0.0.8",
+        "@sxo/matlab": "^0.0.8"
     },
     "devDependencies": {
         "bun": "^1.2.0",
