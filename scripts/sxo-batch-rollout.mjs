@@ -7,6 +7,7 @@
  *   node scripts/sxo-batch-rollout.mjs
  *   LEETCODE_BATCH_LIMIT=20 node scripts/sxo-batch-rollout.mjs
  *   node scripts/sxo-batch-rollout.mjs --write-only
+ *   node scripts/sxo-batch-rollout.mjs --report-only
  */
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -25,6 +26,15 @@ const GAP_PATH = join(REPORT_DIR, 'sxo-batch-gap.md');
 const CATALOG_PATH = join(CONFORMANCE_ROOT, 'src', 'catalog', 'generated.ts');
 
 const writeOnly = process.argv.includes('--write-only');
+const reportOnly = process.argv.includes('--report-only');
+
+/** 0.0.8 锚点：已有手写 coach 对齐解，batch 只测不覆写 */
+const ANCHOR_SKIP_WRITE = new Set([
+    'two-sum',
+    'reverse-integer',
+    'container-with-most-water',
+    'palindrome-number',
+]);
 
 function loadCatalogProblems() {
     const text = readFileSync(CATALOG_PATH, 'utf8');
@@ -256,9 +266,12 @@ function main() {
         }
 
         const bodies = solverBodiesFor(problem.id, symbol, metadata);
-        writeSolver(problemRoot, 'wolfram', bodies.wolfram);
-        writeSolver(problemRoot, 'matlab', bodies.matlab);
-        patchMetadata(problemRoot, symbol);
+        const skipWrite = reportOnly || ANCHOR_SKIP_WRITE.has(problem.id);
+        if (!skipWrite) {
+            writeSolver(problemRoot, 'wolfram', bodies.wolfram);
+            writeSolver(problemRoot, 'matlab', bodies.matlab);
+            patchMetadata(problemRoot, symbol);
+        }
 
         const row = {
             questionId: problem.questionId,
@@ -287,6 +300,9 @@ function main() {
     console.log(`\nGap 报告：${GAP_PATH}`);
     if (writeOnly) {
         console.log('（--write-only：未跑 conformance 测例）');
+    }
+    if (reportOnly) {
+        console.log('（--report-only：未覆写 solver / metadata）');
     }
 }
 

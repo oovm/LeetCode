@@ -49,11 +49,15 @@ end`,
         y = false;
         return;
     end
-    str = num2str(x);
-    y = strcmp(str, str(end:-1:1));
+    rev = 0;
+    n = x;
+    while n > rev
+        rev = rev * 10 + mod(n, 10);
+        n = (n - mod(n, 10)) / 10;
+    end
+    y = (n == rev) || (n == (rev - mod(rev, 10)) / 10);
 end`,
             'S-009',
-            { gapMatlab: 'S-011' },
         ),
 
     'reverse-integer': (s) =>
@@ -61,19 +65,19 @@ end`,
             s,
             `${s}[x_] := Module[{mi = -2147483648, mx = 2147483647, n = x, ans = 0},
   While[n != 0,
-    If[ans < Quotient[mi, 10] + 1 || ans > Quotient[mx, 10], Return[0]];
+    If[ans < Quotient[mi - 9, 10] + 1 || ans > Quotient[mx, 10], Return[0]];
     ans = ans * 10 + Mod[n, 10];
     n = Quotient[n - Mod[n, 10], 10]
   ];
   ans
 ]`,
             `function y = ${s}(x)
-    mi = intmin('int32');
-    mx = intmax('int32');
+    lo = -214748365;
+    hi = 214748364;
     n = x;
     y = 0;
     while n ~= 0
-        if y < floor(mi / 10) + 1 || y > floor(mx / 10)
+        if y < lo + 1 || y > hi
             y = 0;
             return;
         end
@@ -82,7 +86,7 @@ end`,
             rem = rem - 10;
         end
         y = y * 10 + rem;
-        n = floor((n - rem) / 10);
+        n = (n - rem) / 10;
     end
 end`,
             'S-009',
@@ -266,6 +270,32 @@ end`,
 end`,
             'S-013',
             { gapMatlab: 'S-013' },
+        ),
+
+    'search-insert-position': (s) =>
+        body(
+            s,
+            `${s}[nums_, target_] := Module[{lo = 0, hi = Length[nums] - 1},
+  While[lo <= hi,
+    mid = Quotient[lo + hi, 2];
+    If[nums[[mid + 1]] < target, lo = mid + 1, hi = mid - 1]
+  ];
+  lo
+]`,
+            `function y = ${s}(nums, target)
+    lo = 1;
+    hi = length(nums);
+    while lo <= hi
+        mid = (lo + hi - mod(lo + hi, 2)) / 2;
+        if nums(mid) < target
+            lo = mid + 1;
+        else
+            hi = mid - 1;
+        end
+    end
+    y = lo - 1;
+end`,
+            'S-013',
         ),
 
     'valid-parentheses': (s) =>
