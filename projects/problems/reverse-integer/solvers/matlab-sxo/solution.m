@@ -1,10 +1,10 @@
 function y = reverse(x)
-    mi = intmin('int32');
-    mx = intmax('int32');
+    lo = -214748365;
+    hi = 214748364;
     n = x;
     y = 0;
     while n ~= 0
-        if y < floor(mi / 10) + 1 || y > floor(mx / 10)
+        if y < lo + 1 || y > hi
             y = 0;
             return;
         end
@@ -13,6 +13,6 @@ function y = reverse(x)
             rem = rem - 10;
         end
         y = y * 10 + rem;
-        n = floor((n - rem) / 10);
+        n = (n - rem) / 10;
     end
 end
