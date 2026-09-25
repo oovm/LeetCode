@@ -5,14 +5,14 @@
 | ID | 能力簇 | 状态 | 动机（题 / 场景） | 上游落点 | 备注 |
 |----|--------|------|-------------------|----------|------|
 | S-003 | 数组 Part / 下标读取 | partial | 一般数组题 | `@sxo/mathematica` | 基础 `[[i]]` / `Length` 可用，复杂 Part 仍待补 |
-| S-004 | 循环与早退（Medium 题骨架） | partial | 双指针、嵌套扫描 | dialect | `two-sum` / `reverse-integer` / `container-with-most-water` 双端绿（upstream `dev` dialect）；`floor` 在 `function` 内仍 open |
+| S-004 | 循环与早退（Medium 题骨架） | partial | 双指针、嵌套扫描 | dialect | catalog 前 50：**Wolfram/MATLAB 各 5 绿**（锚点 + `search-insert-position`）；`floor` 在 `function` 内仍 open |
 | S-005 | Windows native optional dep 一键可装 | open | 本机 bench CI | `@sxo/sxo-win32-x64` | 与 `loadNative()` 诊断对齐 |
 | S-007 | Wolfram 嵌套 `Table` / `Flatten` 配对枚举 | open | 函数式枚举 | Athena VM | `ATHENA_UNSUPPORTED_OPERATION` op=234 |
 | S-009 | Wolfram `:=` 用户函数 + 标量 `While`/`Module` | partial | `reverse-integer`、`palindrome-number`（绿） | `@sxo/mathematica` `@0.0.8` | `IntegerDigits` 路径；超大 metadata 浮点见 S-018 harness 容错 |
 | S-010 | 字符串 `Characters` / `StringTake` / `strlength` | open | `longest-common-prefix`、`valid-parentheses` | `@sxo/mathematica` / `@sxo/matlab` | 字符级 Part 与拼接 |
-| S-011 | MATLAB 用户 `function` 体（含 `while`） | partial | 标量 / 数组题 | `@sxo/matlab` `@0.0.8` | `two-sum`、`reverse-integer`、`container-with-most-water` 绿；`floor` 在 `function` 内仍 open |
+| S-011 | MATLAB 用户 `function` 体（含 `while`） | partial | 标量 / 数组题 | `@sxo/matlab` `@0.0.8` | `palindrome-number`（数值半反转）、`search-insert-position`（二分 `while`）已绿；`floor` 在 `function` 内仍 open |
 | S-012 | 链表（数组模拟下标） | open | `add-two-numbers` 等 | dialect | batch 多题 `term_not_json_surface` 或求值未绿 |
-| S-013 | 排序 + 多指针 | open | `3sum`、`container-with-most-water` | `@sxo/*` | `Sort` / `sort` + 双指针 |
+| S-013 | 排序 + 多指针 | partial | `3sum`、`search-insert-position` | `@sxo/*` | `search-insert-position` 二分 `while` 双端绿；`Sort` / 多指针仍 open |
 | S-014 | 二维矩阵 | open | `rotate-image`、`valid-sudoku` | dialect | 矩阵下标与变异 |
 | S-015 | 回溯 / 递归 DFS | open | `generate-parentheses` 等 | Athena VM | 深度与组合枚举 |
 | S-016 | 哈希 / `Association` / `containers.Map` | open | `roman-to-integer`、`group-anagrams` | frontend | 映射构造与查表 |

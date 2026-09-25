@@ -1,6 +1,6 @@
 # SXO 批量补题 Gap（catalog 前 N 题）
 
-生成时间：2026-09-25T11:08:39.575Z
+生成时间：2026-09-25T17:48:58.786Z
 
 批量范围：catalog 前 **50** 题（与 `LEETCODE_BATCH_LIMIT` / batch-limit 默认一致）。
 
@@ -10,21 +10,18 @@
 
 | 语言 | 测例全绿 | 失败 |
 |------|----------|------|
-| Wolfram (Sxo) | 2 | 48 |
-| MATLAB (Sxo) | 1 | 49 |
+| Wolfram (Sxo) | 5 | 45 |
+| MATLAB (Sxo) | 5 | 45 |
 
 ## Gap 频次（失败题）
 
 | Gap ID | 次数 | 说明 |
 |--------|------|------|
 | S-004 | 2 | 循环 / 控制流 evaluate 未稳定（总类） |
-| S-006 | 1 | Wolfram `Do` / `Return` / 嵌套循环 |
-| S-008 | 1 | MATLAB `function` + `for` + `return` |
-| S-009 | 1 | Wolfram `:=` 用户函数 + 标量 `While`（`palindrome-number` 余 7 大浮点测例见 S-018） |
 | S-010 | 34 | 字符串 Part / 字符访问 |
-| S-011 | 3 | MATLAB 用户函数体 `error node` |
+| S-011 | 1 | MATLAB 用户函数体 `error node` |
 | S-012 | 12 | 链表（数组模拟） |
-| S-013 | 24 | 排序 / 双指针多指针 |
+| S-013 | 22 | 排序 / 双指针多指针 |
 | S-014 | 6 | 二维矩阵 |
 | S-015 | 8 | 回溯 / 递归 / DFS |
 | S-016 | 3 | 哈希 / 关联结构 |
@@ -40,11 +37,11 @@
 | 4 | `median-of-two-sorted-arrays` | fail | fail | S-013 | S-013 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
 | 5 | `longest-palindromic-substring` | fail | fail | S-010 | S-010 | Error: term_not_json_surface:unevaluated_application head=extension argc=1 |
 | 6 | `zigzag-conversion` | fail | fail | S-010 | S-010 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
-| 7 | `reverse-integer` | pass | fail |  | S-011 |  |
+| 7 | `reverse-integer` | pass | pass | S-009 | S-011 |  |
 | 8 | `string-to-integer-atoi` | fail | fail | S-010 | S-010 | Error: term_not_json_surface:unevaluated_application head=extension argc=1 |
-| 9 | `palindrome-number` | partial | fail | S-018 | S-011 | 54/61 绿。7 测例为大浮点 `bindJson` VM 失败 |
+| 9 | `palindrome-number` | pass | pass | S-009 | S-009 |  |
 | 10 | `regular-expression-matching` | fail | fail | S-010 | S-010 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
-| 11 | `container-with-most-water` | fail | fail | S-006 | S-008 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
+| 11 | `container-with-most-water` | pass | pass | S-006 | S-008 |  |
 | 12 | `integer-to-roman` | fail | fail | S-010 | S-010 | Error: mathematica(ast): error node |
 | 13 | `roman-to-integer` | fail | fail | S-010 | S-016 | Error: mathematica(ast): error node |
 | 14 | `longest-common-prefix` | fail | fail | S-010 | S-010 | Error: ATHENA_UNSUPPORTED_OPERATION details={backend=athena-vm, component=execut |
@@ -68,7 +65,7 @@
 | 32 | `longest-valid-parentheses` | fail | fail | S-010 | S-010 | Error: term_not_json_surface:unevaluated_application head=extension argc=1 |
 | 33 | `search-in-rotated-sorted-array` | fail | fail | S-013 | S-013 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
 | 34 | `find-first-and-last-position-of-element-in-sorted-array` | fail | fail | S-013 | S-013 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
-| 35 | `search-insert-position` | fail | fail | S-013 | S-013 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
+| 35 | `search-insert-position` | pass | pass | S-013 | S-013 |  |
 | 36 | `valid-sudoku` | fail | fail | S-014 | S-014 | Error: term_not_json_surface:unevaluated_application head=extension argc=1 |
 | 37 | `sudoku-solver` | fail | fail | S-014 | S-014 | Error: term_not_json_surface:unevaluated_application head=extension argc=1 |
 | 38 | `count-and-say` | fail | fail | S-010 | S-010 | Error: term_not_json_surface:unevaluated_application head=extension argc=1 |
