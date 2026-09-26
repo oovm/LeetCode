@@ -44,6 +44,28 @@
 
 本条目状态仍为 upstream，不能以单题 smoke 关闭。
 
+### 字符串 identity 整改（ADR 0013，2026-09-26）
+
+| ID | 工作包 | Owner | 状态 | 备注 |
+|----|--------|-------|------|------|
+| S-W1 | 冻结合同：`OperatorId` / `IntrinsicId` / `AttributeKind` + CI string gate | `nyar-types` + CI | planned | 见工作区 `内部决策/10-字符串identity整改方案.md` |
+| S-W2 | HIR / overload：OperatorId、删除全局 `new` fallback、`AttributeKind` | `nyar-language` | planned | 与 V-017c identity 同链 |
+| S-W3 | MIR / executable：`Self` 代入、nominal `Option`/`Result`、`IntrinsicId` | `nyar-language` | planned | 阻塞 `ArrayList.new` SMIR010 正式修复 |
+| S-W4 | Emitter：删除 path/类型名特判；nyar 后端 `CallImport` | `nyar-emitter` | planned | 依赖 S-W3 |
+| S-W5 | VM + bytecode v2：删除 `CallNative` | `nyar-vm` + `vcc-data` | planned | 与 N-W2 联动 |
+| S-W6 | 删旧路径、全量门禁 | 两仓 | planned | 无 compat 转发 |
+
+### 原生栈 VM 三包（ADR 0014，2026-09-26）
+
+| ID | 工作包 | Owner | 状态 | 备注 |
+|----|--------|-------|------|------|
+| N-W0 | 冻结合同：bytecode v2、legacy PE 废弃声明 | `vcc-data` + `legacy-vm.rs` | planned | 见 `内部决策/11-原生栈VM三包方案.md` |
+| N-W1 | `nvm` → `nyar-vm` + `nyar-gc` 实装 + JIT `Unsupported` | `nyar-vm.rs` | **done** | 2026-09-26：`nyar-vm` / `nyar-gc` / `nyar-jit` 三包拆分；mark-sweep GC；`DisabledJit` → `JitError::Unsupported`；`Executor::try_jit_compile` 钩子 |
+| N-W2 | bytecode v2 + verify + 语义事实下沉表 | `vcc-data` + `nyar-vm` | planned | ADR 0015；`CallImport`、layout/witness section；依赖 S-W5 |
+| N-W3 | Emitter nyar 后端对齐 v2 | `nyar-emitter` | planned | 依赖 N-W2、S-W4 |
+| N-W4 | `legion build --target nyar-vm` | `valkyrie.rs` | planned | 不替代 Wasm capability gate |
+| N-W5 | legacy 深协议残余 → 共同 bytecode；删 PE 双轨 | `legacy-vm.rs` | planned | ADR 0016 三件套；不要求 guest → Valkyrie MIR |
+
 ## 和类型 taxonomy
 
 `unite`（始终 tagged，可自动派生 tag） vs named `union`（untagged） vs 匿名 `A|B|C`（untagged）见 [type-taxonomy.md](type-taxonomy.md)。
