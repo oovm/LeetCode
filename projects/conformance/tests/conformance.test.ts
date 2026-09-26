@@ -12,10 +12,12 @@ import { PROBLEMS, legionProjectDir, problemDir } from '../src/catalog/index.ts'
 import { problemsForBatch } from '../src/planning/batch-limit.ts';
 
 import { probeValkyrieProblem } from '../src/adapters/valkyrie-node/matrix.ts';
+import { probeValkyrieNyarProblem } from '../src/adapters/valkyrie-nyar/matrix.ts';
 
 import { pythonRefReady, pythonSkipReason, runPythonSolver as runPythonReference } from '../src/adapters/python/ref.ts';
 
 import { valkyrieRunnerReady } from '../src/adapters/valkyrie-node/valkyrie.ts';
+import { valkyrieNyarRunnerReady } from '../src/adapters/valkyrie-nyar/valkyrie.ts';
 
 const LEETCODE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 
@@ -49,6 +51,30 @@ describe('Valkyrie 完备性矩阵', () => {
 
             try {
                 const row = probeValkyrieProblem(problem, projectPath, outDir);
+
+                expect(row.buildStatus, row.buildError ?? 'build failed').toBe(0);
+
+                if (V_STRICT) {
+                    expect(row.testStatus, row.testError ?? 'test failed').toBe(0);
+                }
+            } finally {
+                rmSync(outDir, { recursive: true, force: true });
+            }
+        });
+    }
+});
+
+describe('Valkyrie Nyar VM 完备性矩阵', () => {
+    const ready = valkyrieNyarRunnerReady();
+
+    for (const problem of BATCH_PROBLEMS) {
+        it.skipIf(!ready)(`${problem.id} legion build --target nyar 必须通过`, { timeout: 10 * 60 * 1000 }, () => {
+            const projectPath = legionProjectDir(LEETCODE_ROOT, problem);
+
+            const outDir = mkdtempSync(join(tmpdir(), `legion-nyar-matrix-${problem.id}-`));
+
+            try {
+                const row = probeValkyrieNyarProblem(problem, projectPath, outDir);
 
                 expect(row.buildStatus, row.buildError ?? 'build failed').toBe(0);
 

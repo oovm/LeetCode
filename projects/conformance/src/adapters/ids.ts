@@ -1,11 +1,19 @@
 /** 适配器注册 ID；与 dashboard 语言键分离，Node/Bun 为独立 runtime 身份。 */
-export type ImplementationId = 'python' | 'typescript-node' | 'typescript-bun' | 'valkyrie-node' | 'wolfram-sxo' | 'matlab-sxo';
+export type ImplementationId =
+    | 'python'
+    | 'typescript-node'
+    | 'typescript-bun'
+    | 'valkyrie-node'
+    | 'valkyrie-nyar'
+    | 'wolfram-sxo'
+    | 'matlab-sxo';
 
 export const ALL_IMPLEMENTATION_IDS: ImplementationId[] = [
     'python',
     'typescript-node',
     'typescript-bun',
     'valkyrie-node',
+    'valkyrie-nyar',
     'wolfram-sxo',
     'matlab-sxo',
 ];
@@ -16,6 +24,9 @@ export const BENCH_LANGUAGE_TO_IMPLEMENTATION: Record<string, ImplementationId> 
     typescript: 'typescript-node',
     'typescript-bun': 'typescript-bun',
     valkyrie: 'valkyrie-node',
+    'valkyrie-nyar': 'valkyrie-nyar',
+    nyar: 'valkyrie-nyar',
+    nvm: 'valkyrie-nyar',
     'wolfram-sxo': 'wolfram-sxo',
     'matlab-sxo': 'matlab-sxo',
 };
@@ -25,6 +36,7 @@ export const IMPLEMENTATION_TO_BENCH_LANGUAGE: Record<ImplementationId, string> 
     'typescript-node': 'typescript',
     'typescript-bun': 'typescript-bun',
     'valkyrie-node': 'valkyrie',
+    'valkyrie-nyar': 'valkyrie-nyar',
     'wolfram-sxo': 'wolfram-sxo',
     'matlab-sxo': 'matlab-sxo',
 };
@@ -34,6 +46,7 @@ export const DASHBOARD_BENCH_FILES: Record<ImplementationId, string> = {
     'typescript-node': 'benchmark-typescript.json',
     'typescript-bun': 'benchmark-typescript-bun.json',
     'valkyrie-node': 'benchmark-valkyrie.json',
+    'valkyrie-nyar': 'benchmark-valkyrie-nyar.json',
     'wolfram-sxo': 'benchmark-wolfram-sxo.json',
     'matlab-sxo': 'benchmark-matlab-sxo.json',
 };

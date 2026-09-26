@@ -6,6 +6,7 @@ import { hasPythonSolver, pythonRefReady } from './python/ref.ts';
 import { hasReadyTsSolver } from './typescript-node/ref.ts';
 import { bunRunnerReady } from './typescript-bun/bridge.ts';
 import { hasValkyrieSolver, valkyrieRunnerReady } from './valkyrie-node/valkyrie.ts';
+import { valkyrieNyarRunnerReady } from './valkyrie-nyar/valkyrie.ts';
 import { hasWolframSxoSolver, hasMatlabSxoSolver } from './shared/sxo-solver-shared.ts';
 import { sxoRunnerReady } from './shared/sxo-bridge.ts';
 
@@ -16,6 +17,7 @@ const ADAPTER_LOADERS: Record<ImplementationId, AdapterLoader> = {
     'typescript-node': () => import('./typescript-node/adapter.ts').then((module) => module.typescriptNodeAdapter),
     'typescript-bun': () => import('./typescript-bun/adapter.ts').then((module) => module.typescriptBunAdapter),
     'valkyrie-node': () => import('./valkyrie-node/adapter.ts').then((module) => module.valkyrieNodeAdapter),
+    'valkyrie-nyar': () => import('./valkyrie-nyar/adapter.ts').then((module) => module.valkyrieNyarAdapter),
     'wolfram-sxo': () => import('./wolfram-sxo/adapter.ts').then((module) => module.wolframSxoAdapter),
     'matlab-sxo': () => import('./matlab-sxo/adapter.ts').then((module) => module.matlabSxoAdapter),
 };
@@ -25,6 +27,7 @@ const DISCOVER: Record<ImplementationId, (problemRoot: string) => boolean> = {
     'typescript-node': hasReadyTsSolver,
     'typescript-bun': hasReadyTsSolver,
     'valkyrie-node': hasValkyrieSolver,
+    'valkyrie-nyar': hasValkyrieSolver,
     'wolfram-sxo': hasWolframSxoSolver,
     'matlab-sxo': hasMatlabSxoSolver,
 };
@@ -34,6 +37,7 @@ const RUNNER_READY: Record<ImplementationId, () => boolean> = {
     'typescript-node': () => true,
     'typescript-bun': bunRunnerReady,
     'valkyrie-node': valkyrieRunnerReady,
+    'valkyrie-nyar': valkyrieNyarRunnerReady,
     'wolfram-sxo': sxoRunnerReady,
     'matlab-sxo': sxoRunnerReady,
 };
