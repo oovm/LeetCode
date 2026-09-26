@@ -7,7 +7,8 @@ micro reverse(x: i64) -> i64 {
     let mut n: i64 = x
     let mut ans: i64 = 0
     while n != 0 {
-        if ans < mi / 10 + 1 || ans > mx / 10 {
+        let neg_limit: i64 = if mi % 10 != 0 { mi / 10 - 1 } else { mi / 10 }
+        if ans < neg_limit + 1 || ans > mx / 10 {
             return 0
         }
         let mut y: i64 = n % 10
