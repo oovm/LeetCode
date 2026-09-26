@@ -2,13 +2,15 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 import type { VccCliSpawnResult } from '@valkyrie-language/vcc';
-import { LEETCODE_ROOT } from '../../domain/paths.ts';
+import type { ProblemDefinition } from '../../catalog/index.ts';
+import { LEETCODE_ROOT, LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 import {
     createBenchmarkRunner,
     formatLegionCliError,
     parseLegionBenchTable,
     type LegionBenchRow,
 } from '@valkyrie-language/vcc/benchmark';
+import { locateNativeLegionBinary, spawnNativeLegion } from '@valkyrie-language/vcc/testing';
 
 const VALKYRIE_RS_ROOT = process.env.VALKYRIE_RS_ROOT ?? join(LEETCODE_ROOT, '..', 'valkyrie.rs');
 const NYAR_VM_ROOT = process.env.NYAR_VM_ROOT ?? join(LEETCODE_ROOT, '..', 'nyar-vm.rs');
@@ -24,6 +26,10 @@ export type LegionOutcome = VccCliSpawnResult;
 
 /** Nyar VM 目标别名（与 `CanonicalTarget::parse("nyar")` 对齐）。 */
 export const NYAR_BUILD_TARGET = 'nyar';
+
+export function nyarBuildDir(problem: ProblemDefinition): string {
+    return join(LEETCODE_ROOT_FROM_PACKAGE, '.cache', `${problem.id}-bench-nyar`);
+}
 
 /** 解析本机 `nyar-vm` CLI（release 优先，其次 debug；可用 `NYAR_VM` 覆盖）。 */
 export function locateNyarVmBinary(): string | null {
@@ -42,12 +48,12 @@ export function locateNyarVmBinary(): string | null {
 }
 
 export function valkyrieNyarRunnerReady(): boolean {
-    return runner.ready() && locateNyarVmBinary() !== null;
+    return locateNativeLegionBinary(VALKYRIE_RS_ROOT) !== null && locateNyarVmBinary() !== null;
 }
 
 export function valkyrieNyarSkipReason(): string | null {
-    if (!runner.ready()) {
-        return runner.skipReason();
+    if (!locateNativeLegionBinary(VALKYRIE_RS_ROOT)) {
+        return 'native legion 未找到（在 valkyrie.rs 执行 cargo build -p legion --features legacy-lanes 或设置 LEGION_BIN）';
     }
     if (!locateNyarVmBinary()) {
         return 'nyar-vm CLI 未找到（在 nyar-vm.rs 执行 cargo build -p nyar-vm 或设置 NYAR_VM）';
@@ -61,16 +67,20 @@ export function spawnLegion(argv: string[]): LegionOutcome {
     return runner.spawnLegion(argv);
 }
 
+function spawnNyarLegion(argv: string[]): LegionOutcome {
+    return spawnNativeLegion(VALKYRIE_RS_ROOT, argv);
+}
+
 export function legionBuildNyar(projectDir: string, outputDir: string): LegionOutcome {
-    return runner.spawnLegion(['build', projectDir, '--target', NYAR_BUILD_TARGET, '-o', outputDir]);
+    return spawnNyarLegion(['build', projectDir, '--target', NYAR_BUILD_TARGET, '-o', outputDir]);
 }
 
 export function legionTestNyar(projectDir: string): LegionOutcome {
-    return runner.spawnLegion(['test', projectDir, '--target', NYAR_BUILD_TARGET]);
+    return spawnNyarLegion(['test', projectDir, '--target', NYAR_BUILD_TARGET]);
 }
 
 export function legionRunNyar(projectDir: string, outputDir: string): LegionOutcome {
-    return runner.spawnLegion(['run', projectDir, '--target', NYAR_BUILD_TARGET, '-o', outputDir]);
+    return spawnNyarLegion(['run', projectDir, '--target', NYAR_BUILD_TARGET, '-o', outputDir]);
 }
 
 export type ParsedBenchRow = LegionBenchRow;

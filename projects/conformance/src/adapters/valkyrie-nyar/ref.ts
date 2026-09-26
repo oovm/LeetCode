@@ -9,16 +9,14 @@ import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 import { resolveWasmExportSymbol } from '../valkyrie-node/ref.ts';
 import { loadMetadata, type TestCase } from '../valkyrie-node/ref.ts';
-import { locateNyarVmBinary, valkyrieNyarRunnerReady } from './valkyrie.ts';
+import { formatLegionError, legionBuildNyar, locateNyarVmBinary, nyarBuildDir, valkyrieNyarRunnerReady } from './valkyrie.ts';
 
 /** 与 `CanonicalTarget` 显示字符串一致。 */
 export const NYAR_VM_TARGET = 'nyar-unknown-unknown-managed';
 
 const RUN_NYAR_SOLVER = join(LEETCODE_ROOT_FROM_PACKAGE, 'projects', 'conformance', 'scripts', 'run_nyar_solver.ts');
 
-export function nyarBuildDir(problem: ProblemDefinition): string {
-    return join(LEETCODE_ROOT_FROM_PACKAGE, '.cache', `${problem.id}-bench-nyar`);
-}
+export { nyarBuildDir } from './valkyrie.ts';
 
 export type NyarVmArtifacts = {
     outDir: string;
@@ -89,11 +87,33 @@ export function nyarInvokeBlockedReason(nyarPath: string, invokeEntry?: string):
     return null;
 }
 
+/** 若缓存无产物则执行 `legion build --target nyar`。 */
+export function ensureNyarBuild(problem: ProblemDefinition, projectDir: string): string | null {
+    if (resolveNyarBuildArtifacts(problem)) {
+        return null;
+    }
+    const outDir = nyarBuildDir(problem);
+    const build = legionBuildNyar(projectDir, outDir);
+    if (build.status !== 0) {
+        return formatLegionError('legion build --target nyar', build);
+    }
+    if (!resolveNyarBuildArtifacts(problem)) {
+        return 'legion build --target nyar 完成但未找到 .nyar 产物';
+    }
+    return null;
+}
+
 export async function runNyarSolverOnce(problemRoot: string): Promise<void> {
     const blocked = (() => {
         try {
             const slug = JSON.parse(readFileSync(join(problemRoot, 'metadata.json'), 'utf8')).id as string;
-            const artifacts = resolveNyarBuildArtifacts({ id: slug } as ProblemDefinition);
+            const problem = { id: slug } as ProblemDefinition;
+            const projectDir = join(problemRoot, 'solvers', 'valkyrie');
+            const buildError = ensureNyarBuild(problem, projectDir);
+            if (buildError) {
+                return buildError;
+            }
+            const artifacts = resolveNyarBuildArtifacts(problem);
             if (!artifacts) {
                 return '未找到 legion build --target nyar 产物';
             }

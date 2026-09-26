@@ -5,7 +5,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
+import { valkyrieProjectDir } from '../src/catalog/index.ts';
+import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
 import {
+    ensureNyarBuild,
     loadMetadata,
     locateNyarVmBinary,
     resolveNyarBuildArtifacts,
@@ -44,7 +47,14 @@ async function main(): Promise<number> {
         throw new Error('metadata.id 缺失');
     }
 
-    const artifacts = resolveNyarBuildArtifacts({ id: slug });
+    const problem = { id: slug };
+    const projectDir = valkyrieProjectDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
+    const buildError = ensureNyarBuild(problem, projectDir);
+    if (buildError) {
+        throw new Error(buildError);
+    }
+
+    const artifacts = resolveNyarBuildArtifacts(problem);
     if (!artifacts) {
         throw new Error('未找到 legion build --target nyar 产物');
     }

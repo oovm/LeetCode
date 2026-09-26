@@ -7,7 +7,7 @@ import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 import { VALKYRIE_BENCH_PARAMS } from '../../planning/bench-params.ts';
-import { resolveNyarBuildArtifacts, nyarInvokeBlockedReason } from './ref.ts';
+import { ensureNyarBuild, resolveNyarBuildArtifacts, nyarInvokeBlockedReason, runNyarSolverOnce } from './ref.ts';
 import { loadMetadata } from './ref.ts';
 import {
     NYAR_BUILD_TARGET,
@@ -24,8 +24,8 @@ export type ValkyrieNyarBenchResult = {
     error: string | null;
 };
 
-/** 外部基准：对 `legion build --target nyar` 计时；运行时分依赖 `run_nyar_solver.ts`。 */
-export function benchValkyrieNyarProblem(
+/** 外部基准：对 `legion build --target nyar` 计时；运行时分对 `metadata.tests` 循环取中位数。 */
+export async function benchValkyrieNyarProblem(
     problem: ProblemDefinition,
     compileRuns = VALKYRIE_BENCH_PARAMS.compileRuns,
     warmup = VALKYRIE_BENCH_PARAMS.warmup,
@@ -77,19 +77,38 @@ export function benchValkyrieNyarProblem(
     let vRuntimeMs: number | null = null;
     let runtimeError: string | null = null;
 
-    const artifacts = resolveNyarBuildArtifacts(problem);
-    if (artifacts) {
-        const problemRoot = problemDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
-        const { invoke } = loadMetadata(problemRoot);
-        const entry = invoke.valkyrie ?? invoke.typescript;
-        const blocked = nyarInvokeBlockedReason(artifacts.nyarPath, entry);
-        if (blocked) {
-            runtimeError = blocked;
-        } else {
-            runtimeError = `nyar runtime bench 未接线（target ${NYAR_BUILD_TARGET}）`;
-        }
+    const buildError = ensureNyarBuild(problem, projectDir);
+    if (buildError) {
+        runtimeError = buildError;
     } else {
-        runtimeError = 'legion build --target nyar 产物缺失';
+        const artifacts = resolveNyarBuildArtifacts(problem);
+        const problemRoot = problemDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
+        if (!artifacts) {
+            runtimeError = 'legion build --target nyar 产物缺失';
+        } else {
+            const { invoke } = loadMetadata(problemRoot);
+            const entry = invoke.valkyrie ?? invoke.typescript;
+            const blocked = nyarInvokeBlockedReason(artifacts.nyarPath, entry);
+            if (blocked) {
+                runtimeError = blocked;
+            } else {
+                const runtimeSamples: number[] = [];
+                const runtimeRuns = Math.max(1, VALKYRIE_BENCH_PARAMS.warmup > 0 ? 3 : 1);
+                for (let i = 0; i < runtimeRuns; i++) {
+                    const start = performance.now();
+                    try {
+                        await runNyarSolverOnce(problemRoot);
+                        runtimeSamples.push(performance.now() - start);
+                    } catch (err) {
+                        runtimeError = String(err);
+                        break;
+                    }
+                }
+                if (!runtimeError && runtimeSamples.length > 0) {
+                    vRuntimeMs = median(runtimeSamples);
+                }
+            }
+        }
     }
 
     return {

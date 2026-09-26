@@ -31,7 +31,7 @@ export const valkyrieNyarAdapter = defineSolverAdapter({
         legionRoute: null,
     }),
     async benchProblem(problem) {
-        const result = benchValkyrieNyarProblem(problem);
+        const result = await benchValkyrieNyarProblem(problem);
         return {
             compileMs: result.vCompileMs,
             runtimeMs: result.vRuntimeMs,
