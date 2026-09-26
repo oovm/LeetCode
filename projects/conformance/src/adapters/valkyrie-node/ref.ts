@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -8,7 +8,7 @@ import { NODE_WASM_TARGET, resolveArtifactDir, resolveNodeEntry } from '@valkyri
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
-import { spawnLegion, valkyrieRunnerReady } from './valkyrie.ts';
+import { formatLegionError, legionBuildNative, spawnLegion, valkyrieRunnerReady } from './valkyrie.ts';
 
 const RUN_V_SOLVER = join(LEETCODE_ROOT_FROM_PACKAGE, 'projects', 'conformance', 'scripts', 'run_v_solver.ts');
 
@@ -88,6 +88,23 @@ export function resolveWasmExportSymbol(invokeEntry: string): string {
     return trimmed;
 }
 
+/** 若缓存无产物则执行 `legion build --target node`。 */
+export function ensureVBuild(problem: ProblemDefinition, projectDir: string): string | null {
+    if (resolveVBuildArtifacts(problem)) {
+        return null;
+    }
+    const outDir = vBuildDir(problem);
+    mkdirSync(outDir, { recursive: true });
+    const build = legionBuildNative(projectDir, outDir);
+    if (build.status !== 0) {
+        return formatLegionError('legion build --target node', build);
+    }
+    if (!resolveVBuildArtifacts(problem)) {
+        return 'legion build --target node 完成但未找到 wasm/js 产物';
+    }
+    return null;
+}
+
 export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string): string | null {
     if (!valkyrieRunnerReady()) {
         return 'legion 未就绪';
@@ -118,7 +135,13 @@ export async function runVSolverOnce(problemRoot: string): Promise<void> {
         try {
             const metaPath = join(problemRoot, 'metadata.json');
             const slug = JSON.parse(readFileSync(metaPath, 'utf8')).id as string;
-            const artifacts = resolveVBuildArtifacts({ id: slug } as ProblemDefinition);
+            const problem = { id: slug } as ProblemDefinition;
+            const projectDir = join(problemRoot, 'solvers', 'valkyrie');
+            const buildError = ensureVBuild(problem, projectDir);
+            if (buildError) {
+                return buildError;
+            }
+            const artifacts = resolveVBuildArtifacts(problem);
             if (!artifacts) {
                 return '未找到 legion build 产物（先跑 legion build --target node）';
             }

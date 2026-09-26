@@ -42,7 +42,7 @@
 | `projects/problems/<slug>/solvers/matlab-sxo/`  | **单文件** `solution.m`（无题级 manifest）                                 |
 | `projects/conformance/`                        | 完备性矩阵、TS/Python/V/SXO 跑测、**外部产物基准**                          |
 | `projects/dashboard/`                          | Vue 看板（合并 `benchmark-*.json`，ECharts 可视化）                         |
-| `scripts/`                                     | `format.mjs`、`reword.mjs`、`batch-limit.mjs`、`link-valkyrie.mjs`、`link-sxo.mjs`、`valkyrie-v-deps.mjs` |
+| `scripts/`                                     | `reword.mjs`、`batch-limit.mjs`、`link-valkyrie.mjs`、`link-sxo.mjs`、`valkyrie-v-deps.mjs` |
 | `legions.von`                                  | workspace 成员：`core`、`std`、`std.adaptors._`（见下文「维护者陷阱」）     |
 
 **禁止**：程序化批量生成 V 解、在 `.v` 里嵌 `# ```legion` cargo-script、把 solver 再套一层 `source/` 目录（除非 `legion`
@@ -115,15 +115,15 @@
 ```text
 pnpm link:valkyrie    # 链到兄弟仓 vcc（按需）
 pnpm link:sxo         # 仅 sxo-framework 上游开发：改回本地 link:（默认用 npm）
-pnpm fmt              # Biome，4 空格
+pnpm fmt              # `nifty format`（读 `biome.json`，4 空格）
 pnpm fmt:check
 pnpm test:problems    # 完备性
 pnpm bench            # 基准
 pnpm dashboard        # 看板 dev
 ```
 
-- Biome 扫描：`scripts/`、`conformance/`、`dashboard/`、根 manifest、 **仅** `projects/problems/**/metadata.json`（不扫海量
-  solver `package.json`）。
+- `nifty format` 扫描：`scripts/`、`conformance/`、`dashboard/`、根 manifest、 **仅** `projects/problems/**/metadata.json`（不扫海量
+ solver `package.json`）。范围与样式以根 `biome.json` 为准。
 - **中文**写注释与 `readme.md`（commit message 例外，见下节）。
 
 ## Git 提交（gitmoji）
@@ -243,12 +243,13 @@ legion test <project-dir> --target node
 | 机制                                        | 验什么                                                                               |
 |---------------------------------------------|--------------------------------------------------------------------------------------|
 | `run_python_solver.py` / `run_ts_solver.ts` | **题意**：`metadata.json` 全量 `tests`                                               |
-| `legion build`                              | V 解能否编译、链接到 node/wasm 产物                                                  |
+| `legion build`                              | V 解能否编译、链接到 node/wasm 或 nyar 产物                                         |
+| `run_v_solver.ts` / `run_nyar_solver.ts`    | **题意**：对 legion 产物跑全量 `metadata.tests`（空壳 wasm 在 harness 内判失败）     |
 | `legion test`                               | 工程内 `[test]` 或 `test/` 目录中的 **V 单测**；无则 **0 通过、跳过**，exit 0 仍可能 |
 
 leetcode **不**在 `solution.v` 里写 `[benchmark]`；也 **不必**为每题复制 `metadata.tests` 进 `[test]`，除非刻意加 V
-侧单测。完备性矩阵默认探测 build + test 退出码（非 strict 下 test 为空可接受）；算法对错以 **题解**为准，三端实现须与题解一致并通过
-`metadata.tests` / bench harness 校验。
+侧单测。`pnpm test:problems` 对 **有** `solution.v` 的题要求 **build 绿且** `metadata.tests` 绿（wasm 经 `run_v_solver.ts`，nyar 经
+`run_nyar_solver.ts`）；无题解的批次题 **跳过** V 用例。`legion test` 仍不作为题意门禁。算法对错以 **题解**为准，三端实现须与题解一致。
 
 ### 6. 单题 `solvers/valkyrie/` 不在 workspace `members` 内是正常的
 

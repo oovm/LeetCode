@@ -1,7 +1,3 @@
-import { mkdtempSync, rmSync } from 'node:fs';
-
-import { tmpdir } from 'node:os';
-
 import { dirname, join } from 'node:path';
 
 import { fileURLToPath } from 'node:url';
@@ -16,12 +12,11 @@ import { probeValkyrieNyarProblem } from '../src/adapters/valkyrie-nyar/matrix.t
 
 import { pythonRefReady, pythonSkipReason, runPythonSolver as runPythonReference } from '../src/adapters/python/ref.ts';
 
-import { valkyrieRunnerReady } from '../src/adapters/valkyrie-node/valkyrie.ts';
+import { hasValkyrieSolver, valkyrieNativeRunnerReady } from '../src/adapters/valkyrie-node/valkyrie.ts';
 import { valkyrieNyarRunnerReady } from '../src/adapters/valkyrie-nyar/valkyrie.ts';
 
 const LEETCODE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 
-const V_STRICT = process.env.LEETCODE_V_STRICT === '1';
 const BATCH_PROBLEMS = problemsForBatch(PROBLEMS, { fallbackKeys: ['LEETCODE_TEST_LIMIT'] });
 
 describe('Python 实现完备性（LeetCodeDataset）', () => {
@@ -40,50 +35,44 @@ describe('Python 实现完备性（LeetCodeDataset）', () => {
     }
 });
 
-describe('Valkyrie 完备性矩阵', () => {
-    const ready = valkyrieRunnerReady();
+describe('Valkyrie wasm 完备性（legion build + metadata.tests）', () => {
+    const ready = valkyrieNativeRunnerReady();
 
     for (const problem of BATCH_PROBLEMS) {
-        it.skipIf(!ready)(`${problem.id} legion build 必须通过`, { timeout: 10 * 60 * 1000 }, () => {
-            const projectPath = legionProjectDir(LEETCODE_ROOT, problem);
+        const problemRoot = problemDir(LEETCODE_ROOT, problem);
+        const hasSolver = hasValkyrieSolver(problemRoot);
 
-            const outDir = mkdtempSync(join(tmpdir(), `legion-matrix-${problem.id}-`));
-
-            try {
-                const row = probeValkyrieProblem(problem, projectPath, outDir);
+        it.skipIf(!ready || !hasSolver)(
+            `${problem.id} legion build --target node 且 metadata.tests 必须通过`,
+            { timeout: 10 * 60 * 1000 },
+            async () => {
+                const projectPath = legionProjectDir(LEETCODE_ROOT, problem);
+                const row = await probeValkyrieProblem(problem, projectPath);
 
                 expect(row.buildStatus, row.buildError ?? 'build failed').toBe(0);
-
-                if (V_STRICT) {
-                    expect(row.testStatus, row.testError ?? 'test failed').toBe(0);
-                }
-            } finally {
-                rmSync(outDir, { recursive: true, force: true });
-            }
-        });
+                expect(row.runtimeOk, row.runtimeError ?? 'metadata.tests failed').toBe(true);
+            },
+        );
     }
 });
 
-describe('Valkyrie Nyar VM 完备性矩阵', () => {
+describe('Valkyrie nyar 完备性（legion build --target nyar + metadata.tests）', () => {
     const ready = valkyrieNyarRunnerReady();
 
     for (const problem of BATCH_PROBLEMS) {
-        it.skipIf(!ready)(`${problem.id} legion build --target nyar 必须通过`, { timeout: 10 * 60 * 1000 }, () => {
-            const projectPath = legionProjectDir(LEETCODE_ROOT, problem);
+        const problemRoot = problemDir(LEETCODE_ROOT, problem);
+        const hasSolver = hasValkyrieSolver(problemRoot);
 
-            const outDir = mkdtempSync(join(tmpdir(), `legion-nyar-matrix-${problem.id}-`));
-
-            try {
-                const row = probeValkyrieNyarProblem(problem, projectPath, outDir);
+        it.skipIf(!ready || !hasSolver)(
+            `${problem.id} legion build --target nyar 且 metadata.tests 必须通过`,
+            { timeout: 10 * 60 * 1000 },
+            async () => {
+                const projectPath = legionProjectDir(LEETCODE_ROOT, problem);
+                const row = await probeValkyrieNyarProblem(problem, projectPath);
 
                 expect(row.buildStatus, row.buildError ?? 'build failed').toBe(0);
-
-                if (V_STRICT) {
-                    expect(row.testStatus, row.testError ?? 'test failed').toBe(0);
-                }
-            } finally {
-                rmSync(outDir, { recursive: true, force: true });
-            }
-        });
+                expect(row.runtimeOk, row.runtimeError ?? 'metadata.tests failed').toBe(true);
+            },
+        );
     }
 });

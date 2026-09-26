@@ -10,6 +10,7 @@ import {
     WASM_NODE_BENCH_TARGET,
     type LegionBenchRow,
 } from '@valkyrie-language/vcc/benchmark';
+import { locateNativeLegionBinary, spawnNativeLegion } from '@valkyrie-language/vcc/testing';
 
 const VALKYRIE_RS_ROOT = process.env.VALKYRIE_RS_ROOT ?? join(LEETCODE_ROOT, '..', 'valkyrie.rs');
 
@@ -40,6 +41,18 @@ export function valkyrieRunnerReady(): boolean {
     return runner.ready();
 }
 
+/** 题级 `legion build -o` 须 native legion；wasm collect 无法写入 conformance 缓存目录。 */
+export function valkyrieNativeRunnerReady(): boolean {
+    return locateNativeLegionBinary(VALKYRIE_RS_ROOT) !== null;
+}
+
+export function valkyrieNativeSkipReason(): string | null {
+    if (valkyrieNativeRunnerReady()) {
+        return null;
+    }
+    return 'native legion 未找到（在 valkyrie.rs 执行 cargo build -p legion --features legacy-lanes 或设置 LEGION_BIN）';
+}
+
 export function valkyrieSkipReason(): string | null {
     return runner.skipReason();
 }
@@ -50,6 +63,10 @@ export function spawnLegion(argv: string[]): LegionOutcome {
 
 export function legionBuild(projectDir: string, outputDir: string): LegionOutcome {
     return runner.spawnLegion(['build', projectDir, '--target', 'node', '-o', outputDir]);
+}
+
+export function legionBuildNative(projectDir: string, outputDir: string): LegionOutcome {
+    return spawnNativeLegion(VALKYRIE_RS_ROOT, ['build', projectDir, '--target', 'node', '-o', outputDir]);
 }
 
 export function legionTest(projectDir: string): LegionOutcome {
