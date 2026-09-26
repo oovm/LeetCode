@@ -1,6 +1,6 @@
 # SXO 批量补题 Gap（catalog 前 N 题）
 
-生成时间：2026-09-25T17:48:58.786Z
+生成时间：2026-09-26T12:08:05.289Z
 
 批量范围：catalog 前 **50** 题（与 `LEETCODE_BATCH_LIMIT` / batch-limit 默认一致）。
 
@@ -10,14 +10,14 @@
 
 | 语言 | 测例全绿 | 失败 |
 |------|----------|------|
-| Wolfram (Sxo) | 5 | 45 |
+| Wolfram (Sxo) | 6 | 44 |
 | MATLAB (Sxo) | 5 | 45 |
 
 ## Gap 频次（失败题）
 
 | Gap ID | 次数 | 说明 |
 |--------|------|------|
-| S-004 | 2 | 循环 / 控制流 evaluate 未稳定（总类） |
+| S-008 | 1 | MATLAB `function` + `for` + `return` |
 | S-010 | 34 | 字符串 Part / 字符访问 |
 | S-011 | 1 | MATLAB 用户函数体 `error node` |
 | S-012 | 12 | 链表（数组模拟） |
@@ -31,7 +31,7 @@
 
 | # | slug | Wolfram | MATLAB | Gap (W) | Gap (M) | 摘要 |
 |---|------|---------|--------|---------|---------|------|
-| 1 | `two-sum` | pass | pass | S-006 | S-008 |  |
+| 1 | `two-sum` | pass | fail | S-006 | S-008 | Error: term_not_json_surface:unevaluated_application head=Add argc=2 |
 | 2 | `add-two-numbers` | fail | fail | S-012 | S-012 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
 | 3 | `longest-substring-without-repeating-characters` | fail | fail | S-010 | S-010 | Error: term_not_json_surface:unevaluated_application head=extension argc=1 |
 | 4 | `median-of-two-sorted-arrays` | fail | fail | S-013 | S-013 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
@@ -59,7 +59,7 @@
 | 26 | `remove-duplicates-from-sorted-array` | fail | fail | S-013 | S-013 | Error: term_not_json_surface:unevaluated_application head=extension argc=1 |
 | 27 | `remove-element` | fail | fail | S-013 | S-013 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
 | 28 | `find-the-index-of-the-first-occurrence-in-a-string` | fail | fail | S-010 | S-010 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
-| 29 | `divide-two-integers` | fail | fail | S-004 | S-004 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
+| 29 | `divide-two-integers` | pass | pass | S-004 | S-004 |  |
 | 30 | `substring-with-concatenation-of-all-words` | fail | fail | S-010 | S-010 | Error: term_not_json_surface:unevaluated_application head=extension argc=2 |
 | 31 | `next-permutation` | fail | fail | S-013 | S-013 | Error: term_not_json_surface:unevaluated_application head=extension argc=1 |
 | 32 | `longest-valid-parentheses` | fail | fail | S-010 | S-010 | Error: term_not_json_surface:unevaluated_application head=extension argc=1 |
