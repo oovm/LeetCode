@@ -8,7 +8,7 @@
         "fmt:check": "node scripts/format.mjs --check",
         "reword:lint": "node scripts/reword.mjs --lint-log --base origin/dev",
         "link:valkyrie": "node scripts/link-valkyrie.mjs",
-        "stage:legion": "node scripts/stage-legion.mjs",
+        "stage:vcc": "node scripts/stage-vcc.mjs",
         "link:sxo": "node scripts/link-sxo.mjs",
         "test:problems": "pnpm --filter @leetcode/conformance test",
         "bench": "node scripts/benchmark.mjs",

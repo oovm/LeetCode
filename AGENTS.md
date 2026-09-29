@@ -186,14 +186,14 @@ node scripts/reword.mjs --file reword.pending.txt --base origin/dev
 
 | 产物                                                           | 仓                                  | leetcode.v 是否默认使用                                        |
 |----------------------------------------------------------------|-------------------------------------|----------------------------------------------------------------|
-| Rust seed `legion.exe`、wasm collect、`@valkyrie-language/vcc` | `../valkyrie.rs`                    | **是** — `conformance` 经 `VALKYRIE_RS_ROOT` 调 native 或 wasm |
+| Rust seed `vcc`、wasm collect、`@valkyrie-language/vcc` | `../valkyrie.rs`                    | **是** — `conformance` 经 `VALKYRIE_RS_ROOT` 调 native 或 wasm |
 | V 自举 `legion.tools` → `legion.mjs` / `legion.jar` 等         | `../valkyrie.v/projects/legion._/…` | **否** — 属 L2 自举门禁，与刷题 harness **不是同一条链**       |
 
-- **勿**在 `valkyrie.v` 里找 leetcode 要用的 `legion` 可执行文件。
+- **勿**在 `valkyrie.v` 里找 leetcode 要用的 seed 可执行文件。
 - **勿**把「补 std」与「修 legion/vcc」混为一仓：`std` API → `valkyrie.v`；编译/链接/CLI → `valkyrie.rs`。
-- **交付线是 leetcode，不是自举**：在 `valkyrie.rs` `cargo build -p legion`（release 优先）后执行
-  `pnpm stage:legion`，把二进制复制到本仓 `vendors/legion.exe`（已 gitignore）。harness 解析顺序：
-  `LEGION_BIN` → `vendors/` → `VALKYRIE_RS_ROOT/target/{release,debug}`。
+- **铁律：`valkyrie.rs` 不得产出 `legion.exe`**；`cargo build -p legion` 产出 `target/*/vcc`。交付线是 leetcode：
+  构建后执行 `pnpm stage:vcc`，复制到本仓 `vendors/vcc.exe`（已 gitignore）。harness 解析顺序：
+  `VCC_BIN` → `vendors/vcc` → `VALKYRIE_RS_ROOT/target/{release,debug}/vcc`。
 
 ### 2. `valkyrie.rs` 是装配层，解析/优化在 `nyar-vm.rs`
 
@@ -204,7 +204,7 @@ node scripts/reword.mjs --file reword.pending.txt --base origin/dev
 
 - **勿**在 `valkyrie.rs` 的 `asgard` 或 `legion` 里找 LeetCode wasm invoke / 多 export 的 emitter 实现（见 backlog **V-017**）。
 - **勿**在 `nyar-vm.rs` 重复实现 `legion.von` 的 `entry` 收集合同；manifest 校验属装配层。
-- 本机开发时 `valkyrie.rs` 根 `Cargo.toml` `[patch]` 应指向 `../nyar-vm.rs`；改 emitter 后需在 `nyar-vm.rs` 验证再 `cargo build -p legion`。
+- 本机开发时 `valkyrie.rs` 根 `Cargo.toml` `[patch]` 应指向 `../nyar-vm.rs`；改 emitter 后需在 `nyar-vm.rs` 验证再 `cargo build -p legion`（产出 `vcc`，不是 `legion.exe`）。
 
 ### 3. `legions.von` 不能只注册 `core` + `std`
 

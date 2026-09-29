@@ -52,7 +52,7 @@ export function valkyrieNativeSkipReason(): string | null {
     if (valkyrieNativeRunnerReady()) {
         return null;
     }
-    return 'native legion 未找到（pnpm stage:legion，或 cargo build -p legion 后设置 LEGION_BIN）';
+    return 'native vcc 未找到（pnpm stage:vcc，或 cargo build -p legion → target/*/vcc 后设置 VCC_BIN）';
 }
 
 export function valkyrieSkipReason(): string | null {

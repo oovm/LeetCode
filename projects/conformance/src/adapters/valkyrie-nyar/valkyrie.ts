@@ -55,7 +55,7 @@ export function valkyrieNyarRunnerReady(): boolean {
 
 export function valkyrieNyarSkipReason(): string | null {
     if (!locateNativeLegionBinary(VALKYRIE_RS_ROOT)) {
-        return 'native legion 未找到（pnpm stage:legion，或 cargo build -p legion 后设置 LEGION_BIN）';
+        return 'native vcc 未找到（pnpm stage:vcc，或 cargo build -p legion → target/*/vcc 后设置 VCC_BIN）';
     }
     if (!locateNyarVmBinary()) {
         return 'nyar-vm CLI 未找到（在 nyar-vm.rs 执行 cargo build -p nyar-vm 或设置 NYAR_VM）';

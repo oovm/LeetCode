@@ -45,16 +45,16 @@ writeFileSync(join(LEETCODE_ROOT, 'legions.von'), leetcodeLegionsVon(), 'utf8');
 
 console.log(`\nV 标准库：workspace 成员（legions.von → valkyrie.v/projects/core|std|std.adaptors._）`);
 console.log('各题 legion.von 使用 `core: true` / `std: true`（等同 version: "workspace"）。');
-const stage = spawnSync(process.execPath, [join(LEETCODE_ROOT, 'scripts', 'stage-legion.mjs')], {
+const stage = spawnSync(process.execPath, [join(LEETCODE_ROOT, 'scripts', 'stage-vcc.mjs')], {
     cwd: LEETCODE_ROOT,
     stdio: 'inherit',
 });
 if (stage.status !== 0) {
-    console.warn('stage:legion 未成功（可稍后单独跑 pnpm stage:legion）。');
+    console.warn('stage:vcc 未成功（可稍后单独跑 pnpm stage:vcc）。');
 }
 
 console.log('运行时通过 @valkyrie-language/vcc 宿主路由（native platform collect 或 wasm collect）。');
-console.log('  pnpm stage:legion    — 复制 Rust seed legion → vendors/');
+console.log('  pnpm stage:vcc       — 复制 Rust seed vcc → vendors/（绝非 legion.exe）');
 console.log('  pnpm test:problems   — TS 完备性 + V 编译/测试');
 console.log('  pnpm bench           — 生成 TS vs Wasm 基准数据');
 console.log('  pnpm dashboard       — Vue 对比看板');
