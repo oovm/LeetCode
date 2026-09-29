@@ -8,7 +8,7 @@ import { NODE_WASM_TARGET, resolveArtifactDir, resolveNodeEntry } from '@valkyri
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
-import { formatLegionError, legionBuildNative, spawnLegion, valkyrieRunnerReady } from './valkyrie.ts';
+import { formatLegionError, legionBuildNative, spawnNativeSpy, valkyrieRunnerReady } from './valkyrie.ts';
 
 const RUN_V_SOLVER = join(LEETCODE_ROOT_FROM_PACKAGE, 'projects', 'conformance', 'scripts', 'run_v_solver.ts');
 
@@ -46,9 +46,9 @@ export function loadMetadata(problemRoot: string): {
     return { tests, invoke: { valkyrie: entry, typescript: meta.invoke?.typescript } };
 }
 
-/** 解析 wasm 导出符号列表（`legion spy wasm --list`）。 */
+/** 解析 wasm 导出符号列表（须 native `vcc spy`；wasm collect 无 spy 能力）。 */
 export function listWasmExports(wasmPath: string): string[] {
-    const outcome = spawnLegion(['spy', 'wasm', wasmPath, '--list']);
+    const outcome = spawnNativeSpy(['spy', 'wasm', wasmPath, '--list']);
     const text = `${outcome.stdout ?? ''}${outcome.stderr ?? ''}`;
     const exports: string[] = [];
     for (const line of text.split(/\r?\n/)) {

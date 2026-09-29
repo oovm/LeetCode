@@ -2,6 +2,7 @@
 /** 加载 legion node 产物并对 metadata.tests 执行外部 wasm invoke（待 glue 接线）。 */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
 import { loadMetadata, resolveVBuildArtifacts, resolveWasmExportSymbol, wasmInvokeBlockedReason } from '../src/adapters/valkyrie-node/ref.ts';
@@ -12,8 +13,7 @@ type InvokeHost = {
 };
 
 async function loadInvokeHost(mjsPath: string): Promise<InvokeHost> {
-    const href = new URL(mjsPath, 'file:///').href;
-    return (await import(href)) as InvokeHost;
+    return (await import(pathToFileURL(mjsPath).href)) as InvokeHost;
 }
 
 async function runCandidate(host: InvokeHost, entry: string, args: Record<string, unknown>): Promise<unknown> {

@@ -71,6 +71,11 @@ export function legionBuildNative(projectDir: string, outputDir: string): Legion
     return spawnNativeLegion(VALKYRIE_RS_ROOT, ['build', projectDir, '--target', 'node', '-o', outputDir]);
 }
 
+/** `spy` 等诊断子命令必须走 native `vcc`（wasm collect 无完整 CLI）。 */
+export function spawnNativeSpy(argv: string[]): LegionOutcome {
+    return spawnNativeLegion(VALKYRIE_RS_ROOT, argv);
+}
+
 export function legionTest(projectDir: string): LegionOutcome {
     return runner.spawnLegion(['test', projectDir, '-t', 'node']);
 }
