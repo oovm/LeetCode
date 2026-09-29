@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import type { VccCliSpawnResult } from '@valkyrie-language/vcc';
 import type { ProblemDefinition } from '../../catalog/index.ts';
-import { LEETCODE_ROOT, LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
+import { LEETCODE_ROOT, LEETCODE_ROOT_FROM_PACKAGE, preferStagedLegionBin } from '../../domain/paths.ts';
 import {
     createBenchmarkRunner,
     formatLegionCliError,
@@ -11,6 +11,8 @@ import {
     type LegionBenchRow,
 } from '@valkyrie-language/vcc/benchmark';
 import { locateNativeLegionBinary, spawnNativeLegion } from '@valkyrie-language/vcc/testing';
+
+preferStagedLegionBin();
 
 const VALKYRIE_RS_ROOT = process.env.VALKYRIE_RS_ROOT ?? join(LEETCODE_ROOT, '..', 'valkyrie.rs');
 const NYAR_VM_ROOT = process.env.NYAR_VM_ROOT ?? join(LEETCODE_ROOT, '..', 'nyar-vm.rs');
@@ -53,7 +55,7 @@ export function valkyrieNyarRunnerReady(): boolean {
 
 export function valkyrieNyarSkipReason(): string | null {
     if (!locateNativeLegionBinary(VALKYRIE_RS_ROOT)) {
-        return 'native legion 未找到（在 valkyrie.rs 执行 cargo build -p legion --features legacy-lanes 或设置 LEGION_BIN）';
+        return 'native legion 未找到（pnpm stage:legion，或 cargo build -p legion 后设置 LEGION_BIN）';
     }
     if (!locateNyarVmBinary()) {
         return 'nyar-vm CLI 未找到（在 nyar-vm.rs 执行 cargo build -p nyar-vm 或设置 NYAR_VM）';

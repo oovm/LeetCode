@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import type { VccCliSpawnResult } from '@valkyrie-language/vcc';
-import { LEETCODE_ROOT } from '../../domain/paths.ts';
+import { LEETCODE_ROOT, preferStagedLegionBin } from '../../domain/paths.ts';
 import {
     createBenchmarkRunner,
     formatLegionCliError,
@@ -11,6 +11,8 @@ import {
     type LegionBenchRow,
 } from '@valkyrie-language/vcc/benchmark';
 import { locateNativeLegionBinary, spawnNativeLegion } from '@valkyrie-language/vcc/testing';
+
+preferStagedLegionBin();
 
 const VALKYRIE_RS_ROOT = process.env.VALKYRIE_RS_ROOT ?? join(LEETCODE_ROOT, '..', 'valkyrie.rs');
 
@@ -50,7 +52,7 @@ export function valkyrieNativeSkipReason(): string | null {
     if (valkyrieNativeRunnerReady()) {
         return null;
     }
-    return 'native legion 未找到（在 valkyrie.rs 执行 cargo build -p legion --features legacy-lanes 或设置 LEGION_BIN）';
+    return 'native legion 未找到（pnpm stage:legion，或 cargo build -p legion 后设置 LEGION_BIN）';
 }
 
 export function valkyrieSkipReason(): string | null {

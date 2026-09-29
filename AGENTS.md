@@ -191,8 +191,9 @@ node scripts/reword.mjs --file reword.pending.txt --base origin/dev
 
 - **勿**在 `valkyrie.v` 里找 leetcode 要用的 `legion` 可执行文件。
 - **勿**把「补 std」与「修 legion/vcc」混为一仓：`std` API → `valkyrie.v`；编译/链接/CLI → `valkyrie.rs`。
-- 本机 `legion` 常不在 `PATH`；harness 默认解析 `VALKYRIE_RS_ROOT/target/release/legion.exe`（或 debug / wasm
-  collect）。可设环境变量 `VALKYRIE_RS_ROOT`。
+- **交付线是 leetcode，不是自举**：在 `valkyrie.rs` `cargo build -p legion`（release 优先）后执行
+  `pnpm stage:legion`，把二进制复制到本仓 `vendors/legion.exe`（已 gitignore）。harness 解析顺序：
+  `LEGION_BIN` → `vendors/` → `VALKYRIE_RS_ROOT/target/{release,debug}`。
 
 ### 2. `valkyrie.rs` 是装配层，解析/优化在 `nyar-vm.rs`
 

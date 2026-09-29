@@ -10,6 +10,9 @@ export const VALKYRIE_RS_ROOT = resolve(process.env.VALKYRIE_RS_ROOT ?? join(LEE
 
 export const VALKYRIE_PACKAGES_DIR = join(VALKYRIE_RS_ROOT, 'projects', 'packages');
 
+/** `pnpm stage:legion` 复制到的本机 seed 路径（已 gitignore `vendors/`）。 */
+export const STAGED_LEGION_BIN = join(LEETCODE_ROOT, 'vendors', process.platform === 'win32' ? 'legion.exe' : 'legion');
+
 /** 供各 workspace 包 `package.json` 使用的 `link:` 相对路径（从 `projects/conformance` 出发）。 */
 export const VALKYRIE_LINK_FROM_CONFORMANCE = {
     '@valkyrie-language/legion': 'link:../../../valkyrie.rs/projects/packages/legion',
