@@ -1,7 +1,7 @@
 {
     name: "leetcode-build-array-where-you-can-find-the-maximum-exactly-k-comparisons",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

@@ -1,7 +1,7 @@
 {
     name: "leetcode-running-sum-of-1d-array",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

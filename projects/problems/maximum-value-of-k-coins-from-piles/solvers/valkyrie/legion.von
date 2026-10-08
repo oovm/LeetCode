@@ -1,7 +1,7 @@
 {
     name: "leetcode-maximum-value-of-k-coins-from-piles",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

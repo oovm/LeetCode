@@ -1,7 +1,7 @@
 {
     name: "leetcode-count-square-submatrices-with-all-ones",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

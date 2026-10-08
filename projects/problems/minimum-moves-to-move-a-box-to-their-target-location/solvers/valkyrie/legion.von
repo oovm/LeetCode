@@ -1,7 +1,7 @@
 {
     name: "leetcode-minimum-moves-to-move-a-box-to-their-target-location",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

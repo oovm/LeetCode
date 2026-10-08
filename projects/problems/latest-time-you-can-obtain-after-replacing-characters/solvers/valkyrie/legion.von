@@ -1,7 +1,7 @@
 {
     name: "leetcode-latest-time-you-can-obtain-after-replacing-characters",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

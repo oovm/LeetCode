@@ -1,7 +1,7 @@
 {
     name: "leetcode-longest-substring-with-at-most-k-distinct-characters",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

@@ -1,7 +1,7 @@
 {
     name: "leetcode-minimizing-array-after-replacing-pairs-with-their-product",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

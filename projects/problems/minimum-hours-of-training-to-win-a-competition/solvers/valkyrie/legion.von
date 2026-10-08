@@ -1,7 +1,7 @@
 {
     name: "leetcode-minimum-hours-of-training-to-win-a-competition",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

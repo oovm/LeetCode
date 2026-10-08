@@ -1,7 +1,7 @@
 {
     name: "leetcode-divide-an-array-into-subarrays-with-minimum-cost-i",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

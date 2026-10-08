@@ -1,7 +1,7 @@
 {
     name: "leetcode-maximum-number-of-people-that-can-be-caught-in-tag",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

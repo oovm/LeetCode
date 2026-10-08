@@ -1,7 +1,7 @@
 {
     name: "leetcode-maximum-points-after-collecting-coins-from-all-nodes",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

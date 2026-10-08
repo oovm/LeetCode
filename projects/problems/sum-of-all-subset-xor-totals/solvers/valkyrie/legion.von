@@ -1,7 +1,7 @@
 {
     name: "leetcode-sum-of-all-subset-xor-totals",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

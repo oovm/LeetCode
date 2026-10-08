@@ -1,7 +1,7 @@
 {
     name: "leetcode-array-with-elements-not-equal-to-average-of-neighbors",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

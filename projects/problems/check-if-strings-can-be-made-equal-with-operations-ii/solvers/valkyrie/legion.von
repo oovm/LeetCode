@@ -1,7 +1,7 @@
 {
     name: "leetcode-check-if-strings-can-be-made-equal-with-operations-ii",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

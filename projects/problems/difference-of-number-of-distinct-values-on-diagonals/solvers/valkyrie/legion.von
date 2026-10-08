@@ -1,7 +1,7 @@
 {
     name: "leetcode-difference-of-number-of-distinct-values-on-diagonals",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

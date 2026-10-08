@@ -1,7 +1,7 @@
 {
     name: "leetcode-amount-of-time-for-binary-tree-to-be-infected",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false

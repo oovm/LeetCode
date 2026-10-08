@@ -1,7 +1,7 @@
 {
     name: "leetcode-can-you-eat-your-favorite-candy-on-your-favorite-day",
     version: "0.1.0",
-    entry: "solution.v",
+    artifact: "library",
     auto_link: {
         core: false,
         std: false
