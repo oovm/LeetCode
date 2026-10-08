@@ -1,8 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import type { VccCliSpawnResult } from '@valkyrie-language/vcc';
-import { LEETCODE_ROOT, preferStagedLegionBin } from '../../domain/paths.ts';
+import {
+    createHostRunner,
+    legionBuildOutcomeToSpawnResult,
+    locateNativeCollect,
+    type LegionBuildOutcome,
+    type VccCliSpawnResult,
+} from '@valkyrie-language/vcc';
+import { LEETCODE_ROOT } from '../../domain/paths.ts';
 import {
     createBenchmarkRunner,
     formatLegionCliError,
@@ -10,17 +16,24 @@ import {
     WASM_NODE_BENCH_TARGET,
     type LegionBenchRow,
 } from '@valkyrie-language/vcc/benchmark';
-import { locateNativeLegionBinary, spawnNativeLegion } from '@valkyrie-language/vcc/testing';
-
-preferStagedLegionBin();
+import { wasmCollectReady } from '@valkyrie-language/vcc/testing';
 
 const VALKYRIE_RS_ROOT = process.env.VALKYRIE_RS_ROOT ?? join(LEETCODE_ROOT, '..', 'valkyrie.rs');
 
 export const VALKYRIE_WASM_COLLECT_DIR = join(VALKYRIE_RS_ROOT, 'projects', 'packages', 'vcc-unknown-wasm32');
 
+const WASM_COLLECT = '@valkyrie-language/vcc-unknown-wasm32';
+const WASM_ENTRY = 'legion.mjs';
+
+export const legionHost = createHostRunner({
+    wasmCollect: WASM_COLLECT,
+    wasmEntry: WASM_ENTRY,
+});
+
 const runner = createBenchmarkRunner({
     valkyrieRsRoot: VALKYRIE_RS_ROOT,
     wasmCollectDir: VALKYRIE_WASM_COLLECT_DIR,
+    host: legionHost,
 });
 
 export type LegionOutcome = VccCliSpawnResult;
@@ -43,16 +56,16 @@ export function valkyrieRunnerReady(): boolean {
     return runner.ready();
 }
 
-/** 题级 `legion build -o` 须 native legion；wasm collect 无法写入 conformance 缓存目录。 */
+/** 题级 `legion build -o` 经 path link 的 VCC N-API（或 wasm collect fallback）。 */
 export function valkyrieNativeRunnerReady(): boolean {
-    return locateNativeLegionBinary(VALKYRIE_RS_ROOT) !== null;
+    return locateNativeCollect() !== null || wasmCollectReady(WASM_COLLECT, WASM_ENTRY);
 }
 
 export function valkyrieNativeSkipReason(): string | null {
     if (valkyrieNativeRunnerReady()) {
         return null;
     }
-    return 'native vcc 未找到（pnpm stage:vcc，或 cargo build -p legion → target/*/vcc 后设置 VCC_BIN）';
+    return 'VCC 未就绪：path link `@valkyrie-language/vcc-win32-x64`（`node scripts/build.mjs napi`）或 wasm collect（`node scripts/build.mjs capability`）';
 }
 
 export function valkyrieSkipReason(): string | null {
@@ -60,24 +73,28 @@ export function valkyrieSkipReason(): string | null {
 }
 
 export function spawnLegion(argv: string[]): LegionOutcome {
-    return runner.spawnLegion(argv);
+    return legionHost.spawnCli(argv);
 }
 
 export function legionBuild(projectDir: string, outputDir: string): LegionOutcome {
-    return runner.spawnLegion(['build', projectDir, '--target', 'node', '-o', outputDir]);
+    const outcome = legionHost.buildProject(projectDir, 'node', outputDir);
+    if ('ok' in outcome) {
+        return legionBuildOutcomeToSpawnResult(outcome as LegionBuildOutcome);
+    }
+    return outcome;
 }
 
 export function legionBuildNative(projectDir: string, outputDir: string): LegionOutcome {
-    return spawnNativeLegion(VALKYRIE_RS_ROOT, ['build', projectDir, '--target', 'node', '-o', outputDir]);
+    return legionBuild(projectDir, outputDir);
 }
 
-/** `spy` 等诊断子命令必须走 native `vcc`（wasm collect 无完整 CLI）。 */
-export function spawnNativeSpy(argv: string[]): LegionOutcome {
-    return spawnNativeLegion(VALKYRIE_RS_ROOT, argv);
+/** `spy` 等诊断子命令走 VCC N-API 宿主（wasm collect 无完整 CLI）。 */
+export function spawnLegionSpy(argv: string[]): LegionOutcome {
+    return legionHost.spawnCli(argv);
 }
 
 export function legionTest(projectDir: string): LegionOutcome {
-    return runner.spawnLegion(['test', projectDir, '-t', 'node']);
+    return legionHost.spawnCli(['test', projectDir, '-t', 'node']);
 }
 
 export type ParsedBenchRow = LegionBenchRow;

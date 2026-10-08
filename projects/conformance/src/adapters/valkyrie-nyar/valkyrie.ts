@@ -1,27 +1,40 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-import type { VccCliSpawnResult } from '@valkyrie-language/vcc';
+import {
+    createHostRunner,
+    legionBuildOutcomeToSpawnResult,
+    locateNativeCollect,
+    type LegionBuildOutcome,
+    type VccCliSpawnResult,
+} from '@valkyrie-language/vcc';
 import type { ProblemDefinition } from '../../catalog/index.ts';
-import { LEETCODE_ROOT, LEETCODE_ROOT_FROM_PACKAGE, preferStagedLegionBin } from '../../domain/paths.ts';
+import { LEETCODE_ROOT, LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 import {
     createBenchmarkRunner,
     formatLegionCliError,
     parseLegionBenchTable,
     type LegionBenchRow,
 } from '@valkyrie-language/vcc/benchmark';
-import { locateNativeLegionBinary, spawnNativeLegion } from '@valkyrie-language/vcc/testing';
-
-preferStagedLegionBin();
+import { wasmCollectReady } from '@valkyrie-language/vcc/testing';
 
 const VALKYRIE_RS_ROOT = process.env.VALKYRIE_RS_ROOT ?? join(LEETCODE_ROOT, '..', 'valkyrie.rs');
 const NYAR_VM_ROOT = process.env.NYAR_VM_ROOT ?? join(LEETCODE_ROOT, '..', 'nyar-vm.rs');
 
 export const VALKYRIE_WASM_COLLECT_DIR = join(VALKYRIE_RS_ROOT, 'projects', 'packages', 'vcc-unknown-wasm32');
 
+const WASM_COLLECT = '@valkyrie-language/vcc-unknown-wasm32';
+const WASM_ENTRY = 'legion.mjs';
+
+export const legionHost = createHostRunner({
+    wasmCollect: WASM_COLLECT,
+    wasmEntry: WASM_ENTRY,
+});
+
 const runner = createBenchmarkRunner({
     valkyrieRsRoot: VALKYRIE_RS_ROOT,
     wasmCollectDir: VALKYRIE_WASM_COLLECT_DIR,
+    host: legionHost,
 });
 
 export type LegionOutcome = VccCliSpawnResult;
@@ -50,12 +63,12 @@ export function locateNyarVmBinary(): string | null {
 }
 
 export function valkyrieNyarRunnerReady(): boolean {
-    return locateNativeLegionBinary(VALKYRIE_RS_ROOT) !== null && locateNyarVmBinary() !== null;
+    return (locateNativeCollect() !== null || wasmCollectReady(WASM_COLLECT, WASM_ENTRY)) && locateNyarVmBinary() !== null;
 }
 
 export function valkyrieNyarSkipReason(): string | null {
-    if (!locateNativeLegionBinary(VALKYRIE_RS_ROOT)) {
-        return 'native vcc 未找到（pnpm stage:vcc，或 cargo build -p legion → target/*/vcc 后设置 VCC_BIN）';
+    if (!locateNativeCollect() && !wasmCollectReady(WASM_COLLECT, WASM_ENTRY)) {
+        return 'VCC 未就绪：path link `@valkyrie-language/vcc-win32-x64`（`node scripts/build.mjs napi`）或 wasm collect';
     }
     if (!locateNyarVmBinary()) {
         return 'nyar-vm CLI 未找到（在 nyar-vm.rs 执行 cargo build -p nyar-vm 或设置 NYAR_VM）';
@@ -66,23 +79,23 @@ export function valkyrieNyarSkipReason(): string | null {
 export { hasValkyrieSolver, valkyrieSolverPath } from '../valkyrie-node/valkyrie.ts';
 
 export function spawnLegion(argv: string[]): LegionOutcome {
-    return runner.spawnLegion(argv);
-}
-
-function spawnNyarLegion(argv: string[]): LegionOutcome {
-    return spawnNativeLegion(VALKYRIE_RS_ROOT, argv);
+    return legionHost.spawnCli(argv);
 }
 
 export function legionBuildNyar(projectDir: string, outputDir: string): LegionOutcome {
-    return spawnNyarLegion(['build', projectDir, '--target', NYAR_BUILD_TARGET, '-o', outputDir]);
+    const outcome = legionHost.buildProject(projectDir, NYAR_BUILD_TARGET, outputDir);
+    if ('ok' in outcome) {
+        return legionBuildOutcomeToSpawnResult(outcome as LegionBuildOutcome);
+    }
+    return outcome;
 }
 
 export function legionTestNyar(projectDir: string): LegionOutcome {
-    return spawnNyarLegion(['test', projectDir, '--target', NYAR_BUILD_TARGET]);
+    return legionHost.spawnCli(['test', projectDir, '--target', NYAR_BUILD_TARGET]);
 }
 
 export function legionRunNyar(projectDir: string, outputDir: string): LegionOutcome {
-    return spawnNyarLegion(['run', projectDir, '--target', NYAR_BUILD_TARGET, '-o', outputDir]);
+    return legionHost.spawnCli(['run', projectDir, '--target', NYAR_BUILD_TARGET, '-o', outputDir]);
 }
 
 export type ParsedBenchRow = LegionBenchRow;
