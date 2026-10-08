@@ -34,15 +34,17 @@
 | V-016 | `Utf8Builder.append_i64` 十进制格式化 | done | `summary-ranges` 等需输出数字字符串的题 | `std.text.Utf8Builder` + `test_utf8_builder.v` | 含 `0` 与 `-2147483648` 边界 |
 | V-017 | **leetcode wasm invoke harness（P0）** | upstream | `vRuntimeMs`、跑飞检测、三语言对比 | `valkyrie.rs` legion/nyar-emitter：① Windows `\\?\` 路径下 package 须能收集 `solution.v`（`path_for_local_fs`）② 仅 `[export]` 顶层 `micro` 进 MIR/wasm（`snake_case` 实现，`[export(case: "camelCase")]` 导出 `twoSum`）③ glue `callExport`/`invokeLeetCode` + JSON 编解码 | leetcode `run_v_solver.ts` + `resolveWasmExportSymbol` 已就绪 |
 
-### V-017 分阶段交付（2026-09-23 评估）
+### V-017 分阶段交付（2026-09-27 复核）
 
-- **V-017a / W1，manifest 与 source closure：** `valkyrie.rs` 为 library artifact 和 `entry` 建立受验证合同，修正 Windows 根目录收集、重复 std 源与 cache key。验收：`solution.v` 恰好一次进入完整 semantic group。
-- **V-017b / W2，多 export：** `nyar-vm.rs` 贯通显式 HIR export 的 `exported_name` 到 MIR/Wasm 导出表；正式 library 缺 executable MIR 时失败。验收：`spy wasm --list` 包含 `twoSum`，无 class 隐式 export。
-- **V-017c / W3，library glue：** `nyar-vm.rs` 提供 import 无执行的 `callExport(name, ...args)` 与签名驱动 JSON↔GC 边界。验收：数组、负整数、空值和错误路径通过 Node 实际调用。
-- **V-017d / W4–W5，消费与测量：** `leetcode.v` 固定顶层 wrapper 模板、参数顺序与无解语义；先跑 two-sum 全部 metadata.tests，再扩 10 题，最后记录真实 `vRuntimeMs`。当前无通过日志或 after 片段。
-- **V-017e，post-0.0.x：** class 与方法显式 export、实例 ABI 和高层路由另立合同；不阻断方案 A。
+工作区评估：`内部决策/08-V-017-LeetCode库模式评估.md`。方案 A；方案 B = V-017e。
 
-本条目状态仍为 upstream，不能以单题 smoke 关闭。
+- **V-017a / W1：** `entry` + `artifact: library` + `path_for_local_fs` **已落地骨架**；仍须 cache key 含 export/layout ABI，并保留 Windows 根目录回归。
+- **V-017b / W2：** `wasm_export_names` **已接线**；缺非法 `case` 诊断与可核验 `spy wasm --list`（`twoSum`）。可执行 MIR 仍被 S-W2/S-W3（`ArrayList.new` SMIR010）挡住。
+- **V-017c / W3：** library `callExport` + 无 auto-main **已落地**；**缺**签名驱动 JSON↔GC。禁止 harness 合成 `_impl`/witness。
+- **V-017d / W4–W5：** 无解 `null` vs 空 `ArrayList` 未统一；无全绿 `run_v_solver` / 非 null `vRuntimeMs`。
+- **V-017e，post-0.0.x：** class/方法 export；不阻断方案 A。
+
+**派发顺序：** S-W2/S-W3 → V-017b′ → V-017c′ → V-017d。条目仍为 upstream；骨架 ≠ 端到端通过。
 
 ### 字符串 identity 整改（ADR 0013，2026-09-26）
 

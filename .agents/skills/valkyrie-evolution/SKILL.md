@@ -69,7 +69,7 @@ description: >-
 
 ## 上游实现纪律
 
-1. **权威在兄弟仓**：编辑 `E:/victory 胜利女神/valkyrie.v` 或 `valkyrie.rs`，不在 leetcode.v 复制 std 源码。
+1. **权威在兄弟仓**：编辑 `../valkyrie.v` 或 `../valkyrie.rs`，不在 leetcode.v 复制 std 源码。
 2. **测试跟能力走**：新 API 必须有 `projects/std/test/` 或 `projects/core/test/` 对应用例；禁止只改实现不补测。
 3. **最小公开面**：先满足题解所需签名；泛化与性能优化放后续切片。
 4. **中文注释**说明非显然不变式；commit 在对应上游仓，gitmoji + 英文 subject。

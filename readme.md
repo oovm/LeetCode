@@ -55,7 +55,7 @@ leetcode.v/
 
 ```bash
 pnpm install
-pnpm fmt:check        # Biome 格式检查
+pnpm fmt:check        # `nifty format --check`
 pnpm test:problems    # 完备性矩阵（默认批量限额 50 题）
 pnpm bench                  # 跑全部已配置语言（默认 python + TS + V）
 pnpm bench --count 10       # 最多 10 题
