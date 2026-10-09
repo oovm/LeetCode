@@ -42,13 +42,29 @@ export function valkyrieSolverPath(problemRoot: string): string {
     return join(problemRoot, 'solvers', 'valkyrie', 'solution.v');
 }
 
-/** 基准只跑非空且未标 `# 阻塞` 的 `solution.v`。 */
+/** 矩阵分母：存在 `solution.v` 即纳入（空文件或 `# 阻塞` 仍算失败，不剔除）。 */
 export function hasValkyrieSolver(problemRoot: string): boolean {
     try {
-        const text = readFileSync(valkyrieSolverPath(problemRoot), 'utf8').trim();
-        return text.length > 0 && !text.startsWith('# 阻塞');
+        readFileSync(valkyrieSolverPath(problemRoot), 'utf8');
+        return true;
     } catch {
         return false;
+    }
+}
+
+/** 题解是否标记阻塞或为空（仅用于报告，不用于缩小分母）。 */
+export function valkyrieSolverBlockedReason(problemRoot: string): string | null {
+    try {
+        const text = readFileSync(valkyrieSolverPath(problemRoot), 'utf8').trim();
+        if (text.length === 0) {
+            return 'solution.v 为空';
+        }
+        if (text.startsWith('# 阻塞')) {
+            return 'solution.v 标记为阻塞';
+        }
+        return null;
+    } catch {
+        return 'solution.v 缺失';
     }
 }
 

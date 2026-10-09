@@ -50,6 +50,8 @@ describe('Valkyrie wasm 完备性（legion build + metadata.tests）', () => {
                 const row = await probeValkyrieProblem(problem, projectPath);
 
                 expect(row.buildStatus, row.buildError ?? 'build failed').toBe(0);
+                expect(row.testStatus, row.testError ?? 'legion test failed').toBe(0);
+                expect(row.manifestFresh, row.manifestError ?? 'execution manifest stale').toBe(true);
                 expect(row.runtimeOk, row.runtimeError ?? 'metadata.tests failed').toBe(true);
             },
         );
@@ -71,6 +73,8 @@ describe('Valkyrie nyar 完备性（legion build --target nyar + metadata.tests�
                 const row = await probeValkyrieNyarProblem(problem, projectPath);
 
                 expect(row.buildStatus, row.buildError ?? 'build failed').toBe(0);
+                expect(row.testStatus, row.testError ?? 'legion test failed').toBe(0);
+                expect(row.manifestFresh, row.manifestError ?? 'execution manifest stale').toBe(true);
                 expect(row.runtimeOk, row.runtimeError ?? 'metadata.tests failed').toBe(true);
             },
         );

@@ -1,8 +1,8 @@
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { resolveArtifactDir } from '@valkyrie-language/vcc/testing';
+import { NYAR_VM_TARGET, resolveArtifactDir, resolveNyarEntry, isArtifactCacheFresh } from '@valkyrie-language/vcc/testing';
 
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
@@ -10,9 +10,6 @@ import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 import { resolveWasmExportSymbol } from '../valkyrie-node/ref.ts';
 import { loadMetadata, type TestCase } from '../valkyrie-node/ref.ts';
 import { formatLegionError, legionBuildNyar, locateNyarVmBinary, nyarBuildDir, valkyrieNyarRunnerReady } from './valkyrie.ts';
-
-/** 与 `CanonicalTarget` 显示字符串一致。 */
-export const NYAR_VM_TARGET = 'nyar-unknown-unknown-managed';
 
 const RUN_NYAR_SOLVER = join(LEETCODE_ROOT_FROM_PACKAGE, 'projects', 'conformance', 'scripts', 'run_nyar_solver.ts');
 
@@ -25,35 +22,30 @@ export type NyarVmArtifacts = {
     logicalEntry: string;
 };
 
-function readContractField(contractPath: string, field: 'physical_entry' | 'logical_entry'): string | null {
-    try {
-        const text = readFileSync(contractPath, 'utf8');
-        const match = text.match(new RegExp(`${field}\\s*:\\s*"([^"]+)"`));
-        return match?.[1] ?? null;
-    } catch {
-        return null;
-    }
-}
+export type NyarBuildOutcome = {
+    error: string | null;
+    artifacts: NyarVmArtifacts | null;
+    buildRoute: string | null;
+};
+
+export type NyarReferencePin = {
+    artifacts: NyarVmArtifacts;
+    buildRoute: string | null;
+};
 
 /** 解析 `legion build --target nyar` 产物中的 `.nyar` 与 run-contract 入口。 */
 export function resolveNyarBuildArtifacts(problem: ProblemDefinition): NyarVmArtifacts | null {
     const outDir = resolveArtifactDir(nyarBuildDir(problem), NYAR_VM_TARGET);
-    for (const contractName of ['run-contracts.txt', 'run-contract.txt']) {
-        const contractPath = join(outDir, contractName);
-        const physical = readContractField(contractPath, 'physical_entry');
-        if (!physical?.endsWith('.nyar')) {
-            continue;
-        }
-        const nyarPath = join(outDir, physical);
-        try {
-            readFileSync(nyarPath);
-        } catch {
-            continue;
-        }
-        const logicalEntry = readContractField(contractPath, 'logical_entry') ?? 'main';
-        return { outDir, nyarPath, physicalEntry: physical, logicalEntry };
+    const entry = resolveNyarEntry(outDir);
+    if (!entry) {
+        return null;
     }
-    return null;
+    return {
+        outDir,
+        nyarPath: entry.nyarPath,
+        physicalEntry: entry.physicalEntry,
+        logicalEntry: entry.logicalEntry,
+    };
 }
 
 /** 列出 `.nyar` 导出符号（`nyar-vm list`）。 */
@@ -87,33 +79,60 @@ export function nyarInvokeBlockedReason(nyarPath: string, invokeEntry?: string):
     return null;
 }
 
-/** 若缓存无产物则执行 `legion build --target nyar`。 */
-export function ensureNyarBuild(problem: ProblemDefinition, projectDir: string): string | null {
-    if (resolveNyarBuildArtifacts(problem)) {
-        return null;
-    }
+/** 构建或复用带 execution manifest 校验的 Nyar 产物。 */
+export function ensureNyarBuild(problem: ProblemDefinition, projectDir: string): NyarBuildOutcome {
     const outDir = nyarBuildDir(problem);
+    const artifactDir = resolveArtifactDir(outDir, NYAR_VM_TARGET);
+    const cached = resolveNyarBuildArtifacts(problem);
+    const freshness = isArtifactCacheFresh(artifactDir, NYAR_VM_TARGET);
+    if (cached && freshness.fresh) {
+        return { error: null, artifacts: cached, buildRoute: null };
+    }
+
+    mkdirSync(outDir, { recursive: true });
     const build = legionBuildNyar(projectDir, outDir);
     if (build.status !== 0) {
-        return formatLegionError('legion build --target nyar', build);
+        return {
+            error: formatLegionError('legion build --target nyar', build),
+            artifacts: null,
+            buildRoute: build.route,
+        };
     }
-    if (!resolveNyarBuildArtifacts(problem)) {
-        return 'legion build --target nyar 完成但未找到 .nyar 产物';
+
+    const artifacts = resolveNyarBuildArtifacts(problem);
+    if (!artifacts) {
+        return {
+            error: 'legion build --target nyar 完成但未找到 .nyar 产物',
+            artifacts: null,
+            buildRoute: build.route,
+        };
     }
-    return null;
+
+    const rebuiltFreshness = isArtifactCacheFresh(artifactDir, NYAR_VM_TARGET);
+    if (!rebuiltFreshness.fresh) {
+        return {
+            error: rebuiltFreshness.reason ?? 'legion build 产物缺少可信 execution manifest',
+            artifacts: null,
+            buildRoute: build.route,
+        };
+    }
+
+    return { error: null, artifacts, buildRoute: build.route };
 }
 
-export async function runNyarSolverOnce(problemRoot: string): Promise<void> {
+export async function runNyarSolverOnce(problemRoot: string, pin?: NyarReferencePin): Promise<void> {
     const blocked = (() => {
         try {
             const slug = JSON.parse(readFileSync(join(problemRoot, 'metadata.json'), 'utf8')).id as string;
             const problem = { id: slug } as ProblemDefinition;
             const projectDir = join(problemRoot, 'solvers', 'valkyrie');
-            const buildError = ensureNyarBuild(problem, projectDir);
-            if (buildError) {
-                return buildError;
-            }
-            const artifacts = resolveNyarBuildArtifacts(problem);
+            const artifacts = pin?.artifacts ?? (() => {
+                const build = ensureNyarBuild(problem, projectDir);
+                if (build.error) {
+                    throw new Error(build.error);
+                }
+                return build.artifacts;
+            })();
             if (!artifacts) {
                 return '未找到 legion build --target nyar 产物';
             }
@@ -148,10 +167,10 @@ export async function runNyarSolverOnce(problemRoot: string): Promise<void> {
     }
 }
 
-export async function runNyarReference(problem: ProblemDefinition): Promise<{ ok: boolean; stderr: string }> {
+export async function runNyarReference(problem: ProblemDefinition, pin?: NyarReferencePin): Promise<{ ok: boolean; stderr: string }> {
     const root = problemDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
     try {
-        await runNyarSolverOnce(root);
+        await runNyarSolverOnce(root, pin);
         return { ok: true, stderr: '' };
     } catch (err) {
         return { ok: false, stderr: String(err) };

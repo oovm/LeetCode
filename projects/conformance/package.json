@@ -29,7 +29,10 @@
     },
     "devDependencies": {
         "bun": "^1.2.0",
+        "@valkyrie-language/legion": "link:../../../valkyrie.rs/projects/packages/legion",
         "@valkyrie-language/vcc": "link:../../../valkyrie.rs/projects/packages/vcc",
+        "@valkyrie-language/vcc-unknown-wasm32": "link:../../../valkyrie.rs/projects/packages/vcc-unknown-wasm32",
+        "@valkyrie-language/vcc-win32-x64": "link:../../../valkyrie.rs/projects/packages/vcc-win32-x64",
         "@types/node": "^22.10.0",
         "tsx": "^4.19.2",
         "typescript": "^5.7.2",

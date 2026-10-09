@@ -77,9 +77,9 @@ export async function benchValkyrieNyarProblem(
     let vRuntimeMs: number | null = null;
     let runtimeError: string | null = null;
 
-    const buildError = ensureNyarBuild(problem, projectDir);
-    if (buildError) {
-        runtimeError = buildError;
+    const buildOutcome = ensureNyarBuild(problem, projectDir);
+    if (buildOutcome.error) {
+        runtimeError = buildOutcome.error;
     } else {
         const artifacts = resolveNyarBuildArtifacts(problem);
         const problemRoot = problemDir(LEETCODE_ROOT_FROM_PACKAGE, problem);

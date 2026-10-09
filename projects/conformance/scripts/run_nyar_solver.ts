@@ -49,9 +49,9 @@ async function main(): Promise<number> {
 
     const problem = { id: slug };
     const projectDir = valkyrieProjectDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
-    const buildError = ensureNyarBuild(problem, projectDir);
-    if (buildError) {
-        throw new Error(buildError);
+    const buildOutcome = ensureNyarBuild(problem, projectDir);
+    if (buildOutcome.error) {
+        throw new Error(buildOutcome.error);
     }
 
     const artifacts = resolveNyarBuildArtifacts(problem);
