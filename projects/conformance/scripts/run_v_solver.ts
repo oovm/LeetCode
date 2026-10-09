@@ -5,7 +5,9 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
-import { loadMetadata, resolveVBuildArtifacts, resolveWasmExportSymbol, wasmInvokeBlockedReason } from '../src/adapters/valkyrie-node/ref.ts';
+import { ensureVBuild, loadMetadata, resolveVBuildArtifacts, resolveWasmExportSymbol, wasmInvokeBlockedReason } from '../src/adapters/valkyrie-node/ref.ts';
+import { valkyrieProjectDir } from '../src/catalog/index.ts';
+import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
 
 type InvokeHost = {
     invokeLeetCode?: (entry: string, args: Record<string, unknown>) => unknown;
@@ -42,7 +44,14 @@ async function main(): Promise<number> {
         throw new Error('metadata.id 缺失');
     }
 
-    const artifacts = resolveVBuildArtifacts({ id: slug });
+    const problem = { id: slug };
+    const projectDir = valkyrieProjectDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
+    const buildOutcome = ensureVBuild(problem, projectDir);
+    if (buildOutcome.error) {
+        throw new Error(buildOutcome.error);
+    }
+
+    const artifacts = buildOutcome.artifacts ?? resolveVBuildArtifacts(problem);
     if (!artifacts) {
         throw new Error('未找到 legion build 产物');
     }
