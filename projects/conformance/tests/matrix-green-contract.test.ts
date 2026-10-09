@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { isMatrixRowGreen } from '../src/adapters/shared/matrix-green.ts';
 import { isValkyrieGreen, type ValkyrieMatrixRow } from '../src/adapters/valkyrie-node/matrix.ts';
 import { isValkyrieNyarGreen, type ValkyrieNyarMatrixRow } from '../src/adapters/valkyrie-nyar/matrix.ts';
 
@@ -38,6 +39,12 @@ function baseNyarRow(overrides: Partial<ValkyrieNyarMatrixRow> = {}): ValkyrieNy
 }
 
 describe('Valkyrie 双 target 矩阵绿门禁', () => {
+    it('shared contract 与 node / nyar 包装一致', () => {
+        const row = baseNodeRow();
+        expect(isMatrixRowGreen(row)).toBe(isValkyrieGreen(row));
+        expect(isMatrixRowGreen(baseNyarRow())).toBe(isValkyrieNyarGreen(baseNyarRow()));
+    });
+
     it('node 绿必须同时满足 build、test、manifest 与 runtime', () => {
         expect(isValkyrieGreen(baseNodeRow())).toBe(true);
         expect(isValkyrieGreen(baseNodeRow({ buildStatus: 1 }))).toBe(false);

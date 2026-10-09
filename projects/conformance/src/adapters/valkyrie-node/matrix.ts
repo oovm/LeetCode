@@ -3,6 +3,7 @@ import { mkdirSync } from 'node:fs';
 import { NODE_WASM_TARGET, isArtifactCacheFresh } from '@valkyrie-language/vcc/testing';
 
 import type { ProblemDefinition } from '../../catalog/index.ts';
+import { isMatrixRowGreen } from '../shared/matrix-green.ts';
 import { formatLegionError, legionBuildNative, legionTest } from './valkyrie.ts';
 import { runVReference, resolveVBuildArtifacts, vArtifactDir, vBuildDir } from './ref.ts';
 
@@ -65,5 +66,5 @@ export async function probeValkyrieProblem(problem: ProblemDefinition, projectPa
 
 /** 绿：能编、`legion test` 通过、manifest 新鲜且 `run_v_solver` 全量 `metadata.tests` 通过。 */
 export function isValkyrieGreen(row: ValkyrieMatrixRow): boolean {
-    return row.buildStatus === 0 && row.testStatus === 0 && row.manifestFresh && row.runtimeOk;
+    return isMatrixRowGreen(row);
 }

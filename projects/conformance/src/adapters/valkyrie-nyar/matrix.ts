@@ -3,6 +3,7 @@ import { mkdirSync } from 'node:fs';
 import { NYAR_VM_TARGET, isArtifactCacheFresh, resolveArtifactDir } from '@valkyrie-language/vcc/testing';
 
 import type { ProblemDefinition } from '../../catalog/index.ts';
+import { isMatrixRowGreen } from '../shared/matrix-green.ts';
 import { formatLegionError, legionBuildNyar, legionTestNyar, nyarBuildDir } from './valkyrie.ts';
 import { runNyarReference, resolveNyarBuildArtifacts } from './ref.ts';
 
@@ -65,5 +66,5 @@ export async function probeValkyrieNyarProblem(problem: ProblemDefinition, proje
 
 /** 绿：能编、`legion test` 通过、manifest 新鲜且 `run_nyar_solver` 全量 `metadata.tests` 通过。 */
 export function isValkyrieNyarGreen(row: ValkyrieNyarMatrixRow): boolean {
-    return row.buildStatus === 0 && row.testStatus === 0 && row.manifestFresh && row.runtimeOk;
+    return isMatrixRowGreen(row);
 }
