@@ -26,7 +26,7 @@ describe('bench language selection', () => {
 
 describe('adapter registry', () => {
     it('registers every implementation id', () => {
-        expect(ALL_IMPLEMENTATION_IDS).toHaveLength(6);
+        expect(ALL_IMPLEMENTATION_IDS).toHaveLength(7);
         for (const implementationId of ALL_IMPLEMENTATION_IDS) {
             expect(typeof adapterReady(implementationId)).toBe('boolean');
         }
