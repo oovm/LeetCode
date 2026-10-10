@@ -10,6 +10,7 @@
         "link:valkyrie": "node scripts/link-valkyrie.mjs",
         "link:sxo": "node scripts/link-sxo.mjs",
         "test:problems": "pnpm --filter @leetcode/conformance test",
+        "matrix:valkyrie": "pnpm --filter @leetcode/conformance matrix:valkyrie",
         "bench": "node scripts/benchmark.mjs",
         "bench:python": "node scripts/benchmark.mjs python",
         "bench:typescript": "node scripts/benchmark.mjs typescript",

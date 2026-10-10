@@ -7,6 +7,7 @@ import { isValkyrieNyarGreen, type ValkyrieNyarMatrixRow } from '../src/adapters
 function baseNodeRow(overrides: Partial<ValkyrieMatrixRow> = {}): ValkyrieMatrixRow {
     return {
         id: 'two-sum',
+        target: 'wasm32-node-unknown-wasm',
         buildStatus: 0,
         testStatus: 0,
         buildRoute: 'legion build --target node',
@@ -15,8 +16,14 @@ function baseNodeRow(overrides: Partial<ValkyrieMatrixRow> = {}): ValkyrieMatrix
         testError: null,
         manifestFresh: true,
         manifestError: null,
+        manifestSchemaVersion: 3,
+        semanticClosureHash: 'abc',
+        canonicalSurfaceHash: 'def',
+        hostProviderBindingHash: 'ghi',
         runtimeOk: true,
         runtimeError: null,
+        solverNote: null,
+        green: true,
         ...overrides,
     };
 }
@@ -24,6 +31,7 @@ function baseNodeRow(overrides: Partial<ValkyrieMatrixRow> = {}): ValkyrieMatrix
 function baseNyarRow(overrides: Partial<ValkyrieNyarMatrixRow> = {}): ValkyrieNyarMatrixRow {
     return {
         id: 'two-sum',
+        target: 'nyar-unknown-unknown-managed',
         buildStatus: 0,
         testStatus: 0,
         buildRoute: 'legion build --target nyar',
@@ -32,8 +40,14 @@ function baseNyarRow(overrides: Partial<ValkyrieNyarMatrixRow> = {}): ValkyrieNy
         testError: null,
         manifestFresh: true,
         manifestError: null,
+        manifestSchemaVersion: 3,
+        semanticClosureHash: 'abc',
+        canonicalSurfaceHash: 'def',
+        hostProviderBindingHash: 'ghi',
         runtimeOk: true,
         runtimeError: null,
+        solverNote: null,
+        green: true,
         ...overrides,
     };
 }

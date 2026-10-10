@@ -20,6 +20,7 @@
         "bench:valkyrie": "node --import tsx src/cli/run.ts --lang valkyrie",
         "bench:wolfram-sxo": "node --import tsx src/cli/run.ts --lang wolfram-sxo",
         "bench:matlab-sxo": "node --import tsx src/cli/run.ts --lang matlab-sxo",
+        "matrix:valkyrie": "node --import tsx src/cli/valkyrie-matrix.ts",
         "rebuild:bun": "pnpm rebuild bun"
     },
     "optionalDependencies": {
