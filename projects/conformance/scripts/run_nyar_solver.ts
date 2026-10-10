@@ -4,6 +4,9 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { isArtifactCacheFresh, NYAR_VM_TARGET } from '@valkyrie-language/vcc/testing';
+
+import { readNyarExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
 import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
 import { valkyrieProjectDir } from '../src/catalog/index.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
@@ -13,6 +16,7 @@ import {
     locateNyarVmBinary,
     resolveNyarBuildArtifacts,
     nyarInvokeBlockedReason,
+    type NyarVmArtifacts,
 } from '../src/adapters/valkyrie-nyar/ref.ts';
 import { resolveWasmExportSymbol } from '../src/adapters/valkyrie-node/ref.ts';
 
@@ -49,12 +53,27 @@ async function main(): Promise<number> {
 
     const problem = { id: slug };
     const projectDir = valkyrieProjectDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
-    const buildOutcome = ensureNyarBuild(problem, projectDir);
-    if (buildOutcome.error) {
-        throw new Error(buildOutcome.error);
-    }
 
-    const artifacts = resolveNyarBuildArtifacts(problem);
+    let artifacts: NyarVmArtifacts | null = null;
+    const pinned = readNyarExecutionPinFromEnv();
+    if (pinned) {
+        const freshness = isArtifactCacheFresh(pinned.artifactDir, NYAR_VM_TARGET);
+        if (!freshness.fresh) {
+            throw new Error(freshness.reason ?? 'pinned execution manifest stale');
+        }
+        artifacts = {
+            outDir: pinned.artifactDir,
+            nyarPath: pinned.nyarPath,
+            physicalEntry: pinned.physicalEntry,
+            logicalEntry: pinned.logicalEntry,
+        };
+    } else {
+        const buildOutcome = ensureNyarBuild(problem, projectDir);
+        if (buildOutcome.error) {
+            throw new Error(buildOutcome.error);
+        }
+        artifacts = resolveNyarBuildArtifacts(problem);
+    }
     if (!artifacts) {
         throw new Error('未找到 legion build --target nyar 产物');
     }

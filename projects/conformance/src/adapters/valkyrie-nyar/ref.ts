@@ -7,6 +7,7 @@ import { NYAR_VM_TARGET, resolveArtifactDir, resolveNyarEntry, isArtifactCacheFr
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
+import { encodeNyarExecutionPin } from '../shared/execution-pin.ts';
 import { resolveWasmExportSymbol } from '../valkyrie-node/ref.ts';
 import { loadMetadata, type TestCase } from '../valkyrie-node/ref.ts';
 import { formatLegionError, legionBuildNyar, locateNyarVmBinary, nyarBuildDir, valkyrieNyarRunnerReady } from './valkyrie.ts';
@@ -153,12 +154,22 @@ export async function runNyarSolverOnce(problemRoot: string, pin?: NyarReference
         throw new Error(blocked);
     }
 
+    const pinEnv = pin
+        ? encodeNyarExecutionPin({
+            artifactDir: pin.artifacts.outDir,
+            nyarPath: pin.artifacts.nyarPath,
+            physicalEntry: pin.artifacts.physicalEntry,
+            logicalEntry: pin.artifacts.logicalEntry,
+        })
+        : {};
+
     const result = spawnSync(process.execPath, ['--import', 'tsx', RUN_NYAR_SOLVER, problemRoot], {
         encoding: 'utf8',
         cwd: join(LEETCODE_ROOT_FROM_PACKAGE, 'projects', 'conformance'),
         env: {
             ...process.env,
             NYAR_VM: locateNyarVmBinary() ?? '',
+            ...pinEnv,
         },
     });
     const stderr = `${result.stderr ?? ''}${result.stdout ?? ''}`.trim();

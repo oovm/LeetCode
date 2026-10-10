@@ -4,8 +4,18 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+import { isArtifactCacheFresh, NODE_WASM_TARGET } from '@valkyrie-language/vcc/testing';
+
+import { readNodeExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
 import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
-import { ensureVBuild, loadMetadata, resolveVBuildArtifacts, resolveWasmExportSymbol, wasmInvokeBlockedReason } from '../src/adapters/valkyrie-node/ref.ts';
+import {
+    ensureVBuild,
+    loadMetadata,
+    resolveVBuildArtifacts,
+    resolveWasmExportSymbol,
+    type VBuildArtifacts,
+    wasmInvokeBlockedReason,
+} from '../src/adapters/valkyrie-node/ref.ts';
 import { valkyrieProjectDir } from '../src/catalog/index.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
 
@@ -46,12 +56,30 @@ async function main(): Promise<number> {
 
     const problem = { id: slug };
     const projectDir = valkyrieProjectDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
-    const buildOutcome = ensureVBuild(problem, projectDir);
-    if (buildOutcome.error) {
-        throw new Error(buildOutcome.error);
-    }
 
-    const artifacts = buildOutcome.artifacts ?? resolveVBuildArtifacts(problem);
+    let artifacts: VBuildArtifacts | null = null;
+    const pinned = readNodeExecutionPinFromEnv();
+    if (pinned) {
+        const freshness = isArtifactCacheFresh(pinned.artifactDir, NODE_WASM_TARGET);
+        if (!freshness.fresh) {
+            throw new Error(freshness.reason ?? 'pinned execution manifest stale');
+        }
+        artifacts = {
+            outDir: pinned.artifactDir,
+            entry: {
+                legionMjs: pinned.legionMjs,
+                legionWasm: pinned.legionWasm,
+                physicalEntry: pinned.physicalEntry,
+                legacy: false,
+            },
+        };
+    } else {
+        const buildOutcome = ensureVBuild(problem, projectDir);
+        if (buildOutcome.error) {
+            throw new Error(buildOutcome.error);
+        }
+        artifacts = buildOutcome.artifacts ?? resolveVBuildArtifacts(problem);
+    }
     if (!artifacts) {
         throw new Error('未找到 legion build 产物');
     }
