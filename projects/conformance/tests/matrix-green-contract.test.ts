@@ -22,6 +22,11 @@ function baseNodeRow(overrides: Partial<ValkyrieMatrixRow> = {}): ValkyrieMatrix
         hostProviderBindingHash: 'ghi',
         runtimeOk: true,
         runtimeError: null,
+        testCaseTotal: 3,
+        testCasePass: 3,
+        testCaseFail: 0,
+        firstFailureIndex: null,
+        firstFailure: null,
         solverNote: null,
         green: true,
         ...overrides,
@@ -46,6 +51,11 @@ function baseNyarRow(overrides: Partial<ValkyrieNyarMatrixRow> = {}): ValkyrieNy
         hostProviderBindingHash: 'ghi',
         runtimeOk: true,
         runtimeError: null,
+        testCaseTotal: 3,
+        testCasePass: 3,
+        testCaseFail: 0,
+        firstFailureIndex: null,
+        firstFailure: null,
         solverNote: null,
         green: true,
         ...overrides,
@@ -73,5 +83,10 @@ describe('Valkyrie 双 target 矩阵绿门禁', () => {
         expect(isValkyrieNyarGreen(baseNyarRow({ testStatus: 1 }))).toBe(false);
         expect(isValkyrieNyarGreen(baseNyarRow({ manifestFresh: false }))).toBe(false);
         expect(isValkyrieNyarGreen(baseNyarRow({ runtimeOk: false }))).toBe(false);
+    });
+
+    it('a row with no executed metadata cases cannot be green', () => {
+        expect(isMatrixRowGreen(baseNodeRow({ testCaseTotal: 0, testCasePass: 0, testCaseFail: 0 }))).toBe(false);
+        expect(isValkyrieGreen(baseNodeRow({ testCaseTotal: 2, testCasePass: 1, testCaseFail: 1 }))).toBe(false);
     });
 });
