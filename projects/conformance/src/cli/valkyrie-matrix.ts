@@ -47,7 +47,8 @@ async function main(): Promise<number> {
     }
 
     const batchLimit = parseBatchLimit({ fallbackKeys: ['LEETCODE_MATRIX_LIMIT', 'LEETCODE_BENCH_LIMIT'] });
-    let candidates = PROBLEMS.filter((problem) => hasValkyrieSolver(problemDir(LEETCODE_ROOT, problem)));
+    const corpus = PROBLEMS.filter((problem) => hasValkyrieSolver(problemDir(LEETCODE_ROOT, problem)));
+    let candidates = corpus;
     if (idFilter) {
         candidates = candidates.filter((problem) => problem.id === idFilter);
     }
@@ -65,6 +66,7 @@ async function main(): Promise<number> {
     }
 
     const report = buildValkyrieDualMatrixReport(entries, {
+        corpusIds: corpus.map((problem) => problem.id),
         batchLimit,
     });
     mkdirSync(dirname(outPath), { recursive: true });
@@ -74,9 +76,11 @@ async function main(): Promise<number> {
     const nyar = report.summary.nyar;
     console.log(
         `wrote ${outPath}\n` +
-            `denominator=${report.denominator} batchLimit=${batchLimit ?? 'all'}\n` +
-            `wasm green ${wasm.green}/${wasm.denominator} (${(wasm.greenRate * 100).toFixed(1)}%)\n` +
-            `nyar green ${nyar.green}/${nyar.denominator} (${(nyar.greenRate * 100).toFixed(1)}%)`,
+            `denominator=${report.denominator} executed=${report.executedIds.length} notExecuted=${report.notExecutedIds.length} complete=${report.complete} batchLimit=${batchLimit ?? 'all'}\n` +
+            `wasm green ${wasm.green}/${wasm.denominator} (${(wasm.greenRate * 100).toFixed(1)}%) ` +
+            `cases ${wasm.testCasePass}/${wasm.testCaseTotal} (${(wasm.casePassRate * 100).toFixed(1)}%)\n` +
+            `nyar green ${nyar.green}/${nyar.denominator} (${(nyar.greenRate * 100).toFixed(1)}%) ` +
+            `cases ${nyar.testCasePass}/${nyar.testCaseTotal} (${(nyar.casePassRate * 100).toFixed(1)}%)`,
     );
     return 0;
 }

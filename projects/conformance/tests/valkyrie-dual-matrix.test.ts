@@ -22,6 +22,11 @@ function greenWasm(id: string): ValkyrieMatrixRow {
         hostProviderBindingHash: 'c',
         runtimeOk: true,
         runtimeError: null,
+        testCaseTotal: 2,
+        testCasePass: 2,
+        testCaseFail: 0,
+        firstFailureIndex: null,
+        firstFailure: null,
         solverNote: null,
         green: true,
     };
@@ -45,21 +50,46 @@ function failNyar(id: string): ValkyrieNyarMatrixRow {
         hostProviderBindingHash: null,
         runtimeOk: false,
         runtimeError: 'compile failed',
+        testCaseTotal: 2,
+        testCasePass: 0,
+        testCaseFail: 2,
+        firstFailureIndex: 0,
+        firstFailure: 'compile failed',
         solverNote: null,
         green: false,
     };
 }
 
 describe('valkyrie dual matrix report', () => {
-    it('summarizes wasm and nyar pass rates separately', () => {
+    it('summarizes wasm and nyar pass rates separately including case rates', () => {
         const report = buildValkyrieDualMatrixReport([
             { id: 'two-sum', wasm: greenWasm('two-sum'), nyar: failNyar('two-sum') },
             { id: 'three-sum', wasm: greenWasm('three-sum'), nyar: failNyar('three-sum') },
-        ]);
+        ], { corpusIds: ['two-sum', 'three-sum'] });
         expect(report.denominator).toBe(2);
         expect(report.summary.wasm.green).toBe(2);
         expect(report.summary.nyar.green).toBe(0);
         expect(report.summary.wasm.greenRate).toBe(1);
         expect(report.summary.nyar.buildPassRate).toBe(0);
+        expect(report.summary.wasm.testCaseTotal).toBe(4);
+        expect(report.summary.wasm.casePassRate).toBe(1);
+        expect(report.summary.nyar.casePassRate).toBe(0);
+    });
+
+    it('keeps the full denominator when a selected batch is entirely green', () => {
+        const report = buildValkyrieDualMatrixReport([
+            { id: 'two-sum', wasm: greenWasm('two-sum'), nyar: failNyar('two-sum') },
+        ], { corpusIds: ['two-sum', 'three-sum'], batchLimit: 1 });
+        expect(report.denominator).toBe(2);
+        expect(report.summary.wasm.greenRate).toBe(0.5);
+        expect(report.summary.wasm.notExecuted).toBe(1);
+        expect(report.notExecutedIds).toEqual(['three-sum']);
+        expect(report.complete).toBe(false);
+    });
+
+    it('rejects rows outside the corpus and duplicated execution identities', () => {
+        const entry = { id: 'two-sum', wasm: greenWasm('two-sum'), nyar: failNyar('two-sum') };
+        expect(() => buildValkyrieDualMatrixReport([entry], { corpusIds: ['three-sum'] })).toThrow();
+        expect(() => buildValkyrieDualMatrixReport([entry, entry], { corpusIds: ['two-sum'] })).toThrow();
     });
 });
