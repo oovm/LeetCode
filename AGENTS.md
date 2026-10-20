@@ -99,13 +99,23 @@
   - Wolfram (Sxo)：`node --import tsx projects/conformance/scripts/run_wolfram_sxo_solver.ts projects/problems/<slug>`
   - `node --import tsx projects/conformance/scripts/run_matlab_sxo_solver.ts projects/problems/<slug>`
 
+## 编译排查边界
+
+LeetCode 仓只负责题解、metadata、题意 harness 和结果证据。Valkyrie 编译语义属于 `nyar-vm.rs` 的 Valkyrie frontend，装配与产物属于 `valkyrie.rs`，标准库与 adaptor 属于旁边的 `valkyrie.v`。
+
+题目失败时先检查入口需求链：export → receiver/call → declaration/instance → evidence → body。无法证明某个声明属于入口闭包时，问题归 Compiler 的 binding/closure contract，不能修改题解、加入源码排除表或为单题增加特判。
+
+`legion build`、artifact/export/invoke 和 `metadata.tests` 是不同证据。局部编译、CLI wrapper、单 target、空用例或旧缓存不能代表题意通过。矩阵报告必须记录本次来源、Compiler/host/target/profile、artifact digest、非空 export、真实 invoke 和全部用例结果。
+
+源码 formatter 由 Oak 的 CST/token-gap formatter 拥有。Nyar 的 PP document 是模型打印，不得用于覆盖题解源码。题解 readme 仍遵守本仓教练稿约定，不能写入编译器内部 workaround。
+
 ## 基准测试
 
 - **外部基准**：先 `legion build` 得到 wasm + js glue，再在 harness 里对 **metadata.tests** 计时；leetcode **不在** `solution.v` 写 `[benchmark]`。
 - **TS (Node) 运行**：harness 单进程加载题解（`tsx` 转译发生在计时外），预热后只对全量 `metadata.tests` 循环取中位数 → `runtimeMs`（不含每次冷启动 Node）。
 - **TS (Bun) 运行**：`bun` 子进程内直载同一 `solution.ts`，预热后只计 `metadata.tests` 循环 → `tbRuntimeMs`；`bun` 来自 `projects/conformance` 的 `devDependency`（`pnpm install`，若二进制缺失在根目录执行 `pnpm approve-builds` 放行 `bun`）或 PATH / `BUN_PATH`。
 - **V 编译**：`pnpm bench` 对 `legion build --target node` 计时 → `vCompileMs`（**不**调用 `legion bench`）。
-- **V 运行**：`vRuntimeMs` 待 wasm 导出 invoke + `run_v_solver` 接线后补全；缺运行时分 **不算 error**（看板标为 missing）。
+- **V 运行**：只记录本次真实产物 invoke 的用例结果与计时。未执行、缺导出、零用例或失败均不计通过；性能缺测可以显示 missing，但不能掩盖正确性未通过。
 - 编排：`pnpm bench` → `scripts/benchmark.mjs` → `@leetcode/conformance` `bench-all.ts`（支持 `--count`、`--id`、`--lang` 等 CLI）。
 - **Wolfram / MATLAB (Sxo)**：单 Node 进程内复用 `@sxo/*` frontend，预热后只对全量 `metadata.tests` 循环取中位数 → `runtimeMs`（对齐 Python / TS 公平性）。
 - 看板：`pnpm dashboard`；基准按语言写入 `projects/dashboard/public/benchmark-*.json`（`pnpm bench:typescript` / `bench:typescript-bun` / `bench:valkyrie` / `bench:wolfram-sxo` / `bench:matlab-sxo`，或 `LEETCODE_BENCH_LANG=typescript-bun pnpm bench`）。
@@ -187,22 +197,22 @@ node scripts/reword.mjs --file reword.pending.txt --base origin/dev
 | 产物                                                           | 仓                                  | leetcode.v 是否默认使用                                        |
 |----------------------------------------------------------------|-------------------------------------|----------------------------------------------------------------|
 | VCC N-API `.node`、wasm collect、`@valkyrie-language/vcc` | `../valkyrie.rs`                    | **是** — `pnpm link:valkyrie` 后 `conformance` 经 `legionHost.spawnCli`（N-API 或 wasm） |
-| V 自举 `legion.tools` → `legion.mjs` / `legion.jar` 等         | `../valkyrie.v/projects/legion._/…` | **否** — 属 L2 自举门禁，与刷题 harness **不是同一条链**       |
+| V 源码 `legion.tools` | `../valkyrie.v/projects/legion._/…` | **否** — 源码工程存在不证明已完成 source-bootstrap 或 self-hosted |
 
 - **勿**在 `valkyrie.v` 里找 leetcode 要用的 seed 可执行文件。
-- **勿**把「补 std」与「修 legion/vcc」混为一仓：`std` API → `valkyrie.v`；编译/链接/CLI → `valkyrie.rs`。
+- **勿**把「补 std」与「修 Compiler/Legion」混为一仓：库声明 → `valkyrie.v`；语义、链接与 emitter → `nyar-vm.rs`；工程装配与 CLI → `valkyrie.rs`。
 - **铁律：禁止 `vcc.exe` / `legion.exe` / `[[bin]]` seed**。原生 CLI 仅经 `vcc-napi` platform `.node`（`node scripts/build.mjs napi`）或 wasm collect；leetcode 用 `pnpm link:valkyrie` path link，**勿** stage 可执行文件。
 
 ### 2. `valkyrie.rs` 是装配层，解析/优化在 `nyar-vm.rs`
 
 | 层 | 仓 | 典型改动 |
 | --- | --- | --- |
-| 装配 | `../valkyrie.rs` | `legion` manifest、`planner` source closure、CLI、`legion build` 缓存与产物路径 |
+| 装配 | `../valkyrie.rs` | `legion` manifest、package graph、不可变源码 inventory、CLI、`legion build` 缓存与产物路径 |
 | 解析/优化/降低 | `../nyar-vm.rs` | HIR、`[export]` → wasm 导出表、MIR、`wasm_js_glue`（`callExport`）、`nyar-optimizer` |
 
-- **勿**在 `valkyrie.rs` 的 `asgard` 或 `legion` 里找 LeetCode wasm invoke / 多 export 的 emitter 实现（见 backlog **V-017**）。
+- **勿**在 `valkyrie.rs` 的 `asgard` 或 `legion` 里补 LeetCode wasm invoke / 多 export 的 emitter 语义。
 - **勿**在 `nyar-vm.rs` 重复实现 `legion.von` 的 `entry` 收集合同；manifest 校验属装配层。
-- 本机开发时 `valkyrie.rs` 根 `Cargo.toml` `[patch]` 应指向 `../nyar-vm.rs`；改 emitter 后需在 `nyar-vm.rs` 验证，再在 `valkyrie.rs` 执行 `node scripts/build.mjs napi` 刷新 platform collect。
+- 本地 patch 验证须记录实际来源与修订；刷新 host 后还需核对调用的 Compiler 路由。最终交付须另做准确 pin 复验，不能把本地兄弟工作树通过当成发布依赖通过。
 
 ### 3. `legions.von` 不能只注册 `core` + `std`
 
