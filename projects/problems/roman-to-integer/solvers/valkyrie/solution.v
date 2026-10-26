@@ -1,7 +1,5 @@
 namespace leetcode.roman_to_integer;
 
-# 阻塞：SMIR003 — `utf8.char_at` wasm 宿主导调用未接线（见 `valkyrie-evolution` backlog V-017）
-
 micro roman_value(c: char) -> i64 {
     let code: u32 = c as u32
     if code == 73 {

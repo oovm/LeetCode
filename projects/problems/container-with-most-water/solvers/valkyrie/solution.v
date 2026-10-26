@@ -10,8 +10,8 @@ micro max_area(height: ArrayList<i64>) -> i64 {
     let mut r: usize = n - 1
     let mut ans: i64 = 0
     while l < r {
-        let left: i64 = height⁅l⁆.unwrap()
-        let right: i64 = height⁅r⁆.unwrap()
+        let left: i64 = height.get(l + 1).unwrap()
+        let right: i64 = height.get(r + 1).unwrap()
         let h: i64 = if left < right { left } else { right }
         let w: i64 = (r - l) as i64
         let area: i64 = h * w
