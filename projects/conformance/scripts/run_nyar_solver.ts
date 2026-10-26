@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-/** ???? legion nyar ?????? metadata.tests ??? nyar-vm invoke?? */
-import { spawnSync } from 'node:child_process';
+/** ? Legion ?? OVM ? metadata.tests?@nyar/valkyrie N-API?? */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { isArtifactCacheFreshForBuild } from '@nyar/valkyrie';
+import { isArtifactCacheFreshForBuild, legionInvokeOvmExport } from '@nyar/valkyrie';
 
 import { readNyarExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
 import {
@@ -18,7 +17,6 @@ import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
 import {
     ensureNyarBuild,
     loadMetadata,
-    locateNyarVmBinary,
     resolveNyarBuildArtifacts,
     nyarInvokeBlockedReason,
     type NyarVmArtifacts,
@@ -26,21 +24,7 @@ import {
 import { resolveWasmExportSymbol } from '../src/adapters/valkyrie-node/ref.ts';
 
 function runNyarExport(nyarPath: string, exportName: string, args: Record<string, unknown>): unknown {
-    const binary = locateNyarVmBinary();
-    if (!binary) {
-        throw new Error('nyar-vm ¦Ä???');
-    }
-    const argsJson = JSON.stringify(Object.values(args));
-    const result = spawnSync(
-        binary,
-        ['run', nyarPath, '--entry', exportName, '--json', '--args-json', argsJson],
-        { encoding: 'utf8' },
-    );
-    if (result.status !== 0) {
-        throw new Error(`${result.stderr ?? ''}${result.stdout ?? ''}`.trim() || 'nyar-vm run failed');
-    }
-    const text = (result.stdout ?? '').trim();
-    return JSON.parse(text);
+    return legionInvokeOvmExport(nyarPath, exportName, args);
 }
 
 function emitStats(stats: SolverCaseStats): void {
@@ -84,7 +68,7 @@ async function main(): Promise<number> {
         artifacts = resolveNyarBuildArtifacts(problem);
     }
     if (!artifacts) {
-        throw new Error('¦Ä??? legion build --target nyar ????');
+        throw new Error('?? legion build --target ovm ??');
     }
 
     const { tests, invoke } = loadMetadata(problemDir);

@@ -2,7 +2,13 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { isArtifactCacheFreshForBuild, resolveArtifactDir, resolveNyarEntry } from '@nyar/valkyrie';
+import {
+    isArtifactCacheFreshForBuild,
+    legionInvokeOvmExport,
+    legionListOvmExports,
+    resolveArtifactDir,
+    resolveNyarEntry,
+} from '@nyar/valkyrie';
 
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
@@ -11,7 +17,7 @@ import { encodeNyarExecutionPin } from '../shared/execution-pin.ts';
 import { emptySolverCaseStats, parseSolverResultLine, type SolverCaseStats } from '../shared/solver-case-stats.ts';
 import { resolveWasmExportSymbol } from '../valkyrie-node/ref.ts';
 import { loadMetadata, type TestCase } from '../valkyrie-node/ref.ts';
-import { formatLegionError, legionBuildNyar, locateNyarVmBinary, nyarBuildDir, valkyrieNyarRunnerReady } from './valkyrie.ts';
+import { formatLegionError, legionBuildNyar, nyarBuildDir, valkyrieNyarRunnerReady } from './valkyrie.ts';
 
 const RUN_NYAR_SOLVER = join(LEETCODE_ROOT_FROM_PACKAGE, 'projects', 'conformance', 'scripts', 'run_nyar_solver.ts');
 
@@ -35,7 +41,7 @@ export type NyarReferencePin = {
     buildRoute: string | null;
 };
 
-/** ???? `legion build --target nyar` ?????§Ö? `.nyar` ?? run-contract ???? */
+/** ?? `legion build --target ovm` ???? `.nyar` ? run-contract ??? */
 export function resolveNyarBuildArtifacts(problem: ProblemDefinition): NyarVmArtifacts | null {
     const outDir = resolveArtifactDir(nyarBuildDir(problem), 'ovm');
     const entry = resolveNyarEntry(outDir);
@@ -50,38 +56,36 @@ export function resolveNyarBuildArtifacts(problem: ProblemDefinition): NyarVmArt
     };
 }
 
-/** ?§Ô? `.nyar` ?????????`nyar-vm list`???? */
+/** ??? OVM ?? `.nyar` ??? */
 export function listNyarExports(nyarPath: string): string[] {
-    const binary = locateNyarVmBinary();
-    if (!binary) {
+    if (!valkyrieNyarRunnerReady()) {
         return [];
     }
-    const result = spawnSync(binary, ['list', nyarPath], { encoding: 'utf8' });
-    const text = `${result.stdout ?? ''}${result.stderr ?? ''}`;
-    return text
-        .split(/\r?\n/)
-        .map((line) => line.split('\t')[0]?.trim())
-        .filter((name) => name.length > 0);
+    try {
+        return legionListOvmExports(nyarPath);
+    } catch {
+        return [];
+    }
 }
 
 export function nyarInvokeBlockedReason(nyarPath: string, invokeEntry?: string): string | null {
     if (!valkyrieNyarRunnerReady()) {
-        return 'legion ?? nyar-vm ¦Ä????';
+        return 'Legion / @nyar/valkyrie N-API ???';
     }
     const exports = listNyarExports(nyarPath);
     if (exports.length === 0) {
-        return '`.nyar` ?????????? nyar-vm list ???';
+        return '`.nyar` ??????? legion build --target ovm ??';
     }
     if (invokeEntry) {
         const expected = resolveWasmExportSymbol(invokeEntry);
         if (!exports.includes(expected)) {
-            return `.nyar ??? metadata.invoke ????????? ${expected}?????§µ?${exports.join(', ') || '??'}??`;
+            return `.nyar ?? metadata.invoke ???? ${expected}????${exports.join(', ') || '?'}`;
         }
     }
     return null;
 }
 
-/** ????????? execution manifest §µ??? Nyar ???? */
+/** ?? `legion build --target ovm` ??? execution manifest? */
 export function ensureNyarBuild(problem: ProblemDefinition, projectDir: string): NyarBuildOutcome {
     const outDir = nyarBuildDir(problem);
     const artifactDir = resolveArtifactDir(outDir, 'ovm');
@@ -104,7 +108,7 @@ export function ensureNyarBuild(problem: ProblemDefinition, projectDir: string):
     const artifacts = resolveNyarBuildArtifacts(problem);
     if (!artifacts) {
         return {
-            error: 'legion build --target nyar ????¦Ä??? .nyar ????',
+            error: 'legion build --target ovm ??? .nyar ??',
             artifacts: null,
             buildRoute: build.route,
         };
@@ -113,7 +117,7 @@ export function ensureNyarBuild(problem: ProblemDefinition, projectDir: string):
     const rebuiltFreshness = isArtifactCacheFreshForBuild(artifactDir);
     if (!rebuiltFreshness.fresh) {
         return {
-            error: rebuiltFreshness.reason ?? 'legion build ?????????? execution manifest',
+            error: rebuiltFreshness.reason ?? 'legion build ? execution manifest ???',
             artifacts: null,
             buildRoute: build.route,
         };
@@ -142,7 +146,7 @@ export async function runNyarSolverOnce(problemRoot: string, pin?: NyarReference
                 return build.artifacts;
             })();
             if (!artifacts) {
-                return '¦Ä??? legion build --target nyar ????';
+                return '?? legion build --target ovm ??';
             }
             const { tests, invoke } = loadMetadata(problemRoot);
             const entry = invoke.valkyrie ?? invoke.typescript;
@@ -150,7 +154,7 @@ export async function runNyarSolverOnce(problemRoot: string, pin?: NyarReference
                 return 'metadata.invoke ??';
             }
             if (tests.length === 0) {
-                return 'metadata.tests ???';
+                return 'metadata.tests ??';
             }
             return nyarInvokeBlockedReason(artifacts.nyarPath, entry);
         } catch (err) {
@@ -175,7 +179,6 @@ export async function runNyarSolverOnce(problemRoot: string, pin?: NyarReference
         cwd: join(LEETCODE_ROOT_FROM_PACKAGE, 'projects', 'conformance'),
         env: {
             ...process.env,
-            NYAR_VM: locateNyarVmBinary() ?? '',
             ...pinEnv,
         },
     });
@@ -184,7 +187,7 @@ export async function runNyarSolverOnce(problemRoot: string, pin?: NyarReference
     if (result.status !== 0) {
         throw Object.assign(new Error(combined || 'run_nyar_solver failed'), { caseStats });
     }
-    return caseStats ?? emptySolverCaseStats('solver ¦Ä??????????');
+    return caseStats ?? emptySolverCaseStats('solver ????????');
 }
 
 export async function runNyarReference(problem: ProblemDefinition, pin?: NyarReferencePin): Promise<NyarReferenceOutcome> {
@@ -199,5 +202,4 @@ export async function runNyarReference(problem: ProblemDefinition, pin?: NyarRef
     }
 }
 
-export { locateNyarVmBinary } from './valkyrie.ts';
 export { loadMetadata, type TestCase } from '../valkyrie-node/ref.ts';
