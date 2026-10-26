@@ -19,11 +19,11 @@ const LEETCODE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 
 
 const BATCH_PROBLEMS = problemsForBatch(PROBLEMS, { fallbackKeys: ['LEETCODE_TEST_LIMIT'] });
 
-describe('Python å®žçŽ°å®Œå¤‡æ€§ï¼ˆLeetCodeDatasetï¼‰', () => {
+describe('Python ÊµÏÖÍê±¸ÐÔ£¨LeetCodeDataset£©', () => {
     const ready = pythonRefReady();
 
     for (const problem of BATCH_PROBLEMS) {
-        it.skipIf(!ready)(`${problem.id} canonical solution é€šè¿‡æ•°æ®é›†æµ‹è¯•`, { timeout: 5 * 60 * 1000 }, () => {
+        it.skipIf(!ready)(`${problem.id} canonical solution Í¨¹ýÊý¾Ý¼¯²âÊÔ`, { timeout: 5 * 60 * 1000 }, () => {
             const result = runPythonReference(problem);
 
             if (!result.ok) {
@@ -35,7 +35,7 @@ describe('Python å®žçŽ°å®Œå¤‡æ€§ï¼ˆLeetCodeDatasetï¼‰', () => {
     }
 });
 
-describe('Valkyrie wasm å®Œå¤‡æ€§ï¼ˆlegion build + metadata.testsï¼‰', () => {
+describe('Valkyrie wasm Íê±¸ÐÔ£¨legion build + metadata.tests£©', () => {
     const ready = valkyrieNativeRunnerReady();
 
     for (const problem of BATCH_PROBLEMS) {
@@ -43,7 +43,7 @@ describe('Valkyrie wasm å®Œå¤‡æ€§ï¼ˆlegion build + metadata.testsï¼‰', () => {
         const hasSolver = hasValkyrieSolver(problemRoot);
 
         it.skipIf(!ready || !hasSolver)(
-            `${problem.id} legion build --target node ä¸” metadata.tests å¿…é¡»é€šè¿‡`,
+            `${problem.id} legion build --target node ÇÒ metadata.tests ±ØÐëÍ¨¹ý`,
             { timeout: 10 * 60 * 1000 },
             async () => {
                 const projectPath = legionProjectDir(LEETCODE_ROOT, problem);
@@ -58,7 +58,7 @@ describe('Valkyrie wasm å®Œå¤‡æ€§ï¼ˆlegion build + metadata.testsï¼‰', () => {
     }
 });
 
-describe('Valkyrie nyar å®Œå¤‡æ€§ï¼ˆlegion build --target nyar + metadata.testsï¼‰', () => {
+describe('Valkyrie nyar Íê±¸ÐÔ£¨legion build --target nyar + metadata.tests£©', () => {
     const ready = valkyrieNyarRunnerReady();
 
     for (const problem of BATCH_PROBLEMS) {
@@ -66,7 +66,7 @@ describe('Valkyrie nyar å®Œå¤‡æ€§ï¼ˆlegion build --target nyar + metadata.testsï
         const hasSolver = hasValkyrieSolver(problemRoot);
 
         it.skipIf(!ready || !hasSolver)(
-            `${problem.id} legion build --target nyar ä¸” metadata.tests å¿…é¡»é€šè¿‡`,
+            `${problem.id} legion build --target nyar ÇÒ metadata.tests ±ØÐëÍ¨¹ý`,
             { timeout: 10 * 60 * 1000 },
             async () => {
                 const projectPath = legionProjectDir(LEETCODE_ROOT, problem);

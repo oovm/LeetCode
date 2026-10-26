@@ -1,4 +1,4 @@
-/** åŒ target çŸ©é˜µå…±ç”¨çš„å››é—¨ç»¿é—¨ç¦ã€‚ */
+/** Ë« target ¾ØÕó¹²ÓÃµÄËÄÃÅÂÌÃÅ½û¡£ */
 export type MatrixGreenFlags = {
     buildStatus: number;
     testStatus: number;
@@ -9,7 +9,7 @@ export type MatrixGreenFlags = {
     testCaseFail: number;
 };
 
-/** ç»¿ï¼šèƒ½ç¼–ã€`legion test` é€šè¿‡ã€manifest æ–°é²œä¸” `metadata.tests` å…¨é‡é€šè¿‡ã€‚ */
+/** ÂÌ£ºÄÜ±à¡¢`legion test` Í¨¹ı¡¢manifest ĞÂÏÊÇÒ `metadata.tests` È«Á¿Í¨¹ı¡£ */
 export function isMatrixRowGreen(row: MatrixGreenFlags): boolean {
     return row.buildStatus === 0
         && row.testStatus === 0

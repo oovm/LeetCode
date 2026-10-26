@@ -1,4 +1,4 @@
-/** é€‚é…å™¨æ³¨å†Œ IDï¼›ä¸ dashboard è¯­è¨€é”®åˆ†ç¦»ï¼ŒNode/Bun ä¸ºç‹¬ç«‹ runtime èº«ä»½ã€‚ */
+/** ÊÊÅäÆ÷×¢²á ID£»Óë dashboard ÓïÑÔ¼ü·ÖÀë£¬Node/Bun Îª¶ÀÁ¢ runtime Éí·İ¡£ */
 export type ImplementationId =
     | 'python'
     | 'typescript-node'
@@ -18,7 +18,7 @@ export const ALL_IMPLEMENTATION_IDS: ImplementationId[] = [
     'matlab-sxo',
 ];
 
-/** å†å² bench è¯­è¨€é”® â†’ é€‚é…å™¨ IDã€‚ */
+/** ÀúÊ· bench ÓïÑÔ¼ü ¡ú ÊÊÅäÆ÷ ID¡£ */
 export const BENCH_LANGUAGE_TO_IMPLEMENTATION: Record<string, ImplementationId> = {
     python: 'python',
     typescript: 'typescript-node',

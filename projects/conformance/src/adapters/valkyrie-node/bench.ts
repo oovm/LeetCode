@@ -1,7 +1,7 @@
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { median } from '@valkyrie-language/vcc/benchmark';
+import { median } from '@nyar/valkyrie';
 
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
@@ -19,9 +19,9 @@ export type ValkyrieBenchResult = {
 };
 
 /**
- * leetcode 外部基准的 V 侧：对 `legion build --target node` 计时。
- * 运行时分：对 wasm 产物跑 `run_v_solver.ts`（`metadata.tests`）。
- * wasm 空壳或 glue 未接线时 `vRuntimeMs` 为 null 且 `error` 说明原因。
+ * leetcode ??????? V ???? `legion build --target node` ?????
+ * ?????????? wasm ?????? `run_v_solver.ts`??`metadata.tests`????
+ * wasm ???? glue ��????? `vRuntimeMs` ? null ?? `error` ??????
  */
 export function benchValkyrieProblem(
     problem: ProblemDefinition,
@@ -91,7 +91,7 @@ export function benchValkyrieProblem(
             }
         }
     } else {
-        runtimeError = 'legion build 产物缺失';
+        runtimeError = 'legion build ??????';
     }
 
     return {

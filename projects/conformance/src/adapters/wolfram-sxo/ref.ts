@@ -15,7 +15,7 @@ export async function benchWolframSxoSolverInProcess(problemRoot: string, iterat
 
 export async function runWolframSxoReference(problem: ProblemDefinition): Promise<{ ok: boolean; stderr: string }> {
     if (!sxoRunnerReady()) {
-        return { ok: false, stderr: sxoSkipReason() ?? '@sxo/* 未安装' };
+        return { ok: false, stderr: sxoSkipReason() ?? '@sxo/* ???' };
     }
     const root = problemRootFor(problem);
     if (!hasWolframSxoSolver(root)) {

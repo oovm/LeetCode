@@ -1,4 +1,4 @@
-import { WASM_NODE_BENCH_TARGET } from '@valkyrie-language/vcc/benchmark';
+import { WASM_NODE_BENCH_TARGET } from '@nyar/valkyrie';
 
 import { collectValkyrieBenchEnvironment } from '../../reporting/environment.ts';
 import { defineSolverAdapter } from '../factory.ts';

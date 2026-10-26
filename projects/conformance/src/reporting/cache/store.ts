@@ -33,7 +33,7 @@ export function appendAttempt(runId: string, attempt: AttemptRecord): void {
     appendFileSync(attemptsPath, `${JSON.stringify(attempt)}\n`, 'utf8');
 }
 
-/** å…ˆå†™å®Œæ•´ runï¼Œå†åŸå­æ›´æ–°ç´¢å¼•ã€‚ */
+/** ÏÈĞ´ÍêÕû run£¬ÔÙÔ­×Ó¸üĞÂË÷Òı¡£ */
 export function writeRunRecord(record: RunRecord, markCurrent = true): void {
     const dir = runDir(record.manifest.runId);
     mkdirSync(dir, { recursive: true });

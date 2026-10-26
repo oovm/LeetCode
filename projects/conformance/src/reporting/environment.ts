@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import os from 'node:os';
 
-import { WASM_NODE_BENCH_TARGET } from '@valkyrie-language/vcc/benchmark';
+import { WASM_NODE_BENCH_TARGET } from '@nyar/valkyrie';
 
 import type {
     HostEnvironment,

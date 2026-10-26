@@ -1,4 +1,4 @@
-/** é¢˜ç›®ç›®å½•ç´¢å¼•ï¼Œå‹¿æ‰‹æ”¹ã€‚ */
+/** ÌâÄ¿Ä¿Â¼Ë÷Òý£¬ÎðÊÖ¸Ä¡£ */
 export type ProblemDefinition = {
     id: string;
     title: string;

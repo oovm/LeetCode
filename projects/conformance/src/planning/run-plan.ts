@@ -26,7 +26,7 @@ export function parseImplementationIds(): ImplementationId[] | 'all' {
     return parts.map((part) => {
         const id = BENCH_LANGUAGE_TO_IMPLEMENTATION[part];
         if (!id) {
-            throw new Error(`æ— æ•ˆè¯­è¨€ ${part}`);
+            throw new Error(`ÎÞÐ§ÓïÑÔ ${part}`);
         }
         return id;
     });

@@ -3,17 +3,17 @@ export { PROBLEMS, type ProblemDefinition } from './generated.ts';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-/** é¢˜ç›®æ ¹ç›®å½• `projects/problems/<slug>/`ï¼ˆslug ä¸ catalog `id` ç°åŒå­—ç¬¦ä¸²ï¼‰ã€‚ */
+/** ÌâÄ¿¸ùÄ¿Â¼ `projects/problems/<slug>/`£¨slug Óë catalog `id` ÏÖÍ¬×Ö·û´®£©¡£ */
 export function problemDir(root: string, problem: { id: string }): string {
     return join(root, 'projects', 'problems', problem.id);
 }
 
-/** V å·¥ç¨‹ç›®å½•ï¼š`solvers/valkyrie/`ï¼ˆ`legion.von` + `solution.v`ï¼‰ã€‚ */
+/** V ¹¤³ÌÄ¿Â¼£º`solvers/valkyrie/`£¨`legion.von` + `solution.v`£©¡£ */
 export function valkyrieProjectDir(root: string, problem: { id: string }): string {
     return join(problemDir(root, problem), 'solvers', 'valkyrie');
 }
 
-/** `legion test` / `bench` / `build` å…¥å‚ã€‚ */
+/** `legion test` / `bench` / `build` Èë²Î¡£ */
 export function legionProjectDir(root: string, problem: { id: string }): string {
     const flat = valkyrieProjectDir(root, problem);
     if (existsSync(join(flat, 'legion.von'))) {

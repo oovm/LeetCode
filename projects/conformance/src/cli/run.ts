@@ -28,7 +28,7 @@ async function main(): Promise<void> {
     const mode: CliMode = process.argv.includes('--correctness') ? 'correctness' : 'benchmark';
     const { paths } = await runCli(mode);
     if (paths.length > 0) {
-        console.log(`\nå·²å†™å…¥ ${paths.length} ä¸ª dashboard æŠ•å½±`);
+        console.log(`\nÒÑÐ´Èë ${paths.length} ¸ö dashboard Í¶Ó°`);
         for (const path of paths) {
             console.log(`  ${path}`);
         }

@@ -30,7 +30,7 @@ export function pythonSkipReason(): string | null {
     if (pythonRefReady()) {
         return null;
     }
-    return 'Python æœªå°±ç»ªï¼šéœ€è¦ python 3 ä»¥è¿è¡Œ solver';
+    return 'Python Î´¾ÍĞ÷£ºĞèÒª python 3 ÒÔÔËĞĞ solver';
 }
 
 export function hasPythonSolver(problemRoot: string): boolean {

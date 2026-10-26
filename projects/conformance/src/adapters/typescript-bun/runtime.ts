@@ -1,6 +1,6 @@
 /**
- * åœ¨ Bun è¿›ç¨‹å†…æ‰§è¡Œï¼ˆç”± `run_bun_solver.ts` è°ƒç”¨ï¼‰ã€‚
- * å¤ç”¨ `solvers/typescript/solution.ts` ä¸ `metadata.invoke.typescript`ã€‚
+ * ÔÚ Bun ½ø³ÌÄÚÖ´ĞĞ£¨ÓÉ `run_bun_solver.ts` µ÷ÓÃ£©¡£
+ * ¸´ÓÃ `solvers/typescript/solution.ts` Óë `metadata.invoke.typescript`¡£
  */
 import { pathToFileURL } from 'node:url';
 

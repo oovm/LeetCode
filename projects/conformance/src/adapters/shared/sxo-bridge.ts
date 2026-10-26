@@ -27,7 +27,7 @@ function tryPackageVersion(name: string): string | null {
                     return pkg.version;
                 }
             } catch {
-                // ç»§ç»­å‘çˆ¶ç›®å½•æŸ¥æ‰¾ package.json
+                // ¼ÌĞøÏò¸¸Ä¿Â¼²éÕÒ package.json
             }
             dir = dirname(dir);
         }
@@ -50,7 +50,7 @@ export function sxoPackagesStatus(): SxoPackageStatus {
         if (!matlabVersion) {
             missing.push('@sxo/matlab');
         }
-        skipReason = `ç¼ºå°‘ ${missing.join('ã€')}ï¼ˆåœ¨ä»“åº“æ ¹æˆ– projects/conformance è¿è¡Œ pnpm installï¼‰`;
+        skipReason = `È±ÉÙ ${missing.join('¡¢')}£¨ÔÚ²Ö¿â¸ù»ò projects/conformance ÔËĞĞ pnpm install£©`;
     }
     return { installed, mathematicaVersion, matlabVersion, skipReason };
 }

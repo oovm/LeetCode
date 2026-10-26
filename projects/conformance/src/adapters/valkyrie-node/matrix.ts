@@ -1,11 +1,12 @@
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { NODE_WASM_TARGET, isArtifactCacheFresh } from '@valkyrie-language/vcc/testing';
+import { NODE_WASM_TARGET, isArtifactCacheFresh } from '@nyar/valkyrie';
 
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { readMatrixManifestAudit } from '../shared/matrix-manifest-audit.ts';
 import { isMatrixRowGreen } from '../shared/matrix-green.ts';
+import { emptySolverCaseStats, type SolverCaseStats } from '../shared/solver-case-stats.ts';
 import { formatLegionError, legionBuildNative, legionTest, valkyrieSolverBlockedReason } from './valkyrie.ts';
 import { runVReference, resolveVBuildArtifacts, vArtifactDir, vBuildDir } from './ref.ts';
 
@@ -26,12 +27,26 @@ export type ValkyrieMatrixRow = {
     hostProviderBindingHash: string | null;
     runtimeOk: boolean;
     runtimeError: string | null;
+    testCaseTotal: number;
+    testCasePass: number;
+    testCaseFail: number;
+    firstFailureIndex: number | null;
+    firstFailure: string | null;
     solverNote: string | null;
     green: boolean;
 };
 
+function withCaseStats(row: ValkyrieMatrixRow, stats: SolverCaseStats): ValkyrieMatrixRow {
+    row.testCaseTotal = stats.testCaseTotal;
+    row.testCasePass = stats.testCasePass;
+    row.testCaseFail = stats.testCaseFail;
+    row.firstFailureIndex = stats.firstFailureIndex;
+    row.firstFailure = stats.firstFailure;
+    return row;
+}
+
 function blockedWasmRow(problem: ProblemDefinition, solverNote: string): ValkyrieMatrixRow {
-    const row: ValkyrieMatrixRow = {
+    return withCaseStats({
         id: problem.id,
         target: 'wasm32-node-unknown-wasm',
         buildStatus: 1,
@@ -48,10 +63,14 @@ function blockedWasmRow(problem: ProblemDefinition, solverNote: string): Valkyri
         hostProviderBindingHash: null,
         runtimeOk: false,
         runtimeError: solverNote,
+        testCaseTotal: 0,
+        testCasePass: 0,
+        testCaseFail: 0,
+        firstFailureIndex: null,
+        firstFailure: solverNote,
         solverNote,
         green: false,
-    };
-    return row;
+    }, emptySolverCaseStats(solverNote));
 }
 
 export async function probeValkyrieProblem(problem: ProblemDefinition, projectPath: string): Promise<ValkyrieMatrixRow> {
@@ -71,25 +90,29 @@ export async function probeValkyrieProblem(problem: ProblemDefinition, projectPa
 
     let runtimeOk = false;
     let runtimeError: string | null = null;
+    let caseStats = emptySolverCaseStats();
     if (build.status === 0) {
         if (!freshness.fresh) {
             runtimeOk = false;
-            runtimeError = freshness.reason ?? 'build 产物缺少可信 execution manifest';
+            runtimeError = freshness.reason ?? 'build ?????????? execution manifest';
+            caseStats = emptySolverCaseStats(runtimeError);
         } else {
             const artifacts = resolveVBuildArtifacts(problem);
             if (!artifacts) {
                 runtimeOk = false;
-                runtimeError = 'build 成功但未解析到 wasm/js 产物';
+                runtimeError = 'build ?????��?????? wasm/js ????';
+                caseStats = emptySolverCaseStats(runtimeError);
             } else {
                 const ref = await runVReference(problem, { artifacts, buildRoute: build.route });
                 runtimeOk = ref.ok;
-                runtimeError = ref.ok ? null : ref.stderr || 'metadata.tests 未通过';
+                runtimeError = ref.ok ? null : ref.stderr || 'metadata.tests ��???';
+                caseStats = ref.caseStats;
             }
         }
     }
 
     const manifestAudit = readMatrixManifestAudit(artifactDir);
-    const row: ValkyrieMatrixRow = {
+    const row: ValkyrieMatrixRow = withCaseStats({
         id: problem.id,
         target: 'wasm32-node-unknown-wasm',
         buildStatus: build.status,
@@ -106,14 +129,19 @@ export async function probeValkyrieProblem(problem: ProblemDefinition, projectPa
         hostProviderBindingHash: manifestAudit.hostProviderBindingHash,
         runtimeOk,
         runtimeError,
+        testCaseTotal: 0,
+        testCasePass: 0,
+        testCaseFail: 0,
+        firstFailureIndex: null,
+        firstFailure: null,
         solverNote: null,
         green: false,
-    };
+    }, caseStats);
     row.green = isMatrixRowGreen(row);
     return row;
 }
 
-/** 绿：能编、`legion test` 通过、manifest 新鲜且 `run_v_solver` 全量 `metadata.tests` 通过。 */
+/** ??????`legion test` ?????manifest ?????? `run_v_solver` ??? `metadata.tests` ????? */
 export function isValkyrieGreen(row: ValkyrieMatrixRow): boolean {
     return isMatrixRowGreen(row);
 }

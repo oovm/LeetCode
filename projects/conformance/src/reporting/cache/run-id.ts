@@ -11,7 +11,7 @@ export type RunIdInputs = {
     executionNonce: string;
 };
 
-/** ä¸ benchmark/correctness manifest ä¸€è‡´çš„é¢˜ç›®æºç æ‘˜è¦ã€‚ */
+/** Óë benchmark/correctness manifest Ò»ÖÂµÄÌâÄ¿Ô´ÂëÕªÒª¡£ */
 export function problemSourceDigest(problemId: string, implementationId: string, tests: unknown[]): string {
     return digestSource([problemId, implementationId, JSON.stringify(tests)]);
 }

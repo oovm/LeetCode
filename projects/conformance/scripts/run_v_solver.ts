@@ -1,12 +1,17 @@
 #!/usr/bin/env node
-/** 加载 legion node 产物并对 metadata.tests 执行外部 wasm invoke（待 glue 接线）。 */
+/** ???? legion node ?????? metadata.tests ????? wasm invoke???? glue ??????? */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { isArtifactCacheFresh, NODE_WASM_TARGET } from '@valkyrie-language/vcc/testing';
+import { isArtifactCacheFresh, NODE_WASM_TARGET } from '@nyar/valkyrie';
 
 import { readNodeExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
+import {
+    extractTestFailureIndex,
+    formatSolverResultLine,
+    type SolverCaseStats,
+} from '../src/adapters/shared/solver-case-stats.ts';
 import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
 import {
     ensureVBuild,
@@ -36,7 +41,11 @@ async function runCandidate(host: InvokeHost, entry: string, args: Record<string
         const exportSymbol = resolveWasmExportSymbol(entry);
         return host.callExport(exportSymbol, ...Object.values(args));
     }
-    throw new Error('node glue 缺少 invokeLeetCode / callExport（需 valkyrie.rs 为 leetcode 库模式接线 wasm invoke）');
+    throw new Error('node glue ??? invokeLeetCode / callExport???? valkyrie.rs ? leetcode ???????? wasm invoke??');
+}
+
+function emitStats(stats: SolverCaseStats): void {
+    console.log(formatSolverResultLine(stats));
 }
 
 async function main(): Promise<number> {
@@ -51,7 +60,7 @@ async function main(): Promise<number> {
     };
     const slug = meta.id;
     if (!slug) {
-        throw new Error('metadata.id 缺失');
+        throw new Error('metadata.id ??');
     }
 
     const problem = { id: slug };
@@ -81,7 +90,7 @@ async function main(): Promise<number> {
         artifacts = buildOutcome.artifacts ?? resolveVBuildArtifacts(problem);
     }
     if (!artifacts) {
-        throw new Error('未找到 legion build 产物');
+        throw new Error('��??? legion build ????');
     }
 
     const { tests, invoke } = loadMetadata(problemDir);
@@ -91,27 +100,61 @@ async function main(): Promise<number> {
         throw new Error(blocked);
     }
     if (!entry) {
-        throw new Error('metadata.invoke 缺失');
+        throw new Error('metadata.invoke ??');
     }
 
     const host = await loadInvokeHost(artifacts.entry.legionMjs);
+    let pass = 0;
     for (const [index, case_] of tests.entries()) {
-        if (typeof case_.expected === 'string' && case_.expected.startsWith('Error:')) {
-            assertTestCase(index, case_.expected, () => {
-                void runCandidate(host, entry, case_.args);
+        try {
+            if (typeof case_.expected === 'string' && case_.expected.startsWith('Error:')) {
+                assertTestCase(index, case_.expected, () => {
+                    void runCandidate(host, entry, case_.args);
+                });
+            } else {
+                const actual = normalizeTsTestResult(await runCandidate(host, entry, case_.args));
+                const expected = normalizeTsTestResult(case_.expected);
+                if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                    throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+                }
+            }
+            pass += 1;
+        } catch (err) {
+            const message = String(err);
+            emitStats({
+                ok: false,
+                testCaseTotal: tests.length,
+                testCasePass: pass,
+                testCaseFail: tests.length - pass,
+                firstFailureIndex: extractTestFailureIndex(message) ?? index,
+                firstFailure: message,
             });
-            continue;
-        }
-        const actual = normalizeTsTestResult(await runCandidate(host, entry, case_.args));
-        const expected = normalizeTsTestResult(case_.expected);
-        if (JSON.stringify(actual) !== JSON.stringify(expected)) {
-            throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+            console.error(message);
+            return 1;
         }
     }
+
+    emitStats({
+        ok: true,
+        testCaseTotal: tests.length,
+        testCasePass: pass,
+        testCaseFail: 0,
+        firstFailureIndex: null,
+        firstFailure: null,
+    });
     return 0;
 }
 
 main().catch((err) => {
-    console.error(String(err));
+    const message = String(err);
+    emitStats({
+        ok: false,
+        testCaseTotal: 0,
+        testCasePass: 0,
+        testCaseFail: 0,
+        firstFailureIndex: extractTestFailureIndex(message),
+        firstFailure: message,
+    });
+    console.error(message);
     process.exit(1);
 });

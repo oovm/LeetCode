@@ -1,4 +1,4 @@
-/** JSON â†” Wolfram / MATLAB å­—é¢é‡ï¼ˆharness è¾¹ç•Œï¼Œéå®Œæ•´æ–¹è¨€è§£æå™¨ï¼‰ã€‚ */
+/** JSON ? Wolfram / MATLAB ×ÖÃæÁ¿£¨harness ±ß½ç£¬·ÇÍêÕû·½ÑÔ½âÎöÆ÷£©¡£ */
 
 export function jsonToWolfram(value: unknown): string {
     if (value === null) {
@@ -9,7 +9,7 @@ export function jsonToWolfram(value: unknown): string {
     }
     if (typeof value === 'number') {
         if (!Number.isFinite(value)) {
-            throw new Error(`ä¸æ”¯æŒçš„æ•°å­—ï¼š${String(value)}`);
+            throw new Error(`²»Ö§³ÖµÄÊı×Ö£º${String(value)}`);
         }
         return String(value);
     }
@@ -19,7 +19,7 @@ export function jsonToWolfram(value: unknown): string {
     if (Array.isArray(value)) {
         return `{${value.map((item) => jsonToWolfram(item)).join(', ')}}`;
     }
-    throw new Error(`æ— æ³•åºåˆ—åŒ–ä¸º Wolframï¼š${typeof value}`);
+    throw new Error(`ÎŞ·¨ĞòÁĞ»¯Îª Wolfram£º${typeof value}`);
 }
 
 export function jsonToMatlab(value: unknown): string {
@@ -31,7 +31,7 @@ export function jsonToMatlab(value: unknown): string {
     }
     if (typeof value === 'number') {
         if (!Number.isFinite(value)) {
-            throw new Error(`ä¸æ”¯æŒçš„æ•°å­—ï¼š${String(value)}`);
+            throw new Error(`²»Ö§³ÖµÄÊı×Ö£º${String(value)}`);
         }
         return String(value);
     }
@@ -41,14 +41,14 @@ export function jsonToMatlab(value: unknown): string {
     if (Array.isArray(value)) {
         return `[${value.map((item) => jsonToMatlab(item)).join(', ')}]`;
     }
-    throw new Error(`æ— æ³•åºåˆ—åŒ–ä¸º MATLABï¼š${typeof value}`);
+    throw new Error(`ÎŞ·¨ĞòÁĞ»¯Îª MATLAB£º${typeof value}`);
 }
 
 function stripOuterWhitespace(text: string): string {
     return text.trim();
 }
 
-/** å°† evaluate æ¸²æŸ“ä¸²è§£æå› JSON å¯æ¯”å¯¹å€¼ï¼ˆLeetCode æ ‡é‡ / ä¸€ç»´æ•°ç»„ï¼‰ã€‚ */
+/** ½« evaluate äÖÈ¾´®½âÎö»Ø JSON ¿É±È¶ÔÖµ£¨LeetCode ±êÁ¿ / Ò»Î¬Êı×é£©¡£ */
 export function parseWolframSurface(text: string): unknown {
     const trimmed = stripOuterWhitespace(text);
     if (trimmed === 'Null') {
@@ -73,10 +73,10 @@ export function parseWolframSurface(text: string): unknown {
         }
         return splitTopLevel(inner, ',').map((part) => parseWolframSurface(part));
     }
-    throw new Error(`æ— æ³•è§£æ Wolfram ç»“æœï¼š${trimmed}`);
+    throw new Error(`ÎŞ·¨½âÎö Wolfram ½á¹û£º${trimmed}`);
 }
 
-/** å°† evaluate æ¸²æŸ“ä¸²è§£æå› JSON å¯æ¯”å¯¹å€¼ã€‚ */
+/** ½« evaluate äÖÈ¾´®½âÎö»Ø JSON ¿É±È¶ÔÖµ¡£ */
 export function parseMatlabSurface(text: string): unknown {
     const trimmed = stripOuterWhitespace(text);
     if (trimmed === '[]') {
@@ -101,7 +101,7 @@ export function parseMatlabSurface(text: string): unknown {
         }
         return splitTopLevel(inner, ',').map((part) => parseMatlabSurface(part));
     }
-    throw new Error(`æ— æ³•è§£æ MATLAB ç»“æœï¼š${trimmed}`);
+    throw new Error(`ÎŞ·¨½âÎö MATLAB ½á¹û£º${trimmed}`);
 }
 
 function splitTopLevel(text: string, separator: string): string[] {

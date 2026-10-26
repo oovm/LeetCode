@@ -2,14 +2,14 @@ import type { MeasurementPlan } from './measurement.ts';
 
 export type RunMode = 'correctness' | 'benchmark';
 
-/** ä¸€æ¬¡è¿è¡Œçš„è¯·æ±‚åˆåŒã€‚ */
+/** Ò»´ÎÔËĞĞµÄÇëÇóºÏÍ¬¡£ */
 export type RunRequest = {
     problemId: string;
     implementationId: string;
     mode: RunMode;
     measurementPlan?: MeasurementPlan;
-    /** æŠ¥å‘Šæˆ–ç¼“å­˜å†™å…¥æ ¹ï¼›ç¼ºçœç”± CLI è§£æä¸ºä»“æ ¹ `.cache/conformance/`ã€‚ */
+    /** ±¨¸æ»ò»º´æĞ´Èë¸ù£»È±Ê¡ÓÉ CLI ½âÎöÎª²Ö¸ù `.cache/conformance/`¡£ */
     outputRoot?: string;
-    /** è¿è¡Œ profile åï¼Œå†³å®š blocked æ˜¯å¦é˜»æ–­é—¨ç¦ã€‚ */
+    /** ÔËĞĞ profile Ãû£¬¾ö¶¨ blocked ÊÇ·ñ×è¶ÏÃÅ½û¡£ */
     profile?: string;
 };

@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "type": "module",
-    "description": "LeetCode 完备性测试与 Valkyrie 对比基准（本地 sibling valkyrie.rs）",
+    "description": "LeetCode 完备性测试（@nyar/valkyrie Legion + valkyrie.v 语料）",
     "exports": {
         ".": "./src/index.ts",
         "./catalog": "./src/catalog/generated.ts",
@@ -30,10 +30,7 @@
     },
     "devDependencies": {
         "bun": "^1.2.0",
-        "@valkyrie-language/legion": "link:../../../valkyrie.rs/projects/packages/legion",
-        "@valkyrie-language/vcc": "link:../../../valkyrie.rs/projects/packages/vcc",
-        "@valkyrie-language/vcc-unknown-wasm32": "link:../../../valkyrie.rs/projects/packages/vcc-unknown-wasm32",
-        "@valkyrie-language/vcc-win32-x64": "link:../../../valkyrie.rs/projects/packages/vcc-win32-x64",
+        "@nyar/valkyrie": "workspace:*",
         "@types/node": "^22.10.0",
         "tsx": "^4.19.2",
         "typescript": "^5.7.2",

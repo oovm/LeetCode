@@ -15,7 +15,7 @@ export async function benchMatlabSxoSolverInProcess(problemRoot: string, iterati
 
 export async function runMatlabSxoReference(problem: ProblemDefinition): Promise<{ ok: boolean; stderr: string }> {
     if (!sxoRunnerReady()) {
-        return { ok: false, stderr: sxoSkipReason() ?? '@sxo/* 未安装' };
+        return { ok: false, stderr: sxoSkipReason() ?? '@sxo/* ???' };
     }
     const root = problemRootFor(problem);
     if (!hasMatlabSxoSolver(root)) {

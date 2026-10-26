@@ -23,7 +23,7 @@ export function normalizeBenchLanguage(token: string): BenchLanguage {
     const key = token.trim().toLowerCase();
     const language = LANGUAGE_ALIASES[key];
     if (!language) {
-        throw new Error(`æ— æ•ˆçš„ LEETCODE_BENCH_LANG=${token}ï¼ˆå¯ç”¨ ${ALL_BENCH_LANGUAGES.join('ã€')}ã€allï¼‰`);
+        throw new Error(`ÎŞĞ§µÄ LEETCODE_BENCH_LANG=${token}£¨¿ÉÓÃ ${ALL_BENCH_LANGUAGES.join('¡¢')}¡¢all£©`);
     }
     return language;
 }

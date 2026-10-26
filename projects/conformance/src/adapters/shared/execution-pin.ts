@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 
-/** çˆ¶è¿›ç¨‹å‘ `run_*_solver` å­è¿›ç¨‹ä¼ é€’å·²éªŒè¯äº§ç‰©èº«ä»½çš„çŽ¯å¢ƒå˜é‡é”®ã€‚ */
+/** ¸¸½ø³ÌÏò `run_*_solver` ×Ó½ø³Ì´«µÝÒÑÑéÖ¤²úÎïÉí·ÝµÄ»·¾³±äÁ¿¼ü¡£ */
 export const PIN_ARTIFACT_DIR = 'VALKYRIE_PIN_ARTIFACT_DIR';
 export const PIN_LEGION_MJS = 'VALKYRIE_PIN_LEGION_MJS';
 export const PIN_LEGION_WASM = 'VALKYRIE_PIN_LEGION_WASM';

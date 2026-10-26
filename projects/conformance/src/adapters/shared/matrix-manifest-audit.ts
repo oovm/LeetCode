@@ -1,6 +1,6 @@
-import { readExecutionManifest } from '@valkyrie-language/vcc/testing';
+import { readExecutionManifest } from '@nyar/valkyrie';
 
-/** execution manifest 中写入矩阵报告的可审计字段。 */
+/** execution manifest ??��??????????????��? */
 export type MatrixManifestAudit = {
     manifestSchemaVersion: number | null;
     semanticClosureHash: string | null;

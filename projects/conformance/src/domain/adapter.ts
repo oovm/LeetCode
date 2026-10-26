@@ -9,7 +9,7 @@ export type AdapterEnvironment = {
     details: Record<string, unknown>;
 };
 
-/** è¯­è¨€é€‚é…å™¨åˆåŒï¼šåªè´Ÿè´£æœ¬å·¥å…·é“¾çš„å‘ç°ã€å‡†å¤‡ã€è°ƒç”¨ä¸ç¯å¢ƒæè¿°ã€‚ */
+/** ÓïÑÔÊÊÅäÆ÷ºÏÍ¬£ºÖ»¸ºÔğ±¾¹¤¾ßÁ´µÄ·¢ÏÖ¡¢×¼±¸¡¢µ÷ÓÃÓë»·¾³ÃèÊö¡£ */
 export interface SolverAdapter {
     readonly implementationId: string;
 

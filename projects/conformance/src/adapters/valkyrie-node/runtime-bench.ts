@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
 
-import { median } from '@valkyrie-language/vcc/benchmark';
+import { median } from '@nyar/valkyrie';
 
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir } from '../../catalog/index.ts';

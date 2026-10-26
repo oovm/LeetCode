@@ -1,9 +1,9 @@
-/** è®¡æ—¶è¾¹ç•Œï¼šç¼–è¯‘ã€åŠ è½½ã€å•æ¬¡è°ƒç”¨æˆ–æ•´ç»„æµ‹è¯•ï¼Œä¸å¯æ··ä¸ºä¸€ä¸ªæ•°ã€‚ */
+/** ¼ÆÊ±±ß½ç£º±àÒë¡¢¼ÓÔØ¡¢µ¥´Îµ÷ÓÃ»òÕû×é²âÊÔ£¬²»¿É»ìÎªÒ»¸öÊı¡£ */
 export type MeasurementBoundary = 'compile' | 'load' | 'single-invoke' | 'metadata-tests';
 
 export type StabilityVerdict = 'stable' | 'unstable' | 'insufficient';
 
-/** å•é¢˜å•å®ç°çš„æµ‹é‡è®¡åˆ’ï¼›æ¬¡æ•°ç”±é¢„ç®—ä¸æ³¢åŠ¨å†³å®šï¼Œéå…¨å±€å›ºå®šå€¼ã€‚ */
+/** µ¥Ìâµ¥ÊµÏÖµÄ²âÁ¿¼Æ»®£»´ÎÊıÓÉÔ¤ËãÓë²¨¶¯¾ö¶¨£¬·ÇÈ«¾Ö¹Ì¶¨Öµ¡£ */
 export type MeasurementPlan = {
     boundary: MeasurementBoundary;
     difficulty: string;
@@ -13,7 +13,7 @@ export type MeasurementPlan = {
     warmupRuns: number;
     minValidSamples: number;
     maxAttempts: number;
-    /** ç›¸å¯¹ä¸­ä½æ•°å…è®¸æ³¢åŠ¨ï¼›æœªè¾¾åˆ™æ ‡ unstableã€‚ */
+    /** Ïà¶ÔÖĞÎ»ÊıÔÊĞí²¨¶¯£»Î´´ïÔò±ê unstable¡£ */
     maxRelativeSpread: number;
     interleaveRuntimes: boolean;
 };

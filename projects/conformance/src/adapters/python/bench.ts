@@ -6,7 +6,7 @@ import { PYTHON_BENCH_PARAMS } from '../../planning/bench-params.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 import { hasPythonSolver, pythonSolverDir, PYTHON_BENCH_CHECKER } from './ref.ts';
 
-/** å• Python è¿›ç¨‹å†…é¢„çƒ­ååªå¯¹ metadata.tests å…¨é‡å¾ªç¯è®¡æ—¶ï¼ˆå¯¹é½ TSï¼‰ã€‚ */
+/** µ¥ Python ½ø³ÌÄÚÔ¤ÈÈºóÖ»¶Ô metadata.tests È«Á¿Ñ­»·¼ÆÊ±£¨¶ÔÆë TS£©¡£ */
 export function benchPythonProblem(
     problem: ProblemDefinition,
     iterations = PYTHON_BENCH_PARAMS.iterations,

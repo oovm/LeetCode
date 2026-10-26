@@ -1,10 +1,10 @@
-/** å•é¢˜æµ‹è¯•ç”¨ä¾‹ï¼›é¢˜ç›®ç›®å½• `metadata.json` ä¸ºäº‹å®æ‰€æœ‰è€…ã€‚ */
+/** µ¥Ìâ²âÊÔÓÃÀı£»ÌâÄ¿Ä¿Â¼ `metadata.json` ÎªÊÂÊµËùÓĞÕß¡£ */
 export type TestCase = {
     args: Record<string, unknown>;
     expected: unknown;
 };
 
-/** ç¨³å®šé¢˜ç›®æ ‡è¯†ä¸å…ƒæ•°æ®ï¼›catalog ä»…ä¸ºç´¢å¼•è§†å›¾ã€‚ */
+/** ÎÈ¶¨ÌâÄ¿±êÊ¶ÓëÔªÊı¾İ£»catalog ½öÎªË÷ÒıÊÓÍ¼¡£ */
 export type ProblemSpec = {
     id: string;
     title: string;
@@ -15,9 +15,9 @@ export type ProblemSpec = {
     invoke: Record<string, string | undefined>;
 };
 
-/** æŸé¢˜æŸä¸€è¯­è¨€å®ç°çš„å…¥å£å£°æ˜ã€‚ */
+/** Ä³ÌâÄ³Ò»ÓïÑÔÊµÏÖµÄÈë¿ÚÉùÃ÷¡£ */
 export type ImplementationSpec = {
-    /** ä¸é€‚é…å™¨æ³¨å†Œ ID ä¸€è‡´ï¼Œå¦‚ `python`ã€`typescript-node`ã€‚ */
+    /** ÓëÊÊÅäÆ÷×¢²á ID Ò»ÖÂ£¬Èç `python`¡¢`typescript-node`¡£ */
     implementationId: string;
     problemId: string;
     invokeKey: string;

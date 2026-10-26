@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { median } from '@valkyrie-language/vcc/benchmark';
+import { median } from '@nyar/valkyrie';
 
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir } from '../../catalog/index.ts';
@@ -33,7 +33,7 @@ export function hasTsSolver(problemRoot: string, _problemId?: string): boolean {
     }
 }
 
-/** 基准只跑含 `export class Solution` 的题解，跳过 LCD 空脚手架。 */
+/** ??????? `export class Solution` ????????? LCD ??????? */
 export function hasReadyTsSolver(problemRoot: string): boolean {
     try {
         const text = readFileSync(tsSolverPath(problemRoot), 'utf8');
@@ -43,7 +43,7 @@ export function hasReadyTsSolver(problemRoot: string): boolean {
     }
 }
 
-/** 解析 `Solution().twoSum` 等 LeetCode 风格入口。 */
+/** ???? `Solution().twoSum` ?? LeetCode ??????? */
 export function makeTsCandidate(entryPoint: string, mod: Record<string, unknown>): (args: Record<string, unknown>) => unknown {
     const expr = entryPoint.trim();
     const classMethod = expr.match(/^Solution\(\)\.(\w+)$/);
@@ -51,13 +51,13 @@ export function makeTsCandidate(entryPoint: string, mod: Record<string, unknown>
         const method = classMethod[1];
         const Solution = mod.Solution;
         if (typeof Solution !== 'function') {
-            throw new Error('solution.ts 缺少 export class Solution');
+            throw new Error('solution.ts ??? export class Solution');
         }
         return (args) => {
             const instance = new (Solution as new () => Record<string, (...values: unknown[]) => unknown>)();
             const fn = instance[method];
             if (typeof fn !== 'function') {
-                throw new Error(`Solution 缺少方法 ${method}`);
+                throw new Error(`Solution ?????? ${method}`);
             }
             return fn.call(instance, ...Object.values(args));
         };
@@ -66,7 +66,7 @@ export function makeTsCandidate(entryPoint: string, mod: Record<string, unknown>
     if (typeof exported === 'function') {
         return (args) => exported(...Object.values(args));
     }
-    throw new Error(`无法解析 typescript entry: ${expr}`);
+    throw new Error(`??????? typescript entry: ${expr}`);
 }
 
 async function loadTsCandidate(problemRoot: string) {
@@ -77,7 +77,7 @@ async function loadTsCandidate(problemRoot: string) {
     return { tests: metadata.tests, candidate };
 }
 
-/** 跑一遍 metadata.tests。 */
+/** ????? metadata.tests?? */
 export async function runTsSolverOnce(problemRoot: string, _problemId?: string): Promise<void> {
     const { tests, candidate } = await loadTsCandidate(problemRoot);
     for (const [index, case_] of tests.entries()) {
@@ -86,7 +86,7 @@ export async function runTsSolverOnce(problemRoot: string, _problemId?: string):
 }
 
 /**
- * 单进程内预热后只对 metadata.tests 全量循环计时（不含每次冷启动 Node/tsx）。
+ * ??????????????? metadata.tests ??????????????????????? Node/tsx????
  */
 export async function benchTsSolverInProcess(problemRoot: string, iterations: number, warmup: number): Promise<number> {
     const { tests, candidate } = await loadTsCandidate(problemRoot);

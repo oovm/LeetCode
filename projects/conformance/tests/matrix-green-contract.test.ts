@@ -62,14 +62,14 @@ function baseNyarRow(overrides: Partial<ValkyrieNyarMatrixRow> = {}): ValkyrieNy
     };
 }
 
-describe('Valkyrie åŒ target çŸ©é˜µç»¿é—¨ç¦', () => {
-    it('shared contract ä¸Ž node / nyar åŒ…è£…ä¸€è‡´', () => {
+describe('Valkyrie Ë« target ¾ØÕóÂÌÃÅ½û', () => {
+    it('shared contract Óë node / nyar °ü×°Ò»ÖÂ', () => {
         const row = baseNodeRow();
         expect(isMatrixRowGreen(row)).toBe(isValkyrieGreen(row));
         expect(isMatrixRowGreen(baseNyarRow())).toBe(isValkyrieNyarGreen(baseNyarRow()));
     });
 
-    it('node ç»¿å¿…é¡»åŒæ—¶æ»¡è¶³ buildã€testã€manifest ä¸Ž runtime', () => {
+    it('node ÂÌ±ØÐëÍ¬Ê±Âú×ã build¡¢test¡¢manifest Óë runtime', () => {
         expect(isValkyrieGreen(baseNodeRow())).toBe(true);
         expect(isValkyrieGreen(baseNodeRow({ buildStatus: 1 }))).toBe(false);
         expect(isValkyrieGreen(baseNodeRow({ testStatus: 1 }))).toBe(false);
@@ -77,7 +77,7 @@ describe('Valkyrie åŒ target çŸ©é˜µç»¿é—¨ç¦', () => {
         expect(isValkyrieGreen(baseNodeRow({ runtimeOk: false }))).toBe(false);
     });
 
-    it('nyar ç»¿å¿…é¡»åŒæ—¶æ»¡è¶³ buildã€testã€manifest ä¸Ž runtime', () => {
+    it('nyar ÂÌ±ØÐëÍ¬Ê±Âú×ã build¡¢test¡¢manifest Óë runtime', () => {
         expect(isValkyrieNyarGreen(baseNyarRow())).toBe(true);
         expect(isValkyrieNyarGreen(baseNyarRow({ buildStatus: 1 }))).toBe(false);
         expect(isValkyrieNyarGreen(baseNyarRow({ testStatus: 1 }))).toBe(false);

@@ -1,9 +1,9 @@
-/** `void` è§£è¿”å›ž `undefined`ï¼›metadata ç”¨ `null` è¡¨ç¤ºæ— è¿”å›žå€¼æ–­è¨€ã€‚ */
+/** `void` ½â·µ»Ø `undefined`£»metadata ÓÃ `null` ±íÊ¾ÎÞ·µ»ØÖµ¶ÏÑÔ¡£ */
 export function normalizeTsTestResult(value: unknown): unknown {
     return value === undefined ? null : value;
 }
 
-/** metadata ä¸­ `expected: "Error: ..."` è¡¨ç¤ºåº”æŠ›å‡ºå¼‚å¸¸ä¸”æ¶ˆæ¯åŒ¹é…ã€‚ */
+/** metadata ÖÐ `expected: "Error: ..."` ±íÊ¾Ó¦Å×³öÒì³£ÇÒÏûÏ¢Æ¥Åä¡£ */
 export function assertTestCase(index: number, expected: unknown, run: () => unknown): void {
     if (typeof expected === 'string' && expected.startsWith('Error:')) {
         try {

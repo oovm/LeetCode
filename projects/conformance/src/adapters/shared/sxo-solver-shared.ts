@@ -10,7 +10,7 @@ export type SxoDialect = 'wolfram-sxo' | 'matlab-sxo';
 
 export type { TestCase };
 
-const BLOCKED_MARKERS = ['# é˜»å¡ï¼š', '% é˜»å¡ï¼š'];
+const BLOCKED_MARKERS = ['# ×èÈû£º', '% ×èÈû£º'];
 
 function isBlockedSource(text: string): boolean {
     const firstLine =
@@ -65,7 +65,7 @@ export function loadSxoSolverBundle(problemRoot: string, dialect: SxoDialect) {
     const symbol = requireInvoke(metadata, key);
     const source = readFileSync(solverPath(problemRoot, dialect), 'utf8');
     if (isBlockedSource(source)) {
-        throw new Error(`${dialect} è§£å¤„äºé˜»å¡çŠ¶æ€`);
+        throw new Error(`${dialect} ½â´¦ÓÚ×èÈû×´Ì¬`);
     }
     return { tests: metadata.tests, symbol, source };
 }

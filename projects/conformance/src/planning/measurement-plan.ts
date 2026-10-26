@@ -7,7 +7,7 @@ const DIFFICULTY_BUDGET: Record<string, { timeoutMs: number; timeBudgetMs: numbe
     Unknown: { timeoutMs: 60_000, timeBudgetMs: 300_000 },
 };
 
-/** æŒ‰é¢˜ç›®éš¾åº¦é€‰æ‹©åˆå§‹é¢„ç®—ï¼›å®žé™…æ¬¡æ•°ç”±æ‰§è¡Œå™¨æŒ‰æ³¢åŠ¨ä¸Žé¢„ç®—åŠ¨æ€å†³å®šã€‚ */
+/** °´ÌâÄ¿ÄÑ¶ÈÑ¡Ôñ³õÊ¼Ô¤Ëã£»Êµ¼Ê´ÎÊýÓÉÖ´ÐÐÆ÷°´²¨¶¯ÓëÔ¤Ëã¶¯Ì¬¾ö¶¨¡£ */
 export function defaultMeasurementPlan(difficulty: string, boundary: MeasurementPlan['boundary'] = 'metadata-tests'): MeasurementPlan {
     const budget = DIFFICULTY_BUDGET[difficulty] ?? DIFFICULTY_BUDGET.Unknown;
     return {

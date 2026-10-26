@@ -6,7 +6,7 @@ import type { ImplementationId } from '../ids.ts';
 
 const ADAPTER_VERSION = '0.2.0';
 
-/** SXO ä¸ Python å¯¹é½ï¼šé¢˜å†… `SXO_BENCH_PARAMS` å·²å« warmup/iterationsï¼Œä¸å†å¥— adaptive å¤–å±‚é‡‡æ ·ã€‚ */
+/** SXO Óë Python ¶ÔÆë£ºÌâÄÚ `SXO_BENCH_PARAMS` ÒÑº¬ warmup/iterations£¬²»ÔÙÌ× adaptive Íâ²ã²ÉÑù¡£ */
 export async function invokeSxoFixedBenchmark(
     implementationId: ImplementationId,
     problem: ProblemSpec,

@@ -2,5 +2,5 @@ import type { BenchLanguage } from '../reporting/schema.ts';
 
 export const ALL_BENCH_LANGUAGES: BenchLanguage[] = ['python', 'typescript', 'typescript-bun', 'valkyrie', 'wolfram-sxo', 'matlab-sxo'];
 
-/** `LEETCODE_BENCH_LANG=all` æ—¶çš„é»˜è®¤è¯­è¨€é›†ï¼ˆä¿æŒå†å²è¡Œä¸ºï¼‰ã€‚ */
+/** `LEETCODE_BENCH_LANG=all` Ê±µÄÄ¬ÈÏÓïÑÔ¼¯£¨±£³ÖÀúÊ·ĞĞÎª£©¡£ */
 export const DEFAULT_BENCH_LANGUAGES: BenchLanguage[] = ['python', 'typescript', 'valkyrie'];

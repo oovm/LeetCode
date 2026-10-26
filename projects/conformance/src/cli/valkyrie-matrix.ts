@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** ç”Ÿæˆ `leetcode.v` Valkyrie åŒ targetï¼ˆwasm + nyarï¼‰å¯é‡å¤é€šè¿‡ç‡çŸ©é˜µæŠ¥å‘Šã€‚ */
+/** Éú³É `leetcode.v` Valkyrie Ë« target£¨wasm + nyar£©¿ÉÖØ¸´Í¨¹ıÂÊ¾ØÕó±¨¸æ¡£ */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -38,11 +38,11 @@ function parseArgs(argv: string[]): { outPath: string; idFilter: string | null }
 async function main(): Promise<number> {
     const { outPath, idFilter } = parseArgs(process.argv.slice(2));
     if (!valkyrieNativeRunnerReady()) {
-        console.error(valkyrieNativeSkipReason() ?? 'Valkyrie wasm runner æœªå°±ç»ª');
+        console.error(valkyrieNativeSkipReason() ?? 'Valkyrie wasm runner Î´¾ÍĞ÷');
         return 2;
     }
     if (!valkyrieNyarRunnerReady()) {
-        console.error(valkyrieNyarSkipReason() ?? 'Valkyrie nyar runner æœªå°±ç»ª');
+        console.error(valkyrieNyarSkipReason() ?? 'Valkyrie nyar runner Î´¾ÍĞ÷');
         return 2;
     }
 
@@ -59,7 +59,7 @@ async function main(): Promise<number> {
     const entries = [];
     for (const problem of candidates) {
         const projectPath = legionProjectDir(LEETCODE_ROOT, problem);
-        process.stderr.write(`matrix ${problem.id} wasm+nyarâ€¦\n`);
+        process.stderr.write(`matrix ${problem.id} wasm+nyar¡­\n`);
         const wasm = await probeValkyrieProblem(problem, projectPath);
         const nyar = await probeValkyrieNyarProblem(problem, projectPath);
         entries.push({ id: problem.id, wasm, nyar });

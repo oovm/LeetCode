@@ -48,7 +48,7 @@ export function benchBunSolverViaSpawn(
 
 export async function runBunReference(problem: ProblemDefinition): Promise<{ ok: boolean; stderr: string }> {
     if (!bunRunnerReady()) {
-        return { ok: false, stderr: bunSkipReason() ?? 'Bun 未安装' };
+        return { ok: false, stderr: bunSkipReason() ?? 'Bun ???' };
     }
     const root = problemDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
     if (!hasReadyTsSolver(root)) {

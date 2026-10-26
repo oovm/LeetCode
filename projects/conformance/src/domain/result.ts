@@ -1,4 +1,4 @@
-/** è¿è¡Œç»ˆæ€ï¼›`blocked` å¿…é¡»æœ‰æœºå™¨å¯è¯»åŸå› ï¼Œä¸è®¡å…¥é€šè¿‡ç‡ã€‚ */
+/** ÔËĞĞÖÕÌ¬£»`blocked` ±ØĞëÓĞ»úÆ÷¿É¶ÁÔ­Òò£¬²»¼ÆÈëÍ¨¹ıÂÊ¡£ */
 export type RunStatus = 'passed' | 'failed' | 'blocked';
 
 export type CaseResult = {
@@ -18,7 +18,7 @@ export type ToolchainIdentity = {
     artifacts?: Record<string, string>;
 };
 
-/** å•æ¬¡è¿è¡Œçš„ç»Ÿä¸€ç»“æœã€‚ */
+/** µ¥´ÎÔËĞĞµÄÍ³Ò»½á¹û¡£ */
 export type RunResult = {
     runId: string;
     problemId: string;

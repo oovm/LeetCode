@@ -1,7 +1,7 @@
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { median } from '@valkyrie-language/vcc/benchmark';
+import { median } from '@nyar/valkyrie';
 
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
@@ -24,7 +24,7 @@ export type ValkyrieNyarBenchResult = {
     error: string | null;
 };
 
-/** 外部基准：对 `legion build --target nyar` 计时；运行时分对 `metadata.tests` 循环取中位数。 */
+/** ????????? `legion build --target nyar` ????????????? `metadata.tests` ??????��???? */
 export async function benchValkyrieNyarProblem(
     problem: ProblemDefinition,
     compileRuns = VALKYRIE_BENCH_PARAMS.compileRuns,
@@ -84,7 +84,7 @@ export async function benchValkyrieNyarProblem(
         const artifacts = resolveNyarBuildArtifacts(problem);
         const problemRoot = problemDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
         if (!artifacts) {
-            runtimeError = 'legion build --target nyar 产物缺失';
+            runtimeError = 'legion build --target nyar ??????';
         } else {
             const { invoke } = loadMetadata(problemRoot);
             const entry = invoke.valkyrie ?? invoke.typescript;

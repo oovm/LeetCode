@@ -26,7 +26,7 @@ function relativeSpread(values: number[]): number {
 
 export type SampleFn = (attempt: number, warmup: boolean) => Promise<number>;
 
-/** æŒ‰æµ‹é‡è®¡åˆ’åŠ¨æ€é‡‡é›†æ ·æœ¬ï¼Œä¿ç•™å…¨éƒ¨åŸå§‹å°è¯•ã€‚ */
+/** °´²âÁ¿¼Æ»®¶¯Ì¬²É¼¯Ñù±¾£¬±£ÁôÈ«²¿Ô­Ê¼³¢ÊÔ¡£ */
 export async function runAdaptiveMeasurement(plan: MeasurementPlan, sampleFn: SampleFn): Promise<MeasurementOutcome> {
     const attempts: AttemptRecord[] = [];
     const rawSamples: BenchmarkSample[] = [];

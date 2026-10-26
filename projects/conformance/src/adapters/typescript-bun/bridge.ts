@@ -21,7 +21,7 @@ function localBunBin(): string | null {
     return candidates.find((candidate) => existsSync(candidate)) ?? null;
 }
 
-/** Bun å¯æ‰§è¡Œè·¯å¾„ï¼š`BUN_PATH` â†’ é¡¹ç›® `node_modules/.bin` â†’ PATH ä¸Šçš„ `bun`ã€‚ */
+/** Bun ¿ÉÖ´ĞĞÂ·¾¶£º`BUN_PATH` ¡ú ÏîÄ¿ `node_modules/.bin` ¡ú PATH ÉÏµÄ `bun`¡£ */
 export function bunExecutable(): string {
     const fromEnv = process.env.BUN_PATH?.trim();
     if (fromEnv && existsSync(fromEnv)) {
@@ -59,7 +59,7 @@ export function bunSkipReason(): string | null {
     if (bunRunnerReady()) {
         return null;
     }
-    return 'Bun æœªå°±ç»ªï¼šè¯· pnpm install å¹¶åœ¨ä»“åº“æ ¹æ‰§è¡Œ pnpm approve-builds æ”¾è¡Œ bunï¼Œæˆ–å®‰è£…å…¨å±€ bun å¹¶è®¾ç½® BUN_PATH';
+    return 'Bun Î´¾ÍĞ÷£ºÇë pnpm install ²¢ÔÚ²Ö¿â¸ùÖ´ĞĞ pnpm approve-builds ·ÅĞĞ bun£¬»ò°²×°È«¾Ö bun ²¢ÉèÖÃ BUN_PATH';
 }
 
 export function spawnBunSolver(args: string[]): {

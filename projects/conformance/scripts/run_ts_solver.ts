@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** åŠ è½½ solvers/typescript/<project>/solution.ts å¹¶æ‰§è¡Œ metadata.testsã€‚ */
+/** ¼ÓÔØ solvers/typescript/<project>/solution.ts ²¢Ö´ÐÐ metadata.tests¡£ */
 import { benchTsSolverInProcess, runTsSolverOnce } from '../src/adapters/typescript-node/ref.ts';
 import { TYPESCRIPT_BENCH_PARAMS } from '../src/planning/bench-params.ts';
 

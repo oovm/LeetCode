@@ -1,4 +1,4 @@
-import { median } from '@valkyrie-language/vcc/benchmark';
+import { median } from '@nyar/valkyrie';
 
 import { createMatlabHarnessEvaluator, createWolframHarnessEvaluator, type SxoHarnessEvaluator } from './sxo-bridge.ts';
 import { loadSxoSolverBundle, type SxoDialect } from './sxo-solver-shared.ts';
@@ -78,7 +78,7 @@ function runHarnessInvoke(
     try {
         return evaluator.invoke(symbol, argNames);
     } catch (err) {
-        // S-018: metadata 超大 / 非安全整数经 JSON 绑定后 Athena VM 可能 fail-closed；期望 `false` 时视为非回文。
+        // S-018: metadata ???? / ?????????? JSON ???? Athena VM ???? fail-closed?????? `false` ??????????
         if (expected === false && isAthenaVmUnsupported(err)) {
             return false;
         }

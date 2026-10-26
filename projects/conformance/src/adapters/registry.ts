@@ -48,7 +48,7 @@ export async function getAdapter(implementationId: string): Promise<SolverAdapte
     const id = implementationId as ImplementationId;
     const loader = ADAPTER_LOADERS[id];
     if (!loader) {
-        throw new Error(`未知适配器 ${implementationId}`);
+        throw new Error(`????? ${implementationId}`);
     }
     if (!adapterCache.has(id)) {
         adapterCache.set(id, loader());

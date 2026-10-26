@@ -82,13 +82,13 @@ export function buildValkyrieDualMatrixReport(
     const executedIds = entries.map((entry) => entry.id);
     const executed = new Set(executedIds);
     if (corpus.size !== corpusIds.length || executed.size !== executedIds.length) {
-        throw new Error('çŸ©é˜µæ€»ä½“ä¸æ‰§è¡ŒèŒƒå›´ä¸å¾—åŒ…å«é‡å¤é¢˜ç›®èº«ä»½');
+        throw new Error('¾ØÕó×ÜÌåÓëÖ´ĞĞ·¶Î§²»µÃ°üº¬ÖØ¸´ÌâÄ¿Éí·İ');
     }
     if (executedIds.some((id) => !corpus.has(id))) {
-        throw new Error('æ‰§è¡Œé¢˜ç›®å¿…é¡»å±äºå›ºå®šæ€»ä½“');
+        throw new Error('Ö´ĞĞÌâÄ¿±ØĞëÊôÓÚ¹Ì¶¨×ÜÌå');
     }
     if (entries.some((entry) => entry.wasm.id !== entry.id || entry.nyar.id !== entry.id)) {
-        throw new Error('åŒ target è¡Œå¿…é¡»ç»‘å®šåŒä¸€é¢˜ç›®èº«ä»½');
+        throw new Error('Ë« target ĞĞ±ØĞë°ó¶¨Í¬Ò»ÌâÄ¿Éí·İ');
     }
     const notExecutedIds = corpusIds.filter((id) => !executed.has(id));
     const wasmRows = entries.map((entry) => entry.wasm);

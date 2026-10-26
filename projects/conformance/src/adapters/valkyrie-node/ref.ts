@@ -14,7 +14,7 @@ import {
     listWasmModuleExports,
     resolveArtifactDir,
     resolveNodeEntry,
-} from '@valkyrie-language/vcc/testing';
+} from '@nyar/valkyrie';
 
 
 
@@ -25,6 +25,7 @@ import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 
 import { encodeNodeExecutionPin } from '../shared/execution-pin.ts';
+import { emptySolverCaseStats, parseSolverResultLine, type SolverCaseStats } from '../shared/solver-case-stats.ts';
 import { formatLegionError, legionBuildNative, valkyrieRunnerReady } from './valkyrie.ts';
 
 
@@ -117,7 +118,7 @@ export function loadMetadata(problemRoot: string): {
 
     if (!tests?.length) {
 
-        throw new Error('metadata.tests 为空');
+        throw new Error('metadata.tests ???');
 
     }
 
@@ -125,7 +126,7 @@ export function loadMetadata(problemRoot: string): {
 
     if (!entry) {
 
-        throw new Error('metadata.invoke.valkyrie 或 invoke.typescript 缺失');
+        throw new Error('metadata.invoke.valkyrie ?? invoke.typescript ??');
 
     }
 
@@ -135,14 +136,14 @@ export function loadMetadata(problemRoot: string): {
 
 
 
-/** 解析 wasm 导出符号列表（Node 内置 WebAssembly，不依赖 `format-spy`）。 */
+/** ???? wasm ?????????��??Node ???? WebAssembly???????? `format-spy`???? */
 export function listWasmExports(wasmPath: string): string[] {
     return listWasmModuleExports(wasmPath);
 }
 
 
 
-/** 126 字节仅 `main` 的空壳 wasm（package 构建未编入题解）。 */
+/** 126 ???? `main` ???? wasm??package ????��????????? */
 
 export function isStubWasmArtifact(wasmPath: string): boolean {
 
@@ -170,7 +171,7 @@ export function isStubWasmArtifact(wasmPath: string): boolean {
 
 
 
-/** 从 `metadata.invoke`（如 `Solution().twoSum`）解析 wasm 导出名（camelCase）。 */
+/** ?? `metadata.invoke`???? `Solution().twoSum`?????? wasm ????????camelCase???? */
 
 export function resolveWasmExportSymbol(invokeEntry: string): string {
 
@@ -198,7 +199,7 @@ export function resolveWasmExportSymbol(invokeEntry: string): string {
 
 
 
-/** 构建或复用带 execution manifest 校验的 Node 产物。 */
+/** ????????? execution manifest ��??? Node ???? */
 
 export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VBuildOutcome {
 
@@ -244,7 +245,7 @@ export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VB
 
         return {
 
-            error: 'legion build --target node 完成但未找到 wasm/js 产物',
+            error: 'legion build --target node ????��??? wasm/js ????',
 
             artifacts: null,
 
@@ -262,7 +263,7 @@ export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VB
 
         return {
 
-            error: rebuiltFreshness.reason ?? 'legion build 产物缺少可信 execution manifest',
+            error: rebuiltFreshness.reason ?? 'legion build ?????????? execution manifest',
 
             artifacts: null,
 
@@ -284,7 +285,7 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
     if (!valkyrieRunnerReady()) {
 
-        return 'legion 未就绪';
+        return 'legion ��????';
 
     }
 
@@ -292,9 +293,9 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
         return (
 
-            'wasm 仅为空壳 main（题解未编入可执行 MIR）。需上游：package 构建编译 entry solution.v、' +
+            'wasm ?????? main?????��???????? MIR?????????��?package ???????? entry solution.v??' +
 
-            '导出 invoke 符号，并在 node glue 提供 callExport / JSON invoke'
+            '???? invoke ????????? node glue ?? callExport / JSON invoke'
 
         );
 
@@ -308,7 +309,7 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
         if (!exports.includes(expected)) {
 
-            return `wasm 缺少 metadata.invoke 声明的导出 ${expected}（现有：${exports.join(', ') || '无'}）`;
+            return `wasm ??? metadata.invoke ????????? ${expected}?????��?${exports.join(', ') || '??'}??`;
 
         }
 
@@ -320,7 +321,7 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
     if (callable.length === 0) {
 
-        return `wasm 缺少可 invoke 的导出符号（现有：${exports.join(', ') || '无'})`;
+        return `wasm ???? invoke ?????????????��?${exports.join(', ') || '??'})`;
 
     }
 
@@ -330,73 +331,46 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
 
 
-export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): Promise<void> {
+export type VReferenceOutcome = {
+    ok: boolean;
+    stderr: string;
+    caseStats: SolverCaseStats;
+};
 
+export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): Promise<SolverCaseStats> {
     const blocked = (() => {
-
         try {
-
             const metaPath = join(problemRoot, 'metadata.json');
-
             const slug = JSON.parse(readFileSync(metaPath, 'utf8')).id as string;
-
             const problem = { id: slug } as ProblemDefinition;
-
             const projectDir = join(problemRoot, 'solvers', 'valkyrie');
-
             const artifacts = pin?.artifacts ?? (() => {
-
                 const build = ensureVBuild(problem, projectDir);
-
                 if (build.error) {
-
                     throw new Error(build.error);
-
                 }
-
                 return build.artifacts;
-
             })();
-
             if (!artifacts) {
-
-                return '未找到 legion build 产物（先跑 legion build --target node）';
-
+                return '��??? legion build ???????? legion build --target node??';
             }
-
             const { tests, invoke } = loadMetadata(problemRoot);
-
             const entry = invoke.valkyrie ?? invoke.typescript;
-
             if (!entry) {
-
-                return 'metadata.invoke.valkyrie 或 invoke.typescript 缺失';
-
+                return 'metadata.invoke.valkyrie ?? invoke.typescript ??';
             }
-
             if (tests.length === 0) {
-
-                return 'metadata.tests 为空';
-
+                return 'metadata.tests ???';
             }
-
             return wasmInvokeBlockedReason(artifacts.entry.legionWasm, entry);
-
         } catch (err) {
-
             return String(err);
-
         }
-
     })();
 
     if (blocked) {
-
         throw new Error(blocked);
-
     }
-
-
 
     const pinEnv = pin
         ? encodeNodeExecutionPin({
@@ -416,34 +390,24 @@ export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): 
         },
     });
 
-    const stderr = `${result.stderr ?? ''}${result.stdout ?? ''}`.trim();
-
+    const combined = `${result.stdout ?? ''}${result.stderr ?? ''}`.trim();
+    const caseStats = parseSolverResultLine(combined);
     if (result.status !== 0) {
-
-        throw new Error(stderr || 'run_v_solver failed');
-
+        throw Object.assign(new Error(combined || 'run_v_solver failed'), { caseStats });
     }
-
+    return caseStats ?? emptySolverCaseStats('solver ��??????????');
 }
 
-
-
-export async function runVReference(problem: ProblemDefinition, pin?: VReferencePin): Promise<{ ok: boolean; stderr: string }> {
-
+export async function runVReference(problem: ProblemDefinition, pin?: VReferencePin): Promise<VReferenceOutcome> {
     const root = problemDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
-
     try {
-
-        await runVSolverOnce(root, pin);
-
-        return { ok: true, stderr: '' };
-
+        const caseStats = await runVSolverOnce(root, pin);
+        return { ok: caseStats.ok, stderr: '', caseStats };
     } catch (err) {
-
-        return { ok: false, stderr: String(err) };
-
+        const caseStats = (err as { caseStats?: SolverCaseStats }).caseStats
+            ?? emptySolverCaseStats(String(err));
+        return { ok: false, stderr: String(err), caseStats };
     }
-
 }
 
 

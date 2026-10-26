@@ -1,11 +1,11 @@
-/** å„è¯­è¨€å¤–éƒ¨ harness é»˜è®¤è®¡æ—¶å‚æ•°ï¼ˆå†™å…¥ benchmark-*.json environmentï¼‰ã€‚ */
+/** ¸÷ÓïÑÔÍâ²¿ harness Ä¬ÈÏ¼ÆÊ±²ÎÊı£¨Ğ´Èë benchmark-*.json environment£©¡£ */
 
 export const PYTHON_BENCH_PARAMS = {
     iterations: 50,
     warmup: 5,
     aggregation: 'median' as const,
     metric: 'runtime' as const,
-    /** å• Python è¿›ç¨‹å†…åŠ è½½é¢˜è§£ååªè®¡ metadata.tests å¾ªç¯ï¼Œä¸å«æ¯æ¬¡å†·å¯åŠ¨è§£é‡Šå™¨ã€‚ */
+    /** µ¥ Python ½ø³ÌÄÚ¼ÓÔØÌâ½âºóÖ»¼Æ metadata.tests Ñ­»·£¬²»º¬Ã¿´ÎÀäÆô¶¯½âÊÍÆ÷¡£ */
     timingScope: 'in-process-metadata-tests' as const,
 };
 
@@ -15,7 +15,7 @@ export const TYPESCRIPT_BENCH_PARAMS = {
     aggregation: 'median' as const,
     metric: 'runtime' as const,
     runner: 'tsx' as const,
-    /** å•è¿›ç¨‹å†…åŠ è½½é¢˜è§£ååªè®¡ metadata.tests å¾ªç¯ï¼Œä¸å«æ¯æ¬¡å†·å¯åŠ¨ Nodeã€‚ */
+    /** µ¥½ø³ÌÄÚ¼ÓÔØÌâ½âºóÖ»¼Æ metadata.tests Ñ­»·£¬²»º¬Ã¿´ÎÀäÆô¶¯ Node¡£ */
     timingScope: 'in-process-metadata-tests' as const,
 };
 
@@ -25,7 +25,7 @@ export const BUN_BENCH_PARAMS = {
     aggregation: 'median' as const,
     metric: 'runtime' as const,
     runner: 'bun' as const,
-    /** Bun å­è¿›ç¨‹å†…åŠ è½½é¢˜è§£ååªè®¡ metadata.tests å¾ªç¯ï¼Œä¸å«æ¯æ¬¡å†·å¯åŠ¨ Bunã€‚ */
+    /** Bun ×Ó½ø³ÌÄÚ¼ÓÔØÌâ½âºóÖ»¼Æ metadata.tests Ñ­»·£¬²»º¬Ã¿´ÎÀäÆô¶¯ Bun¡£ */
     timingScope: 'in-process-metadata-tests' as const,
 };
 
@@ -39,11 +39,11 @@ export const VALKYRIE_BENCH_PARAMS = {
 };
 
 export const SXO_BENCH_PARAMS = {
-    /** æ¯é¢˜ metadata.tests è¾ƒå¤šä¸” N-API é‡ï¼›ä½äº Python çš„ 50 è¿­ä»£ä»¥å… bench çœ‹ä¼¼æŒ‚èµ·ã€‚ */
+    /** Ã¿Ìâ metadata.tests ½Ï¶àÇÒ N-API ÖØ£»µÍÓÚ Python µÄ 50 µü´úÒÔÃâ bench ¿´ËÆ¹ÒÆğ¡£ */
     iterations: 10,
     warmup: 2,
     aggregation: 'median' as const,
     metric: 'runtime' as const,
-    /** å• Node è¿›ç¨‹å†…å¤ç”¨ `HostSession`ï¼Œåªè®¡ metadata.tests å¾ªç¯ã€‚ */
+    /** µ¥ Node ½ø³ÌÄÚ¸´ÓÃ `HostSession`£¬Ö»¼Æ metadata.tests Ñ­»·¡£ */
     timingScope: 'in-process-metadata-tests' as const,
 };

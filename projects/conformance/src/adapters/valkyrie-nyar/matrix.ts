@@ -1,11 +1,12 @@
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { NYAR_VM_TARGET, isArtifactCacheFresh, resolveArtifactDir } from '@valkyrie-language/vcc/testing';
+import { isArtifactCacheFreshForBuild, resolveArtifactDir } from '@nyar/valkyrie';
 
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { readMatrixManifestAudit } from '../shared/matrix-manifest-audit.ts';
 import { isMatrixRowGreen } from '../shared/matrix-green.ts';
+import { emptySolverCaseStats, type SolverCaseStats } from '../shared/solver-case-stats.ts';
 import { valkyrieSolverBlockedReason } from '../valkyrie-node/valkyrie.ts';
 import { formatLegionError, legionBuildNyar, legionTestNyar, nyarBuildDir } from './valkyrie.ts';
 import { runNyarReference, resolveNyarBuildArtifacts } from './ref.ts';
@@ -27,12 +28,26 @@ export type ValkyrieNyarMatrixRow = {
     hostProviderBindingHash: string | null;
     runtimeOk: boolean;
     runtimeError: string | null;
+    testCaseTotal: number;
+    testCasePass: number;
+    testCaseFail: number;
+    firstFailureIndex: number | null;
+    firstFailure: string | null;
     solverNote: string | null;
     green: boolean;
 };
 
+function withCaseStats(row: ValkyrieNyarMatrixRow, stats: SolverCaseStats): ValkyrieNyarMatrixRow {
+    row.testCaseTotal = stats.testCaseTotal;
+    row.testCasePass = stats.testCasePass;
+    row.testCaseFail = stats.testCaseFail;
+    row.firstFailureIndex = stats.firstFailureIndex;
+    row.firstFailure = stats.firstFailure;
+    return row;
+}
+
 function blockedNyarRow(problem: ProblemDefinition, solverNote: string): ValkyrieNyarMatrixRow {
-    return {
+    return withCaseStats({
         id: problem.id,
         target: 'nyar-unknown-unknown-managed',
         buildStatus: 1,
@@ -49,9 +64,14 @@ function blockedNyarRow(problem: ProblemDefinition, solverNote: string): Valkyri
         hostProviderBindingHash: null,
         runtimeOk: false,
         runtimeError: solverNote,
+        testCaseTotal: 0,
+        testCasePass: 0,
+        testCaseFail: 0,
+        firstFailureIndex: null,
+        firstFailure: solverNote,
         solverNote,
         green: false,
-    };
+    }, emptySolverCaseStats(solverNote));
 }
 
 export async function probeValkyrieNyarProblem(problem: ProblemDefinition, projectPath: string): Promise<ValkyrieNyarMatrixRow> {
@@ -66,30 +86,34 @@ export async function probeValkyrieNyarProblem(problem: ProblemDefinition, proje
     const build = legionBuildNyar(projectPath, outDir);
     const test = legionTestNyar(projectPath);
 
-    const artifactDir = resolveArtifactDir(outDir, NYAR_VM_TARGET);
-    const freshness = isArtifactCacheFresh(artifactDir, NYAR_VM_TARGET);
+    const artifactDir = resolveArtifactDir(outDir, 'ovm');
+    const freshness = isArtifactCacheFreshForBuild(artifactDir);
 
     let runtimeOk = false;
     let runtimeError: string | null = null;
+    let caseStats = emptySolverCaseStats();
     if (build.status === 0) {
         if (!freshness.fresh) {
             runtimeOk = false;
-            runtimeError = freshness.reason ?? 'build 产物缺少可信 execution manifest';
+            runtimeError = freshness.reason ?? 'build ?????????? execution manifest';
+            caseStats = emptySolverCaseStats(runtimeError);
         } else {
             const artifacts = resolveNyarBuildArtifacts(problem);
             if (!artifacts) {
                 runtimeOk = false;
-                runtimeError = 'build 成功但未解析到 .nyar 产物';
+                runtimeError = 'build ?????��?????? .nyar ????';
+                caseStats = emptySolverCaseStats(runtimeError);
             } else {
                 const ref = await runNyarReference(problem, { artifacts, buildRoute: build.route });
                 runtimeOk = ref.ok;
-                runtimeError = ref.ok ? null : ref.stderr || 'metadata.tests 未通过';
+                runtimeError = ref.ok ? null : ref.stderr || 'metadata.tests ��???';
+                caseStats = ref.caseStats;
             }
         }
     }
 
     const manifestAudit = readMatrixManifestAudit(artifactDir);
-    const row: ValkyrieNyarMatrixRow = {
+    const row: ValkyrieNyarMatrixRow = withCaseStats({
         id: problem.id,
         target: 'nyar-unknown-unknown-managed',
         buildStatus: build.status,
@@ -106,14 +130,19 @@ export async function probeValkyrieNyarProblem(problem: ProblemDefinition, proje
         hostProviderBindingHash: manifestAudit.hostProviderBindingHash,
         runtimeOk,
         runtimeError,
+        testCaseTotal: 0,
+        testCasePass: 0,
+        testCaseFail: 0,
+        firstFailureIndex: null,
+        firstFailure: null,
         solverNote: null,
         green: false,
-    };
+    }, caseStats);
     row.green = isMatrixRowGreen(row);
     return row;
 }
 
-/** 绿：能编、`legion test` 通过、manifest 新鲜且 `run_nyar_solver` 全量 `metadata.tests` 通过。 */
+/** ??????`legion test` ?????manifest ?????? `run_nyar_solver` ??? `metadata.tests` ????? */
 export function isValkyrieNyarGreen(row: ValkyrieNyarMatrixRow): boolean {
     return isMatrixRowGreen(row);
 }

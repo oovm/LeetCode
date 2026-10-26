@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-/** åœ¨ Bun è¿›ç¨‹å†…åŠ è½½ solvers/typescript/solution.ts å¹¶æ‰§è¡Œ metadata.testsã€‚ */
+/** ÔÚ Bun ½ø³ÌÄÚ¼ÓÔØ solvers/typescript/solution.ts ²¢Ö´ÐÐ metadata.tests¡£ */
 import { BUN_BENCH_PARAMS } from '../src/planning/bench-params.ts';
 import { benchBunSolverInProcess, runBunSolverOnce } from '../src/adapters/typescript-bun/runtime.ts';
 
