@@ -15,14 +15,90 @@ importers:
         specifier: ^10.18.3
         version: 10.34.5
 
+  ../nyar-vm.rs/projects/nyar.ts/emulators/bash:
+    dependencies:
+      '@nyar/nyar':
+        specifier: workspace:*
+        version: link:../../packages/nyar
+
+  ../nyar-vm.rs/projects/nyar.ts/emulators/lua:
+    dependencies:
+      '@nyar/nyar':
+        specifier: workspace:*
+        version: link:../../packages/nyar
+
+  ../nyar-vm.rs/projects/nyar.ts/emulators/tcl:
+    dependencies:
+      '@nyar/nyar':
+        specifier: workspace:*
+        version: link:../../packages/nyar
+
+  ../nyar-vm.rs/projects/nyar.ts/emulators/valkyrie:
+    optionalDependencies:
+      '@nyar/valkyrie-darwin-arm64':
+        specifier: workspace:*
+        version: link:../../platforms/valkyrie-darwin-arm64
+      '@nyar/valkyrie-darwin-x64':
+        specifier: workspace:*
+        version: link:../../platforms/valkyrie-darwin-x64
+      '@nyar/valkyrie-linux-x64':
+        specifier: workspace:*
+        version: link:../../platforms/valkyrie-linux-x64
+      '@nyar/valkyrie-win32-x64':
+        specifier: workspace:*
+        version: link:../../platforms/valkyrie-win32-x64
+
+  ../nyar-vm.rs/projects/nyar.ts/packages/nyar:
+    dependencies:
+      '@vmz/commander':
+        specifier: ^0.3.5
+        version: 0.3.9
+      '@vmz/diagnostic':
+        specifier: ^0.3.5
+        version: 0.3.9
+    optionalDependencies:
+      '@nyar/nyar-darwin-arm64':
+        specifier: workspace:*
+        version: link:../../platforms/nyar-darwin-arm64
+      '@nyar/nyar-darwin-x64':
+        specifier: workspace:*
+        version: link:../../platforms/nyar-darwin-x64
+      '@nyar/nyar-linux-x64':
+        specifier: workspace:*
+        version: link:../../platforms/nyar-linux-x64
+      '@nyar/nyar-unknown-wasm32':
+        specifier: workspace:*
+        version: link:../../platforms/nyar-unknown-wasm32
+      '@nyar/nyar-win32-x64':
+        specifier: workspace:*
+        version: link:../../platforms/nyar-win32-x64
+
+  ../nyar-vm.rs/projects/nyar.ts/platforms/nyar-darwin-arm64: {}
+
+  ../nyar-vm.rs/projects/nyar.ts/platforms/nyar-darwin-x64: {}
+
+  ../nyar-vm.rs/projects/nyar.ts/platforms/nyar-linux-x64: {}
+
+  ../nyar-vm.rs/projects/nyar.ts/platforms/nyar-unknown-wasm32: {}
+
+  ../nyar-vm.rs/projects/nyar.ts/platforms/nyar-win32-x64: {}
+
+  ../nyar-vm.rs/projects/nyar.ts/platforms/valkyrie-darwin-arm64: {}
+
+  ../nyar-vm.rs/projects/nyar.ts/platforms/valkyrie-darwin-x64: {}
+
+  ../nyar-vm.rs/projects/nyar.ts/platforms/valkyrie-linux-x64: {}
+
+  ../nyar-vm.rs/projects/nyar.ts/platforms/valkyrie-win32-x64: {}
+
   projects/conformance:
     devDependencies:
+      '@nyar/valkyrie':
+        specifier: workspace:*
+        version: link:../../../nyar-vm.rs/projects/nyar.ts/emulators/valkyrie
       '@types/node':
         specifier: ^22.10.0
         version: 22.20.4
-      '@valkyrie-language/vcc':
-        specifier: link:../../../valkyrie.rs/projects/packages/vcc
-        version: link:../../../valkyrie.rs/projects/packages/vcc
       bun:
         specifier: ^1.2.0
         version: 1.4.2
@@ -34,17 +110,17 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@22.20.4)(vite@6.4.3(@types/node@22.20.4)(tsx@4.23.15))
+        version: 4.1.11(@types/node@22.20.4)(vite@6.4.3(@types/node@22.20.4)(jiti@2.7.0)(tsx@4.23.15))
     optionalDependencies:
       '@sxo/core':
-        specifier: ^0.0.7
-        version: 0.0.7
+        specifier: ^0.0.8
+        version: 0.0.8
       '@sxo/mathematica':
-        specifier: ^0.0.7
-        version: 0.0.7
+        specifier: ^0.0.8
+        version: 0.0.8
       '@sxo/matlab':
-        specifier: ^0.0.7
-        version: 0.0.7
+        specifier: ^0.0.8
+        version: 0.0.8
 
   projects/dashboard:
     dependencies:
@@ -66,7 +142,7 @@ importers:
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^5.2.1
-        version: 5.2.4(vite@6.4.3(@types/node@22.20.4)(tsx@4.23.15))(vue@3.5.43(typescript@5.9.3))
+        version: 5.2.4(vite@6.4.3(@types/node@22.20.4)(jiti@2.7.0)(tsx@4.23.15))(vue@3.5.43(typescript@5.9.3))
       katex:
         specifier: ^0.16.22
         version: 0.16.47
@@ -78,7 +154,7 @@ importers:
         version: 5.9.3
       vite:
         specifier: ^6.4.3
-        version: 6.4.3(@types/node@22.20.4)(tsx@4.23.15)
+        version: 6.4.3(@types/node@22.20.4)(jiti@2.7.0)(tsx@4.23.15)
       vue-tsc:
         specifier: ^2.1.10
         version: 2.2.12(typescript@5.9.3)
@@ -669,34 +745,34 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@sxo/core@0.0.7':
-    resolution: {integrity: sha512-noZUPkDYwVPaUKCpQoLNDb5GLb8ocjej5isT4TjpneHewhG3hA7zBCyXCphk02bdq+ahgomsVVJk1URvACB07g==}
+  '@sxo/core@0.0.8':
+    resolution: {integrity: sha512-N8aryCEMiV9Us4KSRSMFnBy06a2LxTnDWvCsJ0zCNrImFHn5+FcOE68F0dCxoSlVmA5+Zo8uSqndh8db3UsiLw==}
 
-  '@sxo/mathematica@0.0.7':
-    resolution: {integrity: sha512-zubZIrM/OYLvuEF4qK6oYVag6scCFTzdfRsat0qi7IMjmTSAGUqeESntO+mo8FoIS8vo40sjfRn1XMZQ3cbwig==}
+  '@sxo/mathematica@0.0.8':
+    resolution: {integrity: sha512-8HxsOx52E5efx0yg6o4EP/3GyvmA0KOJKZMGDBxk99WJti5gm5UYnttrEMutaAWolhlmc7R3eTnBQ1tB4DCKgQ==}
     engines: {node: '>=20'}
     hasBin: true
 
-  '@sxo/matlab@0.0.7':
-    resolution: {integrity: sha512-BG/yP7HBKvlPgin1peAjmoUdWJ79VME++8YnDR56aFXFvCvicEz1zjBVax7CkjXm4OZUCxEEBnNk14T0TYanyg==}
+  '@sxo/matlab@0.0.8':
+    resolution: {integrity: sha512-Mu48FihsadkcdE8d+w+45VkJ828aLNmVzW/7ILTF5i00quLO5utUMqMp75MqMT31S9wCKaaH63HL7zHGv2Y9pg==}
 
-  '@sxo/sxo-darwin-arm64@0.0.7':
-    resolution: {integrity: sha512-PA6kvw6YffVjsa1lnWMv6Kqo4a2+HiL8L3Nl/MIX0IDGcYBayUvB57cZDou2FPlz6Oxix1tVBklvN2xLayT/kA==}
+  '@sxo/sxo-darwin-arm64@0.0.8':
+    resolution: {integrity: sha512-W0UkFZWtQ2xbD1WGS6o1FRj1XPd8hF5MD52nHubIgYNiu8Go/F1l+sBWyOkjtUn3wDwd1Jjl1QiZn2/rGkYmpQ==}
     cpu: [arm64]
     os: [darwin]
 
-  '@sxo/sxo-darwin-x64@0.0.7':
-    resolution: {integrity: sha512-kKJAdG/PYUGrIbJlCWnYOoMHgai5Dc3N9pj5V42DKgCugkrvcxvvZVhgCtgOAym+OM6idN5xjRJyRCK3VMdOlg==}
+  '@sxo/sxo-darwin-x64@0.0.8':
+    resolution: {integrity: sha512-0Jrp/6Msk1SRD6igZ+nOvnyLHQNpux8zh/wonGJdrOGtLiYCcOtPBF3kjbGnoLOi/M3OxmSgZxlgO28cftC3Ug==}
     cpu: [x64]
     os: [darwin]
 
-  '@sxo/sxo-linux-x64@0.0.7':
-    resolution: {integrity: sha512-P0rjXjszN4yuwIAZMtjuHxI5Xzx36FSaoer4HfKLdlls2F3FLENG+M6RcIS1adRhjfbNve/8SLx7TWt9GxSqQw==}
+  '@sxo/sxo-linux-x64@0.0.8':
+    resolution: {integrity: sha512-WmP7++jJrfeV0N4iNN56vJLsWUrN3JjXEQOCeZ35myEQwuzHFDqZacmnge6si4yf5jX9gkihuXF1UrhbZh3GdA==}
     cpu: [x64]
     os: [linux]
 
-  '@sxo/sxo-win32-x64@0.0.7':
-    resolution: {integrity: sha512-CJ85UIFsPaCpx7U4gx89kfDhg8dMWbuWJVXe6cphcLS27v6AQKUNsd5jUELBrRcoYzmsKjAVf4erLYA+CcpwIQ==}
+  '@sxo/sxo-win32-x64@0.0.8':
+    resolution: {integrity: sha512-GvrUTSb65zzbnnWfmEYHrPYWuXZOvMWeeMkD2OQXYWY4wpM7YNyDCbbHnkyNxXWE5Qa+3Gf078K/yP34/rQGtw==}
     cpu: [x64]
     os: [win32]
 
@@ -752,8 +828,16 @@ packages:
     resolution: {integrity: sha512-9qMb8bEJsg60Fr968F4/OKnK8l19bDl+ebDU1KvVAoexj7WmCg1srM4/W7lJhS0i1Rmc3dqMnOB+Dxo13Mu40Q==}
     engines: {node: '>=20'}
 
+  '@vmz/commander@0.3.9':
+    resolution: {integrity: sha512-tTkUlwL7OUOPO1mLEMoyZhXDEMeKvpTRUQJfOP0vm3bwQa9Gp1KSJqTcXvYEnkhwl5Q9IB5toQMoxx9RS+ChdQ==}
+    engines: {node: '>=20'}
+
   '@vmz/diagnostic@0.1.26':
     resolution: {integrity: sha512-hGud+xd0N3YqNbuKtpduuy3TZ4uu94bhZKAybl18Jfjy/qn30C3sDY+AL5b6bH88l2nqd/MatUr4Jvsq2UfWEg==}
+    engines: {node: '>=20'}
+
+  '@vmz/diagnostic@0.3.9':
+    resolution: {integrity: sha512-1nft6e5uhvXvsIfWIbjZHerQazP3HizgsQ0m2C5k2+7p5cqXjQ+g1smgXCdOoZTDV6XsIY/nSP4+AHluWpu3sw==}
     engines: {node: '>=20'}
 
   '@volar/language-core@2.4.15':
@@ -888,6 +972,10 @@ packages:
 
   he@1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
+    hasBin: true
+
+  jiti@2.7.0:
+    resolution: {integrity: sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==}
     hasBin: true
 
   katex@0.16.47:
@@ -1449,46 +1537,46 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@sxo/core@0.0.7':
+  '@sxo/core@0.0.8':
     optionalDependencies:
-      '@sxo/sxo-darwin-arm64': 0.0.7
-      '@sxo/sxo-darwin-x64': 0.0.7
-      '@sxo/sxo-linux-x64': 0.0.7
-      '@sxo/sxo-win32-x64': 0.0.7
+      '@sxo/sxo-darwin-arm64': 0.0.8
+      '@sxo/sxo-darwin-x64': 0.0.8
+      '@sxo/sxo-linux-x64': 0.0.8
+      '@sxo/sxo-win32-x64': 0.0.8
     optional: true
 
-  '@sxo/mathematica@0.0.7':
+  '@sxo/mathematica@0.0.8':
     dependencies:
-      '@sxo/core': 0.0.7
+      '@sxo/core': 0.0.8
       '@vmz/commander': 0.1.26
       '@vmz/diagnostic': 0.1.26
     optionalDependencies:
-      '@sxo/sxo-darwin-arm64': 0.0.7
-      '@sxo/sxo-darwin-x64': 0.0.7
-      '@sxo/sxo-linux-x64': 0.0.7
-      '@sxo/sxo-win32-x64': 0.0.7
+      '@sxo/sxo-darwin-arm64': 0.0.8
+      '@sxo/sxo-darwin-x64': 0.0.8
+      '@sxo/sxo-linux-x64': 0.0.8
+      '@sxo/sxo-win32-x64': 0.0.8
     optional: true
 
-  '@sxo/matlab@0.0.7':
+  '@sxo/matlab@0.0.8':
     dependencies:
-      '@sxo/core': 0.0.7
+      '@sxo/core': 0.0.8
     optionalDependencies:
-      '@sxo/sxo-darwin-arm64': 0.0.7
-      '@sxo/sxo-darwin-x64': 0.0.7
-      '@sxo/sxo-linux-x64': 0.0.7
-      '@sxo/sxo-win32-x64': 0.0.7
+      '@sxo/sxo-darwin-arm64': 0.0.8
+      '@sxo/sxo-darwin-x64': 0.0.8
+      '@sxo/sxo-linux-x64': 0.0.8
+      '@sxo/sxo-win32-x64': 0.0.8
     optional: true
 
-  '@sxo/sxo-darwin-arm64@0.0.7':
+  '@sxo/sxo-darwin-arm64@0.0.8':
     optional: true
 
-  '@sxo/sxo-darwin-x64@0.0.7':
+  '@sxo/sxo-darwin-x64@0.0.8':
     optional: true
 
-  '@sxo/sxo-linux-x64@0.0.7':
+  '@sxo/sxo-linux-x64@0.0.8':
     optional: true
 
-  '@sxo/sxo-win32-x64@0.0.7':
+  '@sxo/sxo-win32-x64@0.0.8':
     optional: true
 
   '@types/chai@5.2.3':
@@ -1504,9 +1592,9 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@vitejs/plugin-vue@5.2.4(vite@6.4.3(@types/node@22.20.4)(tsx@4.23.15))(vue@3.5.43(typescript@5.9.3))':
+  '@vitejs/plugin-vue@5.2.4(vite@6.4.3(@types/node@22.20.4)(jiti@2.7.0)(tsx@4.23.15))(vue@3.5.43(typescript@5.9.3))':
     dependencies:
-      vite: 6.4.3(@types/node@22.20.4)(tsx@4.23.15)
+      vite: 6.4.3(@types/node@22.20.4)(jiti@2.7.0)(tsx@4.23.15)
       vue: 3.5.43(typescript@5.9.3)
 
   '@vitest/expect@4.1.11':
@@ -1518,13 +1606,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.1
 
-  '@vitest/mocker@4.1.11(vite@6.4.3(@types/node@22.20.4)(tsx@4.23.15))':
+  '@vitest/mocker@4.1.11(vite@6.4.3(@types/node@22.20.4)(jiti@2.7.0)(tsx@4.23.15))':
     dependencies:
       '@vitest/spy': 4.1.11
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 6.4.3(@types/node@22.20.4)(tsx@4.23.15)
+      vite: 6.4.3(@types/node@22.20.4)(jiti@2.7.0)(tsx@4.23.15)
 
   '@vitest/pretty-format@4.1.11':
     dependencies:
@@ -1553,8 +1641,12 @@ snapshots:
   '@vmz/commander@0.1.26':
     optional: true
 
+  '@vmz/commander@0.3.9': {}
+
   '@vmz/diagnostic@0.1.26':
     optional: true
+
+  '@vmz/diagnostic@0.3.9': {}
 
   '@volar/language-core@2.4.15':
     dependencies:
@@ -1761,6 +1853,9 @@ snapshots:
 
   he@1.2.0: {}
 
+  jiti@2.7.0:
+    optional: true
+
   katex@0.16.47:
     dependencies:
       commander: 8.3.0
@@ -1860,7 +1955,7 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  vite@6.4.3(@types/node@22.20.4)(tsx@4.23.15):
+  vite@6.4.3(@types/node@22.20.4)(jiti@2.7.0)(tsx@4.23.15):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.7)
@@ -1871,12 +1966,13 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.20.4
       fsevents: 2.3.3
+      jiti: 2.7.0
       tsx: 4.23.15
 
-  vitest@4.1.11(@types/node@22.20.4)(vite@6.4.3(@types/node@22.20.4)(tsx@4.23.15)):
+  vitest@4.1.11(@types/node@22.20.4)(vite@6.4.3(@types/node@22.20.4)(jiti@2.7.0)(tsx@4.23.15)):
     dependencies:
       '@vitest/expect': 4.1.11
-      '@vitest/mocker': 4.1.11(vite@6.4.3(@types/node@22.20.4)(tsx@4.23.15))
+      '@vitest/mocker': 4.1.11(vite@6.4.3(@types/node@22.20.4)(jiti@2.7.0)(tsx@4.23.15))
       '@vitest/pretty-format': 4.1.11
       '@vitest/runner': 4.1.11
       '@vitest/snapshot': 4.1.11
@@ -1893,7 +1989,7 @@ snapshots:
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.1
-      vite: 6.4.3(@types/node@22.20.4)(tsx@4.23.15)
+      vite: 6.4.3(@types/node@22.20.4)(jiti@2.7.0)(tsx@4.23.15)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.20.4
