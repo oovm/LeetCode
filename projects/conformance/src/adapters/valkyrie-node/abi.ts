@@ -4,7 +4,8 @@
  *
  * 设计原则：
  * - 唯一事实来源是 emitter 的 `{version, exports, glue_entries, abi_digest}`
- * - 参数类型顺序来自 `params`，参数值按 metadata 键序逐位对齐；不使用旧 schema 的 `name/type` 形状
+ * - 参数顺序由 schema 的 `params[index]` 决定，metadata 只按 `name` 供货；不依赖 metadata 键序
+ * - 每个参数以 `{index, name, type, carrier}` 身份声明，`type` 是 marshal 权威，`carrier` 仅用于身份与展示
  * - glue 查找按 `module_path + name + generic_args` 的完整 aggregate 身份，
  *   与 emitter 的 registry 查询同构；禁止只按简单名匹配、禁止默认 carrier
  * - 旧 `invokes` 格式、未知 kind、缺 `abi_digest` 一律抛结构化错误，不静默 fallback
@@ -40,10 +41,22 @@ export type WasmAbiType =
     | AbiNamedAggregateType
     | { kind: 'Unsupported'; reason: string };
 
+/** 单个参数的 ABI 身份：`index` 决定位置，`name` 供 metadata 按名供货。 */
+export interface AbiParameter {
+    /** 声明顺序（0 起、连续、唯一）；解析后按此升序归一。 */
+    index: number;
+    /** 编译期参数名；metadata.tests.args 按此键取值。 */
+    name: string;
+    /** marshal 的权威类型。 */
+    type: WasmAbiType;
+    /** 物理载体字符串（i32/i64/f32/f64/handle/void 等），仅用于身份与展示。 */
+    carrier: string;
+}
+
 /** Schema 里单个导出的 ABI（Valkyrie 当前单返回）。 */
 export interface AbiExport {
-    /** 参数类型 **按声明顺序**；metadata.tests.args 的键序与之一一对应。 */
-    params: WasmAbiType[];
+    /** 参数身份列表；顺序由 `index` 决定，metadata 只按名字供货。 */
+    params: AbiParameter[];
     returns: WasmAbiType;
 }
 
@@ -69,7 +82,7 @@ export interface AbiGlueEntry {
 
 /** `nyar.library_invoke` section 的 JSON 根结构。 */
 export interface LibraryInvokeSchema {
-    version: 1;
+    version: 2;
     /** key = wasm export 公开名。 */
     exports: Record<string, AbiExport>;
     glue_entries: AbiGlueEntry[];
@@ -87,6 +100,11 @@ export type AbiSchemaErrorCode =
     | 'missing_exports'
     | 'missing_glue_entries'
     | 'invalid_type'
+    | 'legacy_params'
+    | 'invalid_param_index'
+    | 'duplicate_param_identity'
+    | 'missing_argument'
+    | 'unknown_argument'
     | 'unknown_kind'
     | 'invalid_glue_entry'
     | 'glue_entry_not_found'
@@ -114,7 +132,7 @@ export type AbiExportInvoker = (exportName: string, ...args: unknown[]) => unkno
 
 const CUSTOM_SECTION_ID = 0;
 const LIBRARY_INVOKE_SECTION_NAME = 'nyar.library_invoke';
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 
 /**
  * 最小 leb128 无符号解码（wasm section header 用）。
@@ -201,7 +219,7 @@ export function loadLibraryInvokeSchema(wasmBytes: Uint8Array): LibraryInvokeSch
             'missing_section',
             LIBRARY_INVOKE_SECTION_NAME,
             'wasm artifact 缺少 custom section。上游 emitter 必须产出 {version, exports, glue_entries, abi_digest}，' +
-                'harness 不做 Object.values 兜底。',
+                'harness 不按 metadata 键序兜底。',
         );
     }
     return parseLibraryInvokeSchema(jsonText);
@@ -271,11 +289,88 @@ function validateExport(exportSymbol: string, raw: unknown): AbiExport {
     if (!Array.isArray(obj.params)) {
         throw new AbiSchemaError('invalid_type', `${path}.params`, 'export 缺少 params 数组');
     }
-    const params = obj.params.map((param, index) => validateType(`${path}.params[${index}]`, param));
+    const params = validateParams(`${path}.params`, obj.params);
     if (!Object.hasOwn(obj, 'returns')) {
         throw new AbiSchemaError('invalid_type', `${path}.returns`, 'export 缺少 returns');
     }
     return { params, returns: validateType(`${path}.returns`, obj.returns) };
+}
+
+/** 旧 schema 的参数形状：直接是 `WasmAbiType`（带 kind、没有 index/name/type 身份）。 */
+function isLegacyParamShape(raw: unknown): boolean {
+    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return false;
+    const obj = raw as Record<string, unknown>;
+    return typeof obj.kind === 'string' && !Object.hasOwn(obj, 'type') && !Object.hasOwn(obj, 'index');
+}
+
+/**
+ * 解析并校验 `params` 参数身份数组。
+ *
+ * 合同：每个参数是 `{index, name, type, carrier}`；`index` 从 0 连续到 n-1（顺序任意，解析后按 index 升序归一），
+ * `name` 非空且唯一，`type` 走 `validateType`，`carrier` 非空字符串。
+ */
+function validateParams(path: string, raw: unknown[]): AbiParameter[] {
+    if (raw.some((param) => isLegacyParamShape(param))) {
+        throw new AbiSchemaError(
+            'legacy_params',
+            path,
+            'params 仍是旧的「类型数组」形状。必须使用 `{index, name, type, carrier}` 参数身份，' +
+                '由 schema 决定参数位置、metadata 只按名字供货。',
+        );
+    }
+
+    const params = raw.map((param, position) => validateParameter(`${path}[${position}]`, param));
+
+    const seenIndices = new Set<number>();
+    for (const param of params) {
+        if (seenIndices.has(param.index)) {
+            throw new AbiSchemaError('invalid_param_index', `${path}[${param.index}].index`, `参数 index ${param.index} 重复`);
+        }
+        seenIndices.add(param.index);
+    }
+
+    const normalized = [...params].sort((left, right) => left.index - right.index);
+    normalized.forEach((param, position) => {
+        if (param.index !== position) {
+            throw new AbiSchemaError(
+                'invalid_param_index',
+                `${path}[${param.index}].index`,
+                `参数 index 必须从 0 连续到 ${normalized.length - 1}（缺少 index ${position}）`,
+            );
+        }
+    });
+
+    const seenNames = new Set<string>();
+    for (const param of normalized) {
+        if (seenNames.has(param.name)) {
+            throw new AbiSchemaError('duplicate_param_identity', `${path}[${param.index}].name`, `参数名 "${param.name}" 重复`);
+        }
+        seenNames.add(param.name);
+    }
+
+    return normalized;
+}
+
+function validateParameter(path: string, raw: unknown): AbiParameter {
+    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
+        throw new AbiSchemaError('invalid_type', path, '参数必须是 {index, name, type, carrier} object');
+    }
+    const obj = raw as Record<string, unknown>;
+    if (typeof obj.index !== 'number' || !Number.isInteger(obj.index) || obj.index < 0) {
+        throw new AbiSchemaError('invalid_param_index', `${path}.index`, '参数缺少非负整数 index');
+    }
+    if (typeof obj.name !== 'string' || obj.name.length === 0) {
+        throw new AbiSchemaError('invalid_type', `${path}.name`, '参数缺少非空字符串 name');
+    }
+    if (typeof obj.carrier !== 'string' || obj.carrier.length === 0) {
+        throw new AbiSchemaError('invalid_carrier', `${path}.carrier`, '参数缺少非空字符串 carrier');
+    }
+    return {
+        index: obj.index,
+        name: obj.name,
+        type: validateType(`${path}.type`, obj.type),
+        carrier: obj.carrier,
+    };
 }
 
 function validateGlueEntry(path: string, raw: unknown): AbiGlueEntry {
@@ -467,13 +562,15 @@ function requireGlueOperation(entry: AbiGlueEntry, operation: string, path: stri
     return found;
 }
 
-// ── marshal: 按 schema 顺序 + 类型把 Record<string, unknown> 转成参数序列 ────
+// ── marshal: 按 schema 参数身份取 metadata 值并 marshal ──────────────────────
 
 /**
- * 把 metadata.tests 里的 args 按 schema 的 **声明类型顺序** 展开成位置参数。
+ * 把 metadata.tests 里的 args 按 schema 的 **参数身份** 展开成位置参数。
  *
- * 权威 schema 的 `params` 只有类型、没有参数名，因此按 metadata 的键序取位置值，
- * 再逐位用 schema 类型做 marshal。类型数量必须与 args 键数量一致，避免静默错位。
+ * 权威 schema 的 `params` 带 `index` / `name` / `type` / `carrier`：
+ * - 位置顺序完全由 `index` 升序决定，与 metadata 键序无关
+ * - 取值只按 `name` 从 args 里查，缺参数或多参数都抛结构化错误
+ * - 每个值用它自己的 `type` 做 marshal，`carrier` 不参与 marshal
  *
  * NamedAggregate 通过 glue entry 的 construct/push 操作构造真实句柄：
  * construct 的参数按 `param_carriers`（如 `["i32"]`）传入 **容量/长度**，不传元素值。
@@ -484,15 +581,23 @@ export function marshalArgsBySchema(
     args: Record<string, unknown>,
     invokeExport: AbiExportInvoker,
 ): unknown[] {
-    const values = Object.values(args);
-    if (values.length !== exportSchema.params.length) {
-        throw new AbiSchemaError(
-            'invalid_type',
-            '$.exports.params',
-            `schema 声明了 ${exportSchema.params.length} 个参数，但 metadata.tests.args 有 ${values.length} 个键`,
-        );
+    const declaredNames = new Set<string>();
+    for (const param of exportSchema.params) {
+        declaredNames.add(param.name);
+        if (!Object.hasOwn(args, param.name)) {
+            throw new AbiSchemaError('missing_argument', `args.${param.name}`, `metadata.tests.args 缺少参数 "${param.name}"`);
+        }
     }
-    return exportSchema.params.map((type, index) => marshalValue(schema, type, values[index], invokeExport, `params[${index}]`));
+    for (const key of Object.keys(args)) {
+        if (!declaredNames.has(key)) {
+            throw new AbiSchemaError('unknown_argument', `args.${key}`, `metadata.tests.args 含 schema 未声明的参数 "${key}"`);
+        }
+    }
+    return [...exportSchema.params]
+        .sort((left, right) => left.index - right.index)
+        .map((param) =>
+            marshalValue(schema, param.type, args[param.name], invokeExport, `params[${param.index}].${param.name}`),
+        );
 }
 
 function marshalValue(schema: LibraryInvokeSchema, type: WasmAbiType, raw: unknown, invokeExport: AbiExportInvoker, path: string): unknown {

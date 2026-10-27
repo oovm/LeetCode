@@ -61,7 +61,7 @@ function lookupAbiExport(schema: LibraryInvokeSchema, entry: string): AbiLookup 
 
 /**
  * 按 ABI schema 的 params/returns 做 marshal/unmarshal。
- * params 只带类型（权威格式无参数名），按 metadata 键序逐位对齐。
+ * params 带 `{index, name, type, carrier}`：位置由 index 决定，取值按 name 从 metadata 供货。
  */
 async function runCandidate(
     host: InvokeHost,

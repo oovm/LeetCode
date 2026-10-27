@@ -15,17 +15,27 @@ import {
 /** nyar-vm.rs emitter 的权威 `nyar.library_invoke` 形状。 */
 function rawSchema(): Record<string, unknown> {
     return {
-        version: 1,
+        version: 2,
         exports: {
             twoSum: {
                 params: [
                     {
-                        kind: 'NamedAggregate',
-                        name: 'ArrayList',
-                        module_path: 'std::collections',
-                        generic_args: [{ kind: 'I64' }],
+                        index: 0,
+                        name: 'nums',
+                        type: {
+                            kind: 'NamedAggregate',
+                            name: 'ArrayList',
+                            module_path: 'std::collections',
+                            generic_args: [{ kind: 'I64' }],
+                        },
+                        carrier: 'handle',
                     },
-                    { kind: 'I64' },
+                    {
+                        index: 1,
+                        name: 'target',
+                        type: { kind: 'I64' },
+                        carrier: 'i64',
+                    },
                 ],
                 returns: {
                     kind: 'NamedAggregate',
@@ -78,6 +88,12 @@ function parse(raw: Record<string, unknown>): LibraryInvokeSchema {
     return parseLibraryInvokeSchema(JSON.stringify(raw));
 }
 
+type RawExport = { params: unknown[]; returns: unknown };
+
+function twoSumExport(raw: Record<string, unknown>): RawExport {
+    return (raw.exports as Record<string, RawExport>).twoSum!;
+}
+
 function expectAbiError(run: () => unknown, code: string): void {
     try {
         run();
@@ -97,10 +113,12 @@ function namedAggregate(type: WasmAbiType): AbiNamedAggregateType {
 describe('nyar.library_invoke schema parsing', () => {
     it('parses the authoritative {version, exports, glue_entries, abi_digest} format', () => {
         const schema = parse(rawSchema());
-        expect(schema.version).toBe(1);
+        expect(schema.version).toBe(2);
         expect(schema.abi_digest).toBe('sha256-deadbeef');
         expect(Object.keys(schema.exports)).toEqual(['twoSum']);
-        expect(schema.exports.twoSum?.params.map((param) => param.kind)).toEqual(['NamedAggregate', 'I64']);
+        expect(schema.exports.twoSum?.params.map((param) => param.name)).toEqual(['nums', 'target']);
+        expect(schema.exports.twoSum?.params.map((param) => param.type.kind)).toEqual(['NamedAggregate', 'I64']);
+        expect(schema.exports.twoSum?.params.map((param) => param.carrier)).toEqual(['handle', 'i64']);
         expect(schema.glue_entries).toHaveLength(1);
         expect(schema.glue_entries[0]?.operations.map((operation) => operation.operation)).toEqual(['construct', 'push', 'length', 'at']);
     });
@@ -158,7 +176,7 @@ describe('nyar.library_invoke schema parsing', () => {
 
     it('rejects an unsupported version', () => {
         const raw = rawSchema();
-        raw.version = 2;
+        raw.version = 3;
         expectAbiError(() => parse(raw), 'unsupported_version');
     });
 
@@ -166,6 +184,68 @@ describe('nyar.library_invoke schema parsing', () => {
         const raw = rawSchema();
         (raw.exports as Record<string, { returns: unknown }>).twoSum!.returns = { kind: 'Widget' };
         expectAbiError(() => parse(raw), 'unknown_kind');
+    });
+});
+
+describe('parameter identity validation', () => {
+    it('accepts out-of-order params and normalizes them by index', () => {
+        const raw = rawSchema();
+        twoSumExport(raw).params.reverse();
+        const schema = parse(raw);
+        expect(schema.exports.twoSum?.params.map((param) => param.index)).toEqual([0, 1]);
+        expect(schema.exports.twoSum?.params.map((param) => param.name)).toEqual(['nums', 'target']);
+    });
+
+    it('rejects the legacy type-only params shape', () => {
+        const raw = rawSchema();
+        twoSumExport(raw).params = [
+            {
+                kind: 'NamedAggregate',
+                name: 'ArrayList',
+                module_path: 'std::collections',
+                generic_args: [{ kind: 'I64' }],
+            },
+            { kind: 'I64' },
+        ];
+        expectAbiError(() => parse(raw), 'legacy_params');
+    });
+
+    it('rejects duplicate parameter names', () => {
+        const raw = rawSchema();
+        const params = twoSumExport(raw).params as Array<Record<string, unknown>>;
+        params[1]!.name = 'nums';
+        expectAbiError(() => parse(raw), 'duplicate_param_identity');
+    });
+
+    it('rejects duplicate parameter indices', () => {
+        const raw = rawSchema();
+        const params = twoSumExport(raw).params as Array<Record<string, unknown>>;
+        params[1]!.index = 0;
+        expectAbiError(() => parse(raw), 'invalid_param_index');
+    });
+
+    it('rejects non-contiguous parameter indices', () => {
+        const raw = rawSchema();
+        const params = twoSumExport(raw).params as Array<Record<string, unknown>>;
+        params[1]!.index = 2;
+        expectAbiError(() => parse(raw), 'invalid_param_index');
+    });
+
+    it('rejects a non-integer or negative parameter index', () => {
+        const negative = rawSchema();
+        (twoSumExport(negative).params as Array<Record<string, unknown>>)[1]!.index = -1;
+        expectAbiError(() => parse(negative), 'invalid_param_index');
+
+        const fractional = rawSchema();
+        (twoSumExport(fractional).params as Array<Record<string, unknown>>)[1]!.index = 1.5;
+        expectAbiError(() => parse(fractional), 'invalid_param_index');
+    });
+
+    it('rejects a missing carrier', () => {
+        const raw = rawSchema();
+        const params = twoSumExport(raw).params as Array<Record<string, unknown>>;
+        delete params[1]!.carrier;
+        expectAbiError(() => parse(raw), 'invalid_carrier');
     });
 });
 
@@ -223,6 +303,35 @@ describe('schema-driven marshal/unmarshal', () => {
         ]);
         // construct 的第一个参数是数组长度，不是第一个元素值。
         expect(calls[0]?.args[0]).toBe(2);
+    });
+
+    it('ignores metadata key order and takes values by parameter name', () => {
+        const calls: Array<{ name: string; args: unknown[] }> = [];
+        const invokeExport = (name: string, ...args: unknown[]): unknown => {
+            calls.push({ name, args });
+            return name.endsWith('_new') ? 100 : undefined;
+        };
+
+        const marshaled = marshalArgsBySchema(schema, schema.exports.twoSum!, { target: 6, nums: [3, 4] }, invokeExport);
+
+        expect(marshaled).toEqual([100, 6n]);
+        expect(calls.map((call) => call.args)).toEqual([[2], [100, 3n], [100, 4n]]);
+    });
+
+    it('rejects a missing argument', () => {
+        const invokeExport = (): unknown => undefined;
+        expectAbiError(
+            () => marshalArgsBySchema(schema, schema.exports.twoSum!, { nums: [3, 4] }, invokeExport),
+            'missing_argument',
+        );
+    });
+
+    it('rejects an argument the schema does not declare', () => {
+        const invokeExport = (): unknown => undefined;
+        expectAbiError(
+            () => marshalArgsBySchema(schema, schema.exports.twoSum!, { nums: [3, 4], target: 6, extra: 1 }, invokeExport),
+            'unknown_argument',
+        );
     });
 
     it('reads aggregates back through length/at', () => {
