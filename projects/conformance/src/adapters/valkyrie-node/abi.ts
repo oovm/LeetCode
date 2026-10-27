@@ -8,7 +8,7 @@
  * - 每个参数以 `{index, name, type, carrier}` 身份声明，`type` 是 marshal 权威，`carrier` 仅用于身份与展示
  * - glue 查找按 `module_path + name + generic_args` 的完整 aggregate 身份，
  *   与 emitter 的 registry 查询同构；禁止只按简单名匹配、禁止默认 carrier
- * - 旧 `invokes` 格式、未知 kind、缺 `abi_digest` 一律抛结构化错误，不静默 fallback
+ * - 未知 kind、缺 `abi_digest`、参数身份不完整一律抛结构化错误，不静默 fallback
  */
 
 // ── 类型定义 ───────────────────────────────────────────────────────────────────
@@ -82,7 +82,7 @@ export interface AbiGlueEntry {
 
 /** `nyar.library_invoke` section 的 JSON 根结构。 */
 export interface LibraryInvokeSchema {
-    version: 2;
+    version: 0;
     /** key = wasm export 公开名。 */
     exports: Record<string, AbiExport>;
     glue_entries: AbiGlueEntry[];
@@ -94,13 +94,11 @@ export type AbiSchemaErrorCode =
     | 'missing_section'
     | 'invalid_json'
     | 'invalid_root'
-    | 'deprecated_invokes'
     | 'unsupported_version'
     | 'missing_abi_digest'
     | 'missing_exports'
     | 'missing_glue_entries'
     | 'invalid_type'
-    | 'legacy_params'
     | 'invalid_param_index'
     | 'duplicate_param_identity'
     | 'missing_argument'
@@ -132,7 +130,7 @@ export type AbiExportInvoker = (exportName: string, ...args: unknown[]) => unkno
 
 const CUSTOM_SECTION_ID = 0;
 const LIBRARY_INVOKE_SECTION_NAME = 'nyar.library_invoke';
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 0;
 
 /**
  * 最小 leb128 无符号解码（wasm section header 用）。
@@ -244,15 +242,6 @@ function validateSchema(raw: unknown): LibraryInvokeSchema {
     }
     const root = raw as Record<string, unknown>;
 
-    // 旧格式显式拒绝，不静默 fallback。
-    if (Object.hasOwn(root, 'invokes')) {
-        throw new AbiSchemaError(
-            'deprecated_invokes',
-            '$.invokes',
-            '旧 `invokes` 格式已废弃。请使用 nyar-vm.rs 的权威格式 ' +
-                '`{version, exports, glue_entries, abi_digest}`，不支持回退到旧 schema。',
-        );
-    }
     if (root.version !== SCHEMA_VERSION) {
         throw new AbiSchemaError(
             'unsupported_version',
@@ -296,13 +285,6 @@ function validateExport(exportSymbol: string, raw: unknown): AbiExport {
     return { params, returns: validateType(`${path}.returns`, obj.returns) };
 }
 
-/** 旧 schema 的参数形状：直接是 `WasmAbiType`（带 kind、没有 index/name/type 身份）。 */
-function isLegacyParamShape(raw: unknown): boolean {
-    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return false;
-    const obj = raw as Record<string, unknown>;
-    return typeof obj.kind === 'string' && !Object.hasOwn(obj, 'type') && !Object.hasOwn(obj, 'index');
-}
-
 /**
  * 解析并校验 `params` 参数身份数组。
  *
@@ -310,15 +292,6 @@ function isLegacyParamShape(raw: unknown): boolean {
  * `name` 非空且唯一，`type` 走 `validateType`，`carrier` 非空字符串。
  */
 function validateParams(path: string, raw: unknown[]): AbiParameter[] {
-    if (raw.some((param) => isLegacyParamShape(param))) {
-        throw new AbiSchemaError(
-            'legacy_params',
-            path,
-            'params 仍是旧的「类型数组」形状。必须使用 `{index, name, type, carrier}` 参数身份，' +
-                '由 schema 决定参数位置、metadata 只按名字供货。',
-        );
-    }
-
     const params = raw.map((param, position) => validateParameter(`${path}[${position}]`, param));
 
     const seenIndices = new Set<number>();

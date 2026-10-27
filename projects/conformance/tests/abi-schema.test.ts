@@ -15,7 +15,7 @@ import {
 /** nyar-vm.rs emitter 的权威 `nyar.library_invoke` 形状。 */
 function rawSchema(): Record<string, unknown> {
     return {
-        version: 2,
+        version: 0,
         exports: {
             twoSum: {
                 params: [
@@ -113,7 +113,7 @@ function namedAggregate(type: WasmAbiType): AbiNamedAggregateType {
 describe('nyar.library_invoke schema parsing', () => {
     it('parses the authoritative {version, exports, glue_entries, abi_digest} format', () => {
         const schema = parse(rawSchema());
-        expect(schema.version).toBe(2);
+        expect(schema.version).toBe(0);
         expect(schema.abi_digest).toBe('sha256-deadbeef');
         expect(Object.keys(schema.exports)).toEqual(['twoSum']);
         expect(schema.exports.twoSum?.params.map((param) => param.name)).toEqual(['nums', 'target']);
@@ -147,23 +147,6 @@ describe('nyar.library_invoke schema parsing', () => {
         expect(inner.generic_args).toEqual([{ kind: 'I64' }]);
     });
 
-    it('explicitly rejects the deprecated invokes format', () => {
-        expectAbiError(
-            () =>
-                parse({
-                    version: 1,
-                    invokes: { twoSum: { params: [{ name: 'nums', type: 'i32' }], returns: { type: 'i32' } } },
-                }),
-            'deprecated_invokes',
-        );
-        try {
-            parse({ version: 1, invokes: {} });
-        } catch (err) {
-            expect((err as Error).message).toContain('已废弃');
-            expect((err as Error).message).toContain('exports');
-        }
-    });
-
     it('rejects a missing or empty abi_digest', () => {
         const missing = rawSchema();
         delete missing.abi_digest;
@@ -176,7 +159,7 @@ describe('nyar.library_invoke schema parsing', () => {
 
     it('rejects an unsupported version', () => {
         const raw = rawSchema();
-        raw.version = 3;
+        raw.version = 1;
         expectAbiError(() => parse(raw), 'unsupported_version');
     });
 
@@ -196,18 +179,10 @@ describe('parameter identity validation', () => {
         expect(schema.exports.twoSum?.params.map((param) => param.name)).toEqual(['nums', 'target']);
     });
 
-    it('rejects the legacy type-only params shape', () => {
+    it('rejects a params entry without an index', () => {
         const raw = rawSchema();
-        twoSumExport(raw).params = [
-            {
-                kind: 'NamedAggregate',
-                name: 'ArrayList',
-                module_path: 'std::collections',
-                generic_args: [{ kind: 'I64' }],
-            },
-            { kind: 'I64' },
-        ];
-        expectAbiError(() => parse(raw), 'legacy_params');
+        twoSumExport(raw).params = [{ kind: 'I64' }, { kind: 'I64' }];
+        expectAbiError(() => parse(raw), 'invalid_param_index');
     });
 
     it('rejects duplicate parameter names', () => {
