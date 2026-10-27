@@ -1,59 +1,120 @@
 /**
  * ABI schema 消费：从 wasm binary 自定义 section `nyar.library_invoke`
- * 读取 JSON schema，按 schema 的 params/returns 顺序和类型做 marshal/unmarshal。
+ * 读取 nyar-vm.rs 产出的权威 ABI JSON，按结构化 `WasmAbiType` 做 marshal/unmarshal。
  *
  * 设计原则：
- * - 参数顺序 **严格来自 schema**，不使用 `Object.values(args)` 的隐式键序
- * - 找不到 section 时直接抛错，**不做**兜底猜测（架构师禁令：不能把参数顺序交给 JS 对象布局）
- * - 第一阶段只实现 i32/i64/f64/bool/string 标量；ArrayList/HashMap 等容器类型留 TODO
+ * - 唯一事实来源是 emitter 的 `{version, exports, glue_entries, abi_digest}`
+ * - 参数类型顺序来自 `params`，参数值按 metadata 键序逐位对齐；不使用旧 schema 的 `name/type` 形状
+ * - glue 查找按 `module_path + name + generic_args` 的完整 aggregate 身份，
+ *   与 emitter 的 registry 查询同构；禁止只按简单名匹配、禁止默认 carrier
+ * - 旧 `invokes` 格式、未知 kind、缺 `abi_digest` 一律抛结构化错误，不静默 fallback
  */
 
 // ── 类型定义 ───────────────────────────────────────────────────────────────────
 
-/**
- * 标量类型 token（schema JSON 里 type 字段的合法值）。
- * 第一阶段只覆盖 wasm 直接可表示的基础类型。
- */
-export type PrimitiveType = 'i32' | 'i64' | 'f32' | 'f64' | 'bool' | 'string';
+/** 标量 kind：Wasm 直接可表示的 ABI 类型（`Unit` 表示 void 返回）。 */
+export type AbiScalarKind = 'Unit' | 'I32' | 'I64' | 'F32' | 'F64' | 'Bool' | 'Char' | 'Utf8';
 
-/**
- * 类型描述：schema 里一个 param 或 return 的 type 字段。
- * 第一阶段只识别 PrimitiveType，其余一律抛错 + TODO。
- */
-export type AbiType = PrimitiveType;
-
-/** Schema 里单个参数。 */
-export interface AbiParam {
+/** `NamedAggregate`：带语义身份的 nominal / generic aggregate。 */
+export interface AbiNamedAggregateType {
+    kind: 'NamedAggregate';
     name: string;
-    type: AbiType;
+    module_path: string;
+    generic_args: WasmAbiType[];
 }
 
-/** Schema 里单个返回值（Valkyrie 当前单返回）。 */
-export interface AbiReturn {
-    type: AbiType;
+/** 结构化 ABI 类型判别联合，对应 emitter 的 `WasmAbiType`。 */
+export type WasmAbiType =
+    | { kind: 'Unit' }
+    | { kind: 'I32' }
+    | { kind: 'I64' }
+    | { kind: 'F32' }
+    | { kind: 'F64' }
+    | { kind: 'Bool' }
+    | { kind: 'Char' }
+    | { kind: 'Utf8' }
+    | { kind: 'Array'; element: WasmAbiType }
+    | { kind: 'FixedArray'; element: WasmAbiType; length: number }
+    | { kind: 'Option'; inner: WasmAbiType }
+    | { kind: 'Tuple'; fields: WasmAbiType[] }
+    | AbiNamedAggregateType
+    | { kind: 'Unsupported'; reason: string };
+
+/** Schema 里单个导出的 ABI（Valkyrie 当前单返回）。 */
+export interface AbiExport {
+    /** 参数类型 **按声明顺序**；metadata.tests.args 的键序与之一一对应。 */
+    params: WasmAbiType[];
+    returns: WasmAbiType;
 }
 
-/** 单个可调用入口的 ABI。 */
-export interface AbiInvoke {
-    /** 与 wasm export symbol 同名（通常是方法名，如 twoSum）。 */
-    export: string;
-    /** 参数 **按声明顺序**（不是按 metadata.tests 的键序）。 */
-    params: AbiParam[];
-    returns: AbiReturn | null;
+/** glue operation 的 carrier 描述。 */
+export interface AbiGlueOperation {
+    operation: string;
+    export_name: string;
+    param_carriers: string[];
+    return_carrier: string;
+    export_source?: string;
+}
+
+/** `glue_entries` 里单个 aggregate 的语义身份与序列 helper 操作。 */
+export interface AbiGlueEntry {
+    kind?: 'NamedAggregate';
+    name: string;
+    module_path: string;
+    generic_args: WasmAbiType[];
+    operations: AbiGlueOperation[];
+    source?: string;
+    status?: string;
 }
 
 /** `nyar.library_invoke` section 的 JSON 根结构。 */
 export interface LibraryInvokeSchema {
-    /** 将来可能演进。当前固定 1。 */
-    version: number;
-    /** key = export symbol。 */
-    invokes: Record<string, AbiInvoke>;
+    version: 1;
+    /** key = wasm export 公开名。 */
+    exports: Record<string, AbiExport>;
+    glue_entries: AbiGlueEntry[];
+    abi_digest: string;
 }
+
+/** 结构化 ABI 错误码，便于调用方按类别处理。 */
+export type AbiSchemaErrorCode =
+    | 'missing_section'
+    | 'invalid_json'
+    | 'invalid_root'
+    | 'deprecated_invokes'
+    | 'unsupported_version'
+    | 'missing_abi_digest'
+    | 'missing_exports'
+    | 'missing_glue_entries'
+    | 'invalid_type'
+    | 'unknown_kind'
+    | 'invalid_glue_entry'
+    | 'glue_entry_not_found'
+    | 'glue_operation_missing'
+    | 'invalid_carrier'
+    | 'unsupported_value';
+
+/** 带错误码与 JSON 路径的结构化 ABI 错误。 */
+export class AbiSchemaError extends Error {
+    readonly code: AbiSchemaErrorCode;
+    readonly path: string;
+
+    constructor(code: AbiSchemaErrorCode, path: string, message: string) {
+        super(`${path}: ${message}`);
+        this.name = 'AbiSchemaError';
+        this.code = code;
+        this.path = path;
+    }
+}
+
+/** 调用 glue / wasm export 的原始入口（按名字 + 已 marshal 的参数）。 */
+export type AbiExportInvoker = (exportName: string, ...args: unknown[]) => unknown;
 
 // ── wasm custom section 解析 ───────────────────────────────────────────────────
 
 const CUSTOM_SECTION_ID = 0;
 const LIBRARY_INVOKE_SECTION_NAME = 'nyar.library_invoke';
+const SCHEMA_VERSION = 1;
 
 /**
  * 最小 leb128 无符号解码（wasm section header 用）。
@@ -131,201 +192,588 @@ function readCustomSection(bytes: Uint8Array, sectionName: string): string | nul
 /**
  * 从 wasm artifact 的自定义 section `nyar.library_invoke` 加载 ABI schema。
  *
- * section 尚不存在（emitter 侧 Stream A 未产出）时抛 Error，**不兜底**。
- * 调用方应把错误信息原样报告出来，提示上游补 section。
+ * section 不存在时抛结构化错误，**不兜底**。
  */
 export function loadLibraryInvokeSchema(wasmBytes: Uint8Array): LibraryInvokeSchema {
     const jsonText = readCustomSection(wasmBytes, LIBRARY_INVOKE_SECTION_NAME);
     if (!jsonText) {
-        // TODO: emitter 侧 nyar-emitter 产出 nyar.library_invoke section 后，此处应该能读到
-        // 暂时强制失败，逼上游补能力；绝对不能 Object.values 兜底
-        throw new Error(
-            `wasm artifact 缺少 custom section "${LIBRARY_INVOKE_SECTION_NAME}"。` +
-            `上游 nyar-emitter（Stream A）尚未产出 ABI schema。` +
-            `harness 侧不做 Object.values 兜底——请先让 emitter 把 params/returns 顺序写进 wasm。`,
+        throw new AbiSchemaError(
+            'missing_section',
+            LIBRARY_INVOKE_SECTION_NAME,
+            'wasm artifact 缺少 custom section。上游 emitter 必须产出 {version, exports, glue_entries, abi_digest}，' +
+                'harness 不做 Object.values 兜底。',
         );
     }
+    return parseLibraryInvokeSchema(jsonText);
+}
+
+/** 解析并校验 `nyar.library_invoke` section 的 JSON 文本。 */
+export function parseLibraryInvokeSchema(jsonText: string): LibraryInvokeSchema {
     let parsed: unknown;
     try {
         parsed = JSON.parse(jsonText) as unknown;
     } catch (err) {
-        throw new Error(
-            `"${LIBRARY_INVOKE_SECTION_NAME}" section 不是合法 JSON: ${String(err)}`,
-        );
+        throw new AbiSchemaError('invalid_json', LIBRARY_INVOKE_SECTION_NAME, `section 不是合法 JSON: ${String(err)}`);
     }
     return validateSchema(parsed);
 }
 
 // ── schema 校验 ───────────────────────────────────────────────────────────────
 
-const VALID_PRIMITIVES = new Set<string>(['i32', 'i64', 'f32', 'f64', 'bool', 'string']);
-
 function validateSchema(raw: unknown): LibraryInvokeSchema {
-    if (typeof raw !== 'object' || raw === null) {
-        throw new Error('ABI schema 根必须是 object');
+    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
+        throw new AbiSchemaError('invalid_root', '$', 'ABI schema 根必须是 object');
     }
     const root = raw as Record<string, unknown>;
-    if (typeof root.version !== 'number') {
-        throw new Error('ABI schema 缺少数字 version 字段');
+
+    // 旧格式显式拒绝，不静默 fallback。
+    if (Object.hasOwn(root, 'invokes')) {
+        throw new AbiSchemaError(
+            'deprecated_invokes',
+            '$.invokes',
+            '旧 `invokes` 格式已废弃。请使用 nyar-vm.rs 的权威格式 ' +
+                '`{version, exports, glue_entries, abi_digest}`，不支持回退到旧 schema。',
+        );
     }
-    if (typeof root.invokes !== 'object' || root.invokes === null) {
-        throw new Error('ABI schema 缺少 invokes 字段');
+    if (root.version !== SCHEMA_VERSION) {
+        throw new AbiSchemaError(
+            'unsupported_version',
+            '$.version',
+            `ABI schema version 必须为 ${SCHEMA_VERSION}（实际 ${JSON.stringify(root.version)}）`,
+        );
     }
-    const invokes: Record<string, AbiInvoke> = {};
-    for (const [exportSymbol, rawInvoke] of Object.entries(root.invokes as Record<string, unknown>)) {
-        invokes[exportSymbol] = validateInvoke(exportSymbol, rawInvoke);
+    if (typeof root.abi_digest !== 'string' || root.abi_digest.trim().length === 0) {
+        throw new AbiSchemaError('missing_abi_digest', '$.abi_digest', 'ABI schema 缺少非空字符串 abi_digest');
     }
-    return { version: root.version, invokes };
+    if (typeof root.exports !== 'object' || root.exports === null || Array.isArray(root.exports)) {
+        throw new AbiSchemaError('missing_exports', '$.exports', 'ABI schema 缺少 exports 对象');
+    }
+    if (!Array.isArray(root.glue_entries)) {
+        throw new AbiSchemaError('missing_glue_entries', '$.glue_entries', 'ABI schema 缺少 glue_entries 数组');
+    }
+
+    const exports: Record<string, AbiExport> = {};
+    for (const [exportSymbol, rawExport] of Object.entries(root.exports as Record<string, unknown>)) {
+        exports[exportSymbol] = validateExport(exportSymbol, rawExport);
+    }
+
+    const glue_entries = root.glue_entries.map((entry, index) => validateGlueEntry(`$.glue_entries[${index}]`, entry));
+
+    return { version: SCHEMA_VERSION, exports, glue_entries, abi_digest: root.abi_digest };
 }
 
-function validateInvoke(exportSymbol: string, raw: unknown): AbiInvoke {
-    if (typeof raw !== 'object' || raw === null) {
-        throw new Error(`invokes.${exportSymbol} 必须是 object`);
+function validateExport(exportSymbol: string, raw: unknown): AbiExport {
+    const path = `$.exports.${exportSymbol}`;
+    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
+        throw new AbiSchemaError('invalid_type', path, 'export 必须是 object');
     }
     const obj = raw as Record<string, unknown>;
-    const export_ = typeof obj.export === 'string' ? obj.export : exportSymbol;
-    const paramsRaw = obj.params;
-    if (!Array.isArray(paramsRaw)) {
-        throw new Error(`invokes.${exportSymbol} 缺少 params 数组`);
+    if (!Array.isArray(obj.params)) {
+        throw new AbiSchemaError('invalid_type', `${path}.params`, 'export 缺少 params 数组');
     }
-    const params: AbiParam[] = paramsRaw.map((p, i) => validateParam(exportSymbol, i, p));
-    const returnsRaw = obj.returns;
-    const returns = returnsRaw === null || returnsRaw === undefined
-        ? null
-        : validateReturn(exportSymbol, returnsRaw);
-    return { export: export_, params, returns };
+    const params = obj.params.map((param, index) => validateType(`${path}.params[${index}]`, param));
+    if (!Object.hasOwn(obj, 'returns')) {
+        throw new AbiSchemaError('invalid_type', `${path}.returns`, 'export 缺少 returns');
+    }
+    return { params, returns: validateType(`${path}.returns`, obj.returns) };
 }
 
-function validateParam(exportSymbol: string, index: number, raw: unknown): AbiParam {
-    if (typeof raw !== 'object' || raw === null) {
-        throw new Error(`invokes.${exportSymbol}.params[${index}] 必须是 object`);
+function validateGlueEntry(path: string, raw: unknown): AbiGlueEntry {
+    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
+        throw new AbiSchemaError('invalid_glue_entry', path, 'glue entry 必须是 object');
     }
     const obj = raw as Record<string, unknown>;
-    if (typeof obj.name !== 'string') {
-        throw new Error(`invokes.${exportSymbol}.params[${index}] 缺少 name`);
+    if (obj.kind !== undefined && obj.kind !== 'NamedAggregate') {
+        throw new AbiSchemaError(
+            'invalid_glue_entry',
+            `${path}.kind`,
+            `glue entry kind 只支持 "NamedAggregate"（实际 ${JSON.stringify(obj.kind)}）`,
+        );
     }
-    const type = validateType(exportSymbol, `params[${index}]`, obj.type);
-    return { name: obj.name, type };
+    if (typeof obj.name !== 'string' || obj.name.length === 0) {
+        throw new AbiSchemaError('invalid_glue_entry', `${path}.name`, 'glue entry 缺少非空 name');
+    }
+    if (typeof obj.module_path !== 'string') {
+        throw new AbiSchemaError('invalid_glue_entry', `${path}.module_path`, 'glue entry 缺少字符串 module_path');
+    }
+    if (!Array.isArray(obj.generic_args)) {
+        throw new AbiSchemaError('invalid_glue_entry', `${path}.generic_args`, 'glue entry 缺少 generic_args 数组');
+    }
+    if (!Array.isArray(obj.operations)) {
+        throw new AbiSchemaError('invalid_glue_entry', `${path}.operations`, 'glue entry 缺少 operations 数组');
+    }
+
+    const generic_args = obj.generic_args.map((arg, index) => validateType(`${path}.generic_args[${index}]`, arg));
+    const operations = obj.operations.map((operation, index) => validateGlueOperation(`${path}.operations[${index}]`, operation));
+
+    return {
+        ...(obj.kind === 'NamedAggregate' ? { kind: 'NamedAggregate' as const } : {}),
+        name: obj.name,
+        module_path: obj.module_path,
+        generic_args,
+        operations,
+        ...(typeof obj.source === 'string' ? { source: obj.source } : {}),
+        ...(typeof obj.status === 'string' ? { status: obj.status } : {}),
+    };
 }
 
-function validateReturn(exportSymbol: string, raw: unknown): AbiReturn {
-    if (typeof raw !== 'object' || raw === null) {
-        throw new Error(`invokes.${exportSymbol}.returns 必须是 object`);
+function validateGlueOperation(path: string, raw: unknown): AbiGlueOperation {
+    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
+        throw new AbiSchemaError('invalid_glue_entry', path, 'operation 必须是 object');
     }
     const obj = raw as Record<string, unknown>;
-    const type = validateType(exportSymbol, 'returns', obj.type);
-    return { type };
+    if (typeof obj.operation !== 'string' || obj.operation.length === 0) {
+        throw new AbiSchemaError('invalid_glue_entry', `${path}.operation`, 'operation 缺少非空 operation 名');
+    }
+    if (typeof obj.export_name !== 'string') {
+        throw new AbiSchemaError('invalid_glue_entry', `${path}.export_name`, 'operation 缺少字符串 export_name');
+    }
+    if (!Array.isArray(obj.param_carriers) || obj.param_carriers.some((carrier) => typeof carrier !== 'string')) {
+        throw new AbiSchemaError(
+            'invalid_glue_entry',
+            `${path}.param_carriers`,
+            'operation 缺少 param_carriers 字符串数组（不允许默认 carrier）',
+        );
+    }
+    if (typeof obj.return_carrier !== 'string' || obj.return_carrier.length === 0) {
+        throw new AbiSchemaError('invalid_glue_entry', `${path}.return_carrier`, 'operation 缺少非空 return_carrier（不允许默认 carrier）');
+    }
+    return {
+        operation: obj.operation,
+        export_name: obj.export_name,
+        param_carriers: obj.param_carriers as string[],
+        return_carrier: obj.return_carrier,
+        ...(typeof obj.export_source === 'string' ? { export_source: obj.export_source } : {}),
+    };
 }
 
-function validateType(exportSymbol: string, where: string, raw: unknown): AbiType {
-    if (typeof raw !== 'string') {
-        throw new Error(`invokes.${exportSymbol}.${where}.type 必须是 string`);
+/** 校验结构化 `WasmAbiType`；未知 kind 直接抛错。 */
+function validateType(path: string, raw: unknown): WasmAbiType {
+    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
+        throw new AbiSchemaError('invalid_type', path, 'WasmAbiType 必须是 object');
     }
-    if (VALID_PRIMITIVES.has(raw)) {
-        return raw as PrimitiveType;
+    const obj = raw as Record<string, unknown>;
+    const kind = obj.kind;
+    if (typeof kind !== 'string') {
+        throw new AbiSchemaError('invalid_type', `${path}.kind`, 'WasmAbiType 缺少字符串 kind');
     }
-    // TODO: ArrayList<T>、HashMap<K,V>、nullable、T[] 等容器类型后续由 emitter 产出后再补
-    throw new Error(
-        `invokes.${exportSymbol}.${where}.type = "${raw}" 暂未实现。` +
-        `第一阶段只支持 ${Array.from(VALID_PRIMITIVES).join(', ')}。` +
-        `容器类型等 emitter 侧补完整 schema 后在本文件 marshal/unmarshal 里跟进。`,
+
+    switch (kind) {
+        case 'Unit':
+        case 'I32':
+        case 'I64':
+        case 'F32':
+        case 'F64':
+        case 'Bool':
+        case 'Char':
+        case 'Utf8':
+            return { kind };
+        case 'Array':
+            return { kind: 'Array', element: validateType(`${path}.element`, obj.element) };
+        case 'FixedArray': {
+            if (typeof obj.length !== 'number' || !Number.isInteger(obj.length) || obj.length < 0) {
+                throw new AbiSchemaError('invalid_type', `${path}.length`, 'FixedArray 缺少非负整数 length');
+            }
+            return {
+                kind: 'FixedArray',
+                element: validateType(`${path}.element`, obj.element),
+                length: obj.length,
+            };
+        }
+        case 'Option':
+            return { kind: 'Option', inner: validateType(`${path}.inner`, obj.inner) };
+        case 'Tuple': {
+            if (!Array.isArray(obj.fields)) {
+                throw new AbiSchemaError('invalid_type', `${path}.fields`, 'Tuple 缺少 fields 数组');
+            }
+            return {
+                kind: 'Tuple',
+                fields: obj.fields.map((field, index) => validateType(`${path}.fields[${index}]`, field)),
+            };
+        }
+        case 'NamedAggregate': {
+            if (typeof obj.name !== 'string' || obj.name.length === 0) {
+                throw new AbiSchemaError('invalid_type', `${path}.name`, 'NamedAggregate 缺少非空 name');
+            }
+            if (typeof obj.module_path !== 'string') {
+                throw new AbiSchemaError('invalid_type', `${path}.module_path`, 'NamedAggregate 缺少字符串 module_path');
+            }
+            if (!Array.isArray(obj.generic_args)) {
+                throw new AbiSchemaError('invalid_type', `${path}.generic_args`, 'NamedAggregate 缺少 generic_args 数组');
+            }
+            return {
+                kind: 'NamedAggregate',
+                name: obj.name,
+                module_path: obj.module_path,
+                generic_args: obj.generic_args.map((arg, index) => validateType(`${path}.generic_args[${index}]`, arg)),
+            };
+        }
+        case 'Unsupported': {
+            if (typeof obj.reason !== 'string') {
+                throw new AbiSchemaError('invalid_type', `${path}.reason`, 'Unsupported 缺少字符串 reason');
+            }
+            return { kind: 'Unsupported', reason: obj.reason };
+        }
+        default:
+            throw new AbiSchemaError('unknown_kind', `${path}.kind`, `未知 WasmAbiType kind "${kind}"`);
+    }
+}
+
+// ── glue registry 查找 ────────────────────────────────────────────────────────
+
+/**
+ * 按 `kind + module_path + name + generic_args` 查找 glue entry。
+ *
+ * 与 emitter 的 registry 查询同构：module_path 精确比较，generic_args 结构化比较。
+ * 只按简单名匹配会混淆不同命名空间/泛型实例，因此这里一律拒绝。
+ */
+export function findGlueEntry(
+    schema: LibraryInvokeSchema,
+    aggregate: Pick<AbiNamedAggregateType, 'name' | 'module_path' | 'generic_args'>,
+): AbiGlueEntry {
+    const found = schema.glue_entries.find(
+        (entry) =>
+            entry.name === aggregate.name &&
+            entry.module_path === aggregate.module_path &&
+            sameAbiTypes(entry.generic_args, aggregate.generic_args),
     );
+    if (!found) {
+        throw new AbiSchemaError(
+            'glue_entry_not_found',
+            '$.glue_entries',
+            `找不到 aggregate ${aggregate.module_path}.${aggregate.name}<${describeTypes(aggregate.generic_args)}> 的 glue entry`,
+        );
+    }
+    return found;
+}
+
+function sameAbiTypes(left: WasmAbiType[], right: WasmAbiType[]): boolean {
+    return left.length === right.length && left.every((type, index) => JSON.stringify(type) === JSON.stringify(right[index]));
+}
+
+function describeTypes(types: WasmAbiType[]): string {
+    return types.map((type) => type.kind).join(',');
+}
+
+function requireGlueOperation(entry: AbiGlueEntry, operation: string, path: string): AbiGlueOperation {
+    const found = entry.operations.find((candidate) => candidate.operation === operation);
+    if (!found || found.export_name.length === 0) {
+        throw new AbiSchemaError(
+            'glue_operation_missing',
+            path,
+            `aggregate ${entry.module_path}.${entry.name} 缺少可调用的 "${operation}" operation（export_name 不能为空）`,
+        );
+    }
+    return found;
 }
 
 // ── marshal: 按 schema 顺序 + 类型把 Record<string, unknown> 转成参数序列 ────
 
 /**
- * 把 metadata.tests 里的 args（键名 → 值）按 schema 里 params 的**声明顺序**
- * 展开成位置参数数组。不使用 Object.values。
+ * 把 metadata.tests 里的 args 按 schema 的 **声明类型顺序** 展开成位置参数。
  *
- * 类型处理：
- * - i64 用 BigInt（JS number 在 ±2^53 外会丢精度，metadata 里出现 1e10 量级整数）
- * - 其余标量直接透传
+ * 权威 schema 的 `params` 只有类型、没有参数名，因此按 metadata 的键序取位置值，
+ * 再逐位用 schema 类型做 marshal。类型数量必须与 args 键数量一致，避免静默错位。
+ *
+ * NamedAggregate 通过 glue entry 的 construct/push 操作构造真实句柄：
+ * construct 的参数按 `param_carriers`（如 `["i32"]`）传入 **容量/长度**，不传元素值。
  */
 export function marshalArgsBySchema(
-    schema: AbiInvoke,
+    schema: LibraryInvokeSchema,
+    exportSchema: AbiExport,
     args: Record<string, unknown>,
+    invokeExport: AbiExportInvoker,
 ): unknown[] {
-    const out: unknown[] = [];
-    for (const param of schema.params) {
-        const raw = args[param.name];
-        if (raw === undefined) {
-            throw new Error(
-                `schema 声明了参数 "${param.name}"，但 metadata.tests.args 里找不到这个键。` +
-                `schema 与 metadata 不一致。`,
-            );
-        }
-        out.push(marshalPrimitive(param.type, raw, param.name));
+    const values = Object.values(args);
+    if (values.length !== exportSchema.params.length) {
+        throw new AbiSchemaError(
+            'invalid_type',
+            '$.exports.params',
+            `schema 声明了 ${exportSchema.params.length} 个参数，但 metadata.tests.args 有 ${values.length} 个键`,
+        );
     }
-    return out;
+    return exportSchema.params.map((type, index) => marshalValue(schema, type, values[index], invokeExport, `params[${index}]`));
 }
 
-function marshalPrimitive(type: AbiType, raw: unknown, name: string): unknown {
-    switch (type) {
-        case 'i64':
+function marshalValue(schema: LibraryInvokeSchema, type: WasmAbiType, raw: unknown, invokeExport: AbiExportInvoker, path: string): unknown {
+    switch (type.kind) {
+        case 'Unit':
+        case 'I32':
+        case 'I64':
+        case 'F32':
+        case 'F64':
+        case 'Bool':
+        case 'Char':
+        case 'Utf8':
+            return marshalScalar(type, raw, path);
+        case 'NamedAggregate':
+            return marshalAggregate(schema, type, raw, invokeExport, path);
+        case 'Unsupported':
+            throw new AbiSchemaError('unsupported_value', path, `ABI 类型 Unsupported（${type.reason}）不能出现在参数位置`);
+        case 'Array':
+        case 'FixedArray':
+        case 'Option':
+        case 'Tuple':
+            throw new AbiSchemaError('unsupported_value', path, `${type.kind} 需要独立 glue 合同，当前 harness 不支持直接 marshal`);
+    }
+}
+
+function marshalScalar(type: Exclude<WasmAbiType, AbiNamedAggregateType>, raw: unknown, path: string): unknown {
+    switch (type.kind) {
+        case 'Unit':
+            return undefined;
+        case 'I32': {
+            if (typeof raw !== 'number' || !Number.isFinite(raw)) {
+                throw new AbiSchemaError('invalid_type', path, `需要 i32，实际是 ${typeof raw}`);
+            }
+            return raw | 0;
+        }
+        case 'I64': {
+            if (typeof raw === 'bigint') return raw;
+            if (typeof raw === 'number' && Number.isFinite(raw)) return BigInt(Math.trunc(raw));
+            throw new AbiSchemaError('invalid_type', path, `需要 i64，实际是 ${typeof raw}`);
+        }
+        case 'F32':
+        case 'F64': {
+            if (typeof raw !== 'number' || !Number.isFinite(raw)) {
+                throw new AbiSchemaError('invalid_type', path, `需要 ${type.kind}，实际是 ${typeof raw}`);
+            }
+            return raw;
+        }
+        case 'Bool': {
+            if (typeof raw !== 'boolean' && typeof raw !== 'number') {
+                throw new AbiSchemaError('invalid_type', path, `需要 bool，实际是 ${typeof raw}`);
+            }
+            return raw ? 1 : 0;
+        }
+        case 'Char': {
+            if (typeof raw === 'number') return raw | 0;
+            if (typeof raw === 'string' && raw.length > 0) return raw.codePointAt(0)!;
+            throw new AbiSchemaError('invalid_type', path, `需要 char，实际是 ${typeof raw}`);
+        }
+        case 'Utf8': {
+            // Utf8 在 JS-glue 轨是 i32 host-intern 句柄；字符串交给宿主桥处理。
+            if (typeof raw === 'string' || typeof raw === 'number') return raw;
+            throw new AbiSchemaError('invalid_type', path, `需要 utf8，实际是 ${typeof raw}`);
+        }
+    }
+}
+
+function marshalAggregate(
+    schema: LibraryInvokeSchema,
+    type: AbiNamedAggregateType,
+    raw: unknown,
+    invokeExport: AbiExportInvoker,
+    path: string,
+): unknown {
+    if (!Array.isArray(raw)) {
+        throw new AbiSchemaError('invalid_type', path, `NamedAggregate 参数需要 JS 数组，实际是 ${typeof raw}`);
+    }
+    const entry = findGlueEntry(schema, type);
+
+    const construct = requireGlueOperation(entry, 'construct', `${path}.construct`);
+    if (construct.param_carriers.length !== 1) {
+        throw new AbiSchemaError(
+            'invalid_carrier',
+            `${path}.construct`,
+            `construct 必须只有一个容量/长度 carrier（实际 ${JSON.stringify(construct.param_carriers)}）`,
+        );
+    }
+    const capacity = encodeCarrier(construct.param_carriers[0]!, raw.length, `${path}.construct`);
+    const handle = invokeExport(construct.export_name, capacity);
+
+    const push = requireGlueOperation(entry, 'push', `${path}.push`);
+    if (push.param_carriers.length !== 2) {
+        throw new AbiSchemaError(
+            'invalid_carrier',
+            `${path}.push`,
+            `push 必须是 [handle, element] 两个 carrier（实际 ${JSON.stringify(push.param_carriers)}）`,
+        );
+    }
+    const elementType = type.generic_args[0];
+    if (!elementType) {
+        throw new AbiSchemaError('invalid_type', `${path}.generic_args`, 'NamedAggregate 缺少元素类型 generic_args[0]');
+    }
+    const pushedHandle = encodeCarrier(push.param_carriers[0]!, handle, `${path}.push`);
+    const elementCarrier = push.param_carriers[1]!;
+    for (const item of raw) {
+        invokeExport(push.export_name, pushedHandle, marshalElement(elementType, item, schema, invokeExport, elementCarrier, path));
+    }
+    return handle;
+}
+
+function marshalElement(
+    elementType: WasmAbiType,
+    raw: unknown,
+    schema: LibraryInvokeSchema,
+    invokeExport: AbiExportInvoker,
+    carrier: string,
+    path: string,
+): unknown {
+    if (elementType.kind === 'NamedAggregate') {
+        const handle = marshalAggregate(schema, elementType, raw, invokeExport, `${path}.element`);
+        return encodeCarrier(carrier, handle, `${path}.element`);
+    }
+    if (isScalarKind(elementType.kind)) {
+        const value = marshalScalar(elementType as Exclude<WasmAbiType, AbiNamedAggregateType>, raw, `${path}.element`);
+        return encodeCarrier(carrier, value, `${path}.element`);
+    }
+    throw new AbiSchemaError(
+        'unsupported_value',
+        `${path}.element`,
+        `元素类型 ${elementType.kind} 需要独立 glue 合同，当前 harness 不支持序列 marshal`,
+    );
+}
+
+/** 把值编码成 glue operation 声明的物理 carrier；未知 carrier 直接抛错，不默认。 */
+function encodeCarrier(carrier: string, raw: unknown, path: string): unknown {
+    switch (carrier) {
+        case 'i32': {
+            if (typeof raw !== 'number' || !Number.isFinite(raw)) {
+                throw new AbiSchemaError('invalid_carrier', path, `carrier i32 需要数字，实际是 ${typeof raw}`);
+            }
+            return raw | 0;
+        }
+        case 'i64': {
+            if (typeof raw === 'bigint') return raw;
+            if (typeof raw === 'number' && Number.isFinite(raw)) return BigInt(Math.trunc(raw));
+            throw new AbiSchemaError('invalid_carrier', path, `carrier i64 需要数字，实际是 ${typeof raw}`);
+        }
         case 'f32':
         case 'f64': {
-            if (typeof raw === 'bigint') return raw;
-            if (typeof raw === 'number') {
-                // i64: 整数安全则转 BigInt，避免精度丢
-                // f32/f64: 直接透传 number
-                if (type === 'i64') {
-                    if (!Number.isFinite(raw)) {
-                        throw new Error(`参数 "${name}" 需要 i64，但拿到了非有限值 ${raw}`);
-                    }
-                    // 超出安全整数范围也转 BigInt
-                    return BigInt(Math.trunc(raw));
-                }
-                return raw;
+            if (typeof raw !== 'number' || !Number.isFinite(raw)) {
+                throw new AbiSchemaError('invalid_carrier', path, `carrier ${carrier} 需要数字，实际是 ${typeof raw}`);
             }
-            throw new Error(`参数 "${name}" 需要 ${type}，但类型是 ${typeof raw}`);
+            return raw;
         }
-        case 'i32': {
-            if (typeof raw === 'number') return raw | 0;
-            throw new Error(`参数 "${name}" 需要 i32，但类型是 ${typeof raw}`);
-        }
-        case 'bool': {
-            if (typeof raw === 'boolean') return raw;
-            throw new Error(`参数 "${name}" 需要 bool，但类型是 ${typeof raw}`);
-        }
-        case 'string': {
-            if (typeof raw === 'string') return raw;
-            throw new Error(`参数 "${name}" 需要 string，但类型是 ${typeof raw}`);
-        }
+        default:
+            throw new AbiSchemaError('invalid_carrier', path, `未知 Wasm carrier "${carrier}"（只支持 i32/i64/f32/f64）`);
     }
 }
 
 // ── unmarshal: 按 schema.returns 把 callExport 返回值转成 JS 期望值 ────────────
 
 /**
- * 把 wasm callExport 的返回值按 schema.returns 类型转成 JS。
- * 单返回值（当前 Valkyrie 约定），返回 null 表示 void。
+ * 把 wasm callExport 的返回值按 schema.returns 转成 JS。
+ * `Unit` 表示 void；NamedAggregate 通过 glue 的 length/at 操作读回。
  */
 export function unmarshalReturnBySchema(
-    schema: AbiInvoke,
+    schema: LibraryInvokeSchema,
+    exportSchema: AbiExport,
     raw: unknown,
+    invokeExport: AbiExportInvoker,
 ): unknown {
-    if (!schema.returns) {
-        // void 返回：callExport 可能返回 undefined 或 i32=0
-        return raw === undefined || raw === null ? null : raw;
-    }
-    return unmarshalPrimitive(schema.returns.type, raw);
+    return unmarshalValue(schema, exportSchema.returns, raw, invokeExport, 'returns');
 }
 
-function unmarshalPrimitive(type: AbiType, raw: unknown): unknown {
-    switch (type) {
-        case 'i64': {
+function unmarshalValue(schema: LibraryInvokeSchema, type: WasmAbiType, raw: unknown, invokeExport: AbiExportInvoker, path: string): unknown {
+    switch (type.kind) {
+        case 'Unit':
+            return null;
+        case 'I32':
+        case 'F32':
+        case 'F64':
+        case 'Bool':
+        case 'Char':
+        case 'Utf8':
+            return raw;
+        case 'I64': {
             // BigInt 转 string，避免后续 JSON stringify 丢精度
             if (typeof raw === 'bigint') return raw.toString();
             if (typeof raw === 'number') return BigInt(Math.trunc(raw)).toString();
             return raw;
         }
-        case 'i32':
-        case 'f32':
-        case 'f64':
-        case 'bool':
-        case 'string': {
-            return raw;
-        }
+        case 'NamedAggregate':
+            return unmarshalAggregate(schema, type, raw, invokeExport, path);
+        case 'Unsupported':
+            throw new AbiSchemaError('unsupported_value', path, `ABI 返回类型 Unsupported（${type.reason}）没有 Wasm carrier`);
+        case 'Array':
+        case 'FixedArray':
+        case 'Option':
+        case 'Tuple':
+            throw new AbiSchemaError('unsupported_value', path, `${type.kind} 需要独立 glue 合同，当前 harness 不支持直接 unmarshal`);
     }
+}
+
+function unmarshalAggregate(
+    schema: LibraryInvokeSchema,
+    type: AbiNamedAggregateType,
+    raw: unknown,
+    invokeExport: AbiExportInvoker,
+    path: string,
+): unknown {
+    if (raw === undefined || raw === null) return null;
+    const entry = findGlueEntry(schema, type);
+
+    const length = requireGlueOperation(entry, 'length', `${path}.length`);
+    const at = requireGlueOperation(entry, 'at', `${path}.at`);
+    if (at.param_carriers.length !== 2) {
+        throw new AbiSchemaError(
+            'invalid_carrier',
+            `${path}.at`,
+            `at 必须是 [handle, index] 两个 carrier（实际 ${JSON.stringify(at.param_carriers)}）`,
+        );
+    }
+    const elementType = type.generic_args[0];
+    if (!elementType) {
+        throw new AbiSchemaError('invalid_type', `${path}.generic_args`, 'NamedAggregate 缺少元素类型 generic_args[0]');
+    }
+
+    const lengthValue = Number(invokeExport(length.export_name, raw));
+    if (!Number.isFinite(lengthValue) || lengthValue < 0) {
+        throw new AbiSchemaError('unsupported_value', `${path}.length`, `length 返回非法值 ${String(lengthValue)}`);
+    }
+    const out: unknown[] = [];
+    for (let index = 0; index < lengthValue; index += 1) {
+        // V `ArrayList.at` 使用序数索引（1-based），JS 循环下标是 0-based。
+        const atIndex = encodeCarrier(at.param_carriers[1]!, index + 1, `${path}.at`);
+        const item = invokeExport(at.export_name, raw, atIndex);
+        out.push(unmarshalElement(elementType, item, schema, invokeExport, `${path}[${index}]`));
+    }
+    return out;
+}
+
+function unmarshalElement(
+    elementType: WasmAbiType,
+    raw: unknown,
+    schema: LibraryInvokeSchema,
+    invokeExport: AbiExportInvoker,
+    path: string,
+): unknown {
+    if (elementType.kind === 'NamedAggregate') {
+        return unmarshalAggregate(schema, elementType, raw, invokeExport, path);
+    }
+    switch (elementType.kind) {
+        case 'Unit':
+            return null;
+        case 'Bool':
+            return Boolean(raw);
+        case 'I32':
+        case 'F32':
+        case 'F64':
+        case 'Char':
+            return Number(raw);
+        case 'I64':
+        case 'Utf8':
+            return Number(raw);
+        default:
+            throw new AbiSchemaError(
+                'unsupported_value',
+                path,
+                `元素类型 ${elementType.kind} 需要独立 glue 合同，当前 harness 不支持序列 unmarshal`,
+            );
+    }
+}
+
+function isScalarKind(kind: WasmAbiType['kind']): boolean {
+    return (
+        kind === 'Unit' ||
+        kind === 'I32' ||
+        kind === 'I64' ||
+        kind === 'F32' ||
+        kind === 'F64' ||
+        kind === 'Bool' ||
+        kind === 'Char' ||
+        kind === 'Utf8'
+    );
 }

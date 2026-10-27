@@ -5,21 +5,16 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { isArtifactCacheFresh, NODE_WASM_TARGET } from '@nyar/valkyrie';
-
+import { readNodeExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
+import { extractTestFailureIndex, formatSolverResultLine, type SolverCaseStats } from '../src/adapters/shared/solver-case-stats.ts';
 import {
+    type AbiExport,
+    type AbiExportInvoker,
+    type LibraryInvokeSchema,
     loadLibraryInvokeSchema,
     marshalArgsBySchema,
     unmarshalReturnBySchema,
-    type AbiInvoke,
-    type LibraryInvokeSchema,
 } from '../src/adapters/valkyrie-node/abi.ts';
-import { readNodeExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
-import {
-    extractTestFailureIndex,
-    formatSolverResultLine,
-    type SolverCaseStats,
-} from '../src/adapters/shared/solver-case-stats.ts';
-import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
 import {
     ensureVBuild,
     loadMetadata,
@@ -29,6 +24,7 @@ import {
     wasmInvokeBlockedReason,
 } from '../src/adapters/valkyrie-node/ref.ts';
 import { valkyrieProjectDir } from '../src/catalog/index.ts';
+import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
 
 type InvokeHost = {
@@ -40,49 +36,53 @@ async function loadInvokeHost(mjsPath: string): Promise<InvokeHost> {
     return (await import(pathToFileURL(mjsPath).href)) as InvokeHost;
 }
 
+type AbiLookup = {
+    exportSymbol: string;
+    exportSchema: AbiExport;
+};
+
 /**
- * 从 ABI schema 中找到 entry 对应的 AbiInvoke 声明。
- * entry 形如 `Solution().twoSum`，先剥出 export symbol 再查 schema。
+ * 从 ABI schema 中找到 entry 对应的 export 声明。
+ * entry 形如 `Solution().twoSum`，先剥出 export symbol 再查 schema.exports。
  */
-function lookupAbiInvoke(schema: LibraryInvokeSchema, entry: string): AbiInvoke {
+function lookupAbiExport(schema: LibraryInvokeSchema, entry: string): AbiLookup {
     const exportSymbol = resolveWasmExportSymbol(entry);
-    const found = schema.invokes[exportSymbol];
-    if (!found) {
-        const available = Object.keys(schema.invokes);
+    const exportSchema = schema.exports[exportSymbol];
+    if (!exportSchema) {
+        const available = Object.keys(schema.exports);
         throw new Error(
             `ABI schema 里找不到 export "${exportSymbol}"（来自 entry "${entry}"）。` +
-            `schema 里已注册的 export: ${available.join(', ') || '(none)'}`,
+                `schema 里已注册的 export: ${available.join(', ') || '(none)'}`,
         );
     }
-    return found;
+    return { exportSymbol, exportSchema };
 }
 
 /**
  * 按 ABI schema 的 params/returns 做 marshal/unmarshal。
- * 绝不使用 Object.values(args)——参数顺序由编译产物里的 schema 决定。
+ * params 只带类型（权威格式无参数名），按 metadata 键序逐位对齐。
  */
 async function runCandidate(
     host: InvokeHost,
     entry: string,
     args: Record<string, unknown>,
-    abi: { schema: LibraryInvokeSchema; invoke: AbiInvoke } | null,
+    abi: { schema: LibraryInvokeSchema; lookup: AbiLookup } | null,
 ): Promise<unknown> {
     if (typeof host.invokeLeetCode === 'function') {
         return host.invokeLeetCode(entry, args);
     }
     if (typeof host.callExport === 'function') {
         if (!abi) {
-            // TODO: emitter 侧产出 nyar.library_invoke section 后这个分支应该消失
-            // 现在强制失败，不允许回退到 Object.values
             throw new Error(
-                'callExport 路径需要 ABI schema，但 schema 未加载。' +
-                '请确认 wasm artifact 包含 nyar.library_invoke custom section。',
+                'callExport 路径需要 ABI schema，但 schema 未加载。' + '请确认 wasm artifact 包含 nyar.library_invoke custom section。',
             );
         }
-        const marshaled = marshalArgsBySchema(abi.invoke, args);
-        const raw = host.callExport(abi.invoke.export, ...marshaled);
+        // glue helper（construct/push/length/at）与顶层 export 都经 callExport 调用。
+        const invokeExport: AbiExportInvoker = (name, ...callArgs) => host.callExport!(name, ...callArgs);
+        const marshaled = marshalArgsBySchema(abi.schema, abi.lookup.exportSchema, args, invokeExport);
+        const raw = host.callExport(abi.lookup.exportSymbol, ...marshaled);
         const awaited = raw instanceof Promise ? await raw : raw;
-        return unmarshalReturnBySchema(abi.invoke, awaited);
+        return unmarshalReturnBySchema(abi.schema, abi.lookup.exportSchema, awaited, invokeExport);
     }
     throw new Error('node glue ??? invokeLeetCode / callExport???? valkyrie.rs ? leetcode ???????? wasm invoke??');
 }
@@ -148,11 +148,11 @@ async function main(): Promise<number> {
 
     // ── 加载 ABI schema（callExport 路径必需）─────────────────────────────────
     // 如果 node glue 只暴露 invokeLeetCode（结构化 JSON 接口），schema 可以跳过。
-    // 但只要走 callExport——参数顺序就必须由 schema 来，绝不能 Object.values。
+    // 但只要走 callExport——参数类型与 glue 身份就必须由 schema 来，不按题目名特判。
     const wasmBytes = readFileSync(artifacts.entry.legionWasm);
     const abiSchema = loadLibraryInvokeSchema(wasmBytes);
-    const abiInvoke = lookupAbiInvoke(abiSchema, entry);
-    const abi = { schema: abiSchema, invoke: abiInvoke };
+    const abiLookup = lookupAbiExport(abiSchema, entry);
+    const abi = { schema: abiSchema, lookup: abiLookup };
 
     const host = await loadInvokeHost(artifacts.entry.legionMjs);
     // host.callExport 存在则走 ABI marshal/unmarshal；只暴露 invokeLeetCode 时 abi 参数可省
