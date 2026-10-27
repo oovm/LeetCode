@@ -18,6 +18,7 @@ import {
 import {
     ensureVBuild,
     loadMetadata,
+    requireValkyrieInvokeEntry,
     resolveVBuildArtifacts,
     resolveWasmExportSymbol,
     type VBuildArtifacts,
@@ -137,13 +138,10 @@ async function main(): Promise<number> {
     }
 
     const { tests, invoke } = loadMetadata(problemDir);
-    const entry = invoke.valkyrie ?? invoke.typescript;
+    const entry = requireValkyrieInvokeEntry(invoke);
     const blocked = wasmInvokeBlockedReason(artifacts.entry.legionWasm, entry);
     if (blocked) {
         throw new Error(blocked);
-    }
-    if (!entry) {
-        throw new Error('metadata.invoke ??');
     }
 
     // ── 加载 ABI schema（callExport 路径必需）─────────────────────────────────

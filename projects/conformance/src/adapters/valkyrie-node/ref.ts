@@ -130,20 +130,20 @@ export function loadMetadata(problemRoot: string): {
 
     }
 
-    return { tests, invoke: { valkyrie: entry, typescript: meta.invoke?.typescript } };
+    return { tests, invoke: { valkyrie: meta.invoke?.valkyrie, typescript: meta.invoke?.typescript } };
 
 }
 
 
 
-/** ???? wasm ?????????��??Node ???? WebAssembly???????? `format-spy`???? */
+/** ???? wasm ?????????§Ò??Node ???? WebAssembly???????? `format-spy`???? */
 export function listWasmExports(wasmPath: string): string[] {
     return listWasmModuleExports(wasmPath);
 }
 
 
 
-/** 126 ???? `main` ???? wasm??package ????��????????? */
+/** 126 ???? `main` ???? wasm??package ????¦Ä????????? */
 
 export function isStubWasmArtifact(wasmPath: string): boolean {
 
@@ -199,7 +199,36 @@ export function resolveWasmExportSymbol(invokeEntry: string): string {
 
 
 
-/** ????????? execution manifest ��??? Node ???? */
+/** ????????? execution manifest §µ??? Node ???? */
+
+/** Valkyrie 入口合同错误码。 */
+export type ValkyrieEntryContractErrorCode = 'valkyrie_entry_contract_failure';
+
+/** Valkyrie 产物入口合同失败：`metadata.invoke.valkyrie` 缺失或为空。 */
+export class ValkyrieEntryContractError extends Error {
+    readonly code: ValkyrieEntryContractErrorCode = 'valkyrie_entry_contract_failure';
+
+    constructor(message: string) {
+        super(message);
+        this.name = 'ValkyrieEntryContractError';
+    }
+}
+
+/**
+ * 解析 Valkyrie 产物的 invoke 入口。
+ *
+ * 只认 `metadata.invoke.valkyrie`：它是 wasm export 的稳定身份。缺失即入口合同失败，
+ * 禁止回退到 `metadata.invoke.typescript`（TypeScript 入口不是 wasm export 身份）。
+ */
+export function requireValkyrieInvokeEntry(invoke: { valkyrie?: string; typescript?: string }): string {
+    const entry = invoke.valkyrie?.trim();
+    if (!entry) {
+        throw new ValkyrieEntryContractError(
+            'Valkyrie entry contract failure：metadata.invoke.valkyrie 缺失，禁止回退到 metadata.invoke.typescript',
+        );
+    }
+    return entry;
+}
 
 export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VBuildOutcome {
 
@@ -245,7 +274,7 @@ export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VB
 
         return {
 
-            error: 'legion build --target node ????��??? wasm/js ????',
+            error: 'legion build --target node ????¦Ä??? wasm/js ????',
 
             artifacts: null,
 
@@ -285,7 +314,7 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
     if (!valkyrieRunnerReady()) {
 
-        return 'legion ��????';
+        return 'legion ¦Ä????';
 
     }
 
@@ -293,7 +322,7 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
         return (
 
-            'wasm ?????? main?????��???????? MIR?????????��?package ???????? entry solution.v??' +
+            'wasm ?????? main?????¦Ä???????? MIR?????????¦²?package ???????? entry solution.v??' +
 
             '???? invoke ????????? node glue ?? callExport / JSON invoke'
 
@@ -309,7 +338,7 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
         if (!exports.includes(expected)) {
 
-            return `wasm ??? metadata.invoke ????????? ${expected}?????��?${exports.join(', ') || '??'}??`;
+            return `wasm ??? metadata.invoke ????????? ${expected}?????§µ?${exports.join(', ') || '??'}??`;
 
         }
 
@@ -321,7 +350,7 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
     if (callable.length === 0) {
 
-        return `wasm ???? invoke ?????????????��?${exports.join(', ') || '??'})`;
+        return `wasm ???? invoke ?????????????§µ?${exports.join(', ') || '??'})`;
 
     }
 
@@ -352,13 +381,10 @@ export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): 
                 return build.artifacts;
             })();
             if (!artifacts) {
-                return '��??? legion build ???????? legion build --target node??';
+                return '¦Ä??? legion build ???????? legion build --target node??';
             }
             const { tests, invoke } = loadMetadata(problemRoot);
-            const entry = invoke.valkyrie ?? invoke.typescript;
-            if (!entry) {
-                return 'metadata.invoke.valkyrie ?? invoke.typescript ??';
-            }
+            const entry = requireValkyrieInvokeEntry(invoke);
             if (tests.length === 0) {
                 return 'metadata.tests ???';
             }
@@ -395,7 +421,7 @@ export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): 
     if (result.status !== 0) {
         throw Object.assign(new Error(combined || 'run_v_solver failed'), { caseStats });
     }
-    return caseStats ?? emptySolverCaseStats('solver ��??????????');
+    return caseStats ?? emptySolverCaseStats('solver ¦Ä??????????');
 }
 
 export async function runVReference(problem: ProblemDefinition, pin?: VReferencePin): Promise<VReferenceOutcome> {

@@ -629,6 +629,7 @@
     "invoke": {
         "python": "Solution().twoSum",
         "typescript": "Solution().twoSum",
+        "valkyrie": "twoSum",
         "wolframSxo": "twoSum",
         "matlabSxo": "twoSum"
     }
