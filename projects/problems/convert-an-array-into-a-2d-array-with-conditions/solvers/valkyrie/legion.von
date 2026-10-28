@@ -11,6 +11,6 @@
         std: true
     },
     build: [
-        { target: "node" }
+        { target: "wasm" }
     ]
 }
