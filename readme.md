@@ -11,14 +11,15 @@ LeetCode 题目在 **Valkyrie（V）** 与 **TypeScript** 上的完备性测试�
 
 | 仓                              | 作用                                                                           |
 |---------------------------------|--------------------------------------------------------------------------------|
-| [`valkyrie.rs`](../valkyrie.rs) | `legion` CLI、`@valkyrie-language/vcc`、Wasm 编译与基准                        |
+| [`nyar-vm.rs`](../nyar-vm.rs)   | Valkyrie compiler（`rusty-valkyrie`）+ Legion/Asgard + `@nyar/valkyrie` / native N-API 产物（本仓 workspace 成员） |
+| [`valkyrie.rs`](../valkyrie.rs) | 下游语料仓：fixtures / golden / 黑盒 harness，不提供 legion 工具链 |
 | [`valkyrie.v`](../valkyrie.v)   | V 语言 `core` / `std` / adaptors（`legions.von` 注册；**非** legion CLI 来源） |
 
 首次克隆后建议：
 
 ```bash
 pnpm install
-pnpm link:valkyrie   # 将 vcc 链到本地 valkyrie.rs（按需）
+pnpm link:valkyrie   # 写 legions.von 并 pnpm install，解析 workspace 内的 @nyar/valkyrie
 ```
 
 ## 标识符
@@ -70,7 +71,7 @@ pnpm dashboard            # 启动看板 dev server
 
 | 变量                   | 说明                                 |
 |------------------------|--------------------------------------|
-| `VALKYRIE_RS_ROOT`     | 覆盖 `valkyrie.rs` 根路径            |
+| `NYAR_VM_ROOT`         | 覆盖 `nyar-vm.rs` 根路径             |
 | `LEETCODE_BATCH_ALL=1` | 全量题目（等同 `--all`）             |
 | `LEETCODE_BENCH_ID`    | 单题 id（等同 `--id`）               |
 
@@ -79,8 +80,8 @@ pnpm dashboard            # 启动看板 dev server
 - **题解**：`readme.md` 为参考实现（语言无关最优算法）；三端实现须与其一致。
 - **Python**：`solvers/python/solution.py`，LCD 脚手架，完备性跑测用。
 - **TypeScript**：`export class Solution`，方法名与 `invoke.typescript` 一致（如 `Solution().twoSum`）。
-- **Valkyrie**：`solvers/valkyrie/solution.v` + `legion.von`（`entry: "solution.v"`，`core` / `std` 为 workspace 依赖，
-  `target: node`）。
+- **Valkyrie**：`solvers/valkyrie/solution.v` + `legion.von`（`entry: "solution.v"`，`core` / `std` 为 workspace 依赖；
+  编译 target 由 `build[].target` 唯一决定，`two-sum` 为 `wasm`，中性 Wasm 不注入宿主 API；Node 只是 runner 执行宿主）。
 
 基准采用 **外部 harness**：`legion build` 产出 wasm + js glue；TS 对 `metadata.tests` 计时（`tsRuntimeMs`）。`pnpm bench` 对 V 侧只计 **编译**（`vCompileMs`），**不**调用 `legion bench` / `[benchmark]`；`vRuntimeMs` 待 wasm invoke harness 接线。
 

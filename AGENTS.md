@@ -15,8 +15,8 @@
 
 | 仓               | 用途                                                                                                              |
 |------------------|-------------------------------------------------------------------------------------------------------------------|
-| `../valkyrie.rs` | **装配层**：Rust seed `legion` CLI、`@valkyrie-language/vcc`、manifest/收集/构建编排与 wasm 产物装配（leetcode 默认工具链） |
-| `../nyar-vm.rs`  | **解析与优化层**：`nyar-language` / `nyar-optimizer` / `nyar-emitter`（HIR、`[export]`、wasm 降低、Node `callExport` glue）；经 `valkyrie.rs` `[patch]` 链接 |
+| `../nyar-vm.rs`  | **Valkyrie 工具链**：Valkyrie compiler（`rusty-valkyrie`）+ Legion/Asgard + `@nyar/valkyrie` / native N-API 产物；本仓 `pnpm-workspace.yaml` 直接将其 `projects/nyar.ts/**` 作为 workspace 成员 |
+| `../valkyrie.rs` | **下游语料仓**：fixtures / golden / 黑盒 harness，不提供 legion 工具链 |
 | `../valkyrie.v`  | V 语言 `core` / `std` / `std.adaptors._`（经根 `legions.von` 注册）；**不是** leetcode 用的 legion 可执行文件来源 |
 | sxo-framework（npm） | **Wolfram (Sxo)** / **MATLAB (Sxo)**：已发布 `@sxo/mathematica`、`@sxo/matlab`（`conformance` 的 `optionalDependencies`）；上游开发可选 `pnpm link:sxo` |
 
@@ -82,11 +82,11 @@
 | Python     | `invoke.python`                               | LCD 脚手架实现，算法须与题解一致；完备性跑测用                                                     |
 | TypeScript | `export class Solution` + `invoke.typescript` | 手写实现，算法须与题解一致；Node + `tsx` 跑测 |
 | TypeScript (Bun) | 同上 `solution.ts` + `invoke.typescript` | **复用** `solvers/typescript/solution.ts`；Bun 进程内直载 TS，看板标 **TypeScript (Bun)** |
-| Valkyrie   | `solution.v` + `legion.von`                   | 手写实现，算法须与题解一致；`core: true`、`std: true`、`target: node`；**无** `[benchmark]` 烟雾块 |
+| Valkyrie   | `solution.v` + `legion.von`                   | 手写实现，算法须与题解一致；`core: true`、`std: true`；编译 target 由 `legion.von` 的 `build[].target` 唯一决定（two-sum 当前为 `wasm`，中性 Wasm，不注入宿主 API）；**无** `[benchmark]` 烟雾块 |
 | Wolfram (Sxo) | `invoke.wolframSxo` + `solution.wl`        | 单脚本；经 `@sxo/mathematica` evaluate；看板标 **Wolfram (Sxo)**，非 Wolfram Engine |
 | MATLAB (Sxo)  | `invoke.matlabSxo` + `solution.m`          | 单脚本；经 `@sxo/matlab` evaluate；看板标 **MATLAB (Sxo)**，非 MATLAB Runtime |
 
-`legion.von` 示例字段：`entry: "solution.v"`、`dependencies: { core: true, std: true }`。
+`legion.von` 示例字段：`entry: "solution.v"`、`dependencies: { core: true, std: true }`、`build: [{ target: "wasm" }]`（`build[].target` 必填，无默认值）。
 
 ### SXO 单脚本约定
 
@@ -101,7 +101,7 @@
 
 ## 编译排查边界
 
-LeetCode 仓只负责题解、metadata、题意 harness 和结果证据。Valkyrie 编译语义属于 `nyar-vm.rs` 的 Valkyrie frontend，装配与产物属于 `valkyrie.rs`，标准库与 adaptor 属于旁边的 `valkyrie.v`。
+LeetCode 仓只负责题解、metadata、题意 harness 和结果证据。Valkyrie 编译语义属于 `nyar-vm.rs` 的 Valkyrie frontend，装配与产物属于 `nyar-vm.rs`（`legion` / `asgard` / `@nyar/valkyrie`），标准库与 adaptor 属于旁边的 `valkyrie.v`；`valkyrie.rs` 只是下游语料/fixtures 仓。
 
 题目失败时先检查入口需求链：export → receiver/call → declaration/instance → evidence → body。无法证明某个声明属于入口闭包时，问题归 Compiler 的 binding/closure contract，不能修改题解、加入源码排除表或为单题增加特判。
 
@@ -114,7 +114,7 @@ LeetCode 仓只负责题解、metadata、题意 harness 和结果证据。Valkyr
 - **外部基准**：先 `legion build` 得到 wasm + js glue，再在 harness 里对 **metadata.tests** 计时；leetcode **不在** `solution.v` 写 `[benchmark]`。
 - **TS (Node) 运行**：harness 单进程加载题解（`tsx` 转译发生在计时外），预热后只对全量 `metadata.tests` 循环取中位数 → `runtimeMs`（不含每次冷启动 Node）。
 - **TS (Bun) 运行**：`bun` 子进程内直载同一 `solution.ts`，预热后只计 `metadata.tests` 循环 → `tbRuntimeMs`；`bun` 来自 `projects/conformance` 的 `devDependency`（`pnpm install`，若二进制缺失在根目录执行 `pnpm approve-builds` 放行 `bun`）或 PATH / `BUN_PATH`。
-- **V 编译**：`pnpm bench` 对 `legion build --target node` 计时 → `vCompileMs`（**不**调用 `legion bench`）。
+- **V 编译**：`pnpm bench` 对 `legion build` 计时 → `vCompileMs`（target 由 `legion.von` 的 `build[].target` 决定，**不**调用 `legion bench`）。
 - **V 运行**：只记录本次真实产物 invoke 的用例结果与计时。未执行、缺导出、零用例或失败均不计通过；性能缺测可以显示 missing，但不能掩盖正确性未通过。
 - 编排：`pnpm bench` → `scripts/benchmark.mjs` → `@leetcode/conformance` `bench-all.ts`（支持 `--count`、`--id`、`--lang` 等 CLI）。
 - **Wolfram / MATLAB (Sxo)**：单 Node 进程内复用 `@sxo/*` frontend，预热后只对全量 `metadata.tests` 循环取中位数 → `runtimeMs`（对齐 Python / TS 公平性）。
@@ -123,7 +123,7 @@ LeetCode 仓只负责题解、metadata、题意 harness 和结果证据。Valkyr
 ## 格式化与链接
 
 ```text
-pnpm link:valkyrie    # 链到兄弟仓 vcc（按需）
+pnpm link:valkyrie    # 写 legions.von 并 pnpm install，解析 workspace 内的 `@nyar/valkyrie`
 pnpm link:sxo         # 仅 sxo-framework 上游开发：改回本地 link:（默认用 npm）
 pnpm fmt              # `nifty format`（读 `biome.json`，4 空格）
 pnpm fmt:check
@@ -192,26 +192,27 @@ node scripts/reword.mjs --file reword.pending.txt --base origin/dev
 
 本节记录自动化助手与新人易犯的 **概念混淆** 与 **操作坑**；细节流程仍以各 skill 为准。
 
-### 1. legion 来自 `valkyrie.rs`，不是 `valkyrie.v` 自举 legion
+### 1. legion 来自 `nyar-vm.rs`，不是 `valkyrie.v` 自举 legion
 
 | 产物                                                           | 仓                                  | leetcode.v 是否默认使用                                        |
 |----------------------------------------------------------------|-------------------------------------|----------------------------------------------------------------|
-| VCC N-API `.node`、wasm collect、`@valkyrie-language/vcc` | `../valkyrie.rs`                    | **是** — `pnpm link:valkyrie` 后 `conformance` 经 `legionHost.spawnCli`（N-API 或 wasm） |
+| `valkyrie-napi` N-API `.node`、`@nyar/valkyrie`（legion/asgard） | `../nyar-vm.rs`                     | **是** — workspace 成员；`pnpm link:valkyrie` 写 `legions.von` + `pnpm install` 后 `conformance` 直接经 `@nyar/valkyrie` 调 `legion build` / `test` |
 | V 源码 `legion.tools` | `../valkyrie.v/projects/legion._/…` | **否** — 源码工程存在不证明已完成 source-bootstrap 或 self-hosted |
 
-- **勿**在 `valkyrie.v` 里找 leetcode 要用的 seed 可执行文件。
-- **勿**把「补 std」与「修 Compiler/Legion」混为一仓：库声明 → `valkyrie.v`；语义、链接与 emitter → `nyar-vm.rs`；工程装配与 CLI → `valkyrie.rs`。
-- **铁律：禁止 `vcc.exe` / `legion.exe` / `[[bin]]` seed**。原生 CLI 仅经 `vcc-napi` platform `.node`（`node scripts/build.mjs napi`）或 wasm collect；leetcode 用 `pnpm link:valkyrie` path link，**勿** stage 可执行文件。
+- **勿**在 `valkyrie.v` 里找 leetcode 要用的 legion 可执行文件。
+- **勿**把「补 std」与「修 Compiler/Legion」混为一仓：库声明 → `valkyrie.v`；语义、链接、emitter 与 Legion/Asgard 装配 → `nyar-vm.rs`；`valkyrie.rs` 只是 fixtures/黑盒语料仓，不提供工具链。
+- **铁律：禁止 `vcc.exe` / `legion.exe` / `[[bin]]` seed**。原生 CLI 仅经 `valkyrie-napi` platform `.node`（`node scripts/build.mjs napi`）或 wasm collect；leetcode 用 `pnpm link:valkyrie` 生成 `legions.von` + `pnpm install` 解析 workspace 内 `@nyar/valkyrie`，**勿** stage 可执行文件。
 
-### 2. `valkyrie.rs` 是装配层，解析/优化在 `nyar-vm.rs`
+### 2. Legion/Asgard 装配与 Valkyrie 编译都在 `nyar-vm.rs`
 
 | 层 | 仓 | 典型改动 |
 | --- | --- | --- |
-| 装配 | `../valkyrie.rs` | `legion` manifest、package graph、不可变源码 inventory、CLI、`legion build` 缓存与产物路径 |
-| 解析/优化/降低 | `../nyar-vm.rs` | HIR、`[export]` → wasm 导出表、MIR、`wasm_js_glue`（`callExport`）、`nyar-optimizer` |
+| 装配 | `../nyar-vm.rs`（`rusty-valkyrie` 的 `src/legion`、`src/asgard`） | `legion` manifest、package graph、不可变源码 inventory、CLI、`legion build` 缓存与产物路径 |
+| 解析/优化/降低 | `../nyar-vm.rs`（Valkyrie frontend、`nyar-emitter`） | HIR、`[export]` → wasm 导出表、MIR、`wasm_js_glue`（`callExport`）、`nyar-optimizer` |
+| 语料/fixtures | `../valkyrie.rs` | 黑盒 harness、golden；不承载工具链 |
 
-- **勿**在 `valkyrie.rs` 的 `asgard` 或 `legion` 里补 LeetCode wasm invoke / 多 export 的 emitter 语义。
-- **勿**在 `nyar-vm.rs` 重复实现 `legion.von` 的 `entry` 收集合同；manifest 校验属装配层。
+- **勿**在 `nyar-vm.rs` 的 `asgard` 或 `legion` 里补 LeetCode wasm invoke / 多 export 的 emitter 语义。
+- `legion.von` 的 `entry` 收集合同只在装配层实现一次；前端不得重复实现，manifest 校验同样属装配层。
 - 本地 patch 验证须记录实际来源与修订；刷新 host 后还需核对调用的 Compiler 路由。最终交付须另做准确 pin 复验，不能把本地兄弟工作树通过当成发布依赖通过。
 
 ### 3. `legions.von` 不能只注册 `core` + `std`
@@ -236,23 +237,23 @@ project 'std' requires workspace dependency 'std.adaptor.clr', but no workspace 
 
 ### 4. legion CLI 标志：用 `--target`，不是 `-t`
 
-当前 Rust seed legion 的 build/test 使用长选项：
+当前 legion（`@nyar/valkyrie`）的 build/test 使用长选项：
 
 ```text
-legion build <project-dir> --target node -o .cache/<slug>-node
-legion test <project-dir> --target node
+legion build <project-dir> --target wasm -o .cache/<slug>-wasm
+legion test <project-dir> --target wasm
 ```
 
-`-t node` 会报 `unexpected argument '-t' found`。skills 里若仍写 `-t`，以 **本文件与 legion `--help`** 为准。
+`-t wasm` 会报 `unexpected argument '-t' found`。skills 里若仍写 `-t`，以 **本文件与 legion `--help`** 为准。
 
-`node` 在规划器里映射为 `wasm32-node-unknown-wasm`（见 `valkyrie.rs` planner 测试）。
+编译 target 由 `legion.von` 的 `build[].target` 唯一决定（`resolveCompileTargetFromManifest` 无默认值），`--target` 须与 manifest 一致。Node 只是 runner 执行宿主，不等于编译 target 是 `node`。
 
 ### 5. `legion test` ≠ 对 `metadata.tests` 验题意
 
 | 机制                                        | 验什么                                                                               |
 |---------------------------------------------|--------------------------------------------------------------------------------------|
 | `run_python_solver.py` / `run_ts_solver.ts` | **题意**：`metadata.json` 全量 `tests`                                               |
-| `legion build`                              | V 解能否编译、链接到 node/wasm 或 nyar 产物                                         |
+| `legion build`                              | V 解能否按 `build[].target` 编译、链接（two-sum 为 wasm）                            |
 | `run_v_solver.ts` / `run_nyar_solver.ts`    | **题意**：对 legion 产物跑全量 `metadata.tests`（空壳 wasm 在 harness 内判失败）     |
 | `legion test`                               | 工程内 `[test]` 或 `test/` 目录中的 **V 单测**；无则 **0 通过、跳过**，exit 0 仍可能 |
 
@@ -272,8 +273,8 @@ slug 写进 `legions.von`。
 |---------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | ① coach `readme.md` | 把 LCD 旧稿（英文题面 + 难度标签行）当成已完成；须符合 `leetcode-coach`（中文、`## 问题` / `## 解答` / `## 复杂度分析`、无代码） |
 | ② `solution.v`      | 文件存在但 **空文件** 或仅 `# 阻塞：` 即宣称「已实现」                                                                           |
-| ③ 测 V              | 只跑 `legion build` 未对照题解或其它实现；或把 seed legion 与自举 legion 混用导致环境不一致                                      |
-| ④ 演进              | 在 leetcode.v 内嵌 std 副本；应在 `valkyrie.v` / `valkyrie.rs` / `nyar-vm.rs`（按层）补能力后回到 ②③                                 |
+| ③ 测 V              | 只跑 `legion build` 未对照题解或其它实现；或把 `@nyar/valkyrie` 的 legion 与 `valkyrie.v` 自举 legion 混用导致环境不一致            |
+| ④ 演进              | 在 leetcode.v 内嵌 std 副本；应在 `valkyrie.v` / `nyar-vm.rs`（按层）补能力后回到 ②③                                               |
 
 ### 8. 写 `solution.v` 时易错点（详见 `valkyrie-guide`）
 
@@ -314,7 +315,7 @@ slug 写进 `legions.von`。
 | `leetcode-coach`        | ① 单题 `readme.md` 教练稿（语言无关）                |
 | `leetcode-implement`    | ② `solvers/` 三端实现与 `metadata.tests`             |
 | `valkyrie-guide`        | ② 写 V 时：语法、下标、std、legion                   |
-| `valkyrie-evolution`    | ④ 按缺口在 `../valkyrie.v` / `../valkyrie.rs` 补能力 |
+| `valkyrie-evolution`    | ④ 按缺口在 `../valkyrie.v` / `../nyar-vm.rs` 补能力 |
 | `sxo-evolution`         | ④ 按缺口在 sxo-framework `@sxo/mathematica` / `@sxo/matlab` 补能力（看板标 **(Sxo)**） |
 
 **勿**在仓库根自建 `skills/` 或提交 `.cursor/skills/` 副本；`.cursor/` 仅作本机可选映射（已 gitignore）。
