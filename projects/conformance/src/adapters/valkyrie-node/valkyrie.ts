@@ -14,7 +14,7 @@ import {
     type LegionSpawnResult,
 } from '@nyar/valkyrie';
 import { LEETCODE_ROOT } from '../../domain/paths.ts';
-import { VALKYRIE_NODE } from './config.ts';
+import { resolveCompileTargetFromManifest } from './manifest.ts';
 
 const runner = createLegionBenchmarkRunner();
 
@@ -36,11 +36,11 @@ export function hasValkyrieSolver(problemRoot: string): boolean {
 export function valkyrieSolverBlockedReason(problemRoot: string): string | null {
     try {
         const text = readFileSync(valkyrieSolverPath(problemRoot), 'utf8').trim();
-        if (text.length === 0) return 'solution.v ??';
-        if (text.startsWith('# ??')) return 'solution.v ?????';
+        if (text.length === 0) return 'solution.v 为空';
+        if (text.startsWith('# ')) return 'solution.v 仅占位';
         return null;
     } catch {
-        return 'solution.v ??';
+        return 'solution.v 缺失';
     }
 }
 
@@ -64,21 +64,34 @@ export function spawnLegion(argv: string[]): LegionOutcome {
     return legionSpawn(argv);
 }
 
+/**
+ * 从 solver 目录的 legion.von 解析 compile target，然后调用 legion build。
+ * compile target 的**唯一来源**是 manifest —— 禁止任何默认值。
+ */
 export function legionBuild(projectDir: string, outputDir: string): LegionOutcome {
-    return legionBuildProject(projectDir, VALKYRIE_NODE.compileTargetDefault, outputDir);
+    const target = resolveCompileTargetFromManifest(projectDir);
+    return legionBuildProject(projectDir, target, outputDir);
 }
 
 export const legionBuildNative = legionBuild;
 
+/**
+ * 从 solver 目录的 legion.von 解析 compile target，然后调用 legion test。
+ */
 export function legionTest(projectDir: string): LegionOutcome {
-    return legionTestProject(projectDir, VALKYRIE_NODE.compileTargetDefault);
+    const target = resolveCompileTargetFromManifest(projectDir);
+    return legionTestProject(projectDir, target);
 }
 
 export type ParsedBenchRow = LegionBenchRow;
 export { parseLegionBenchTable };
 
+/**
+ * bench 同样从 manifest 读 target。
+ */
 export function legionBench(projectDir: string, runs = 3) {
-    return runner.benchProject(projectDir, { runs, target: VALKYRIE_NODE.benchCompileTarget });
+    const target = resolveCompileTargetFromManifest(projectDir);
+    return runner.benchProject(projectDir, { runs, target });
 }
 
 export function formatLegionError(label: string, outcome: LegionOutcome): string {

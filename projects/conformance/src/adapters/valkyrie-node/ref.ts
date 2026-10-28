@@ -11,11 +11,8 @@ import { pathToFileURL } from 'node:url';
 import {
     isArtifactCacheFreshForBuild,
     listWasmModuleExports,
-    resolveArtifactDir,
     resolveNodeEntry,
 } from '@nyar/valkyrie';
-
-import { VALKYRIE_NODE } from './config.ts';
 
 
 
@@ -73,9 +70,16 @@ export function vBuildDir(problem: ProblemDefinition): string {
 
 
 
+/**
+ * artifact 目录 = build output dir。
+ *
+ * 历史上这里硬编码 canonical triple 做子目录，但 `@nyar/valkyrie` 的
+ * `resolveArtifactDir(dir, _target)` 已经把 target 参数废弃（直接 return dir），
+ * 所以 artifactDir 就是 outDir 本身。
+ */
 export function vArtifactDir(problem: ProblemDefinition): string {
 
-    return resolveArtifactDir(vBuildDir(problem), VALKYRIE_NODE.canonicalTargetNodeWasm);
+    return vBuildDir(problem);
 
 }
 
@@ -83,7 +87,7 @@ export function vArtifactDir(problem: ProblemDefinition): string {
 
 export function resolveVBuildArtifacts(problem: ProblemDefinition) {
 
-    const outDir = resolveArtifactDir(vBuildDir(problem), VALKYRIE_NODE.canonicalTargetNodeWasm);
+    const outDir = vBuildDir(problem);
 
     const entry = resolveNodeEntry(outDir);
 
@@ -119,7 +123,7 @@ export function loadMetadata(problemRoot: string): {
 
     if (!tests?.length) {
 
-        throw new Error('metadata.tests ???');
+        throw new Error('metadata.tests 缺失');
 
     }
 
@@ -127,7 +131,7 @@ export function loadMetadata(problemRoot: string): {
 
     if (!entry) {
 
-        throw new Error('metadata.invoke.valkyrie ?? invoke.typescript ??');
+        throw new Error('metadata.invoke.valkyrie 与 invoke.typescript 均缺失');
 
     }
 
@@ -137,14 +141,14 @@ export function loadMetadata(problemRoot: string): {
 
 
 
-/** ???? wasm ?????????§Ò??Node ???? WebAssembly???????? `format-spy`???? */
+/** 检查 wasm 导出是否只有 `main` —— 占位/桩 wasm，禁止 invoke。 */
 export function listWasmExports(wasmPath: string): string[] {
     return listWasmModuleExports(wasmPath);
 }
 
 
 
-/** 126 ???? `main` ???? wasm??package ????¦Ä????????? */
+/** 126 字节只有 `main` 导出的 wasm 不是 package 编译产物。 */
 
 export function isStubWasmArtifact(wasmPath: string): boolean {
 
@@ -172,7 +176,7 @@ export function isStubWasmArtifact(wasmPath: string): boolean {
 
 
 
-/** ?? `metadata.invoke`???? `Solution().twoSum`?????? wasm ????????camelCase???? */
+/** 从 `metadata.invoke` 提取 `Solution().twoSum` 里的 wasm export symbol（camelCase 方法名）。 */
 
 export function resolveWasmExportSymbol(invokeEntry: string): string {
 
@@ -199,8 +203,6 @@ export function resolveWasmExportSymbol(invokeEntry: string): string {
 }
 
 
-
-/** ????????? execution manifest §µ??? Node ???? */
 
 /** Valkyrie 入口合同错误码。 */
 export type ValkyrieEntryContractErrorCode = 'valkyrie_entry_contract_failure';
@@ -235,7 +237,7 @@ export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VB
 
     const outDir = vBuildDir(problem);
 
-    const artifactDir = resolveArtifactDir(outDir, VALKYRIE_NODE.canonicalTargetNodeWasm);
+    const artifactDir = outDir;
 
     const cached = resolveVBuildArtifacts(problem);
 
@@ -257,7 +259,7 @@ export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VB
 
         return {
 
-            error: formatLegionError('legion build --target node', build),
+            error: formatLegionError('legion build', build),
 
             artifacts: null,
 
@@ -275,7 +277,7 @@ export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VB
 
         return {
 
-            error: 'legion build --target node ????¦Ä??? wasm/js ????',
+            error: 'legion build 成功但找不到 wasm/js 入口',
 
             artifacts: null,
 
@@ -293,7 +295,7 @@ export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VB
 
         return {
 
-            error: rebuiltFreshness.reason ?? 'legion build ?????????? execution manifest',
+            error: rebuiltFreshness.reason ?? 'legion build 未生成 execution manifest',
 
             artifacts: null,
 
@@ -315,7 +317,7 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
     if (!valkyrieRunnerReady()) {
 
-        return 'legion ¦Ä????';
+        return 'legion 未就绪';
 
     }
 
@@ -323,9 +325,9 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
         return (
 
-            'wasm ?????? main?????¦Ä???????? MIR?????????¦²?package ???????? entry solution.v??' +
+            'wasm 只有 main 导出 —— 不是 package 编译产物。确认 solution.v 是否真的调用了 export，' +
 
-            '???? invoke ????????? node glue ?? callExport / JSON invoke'
+            '并确保 invoke 入口与 node glue 兼容（callExport / JSON invoke）。'
 
         );
 
@@ -339,7 +341,7 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
         if (!exports.includes(expected)) {
 
-            return `wasm ??? metadata.invoke ????????? ${expected}?????§µ?${exports.join(', ') || '??'}??`;
+            return `wasm 里找不到 metadata.invoke 对应的 export "${expected}"（已有: ${exports.join(', ') || '(none)'}）。`;
 
         }
 
@@ -351,7 +353,7 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
     if (callable.length === 0) {
 
-        return `wasm ???? invoke ?????????????§µ?${exports.join(', ') || '??'})`;
+        return `wasm 里没有可 invoke 的 export（已有: ${exports.join(', ') || '(none)'}）。`;
 
     }
 
@@ -362,9 +364,13 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
 
 export type VReferenceOutcome = {
+
     ok: boolean;
+
     stderr: string;
+
     caseStats: SolverCaseStats;
+
 };
 
 export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): Promise<SolverCaseStats> {
@@ -382,12 +388,12 @@ export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): 
                 return build.artifacts;
             })();
             if (!artifacts) {
-                return '¦Ä??? legion build ???????? legion build --target node??';
+                return '无法 legion build —— 检查 legion.von 与编译环境';
             }
             const { tests, invoke } = loadMetadata(problemRoot);
             const entry = requireValkyrieInvokeEntry(invoke);
             if (tests.length === 0) {
-                return 'metadata.tests ???';
+                return 'metadata.tests 缺失';
             }
             return wasmInvokeBlockedReason(artifacts.entry.legionWasm, entry);
         } catch (err) {
@@ -422,7 +428,7 @@ export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): 
     if (result.status !== 0) {
         throw Object.assign(new Error(combined || 'run_v_solver failed'), { caseStats });
     }
-    return caseStats ?? emptySolverCaseStats('solver ¦Ä??????????');
+    return caseStats ?? emptySolverCaseStats('solver 未执行完所有 case');
 }
 
 export async function runVReference(problem: ProblemDefinition, pin?: VReferencePin): Promise<VReferenceOutcome> {
@@ -452,5 +458,3 @@ export function vSolverModuleUrl(problemRoot: string): string {
     return pathToFileURL(join(problemRoot, 'solvers', 'valkyrie', 'solution.v')).href;
 
 }
-
-

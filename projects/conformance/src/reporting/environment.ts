@@ -18,7 +18,7 @@ import {
     TYPESCRIPT_BENCH_PARAMS,
     VALKYRIE_BENCH_PARAMS,
 } from '../planning/bench-params.ts';
-import { VALKYRIE_NODE } from '../adapters/valkyrie-node/config.ts';
+// VALKYRIE_NODE import removed — compile target 从各题 manifest 读，不再有 adapter 级默认值
 import { bunRunnerReady, bunSkipReason, bunVersion } from '../adapters/typescript-bun/bridge.ts';
 import { sxoPackagesStatus, sxoRunnerReady, sxoSkipReason } from '../adapters/shared/sxo-bridge.ts';
 import { spawnLegion, valkyrieRunnerReady, valkyrieSkipReason } from '../adapters/valkyrie-node/valkyrie.ts';
@@ -109,7 +109,8 @@ export function collectMatlabSxoBenchEnvironment(): MatlabSxoBenchEnvironment {
 }
 
 export function collectValkyrieBenchEnvironment(): ValkyrieBenchEnvironment {
-    const benchTarget = VALKYRIE_NODE.benchCompileTarget;
+    // compile target 是 per-problem 的（来自各题 legion.von），环境级只给一个描述性标签
+    const benchTarget = 'per-problem-manifest';
     let legionVersion: string | null = null;
     let legionRoute: string | null = null;
 

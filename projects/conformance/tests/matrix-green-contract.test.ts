@@ -2,14 +2,17 @@ import { describe, expect, it } from 'vitest';
 
 import { isMatrixRowGreen } from '../src/adapters/shared/matrix-green.ts';
 import { isValkyrieGreen, type ValkyrieMatrixRow } from '../src/adapters/valkyrie-node/matrix.ts';
-import { VALKYRIE_NODE } from '../src/adapters/valkyrie-node/config.ts';
 import { isValkyrieNyarGreen, type ValkyrieNyarMatrixRow } from '../src/adapters/valkyrie-nyar/matrix.ts';
+
+// runnerHost 固定为 'node'，compile target 来自各题 manifest
+const RUNNER_HOST = 'node';
+const CANONICAL_TRIPLE_NODE_WASM = 'wasm32-node-unknown-wasm';
 
 function baseNodeRow(overrides: Partial<ValkyrieMatrixRow> = {}): ValkyrieMatrixRow {
     return {
         id: 'two-sum',
-        target: VALKYRIE_NODE.canonicalTargetNodeWasm,
-        runnerHost: VALKYRIE_NODE.runnerHost,
+        target: CANONICAL_TRIPLE_NODE_WASM,
+        runnerHost: RUNNER_HOST,
         buildStatus: 0,
         testStatus: 0,
         buildRoute: 'legion build --target node',
