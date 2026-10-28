@@ -58,7 +58,7 @@ solvers/valkyrie/solution.v + legion.von
 ```text
 python projects/conformance/scripts/run_python_solver.py projects/problems/<slug>
 node --import tsx projects/conformance/scripts/run_ts_solver.ts projects/problems/<slug>
-legion build projects/problems/<slug>/solvers/valkyrie --target node -o .cache/<slug>-node
+legion build projects/problems/<slug>/solvers/valkyrie --target wasm -o .cache/<slug>-wasm
 ```
 
 ## ③ 测 Valkyrie 是否正常
@@ -67,7 +67,7 @@ legion build projects/problems/<slug>/solvers/valkyrie --target node -o .cache/<
 
 **必做**：
 
-1. `legion build …/solvers/valkyrie --target node` 成功
+1. `legion build …/solvers/valkyrie --target wasm` 成功
 2. 对 **metadata.tests** 跑 V（harness / `legion test`，环境允许时）
 3. （可选）`LEETCODE_BENCH_ID=<slug> pnpm bench` 对比 TS 与 V 耗时
 
@@ -98,7 +98,7 @@ legion build projects/problems/<slug>/solvers/valkyrie --target node -o .cache/<
 - [ ] ① `readme.md` 符合 coach 规范
 - [ ] ② Python + TS `metadata.tests` 全绿
 - [ ] ② V 源码与 `legion.von` 就绪
-- [ ] ③ `legion build --target node` 通过
+- [ ] ③ `legion build --target wasm` 通过
 - [ ] ③ V 测例与题解一致（与其它实现对齐）
 - [ ] ④（若曾阻塞）backlog 项已 `done` 或 `wont`
 

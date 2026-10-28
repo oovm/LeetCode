@@ -79,7 +79,7 @@ projects/problems/<slug>/solvers/
 - [ ] 三端算法与 coach **最终算法** 同阶同语义
 - [ ] Python / TS 对本机 `metadata.tests` 全绿
 - [ ] 未在 readme 写代码或语言名（coach 规则不变）
-- [ ] V 至少 `legion build --target node` 可尝试（环境允许时）
+- [ ] V 至少 `legion build --target wasm` 可尝试（环境允许时）
 
 ## 参考
 

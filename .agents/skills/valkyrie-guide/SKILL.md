@@ -81,12 +81,12 @@ imply Solution {
 
 ```text
 solvers/valkyrie/
-├── legion.von    # entry: "solution.v", build target node
+├── legion.von    # entry: "solution.v", build target wasm
 └── solution.v
 ```
 
 - **不要**在 `solution.v` 里写 `[benchmark]`；leetcode 用外部 harness 跑 `metadata.tests`。
-- 编译：`legion build <dir> --target node -o ...`（Rust seed，见 `AGENTS.md` §维护者陷阱；非 `valkyrie.v` 自举 legion）。
+- 编译：`legion build <dir> --target wasm -o ...`（Rust seed，见 `AGENTS.md` §维护者陷阱；非 `valkyrie.v` 自举 legion）。
 
 ### wasm invoke（库模式，无 `[main]`）
 

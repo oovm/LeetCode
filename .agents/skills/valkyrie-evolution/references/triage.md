@@ -7,7 +7,7 @@
 | 找不到类型 / `namespace` | std 未实现或未进 prelude  | `valkyrie.v/projects/std/legion.von`、`_prelude` |
 | 方法存在但链接失败       | adaptor / `host_contract` | `std.adaptors._`                                 |
 | 语法不接受合法 V         | 编译器                    | `valkyrie.rs`、nyar 报错栈                       |
-| 仅 node 目标失败         | legion 目标配置           | 题 `legion.von`、`legion build --target node`    |
+| 仅某 compile target 失败 | legion 目标配置           | 题 `legion.von` 的 `build[].target`、`legion build --target <target>` |
 | 逻辑对但测例不过         | **题解**（非本 skill）    | `leetcode-implement`                             |
 
 ## std 已存在 vs 真缺失

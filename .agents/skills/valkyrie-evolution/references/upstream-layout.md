@@ -33,11 +33,11 @@ leetcode.v 通过根 `legions.von` 引用：
 ```text
 # 上游 std
 cd ../valkyrie.v/projects/std
-legion test --target node
+legion test --target wasm
 
 # 单题 V 解
 cd leetcode.v
-legion build projects/problems/<slug>/solvers/valkyrie --target node -o .cache/<slug>-node
+legion build projects/problems/<slug>/solvers/valkyrie --target wasm -o .cache/<slug>-wasm
 
 # 链工具链（按需）
 pnpm link:valkyrie

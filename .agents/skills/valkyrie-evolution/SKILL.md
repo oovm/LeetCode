@@ -86,7 +86,7 @@ valkyrie-evolution（上游） → leetcode-implement（solution.v） → confor
 解除阻塞时：删除 `solution.v` 顶部 `# 阻塞：` 行，实现与 coach 一致的最优解，并跑：
 
 ```text
-legion build projects/problems/<slug>/solvers/valkyrie --target node
+legion build projects/problems/<slug>/solvers/valkyrie --target wasm
 python projects/conformance/scripts/run_python_solver.py projects/problems/<slug>   # 对照
 node --import tsx projects/conformance/scripts/run_ts_solver.ts projects/problems/<slug>
 ```

@@ -21,7 +21,7 @@ projects/problems/<slug>/solvers/valkyrie/
   },
   build: [
     {
-      target: "node"
+      target: "wasm"
     }
   ]
 }
@@ -36,8 +36,8 @@ projects/problems/<slug>/solvers/valkyrie/
 使用 **`valkyrie.rs` Rust seed** `legion`（非 `valkyrie.v` 自举 `legion.tools`）。见 `AGENTS.md` §维护者陷阱。
 
 ```text
-legion build solvers/valkyrie --target node -o .cache/out
-legion test solvers/valkyrie --target node
+legion build solvers/valkyrie --target wasm -o .cache/out
+legion test solvers/valkyrie --target wasm
 ```
 
 路径相对于题目目录或传入绝对路径。leetcode 基准以外部 harness 跑 `metadata.tests` 为准，不依赖源码内 `[benchmark]`。
