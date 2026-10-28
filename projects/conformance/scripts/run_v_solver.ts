@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { isArtifactCacheFresh, NODE_WASM_TARGET } from '@nyar/valkyrie';
+import { isArtifactCacheFreshForBuild } from '@nyar/valkyrie';
 import { readNodeExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
 import { extractTestFailureIndex, formatSolverResultLine, type SolverCaseStats } from '../src/adapters/shared/solver-case-stats.ts';
 import {
@@ -113,7 +113,7 @@ async function main(): Promise<number> {
     let artifacts: VBuildArtifacts | null = null;
     const pinned = readNodeExecutionPinFromEnv();
     if (pinned) {
-        const freshness = isArtifactCacheFresh(pinned.artifactDir, NODE_WASM_TARGET);
+        const freshness = isArtifactCacheFreshForBuild(pinned.artifactDir);
         if (!freshness.fresh) {
             throw new Error(freshness.reason ?? 'pinned execution manifest stale');
         }

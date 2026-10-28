@@ -9,12 +9,13 @@ import { pathToFileURL } from 'node:url';
 
 
 import {
-    NODE_WASM_TARGET,
-    isArtifactCacheFresh,
+    isArtifactCacheFreshForBuild,
     listWasmModuleExports,
     resolveArtifactDir,
     resolveNodeEntry,
 } from '@nyar/valkyrie';
+
+import { VALKYRIE_NODE } from './config.ts';
 
 
 
@@ -74,7 +75,7 @@ export function vBuildDir(problem: ProblemDefinition): string {
 
 export function vArtifactDir(problem: ProblemDefinition): string {
 
-    return resolveArtifactDir(vBuildDir(problem), NODE_WASM_TARGET);
+    return resolveArtifactDir(vBuildDir(problem), VALKYRIE_NODE.canonicalTargetNodeWasm);
 
 }
 
@@ -82,7 +83,7 @@ export function vArtifactDir(problem: ProblemDefinition): string {
 
 export function resolveVBuildArtifacts(problem: ProblemDefinition) {
 
-    const outDir = resolveArtifactDir(vBuildDir(problem), NODE_WASM_TARGET);
+    const outDir = resolveArtifactDir(vBuildDir(problem), VALKYRIE_NODE.canonicalTargetNodeWasm);
 
     const entry = resolveNodeEntry(outDir);
 
@@ -234,11 +235,11 @@ export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VB
 
     const outDir = vBuildDir(problem);
 
-    const artifactDir = resolveArtifactDir(outDir, NODE_WASM_TARGET);
+    const artifactDir = resolveArtifactDir(outDir, VALKYRIE_NODE.canonicalTargetNodeWasm);
 
     const cached = resolveVBuildArtifacts(problem);
 
-    const freshness = isArtifactCacheFresh(artifactDir, NODE_WASM_TARGET);
+    const freshness = isArtifactCacheFreshForBuild(artifactDir);
 
     if (cached && freshness.fresh) {
 
@@ -286,7 +287,7 @@ export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VB
 
 
 
-    const rebuiltFreshness = isArtifactCacheFresh(artifactDir, NODE_WASM_TARGET);
+    const rebuiltFreshness = isArtifactCacheFreshForBuild(artifactDir);
 
     if (!rebuiltFreshness.fresh) {
 

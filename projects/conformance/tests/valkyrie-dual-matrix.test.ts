@@ -2,12 +2,14 @@ import { describe, expect, it } from 'vitest';
 
 import { buildValkyrieDualMatrixReport } from '../src/reporting/valkyrie-dual-matrix.ts';
 import type { ValkyrieMatrixRow } from '../src/adapters/valkyrie-node/matrix.ts';
+import { VALKYRIE_NODE } from '../src/adapters/valkyrie-node/config.ts';
 import type { ValkyrieNyarMatrixRow } from '../src/adapters/valkyrie-nyar/matrix.ts';
 
 function greenWasm(id: string): ValkyrieMatrixRow {
     return {
         id,
-        target: 'wasm32-node-unknown-wasm',
+        target: VALKYRIE_NODE.canonicalTargetNodeWasm,
+        runnerHost: VALKYRIE_NODE.runnerHost,
         buildStatus: 0,
         testStatus: 0,
         buildRoute: 'native',

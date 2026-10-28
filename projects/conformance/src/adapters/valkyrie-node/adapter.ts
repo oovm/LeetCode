@@ -1,8 +1,7 @@
-import { WASM_NODE_BENCH_TARGET } from '@nyar/valkyrie';
-
 import { collectValkyrieBenchEnvironment } from '../../reporting/environment.ts';
 import { defineSolverAdapter } from '../factory.ts';
 import { runResultFromReference } from '../shared/correctness-result.ts';
+import { VALKYRIE_NODE } from './config.ts';
 import { benchValkyrieProblem } from './bench.ts';
 import { runVReference } from './ref.ts';
 import { hasValkyrieSolver, valkyrieRunnerReady, valkyrieSkipReason } from './valkyrie.ts';
@@ -19,7 +18,7 @@ export const valkyrieNodeAdapter = defineSolverAdapter({
             compileMs: result.vCompileMs,
             runtimeMs: result.vRuntimeMs,
             legionRoute: result.legionRoute,
-            benchTarget: WASM_NODE_BENCH_TARGET,
+            benchTarget: VALKYRIE_NODE.benchCompileTarget,
             error: result.error,
         };
     },

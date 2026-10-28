@@ -2,8 +2,6 @@ import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import os from 'node:os';
 
-import { WASM_NODE_BENCH_TARGET } from '@nyar/valkyrie';
-
 import type {
     HostEnvironment,
     MatlabSxoBenchEnvironment,
@@ -20,6 +18,7 @@ import {
     TYPESCRIPT_BENCH_PARAMS,
     VALKYRIE_BENCH_PARAMS,
 } from '../planning/bench-params.ts';
+import { VALKYRIE_NODE } from '../adapters/valkyrie-node/config.ts';
 import { bunRunnerReady, bunSkipReason, bunVersion } from '../adapters/typescript-bun/bridge.ts';
 import { sxoPackagesStatus, sxoRunnerReady, sxoSkipReason } from '../adapters/shared/sxo-bridge.ts';
 import { spawnLegion, valkyrieRunnerReady, valkyrieSkipReason } from '../adapters/valkyrie-node/valkyrie.ts';
@@ -110,7 +109,7 @@ export function collectMatlabSxoBenchEnvironment(): MatlabSxoBenchEnvironment {
 }
 
 export function collectValkyrieBenchEnvironment(): ValkyrieBenchEnvironment {
-    const benchTarget = WASM_NODE_BENCH_TARGET;
+    const benchTarget = VALKYRIE_NODE.benchCompileTarget;
     let legionVersion: string | null = null;
     let legionRoute: string | null = null;
 

@@ -2,12 +2,14 @@ import { describe, expect, it } from 'vitest';
 
 import { isMatrixRowGreen } from '../src/adapters/shared/matrix-green.ts';
 import { isValkyrieGreen, type ValkyrieMatrixRow } from '../src/adapters/valkyrie-node/matrix.ts';
+import { VALKYRIE_NODE } from '../src/adapters/valkyrie-node/config.ts';
 import { isValkyrieNyarGreen, type ValkyrieNyarMatrixRow } from '../src/adapters/valkyrie-nyar/matrix.ts';
 
 function baseNodeRow(overrides: Partial<ValkyrieMatrixRow> = {}): ValkyrieMatrixRow {
     return {
         id: 'two-sum',
-        target: 'wasm32-node-unknown-wasm',
+        target: VALKYRIE_NODE.canonicalTargetNodeWasm,
+        runnerHost: VALKYRIE_NODE.runnerHost,
         buildStatus: 0,
         testStatus: 0,
         buildRoute: 'legion build --target node',
@@ -62,14 +64,14 @@ function baseNyarRow(overrides: Partial<ValkyrieNyarMatrixRow> = {}): ValkyrieNy
     };
 }
 
-describe('Valkyrie Ë« target ¾ØÕóÂÌÃÅ½û', () => {
-    it('shared contract Óë node / nyar °ü×°Ò»ÖÂ', () => {
+describe('Valkyrie åŒ target çŸ©é˜µç»¿é—¨ç¦', () => {
+    it('shared contract ä¸Ž node / nyar åŒ…è£…ä¸€è‡´', () => {
         const row = baseNodeRow();
         expect(isMatrixRowGreen(row)).toBe(isValkyrieGreen(row));
         expect(isMatrixRowGreen(baseNyarRow())).toBe(isValkyrieNyarGreen(baseNyarRow()));
     });
 
-    it('node ÂÌ±ØÐëÍ¬Ê±Âú×ã build¡¢test¡¢manifest Óë runtime', () => {
+    it('node ç»¿å¿…é¡»åŒæ—¶æ»¡è¶³ buildã€testã€manifest ä¸Ž runtime', () => {
         expect(isValkyrieGreen(baseNodeRow())).toBe(true);
         expect(isValkyrieGreen(baseNodeRow({ buildStatus: 1 }))).toBe(false);
         expect(isValkyrieGreen(baseNodeRow({ testStatus: 1 }))).toBe(false);
@@ -77,7 +79,7 @@ describe('Valkyrie Ë« target ¾ØÕóÂÌÃÅ½û', () => {
         expect(isValkyrieGreen(baseNodeRow({ runtimeOk: false }))).toBe(false);
     });
 
-    it('nyar ÂÌ±ØÐëÍ¬Ê±Âú×ã build¡¢test¡¢manifest Óë runtime', () => {
+    it('nyar ç»¿å¿…é¡»åŒæ—¶æ»¡è¶³ buildã€testã€manifest ä¸Ž runtime', () => {
         expect(isValkyrieNyarGreen(baseNyarRow())).toBe(true);
         expect(isValkyrieNyarGreen(baseNyarRow({ buildStatus: 1 }))).toBe(false);
         expect(isValkyrieNyarGreen(baseNyarRow({ testStatus: 1 }))).toBe(false);

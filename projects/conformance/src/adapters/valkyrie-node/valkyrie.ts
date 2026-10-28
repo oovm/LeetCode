@@ -10,11 +10,11 @@ import {
     legionSpawn,
     legionTestProject,
     parseLegionBenchTable,
-    WASM_NODE_BENCH_TARGET,
     type LegionBenchRow,
     type LegionSpawnResult,
 } from '@nyar/valkyrie';
 import { LEETCODE_ROOT } from '../../domain/paths.ts';
+import { VALKYRIE_NODE } from './config.ts';
 
 const runner = createLegionBenchmarkRunner();
 
@@ -65,20 +65,20 @@ export function spawnLegion(argv: string[]): LegionOutcome {
 }
 
 export function legionBuild(projectDir: string, outputDir: string): LegionOutcome {
-    return legionBuildProject(projectDir, 'node', outputDir);
+    return legionBuildProject(projectDir, VALKYRIE_NODE.compileTargetDefault, outputDir);
 }
 
 export const legionBuildNative = legionBuild;
 
 export function legionTest(projectDir: string): LegionOutcome {
-    return legionTestProject(projectDir, 'node');
+    return legionTestProject(projectDir, VALKYRIE_NODE.compileTargetDefault);
 }
 
 export type ParsedBenchRow = LegionBenchRow;
 export { parseLegionBenchTable };
 
 export function legionBench(projectDir: string, runs = 3) {
-    return runner.benchProject(projectDir, { runs, target: WASM_NODE_BENCH_TARGET });
+    return runner.benchProject(projectDir, { runs, target: VALKYRIE_NODE.benchCompileTarget });
 }
 
 export function formatLegionError(label: string, outcome: LegionOutcome): string {
