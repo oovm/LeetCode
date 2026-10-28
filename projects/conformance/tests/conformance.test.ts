@@ -43,7 +43,7 @@ describe('Valkyrie wasm Íê±¸ÐÔ£¨legion build + metadata.tests£©', () => {
         const hasSolver = hasValkyrieSolver(problemRoot);
 
         it.skipIf(!ready || !hasSolver)(
-            `${problem.id} legion build --target node ÇÒ metadata.tests ±ØÐëÍ¨¹ý`,
+            `${problem.id} legion buildï¼ˆæŒ‰ manifest targetï¼‰ ÇÒ metadata.tests ±ØÐëÍ¨¹ý`,
             { timeout: 10 * 60 * 1000 },
             async () => {
                 const projectPath = legionProjectDir(LEETCODE_ROOT, problem);

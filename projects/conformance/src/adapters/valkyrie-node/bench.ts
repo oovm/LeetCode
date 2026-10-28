@@ -19,9 +19,9 @@ export type ValkyrieBenchResult = {
 };
 
 /**
- * leetcode ??????? V ???? `legion build --target node` ?????
- * ?????????? wasm ?????? `run_v_solver.ts`??`metadata.tests`????
- * wasm ???? glue ��????? `vRuntimeMs` ? null ?? `error` ??????
+ * leetcode 的 V 基准：`legion build` 从 manifest 读 compile target（每题可为 `wasm`），
+ * 产物是 wasm + js glue，由 `run_v_solver.ts` 对 `metadata.tests` 计时。
+ * wasm 产物无法 invoke 时 `vRuntimeMs` 置 null，并在 `error` 里说明原因。
  */
 export function benchValkyrieProblem(
     problem: ProblemDefinition,
@@ -91,7 +91,7 @@ export function benchValkyrieProblem(
             }
         }
     } else {
-        runtimeError = 'legion build ??????';
+        runtimeError = 'legion build 产物缺失';
     }
 
     return {

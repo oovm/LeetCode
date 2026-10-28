@@ -4,13 +4,13 @@ import { buildValkyrieDualMatrixReport } from '../src/reporting/valkyrie-dual-ma
 import type { ValkyrieMatrixRow } from '../src/adapters/valkyrie-node/matrix.ts';
 import type { ValkyrieNyarMatrixRow } from '../src/adapters/valkyrie-nyar/matrix.ts';
 
-// runnerHost 固定为 'node'，compile target 来自各题 manifest
+// runnerHost 固定为 'node'（仅执行宿主），compile target 来自各题 manifest
 const RUNNER_HOST = 'node';
 
 function greenWasm(id: string): ValkyrieMatrixRow {
     return {
         id,
-        target: 'wasm32-node-unknown-wasm', // execution manifest 写的 canonical triple
+        target: 'wasm32-unknown-unknown-wasm', // execution manifest 写的 canonical triple
         runnerHost: RUNNER_HOST,
         buildStatus: 0,
         testStatus: 0,

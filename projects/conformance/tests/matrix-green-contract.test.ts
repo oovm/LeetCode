@@ -6,17 +6,17 @@ import { isValkyrieNyarGreen, type ValkyrieNyarMatrixRow } from '../src/adapters
 
 // runnerHost 固定为 'node'，compile target 来自各题 manifest
 const RUNNER_HOST = 'node';
-const CANONICAL_TRIPLE_NODE_WASM = 'wasm32-node-unknown-wasm';
+const CANONICAL_TRIPLE_WASM = 'wasm32-unknown-unknown-wasm';
 
 function baseNodeRow(overrides: Partial<ValkyrieMatrixRow> = {}): ValkyrieMatrixRow {
     return {
         id: 'two-sum',
-        target: CANONICAL_TRIPLE_NODE_WASM,
+        target: CANONICAL_TRIPLE_WASM,
         runnerHost: RUNNER_HOST,
         buildStatus: 0,
         testStatus: 0,
-        buildRoute: 'legion build --target node',
-        testRoute: 'legion test --target node',
+        buildRoute: 'legion build --target wasm',
+        testRoute: 'legion test --target wasm',
         buildError: null,
         testError: null,
         manifestFresh: true,
@@ -74,7 +74,7 @@ describe('Valkyrie 双 target 矩阵绿门禁', () => {
         expect(isMatrixRowGreen(baseNyarRow())).toBe(isValkyrieNyarGreen(baseNyarRow()));
     });
 
-    it('node 绿必须同时满足 build、test、manifest 与 runtime', () => {
+    it('wasm 绿必须同时满足 build、test、manifest 与 runtime', () => {
         expect(isValkyrieGreen(baseNodeRow())).toBe(true);
         expect(isValkyrieGreen(baseNodeRow({ buildStatus: 1 }))).toBe(false);
         expect(isValkyrieGreen(baseNodeRow({ testStatus: 1 }))).toBe(false);
