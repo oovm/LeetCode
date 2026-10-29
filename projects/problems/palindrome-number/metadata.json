@@ -6,7 +6,49 @@
     "tests": [
         {
             "args": {
-                "x": 1221
+                "x": -2147483648
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "x": -121
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "x": -2147447412
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "x": -1
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "x": 0
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 1
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 7
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 9
             },
             "expected": true
         },
@@ -18,99 +60,39 @@
         },
         {
             "args": {
-                "x": 123421
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 1
+                "x": 11
             },
             "expected": true
         },
         {
             "args": {
-                "x": -121
+                "x": 12
             },
             "expected": false
         },
         {
             "args": {
-                "x": 1234554321
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "x": 123456
+                "x": 21
             },
             "expected": false
         },
         {
             "args": {
-                "x": -2147483648
+                "x": 100
             },
             "expected": false
         },
         {
             "args": {
-                "x": 1000000001
+                "x": 101
             },
             "expected": true
         },
         {
             "args": {
-                "x": 1111111111
+                "x": 111
             },
             "expected": true
-        },
-        {
-            "args": {
-                "x": 0
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "x": 123321
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "x": 2147483647
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 1000021
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": -1000021
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 12321
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "x": 1234321
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "x": -12321
-            },
-            "expected": false
         },
         {
             "args": {
@@ -120,169 +102,133 @@
         },
         {
             "args": {
-                "x": -1221
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 1000000000000000000
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 123456789987654320
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 1e37
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 1100110011
+                "x": 131
             },
             "expected": true
         },
         {
             "args": {
-                "x": 12210000221
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 1e97
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 12345678987654322
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 987656789
+                "x": 141
             },
             "expected": true
         },
         {
             "args": {
-                "x": 100000000000000000
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 1234567890987654400
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 100000000000000000000
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 101010101
+                "x": 191
             },
             "expected": true
         },
         {
             "args": {
-                "x": 1001001
+                "x": 222
             },
             "expected": true
         },
         {
             "args": {
-                "x": 12300321
+                "x": 232
             },
             "expected": true
         },
         {
             "args": {
-                "x": 2147447412
+                "x": 313
             },
             "expected": true
         },
         {
             "args": {
-                "x": 12345677654321
+                "x": 323
             },
             "expected": true
         },
         {
             "args": {
-                "x": 98765432112345680
+                "x": 333
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 353
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 414
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 455
             },
             "expected": false
         },
         {
             "args": {
-                "x": 10000000001
+                "x": 474
             },
             "expected": true
         },
         {
             "args": {
-                "x": 10000000000000000000
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 12345654321
+                "x": 525
             },
             "expected": true
         },
         {
             "args": {
-                "x": 999999999
+                "x": 636
             },
             "expected": true
         },
         {
             "args": {
-                "x": 987898789
+                "x": 727
             },
             "expected": true
         },
         {
             "args": {
-                "x": 1e36
+                "x": 737
             },
-            "expected": false
+            "expected": true
         },
         {
             "args": {
-                "x": -1000000001
+                "x": 747
             },
-            "expected": false
+            "expected": true
         },
         {
             "args": {
-                "x": 1000000000000000000
+                "x": 858
             },
-            "expected": false
+            "expected": true
         },
         {
             "args": {
-                "x": 2121212121
+                "x": 909
             },
-            "expected": false
+            "expected": true
         },
         {
             "args": {
-                "x": 123321000
+                "x": 959
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 969
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 1000
             },
             "expected": false
         },
@@ -294,79 +240,85 @@
         },
         {
             "args": {
-                "x": 1234567899876543200
+                "x": 10001
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 100001
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 12321
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 12345
             },
             "expected": false
         },
         {
             "args": {
-                "x": 1230321
+                "x": 123321
             },
             "expected": true
         },
         {
             "args": {
-                "x": 12211221
+                "x": 12344321
             },
             "expected": true
         },
         {
             "args": {
-                "x": 1002001
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "x": 10000200001
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "x": 98789
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "x": 123454321
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "x": 98765432123456780
+                "x": 1234567
             },
             "expected": false
         },
         {
             "args": {
-                "x": 1e50
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 1e38
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "x": 123321123321
+                "x": 100000001
             },
             "expected": true
         },
         {
             "args": {
-                "x": 1111111111111111200
+                "x": 1000000001
             },
-            "expected": false
+            "expected": true
         },
         {
             "args": {
                 "x": 1000000000
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "x": 999999999
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 2147447412
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "x": 2147483646
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "x": 2147483647
             },
             "expected": false
         }

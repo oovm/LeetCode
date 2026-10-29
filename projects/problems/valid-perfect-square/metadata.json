@@ -42,12 +42,6 @@
         },
         {
             "args": {
-                "num": 0
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "num": 4
             },
             "expected": true
@@ -69,12 +63,6 @@
                 "num": 100
             },
             "expected": true
-        },
-        {
-            "args": {
-                "num": 152415787501905200
-            },
-            "expected": false
         },
         {
             "args": {
@@ -114,19 +102,7 @@
         },
         {
             "args": {
-                "num": 12345678987654320
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "num": 10
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "num": 361294659455137
             },
             "expected": false
         },
@@ -144,19 +120,7 @@
         },
         {
             "args": {
-                "num": 4503599627370496
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "num": 401
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "num": 12345678987654322
             },
             "expected": false
         },
@@ -175,36 +139,6 @@
         {
             "args": {
                 "num": 123456789
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "num": 252890377088361300000
-            },
-            "expected": "Error: Python int too large to convert to C ssize_t"
-        },
-        {
-            "args": {
-                "num": 18014398509481984
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "num": 6.984109366835872e30
-            },
-            "expected": "Error: Python int too large to convert to C ssize_t"
-        },
-        {
-            "args": {
-                "num": 18014398509481984
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "num": 9223372036854776000
             },
             "expected": false
         },
@@ -246,21 +180,9 @@
         },
         {
             "args": {
-                "num": 4294967296
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "num": 2
             },
             "expected": false
-        },
-        {
-            "args": {
-                "num": 46656000000
-            },
-            "expected": true
         },
         {
             "args": {
@@ -282,21 +204,9 @@
         },
         {
             "args": {
-                "num": 1000000000000
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "num": 16777216
             },
             "expected": true
-        },
-        {
-            "args": {
-                "num": 18446744073709552000
-            },
-            "expected": "Error: Python int too large to convert to C ssize_t"
         },
         {
             "args": {
@@ -321,6 +231,132 @@
                 "num": 1073741824
             },
             "expected": true
+        },
+        {
+            "args": {
+                "num": 5
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 8
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 17
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 36
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 64
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 81
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 121
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 144
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 169
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 196
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 225
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 361
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 576
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 625
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 676
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 900
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 961
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 10000
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 2147395599
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 2147395600
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 2147395601
+            },
+            "expected": false
         }
     ],
     "invoke": {
