@@ -1,6 +1,6 @@
 namespace leetcode.three_sum;
 
-# 阻塞：SMIR010 — `ArrayList::new` / 嵌套 `ArrayList` wasm layout 合同失败（见 `valkyrie-evolution` backlog V-017c）
+using std.collection;
 
 micro cmp_i64(a: i64, b: i64) -> i32 {
     if a < b {
