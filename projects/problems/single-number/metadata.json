@@ -677,6 +677,7 @@
     ],
     "invoke": {
         "python": "Solution().singleNumber",
-        "typescript": "Solution().singleNumber"
+        "typescript": "Solution().singleNumber",
+        "valkyrie": "singleNumber"
     }
 }

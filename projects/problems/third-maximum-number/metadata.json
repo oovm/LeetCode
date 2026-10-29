@@ -783,6 +783,7 @@
     ],
     "invoke": {
         "python": "Solution().thirdMax",
-        "typescript": "Solution().thirdMax"
+        "typescript": "Solution().thirdMax",
+        "valkyrie": "thirdMax"
     }
 }

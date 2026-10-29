@@ -756,6 +756,7 @@
     ],
     "invoke": {
         "python": "Solution().isAnagram",
-        "typescript": "Solution().isAnagram"
+        "typescript": "Solution().isAnagram",
+        "valkyrie": "isAnagram"
     }
 }

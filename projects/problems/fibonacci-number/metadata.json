@@ -109,6 +109,7 @@
     ],
     "invoke": {
         "python": "Solution().fib",
-        "typescript": "Solution().fib"
+        "typescript": "Solution().fib",
+        "valkyrie": "fib"
     }
 }

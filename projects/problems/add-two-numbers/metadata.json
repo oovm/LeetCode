@@ -421,6 +421,7 @@
     "invoke": {
         "python": "Solution().addTwoNumbers",
         "typescript": "Solution().addTwoNumbers",
+        "valkyrie": "addTwoNumbers",
         "wolframSxo": "addTwoNumbers",
         "matlabSxo": "addTwoNumbers"
     }

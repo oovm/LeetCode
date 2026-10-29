@@ -307,6 +307,7 @@
     ],
     "invoke": {
         "python": "Solution().checkPerfectNumber",
-        "typescript": "Solution().checkPerfectNumber"
+        "typescript": "Solution().checkPerfectNumber",
+        "valkyrie": "checkPerfectNumber"
     }
 }

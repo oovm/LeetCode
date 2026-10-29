@@ -374,6 +374,7 @@
     "invoke": {
         "python": "Solution().isPalindrome",
         "typescript": "Solution().isPalindrome",
+        "valkyrie": "isPalindrome",
         "wolframSxo": "isPalindrome",
         "matlabSxo": "isPalindrome"
     }

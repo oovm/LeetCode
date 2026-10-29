@@ -490,6 +490,7 @@
     ],
     "invoke": {
         "python": "Solution().isSubsequence",
-        "typescript": "Solution().isSubsequence"
+        "typescript": "Solution().isSubsequence",
+        "valkyrie": "isSubsequence"
     }
 }

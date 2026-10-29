@@ -625,6 +625,7 @@
     ],
     "invoke": {
         "python": "Solution().isPowerOfTwo",
-        "typescript": "Solution().isPowerOfTwo"
+        "typescript": "Solution().isPowerOfTwo",
+        "valkyrie": "isPowerOfTwo"
     }
 }

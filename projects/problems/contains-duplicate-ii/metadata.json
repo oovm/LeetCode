@@ -781,6 +781,7 @@
     ],
     "invoke": {
         "python": "Solution().containsNearbyDuplicate",
-        "typescript": "Solution().containsNearbyDuplicate"
+        "typescript": "Solution().containsNearbyDuplicate",
+        "valkyrie": "containsNearbyDuplicate"
     }
 }

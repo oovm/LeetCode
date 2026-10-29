@@ -832,6 +832,7 @@
     "invoke": {
         "python": "Solution().removeElement",
         "typescript": "Solution().removeElement",
+        "valkyrie": "removeElement",
         "wolframSxo": "removeElement",
         "matlabSxo": "removeElement"
     }

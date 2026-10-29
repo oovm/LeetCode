@@ -337,6 +337,7 @@
     ],
     "invoke": {
         "python": "Solution().subtractProductAndSum",
-        "typescript": "Solution().subtractProductAndSum"
+        "typescript": "Solution().subtractProductAndSum",
+        "valkyrie": "subtractProductAndSum"
     }
 }

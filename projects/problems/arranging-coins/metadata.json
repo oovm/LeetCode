@@ -331,6 +331,7 @@
     ],
     "invoke": {
         "python": "Solution().arrangeCoins",
-        "typescript": "Solution().arrangeCoins"
+        "typescript": "Solution().arrangeCoins",
+        "valkyrie": "arrangeCoins"
     }
 }

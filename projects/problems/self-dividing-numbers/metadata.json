@@ -708,6 +708,7 @@
     ],
     "invoke": {
         "python": "Solution().selfDividingNumbers",
-        "typescript": "Solution().selfDividingNumbers"
+        "typescript": "Solution().selfDividingNumbers",
+        "valkyrie": "selfDividingNumbers"
     }
 }

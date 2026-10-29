@@ -763,6 +763,7 @@
     ],
     "invoke": {
         "python": "Solution().moveZeroes",
-        "typescript": "Solution().moveZeroes"
+        "typescript": "Solution().moveZeroes",
+        "valkyrie": "moveZeroes"
     }
 }

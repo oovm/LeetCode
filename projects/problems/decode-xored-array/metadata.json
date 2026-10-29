@@ -689,6 +689,7 @@
     ],
     "invoke": {
         "python": "Solution().decode",
-        "typescript": "Solution().decode"
+        "typescript": "Solution().decode",
+        "valkyrie": "decode"
     }
 }

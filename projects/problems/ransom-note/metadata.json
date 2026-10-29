@@ -1001,6 +1001,7 @@
     ],
     "invoke": {
         "python": "Solution().canConstruct",
-        "typescript": "Solution().canConstruct"
+        "typescript": "Solution().canConstruct",
+        "valkyrie": "canConstruct"
     }
 }

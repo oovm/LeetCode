@@ -343,6 +343,7 @@
     ],
     "invoke": {
         "python": "Solution().isArmstrong",
-        "typescript": "Solution().isArmstrong"
+        "typescript": "Solution().isArmstrong",
+        "valkyrie": "isArmstrong"
     }
 }

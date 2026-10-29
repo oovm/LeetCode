@@ -133,6 +133,7 @@
     ],
     "invoke": {
         "python": "Solution().isPalindrome",
-        "typescript": "Solution().isPalindrome"
+        "typescript": "Solution().isPalindrome",
+        "valkyrie": "isPalindrome"
     }
 }

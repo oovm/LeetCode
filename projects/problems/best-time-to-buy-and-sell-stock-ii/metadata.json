@@ -760,6 +760,7 @@
     ],
     "invoke": {
         "python": "Solution().maxProfit",
-        "typescript": "Solution().maxProfit"
+        "typescript": "Solution().maxProfit",
+        "valkyrie": "maxProfit"
     }
 }

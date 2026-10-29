@@ -325,6 +325,7 @@
     ],
     "invoke": {
         "python": "Solution().isPerfectSquare",
-        "typescript": "Solution().isPerfectSquare"
+        "typescript": "Solution().isPerfectSquare",
+        "valkyrie": "isPerfectSquare"
     }
 }

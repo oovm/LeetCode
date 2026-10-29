@@ -361,6 +361,7 @@
     ],
     "invoke": {
         "python": "Solution().numberOfSteps",
-        "typescript": "Solution().numberOfSteps"
+        "typescript": "Solution().numberOfSteps",
+        "valkyrie": "numberOfSteps"
     }
 }

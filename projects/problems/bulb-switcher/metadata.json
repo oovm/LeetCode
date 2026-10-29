@@ -517,6 +517,7 @@
     ],
     "invoke": {
         "python": "Solution().bulbSwitch",
-        "typescript": "Solution().bulbSwitch"
+        "typescript": "Solution().bulbSwitch",
+        "valkyrie": "bulbSwitch"
     }
 }

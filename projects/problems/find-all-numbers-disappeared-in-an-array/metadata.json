@@ -502,6 +502,7 @@
     ],
     "invoke": {
         "python": "Solution().findDisappearedNumbers",
-        "typescript": "Solution().findDisappearedNumbers"
+        "typescript": "Solution().findDisappearedNumbers",
+        "valkyrie": "findDisappearedNumbers"
     }
 }

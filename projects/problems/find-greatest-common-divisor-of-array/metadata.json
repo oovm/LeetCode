@@ -709,6 +709,7 @@
     ],
     "invoke": {
         "python": "Solution().findGCD",
-        "typescript": "Solution().findGCD"
+        "typescript": "Solution().findGCD",
+        "valkyrie": "findGcd"
     }
 }

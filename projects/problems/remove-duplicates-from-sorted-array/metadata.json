@@ -783,6 +783,7 @@
     "invoke": {
         "python": "Solution().removeDuplicates",
         "typescript": "Solution().removeDuplicates",
+        "valkyrie": "removeDuplicates",
         "wolframSxo": "removeDuplicates",
         "matlabSxo": "removeDuplicates"
     }

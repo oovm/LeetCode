@@ -658,6 +658,7 @@
     ],
     "invoke": {
         "python": "Solution().countOdds",
-        "typescript": "Solution().countOdds"
+        "typescript": "Solution().countOdds",
+        "valkyrie": "countOdds"
     }
 }

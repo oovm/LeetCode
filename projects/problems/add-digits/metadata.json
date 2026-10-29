@@ -457,6 +457,7 @@
     ],
     "invoke": {
         "python": "Solution().addDigits",
-        "typescript": "Solution().addDigits"
+        "typescript": "Solution().addDigits",
+        "valkyrie": "addDigits"
     }
 }

@@ -855,6 +855,7 @@
     ],
     "invoke": {
         "python": "Solution().sortedSquares",
-        "typescript": "Solution().sortedSquares"
+        "typescript": "Solution().sortedSquares",
+        "valkyrie": "sortedSquares"
     }
 }

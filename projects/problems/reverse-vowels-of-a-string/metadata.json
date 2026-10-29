@@ -235,6 +235,7 @@
     ],
     "invoke": {
         "python": "Solution().reverseVowels",
-        "typescript": "Solution().reverseVowels"
+        "typescript": "Solution().reverseVowels",
+        "valkyrie": "reverseVowels"
     }
 }

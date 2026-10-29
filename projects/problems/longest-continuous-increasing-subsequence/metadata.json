@@ -828,6 +828,7 @@
     ],
     "invoke": {
         "python": "Solution().findLengthOfLCIS",
-        "typescript": "Solution().findLengthOfLCIS"
+        "typescript": "Solution().findLengthOfLCIS",
+        "valkyrie": "findLengthOfLcis"
     }
 }

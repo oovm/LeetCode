@@ -595,6 +595,7 @@
     ],
     "invoke": {
         "python": "Solution().maxSubArray",
-        "typescript": "Solution().maxSubArray"
+        "typescript": "Solution().maxSubArray",
+        "valkyrie": "maxSubArray"
     }
 }

@@ -523,6 +523,7 @@
     ],
     "invoke": {
         "python": "Solution().plusOne",
-        "typescript": "Solution().plusOne"
+        "typescript": "Solution().plusOne",
+        "valkyrie": "plusOne"
     }
 }

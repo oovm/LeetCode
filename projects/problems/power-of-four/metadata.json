@@ -355,6 +355,7 @@
     ],
     "invoke": {
         "python": "Solution().isPowerOfFour",
-        "typescript": "Solution().isPowerOfFour"
+        "typescript": "Solution().isPowerOfFour",
+        "valkyrie": "isPowerOfFour"
     }
 }

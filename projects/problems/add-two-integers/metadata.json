@@ -420,6 +420,7 @@
     ],
     "invoke": {
         "python": "Solution().sum",
-        "typescript": "Solution().sum"
+        "typescript": "Solution().sum",
+        "valkyrie": "sum"
     }
 }

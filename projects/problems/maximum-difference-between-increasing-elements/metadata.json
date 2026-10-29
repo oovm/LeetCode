@@ -720,6 +720,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumDifference",
-        "typescript": "Solution().maximumDifference"
+        "typescript": "Solution().maximumDifference",
+        "valkyrie": "maximumDifference"
     }
 }

@@ -735,6 +735,7 @@
     "invoke": {
         "python": "Solution().maxArea",
         "typescript": "Solution().maxArea",
+        "valkyrie": "maxArea",
         "wolframSxo": "maxArea",
         "matlabSxo": "maxArea"
     }

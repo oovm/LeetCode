@@ -337,6 +337,7 @@
     ],
     "invoke": {
         "python": "Solution().isHappy",
-        "typescript": "Solution().isHappy"
+        "typescript": "Solution().isHappy",
+        "valkyrie": "isHappy"
     }
 }

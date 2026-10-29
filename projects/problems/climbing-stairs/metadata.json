@@ -103,6 +103,7 @@
     ],
     "invoke": {
         "python": "Solution().climbStairs",
-        "typescript": "Solution().climbStairs"
+        "typescript": "Solution().climbStairs",
+        "valkyrie": "climbStairs"
     }
 }

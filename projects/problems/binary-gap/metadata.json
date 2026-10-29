@@ -397,6 +397,7 @@
     ],
     "invoke": {
         "python": "Solution().binaryGap",
-        "typescript": "Solution().binaryGap"
+        "typescript": "Solution().binaryGap",
+        "valkyrie": "binaryGap"
     }
 }

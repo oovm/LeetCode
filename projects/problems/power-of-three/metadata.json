@@ -463,6 +463,7 @@
     ],
     "invoke": {
         "python": "Solution().isPowerOfThree",
-        "typescript": "Solution().isPowerOfThree"
+        "typescript": "Solution().isPowerOfThree",
+        "valkyrie": "isPowerOfThree"
     }
 }

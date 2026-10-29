@@ -518,6 +518,7 @@
     ],
     "invoke": {
         "python": "Solution().getConcatenation",
-        "typescript": "Solution().getConcatenation"
+        "typescript": "Solution().getConcatenation",
+        "valkyrie": "getConcatenation"
     }
 }

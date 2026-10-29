@@ -851,6 +851,7 @@
     ],
     "invoke": {
         "python": "Solution().summaryRanges",
-        "typescript": "Solution().summaryRanges"
+        "typescript": "Solution().summaryRanges",
+        "valkyrie": "summaryRanges"
     }
 }

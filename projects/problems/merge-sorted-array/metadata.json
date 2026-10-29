@@ -781,6 +781,7 @@
     ],
     "invoke": {
         "python": "Solution().merge",
-        "typescript": "Solution().merge"
+        "typescript": "Solution().merge",
+        "valkyrie": "merge"
     }
 }

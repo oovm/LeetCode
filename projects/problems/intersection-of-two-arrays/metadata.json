@@ -875,6 +875,7 @@
     ],
     "invoke": {
         "python": "Solution().intersection",
-        "typescript": "Solution().intersection"
+        "typescript": "Solution().intersection",
+        "valkyrie": "intersection"
     }
 }

@@ -675,6 +675,7 @@
     ],
     "invoke": {
         "python": "Solution().containsDuplicate",
-        "typescript": "Solution().containsDuplicate"
+        "typescript": "Solution().containsDuplicate",
+        "valkyrie": "containsDuplicate"
     }
 }

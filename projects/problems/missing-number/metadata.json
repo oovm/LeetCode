@@ -346,6 +346,7 @@
     ],
     "invoke": {
         "python": "Solution().missingNumber",
-        "typescript": "Solution().missingNumber"
+        "typescript": "Solution().missingNumber",
+        "valkyrie": "missingNumber"
     }
 }

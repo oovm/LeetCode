@@ -910,6 +910,7 @@
     ],
     "invoke": {
         "python": "Solution().findContentChildren",
-        "typescript": "Solution().findContentChildren"
+        "typescript": "Solution().findContentChildren",
+        "valkyrie": "findContentChildren"
     }
 }
