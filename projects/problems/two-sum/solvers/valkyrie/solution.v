@@ -1,7 +1,7 @@
 namespace leetcode.two_sum;
 
 [export(case: "camelCase")]
-micro two_sum(nums: ArrayList<i64>, target: i64) -> ArrayList<i64> {
+micro two_sum(nums: ArrayList<i64>, target: i64) -> ArrayList<i64>? {
     let mut index: HashMap<i64, i64> = HashMap::new(0)
     let mut i: usize = 0
     while i < nums.length() {
@@ -16,5 +16,11 @@ micro two_sum(nums: ArrayList<i64>, target: i64) -> ArrayList<i64> {
         index.insert(x, i as i64)
         i = i + 1
     }
-    return ArrayList::new(0)
+    return null
+}
+
+class Solution {
+    micro twoSum(self, nums: ArrayList<i64>, target: i64): ArrayList<i64>? {
+        return two_sum(nums, target)
+    }
 }
