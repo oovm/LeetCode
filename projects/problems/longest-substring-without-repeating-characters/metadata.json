@@ -224,6 +224,7 @@
     "invoke": {
         "python": "Solution().lengthOfLongestSubstring",
         "typescript": "Solution().lengthOfLongestSubstring",
+        "valkyrie": "lengthOfLongestSubstring",
         "wolframSxo": "lengthOfLongestSubstring",
         "matlabSxo": "lengthOfLongestSubstring"
     }

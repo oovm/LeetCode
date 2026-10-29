@@ -374,6 +374,7 @@
     "invoke": {
         "python": "Solution().reverse",
         "typescript": "Solution().reverse",
+        "valkyrie": "reverse",
         "wolframSxo": "reverse",
         "matlabSxo": "reverse"
     }

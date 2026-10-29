@@ -1118,6 +1118,7 @@
     "invoke": {
         "python": "Solution().myAtoi",
         "typescript": "Solution().myAtoi",
+        "valkyrie": "myAtoi",
         "wolframSxo": "myAtoi",
         "matlabSxo": "myAtoi"
     }

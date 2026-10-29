@@ -896,6 +896,7 @@
     "invoke": {
         "python": "Solution().longestCommonPrefix",
         "typescript": "Solution().longestCommonPrefix",
+        "valkyrie": "longestCommonPrefix",
         "wolframSxo": "longestCommonPrefix",
         "matlabSxo": "longestCommonPrefix"
     }

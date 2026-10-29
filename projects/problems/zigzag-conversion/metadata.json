@@ -736,6 +736,7 @@
     "invoke": {
         "python": "Solution().convert",
         "typescript": "Solution().convert",
+        "valkyrie": "convert",
         "wolframSxo": "convert",
         "matlabSxo": "convert"
     }

@@ -470,6 +470,7 @@
     "invoke": {
         "python": "Solution().intToRoman",
         "typescript": "Solution().intToRoman",
+        "valkyrie": "intToRoman",
         "wolframSxo": "intToRoman",
         "matlabSxo": "intToRoman"
     }

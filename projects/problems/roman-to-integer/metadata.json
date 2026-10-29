@@ -572,6 +572,7 @@
     "invoke": {
         "python": "Solution().romanToInt",
         "typescript": "Solution().romanToInt",
+        "valkyrie": "romanToInt",
         "wolframSxo": "romanToInt",
         "matlabSxo": "romanToInt"
     }
