@@ -11,7 +11,7 @@ import { pathToFileURL } from 'node:url';
 import {
     isArtifactCacheFreshForBuild,
     listWasmModuleExports,
-    resolveNodeEntry,
+    resolveArtifactEntry,
 } from '@nyar/valkyrie';
 
 
@@ -89,7 +89,7 @@ export function resolveVBuildArtifacts(problem: ProblemDefinition) {
 
     const outDir = vBuildDir(problem);
 
-    const entry = resolveNodeEntry(outDir);
+    const entry = resolveArtifactEntry(outDir);
 
     if (!entry) {
 
@@ -239,18 +239,9 @@ export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VB
 
     const artifactDir = outDir;
 
-    const cached = resolveVBuildArtifacts(problem);
-
-    const freshness = isArtifactCacheFreshForBuild(artifactDir);
-
-    if (cached && freshness.fresh) {
-
-        return { error: null, artifacts: cached, buildRoute: null };
-
-    }
-
-
-
+    // 验收必须反映当前源码。产物是否过期由源码闭包决定，而 `isArtifactCacheFreshForBuild`
+    // 只看执行 manifest 与 target，不看入口源码内容；这里不能复用它来跳过构建。
+    // 构建本身有 `legion build` 自己的缓存，harness 不做第二层缓存判断。
     mkdirSync(outDir, { recursive: true });
 
     const build = legionBuildNative(projectDir, outDir);

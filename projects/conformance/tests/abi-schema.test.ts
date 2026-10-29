@@ -1,14 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    type AbiGlueEntry,
     type AbiNamedAggregateType,
     AbiSchemaError,
     findGlueEntry,
     type LibraryInvokeSchema,
-    marshalArgsBySchema,
+    orderArgsBySchema,
     parseLibraryInvokeSchema,
-    unmarshalReturnBySchema,
     type WasmAbiType,
 } from '../src/adapters/valkyrie-node/abi.ts';
 
@@ -258,77 +256,29 @@ describe('glue registry lookup', () => {
     });
 });
 
-describe('schema-driven marshal/unmarshal', () => {
+describe('argument ordering by schema identity', () => {
     const schema = parse(rawSchema());
 
-    it('constructs aggregates with capacity/length, not element values', () => {
-        const calls: Array<{ name: string; args: unknown[] }> = [];
-        const invokeExport = (name: string, ...args: unknown[]): unknown => {
-            calls.push({ name, args });
-            return name.endsWith('_new') ? 100 : undefined;
-        };
+    it('ignores metadata key order and takes values by parameter name', () => {
+        const ordered = orderArgsBySchema(schema.exports.twoSum!, { target: 6, nums: [3, 4] });
 
-        const marshaled = marshalArgsBySchema(schema, schema.exports.twoSum!, { nums: [3, 4], target: 6 }, invokeExport);
-
-        expect(marshaled).toEqual([100, 6n]);
-        expect(calls).toEqual([
-            { name: '$seq_i64_new', args: [2] },
-            { name: '$seq_i64_push', args: [100, 3n] },
-            { name: '$seq_i64_push', args: [100, 4n] },
-        ]);
-        // construct 的第一个参数是数组长度，不是第一个元素值。
-        expect(calls[0]?.args[0]).toBe(2);
+        expect(ordered).toEqual([[3, 4], 6]);
     });
 
-    it('ignores metadata key order and takes values by parameter name', () => {
-        const calls: Array<{ name: string; args: unknown[] }> = [];
-        const invokeExport = (name: string, ...args: unknown[]): unknown => {
-            calls.push({ name, args });
-            return name.endsWith('_new') ? 100 : undefined;
-        };
+    it('keeps plain JS values: marshal 属于产物 node glue，harness 不做第二套桥', () => {
+        const ordered = orderArgsBySchema(schema.exports.twoSum!, { nums: [3, 4], target: 6 });
 
-        const marshaled = marshalArgsBySchema(schema, schema.exports.twoSum!, { target: 6, nums: [3, 4] }, invokeExport);
-
-        expect(marshaled).toEqual([100, 6n]);
-        expect(calls.map((call) => call.args)).toEqual([[2], [100, 3n], [100, 4n]]);
+        expect(ordered[1]).toBe(6);
     });
 
     it('rejects a missing argument', () => {
-        const invokeExport = (): unknown => undefined;
-        expectAbiError(
-            () => marshalArgsBySchema(schema, schema.exports.twoSum!, { nums: [3, 4] }, invokeExport),
-            'missing_argument',
-        );
+        expectAbiError(() => orderArgsBySchema(schema.exports.twoSum!, { nums: [3, 4] }), 'missing_argument');
     });
 
     it('rejects an argument the schema does not declare', () => {
-        const invokeExport = (): unknown => undefined;
         expectAbiError(
-            () => marshalArgsBySchema(schema, schema.exports.twoSum!, { nums: [3, 4], target: 6, extra: 1 }, invokeExport),
+            () => orderArgsBySchema(schema.exports.twoSum!, { nums: [3, 4], target: 6, extra: 1 }),
             'unknown_argument',
-        );
-    });
-
-    it('reads aggregates back through length/at', () => {
-        const calls: Array<{ name: string; args: unknown[] }> = [];
-        const invokeExport = (name: string, ...args: unknown[]): unknown => {
-            calls.push({ name, args });
-            if (name === '$seq_i64_len') return 2;
-            if (name === '$seq_i64_at') return args[1] === 1 ? 3n : 4n;
-            throw new Error(`unexpected export ${name}`);
-        };
-
-        const value = unmarshalReturnBySchema(schema, schema.exports.twoSum!, 100, invokeExport);
-        expect(value).toEqual([3, 4]);
-        expect(calls.map((call) => call.args)).toEqual([[100], [100, 1], [100, 2]]);
-    });
-
-    it('rejects aggregate params without a glue entry', () => {
-        const invokeExport = (): unknown => undefined;
-        const schemaWithoutGlue: LibraryInvokeSchema = { ...schema, glue_entries: [] as AbiGlueEntry[] };
-        expectAbiError(
-            () => marshalArgsBySchema(schemaWithoutGlue, schema.exports.twoSum!, { nums: [3, 4], target: 6 }, invokeExport),
-            'glue_entry_not_found',
         );
     });
 });

@@ -9,11 +9,9 @@ import { readNodeExecutionPinFromEnv } from '../src/adapters/shared/execution-pi
 import { extractTestFailureIndex, formatSolverResultLine, type SolverCaseStats } from '../src/adapters/shared/solver-case-stats.ts';
 import {
     type AbiExport,
-    type AbiExportInvoker,
     type LibraryInvokeSchema,
     loadLibraryInvokeSchema,
-    marshalArgsBySchema,
-    unmarshalReturnBySchema,
+    orderArgsBySchema,
 } from '../src/adapters/valkyrie-node/abi.ts';
 import {
     ensureVBuild,
@@ -78,14 +76,13 @@ async function runCandidate(
                 'callExport 路径需要 ABI schema，但 schema 未加载。' + '请确认 wasm artifact 包含 nyar.library_invoke custom section。',
             );
         }
-        // glue helper（construct/push/length/at）与顶层 export 都经 callExport 调用。
-        const invokeExport: AbiExportInvoker = (name, ...callArgs) => host.callExport!(name, ...callArgs);
-        const marshaled = marshalArgsBySchema(abi.schema, abi.lookup.exportSchema, args, invokeExport);
-        const raw = host.callExport(abi.lookup.exportSymbol, ...marshaled);
-        const awaited = raw instanceof Promise ? await raw : raw;
-        return unmarshalReturnBySchema(abi.schema, abi.lookup.exportSchema, awaited, invokeExport);
+        // 值的 marshal/unmarshal 由产物自带 node glue（callExport）按同一份 schema 完成；
+        // harness 只按 schema 的参数身份把 metadata args 展开成位置参数，不维护第二套 ABI 桥。
+        const ordered = orderArgsBySchema(abi.lookup.exportSchema, args);
+        const raw = host.callExport(abi.lookup.exportSymbol, ...ordered);
+        return raw instanceof Promise ? await raw : raw;
     }
-    throw new Error('node glue ??? invokeLeetCode / callExport???? valkyrie.rs ? leetcode ???????? wasm invoke??');
+    throw new Error('node glue 未暴露 invokeLeetCode / callExport，无法 invoke wasm 产物');
 }
 
 function emitStats(stats: SolverCaseStats): void {
@@ -123,7 +120,6 @@ async function main(): Promise<number> {
                 legionMjs: pinned.legionMjs,
                 legionWasm: pinned.legionWasm,
                 physicalEntry: pinned.physicalEntry,
-                legacy: false,
             },
         };
     } else {
