@@ -4,13 +4,19 @@ import { buildValkyrieDualMatrixReport } from '../src/reporting/valkyrie-dual-ma
 import type { ValkyrieMatrixRow } from '../src/adapters/valkyrie-node/matrix.ts';
 import type { ValkyrieNyarMatrixRow } from '../src/adapters/valkyrie-nyar/matrix.ts';
 
-// runnerHost 固定为 'node'（仅执行宿主），compile target 来自各题 manifest
+// runnerHost 固定为 'node'（仅执行宿主），compile target 来自各题 manifest / lane 计划
 const RUNNER_HOST = 'node';
 
 function greenWasm(id: string): ValkyrieMatrixRow {
     return {
         id,
-        target: 'wasm32-unknown-unknown-wasm', // execution manifest 写的 canonical triple
+        target: 'wasm32-unknown-unknown-wasm', // 计划 canonical triple（manifest 声明）
+        declaredTarget: 'wasm',
+        targetSource: 'manifest',
+        targetError: null,
+        manifestTarget: 'wasm32-unknown-unknown-wasm',
+        runtimeStatus: 'ready',
+        runtimeReason: null,
         runnerHost: RUNNER_HOST,
         buildStatus: 0,
         testStatus: 0,
@@ -39,7 +45,13 @@ function greenWasm(id: string): ValkyrieMatrixRow {
 function failNyar(id: string): ValkyrieNyarMatrixRow {
     return {
         id,
-        target: 'nyar-unknown-unknown-managed',
+        target: 'ovm-unknown-unknown-managed', // lane 显式 target 的 canonical triple
+        declaredTarget: 'ovm',
+        targetSource: 'lane-explicit',
+        targetError: null,
+        manifestTarget: null,
+        runtimeStatus: 'pending',
+        runtimeReason: 'build 未通过，runtime 未执行',
         buildStatus: 1,
         testStatus: 0,
         buildRoute: 'native',

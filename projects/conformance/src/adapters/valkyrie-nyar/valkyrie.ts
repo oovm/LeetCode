@@ -1,4 +1,3 @@
-import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 import {
@@ -15,12 +14,19 @@ import {
     type LegionSpawnResult,
 } from '@nyar/valkyrie';
 import type { ProblemDefinition } from '../../catalog/index.ts';
-import { LEETCODE_ROOT, LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
+import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
+import type { CompileTargetPlan } from '../shared/compile-target-plan.ts';
 
 const runner = createLegionBenchmarkRunner();
 
 export type LegionOutcome = LegionSpawnResult;
 
+/**
+ * 旧 nyar lane 显式指定的编译目标。
+ *
+ * 这是 lane 自身的定义（`ovm` = 旧 managed 运行器 lane），不是 manifest 声明的 `wasm`；
+ * 它不是 `0.0.x` 的交付 lane，因此报告必须与 wasm lane 分开计数。
+ */
 export const NYAR_BUILD_TARGET = OVM_BUILD_TARGET;
 
 export function nyarBuildDir(problem: ProblemDefinition): string {
@@ -41,12 +47,19 @@ export function spawnLegion(argv: string[]): LegionOutcome {
     return legionSpawn(argv);
 }
 
-export function legionBuildNyar(projectDir: string, outputDir: string): LegionOutcome {
-    return legionBuildProject(projectDir, NYAR_BUILD_TARGET, outputDir);
+/**
+ * 按 lane 计划调用 `legion build`。
+ * compile target 的唯一来源是 `CompileTargetPlan`（lane-explicit），这里不再写死短名。
+ */
+export function legionBuildNyar(plan: CompileTargetPlan, outputDir: string): LegionOutcome {
+    return legionBuildProject(plan.solverDir, plan.canonicalTarget, outputDir);
 }
 
-export function legionTestNyar(projectDir: string): LegionOutcome {
-    return legionTestProject(projectDir, NYAR_BUILD_TARGET);
+/**
+ * 按 lane 计划调用 `legion test`。
+ */
+export function legionTestNyar(plan: CompileTargetPlan): LegionOutcome {
+    return legionTestProject(plan.solverDir, plan.canonicalTarget);
 }
 
 export type ParsedBenchRow = LegionBenchRow;

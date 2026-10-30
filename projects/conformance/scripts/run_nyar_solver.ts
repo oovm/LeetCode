@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-/** ? Legion ?? OVM ? metadata.tests?@nyar/valkyrie N-API?? */
+/** 对旧 OVM lane 产物运行 `metadata.tests`（通过 @nyar/valkyrie N-API 调用 `.nyar` 导出）。 */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { isArtifactCacheFreshForBuild, legionInvokeOvmExport } from '@nyar/valkyrie';
+import { isArtifactCacheFresh, legionInvokeOvmExport } from '@nyar/valkyrie';
 
 import { readNyarExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
 import {
@@ -21,6 +21,8 @@ import {
     nyarInvokeBlockedReason,
     type NyarVmArtifacts,
 } from '../src/adapters/valkyrie-nyar/ref.ts';
+import { resolveLaneTargetPlan } from '../src/adapters/shared/compile-target-plan.ts';
+import { NYAR_BUILD_TARGET } from '../src/adapters/valkyrie-nyar/valkyrie.ts';
 import { resolveWasmExportSymbol } from '../src/adapters/valkyrie-node/ref.ts';
 
 function runNyarExport(nyarPath: string, exportName: string, args: Record<string, unknown>): unknown {
@@ -41,7 +43,7 @@ async function main(): Promise<number> {
     const meta = JSON.parse(readFileSync(join(problemDir, 'metadata.json'), 'utf8')) as { id?: string };
     const slug = meta.id;
     if (!slug) {
-        throw new Error('metadata.id ??');
+        throw new Error('metadata.id 缺失');
     }
 
     const problem = { id: slug };
@@ -50,7 +52,7 @@ async function main(): Promise<number> {
     let artifacts: NyarVmArtifacts | null = null;
     const pinned = readNyarExecutionPinFromEnv();
     if (pinned) {
-        const freshness = isArtifactCacheFreshForBuild(pinned.artifactDir);
+        const freshness = isArtifactCacheFresh(pinned.artifactDir, pinned.compileTarget);
         if (!freshness.fresh) {
             throw new Error(freshness.reason ?? 'pinned execution manifest stale');
         }
@@ -61,20 +63,21 @@ async function main(): Promise<number> {
             logicalEntry: pinned.logicalEntry,
         };
     } else {
-        const buildOutcome = ensureNyarBuild(problem, projectDir);
+        const plan = resolveLaneTargetPlan(projectDir, NYAR_BUILD_TARGET);
+        const buildOutcome = ensureNyarBuild(problem, plan);
         if (buildOutcome.error) {
             throw new Error(buildOutcome.error);
         }
         artifacts = resolveNyarBuildArtifacts(problem);
     }
     if (!artifacts) {
-        throw new Error('?? legion build --target ovm ??');
+        throw new Error('legion build --target ovm 未产出 `.nyar` 入口');
     }
 
     const { tests, invoke } = loadMetadata(problemDir);
     const entry = invoke.valkyrie ?? invoke.typescript;
     if (!entry) {
-        throw new Error('metadata.invoke ??');
+        throw new Error('metadata.invoke 缺失');
     }
     const exportName = resolveWasmExportSymbol(entry);
     const blocked = nyarInvokeBlockedReason(artifacts.nyarPath, entry);

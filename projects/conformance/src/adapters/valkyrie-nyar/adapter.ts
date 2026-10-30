@@ -32,11 +32,12 @@ export const valkyrieNyarAdapter = defineSolverAdapter({
     }),
     async benchProblem(problem) {
         const result = await benchValkyrieNyarProblem(problem);
+        // benchTarget 回传本次 bench 实际使用的 lane 计划 canonical triple
         return {
             compileMs: result.vCompileMs,
             runtimeMs: result.vRuntimeMs,
             legionRoute: result.legionRoute,
-            benchTarget: NYAR_BUILD_TARGET,
+            benchTarget: result.target ?? undefined,
             error: result.error,
         };
     },
