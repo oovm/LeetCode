@@ -1,14 +1,12 @@
 namespace leetcode.string_to_integer_atoi;
 
-# 阻塞：SMIR003 — `utf8.char_at` wasm 宿主导调用未接线
-
 [export(case: "camelCase")]
 micro my_atoi(s: utf8) -> i64 {
-    let n: i32 = s.length()
+    let n: usize = s.length()
     if n == 0 {
         return 0
     }
-    let mut i: i32 = 0
+    let mut i: usize = 0
     while i < n {
         let ch: char = s.char_at(i).unwrap()
         if ch as u32 != 32 {
