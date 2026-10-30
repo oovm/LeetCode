@@ -25,12 +25,12 @@ micro roman_value(c: char) -> i64 {
 
 [export(case: "camelCase")]
 micro roman_to_int(s: utf8) -> i64 {
-    let len: i32 = s.length()
+    let len: usize = s.length()
     if len == 0 {
         return 0
     }
     let mut sum: i64 = roman_value(s.char_at(len - 1).unwrap())
-    let mut i: i32 = 0
+    let mut i: usize = 0
     while i < len - 1 {
         let a: i64 = roman_value(s.char_at(i).unwrap())
         let b: i64 = roman_value(s.char_at(i + 1).unwrap())
