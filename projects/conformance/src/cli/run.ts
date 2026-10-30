@@ -28,14 +28,14 @@ async function main(): Promise<void> {
     const mode: CliMode = process.argv.includes('--correctness') ? 'correctness' : 'benchmark';
     const { paths } = await runCli(mode);
     if (paths.length > 0) {
-        console.log(`\nÒÑÐ´Èë ${paths.length} ¸ö dashboard Í¶Ó°`);
+        console.log(`\nå·²å†™å…¥ ${paths.length} ä¸ª dashboard æŠ•å½±`);
         for (const path of paths) {
             console.log(`  ${path}`);
         }
     }
 }
 
-const invokedDirectly = process.argv[1]?.includes('cli/run');
+const invokedDirectly = process.argv[1]?.replace(/\\/g, '/').includes('cli/run');
 if (invokedDirectly) {
     main().catch((err) => {
         console.error(err);

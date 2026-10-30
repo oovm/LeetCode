@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { collectValkyrieBenchEnvironment } from '../../reporting/environment.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 import { defineSolverAdapter } from '../factory.ts';
-import { problemDir, valkyrieProjectDir } from '../catalog/index.ts';
+import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
 import { runResultFromReference } from '../shared/correctness-result.ts';
 import { benchValkyrieProblem } from './bench.ts';
 import { resolveCompileTargetFromManifest } from './manifest.ts';
