@@ -4,6 +4,7 @@ import { median } from '@nyar/valkyrie';
 
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
+import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 import { VALKYRIE_BENCH_PARAMS } from '../../planning/bench-params.ts';
 import { readArtifactEvidence } from '../shared/artifact-evidence.ts';
 import {
