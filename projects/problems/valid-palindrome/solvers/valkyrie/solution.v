@@ -2,9 +2,12 @@ namespace leetcode.valid_palindrome;
 
 [export(case: "camelCase")]
 micro is_palindrome(s: utf8) -> bool {
-    let n: i32 = s.length()
-    let mut i: i32 = 0
-    let mut j: i32 = n - 1
+    let n: usize = s.length()
+    let mut i: usize = 0
+    let mut j: usize = n
+    if j > 0 {
+        j = j - 1
+    }
     while i < j {
         let left: char = s.char_at(i).unwrap()
         let right: char = s.char_at(j).unwrap()
