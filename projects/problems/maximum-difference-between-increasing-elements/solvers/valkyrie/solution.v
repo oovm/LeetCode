@@ -5,7 +5,7 @@ micro maximum_difference(nums: ArrayList<i64>) -> i64 {
     let mut max_diff: i64 = -1
     let mut i: usize = 0
     while i < nums.length() {
-        let j: usize = i + 1
+        let mut j: usize = i + 1
         while j < nums.length() {
             let ni: i64 = nums⁅i⁆.unwrap()
             let nj: i64 = nums⁅j⁆.unwrap()
