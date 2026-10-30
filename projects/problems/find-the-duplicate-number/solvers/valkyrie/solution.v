@@ -8,12 +8,11 @@ micro next_index(nums: ArrayList<i64>, index: i64) -> i64 {
 micro find_duplicate(nums: ArrayList<i64>) -> i64 {
     let mut slow: i64 = nums⁅0⁆.unwrap()
     let mut fast: i64 = nums⁅0⁆.unwrap()
-    while true {
+    slow = next_index(nums, slow)
+    fast = next_index(nums, next_index(nums, fast))
+    while slow != fast {
         slow = next_index(nums, slow)
         fast = next_index(nums, next_index(nums, fast))
-        if slow == fast {
-            break
-        }
     }
     slow = nums⁅0⁆.unwrap()
     while slow != fast {
