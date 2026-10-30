@@ -3,7 +3,7 @@ namespace leetcode.find_all_numbers_disappeared_in_an_array;
 [export(case: "camelCase")]
 micro find_disappeared_numbers(mut nums: ArrayList<i64>) -> ArrayList<i64> {
     loop num in nums {
-        let abs_num: i64 = num
+        let mut abs_num: i64 = num
         if abs_num < 0 {
             abs_num = -abs_num
         }

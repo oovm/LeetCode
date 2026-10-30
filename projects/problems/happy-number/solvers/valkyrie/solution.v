@@ -13,12 +13,13 @@ micro sum_square_digits(mut n: i64) -> i64 {
 [export(case: "camelCase")]
 micro is_happy(n: i64) -> bool {
     let mut seen: HashSet<i64> = HashSet::new()
-    while n != 1 {
-        if seen.contains(n) {
+    let mut cur: i64 = n
+    while cur != 1 {
+        if seen.contains(cur) {
             return false
         }
-        seen.insert(n)
-        n = sum_square_digits(n)
+        seen.insert(cur)
+        cur = sum_square_digits(cur)
     }
     return true
 }
