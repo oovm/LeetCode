@@ -17,7 +17,6 @@ export const valkyrieNyarAdapter = defineSolverAdapter({
         skipReason: valkyrieNyarSkipReason(),
         compileMetric: 'compile' as const,
         runtimeMetric: 'runtime' as const,
-        runtimeStatus: valkyrieNyarRunnerReady() ? ('ready' as const) : ('blocked-stub-wasm' as const),
         aggregation: 'median' as const,
         compileRuns: 1,
         warmup: 0,

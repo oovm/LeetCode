@@ -54,7 +54,6 @@ export type ValkyrieBenchEnvironment = {
     skipReason: string | null;
     compileMetric: 'compile';
     runtimeMetric: 'runtime';
-    runtimeStatus: 'blocked-stub-wasm' | 'ready';
     aggregation: 'median';
     compileRuns: number;
     warmup: number;

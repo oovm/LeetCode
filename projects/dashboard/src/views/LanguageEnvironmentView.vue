@@ -169,7 +169,7 @@ function valkyrieCard(env: ValkyrieBenchEnvironment | null, ready: boolean): Env
             { label: '编译指标', value: `${env.compileMetric}（${env.aggregation}）` },
             { label: '编译采样', value: `${env.compileRuns} 次` },
             { label: '预热', value: `${env.warmup} 次` },
-            { label: '运行指标', value: `${env.runtimeMetric}（${env.runtimeStatus}）` },
+            { label: '运行指标', value: `${env.runtimeMetric}（${env.aggregation}）` },
         ],
         host: env.host,
         note: env.skipReason && !env.runnerReady ? env.skipReason : undefined,
