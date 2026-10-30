@@ -1,12 +1,7 @@
-import { join } from 'node:path';
-
 import { collectValkyrieBenchEnvironment } from '../../reporting/environment.ts';
-import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 import { defineSolverAdapter } from '../factory.ts';
-import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
 import { runResultFromReference } from '../shared/correctness-result.ts';
 import { benchValkyrieProblem } from './bench.ts';
-import { resolveCompileTargetFromManifest } from './manifest.ts';
 import { runVReference } from './ref.ts';
 import { hasValkyrieSolver, valkyrieRunnerReady, valkyrieSkipReason } from './valkyrie.ts';
 
@@ -18,19 +13,12 @@ export const valkyrieNodeAdapter = defineSolverAdapter({
     collectEnvironment: collectValkyrieBenchEnvironment,
     async benchProblem(problem) {
         const result = benchValkyrieProblem(problem);
-        // benchTarget 从该题 manifest 解析 —— 每个 problem 可以有自己的 compile target
-        let benchTarget = 'manifest';
-        try {
-            const projectDir = valkyrieProjectDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
-            benchTarget = resolveCompileTargetFromManifest(projectDir);
-        } catch {
-            // manifest 解析失败时保留占位字符串，上层会看到具体错误
-        }
+        // benchTarget 回传本次 bench 实际使用的计划 canonical triple，不再二次解析 manifest
         return {
             compileMs: result.vCompileMs,
             runtimeMs: result.vRuntimeMs,
             legionRoute: result.legionRoute,
-            benchTarget,
+            benchTarget: result.target ?? undefined,
             error: result.error,
         };
     },

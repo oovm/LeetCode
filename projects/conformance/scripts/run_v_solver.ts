@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-/** ???? legion node ?????? metadata.tests ????? wasm invoke???? glue ??????? */
+/** 对本次 legion node lane 产物运行 `metadata.tests`：加载 wasm invoke 与 glue 后在 node 进程内比对。 */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { isArtifactCacheFreshForBuild } from '@nyar/valkyrie';
+import { isArtifactCacheFresh } from '@nyar/valkyrie';
+import { resolveCompileTargetPlan } from '../src/adapters/shared/compile-target-plan.ts';
 import { readNodeExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
 import { extractTestFailureIndex, formatSolverResultLine, type SolverCaseStats } from '../src/adapters/shared/solver-case-stats.ts';
 import {
@@ -101,7 +102,7 @@ async function main(): Promise<number> {
     };
     const slug = meta.id;
     if (!slug) {
-        throw new Error('metadata.id ??');
+        throw new Error('metadata.id 缺失');
     }
 
     const problem = { id: slug };
@@ -110,7 +111,7 @@ async function main(): Promise<number> {
     let artifacts: VBuildArtifacts | null = null;
     const pinned = readNodeExecutionPinFromEnv();
     if (pinned) {
-        const freshness = isArtifactCacheFreshForBuild(pinned.artifactDir);
+        const freshness = isArtifactCacheFresh(pinned.artifactDir, pinned.compileTarget);
         if (!freshness.fresh) {
             throw new Error(freshness.reason ?? 'pinned execution manifest stale');
         }
@@ -123,14 +124,15 @@ async function main(): Promise<number> {
             },
         };
     } else {
-        const buildOutcome = ensureVBuild(problem, projectDir);
+        const plan = resolveCompileTargetPlan(projectDir);
+        const buildOutcome = ensureVBuild(problem, plan);
         if (buildOutcome.error) {
             throw new Error(buildOutcome.error);
         }
         artifacts = buildOutcome.artifacts ?? resolveVBuildArtifacts(problem);
     }
     if (!artifacts) {
-        throw new Error('¦Ä??? legion build ????');
+        throw new Error('legion build 未产出可执行产物');
     }
 
     const { tests, invoke } = loadMetadata(problemDir);

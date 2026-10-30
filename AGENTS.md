@@ -246,7 +246,7 @@ legion test <project-dir> --target wasm
 
 `-t wasm` 会报 `unexpected argument '-t' found`。skills 里若仍写 `-t`，以 **本文件与 legion `--help`** 为准。
 
-编译 target 由 `legion.von` 的 `build[].target` 唯一决定（`resolveCompileTargetFromManifest` 无默认值），`--target` 须与 manifest 一致。Node 只是 runner 执行宿主，不等于编译 target 是 `node`。
+编译 target 由 `legion.von` 的 `build[].target` 唯一决定（`resolveCompileTargetPlan` 无默认值，声明缺失或多值即结构化失败），`--target` 须与 manifest 一致。Node 只是 runner 执行宿主，不等于编译 target 是 `node`。
 
 ### 5. `legion test` ≠ 对 `metadata.tests` 验题意
 

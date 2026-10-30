@@ -14,7 +14,7 @@ import {
     type LegionSpawnResult,
 } from '@nyar/valkyrie';
 import { LEETCODE_ROOT } from '../../domain/paths.ts';
-import { resolveCompileTargetFromManifest } from './manifest.ts';
+import type { CompileTargetPlan } from '../shared/compile-target-plan.ts';
 
 const runner = createLegionBenchmarkRunner();
 
@@ -65,33 +65,30 @@ export function spawnLegion(argv: string[]): LegionOutcome {
 }
 
 /**
- * 从 solver 目录的 legion.von 解析 compile target，然后调用 legion build。
- * compile target 的**唯一来源**是 manifest —— 禁止任何默认值。
+ * 按计划对象调用 legion build。
+ * compile target 的唯一来源是 `CompileTargetPlan`；这里不再解析 manifest。
  */
-export function legionBuild(projectDir: string, outputDir: string): LegionOutcome {
-    const target = resolveCompileTargetFromManifest(projectDir);
-    return legionBuildProject(projectDir, target, outputDir);
+export function legionBuild(plan: CompileTargetPlan, outputDir: string): LegionOutcome {
+    return legionBuildProject(plan.solverDir, plan.canonicalTarget, outputDir);
 }
 
 export const legionBuildNative = legionBuild;
 
 /**
- * 从 solver 目录的 legion.von 解析 compile target，然后调用 legion test。
+ * 按计划对象调用 legion test。
  */
-export function legionTest(projectDir: string): LegionOutcome {
-    const target = resolveCompileTargetFromManifest(projectDir);
-    return legionTestProject(projectDir, target);
+export function legionTest(plan: CompileTargetPlan): LegionOutcome {
+    return legionTestProject(plan.solverDir, plan.canonicalTarget);
 }
 
 export type ParsedBenchRow = LegionBenchRow;
 export { parseLegionBenchTable };
 
 /**
- * bench 同样从 manifest 读 target。
+ * bench 复用同一计划对象，避免每次采样重新解析 target。
  */
-export function legionBench(projectDir: string, runs = 3) {
-    const target = resolveCompileTargetFromManifest(projectDir);
-    return runner.benchProject(projectDir, { runs, target });
+export function legionBench(plan: CompileTargetPlan, runs = 3) {
+    return runner.benchProject(plan.solverDir, { runs, target: plan.canonicalTarget });
 }
 
 export function formatLegionError(label: string, outcome: LegionOutcome): string {

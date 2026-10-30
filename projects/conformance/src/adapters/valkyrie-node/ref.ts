@@ -9,7 +9,6 @@ import { pathToFileURL } from 'node:url';
 
 
 import {
-    isArtifactCacheFreshForBuild,
     listWasmModuleExports,
     resolveArtifactEntry,
 } from '@nyar/valkyrie';
@@ -22,6 +21,11 @@ import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
 
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 
+import { readArtifactEvidence } from '../shared/artifact-evidence.ts';
+import {
+    resolveCompileTargetPlan,
+    type CompileTargetPlan,
+} from '../shared/compile-target-plan.ts';
 import { encodeNodeExecutionPin } from '../shared/execution-pin.ts';
 import { emptySolverCaseStats, parseSolverResultLine, type SolverCaseStats } from '../shared/solver-case-stats.ts';
 import { formatLegionError, legionBuildNative, valkyrieRunnerReady } from './valkyrie.ts';
@@ -58,6 +62,9 @@ export type VReferencePin = {
 
     buildRoute: string | null;
 
+    /** 产物证据的期望 canonical triple（来自 `CompileTargetPlan`，禁止从 artifact 反推）。 */
+    compileTarget: string;
+
 };
 
 
@@ -73,8 +80,7 @@ export function vBuildDir(problem: ProblemDefinition): string {
 /**
  * artifact 目录 = build output dir。
  *
- * 历史上这里硬编码 canonical triple 做子目录，但 `@nyar/valkyrie` 的
- * `resolveArtifactDir(dir, _target)` 已经把 target 参数废弃（直接 return dir），
+ * `@nyar/valkyrie` 的 `resolveArtifactDir(dir, _target)` 已废弃 target 参数（直接返回 dir），
  * 所以 artifactDir 就是 outDir 本身。
  */
 export function vArtifactDir(problem: ProblemDefinition): string {
@@ -233,24 +239,26 @@ export function requireValkyrieInvokeEntry(invoke: { valkyrie?: string; typescri
     return entry;
 }
 
-export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VBuildOutcome {
+/**
+ * 用同一 `CompileTargetPlan` 完成 build + freshness 判定。
+ *
+ * 验收必须反映当前源码。产物是否过期由源码闭包决定，而 freshness 只看执行 manifest
+ * 与期望 target；这里不能复用 freshness 来跳过构建。构建本身有 `legion build` 自己的缓存，
+ * harness 不做第二层缓存判断。
+ */
+export function ensureVBuild(problem: ProblemDefinition, plan: CompileTargetPlan): VBuildOutcome {
 
     const outDir = vBuildDir(problem);
 
-    const artifactDir = outDir;
-
-    // 验收必须反映当前源码。产物是否过期由源码闭包决定，而 `isArtifactCacheFreshForBuild`
-    // 只看执行 manifest 与 target，不看入口源码内容；这里不能复用它来跳过构建。
-    // 构建本身有 `legion build` 自己的缓存，harness 不做第二层缓存判断。
     mkdirSync(outDir, { recursive: true });
 
-    const build = legionBuildNative(projectDir, outDir);
+    const build = legionBuildNative(plan, outDir);
 
     if (build.status !== 0) {
 
         return {
 
-            error: formatLegionError('legion build', build),
+            error: formatLegionError(`legion build --target ${plan.canonicalTarget}`, build),
 
             artifacts: null,
 
@@ -280,13 +288,13 @@ export function ensureVBuild(problem: ProblemDefinition, projectDir: string): VB
 
 
 
-    const rebuiltFreshness = isArtifactCacheFreshForBuild(artifactDir);
+    const evidence = readArtifactEvidence(outDir, plan);
 
-    if (!rebuiltFreshness.fresh) {
+    if (!evidence.fresh) {
 
         return {
 
-            error: rebuiltFreshness.reason ?? 'legion build 未生成 execution manifest',
+            error: evidence.reason ?? 'legion build 未生成 execution manifest',
 
             artifacts: null,
 
@@ -364,6 +372,19 @@ export type VReferenceOutcome = {
 
 };
 
+/**
+ * 读取 metadata 入口后判定 wasm invoke 是否被阻塞；返回 `null` 表示可 invoke。
+ * 只做诊断聚合，不缓存结果，也不改变 invoke 判定口径。
+ */
+export function resolveWasmInvokeBlocker(problemRoot: string, wasmPath: string): string | null {
+    try {
+        const { invoke } = loadMetadata(problemRoot);
+        return wasmInvokeBlockedReason(wasmPath, requireValkyrieInvokeEntry(invoke));
+    } catch (error) {
+        return String(error);
+    }
+}
+
 export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): Promise<SolverCaseStats> {
     const blocked = (() => {
         try {
@@ -372,7 +393,8 @@ export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): 
             const problem = { id: slug } as ProblemDefinition;
             const projectDir = join(problemRoot, 'solvers', 'valkyrie');
             const artifacts = pin?.artifacts ?? (() => {
-                const build = ensureVBuild(problem, projectDir);
+                const plan = resolveCompileTargetPlan(projectDir);
+                const build = ensureVBuild(problem, plan);
                 if (build.error) {
                     throw new Error(build.error);
                 }
@@ -402,6 +424,7 @@ export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): 
             legionMjs: pin.artifacts.entry.legionMjs,
             legionWasm: pin.artifacts.entry.legionWasm,
             physicalEntry: pin.artifacts.entry.physicalEntry,
+            compileTarget: pin.compileTarget,
         })
         : {};
 

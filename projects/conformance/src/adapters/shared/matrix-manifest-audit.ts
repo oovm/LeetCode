@@ -1,6 +1,12 @@
-import { readExecutionManifest } from '@nyar/valkyrie';
+/**
+ * execution manifest 审计投影：只从已读取的 manifest 视图取值。
+ *
+ * 读取动作统一由 `readArtifactEvidence` 完成，这里禁止再次读盘，
+ * 以免同一产物在报告里出现两份来源不同的证据。
+ */
 
-/** execution manifest ??��??????????????��? */
+import type { ExecutionManifestView } from './artifact-evidence.ts';
+
 export type MatrixManifestAudit = {
     manifestSchemaVersion: number | null;
     semanticClosureHash: string | null;
@@ -8,8 +14,7 @@ export type MatrixManifestAudit = {
     hostProviderBindingHash: string | null;
 };
 
-export function readMatrixManifestAudit(artifactDir: string): MatrixManifestAudit {
-    const manifest = readExecutionManifest(artifactDir);
+export function readMatrixManifestAudit(manifest: ExecutionManifestView | null): MatrixManifestAudit {
     if (!manifest) {
         return {
             manifestSchemaVersion: null,

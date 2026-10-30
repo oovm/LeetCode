@@ -12,6 +12,12 @@ function baseNodeRow(overrides: Partial<ValkyrieMatrixRow> = {}): ValkyrieMatrix
     return {
         id: 'two-sum',
         target: CANONICAL_TRIPLE_WASM,
+        declaredTarget: 'wasm',
+        targetSource: 'manifest',
+        targetError: null,
+        manifestTarget: CANONICAL_TRIPLE_WASM,
+        runtimeStatus: 'ready',
+        runtimeReason: null,
         runnerHost: RUNNER_HOST,
         buildStatus: 0,
         testStatus: 0,

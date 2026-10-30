@@ -3,9 +3,8 @@
  *
  * 本模块只表达 runner 层**固定的执行宿主**：Node.js。
  *
- * compile target（编译目标别名，如 "wasm"、"node"）**不在此配置** ——
- * 它的**唯一来源**是各题解 `legion.von` 的 `build[0].target` 字段。
- * 见 `manifest.ts` 的 `resolveCompileTargetFromManifest`。
+ * compile target（canonical triple）**不在此配置** —— 它由 `CompileTargetPlan` 唯一给出：
+ * manifest 声明 + `legionPlan` 规范化，见 `../shared/compile-target-plan.ts`。
  */
 
 /** 当前 valkyrie-node adapter 固定的 runner 宿主：Node.js。 */
