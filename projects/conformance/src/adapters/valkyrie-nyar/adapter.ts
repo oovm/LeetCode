@@ -1,4 +1,3 @@
-import { NYAR_BUILD_TARGET } from './valkyrie.ts';
 import { defineSolverAdapter } from '../factory.ts';
 import { runResultFromReference } from '../shared/correctness-result.ts';
 import { hasValkyrieSolver, valkyrieNyarRunnerReady, valkyrieNyarSkipReason } from './valkyrie.ts';
@@ -12,7 +11,8 @@ export const valkyrieNyarAdapter = defineSolverAdapter({
     blockedReason: valkyrieNyarSkipReason,
     collectEnvironment: async () => ({
         language: 'valkyrie-nyar' as const,
-        benchTarget: NYAR_BUILD_TARGET,
+        lane: 'nyar' as const,
+        targetPolicy: 'lane-explicit' as const,
         runnerReady: valkyrieNyarRunnerReady(),
         skipReason: valkyrieNyarSkipReason(),
         compileMetric: 'compile' as const,

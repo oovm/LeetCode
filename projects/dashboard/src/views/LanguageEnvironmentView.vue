@@ -158,12 +158,13 @@ function valkyrieCard(env: ValkyrieBenchEnvironment | null, ready: boolean): Env
     return {
         key: 'valkyrie',
         title: 'V (wasm)',
-        subtitle: 'legion build --target node 外部 harness',
+        subtitle: 'legion build --target wasm（target 由各题 legion.von 声明）外部 harness',
         ready,
         versionRows: [
             { label: 'legion', value: env.legionVersion ?? '—' },
             { label: 'route', value: env.legionRoute ?? '—' },
-            { label: 'target', value: env.benchTarget },
+            { label: 'lane', value: env.lane ?? '—' },
+            { label: 'target 来源', value: env.targetPolicy ?? '—' },
         ],
         paramRows: [
             { label: '编译指标', value: `${env.compileMetric}（${env.aggregation}）` },

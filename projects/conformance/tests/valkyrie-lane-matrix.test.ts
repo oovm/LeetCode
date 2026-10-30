@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildValkyrieDualMatrixReport } from '../src/reporting/valkyrie-dual-matrix.ts';
+import { buildValkyrieLaneMatrixReport } from '../src/reporting/valkyrie-lane-matrix.ts';
 import type { ValkyrieMatrixRow } from '../src/adapters/valkyrie-node/matrix.ts';
 import type { ValkyrieNyarMatrixRow } from '../src/adapters/valkyrie-nyar/matrix.ts';
 
@@ -76,13 +76,14 @@ function failNyar(id: string): ValkyrieNyarMatrixRow {
     };
 }
 
-describe('valkyrie dual matrix report', () => {
-    it('summarizes wasm and nyar pass rates separately including case rates', () => {
-        const report = buildValkyrieDualMatrixReport([
+describe('valkyrie lane matrix report', () => {
+    it('summarizes the wasm delivery lane and the legacy nyar lane separately', () => {
+        const report = buildValkyrieLaneMatrixReport([
             { id: 'two-sum', wasm: greenWasm('two-sum'), nyar: failNyar('two-sum') },
             { id: 'three-sum', wasm: greenWasm('three-sum'), nyar: failNyar('three-sum') },
         ], { corpusIds: ['two-sum', 'three-sum'] });
         expect(report.denominator).toBe(2);
+        expect(report.deliveryLane).toBe('wasm');
         expect(report.summary.wasm.green).toBe(2);
         expect(report.summary.nyar.green).toBe(0);
         expect(report.summary.wasm.greenRate).toBe(1);
@@ -90,10 +91,23 @@ describe('valkyrie dual matrix report', () => {
         expect(report.summary.wasm.testCaseTotal).toBe(4);
         expect(report.summary.wasm.casePassRate).toBe(1);
         expect(report.summary.nyar.casePassRate).toBe(0);
+        expect(report.summary.wasm.runtime).toEqual({ ready: 2, blocked: 0, pending: 0 });
+        expect(report.summary.nyar.runtime).toEqual({ ready: 0, blocked: 0, pending: 2 });
+    });
+
+    it('marks only the wasm lane as counting toward delivery', () => {
+        const report = buildValkyrieLaneMatrixReport([
+            { id: 'two-sum', wasm: greenWasm('two-sum'), nyar: failNyar('two-sum') },
+        ], { corpusIds: ['two-sum'] });
+        const byId = new Map(report.lanes.map((lane) => [lane.id, lane]));
+        expect(byId.get('wasm')?.countsTowardDelivery).toBe(true);
+        expect(byId.get('wasm')?.targetSource).toBe('manifest');
+        expect(byId.get('nyar')?.countsTowardDelivery).toBe(false);
+        expect(byId.get('nyar')?.targetSource).toBe('lane-explicit');
     });
 
     it('keeps the full denominator when a selected batch is entirely green', () => {
-        const report = buildValkyrieDualMatrixReport([
+        const report = buildValkyrieLaneMatrixReport([
             { id: 'two-sum', wasm: greenWasm('two-sum'), nyar: failNyar('two-sum') },
         ], { corpusIds: ['two-sum', 'three-sum'], batchLimit: 1 });
         expect(report.denominator).toBe(2);
@@ -105,7 +119,7 @@ describe('valkyrie dual matrix report', () => {
 
     it('rejects rows outside the corpus and duplicated execution identities', () => {
         const entry = { id: 'two-sum', wasm: greenWasm('two-sum'), nyar: failNyar('two-sum') };
-        expect(() => buildValkyrieDualMatrixReport([entry], { corpusIds: ['three-sum'] })).toThrow();
-        expect(() => buildValkyrieDualMatrixReport([entry, entry], { corpusIds: ['two-sum'] })).toThrow();
+        expect(() => buildValkyrieLaneMatrixReport([entry], { corpusIds: ['three-sum'] })).toThrow();
+        expect(() => buildValkyrieLaneMatrixReport([entry, entry], { corpusIds: ['two-sum'] })).toThrow();
     });
 });

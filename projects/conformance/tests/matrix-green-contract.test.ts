@@ -47,11 +47,17 @@ function baseNodeRow(overrides: Partial<ValkyrieMatrixRow> = {}): ValkyrieMatrix
 function baseNyarRow(overrides: Partial<ValkyrieNyarMatrixRow> = {}): ValkyrieNyarMatrixRow {
     return {
         id: 'two-sum',
-        target: 'nyar-unknown-unknown-managed',
+        target: 'ovm-unknown-unknown-managed',
+        declaredTarget: 'ovm',
+        targetSource: 'lane-explicit',
+        targetError: null,
+        manifestTarget: 'ovm-unknown-unknown-managed',
+        runtimeStatus: 'ready',
+        runtimeReason: null,
         buildStatus: 0,
         testStatus: 0,
-        buildRoute: 'legion build --target nyar',
-        testRoute: 'legion test --target nyar',
+        buildRoute: 'legion build --target ovm',
+        testRoute: 'legion test --target ovm',
         buildError: null,
         testError: null,
         manifestFresh: true,
@@ -73,7 +79,7 @@ function baseNyarRow(overrides: Partial<ValkyrieNyarMatrixRow> = {}): ValkyrieNy
     };
 }
 
-describe('Valkyrie 双 target 矩阵绿门禁', () => {
+describe('Valkyrie lane 矩阵绿门禁', () => {
     it('shared contract 与 node / nyar 包装一致', () => {
         const row = baseNodeRow();
         expect(isMatrixRowGreen(row)).toBe(isValkyrieGreen(row));

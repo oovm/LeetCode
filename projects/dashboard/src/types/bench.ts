@@ -71,9 +71,12 @@ export type TypeScriptBunBenchEnvironment = {
 
 export type ValkyrieBenchEnvironment = {
     language: 'valkyrie';
+    /** `wasm` = 交付 lane；`nyar` = 旧 managed lane（不计入完成度）。 */
+    lane: 'wasm' | 'nyar';
+    /** compile target 来源：manifest 声明 / lane 显式。 */
+    targetPolicy: 'manifest-declared' | 'lane-explicit';
     legionVersion: string | null;
     legionRoute: string | null;
-    benchTarget: string;
     runnerReady: boolean;
     skipReason: string | null;
     compileMetric: 'compile';

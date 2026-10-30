@@ -109,8 +109,8 @@ export function collectMatlabSxoBenchEnvironment(): MatlabSxoBenchEnvironment {
 }
 
 export function collectValkyrieBenchEnvironment(): ValkyrieBenchEnvironment {
-    // compile target 是 per-problem 的（来自各题 legion.von），环境级只给一个描述性标签
-    const benchTarget = 'per-problem-manifest';
+    // compile target 是 per-problem 的（由各题 legion.von 的 build[].target 声明），
+    // 环境级只描述 lane 与 target 来源策略，不伪造一个统一 target 值。
     let legionVersion: string | null = null;
     let legionRoute: string | null = null;
 
@@ -123,9 +123,10 @@ export function collectValkyrieBenchEnvironment(): ValkyrieBenchEnvironment {
 
     return {
         language: 'valkyrie',
+        lane: 'wasm',
+        targetPolicy: 'manifest-declared',
         legionVersion,
         legionRoute,
-        benchTarget,
         runnerReady: valkyrieRunnerReady(),
         skipReason: valkyrieSkipReason(),
         host: collectHostEnvironment(),
