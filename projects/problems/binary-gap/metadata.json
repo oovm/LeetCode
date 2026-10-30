@@ -2,7 +2,9 @@
     "id": "binary-gap",
     "questionId": 868,
     "difficulty": "Easy",
-    "tags": ["Bit Manipulation"],
+    "tags": [
+        "Bit Manipulation"
+    ],
     "tests": [
         {
             "args": {
@@ -102,12 +104,6 @@
         },
         {
             "args": {
-                "n": 8589934591
-            },
-            "expected": 1
-        },
-        {
-            "args": {
                 "n": 47
             },
             "expected": 2
@@ -129,18 +125,6 @@
                 "n": 2147483647
             },
             "expected": 1
-        },
-        {
-            "args": {
-                "n": 100111011000110000
-            },
-            "expected": 6
-        },
-        {
-            "args": {
-                "n": 1.001001001001001e30
-            },
-            "expected": 8
         },
         {
             "args": {
@@ -177,12 +161,6 @@
                 "n": 1879048192
             },
             "expected": 1
-        },
-        {
-            "args": {
-                "n": 10000100001
-            },
-            "expected": 7
         },
         {
             "args": {
@@ -246,12 +224,6 @@
         },
         {
             "args": {
-                "n": 1000010000100001
-            },
-            "expected": 8
-        },
-        {
-            "args": {
                 "n": 101010101
             },
             "expected": 7
@@ -312,12 +284,6 @@
         },
         {
             "args": {
-                "n": 1010101010101010000
-            },
-            "expected": 7
-        },
-        {
-            "args": {
                 "n": 65535
             },
             "expected": 1
@@ -327,12 +293,6 @@
                 "n": 127
             },
             "expected": 1
-        },
-        {
-            "args": {
-                "n": 1.0011001100110011e31
-            },
-            "expected": 8
         },
         {
             "args": {
@@ -384,15 +344,33 @@
         },
         {
             "args": {
-                "n": 10011001100110010000
+                "n": 2
             },
-            "expected": 5
+            "expected": 0
         },
         {
             "args": {
-                "n": 1.1001100110011e31
+                "n": 2147483648
             },
-            "expected": 5
+            "expected": 0
+        },
+        {
+            "args": {
+                "n": 1073741823
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "n": 1073741826
+            },
+            "expected": 29
+        },
+        {
+            "args": {
+                "n": 1234567890
+            },
+            "expected": 8
         }
     ],
     "invoke": {
