@@ -1,5 +1,6 @@
 import { defineSolverAdapter } from '../factory.ts';
 import { runResultFromReference } from '../shared/correctness-result.ts';
+import { VALKYRIE_BENCH_PARAMS } from '../../planning/bench-params.ts';
 import { hasValkyrieSolver, valkyrieNyarRunnerReady, valkyrieNyarSkipReason } from './valkyrie.ts';
 import { benchValkyrieNyarProblem } from './bench.ts';
 import { runNyarReference } from './ref.ts';
@@ -15,11 +16,8 @@ export const valkyrieNyarAdapter = defineSolverAdapter({
         targetPolicy: 'lane-explicit' as const,
         runnerReady: valkyrieNyarRunnerReady(),
         skipReason: valkyrieNyarSkipReason(),
-        compileMetric: 'compile' as const,
-        runtimeMetric: 'runtime' as const,
-        aggregation: 'median' as const,
-        compileRuns: 1,
-        warmup: 0,
+        // bench 实际参数以 VALKYRIE_BENCH_PARAMS 为准（与 benchValkyrieNyarProblem 默认值同源），不再伪造
+        ...VALKYRIE_BENCH_PARAMS,
         host: {
             platform: process.platform,
             arch: process.arch,

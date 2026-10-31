@@ -54,10 +54,18 @@ export function defineSolverAdapter(definition: AdapterDefinition): SolverAdapte
         async invokeBenchmark(problem: ProblemSpec, _problemRoot: string, plan: MeasurementPlan) {
             const startedAt = new Date().toISOString();
             const problemDef: ProblemDefinition = { id: problem.id, title: problem.title };
+            // 本次 bench 实际使用的执行身份（计划 canonical triple / legion route），随 run record 落进报告证据
+            const evidence: Record<string, string> = {};
             const measurement = await runAdaptiveMeasurement(plan, async () => {
                 const outcome = await benchProblem(problemDef);
                 if (outcome.error) {
                     throw new Error(outcome.error);
+                }
+                if (outcome.benchTarget) {
+                    evidence.benchTarget = outcome.benchTarget;
+                }
+                if (outcome.legionRoute) {
+                    evidence.legionRoute = outcome.legionRoute;
                 }
                 const ms = outcome.runtimeMs ?? outcome.compileMs;
                 if (typeof ms !== 'number' || !Number.isFinite(ms) || ms <= 0) {
@@ -77,7 +85,11 @@ export function defineSolverAdapter(definition: AdapterDefinition): SolverAdapte
                 status,
                 cases: [],
                 diagnostics: measurement.stability !== 'stable' ? [`measurement ${measurement.stability}`] : [],
-                toolchain: { implementationId, adapterVersion: ADAPTER_VERSION },
+                toolchain: {
+                    implementationId,
+                    adapterVersion: ADAPTER_VERSION,
+                    ...(Object.keys(evidence).length > 0 ? { artifacts: { ...evidence } } : {}),
+                },
                 startedAt,
                 finishedAt,
             };

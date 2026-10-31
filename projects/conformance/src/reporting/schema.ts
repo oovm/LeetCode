@@ -71,71 +71,6 @@ export type LanguageBenchEnvironment =
     | WolframSxoBenchEnvironment
     | MatlabSxoBenchEnvironment;
 
-export type LanguageBenchRowBase = {
-    id: string;
-    title: string;
-    questionId: number;
-    difficulty: string;
-    tags: string[];
-    error: string | null;
-};
-
-export type PythonBenchRow = LanguageBenchRowBase & {
-    runtimeMs: number | null;
-};
-
-export type TypeScriptBenchRow = LanguageBenchRowBase & {
-    runtimeMs: number | null;
-};
-
-export type TypeScriptBunBenchRow = LanguageBenchRowBase & {
-    runtimeMs: number | null;
-};
-
-export type ValkyrieBenchRow = LanguageBenchRowBase & {
-    compileMs: number | null;
-    runtimeMs: number | null;
-    legionRoute: string | null;
-    benchTarget: string;
-};
-
-export type PythonBenchReport = {
-    language: 'python';
-    generatedAt: string;
-    ready: boolean;
-    catalogTotal: number;
-    environment: PythonBenchEnvironment;
-    rows: PythonBenchRow[];
-};
-
-export type TypeScriptBenchReport = {
-    language: 'typescript';
-    generatedAt: string;
-    ready: boolean;
-    catalogTotal: number;
-    environment: TypeScriptBenchEnvironment;
-    rows: TypeScriptBenchRow[];
-};
-
-export type TypeScriptBunBenchReport = {
-    language: 'typescript-bun';
-    generatedAt: string;
-    ready: boolean;
-    catalogTotal: number;
-    environment: TypeScriptBunBenchEnvironment;
-    rows: TypeScriptBunBenchRow[];
-};
-
-export type ValkyrieBenchReport = {
-    language: 'valkyrie';
-    generatedAt: string;
-    ready: boolean;
-    benchTarget: string;
-    catalogTotal: number;
-    environment: ValkyrieBenchEnvironment;
-    rows: ValkyrieBenchRow[];
-};
-
 export type WolframSxoBenchEnvironment = {
     language: 'wolfram-sxo';
     sxoMathematicaVersion: string | null;
@@ -162,45 +97,4 @@ export type MatlabSxoBenchEnvironment = {
     host: HostEnvironment;
 };
 
-export type WolframSxoBenchRow = LanguageBenchRowBase & {
-    runtimeMs: number | null;
-};
 
-export type MatlabSxoBenchRow = LanguageBenchRowBase & {
-    runtimeMs: number | null;
-};
-
-export type WolframSxoBenchReport = {
-    language: 'wolfram-sxo';
-    generatedAt: string;
-    ready: boolean;
-    catalogTotal: number;
-    environment: WolframSxoBenchEnvironment;
-    rows: WolframSxoBenchRow[];
-};
-
-export type MatlabSxoBenchReport = {
-    language: 'matlab-sxo';
-    generatedAt: string;
-    ready: boolean;
-    catalogTotal: number;
-    environment: MatlabSxoBenchEnvironment;
-    rows: MatlabSxoBenchRow[];
-};
-
-export type LanguageBenchReport =
-    | PythonBenchReport
-    | TypeScriptBenchReport
-    | TypeScriptBunBenchReport
-    | ValkyrieBenchReport
-    | WolframSxoBenchReport
-    | MatlabSxoBenchReport;
-
-export const BENCH_JSON_FILES: Record<BenchLanguage, string> = {
-    python: 'benchmark-python.json',
-    typescript: 'benchmark-typescript.json',
-    'typescript-bun': 'benchmark-typescript-bun.json',
-    valkyrie: 'benchmark-valkyrie.json',
-    'wolfram-sxo': 'benchmark-wolfram-sxo.json',
-    'matlab-sxo': 'benchmark-matlab-sxo.json',
-};
