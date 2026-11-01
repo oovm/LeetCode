@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildValkyrieLaneMatrixReport } from '../src/reporting/valkyrie-lane-matrix.ts';
+import { buildValkyrieLaneMatrixReport, MATRIX_LANES } from '../src/reporting/valkyrie-lane-matrix.ts';
 import type { ValkyrieMatrixRow } from '../src/adapters/valkyrie-node/matrix.ts';
-import type { ValkyrieNyarMatrixRow } from '../src/adapters/valkyrie-nyar/matrix.ts';
+import type { ValkyrieBackendMatrixRow } from '../src/adapters/valkyrie-backend/matrix.ts';
 
 // runnerHost 固定为 'node'（仅执行宿主），compile target 来自各题 manifest / lane 计划
 const RUNNER_HOST = 'node';
@@ -42,10 +42,10 @@ function greenWasm(id: string): ValkyrieMatrixRow {
     };
 }
 
-function failNyar(id: string): ValkyrieNyarMatrixRow {
+function backendRow(id: string, overrides: Partial<ValkyrieBackendMatrixRow> = {}): ValkyrieBackendMatrixRow {
     return {
         id,
-        target: 'ovm-unknown-unknown-managed', // lane 显式 target 的 canonical triple
+        target: 'ovm-unknown-unknown-managed',
         declaredTarget: 'ovm',
         targetSource: 'lane-explicit',
         targetError: null,
@@ -73,43 +73,116 @@ function failNyar(id: string): ValkyrieNyarMatrixRow {
         firstFailure: 'compile failed',
         solverNote: null,
         green: false,
+        ...overrides,
+    };
+}
+
+function greenOvm(id: string): ValkyrieBackendMatrixRow {
+    return backendRow(id, {
+        manifestTarget: 'ovm-unknown-unknown-managed',
+        runtimeStatus: 'ready',
+        runtimeReason: null,
+        buildStatus: 0,
+        buildError: null,
+        manifestFresh: true,
+        manifestError: null,
+        manifestSchemaVersion: 3,
+        semanticClosureHash: 'a',
+        canonicalSurfaceHash: 'b',
+        hostProviderBindingHash: 'c',
+        runtimeOk: true,
+        runtimeError: null,
+        testCasePass: 2,
+        testCaseFail: 0,
+        firstFailureIndex: null,
+        firstFailure: null,
+        green: true,
+    });
+}
+
+/** 对照 lane 因生产 lowering 未启用而在 build 阶段结构化失败的真实形态。 */
+function blockedContrast(id: string, lane: 'jvm' | 'clr'): ValkyrieBackendMatrixRow {
+    const reason = `目标 ${lane} 在当前构建中没有已启用的正式 lowering；拒绝切换目标或补造产物`;
+    return backendRow(id, {
+        target: lane === 'jvm' ? 'jvm-unknown-unknown-jvm' : 'clr-unknown-unknown-clr',
+        declaredTarget: lane,
+        buildError: reason,
+        testError: reason,
+        runtimeStatus: 'pending',
+        runtimeReason: 'build 未通过，runtime 未执行',
+        runtimeError: reason,
+        firstFailure: reason,
+        testCaseTotal: 0,
+        testCasePass: 0,
+        testCaseFail: 0,
+    });
+}
+
+function entry(id: string, overrides: Partial<Record<'wasm' | 'ovm' | 'jvm' | 'clr', ValkyrieMatrixRow | ValkyrieBackendMatrixRow>> = {}) {
+    return {
+        id,
+        rows: {
+            wasm: overrides.wasm ?? greenWasm(id),
+            ovm: overrides.ovm ?? greenOvm(id),
+            jvm: overrides.jvm ?? blockedContrast(id, 'jvm'),
+            clr: overrides.clr ?? blockedContrast(id, 'clr'),
+        },
     };
 }
 
 describe('valkyrie lane matrix report', () => {
-    it('summarizes the wasm delivery lane and the legacy nyar lane separately', () => {
-        const report = buildValkyrieLaneMatrixReport([
-            { id: 'two-sum', wasm: greenWasm('two-sum'), nyar: failNyar('two-sum') },
-            { id: 'three-sum', wasm: greenWasm('three-sum'), nyar: failNyar('three-sum') },
-        ], { corpusIds: ['two-sum', 'three-sum'] });
+    it('declares exactly the four lanes with distinct roles', () => {
+        expect(MATRIX_LANES.map((lane) => lane.id)).toEqual(['wasm', 'ovm', 'jvm', 'clr']);
+        const byId = new Map(MATRIX_LANES.map((lane) => [lane.id, lane]));
+        expect(byId.get('wasm')?.role).toBe('delivery');
+        expect(byId.get('ovm')?.role).toBe('execution');
+        expect(byId.get('jvm')?.role).toBe('contrast');
+        expect(byId.get('clr')?.role).toBe('contrast');
+    });
+
+    it('summarizes each lane separately without mixing counts across lanes', () => {
+        const report = buildValkyrieLaneMatrixReport([entry('two-sum'), entry('three-sum')], { corpusIds: ['two-sum', 'three-sum'] });
         expect(report.denominator).toBe(2);
         expect(report.deliveryLane).toBe('wasm');
+        expect(Object.keys(report.summary).sort()).toEqual(['clr', 'jvm', 'ovm', 'wasm']);
         expect(report.summary.wasm.green).toBe(2);
-        expect(report.summary.nyar.green).toBe(0);
+        expect(report.summary.ovm.green).toBe(2);
+        expect(report.summary.jvm.green).toBe(0);
+        expect(report.summary.clr.green).toBe(0);
         expect(report.summary.wasm.greenRate).toBe(1);
-        expect(report.summary.nyar.buildPassRate).toBe(0);
+        expect(report.summary.jvm.buildPassRate).toBe(0);
         expect(report.summary.wasm.testCaseTotal).toBe(4);
         expect(report.summary.wasm.casePassRate).toBe(1);
-        expect(report.summary.nyar.casePassRate).toBe(0);
+        expect(report.summary.jvm.casePassRate).toBe(0);
         expect(report.summary.wasm.runtime).toEqual({ ready: 2, blocked: 0, pending: 0 });
-        expect(report.summary.nyar.runtime).toEqual({ ready: 0, blocked: 0, pending: 2 });
+        expect(report.summary.ovm.runtime).toEqual({ ready: 2, blocked: 0, pending: 0 });
+        expect(report.summary.jvm.runtime).toEqual({ ready: 0, blocked: 0, pending: 2 });
+    });
+
+    it('keeps contrast lane failure reasons independent of the execution lane verdict', () => {
+        const report = buildValkyrieLaneMatrixReport([entry('two-sum')], { corpusIds: ['two-sum'] });
+        const jvm = report.problems[0]!.rows.jvm as ValkyrieBackendMatrixRow;
+        const ovm = report.problems[0]!.rows.ovm as ValkyrieBackendMatrixRow;
+        expect(ovm.green).toBe(true);
+        expect(jvm.green).toBe(false);
+        expect(jvm.buildError).toContain('lowering');
+        expect(jvm.buildError).not.toBe(ovm.buildError);
+        expect(jvm.target).not.toBe(ovm.target);
     });
 
     it('marks only the wasm lane as counting toward delivery', () => {
-        const report = buildValkyrieLaneMatrixReport([
-            { id: 'two-sum', wasm: greenWasm('two-sum'), nyar: failNyar('two-sum') },
-        ], { corpusIds: ['two-sum'] });
+        const report = buildValkyrieLaneMatrixReport([entry('two-sum')], { corpusIds: ['two-sum'] });
         const byId = new Map(report.lanes.map((lane) => [lane.id, lane]));
         expect(byId.get('wasm')?.countsTowardDelivery).toBe(true);
         expect(byId.get('wasm')?.targetSource).toBe('manifest');
-        expect(byId.get('nyar')?.countsTowardDelivery).toBe(false);
-        expect(byId.get('nyar')?.targetSource).toBe('lane-explicit');
+        for (const lane of ['ovm', 'jvm', 'clr'] as const) {
+            expect(byId.get(lane)?.countsTowardDelivery).toBe(false);
+            expect(byId.get(lane)?.targetSource).toBe('lane-explicit');
+        }
     });
 
     it('keeps the full denominator when a selected batch is entirely green', () => {
-        const report = buildValkyrieLaneMatrixReport([
-            { id: 'two-sum', wasm: greenWasm('two-sum'), nyar: failNyar('two-sum') },
-        ], { corpusIds: ['two-sum', 'three-sum'], batchLimit: 1 });
+        const report = buildValkyrieLaneMatrixReport([entry('two-sum')], { corpusIds: ['two-sum', 'three-sum'], batchLimit: 1 });
         expect(report.denominator).toBe(2);
         expect(report.summary.wasm.greenRate).toBe(0.5);
         expect(report.summary.wasm.notExecuted).toBe(1);
@@ -117,9 +190,16 @@ describe('valkyrie lane matrix report', () => {
         expect(report.complete).toBe(false);
     });
 
-    it('rejects rows outside the corpus and duplicated execution identities', () => {
-        const entry = { id: 'two-sum', wasm: greenWasm('two-sum'), nyar: failNyar('two-sum') };
-        expect(() => buildValkyrieLaneMatrixReport([entry], { corpusIds: ['three-sum'] })).toThrow();
-        expect(() => buildValkyrieLaneMatrixReport([entry, entry], { corpusIds: ['two-sum'] })).toThrow();
+    it('rejects rows outside the corpus, duplicated identities and missing lane rows', () => {
+        const good = entry('two-sum');
+        expect(() => buildValkyrieLaneMatrixReport([good], { corpusIds: ['three-sum'] })).toThrow();
+        expect(() => buildValkyrieLaneMatrixReport([good, good], { corpusIds: ['two-sum'] })).toThrow();
+        const missingClr = { id: 'two-sum', rows: { wasm: greenWasm('two-sum'), ovm: greenOvm('two-sum'), jvm: blockedContrast('two-sum', 'jvm') } };
+        expect(() => buildValkyrieLaneMatrixReport([missingClr as never], { corpusIds: ['two-sum'] })).toThrow();
+        const mismatchedId = {
+            id: 'two-sum',
+            rows: { wasm: greenWasm('three-sum'), ovm: greenOvm('two-sum'), jvm: blockedContrast('two-sum', 'jvm'), clr: blockedContrast('two-sum', 'clr') },
+        };
+        expect(() => buildValkyrieLaneMatrixReport([mismatchedId], { corpusIds: ['two-sum'] })).toThrow();
     });
 });

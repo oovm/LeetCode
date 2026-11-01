@@ -1,21 +1,23 @@
 import type { CompileTargetPlanSource } from '../adapters/shared/compile-target-plan.ts';
 import type { ArtifactRuntimeStatus } from '../adapters/shared/artifact-runtime-status.ts';
 import type { ValkyrieMatrixRow } from '../adapters/valkyrie-node/matrix.ts';
-import type { ValkyrieNyarMatrixRow } from '../adapters/valkyrie-nyar/matrix.ts';
+import type { ValkyrieBackendMatrixRow } from '../adapters/valkyrie-backend/matrix.ts';
 
-export type ValkyrieLaneRow = ValkyrieMatrixRow | ValkyrieNyarMatrixRow;
+export type ValkyrieLaneRow = ValkyrieMatrixRow | ValkyrieBackendMatrixRow;
 
-export type MatrixLaneId = 'wasm' | 'nyar';
+export type MatrixLaneId = 'wasm' | 'ovm' | 'jvm' | 'clr';
 
 /**
  * 矩阵 lane 的身份描述。
  *
  * `wasm` 是 `0.0.x` 的交付 lane（target 由各题 `legion.von` 的 `build[].target` 声明）；
- * `nyar` 是旧 managed lane（target 由 lane 显式指定 `ovm`），其结果不是 Node/Wasm 完成度。
+ * `ovm` 是执行 lane（lane 显式指定 `ovm`，legion 内置 OVM 跑参考）；
+ * `jvm` / `clr` 是对照 lane（lane 显式指定 target，外部 runner 执行，用于防止单一 target 过拟合）。
+ * 三条非交付 lane 的结果都不计入交付完成度，且彼此独立推导、互不顶替。
  */
 export type MatrixLaneDescriptor = {
     id: MatrixLaneId;
-    role: 'delivery' | 'legacy';
+    role: 'delivery' | 'execution' | 'contrast';
     targetSource: CompileTargetPlanSource;
     countsTowardDelivery: boolean;
     description: string;
@@ -30,13 +32,29 @@ export const MATRIX_LANES: readonly MatrixLaneDescriptor[] = [
         description: '交付 lane：compile target 由各题 legion.von 的 build[].target 声明',
     },
     {
-        id: 'nyar',
-        role: 'legacy',
+        id: 'ovm',
+        role: 'execution',
         targetSource: 'lane-explicit',
         countsTowardDelivery: false,
-        description: '旧 managed lane：compile target 由 lane 显式指定 ovm，不计入交付完成度',
+        description: '执行 lane：compile target 由 lane 显式指定 ovm，legion 内置 OVM 跑参考，不计入交付完成度',
+    },
+    {
+        id: 'jvm',
+        role: 'contrast',
+        targetSource: 'lane-explicit',
+        countsTowardDelivery: false,
+        description: '对照 lane：compile target 由 lane 显式指定 jvm，外部 JVM runner 执行，防止单一 target 过拟合，不计入交付完成度',
+    },
+    {
+        id: 'clr',
+        role: 'contrast',
+        targetSource: 'lane-explicit',
+        countsTowardDelivery: false,
+        description: '对照 lane：compile target 由 lane 显式指定 clr，外部 CLR runner 执行，防止单一 target 过拟合，不计入交付完成度',
     },
 ] as const;
+
+export const MATRIX_LANE_IDS: readonly MatrixLaneId[] = MATRIX_LANES.map((lane) => lane.id);
 
 /** 交付完成度只认这个 lane。 */
 export const DELIVERY_LANE: MatrixLaneId = 'wasm';
@@ -73,17 +91,13 @@ export type ValkyrieLaneMatrixReport = {
     complete: boolean;
     deliveryLane: MatrixLaneId;
     lanes: readonly MatrixLaneDescriptor[];
-    summary: {
-        wasm: LaneMatrixSummary;
-        nyar: LaneMatrixSummary;
-    };
+    summary: Record<MatrixLaneId, LaneMatrixSummary>;
     problems: LaneMatrixProblemEntry[];
 };
 
 export type LaneMatrixProblemEntry = {
     id: string;
-    wasm: ValkyrieMatrixRow;
-    nyar: ValkyrieNyarMatrixRow;
+    rows: Record<MatrixLaneId, ValkyrieLaneRow>;
 };
 
 function summarizeLane(rows: ValkyrieLaneRow[], denominator: number): LaneMatrixSummary {
@@ -135,12 +149,17 @@ export function buildValkyrieLaneMatrixReport(
     if (executedIds.some((id) => !corpus.has(id))) {
         throw new Error('执行题目必须属于固定总体');
     }
-    if (entries.some((entry) => entry.wasm.id !== entry.id || entry.nyar.id !== entry.id)) {
-        throw new Error('同一题目的 wasm 与 nyar lane 行必须绑定同一题目身份');
+    for (const entry of entries) {
+        for (const lane of MATRIX_LANE_IDS) {
+            if (entry.rows[lane]?.id !== entry.id) {
+                throw new Error(`题目 ${entry.id} 缺少 ${lane} lane 行或 lane 行绑定了错误题目身份`);
+            }
+        }
     }
     const notExecutedIds = corpusIds.filter((id) => !executed.has(id));
-    const wasmRows = entries.map((entry) => entry.wasm);
-    const nyarRows = entries.map((entry) => entry.nyar);
+    const summary = Object.fromEntries(
+        MATRIX_LANE_IDS.map((lane) => [lane, summarizeLane(entries.map((entry) => entry.rows[lane]), corpusIds.length)]),
+    ) as Record<MatrixLaneId, LaneMatrixSummary>;
     return {
         generatedAt: options.generatedAt ?? new Date().toISOString(),
         batchLimit: options.batchLimit ?? null,
@@ -151,10 +170,7 @@ export function buildValkyrieLaneMatrixReport(
         complete: notExecutedIds.length === 0,
         deliveryLane: DELIVERY_LANE,
         lanes: MATRIX_LANES,
-        summary: {
-            wasm: summarizeLane(wasmRows, corpusIds.length),
-            nyar: summarizeLane(nyarRows, corpusIds.length),
-        },
+        summary,
         problems: entries,
     };
 }

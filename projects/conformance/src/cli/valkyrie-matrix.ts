@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * 生成 Valkyrie lane 矩阵报告（`wasm` 交付 lane + 旧 `nyar` legacy lane）。
+ * 生成 Valkyrie lane 矩阵报告（`wasm` 交付 lane + `ovm` 执行 lane + `jvm`/`clr` 对照 lane）。
  *
- * 两条 lane 的 target 来源不同：wasm 由各题 `legion.von` 的 `build[].target` 声明，
- * nyar 由 lane 显式指定 `ovm`。只有 wasm lane 参与 `0.0.x` 交付完成度统计。
+ * target 来源不同：wasm 由各题 `legion.von` 的 `build[].target` 声明；
+ * ovm/jvm/clr 由 lane 显式指定并经 `legionPlan` 结构化规范化。
+ * 只有 wasm lane 参与 `0.0.x` 交付完成度统计；各 lane 独立探测、独立计数，互不顶替。
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -12,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { PROBLEMS, legionProjectDir, problemDir } from '../catalog/index.ts';
 import { hasValkyrieSolver } from '../adapters/valkyrie-node/valkyrie.ts';
 import { probeValkyrieProblem } from '../adapters/valkyrie-node/matrix.ts';
-import { probeValkyrieNyarProblem } from '../adapters/valkyrie-nyar/matrix.ts';
+import { probeValkyrieBackendProblem } from '../adapters/valkyrie-backend/matrix.ts';
 import { valkyrieNativeRunnerReady, valkyrieNativeSkipReason } from '../adapters/valkyrie-node/valkyrie.ts';
 import { valkyrieNyarRunnerReady, valkyrieNyarSkipReason } from '../adapters/valkyrie-nyar/valkyrie.ts';
 import { parseBatchLimit, problemsForBatch } from '../planning/batch-limit.ts';
@@ -67,9 +68,13 @@ async function main(): Promise<number> {
         const projectPath = legionProjectDir(LEETCODE_ROOT, problem);
         process.stderr.write(`matrix ${problem.id} lane wasm…\n`);
         const wasm = await probeValkyrieProblem(problem, projectPath);
-        process.stderr.write(`matrix ${problem.id} lane nyar…\n`);
-        const nyar = await probeValkyrieNyarProblem(problem, projectPath);
-        entries.push({ id: problem.id, wasm, nyar });
+        process.stderr.write(`matrix ${problem.id} lane ovm…\n`);
+        const ovm = await probeValkyrieBackendProblem(problem, projectPath, 'ovm');
+        process.stderr.write(`matrix ${problem.id} lane jvm…\n`);
+        const jvm = await probeValkyrieBackendProblem(problem, projectPath, 'jvm');
+        process.stderr.write(`matrix ${problem.id} lane clr…\n`);
+        const clr = await probeValkyrieBackendProblem(problem, projectPath, 'clr');
+        entries.push({ id: problem.id, rows: { wasm, ovm, jvm, clr } });
     }
 
     const report = buildValkyrieLaneMatrixReport(entries, {
@@ -79,19 +84,22 @@ async function main(): Promise<number> {
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
 
-    const wasm = report.summary.wasm;
-    const nyar = report.summary.nyar;
-    const laneLine = (label: string, summary: typeof wasm, note: string) =>
+    const laneLine = (label: string, summary: (typeof report.summary)['wasm'], note: string) =>
         `lane ${label}: green ${summary.green}/${summary.denominator} ` +
         `(${(summary.greenRate * 100).toFixed(1)}%) cases ${summary.testCasePass}/${summary.testCaseTotal} ` +
         `(${(summary.casePassRate * 100).toFixed(1)}%) runtime ready/blocked/pending ` +
         `${summary.runtime.ready}/${summary.runtime.blocked}/${summary.runtime.pending} ${note}`;
+    const laneNotes: Record<string, string> = {
+        wasm: '(delivery, target=manifest-declared)',
+        ovm: '(execution, target=lane-explicit ovm, 不计入完成度)',
+        jvm: '(contrast, target=lane-explicit jvm, 不计入完成度)',
+        clr: '(contrast, target=lane-explicit clr, 不计入完成度)',
+    };
     console.log(
         `wrote ${outPath}\n` +
             `denominator=${report.denominator} executed=${report.executedIds.length} notExecuted=${report.notExecutedIds.length} complete=${report.complete} batchLimit=${batchLimit ?? 'all'}\n` +
             `delivery lane: ${report.deliveryLane}（只有该 lane 计入交付完成度）\n` +
-            `${laneLine('wasm', wasm, '(delivery, target=manifest-declared)')}\n` +
-            `${laneLine('nyar', nyar, '(legacy, target=lane-explicit ovm, 不计入完成度)')}`,
+            report.lanes.map((lane) => laneLine(lane.id, report.summary[lane.id], laneNotes[lane.id] ?? '')).join('\n'),
     );
     return 0;
 }
