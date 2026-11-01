@@ -896,6 +896,7 @@
     "invoke": {
         "python": "Solution().isValid",
         "typescript": "Solution().isValid",
+        "valkyrie": "Solution().isValid",
         "wolframSxo": "isValid",
         "matlabSxo": "isValid"
     }
