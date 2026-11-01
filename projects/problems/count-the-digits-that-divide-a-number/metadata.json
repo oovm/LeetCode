@@ -2,7 +2,9 @@
     "id": "count-the-digits-that-divide-a-number",
     "questionId": 2520,
     "difficulty": "Easy",
-    "tags": ["Math"],
+    "tags": [
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -180,15 +182,15 @@
         },
         {
             "args": {
-                "num": 1111111111
+                "num": 111111111
             },
-            "expected": 10
+            "expected": 9
         },
         {
             "args": {
-                "num": 2.223334445556668e23
+                "num": 222333444
             },
-            "expected": 3
+            "expected": 9
         },
         {
             "args": {
@@ -210,7 +212,7 @@
         },
         {
             "args": {
-                "num": 1357913579
+                "num": 135791357
             },
             "expected": 2
         },
@@ -222,15 +224,15 @@
         },
         {
             "args": {
-                "num": 248163264128
+                "num": 248163264
             },
             "expected": 9
         },
         {
             "args": {
-                "num": 1000000000
+                "num": 1
             },
-            "expected": "Error: integer modulo by zero"
+            "expected": 1
         },
         {
             "args": {
@@ -276,9 +278,9 @@
         },
         {
             "args": {
-                "num": 1.2345678910111213e30
+                "num": 123456789
             },
-            "expected": "Error: integer modulo by zero"
+            "expected": 3
         },
         {
             "args": {
@@ -312,15 +314,15 @@
         },
         {
             "args": {
-                "num": 555555555555555600
+                "num": 555555555
             },
-            "expected": 18
+            "expected": 9
         },
         {
             "args": {
-                "num": 333366669999
+                "num": 333366669
             },
-            "expected": 8
+            "expected": 5
         },
         {
             "args": {
@@ -330,9 +332,9 @@
         },
         {
             "args": {
-                "num": 101010101
+                "num": 11111
             },
-            "expected": "Error: integer modulo by zero"
+            "expected": 5
         },
         {
             "args": {
@@ -360,9 +362,9 @@
         },
         {
             "args": {
-                "num": 1122334455
+                "num": 112233445
             },
-            "expected": 6
+            "expected": 3
         },
         {
             "args": {
@@ -396,7 +398,7 @@
         },
         {
             "args": {
-                "num": 1133557799
+                "num": 113355779
             },
             "expected": 2
         },
@@ -408,9 +410,9 @@
         },
         {
             "args": {
-                "num": 1.1122233344455567e26
+                "num": 111222333
             },
-            "expected": 9
+            "expected": 6
         },
         {
             "args": {
@@ -438,9 +440,9 @@
         },
         {
             "args": {
-                "num": 864202468
+                "num": 86422468
             },
-            "expected": "Error: integer modulo by zero"
+            "expected": 4
         },
         {
             "args": {
@@ -462,9 +464,9 @@
         },
         {
             "args": {
-                "num": 112233445566778900
+                "num": 112233445
             },
-            "expected": 6
+            "expected": 3
         }
     ],
     "invoke": {
