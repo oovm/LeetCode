@@ -115,6 +115,7 @@
     ],
     "invoke": {
         "python": "Solution().tribonacci",
-        "typescript": "Solution().tribonacci"
+        "typescript": "Solution().tribonacci",
+        "valkyrie": "Solution().tribonacci"
     }
 }

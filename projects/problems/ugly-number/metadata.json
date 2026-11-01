@@ -416,7 +416,7 @@
             "args": {
                 "n": 72057594037927940
             },
-            "expected": true
+            "expected": false
         },
         {
             "args": {
@@ -451,6 +451,7 @@
     ],
     "invoke": {
         "python": "Solution().isUgly",
-        "typescript": "Solution().isUgly"
+        "typescript": "Solution().isUgly",
+        "valkyrie": "Solution().isUgly"
     }
 }

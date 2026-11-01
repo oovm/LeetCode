@@ -367,6 +367,7 @@
     ],
     "invoke": {
         "python": "Solution().numberOfMatches",
-        "typescript": "Solution().numberOfMatches"
+        "typescript": "Solution().numberOfMatches",
+        "valkyrie": "Solution().numberOfMatches"
     }
 }

@@ -10,6 +10,7 @@ import { readNodeExecutionPinFromEnv } from '../src/adapters/shared/execution-pi
 import { extractTestFailureIndex, formatSolverResultLine, type SolverCaseStats } from '../src/adapters/shared/solver-case-stats.ts';
 import {
     type AbiExport,
+    type AbiParameter,
     type LibraryInvokeSchema,
     loadLibraryInvokeSchema,
     orderArgsBySchema,
@@ -59,6 +60,24 @@ function lookupAbiExport(schema: LibraryInvokeSchema, entry: string): AbiLookup 
 }
 
 /**
+ * `i64` 参数以十进制字符串交给 node glue。
+ *
+ * `metadata.json` 经 `JSON.parse` 后，绝对值超过 $2^{53}-1$ 的整数已丢失低位；
+ * 而 glue 的 `BigInt(number)` 取的是丢失后的二进制值。`Number.prototype.toString()`
+ * 返回最短且可往返的十进制文本，`BigInt("...")` 能按原始文本精确恢复，
+ * 从而让 wasm lane 与 `ovm`/managed lane 看到同一个整数。
+ */
+function preserveI64Precision(param: AbiParameter, value: unknown): unknown {
+    if (param.type.kind !== 'I64') {
+        return value;
+    }
+    if (typeof value === 'number' || typeof value === 'bigint') {
+        return value.toString();
+    }
+    return value;
+}
+
+/**
  * 按 ABI schema 的 params/returns 做 marshal/unmarshal。
  * params 带 `{index, name, type, carrier}`：位置由 index 决定，取值按 name 从 metadata 供货。
  */
@@ -79,7 +98,9 @@ async function runCandidate(
         }
         // 值的 marshal/unmarshal 由产物自带 node glue（callExport）按同一份 schema 完成；
         // harness 只按 schema 的参数身份把 metadata args 展开成位置参数，不维护第二套 ABI 桥。
-        const ordered = orderArgsBySchema(abi.lookup.exportSchema, args);
+        const ordered = orderArgsBySchema(abi.lookup.exportSchema, args).map((value, index) =>
+            preserveI64Precision(abi.lookup.exportSchema.params[index] as AbiParameter, value),
+        );
         const raw = host.callExport(abi.lookup.exportSymbol, ...ordered);
         return raw instanceof Promise ? await raw : raw;
     }

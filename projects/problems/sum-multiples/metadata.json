@@ -235,6 +235,7 @@
     ],
     "invoke": {
         "python": "Solution().sumOfMultiples",
-        "typescript": "Solution().sumOfMultiples"
+        "typescript": "Solution().sumOfMultiples",
+        "valkyrie": "Solution().sumOfMultiples"
     }
 }

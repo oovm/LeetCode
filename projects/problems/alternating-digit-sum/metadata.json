@@ -349,6 +349,7 @@
     ],
     "invoke": {
         "python": "Solution().alternateDigitSum",
-        "typescript": "Solution().alternateDigitSum"
+        "typescript": "Solution().alternateDigitSum",
+        "valkyrie": "Solution().alternateDigitSum"
     }
 }
