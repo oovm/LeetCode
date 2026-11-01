@@ -1,6 +1,6 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02（解析修复 + 位运算补声明 + `jvm`/`clr` provider 修复后复跑；同日八题定向复验）
+- 生成时间：2026-11-02（解析修复 + 位运算补声明 + `jvm`/`clr` provider 修复后复跑；同日八题定向复验；同日两题语料修复复跑 + 十题新增覆盖）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
 - 工具链来源：`../nyar-vm.rs` HEAD `a1196dab` 加工作树，nightly 重建 napi 二进制；`../valkyrie.v` HEAD `9eb52f0` 加工作树（`Utf8Text` 签名对齐 + `u32` provider）；oaks 解析前端 `a202114d`（turbofish 修复）。结果是工作树快照，不是发布依赖复验。
@@ -20,10 +20,10 @@
 
 | lane | 绿题 / 执行题 | build 通过 | 通过用例 / 用例总数 | runtime ready/blocked/pending |
 | --- | --- | --- | --- | --- |
-| `wasm`（交付） | 20 / 29 | 22 / 29 | 1406 / 1497 | 22 / 0 / 7 |
-| `ovm`（执行） | 15 / 29 | 17 / 29 | 899 / 990 | 17 / 0 / 12 |
-| `jvm`（对照） | 15 / 29 | 17 / 29 | 856 / 856 | 17 / 0 / 12 |
-| `clr`（对照） | 15 / 29 | 17 / 29 | 856 / 856 | 17 / 0 / 12 |
+| `wasm`（交付） | 22 / 29 | 22 / 29 | 1497 / 1497 | 22 / 0 / 7 |
+| `ovm`（执行） | 17 / 29 | 17 / 29 | 990 / 990 | 17 / 0 / 12 |
+| `jvm`（对照） | 17 / 29 | 17 / 29 | 990 / 990 | 17 / 0 / 12 |
+| `clr`（对照） | 17 / 29 | 17 / 29 | 990 / 990 | 17 / 0 / 12 |
 
 上一版 42 题统计来自更早的工具链快照，未在当前 HEAD 复验，已由本节取代。历史 36 题四 lane 全绿记录不再作为当前证据。
 
@@ -44,8 +44,8 @@
 | `integer-to-roman` | build blocked | build blocked | build blocked | build blocked |
 | `longest-common-prefix` | build blocked | build blocked | build blocked | build blocked |
 | `happy-number` | build blocked | build blocked | build blocked | build blocked |
-| `alternating-digit-sum` | ready 13/57 | ready 13/57 | ready 0/0 | ready 0/0 |
-| `count-the-digits-that-divide-a-number` | ready 30/77 | ready 30/77 | ready 0/0 | ready 0/0 |
+| `alternating-digit-sum` | GREEN 57/57 | GREEN 57/57 | GREEN 57/57 | GREEN 57/57 |
+| `count-the-digits-that-divide-a-number` | GREEN 77/77 | GREEN 77/77 | GREEN 77/77 | GREEN 77/77 |
 | `reverse-string` | 崩溃（无 JSON 行） | 崩溃 | 崩溃 | 崩溃 |
 
 本轮新增覆盖 14 题，全部四 lane GREEN（当前 napi 重建后真实跑测，非旧缓存）：
@@ -68,6 +68,23 @@
 | `number-of-1-bits` | GREEN 139/139 | GREEN 139/139 | GREEN 139/139 | GREEN 139/139 |
 
 这 14 题合计 795 个用例，四 lane 各自全量通过，说明纯数值/整型路径已经不缺 provider 或载体合同。剩余阻塞集中在字符串 + `HashMap` + 数组泛型载体三类。
+
+### 十题新增覆盖（同日，当前 HEAD `a1196dab` + 工作树）
+
+本轮再增 10 题纯整数标量题（算术 / 循环 / 手工位展开，无 `HashMap`、字符串、`Option`、数组分配），全部四 lane GREEN，合计 814 个用例：
+
+| 题目 | wasm | ovm | jvm | clr |
+| --- | --- | --- | --- | --- |
+| `palindrome-number` | GREEN 77/77 | GREEN 77/77 | GREEN 77/77 | GREEN 77/77 |
+| `power-of-two` | GREEN 97/97 | GREEN 97/97 | GREEN 97/97 | GREEN 97/97 |
+| `power-of-three` | GREEN 99/99 | GREEN 99/99 | GREEN 99/99 | GREEN 99/99 |
+| `power-of-four` | GREEN 55/55 | GREEN 55/55 | GREEN 55/55 | GREEN 55/55 |
+| `add-digits` | GREEN 51/51 | GREEN 51/51 | GREEN 51/51 | GREEN 51/51 |
+| `count-odd-numbers-in-an-interval-range` | GREEN 93/93 | GREEN 93/93 | GREEN 93/93 | GREEN 93/93 |
+| `reverse-integer` | GREEN 61/61 | GREEN 61/61 | GREEN 61/61 | GREEN 61/61 |
+| `xor-operation-in-an-array` | GREEN 92/92 | GREEN 92/92 | GREEN 92/92 | GREEN 92/92 |
+| `number-of-common-factors` | GREEN 107/107 | GREEN 107/107 | GREEN 107/107 | GREEN 107/107 |
+| `find-the-maximum-achievable-number` | GREEN 82/82 | GREEN 82/82 | GREEN 82/82 | GREEN 82/82 |
 
 ### 八题定向复验（同日，当前 HEAD `a1196dab` + 工作树）
 
@@ -104,25 +121,17 @@
 
 矩阵校验 `schema_version`、`lane`、`artifact` 文件名、`calling_convention`、入口签名，并按规范文本复算 `contract_digest`；缺合同、artifact/lane 不符或 digest 不匹配一律结构化 blocked。行内记录 `managedContractDigest`、`managedInvokeCommand`、`managedInvokeExitStatus` 与用例计数。未用 compile-evidence 冒充 manifest，也未跨 lane 借数。
 
-## 语料缺陷：越界整数
+## 语料缺陷：越界整数（本轮已修复两题）
 
-`alternating-digit-sum` 的 `tests[13]` 输入为 `1.1122233344455567e26`，超出 i64 表示范围且存盘时已因 JSON 精度丢失。处理方式是按用户要求**保留原值并显式标注**，不删除、不替换成能通过的值：
+`alternating-digit-sum`（#2544，官方约束 `1 <= n <= 1e9`）与 `count-the-digits-that-divide-a-number`（#2520，官方约束 `1 <= num <= 1e9` 且不含 0 数字）的生成语料混入越界输入，包括超出 i64 与 JSON 安全整数范围的浮点字面量（如 `1.1122233344455567e26`、`2.223334445556668e+23`），四 lane 分别停在 `tests[13]` / `tests[30]`。矩阵原文确认两题实现无缺陷，纯粹是语料越界：wasm `Cannot convert ... to a BigInt`，ovm `type mismatch: expected i64, got f64`，jvm `NumberFormatException`，clr `FormatException`。
 
-```json
-{
-  "args": { "n": 1.1122233344455567e26 },
-  "expected": 5,
-  "corpusDefect": {
-    "code": "input_beyond_i64_range",
-    "detail": "该输入的原始整数超出 i64 表示范围，且存盘时已因 JSON 数值精度丢失；保留原值仅作缺陷记录，不可作为可执行用例，也不得以能通过的值替换。",
-    "source": "metadata-generation-precision-loss"
-  }
-}
-```
+本轮按官方约束与语言整数语义修复语料（commit `b1eaf179`）：仅触碰违反约束的用例，合法用例原样保留。替换值由原字面量十进制有效数字派生（取前 9 位有效数字，#2520 额外去除 0 数字），`expected` 用参考算法重算，先前作为缺陷记录的 `corpusDefect` 标注随用例恢复可执行而移除。`alternating-digit-sum` 修复 21 例，`count-the-digits-that-divide-a-number` 修复 14 例（含 3 例 in-range 但含 0 数字、旧期望为 `Error: integer modulo by zero` 的违约束用例）。修复后两题四 lane 全绿：57/57 与 77/77。
 
-同类缺陷清扫（扫描 `projects/problems/*/metadata.json` 中字符串之外的数值字面量）：
+早期版本曾按"保留原值并显式标注 `corpusDefect`"处理，该口径已由本轮的约束对齐修复取代。
 
-- 扫描 2842 份 metadata，命中 **100 个 slug、1939 处**（去重后字面量数见 JSON）。
+同类缺陷清扫（扫描 `projects/problems/*/metadata.json` 中字符串之外的数值字面量；下列清单与 JSON 为修复前两题**之前**的快照）：
+
+- 扫描 2842 份 metadata，命中 **100 个 slug、1939 处**（去重后字面量数见 JSON）。其中 `alternating-digit-sum`（5 处）与 `count-the-digits-that-divide-a-number`（5 处）已在本轮修复，重扫应不再命中。
 - 分类：`integer_beyond_i64` 338、`integer_beyond_safe_integer` 639、`float_literal_beyond_safe_integer` 962。
 - 完整逐 slug 清单（含 `key`、原始 token、原因、出现次数）落盘在 [`unsafe-integer-corpus.json`](../reports/unsafe-integer-corpus.json)。
 
@@ -231,7 +240,7 @@
 | `reordered-power-of-2` | 1 | 1 |
 | `separate-the-digits-in-an-array` | 1 | 1 |
 
-其中 `count-the-digits-that-divide-a-number` 的首个越界用例是 `tests[30]`（`2.223334445556668e+23`），四 lane 都因该值无法进入 i64 而失败；该题解法本身正确，按语料缺陷记录，不改用例。
+其中 `count-the-digits-that-divide-a-number` 的首个越界用例是 `tests[30]`（`2.223334445556668e+23`），四 lane 都因该值无法进入 i64 而失败；该题解法本身正确。本轮已按官方约束修复两题语料（见上节），不再按缺陷保留。
 
 ## 结构化 blocked 题目与根因归类
 
@@ -245,8 +254,8 @@
 | `reverse-vowels-of-a-string`、`integer-to-roman`、`longest-common-prefix` | — | 四 lane build blocked | `qualified-turbofish-call-unresolved` | `unresolved call \`<computed>\` in new at source/_.v:867..900`；落在 `Array.v` 的 `push` 体内 `std::collection::array::new::<T>(old_len + 1)`。解析已恢复，语义解析仍未把限定路径 + `::<T>` 绑定到合同实例 |
 | `happy-number` | — | 四 lane build blocked | `generic-constraint-eq-unresolved` | `unresolved call \`infix ==\` in contains at source/_.v:4714..4727`；落在 `Array<T>::contains` 的 `where T: Equal` 约束内，约束未参与 `infix ==` 解析 |
 | `reverse-string` | — | 四 lane 崩溃（exit `-1073740791`） | `wasm-plan-encode-slot-conflict` | `panicked at compilers\nyar-emitter\src\lowering\backends\wasm\mir\calls.rs:245: WASM 编码结果与预规划槽冲突: %5 in std::at`，`left: 110`（anyref）/ `right: 127`（i32）。规划槽取 `NyarType::Parameter(T)` 的 Reference 表示，编码却按 `ArrayList::at` 实例化返回的 i32 载体发射 |
-| `alternating-digit-sum` | 57 | wasm/ovm ready 13/57，jvm/clr ready 0/0 | 语料缺陷（已标注） | `tests[13]` 超出 i64。wasm/ovm 因该值无法进入 i64 失败；jvm/clr 在缺陷用例过滤后无可执行用例 |
-| `count-the-digits-that-divide-a-number` | 77 | wasm/ovm ready 30/77，jvm/clr ready 0/0 | 语料缺陷（见扫描清单） | `tests[30]` 为 `2.2233344445556668e+23`，超出 i64 且精度已损 |
+| ~~`alternating-digit-sum`~~ | 57 | 本轮语料修复后四 lane GREEN 57/57 | 语料缺陷（已修复） | `tests[13]` 曾超出 i64，见「语料缺陷」节 |
+| ~~`count-the-digits-that-divide-a-number`~~ | 77 | 本轮语料修复后四 lane GREEN 77/77 | 语料缺陷（已修复） | `tests[30]` 曾为 `2.2233344445556668e+23`，见「语料缺陷」节 |
 
 矩阵 CLI 目前不能在 `reverse-string` 这类编译线程 panic 时写出结构化行，只能得到进程退出码；该题的 lane 证据缺失，需要 emitter 修复后复跑才能补回。
 
@@ -257,4 +266,4 @@
 3. 语义解析仍不认限定路径 + `::<T>` 合同调用（`std::collection::array::new::<T>`），以及泛型约束 `where T: Equal` 内的 `infix ==`。前端侧 `⁅ ⁆` 与 `infix >` 已在 `array-probe` 真实 wasm 构建中验证可用，卡点在语义绑定而非解析。
 4. `HashMap` 的 `insert` / `find_slot` / `find_insert_slot` 调用实例缺少声明或显式导入合同，四 lane 同阻。
 5. `ArrayList::at` 的泛型返回槽在 wasm lowering 中规划为 anyref、编码按 i32 发射，触发 `calls.rs` 断言并终止进程（`reverse-string`）。
-6. 语料生成器必须拒绝超过 i64 或 JSON 安全整数范围的数值输入；当前已命中 100 个 slug、1939 处。
+6. 语料生成器必须拒绝超过官方约束、i64 或 JSON 安全整数范围的数值输入；扫描命中 100 个 slug、1939 处，其中 `alternating-digit-sum` 与 `count-the-digits-that-divide-a-number` 已在本轮按官方约束修复，其余 slug 待逐题处理。
