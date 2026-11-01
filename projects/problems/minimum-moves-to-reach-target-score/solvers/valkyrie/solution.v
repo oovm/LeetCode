@@ -14,6 +14,9 @@ micro min_moves(target: i64, maxDoubles: i64) -> i64 {
                 value = value - 1
             }
             moves = moves + 1
+        } else if value == 2 {
+            value = 1
+            moves = moves + 1
         } else {
             moves = moves + value - 1
             value = 1
