@@ -1,9 +1,9 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02（解析修复 + 位运算补声明后复跑）
+- 生成时间：2026-11-02（解析修复 + 位运算补声明 + `jvm`/`clr` provider 修复后复跑）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
-- 工具链来源：`../nyar-vm.rs` HEAD `a7df887e`（`asgard-static-browser-artifacts` 合并后的 `dev`）加当时工作树，nightly 重建 napi 二进制；`../valkyrie.v` HEAD `07aa313` 加当时工作树（primitive 位运算声明）；oaks 解析前端 `a202114d`（turbofish 修复）。结果是工作树快照，不是发布依赖复验。
+- 工具链来源：`../nyar-vm.rs` HEAD `a1196dab` 加工作树，nightly 重建 napi 二进制；`../valkyrie.v` HEAD `9eb52f0` 加工作树（`Utf8Text` 签名对齐 + `u32` provider）；oaks 解析前端 `a202114d`（turbofish 修复）。结果是工作树快照，不是发布依赖复验。
 
 ## lane 口径
 
@@ -198,7 +198,7 @@
 
 | 题目 | 用例数 | 状态 | 根因类别 | 原始诊断 |
 | --- | --- | --- | --- | --- |
-| `valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi` | 148 / 94 / 21 / 185 | wasm GREEN，其余三 lane build blocked | `ovm-provider-missing` + `managed-provider-signature-mismatch` | ovm：`host contract \`std.primitive.__u32_or\` (instance \`ItemInstanceId(27)\`) has a resolved call but no host provider is bound`。jvm/clr：`host provider 声明 \`std.adaptor.{jvm,clr}::source/text/Utf8Text.v::micro::...::host_length\` 没有与闭合合同实例同签名的 provider 实例` |
+| `valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi` | 148 / 94 / 21 / 185 | wasm GREEN，其余三 lane build blocked | `ovm-provider-missing` + `managed-option-char-unsupported` | ovm：`host contract \`std.primitive.__u32_or\` (instance \`ItemInstanceId(27)\`) has a resolved call but no host provider is bound`。jvm/clr：`JVM/CLR 最小 lowering 不支持类型 \`Option<char>\`：缺少该形状的 JVM/CLR 载体合同`。`Utf8Text` provider 签名与 `u32` provider 已修（`valkyrie.v` `6bdf9b8`/`9eb52f0`、`nyar-vm.rs` `a1196dab`），`valid-parentheses` 已越过 `__u32_eq` 与签名不符两道门 |
 | `add-two-numbers` | 59 | wasm GREEN，其余三 lane build blocked | `ovm-typed-sum-plan-missing` + `managed-arraylist-i64-unsupported` | ovm：`Nyar backend requires a typed sum representation plan; semantic sum operation has no target contract`。jvm/clr：`JVM/CLR 最小 lowering 不支持类型 \`std::collection::ArrayList<i64>\`：缺少该形状的 JVM/CLR 载体合同` |
 | `two-sum`、`valid-anagram`、`ransom-note` | 80 / — / — | 四 lane build blocked | `hashmap-insert-instance-undeclared` | `调用实例 \`ItemInstanceId(...)\` 没有定义或显式导入合同；callers=[\"std::find_slot#...\", \"std::find_insert_slot#...\"]`（`valid-anagram`/`ransom-note` 为 `std::insert#...` + `std::find_slot#...`） |
 | `reverse-vowels-of-a-string`、`integer-to-roman`、`longest-common-prefix` | — | 四 lane build blocked | `qualified-turbofish-call-unresolved` | `unresolved call \`<computed>\` in new at source/_.v:867..900`；落在 `Array.v` 的 `push` 体内 `std::collection::array::new::<T>(old_len + 1)`。解析已恢复，语义解析仍未把限定路径 + `::<T>` 绑定到合同实例 |
@@ -211,8 +211,8 @@
 
 ## 上游待修（本轮发现）
 
-1. `std.adaptor.ovm` 的 `std.primitive.__u32_or` 无 provider 绑定，阻塞 `ovm` 执行 lane 的字符串题。
-2. `std.adaptor.jvm` / `std.adaptor.clr` 的 `Utf8Text.host_length` provider 声明与闭合合同实例签名不一致，阻塞 `jvm` / `clr` 对照 lane 的字符串题。
+1. `std.adaptor.ovm` 的 `std.primitive.__u32_or` 无 provider 绑定，阻塞 `ovm` 执行 lane 的字符串题。Odin 字节码没有位运算/移位 opcode，不能在 adaptor 伪造。
+2. `std.adaptor.jvm` / `std.adaptor.clr` 的 `Utf8Text.host_length` 签名不一致已修（`6bdf9b8`），`u32` 位运算 provider 已补（`9eb52f0`、`a1196dab`）。当前阻塞转为 `JVM/CLR 最小 lowering 不支持类型 \`Option<char>\`：缺少该形状的 JVM/CLR 载体合同`，即托管 lane 缺泛型和型 `Option` 载体，不再是 provider 缺失。
 3. 语义解析仍不认限定路径 + `::<T>` 合同调用（`std::collection::array::new::<T>`），以及泛型约束 `where T: Equal` 内的 `infix ==`。
 4. `HashMap` 的 `insert` / `find_slot` / `find_insert_slot` 调用实例缺少声明或显式导入合同，四 lane 同阻。
 5. `ArrayList::at` 的泛型返回槽在 wasm lowering 中规划为 anyref、编码按 i32 发射，触发 `calls.rs` 断言并终止进程（`reverse-string`）。
