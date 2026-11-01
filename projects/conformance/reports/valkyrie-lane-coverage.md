@@ -1,9 +1,9 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02
+- 生成时间：2026-11-02 01:10
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`）
-- 工具链来源：`../nyar-vm.rs` HEAD `d41a503fc75f451e55191e0ad07e737bed387f1d`（并行会话仍在修改编译器），`../valkyrie.v` HEAD `cb2cd2b3031899039cf31a103ebc59a371fcc81f`；`@nyar/valkyrie` 本地 workspace 版本 `0.0.22`。结果是当前工作树的快照，不是发布依赖的复验。
+- 工具链来源：`../nyar-vm.rs` HEAD `f5747e56`（并行会话仍在修改编译器），`../valkyrie.v` HEAD `856eda0`；`@nyar/valkyrie` 本地 workspace 版本 `0.0.22`，napi 二进制构建时间 `2026-11-02 00:02`。本轮复跑的是该二进制，不是 HEAD 的即时重建，结果是工作树快照而非发布依赖复验。
 
 ## lane 口径
 
@@ -46,21 +46,23 @@
 
 | 题目 | 用例数 | 四 lane 状态 | 根因类别 | 原始诊断 |
 | --- | --- | --- | --- | --- |
-| `valid-parentheses` | 148 | 全部 pending | 前端语义：`utf8`/std `push` 闭包 | `unresolved call 'infix >' in push at source/_.v:3008..3053` |
-| `two-sum` | 80 | 全部 pending | 前端语义：`ArrayList`/`HashMap` 闭包 | 同上 |
-| `add-two-numbers` | 59 | 全部 pending | 前端语义：`ArrayList` 闭包 | 同上 |
-| `happy-number` | 57 | 全部 pending（预检） | 前端语义：`HashSet` 闭包 | 同上 |
-| `reverse-string` | — | 全部 pending（预检） | 前端语义：`ArrayList<utf8>` 闭包 | 同上 |
-| `roman-to-integer` | — | 全部 pending（预检） | 前端语义：`utf8` 闭包 | 同上 |
+| `valid-parentheses` | 148 | 全部 pending | 前端语义：数组/迭代器成员解析 | `unresolved call <computed> in first at source/_.v:1748..1766` |
+| `two-sum` | 80 | 全部 pending | 前端语义：泛型 binder 身份不一致 | `` `let` initializer type `[T[Some(GenericBinderId { owner: ItemId(3), ordinal: 0 })]]` is incompatible with the declared type `[T[Some(GenericBinderId { owner: ItemId(0), ordinal: 0 })]]` `` |
+| `add-two-numbers` | 59 | 全部 pending | 前端语义：泛型 binder 身份不一致 | 同上 |
+| `happy-number` | 57 | 全部 pending（预检，未复跑） | 前端语义：`HashSet` 闭包 | 旧诊断 `infix >`，待复跑 |
+| `reverse-string` | — | 全部 pending（预检，未复跑） | 前端语义：`ArrayList<utf8>` 闭包 | 旧诊断 `infix >`，待复跑 |
+| `roman-to-integer` | — | 全部 pending（预检，未复跑） | 前端语义：`utf8` 闭包 | 旧诊断 `infix >`，待复跑 |
 
-根因归类：
+根因归类（2026-11-02 01:10 复跑）：
 
-1. **前端语义缺陷（当前唯一阻断项）**：任何 `ArrayList<ut8>`/`utf8`/`HashMap`/`HashSet` 入口闭包都会拉入 std 的 `push`，其中 `infix >` 在 `usize` 上无候选，四条 lane 都在 HIR 解析阶段失败。`two-sum`、`add-two-numbers`、`valid-parentheses` 属于这一类。
-2. **OVM host provider 缺口（已被上游改动遮挡）**：旧报告记录 `core.primitive.__usize_lt`（`ItemInstanceId(17)`）缺 provider。本次复跑已先命中前端 `infix >`，修好前端后需重跑确认该 provider 是否仍缺。
-3. **jvm/clr 对照 lane 结构化成因（标量题）**：`SMIR007`，`function=i64.infix ==` 的 `call result type differs from declared signature`，属 MIR 合同缺陷；在字符串/数组题上更早被前端 `infix >` 拦住。
+1. **数组/迭代器成员解析（当前首要阻断）**：`valid-parentheses` 在 std `first` 的调用解析阶段失败，`<computed>` 表示接收者或成员候选未闭合。四条 lane 同源，属前端 HIR，不是 lane 差异。
+2. **泛型 binder 身份不一致**：`two-sum`、`add-two-numbers` 的 `[T]` 初始化类型把同一泛型参数解析成不同 `GenericBinderId`（`ItemId(3)` 对 `ItemId(0)`），属泛型身份/实例化合同缺陷。
+3. **`infix >` 已被上游推进遮挡**：旧报告的唯一阻断项不再出现在本轮复跑诊断中，说明该解析路径已变；`happy-number`、`reverse-string`、`roman-to-integer` 未复跑，不能沿用旧结论。
+4. **jvm/clr 对照 lane**：旧报的 `SMIR007` 整数比较结果类型合同已有回归测试提交（`f5747e56`），但本轮二进制未重建，lane 仍 pending，不能据此宣称 lane 转绿。
 
 ## 后续转绿条件
 
-- 前端修复 `infix >`（`usize` 比较候选）后，重跑 `valid-parentheses`、`two-sum`、`add-two-numbers`，按真实结果更新本报告。
-- OVM 若仍报 `__usize_lt` 缺 provider，需在 host provider 侧补齐后再判定 `ovm` 执行 lane。
-- jvm/clr 需等 `SMIR007` 合同缺陷修复；在此之前保持 pending，禁止用其他 lane 结果填充。
+- 前端闭合 `<computed>` 成员解析后，重跑 `valid-parentheses`。
+- 泛型 binder 身份修复后，重跑 `two-sum`、`add-two-numbers`。
+- 用 HEAD 重建 napi 后复跑 13 题子集，再判定 `wasm`/`ovm`/`jvm`/`clr` 各 lane 的真实绿题数。
+- jvm/clr 需真实构建与用例通过，不能以 `SMIR007` 测试提交或其它 lane 结果顶替。
