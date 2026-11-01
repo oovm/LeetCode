@@ -325,6 +325,7 @@
     ],
     "invoke": {
         "python": "Solution().sumOfTheDigitsOfHarshadNumber",
-        "typescript": "Solution().sumOfTheDigitsOfHarshadNumber"
+        "typescript": "Solution().sumOfTheDigitsOfHarshadNumber",
+        "valkyrie": "Solution().sumOfTheDigitsOfHarshadNumber"
     }
 }

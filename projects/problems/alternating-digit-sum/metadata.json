@@ -86,7 +86,12 @@
             "args": {
                 "n": 1.1122233344455567e26
             },
-            "expected": 5
+            "expected": 5,
+            "corpusDefect": {
+                "code": "input_beyond_i64_range",
+                "detail": "该输入的原始整数超出 i64 表示范围，且存盘时已因 JSON 数值精度丢失；保留原值仅作缺陷记录，不可作为可执行用例，也不得以能通过的值替换。",
+                "source": "metadata-generation-precision-loss"
+            }
         },
         {
             "args": {

@@ -229,6 +229,7 @@
     ],
     "invoke": {
         "python": "Solution().coloredCells",
-        "typescript": "Solution().coloredCells"
+        "typescript": "Solution().coloredCells",
+        "valkyrie": "Solution().coloredCells"
     }
 }

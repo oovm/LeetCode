@@ -987,6 +987,7 @@
     ],
     "invoke": {
         "python": "Solution().minMoves",
-        "typescript": "Solution().minMoves"
+        "typescript": "Solution().minMoves",
+        "valkyrie": "Solution().minMoves"
     }
 }

@@ -319,6 +319,7 @@
     ],
     "invoke": {
         "python": "Solution().pivotInteger",
-        "typescript": "Solution().pivotInteger"
+        "typescript": "Solution().pivotInteger",
+        "valkyrie": "Solution().pivotInteger"
     }
 }

@@ -145,6 +145,7 @@
     ],
     "invoke": {
         "python": "Solution().countTriples",
-        "typescript": "Solution().countTriples"
+        "typescript": "Solution().countTriples",
+        "valkyrie": "Solution().countTriples"
     }
 }

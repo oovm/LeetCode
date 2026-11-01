@@ -307,6 +307,7 @@
     ],
     "invoke": {
         "python": "Solution().totalMoney",
-        "typescript": "Solution().totalMoney"
+        "typescript": "Solution().totalMoney",
+        "valkyrie": "Solution().totalMoney"
     }
 }
