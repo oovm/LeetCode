@@ -1,6 +1,7 @@
 namespace leetcode.add_two_numbers;
 
-# 阻塞：SMIR010 — `ArrayList::new` / `push` 在 wasm 降低时 layout 合同失败（见 `valkyrie-evolution` backlog V-017c）
+# 阻塞：wasm 交付 lane 已真实产物全量通过（59/59）。ovm 缺 typed sum 表示合同（`Nyar backend requires a typed sum representation plan`）；
+# jvm/clr 最小 lowering 缺 `ArrayList<i64>` 载体合同。其余 lane 不计入交付完成度。
 
 [export(case: "camelCase")]
 micro add_two_numbers(l1: ArrayList<i64>, l2: ArrayList<i64>) -> ArrayList<i64> {

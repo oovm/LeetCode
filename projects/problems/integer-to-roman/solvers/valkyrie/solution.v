@@ -1,6 +1,7 @@
 namespace leetcode.integer_to_roman;
 
-# 阻塞：SMIR010 — `Utf8Builder` / `ArrayList::new` wasm layout 合同失败（见 `valkyrie-evolution` backlog V-017c）
+# 阻塞：四 lane 同阻——`unresolved call <computed> in new at source/_.v:867..900`。入口闭包经
+# `Array::push` 走到 `std::collection::array::new::<T>(old_len + 1)`，限定路径 + turbofish 仍未绑定到合同实例。
 
 micro append_token(mut builder: Utf8Builder, token: i64): unit {
     if token == 1000 {

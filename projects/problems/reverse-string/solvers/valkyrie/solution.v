@@ -1,8 +1,7 @@
 namespace leetcode.reverse_string;
 
-# 阻塞：wasm 未绑定 `core::primitive::__u8_add`。`std.adaptor.wasm` 的 `math/unsigned.v` 明确声明
-# u8/u16 保持未绑定、必须结构化失败；`ArrayList<utf8>` 实例闭包会拉入 `Utf8Text` 的 u8 算术，
-# 故 `legion build` 报 Planner(HostProviderCapabilityMissing)。入口合同之外仍需 std 上游演进。
+# 阻塞：四 lane 崩溃（进程退出码 `-1073740791`，无结构化 JSON 行）。`ArrayList::at` 泛型返回槽在 wasm
+# 规划为 anyref、编码按 i32 发射，触发 `callers` 断言 `WASM 编码结果与预规划槽冲突: %5 in std::at`。
 
 [export(case: "camelCase")]
 micro reverse_string(mut s: ArrayList<utf8>) -> unit {

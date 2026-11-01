@@ -1,6 +1,6 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02（解析修复 + 位运算补声明 + `jvm`/`clr` provider 修复后复跑）
+- 生成时间：2026-11-02（解析修复 + 位运算补声明 + `jvm`/`clr` provider 修复后复跑；同日八题定向复验）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
 - 工具链来源：`../nyar-vm.rs` HEAD `a1196dab` 加工作树，nightly 重建 napi 二进制；`../valkyrie.v` HEAD `9eb52f0` 加工作树（`Utf8Text` 签名对齐 + `u32` provider）；oaks 解析前端 `a202114d`（turbofish 修复）。结果是工作树快照，不是发布依赖复验。
@@ -16,14 +16,14 @@
 
 矩阵 JSON 的 `summary.*.green` 分母是语料总体（2842 题），单题跑测时显示 `1/2842` 属于口径噪声。本报告只按**本次复跑子集**统计，各 lane 独立探测、独立计数，互不顶替。
 
-## 本次复跑子集覆盖率（15 题 + `reverse-string` 崩溃）
+## 本次复跑子集覆盖率（29 题 + `reverse-string` 崩溃）
 
 | lane | 绿题 / 执行题 | build 通过 | 通过用例 / 用例总数 | runtime ready/blocked/pending |
 | --- | --- | --- | --- | --- |
-| `wasm`（交付） | 6 / 15 | 8 / 15 | 611 / 702 | 8 / 0 / 7 |
-| `ovm`（执行） | 1 / 15 | 3 / 15 | 104 / 195 | 3 / 0 / 12 |
-| `jvm`（对照） | 1 / 15 | 3 / 15 | 61 / 61 | 3 / 0 / 12 |
-| `clr`（对照） | 1 / 15 | 3 / 15 | 61 / 61 | 3 / 0 / 12 |
+| `wasm`（交付） | 20 / 29 | 22 / 29 | 1406 / 1497 | 22 / 0 / 7 |
+| `ovm`（执行） | 15 / 29 | 17 / 29 | 899 / 990 | 17 / 0 / 12 |
+| `jvm`（对照） | 15 / 29 | 17 / 29 | 856 / 856 | 17 / 0 / 12 |
+| `clr`（对照） | 15 / 29 | 17 / 29 | 856 / 856 | 17 / 0 / 12 |
 
 上一版 42 题统计来自更早的工具链快照，未在当前 HEAD 复验，已由本节取代。历史 36 题四 lane 全绿记录不再作为当前证据。
 
@@ -47,6 +47,47 @@
 | `alternating-digit-sum` | ready 13/57 | ready 13/57 | ready 0/0 | ready 0/0 |
 | `count-the-digits-that-divide-a-number` | ready 30/77 | ready 30/77 | ready 0/0 | ready 0/0 |
 | `reverse-string` | 崩溃（无 JSON 行） | 崩溃 | 崩溃 | 崩溃 |
+
+本轮新增覆盖 14 题，全部四 lane GREEN（当前 napi 重建后真实跑测，非旧缓存）：
+
+| 题目 | wasm | ovm | jvm | clr |
+| --- | --- | --- | --- | --- |
+| `harshad-number` | GREEN 53/53 | GREEN 53/53 | GREEN 53/53 | GREEN 53/53 |
+| `calculate-money-in-leetcode-bank` | GREEN 50/50 | GREEN 50/50 | GREEN 50/50 | GREEN 50/50 |
+| `find-the-pivot-integer` | GREEN 52/52 | GREEN 52/52 | GREEN 52/52 | GREEN 52/52 |
+| `smallest-even-multiple` | GREEN 91/91 | GREEN 91/91 | GREEN 91/91 | GREEN 91/91 |
+| `sum-multiples` | GREEN 38/38 | GREEN 38/38 | GREEN 38/38 | GREEN 38/38 |
+| `divisor-game` | GREEN 51/51 | GREEN 51/51 | GREEN 51/51 | GREEN 51/51 |
+| `count-of-matches-in-tournament` | GREEN 60/60 | GREEN 60/60 | GREEN 60/60 | GREEN 60/60 |
+| `perfect-number` | GREEN 67/67 | GREEN 67/67 | GREEN 67/67 | GREEN 67/67 |
+| `base-7` | GREEN 47/47 | GREEN 47/47 | GREEN 47/47 | GREEN 47/47 |
+| `number-of-steps-to-reduce-a-number-to-zero` | GREEN 59/59 | GREEN 59/59 | GREEN 59/59 | GREEN 59/59 |
+| `subtract-the-product-and-sum-of-digits-of-an-integer` | GREEN 55/55 | GREEN 55/55 | GREEN 55/55 | GREEN 55/55 |
+| `fibonacci-number` | GREEN 17/17 | GREEN 17/17 | GREEN 17/17 | GREEN 17/17 |
+| `climbing-stairs` | GREEN 16/16 | GREEN 16/16 | GREEN 16/16 | GREEN 16/16 |
+| `number-of-1-bits` | GREEN 139/139 | GREEN 139/139 | GREEN 139/139 | GREEN 139/139 |
+
+这 14 题合计 795 个用例，四 lane 各自全量通过，说明纯数值/整型路径已经不缺 provider 或载体合同。剩余阻塞集中在字符串 + `HashMap` + 数组泛型载体三类。
+
+### 八题定向复验（同日，当前 HEAD `a1196dab` + 工作树）
+
+对受阻题逐题重跑矩阵，每 lane 结构化诊断保持不变，未出现新的假绿：
+
+| 题目 | wasm | ovm | jvm | clr | 结构化根因 |
+| --- | --- | --- | --- | --- | --- |
+| `two-sum` | blocked | blocked | blocked | blocked | `hashmap-insert-instance-undeclared` |
+| `valid-anagram` | blocked | blocked | blocked | blocked | `hashmap-insert-instance-undeclared` |
+| `ransom-note` | blocked | blocked | blocked | blocked | `hashmap-insert-instance-undeclared` |
+| `reverse-vowels-of-a-string` | blocked | blocked | blocked | blocked | `qualified-turbofish-call-unresolved` |
+| `integer-to-roman` | blocked | blocked | blocked | blocked | `qualified-turbofish-call-unresolved` |
+| `longest-common-prefix` | blocked | blocked | blocked | blocked | `qualified-turbofish-call-unresolved` |
+| `happy-number` | blocked | blocked | blocked | blocked | `generic-constraint-eq-unresolved` |
+| `reverse-string` | 崩溃 | 崩溃 | 崩溃 | 崩溃 | `wasm-plan-encode-slot-conflict` |
+| `add-two-numbers` | GREEN 59/59 | blocked | blocked | blocked | `ovm-typed-sum-plan-missing` + `managed-arraylist-i64-unsupported` |
+
+同时用 `../valkyrie.v/examples/array-probe`（`values⁅0⁆.unwrap()`、`values = std::collection::push(values, 4)`、`if first > 0`）以当前 napi 执行 `legion build --target wasm`，成功产出 `main.wasm` / `main.mjs`：数组下标 `⁅ ⁆` 与 `infix >` 在真实 wasm 编译路径上已可用，不再属于前端阻塞。仍卡住的是语义层的限定路径 turbofish 绑定与 `where T: Equal` 内的 `infix ==`。
+
+`reverse-string` 的编译线程 panic 会让矩阵进程直接退出（`-1073740791`），因此该题没有 JSON 行，属于证据缺口，不是通过。
 
 本轮相对上一版的真实跃迁：`binary-gap` 由 wasm blocked 变为四 lane 全绿；`valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`add-two-numbers` 的 wasm 交付 lane 全部变为真实产物全量用例通过。原因是两项上游修复：
 
@@ -213,7 +254,7 @@
 
 1. `std.adaptor.ovm` 的 `std.primitive.__u32_or` 无 provider 绑定，阻塞 `ovm` 执行 lane 的字符串题。Odin 字节码没有位运算/移位 opcode，不能在 adaptor 伪造。
 2. `std.adaptor.jvm` / `std.adaptor.clr` 的 `Utf8Text.host_length` 签名不一致已修（`6bdf9b8`），`u32` 位运算 provider 已补（`9eb52f0`、`a1196dab`）。当前阻塞转为 `JVM/CLR 最小 lowering 不支持类型 \`Option<char>\`：缺少该形状的 JVM/CLR 载体合同`，即托管 lane 缺泛型和型 `Option` 载体，不再是 provider 缺失。
-3. 语义解析仍不认限定路径 + `::<T>` 合同调用（`std::collection::array::new::<T>`），以及泛型约束 `where T: Equal` 内的 `infix ==`。
+3. 语义解析仍不认限定路径 + `::<T>` 合同调用（`std::collection::array::new::<T>`），以及泛型约束 `where T: Equal` 内的 `infix ==`。前端侧 `⁅ ⁆` 与 `infix >` 已在 `array-probe` 真实 wasm 构建中验证可用，卡点在语义绑定而非解析。
 4. `HashMap` 的 `insert` / `find_slot` / `find_insert_slot` 调用实例缺少声明或显式导入合同，四 lane 同阻。
 5. `ArrayList::at` 的泛型返回槽在 wasm lowering 中规划为 anyref、编码按 i32 发射，触发 `calls.rs` 断言并终止进程（`reverse-string`）。
 6. 语料生成器必须拒绝超过 i64 或 JSON 安全整数范围的数值输入；当前已命中 100 个 slug、1939 处。

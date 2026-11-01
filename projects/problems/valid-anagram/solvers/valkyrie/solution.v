@@ -1,8 +1,7 @@
 namespace leetcode.valid_anagram;
 
-# 阻塞：wasm 未绑定 `core::primitive::__u16_add`。`std.adaptor.wasm` 的 `math/unsigned.v` 明确声明
-# u8/u16 保持未绑定、必须结构化失败；`utf8` 入口闭包会拉入 `char`/`Utf8Text` 的 u16 算术，
-# 故 `legion build` 报 Planner(HostProviderCapabilityMissing)。入口合同之外仍需 std 上游演进。
+# 阻塞：四 lane 同阻——`调用实例 ItemInstanceId(...) 没有定义或显式导入合同`，callers 为
+# `std::insert` 与 `std::find_slot`。`HashMap` 的插入/查找实例缺声明或显式导入合同，不是 provider 缺失。
 
 [export(case: "camelCase")]
 micro is_anagram(s: utf8, t: utf8) -> bool {
