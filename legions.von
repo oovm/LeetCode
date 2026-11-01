@@ -1,15 +1,10 @@
 {
     name: "leetcode",
     members: [
-        "../valkyrie.v/projects/core",
         "../valkyrie.v/projects/std",
         "../valkyrie.v/projects/std.adaptors._"
     ],
     workspace: {
-        version: "0.1.0",
-        auto_link: {
-            core: false,
-            std: false
-        }
+        version: "0.1.0"
     }
 }

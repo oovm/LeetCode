@@ -2,13 +2,10 @@
     name: "leetcode-number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold",
     version: "0.1.0",
     artifact: "library",
-    auto_link: {
-        core: false,
-        std: false
-    },
     dependencies: {
-        core: true,
-        std: true
+        std: {
+            version: "workspace"
+        }
     },
     build: [
         { target: "wasm" }

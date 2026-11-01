@@ -17,7 +17,7 @@
 |------------------|-------------------------------------------------------------------------------------------------------------------|
 | `../nyar-vm.rs`  | **Valkyrie 工具链**：Valkyrie compiler（`rusty-valkyrie`）+ Legion/Asgard + `@nyar/valkyrie` / native N-API 产物；本仓 `pnpm-workspace.yaml` 直接将其 `projects/nyar.ts/**` 作为 workspace 成员 |
 | `../valkyrie.rs` | **下游语料仓**：fixtures / golden / 黑盒 harness，不提供 legion 工具链 |
-| `../valkyrie.v`  | V 语言 `core` / `std` / `std.adaptors._`（经根 `legions.von` 注册）；**不是** leetcode 用的 legion 可执行文件来源 |
+| `../valkyrie.v`  | V 语言 `std` / `std.adaptors._`（经根 `legions.von` 注册）；**不是** leetcode 用的 legion 可执行文件来源 |
 | sxo-framework（npm） | **Wolfram (Sxo)** / **MATLAB (Sxo)**：已发布 `@sxo/mathematica`、`@sxo/matlab`（`conformance` 的 `optionalDependencies`）；上游开发可选 `pnpm link:sxo` |
 
 ## 标识符（slug / id / questionId）
@@ -43,7 +43,7 @@
 | `projects/conformance/`                        | 完备性矩阵、TS/Python/V/SXO 跑测、**外部产物基准**                          |
 | `projects/dashboard/`                          | Vue 看板（合并 `benchmark-*.json`，ECharts 可视化）                         |
 | `scripts/`                                     | `reword.mjs`、`batch-limit.mjs`、`link-valkyrie.mjs`、`link-sxo.mjs`、`valkyrie-v-deps.mjs` |
-| `legions.von`                                  | workspace 成员：`core`、`std`、`std.adaptors._`（见下文「维护者陷阱」）     |
+| `legions.von`                                  | workspace 成员：`std`、`std.adaptors._`（见下文「维护者陷阱」）            |
 
 **禁止**：程序化批量生成 V 解、在 `.v` 里嵌 `# ```legion` cargo-script、把 solver 再套一层 `source/` 目录（除非 `legion`
 规划器明确要求）。
@@ -82,11 +82,11 @@
 | Python     | `invoke.python`                               | LCD 脚手架实现，算法须与题解一致；完备性跑测用                                                     |
 | TypeScript | `export class Solution` + `invoke.typescript` | 手写实现，算法须与题解一致；Node + `tsx` 跑测 |
 | TypeScript (Bun) | 同上 `solution.ts` + `invoke.typescript` | **复用** `solvers/typescript/solution.ts`；Bun 进程内直载 TS，看板标 **TypeScript (Bun)** |
-| Valkyrie   | `solution.v` + `legion.von`                   | 手写实现，算法须与题解一致；`core: true`、`std: true`；编译 target 由 `legion.von` 的 `build[].target` 唯一决定（two-sum 当前为 `wasm`，中性 Wasm，不注入宿主 API）；**无** `[benchmark]` 烟雾块 |
+| Valkyrie   | `solution.v` + `legion.von`                   | 手写实现，算法须与题解一致；`dependencies.std` 使用 workspace 版本；编译 target 由 `legion.von` 的 `build[].target` 唯一决定（two-sum 当前为 `wasm`，中性 Wasm，不注入宿主 API）；**无** `[benchmark]` 烟雾块 |
 | Wolfram (Sxo) | `invoke.wolframSxo` + `solution.wl`        | 单脚本；经 `@sxo/mathematica` evaluate；看板标 **Wolfram (Sxo)**，非 Wolfram Engine |
 | MATLAB (Sxo)  | `invoke.matlabSxo` + `solution.m`          | 单脚本；经 `@sxo/matlab` evaluate；看板标 **MATLAB (Sxo)**，非 MATLAB Runtime |
 
-`legion.von` 示例字段：`entry: "solution.v"`、`dependencies: { core: true, std: true }`、`build: [{ target: "wasm" }]`（`build[].target` 必填，无默认值）。
+`legion.von` 示例字段：`entry: "solution.v"`、`dependencies: { std: { version: "workspace" } }`、`build: [{ target: "wasm" }]`（`build[].target` 必填，无默认值）。
 
 ### SXO 单脚本约定
 
@@ -215,7 +215,7 @@ node scripts/reword.mjs --file reword.pending.txt --base origin/dev
 - `legion.von` 的 `entry` 收集合同只在装配层实现一次；前端不得重复实现，manifest 校验同样属装配层。
 - 本地 patch 验证须记录实际来源与修订；刷新 host 后还需核对调用的 Compiler 路由。最终交付须另做准确 pin 复验，不能把本地兄弟工作树通过当成发布依赖通过。
 
-### 3. `legions.von` 不能只注册 `core` + `std`
+### 3. `legions.von` 必须注册 `std` + adaptor 超工作空间
 
 `projects/std/legion.von` 声明 `std.adaptor.clr`、`std.adaptor.wasm` 等为 **workspace 依赖**。leetcode 根 `legions.von`
 若缺少 adaptor 超工作空间，会出现：
@@ -225,10 +225,9 @@ legion::planner::forced_workspace_dependency_missing
 project 'std' requires workspace dependency 'std.adaptor.clr', but no workspace member was found
 ```
 
-**正确成员**（路径相对 leetcode 根）：
+**正确成员**（路径相对 leetcode 根，`core` 已并入 `std`，不再单独注册）：
 
 ```text
-../valkyrie.v/projects/core
 ../valkyrie.v/projects/std
 ../valkyrie.v/projects/std.adaptors._    # 嵌套 legions，展开全部 adaptor
 ```

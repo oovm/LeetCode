@@ -2,13 +2,10 @@
     name: "leetcode-maximum-area-of-a-piece-of-cake-after-horizontal-and-vertical-cuts",
     version: "0.1.0",
     artifact: "library",
-    auto_link: {
-        core: false,
-        std: false
-    },
     dependencies: {
-        core: true,
-        std: true
+        std: {
+            version: "workspace"
+        }
     },
     build: [
         { target: "wasm" }

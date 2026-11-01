@@ -2,13 +2,10 @@
     name: "leetcode-smallest-value-after-replacing-with-sum-of-prime-factors",
     version: "0.1.0",
     artifact: "library",
-    auto_link: {
-        core: false,
-        std: false
-    },
     dependencies: {
-        core: true,
-        std: true
+        std: {
+            version: "workspace"
+        }
     },
     build: [
         { target: "wasm" }

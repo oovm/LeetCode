@@ -28,51 +28,19 @@ function toPosixPath(path) {
     return path.split('\\').join('/');
 }
 
-/**
- * 各题 `legion.von` 的 `dependencies` 段。
- * `true` 与 `{ version: "workspace" }` 等价：从祖先 `legions.von` workspace 解析成员。
- */
-export function coreStdDependenciesVon() {
-    return `        core: true,
-        std: true`;
-}
-
-/** 写入 `leetcode.v/legions.von`，注册 `core` / `std` / `std.adaptors._` workspace 成员。 */
+/** 写入 `leetcode.v/legions.von`，注册 `std` / `std.adaptors._` workspace 成员。 */
 export function leetcodeLegionsVon({ leetcodeRoot = LEETCODE_ROOT, valkyrieRoot = VALKYRIE_V_ROOT } = {}) {
-    const coreMember = toPosixPath(relative(leetcodeRoot, join(valkyrieRoot, 'projects', 'core')));
     const stdMember = toPosixPath(relative(leetcodeRoot, join(valkyrieRoot, 'projects', 'std')));
     const adaptorsMember = toPosixPath(relative(leetcodeRoot, join(valkyrieRoot, 'projects', 'std.adaptors._')));
     return `{
     name: "leetcode",
     members: [
-        "${coreMember}",
         "${stdMember}",
         "${adaptorsMember}"
     ],
     workspace: {
-        version: "0.1.0",
-        auto_link: {
-            core: false,
-            std: false
-        }
+        version: "0.1.0"
     }
 }
 `;
-}
-
-/** 替换 `legion.von` 中的 `dependencies: { … }` 块。 */
-export function updateLegionVonDependencies(manifestSource, depsBlock = coreStdDependenciesVon()) {
-    if (!manifestSource.includes('dependencies:')) {
-        return manifestSource.replace(
-            /auto_link:\s*\{[^}]+\},/,
-            `auto_link: {
-        core: false,
-        std: false
-    },
-    dependencies: {
-${depsBlock}
-    },`,
-        );
-    }
-    return manifestSource.replace(/dependencies:\s*\{[\s\S]*?\},/, `dependencies: {\n${depsBlock}\n    },`);
 }
