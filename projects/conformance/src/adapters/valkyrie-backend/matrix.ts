@@ -18,7 +18,14 @@ import {
     type CompileTargetPlan,
     type CompileTargetPlanSource,
 } from '../shared/compile-target-plan.ts';
+import {
+    ManagedAbiError,
+    managedArtifactFileName,
+    readManagedAbiContract,
+    type ManagedAbiContract,
+} from './managed-abi.ts';
 import { readManagedCompileEvidence, resolveManagedArtifact } from './managed-evidence.ts';
+import { runManagedReference } from './managed-runner.ts';
 import { readMatrixManifestAudit } from '../shared/matrix-manifest-audit.ts';
 import { isMatrixRowGreen } from '../shared/matrix-green.ts';
 import { emptySolverCaseStats, type SolverCaseStats } from '../shared/solver-case-stats.ts';
@@ -67,6 +74,12 @@ export type ValkyrieBackendMatrixRow = {
     runtimeReason: string | null;
     runtimeOk: boolean;
     runtimeError: string | null;
+    /** managed 合同 digest（只来自 `managed-abi.json`，`ovm`/`wasm` 为 null）。 */
+    managedContractDigest: string | null;
+    /** managed 首个用例的真实启动命令；未执行时为 null。 */
+    managedInvokeCommand: string | null;
+    /** managed 全量用例统一为 0 时记 0；未执行时为 null。 */
+    managedInvokeExitStatus: number | null;
     testCaseTotal: number;
     testCasePass: number;
     testCaseFail: number;
@@ -114,6 +127,9 @@ function baseRow(problem: ProblemDefinition): ValkyrieBackendMatrixRowNoGreen {
         runtimeReason: null,
         runtimeOk: false,
         runtimeError: null,
+        managedContractDigest: null,
+        managedInvokeCommand: null,
+        managedInvokeExitStatus: null,
         testCaseTotal: 0,
         testCasePass: 0,
         testCaseFail: 0,
@@ -184,14 +200,26 @@ export async function probeValkyrieBackendProblem(
 
     const artifactDir = resolveArtifactDir(outDir, plan.canonicalTarget);
     const evidence = readArtifactEvidence(artifactDir, plan);
-    // 执行 lane（ovm）用 `.nyar` 入口；对照 lane（jvm/clr）只识别 managed 产物（`jar` / `dll`）。
-    // managed pipeline 并不落 execution manifest，因此对照 lane 仍然无法进入 runtime：
-    // 这里如实记录“产物存在但缺 manifest”，不借用其他 lane 的产物或证据。
+    // 执行 lane（ovm）用 `.nyar` 入口；对照 lane（jvm/clr）用 managed 产物（`jar` / `dll`）
+    // 与 `managed-abi.json` 合同。缺合同、artifact/lane 不符或 digest 不能复算时结构化 blocked。
     const artifacts = lane === 'ovm' ? resolveNyarBuildArtifacts(problem) : null;
     const managedArtifact = lane === 'ovm' ? null : resolveManagedArtifact(outDir, lane);
+    let managedContract: ManagedAbiContract | null = null;
+    let managedBlocker: string | null = null;
+    if (lane !== 'ovm') {
+        if (managedArtifact === null) {
+            managedBlocker = 'managed 产物（`jar`/`dll`）缺失或目录内存在多个候选';
+        } else {
+            try {
+                managedContract = readManagedAbiContract(outDir, lane, managedArtifactFileName(managedArtifact));
+            } catch (error) {
+                managedBlocker = error instanceof ManagedAbiError ? error.reason : String(error);
+            }
+        }
+    }
     const invokeBlocker = artifacts
         ? resolveNyarInvokeBlocker(problemRoot, artifacts.nyarPath)
-        : null;
+        : managedBlocker;
 
     const verdict = deriveArtifactRuntimeStatus({
         buildOk: build.status === 0,
@@ -202,6 +230,9 @@ export async function probeValkyrieBackendProblem(
 
     let runtimeOk = false;
     let runtimeError: string | null = null;
+    let managedContractDigest: string | null = null;
+    let managedInvokeCommand: string | null = null;
+    let managedInvokeExitStatus: number | null = null;
     let caseStats = emptySolverCaseStats(verdict.reason);
     if (lane === 'ovm' && verdict.status === 'ready' && artifacts) {
         const ref = await runNyarReference(problem, {
@@ -213,10 +244,18 @@ export async function probeValkyrieBackendProblem(
         runtimeError = ref.ok ? null : ref.stderr || 'metadata.tests 未执行';
         caseStats = ref.caseStats;
     }
+    if (lane !== 'ovm' && verdict.status === 'ready' && managedArtifact !== null && managedContract !== null) {
+        const managed = runManagedReference(problemRoot, lane, managedArtifact, managedContract);
+        runtimeOk = managed.ok;
+        runtimeError = managed.error;
+        caseStats = managed.caseStats;
+        managedContractDigest = managedContract.contract_digest;
+        managedInvokeCommand = managed.command;
+        managedInvokeExitStatus = managed.exitStatus;
+    }
 
     const manifestAudit = readMatrixManifestAudit(evidence.manifest);
-    // 对照 lane 的 digest 来自同一次 build 的 compile-evidence sidecar；
-    // 它只是 managed 产物身份，不等价于 execution manifest（`run-contracts.txt` 尚未产出）。
+    // 对照 lane 的 compile-evidence digest 只作补充身份；execution manifest 才是 freshness 依据。
     const managedEvidence = lane === 'ovm' ? null : readManagedCompileEvidence(outDir);
     const row: ValkyrieBackendMatrixRow = withCaseStats(
         {
@@ -232,7 +271,7 @@ export async function probeValkyrieBackendProblem(
             buildError: build.status === 0 ? null : formatLegionCliError(`legion build --target ${plan.canonicalTarget}`, build),
             testError: test.status === 0 ? null : formatLegionCliError(`legion test --target ${plan.canonicalTarget}`, test),
             manifestFresh: evidence.fresh,
-            manifestError: lane !== 'ovm' && managedArtifact !== null
+            manifestError: lane !== 'ovm' && managedArtifact !== null && evidence.manifest === null
                 ? 'managed 产物缺少 `run-contracts.txt`（execution manifest），且无 managed ABI invoke 合同'
                 : evidence.reason,
             manifestSchemaVersion: manifestAudit.manifestSchemaVersion,
@@ -243,6 +282,9 @@ export async function probeValkyrieBackendProblem(
             runtimeReason: verdict.reason,
             runtimeOk,
             runtimeError,
+            managedContractDigest,
+            managedInvokeCommand,
+            managedInvokeExitStatus,
         },
         caseStats,
     );
