@@ -1,9 +1,9 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02（语料缺陷登记与扩题后复跑）
+- 生成时间：2026-11-02（解析修复 + 位运算补声明后复跑）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
-- 工具链来源：`../nyar-vm.rs` HEAD `7e10dca6`（managed ABI 合同为 `ef4afe77` / `7e10dca6`），本轮用 nightly 从该 HEAD 重建 napi 二进制；`../valkyrie.v` 使用当时工作树。结果是工作树快照，不是发布依赖复验。
+- 工具链来源：`../nyar-vm.rs` HEAD `a7df887e`（`asgard-static-browser-artifacts` 合并后的 `dev`）加当时工作树，nightly 重建 napi 二进制；`../valkyrie.v` HEAD `07aa313` 加当时工作树（primitive 位运算声明）；oaks 解析前端 `a202114d`（turbofish 修复）。结果是工作树快照，不是发布依赖复验。
 
 ## lane 口径
 
@@ -14,20 +14,45 @@
 | `jvm` | 对照 lane | lane 显式 `jvm` + `managed-abi.json` | 否 |
 | `clr` | 对照 lane | lane 显式 `clr` + `managed-abi.json` | 否 |
 
-矩阵 JSON 的 `summary.*.green` 分母是语料总体（2842 题），单题跑测时显示 `1/2842` 属于口径噪声。本报告只按已执行子集（42 题）统计，各 lane 独立探测、独立计数，互不顶替。
+矩阵 JSON 的 `summary.*.green` 分母是语料总体（2842 题），单题跑测时显示 `1/2842` 属于口径噪声。本报告只按**本次复跑子集**统计，各 lane 独立探测、独立计数，互不顶替。
 
-## 已执行子集覆盖率（42 题）
+## 本次复跑子集覆盖率（15 题 + `reverse-string` 崩溃）
 
 | lane | 绿题 / 执行题 | build 通过 | 通过用例 / 用例总数 | runtime ready/blocked/pending |
 | --- | --- | --- | --- | --- |
-| `wasm`（交付） | 36 / 42 | 40 / 42 | 2370 / 2520 | 39 / 1 / 2 |
-| `ovm`（执行） | 37 / 42 | 39 / 42 | 2431 / 2522 | 39 / 0 / 3 |
-| `jvm`（对照） | 37 / 42 | 39 / 42 | 2388 / 2388 | 39 / 0 / 3 |
-| `clr`（对照） | 37 / 42 | 39 / 42 | 2388 / 2388 | 39 / 0 / 3 |
+| `wasm`（交付） | 6 / 15 | 8 / 15 | 611 / 702 | 8 / 0 / 7 |
+| `ovm`（执行） | 1 / 15 | 3 / 15 | 104 / 195 | 3 / 0 / 12 |
+| `jvm`（对照） | 1 / 15 | 3 / 15 | 61 / 61 | 3 / 0 / 12 |
+| `clr`（对照） | 1 / 15 | 3 / 15 | 61 / 61 | 3 / 0 / 12 |
 
-四 lane 全绿 36 题：`reverse-integer`、`palindrome-number`、`add-digits`、`add-two-integers`、`base-7`、`climbing-stairs`、`power-of-two`、`number-of-steps-to-reduce-a-number-to-zero`、`subtract-the-product-and-sum-of-digits-of-an-integer`、`fibonacci-number`、`armstrong-number`、`arranging-coins`、`bulb-switcher`、`count-odd-numbers-in-an-interval-range`、`perfect-number`、`power-of-four`、`power-of-three`、`valid-perfect-square`、`ugly-number`、`count-of-matches-in-tournament`、`divisor-game`、`find-the-maximum-achievable-number`、`sum-multiples`、`smallest-even-multiple`、`n-th-tribonacci-number`、`find-the-pivot-integer`、`calculate-money-in-leetcode-bank`、`harshad-number`、`minimum-moves-to-reach-target-score`、`count-total-number-of-colored-cells`、`divisible-and-non-divisible-sums-difference`、`count-square-sum-triples`、`number-of-common-factors`、`count-operations-to-obtain-zero`、`number-of-1-bits`、`count-integers-with-even-digit-sum`。
+上一版 42 题统计来自更早的工具链快照，未在当前 HEAD 复验，已由本节取代。历史 36 题四 lane 全绿记录不再作为当前证据。
 
-本轮新增四 lane 绿 11 题：`find-the-pivot-integer`(52)、`calculate-money-in-leetcode-bank`(50)、`harshad-number`(53)、`minimum-moves-to-reach-target-score`(140)、`count-total-number-of-colored-cells`(37)、`divisible-and-non-divisible-sums-difference`(93)、`count-square-sum-triples`(23)、`number-of-common-factors`(107)、`count-operations-to-obtain-zero`(78)、`number-of-1-bits`(139)、`count-integers-with-even-digit-sum`(34)。全部来自真实产物 invoke 全量 `metadata.tests`，未降级断言、未删用例。
+逐题结果（`GREEN` = build 通过且全量 `metadata.tests` 通过）：
+
+| 题目 | wasm | ovm | jvm | clr |
+| --- | --- | --- | --- | --- |
+| `binary-gap` | GREEN 61/61 | GREEN 61/61 | GREEN 61/61 | GREEN 61/61 |
+| `valid-parentheses` | GREEN 148/148 | build blocked | build blocked | build blocked |
+| `add-two-numbers` | GREEN 59/59 | build blocked | build blocked | build blocked |
+| `roman-to-integer` | GREEN 94/94 | build blocked | build blocked | build blocked |
+| `valid-palindrome` | GREEN 21/21 | build blocked | build blocked | build blocked |
+| `string-to-integer-atoi` | GREEN 185/185 | build blocked | build blocked | build blocked |
+| `two-sum` | build blocked | build blocked | build blocked | build blocked |
+| `valid-anagram` | build blocked | build blocked | build blocked | build blocked |
+| `ransom-note` | build blocked | build blocked | build blocked | build blocked |
+| `reverse-vowels-of-a-string` | build blocked | build blocked | build blocked | build blocked |
+| `integer-to-roman` | build blocked | build blocked | build blocked | build blocked |
+| `longest-common-prefix` | build blocked | build blocked | build blocked | build blocked |
+| `happy-number` | build blocked | build blocked | build blocked | build blocked |
+| `alternating-digit-sum` | ready 13/57 | ready 13/57 | ready 0/0 | ready 0/0 |
+| `count-the-digits-that-divide-a-number` | ready 30/77 | ready 30/77 | ready 0/0 | ready 0/0 |
+| `reverse-string` | 崩溃（无 JSON 行） | 崩溃 | 崩溃 | 崩溃 |
+
+本轮相对上一版的真实跃迁：`binary-gap` 由 wasm blocked 变为四 lane 全绿；`valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`add-two-numbers` 的 wasm 交付 lane 全部变为真实产物全量用例通过。原因是两项上游修复：
+
+1. oaks `parse_primary_expression` 不再把 `::<` 前的 `::` 当作路径段，`option_none::<T>()` 等 turbofish 调用恢复可解析（oaks `a202114d`）。
+2. `valkyrie.v` 的 10 个 primitive 补齐 `&` / `|` / `^` / `<<` / `>>` 的 `infix` 声明，std `Utf8Text.char_at` 的位运算不再报 `unresolved call infix <<`（`valkyrie.v` `07aa313`）。
+
 
 ## managed lane 真实执行
 
@@ -169,20 +194,26 @@
 
 ## 结构化 blocked 题目与根因归类
 
+分类口径：`build blocked` = compile/link 结构化失败；`ready N/M` = 已生成真实产物但用例失败；`崩溃` = 编译线程 panic 并终止进程。
+
 | 题目 | 用例数 | 状态 | 根因类别 | 原始诊断 |
 | --- | --- | --- | --- | --- |
-| `binary-gap` | 61 | `wasm` blocked，其余三 lane 绿 | wasm codegen / 校验失败 | `CompileError: WebAssembly.Module(): Compiling function #19 failed: i64.shr_s[1] expected type i64, found i32.wrap_i64 of type i32` |
-| `alternating-digit-sum` | 57 | 四 lane ready 但用例失败 | 语料缺陷（已标注） | `tests[13]` 超出 i64。`java` 退出码 1（`NumberFormatException`），`dotnet` 退出码 3762504530（`FormatException`），wasm `Cannot convert ... to a BigInt`，ovm `expected i64, got f64` |
-| `count-the-digits-that-divide-a-number` | 77 | 四 lane ready 但用例失败 | 语料缺陷（未标注，见扫描清单） | `tests[30]` 为 `2.223334445556668e+23`，超出 i64 且精度已损 |
-| `add-two-numbers` | 59 | `wasm` ready 但结果错误，其余 pending | 已知 codegen 缺陷（已转 emitter 会话） | wasm `tests[0]: expected [0,1,1,1], got [1]`；ovm `Nyar backend requires a typed sum representation plan`；jvm/clr 缺 `std.primitive.__usize_sub` provider。保持结构化失败记录，等 emitter 修复后复跑 |
-| `valid-parentheses` | 148 | 四 lane pending | 前端：数组/迭代器成员解析 | `unresolved call <computed> in first at source/_.v:1748..1766` |
-| `two-sum` | 80 | 四 lane pending | 前端：泛型 binder 身份不一致 | `let` initializer type `[T[GenericBinderId { owner: ItemId(3) }]]` incompatible with `[T[GenericBinderId { owner: ItemId(0) }]]` |
-| 字符串/哈希题（`roman-to-integer`、`valid-anagram`、`string-to-integer-atoi`、`longest-common-prefix`、`reverse-vowels-of-a-string`、`ransom-note`、`valid-palindrome`、`happy-number`、`reverse-string`） | — | 四 lane pending（预检） | 前端：字符串/迭代器/集合成员解析 | `<computed> in first`、`infix == in contains`、`infix != in equals_repr` |
+| `valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi` | 148 / 94 / 21 / 185 | wasm GREEN，其余三 lane build blocked | `ovm-provider-missing` + `managed-provider-signature-mismatch` | ovm：`host contract \`std.primitive.__u32_or\` (instance \`ItemInstanceId(27)\`) has a resolved call but no host provider is bound`。jvm/clr：`host provider 声明 \`std.adaptor.{jvm,clr}::source/text/Utf8Text.v::micro::...::host_length\` 没有与闭合合同实例同签名的 provider 实例` |
+| `add-two-numbers` | 59 | wasm GREEN，其余三 lane build blocked | `ovm-typed-sum-plan-missing` + `managed-arraylist-i64-unsupported` | ovm：`Nyar backend requires a typed sum representation plan; semantic sum operation has no target contract`。jvm/clr：`JVM/CLR 最小 lowering 不支持类型 \`std::collection::ArrayList<i64>\`：缺少该形状的 JVM/CLR 载体合同` |
+| `two-sum`、`valid-anagram`、`ransom-note` | 80 / — / — | 四 lane build blocked | `hashmap-insert-instance-undeclared` | `调用实例 \`ItemInstanceId(...)\` 没有定义或显式导入合同；callers=[\"std::find_slot#...\", \"std::find_insert_slot#...\"]`（`valid-anagram`/`ransom-note` 为 `std::insert#...` + `std::find_slot#...`） |
+| `reverse-vowels-of-a-string`、`integer-to-roman`、`longest-common-prefix` | — | 四 lane build blocked | `qualified-turbofish-call-unresolved` | `unresolved call \`<computed>\` in new at source/_.v:867..900`；落在 `Array.v` 的 `push` 体内 `std::collection::array::new::<T>(old_len + 1)`。解析已恢复，语义解析仍未把限定路径 + `::<T>` 绑定到合同实例 |
+| `happy-number` | — | 四 lane build blocked | `generic-constraint-eq-unresolved` | `unresolved call \`infix ==\` in contains at source/_.v:4714..4727`；落在 `Array<T>::contains` 的 `where T: Equal` 约束内，约束未参与 `infix ==` 解析 |
+| `reverse-string` | — | 四 lane 崩溃（exit `-1073740791`） | `wasm-plan-encode-slot-conflict` | `panicked at compilers\nyar-emitter\src\lowering\backends\wasm\mir\calls.rs:245: WASM 编码结果与预规划槽冲突: %5 in std::at`，`left: 110`（anyref）/ `right: 127`（i32）。规划槽取 `NyarType::Parameter(T)` 的 Reference 表示，编码却按 `ArrayList::at` 实例化返回的 i32 载体发射 |
+| `alternating-digit-sum` | 57 | wasm/ovm ready 13/57，jvm/clr ready 0/0 | 语料缺陷（已标注） | `tests[13]` 超出 i64。wasm/ovm 因该值无法进入 i64 失败；jvm/clr 在缺陷用例过滤后无可执行用例 |
+| `count-the-digits-that-divide-a-number` | 77 | wasm/ovm ready 30/77，jvm/clr ready 0/0 | 语料缺陷（见扫描清单） | `tests[30]` 为 `2.2233344445556668e+23`，超出 i64 且精度已损 |
+
+矩阵 CLI 目前不能在 `reverse-string` 这类编译线程 panic 时写出结构化行，只能得到进程退出码；该题的 lane 证据缺失，需要 emitter 修复后复跑才能补回。
 
 ## 上游待修（本轮发现）
 
-1. `wasm` 位运算 lowering：`i64.shr_s` 操作数类型错误（`i32.wrap_i64`），生成非法 wasm，`binary-gap` 交付 lane 失败。
-2. `else if` 链在 `wasm` / `ovm` 被错误降低为死循环：`minimum-moves-to-reach-target-score` 初版（`else if` 形式）在 target=2 输入上无限循环；改为语义等价的嵌套 `if` 后 140/140 通过。请上游修复 `else if` lowering。
-3. `add-two-numbers`：wasm 结果与期望不符；`ovm` 缺 typed sum representation plan；`jvm`/`clr` 缺 `std.primitive.__usize_sub` provider。
-4. 前端仍阻断数组/字符串入口：`<computed>` 成员解析与泛型 binder 身份不一致。
-5. 语料生成器必须拒绝超过 i64 或 JSON 安全整数范围的数值输入；当前已命中 100 个 slug、1939 处。
+1. `std.adaptor.ovm` 的 `std.primitive.__u32_or` 无 provider 绑定，阻塞 `ovm` 执行 lane 的字符串题。
+2. `std.adaptor.jvm` / `std.adaptor.clr` 的 `Utf8Text.host_length` provider 声明与闭合合同实例签名不一致，阻塞 `jvm` / `clr` 对照 lane 的字符串题。
+3. 语义解析仍不认限定路径 + `::<T>` 合同调用（`std::collection::array::new::<T>`），以及泛型约束 `where T: Equal` 内的 `infix ==`。
+4. `HashMap` 的 `insert` / `find_slot` / `find_insert_slot` 调用实例缺少声明或显式导入合同，四 lane 同阻。
+5. `ArrayList::at` 的泛型返回槽在 wasm lowering 中规划为 anyref、编码按 i32 发射，触发 `calls.rs` 断言并终止进程（`reverse-string`）。
+6. 语料生成器必须拒绝超过 i64 或 JSON 安全整数范围的数值输入；当前已命中 100 个 slug、1939 处。
