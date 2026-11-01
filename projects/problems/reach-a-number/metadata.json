@@ -427,6 +427,7 @@
     ],
     "invoke": {
         "python": "Solution().reachNumber",
-        "typescript": "Solution().reachNumber"
+        "typescript": "Solution().reachNumber",
+        "valkyrie": "Solution().reachNumber"
     }
 }

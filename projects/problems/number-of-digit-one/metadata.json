@@ -463,6 +463,7 @@
     ],
     "invoke": {
         "python": "Solution().countDigitOne",
-        "typescript": "Solution().countDigitOne"
+        "typescript": "Solution().countDigitOne",
+        "valkyrie": "Solution().countDigitOne"
     }
 }

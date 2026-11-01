@@ -187,6 +187,7 @@
     ],
     "invoke": {
         "python": "Solution().integerBreak",
-        "typescript": "Solution().integerBreak"
+        "typescript": "Solution().integerBreak",
+        "valkyrie": "Solution().integerBreak"
     }
 }

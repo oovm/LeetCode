@@ -174,12 +174,6 @@
         },
         {
             "args": {
-                "n": 9876543210987655000
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "n": 200000000
             },
             "expected": 9
@@ -331,6 +325,7 @@
     ],
     "invoke": {
         "python": "Solution().consecutiveNumbersSum",
-        "typescript": "Solution().consecutiveNumbersSum"
+        "typescript": "Solution().consecutiveNumbersSum",
+        "valkyrie": "Solution().consecutiveNumbersSum"
     }
 }

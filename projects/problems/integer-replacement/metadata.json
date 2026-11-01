@@ -229,6 +229,7 @@
     ],
     "invoke": {
         "python": "Solution().integerReplacement",
-        "typescript": "Solution().integerReplacement"
+        "typescript": "Solution().integerReplacement",
+        "valkyrie": "Solution().integerReplacement"
     }
 }

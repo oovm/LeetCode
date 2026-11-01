@@ -547,6 +547,7 @@
     ],
     "invoke": {
         "python": "Solution().smallestRepunitDivByK",
-        "typescript": "Solution().smallestRepunitDivByK"
+        "typescript": "Solution().smallestRepunitDivByK",
+        "valkyrie": "Solution().smallestRepunitDivByK"
     }
 }

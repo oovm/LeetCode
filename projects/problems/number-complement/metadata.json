@@ -271,6 +271,7 @@
     ],
     "invoke": {
         "python": "Solution().findComplement",
-        "typescript": "Solution().findComplement"
+        "typescript": "Solution().findComplement",
+        "valkyrie": "Solution().findComplement"
     }
 }

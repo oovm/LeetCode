@@ -553,6 +553,7 @@
     ],
     "invoke": {
         "python": "Solution().countOperations",
-        "typescript": "Solution().countOperations"
+        "typescript": "Solution().countOperations",
+        "valkyrie": "Solution().countOperations"
     }
 }

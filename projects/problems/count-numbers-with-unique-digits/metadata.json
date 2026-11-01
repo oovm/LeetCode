@@ -73,6 +73,7 @@
     ],
     "invoke": {
         "python": "Solution().countNumbersWithUniqueDigits",
-        "typescript": "Solution().countNumbersWithUniqueDigits"
+        "typescript": "Solution().countNumbersWithUniqueDigits",
+        "valkyrie": "Solution().countNumbersWithUniqueDigits"
     }
 }
