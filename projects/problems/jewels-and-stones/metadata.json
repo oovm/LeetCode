@@ -2,7 +2,10 @@
     "id": "jewels-and-stones",
     "questionId": 771,
     "difficulty": "Easy",
-    "tags": ["Hash Table", "String"],
+    "tags": [
+        "Hash Table",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -728,6 +731,7 @@
     ],
     "invoke": {
         "python": "Solution().numJewelsInStones",
-        "typescript": "Solution().numJewelsInStones"
+        "typescript": "Solution().numJewelsInStones",
+        "valkyrie": "Solution().numJewelsInStones"
     }
 }

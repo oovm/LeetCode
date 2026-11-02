@@ -2,7 +2,9 @@
     "id": "detect-capital",
     "questionId": 520,
     "difficulty": "Easy",
-    "tags": ["String"],
+    "tags": [
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -2413,6 +2415,7 @@
     ],
     "invoke": {
         "python": "Solution().detectCapitalUse",
-        "typescript": "Solution().detectCapitalUse"
+        "typescript": "Solution().detectCapitalUse",
+        "valkyrie": "Solution().detectCapitalUse"
     }
 }

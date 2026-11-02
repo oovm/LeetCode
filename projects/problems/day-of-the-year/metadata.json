@@ -2,7 +2,10 @@
     "id": "day-of-the-year",
     "questionId": 1154,
     "difficulty": "Easy",
-    "tags": ["Math", "String"],
+    "tags": [
+        "Math",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -721,6 +724,7 @@
     ],
     "invoke": {
         "python": "Solution().dayOfYear",
-        "typescript": "Solution().dayOfYear"
+        "typescript": "Solution().dayOfYear",
+        "valkyrie": "Solution().dayOfYear"
     }
 }

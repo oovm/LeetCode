@@ -2,7 +2,10 @@
     "id": "number-of-steps-to-reduce-a-number-in-binary-representation-to-one",
     "questionId": 1404,
     "difficulty": "Medium",
-    "tags": ["Bit Manipulation", "String"],
+    "tags": [
+        "Bit Manipulation",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -613,6 +616,7 @@
     ],
     "invoke": {
         "python": "Solution().numSteps",
-        "typescript": "Solution().numSteps"
+        "typescript": "Solution().numSteps",
+        "valkyrie": "Solution().numSteps"
     }
 }

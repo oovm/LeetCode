@@ -2,7 +2,11 @@
     "id": "split-a-string-in-balanced-strings",
     "questionId": 1221,
     "difficulty": "Easy",
-    "tags": ["Greedy", "String", "Counting"],
+    "tags": [
+        "Greedy",
+        "String",
+        "Counting"
+    ],
     "tests": [
         {
             "args": {
@@ -715,6 +719,7 @@
     ],
     "invoke": {
         "python": "Solution().balancedStringSplit",
-        "typescript": "Solution().balancedStringSplit"
+        "typescript": "Solution().balancedStringSplit",
+        "valkyrie": "Solution().balancedStringSplit"
     }
 }
