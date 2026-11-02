@@ -2,7 +2,7 @@
 
 > 口径：本报告只记录外部可观测的编译/运行现象（错误文本、通道、用例计数），不含内部缺陷编号。
 
-- 生成时间：2026-11-02（历程：全绿累计 53 → 56 → 59 → 72 → 80 → 81 → 87 → 90 → 91）
+- 生成时间：2026-11-03（历程：全绿累计 53 → 56 → 59 → 72 → 80 → 81 → 87 → 90 → 91 → 95）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
 - 工具链来源：本地 dev 工具链快照（经独立 worktree 构建的 napi 产物，`VALKYRIE_NATIVE` 指向该产物，`legions.von` 指向工作树 std）。结果为工作树快照，不是发布依赖复验。
@@ -234,6 +234,38 @@
 - 新发现：V 源文件不支持 `//` 行注释（编译报 `此处需要表达式`），全库 `solution.v` 无一行注释用例；valkyrie 注释语法为 `#` 行注释、`<$ $>` 块注释、`#?` 文档注释。
 
 **全绿累计：91 题**。
+
+### 第五批（10 题，V + TypeScript + Python 三参考）
+
+| 题目 | 专题 | 用例数 | V wasm | V ovm | V jvm | V clr | 三参考 | 现象 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `poor-pigs` | 数学 | 99 | GREEN 99/99 | GREEN 99/99 | GREEN 99/99 | GREEN 99/99 | TS+PY 对齐 | — |
+| `minimize-xor` | 位运算 | 85 | GREEN 85/85 | GREEN 85/85 | GREEN 85/85 | GREEN 85/85 | TS+PY 对齐 | — |
+| `split-with-minimum-sum` | 数学 | 98 | GREEN 98/98 | GREEN 98/98 | GREEN 98/98 | GREEN 98/98 | TS+PY 对齐 | — |
+| `find-the-k-beauty-of-a-number` | 数学 | 90 | GREEN 90/90 | GREEN 90/90 | GREEN 90/90 | GREEN 90/90 | TS+PY 对齐 | — |
+| `number-of-days-between-two-dates` | 日期 | 138 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | wasm `Raise` 受阻 + managed `infix !=` 受阻 |
+| `count-days-spent-together` | 日期 | 116 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | wasm `Raise` 受阻 + managed `infix !=` 受阻 |
+| `shuffle-the-array` | 数组 | 71 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻 |
+| `can-make-arithmetic-progression-from-sequence` | 数组/排序 | 164 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻（wasm）+ managed `infix !=` 受阻 |
+| `decode-the-message` | 字符串 | 230 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻（wasm `Utf8Builder` `append` 链路）+ managed `infix !=` 受阻 |
+| `count-good-triplets` | 数组 | 101 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻（见下方诊断归因观察） |
+
+- `split-with-minimum-sum`（V 四 lane 全绿）：TS 排序数组，V 无排序原语，用 10 个计数器做计数排序后交替重建两数；算法同阶 $O(d)$。
+- `find-the-k-beauty-of-a-number`（V 四 lane 全绿）：不存数字数组，窗口值用纯算术 `(num / 10^{n-s-k}) \bmod 10^k$ 逐位计算。
+- `minimize-xor`（V 四 lane 全绿）：i64 无 `<<` 惯用形态，用乘 2 幂循环与 `/ base % 2` 取位；注意参考实现的第二趟补位循环上界是 $[0,30)$，照抄 `<= 30` 会多置最高位。
+- `count-good-triplets` 的诊断归因观察：构建失败报 `unresolved call `abs_i64` in count_good_triplets --> solution.v:20:35`，即 `⁅ ⁆` 参数子树解析失败时，诊断名归到最外层具名调用（用户自定义 helper），而非现象 A 常见的 `<computed>`。对照 `minimize-xor`（标量参数 helper，四 lane 全绿）与 `shuffle-the-array`（同数组读，报 `<computed>`）可复现该归因差异；本质仍是现象 A。
+- 语料复核：`shuffle-the-array` 的 `tests[17]` 输入 `nums` 长 30、`n=17`（不满足 `nums.length == 2n`），与参考实现的 zip 语义（短者截断）自洽；三端实现按同一 zip 语义对齐。
+- 含 `Error:` 期望的用例（`can-make-arithmetic-progression-from-sequence` 的 `arr=[1]`、`decode-the-message` 的缺字母消息）：TypeScript 参考解按既有先例以相同消息文本抛错对齐。
+- ABI 参数名观察（见「编译器/标准库问题清单」）：导出 micro 的多词形参必须与 `metadata.tests[].args` 键逐字一致（camelCase），snake_case 形参在 wasm 通道报 `AbiSchemaError: 缺少参数`。
+
+**全绿累计：95 题**（91 + `poor-pigs`、`minimize-xor`、`split-with-minimum-sum`、`find-the-k-beauty-of-a-number`）。
+
+## 编译器/标准库问题清单
+
+| 现象 | 最小复现 | 涉及题目 |
+| --- | --- | --- |
+| 导出 micro 的多词形参以 snake_case 书写时，wasm 通道运行期报 `AbiSchemaError: args.<snake> 缺少参数`；ovm/jvm/clr 未报。形参按字面量进入 ABI schema，不经 case 变换 | `micro poor_pigs(buckets: i64, minutes_to_die: i64, minutes_to_test: i64)` + args 键 `minutesToDie` → `args.minutes_to_die 缺少参数`；改为 camelCase 后四 lane 全绿 | `poor-pigs`（已按约定修正） |
+| `⁅ ⁆` 参数子树解析失败时，诊断名归到最外层具名调用而非 `<computed>` | `abs_i64(arr⁅i⁆.unwrap() - arr⁅j⁆.unwrap())` 报 `unresolved call `abs_i64``；`result.push(nums⁅i⁆.unwrap())` 报 `unresolved call `<computed>`` | `count-good-triplets`（现象 A 的诊断形态） |
 
 ## 按现象归类的阻塞清单
 
