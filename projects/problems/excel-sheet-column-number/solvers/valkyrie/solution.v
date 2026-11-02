@@ -6,7 +6,7 @@ micro title_to_number(s: utf8) -> i64 {
     let n: usize = s.length()
     let mut i: usize = 0
     while i < n {
-        let code: u32 = s.char_at(i + 1).unwrap() as u32
+        let code: u32 = s⁅i⁆ as u32
         result = result * 26 + (code as i64 - 64)
         i = i + 1
     }

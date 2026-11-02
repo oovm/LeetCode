@@ -7,7 +7,7 @@ micro check_record(s: utf8) -> bool {
     let mut absents: i64 = 0
     let mut late_run: i64 = 0
     while i < n {
-        let code: u32 = s.char_at(i + 1).unwrap() as u32
+        let code: u32 = s⁅i⁆ as u32
         if code == 65 {
             absents = absents + 1
             late_run = 0

@@ -8,7 +8,7 @@ micro can_construct(ransomNote: utf8, magazine: utf8) -> bool {
     let mut counts: HashMap<i64, i64> = HashMap::new(0)
     let mut j: usize = 0
     while j < magazine.length() {
-        let ch: char = magazine.char_at(j + 1).unwrap()
+        let ch: char = magazine⁅j⁆
         let code: u32 = ch as u32
         let key: i64 = code as i64
         let mut seen: i64 = 0
@@ -20,7 +20,7 @@ micro can_construct(ransomNote: utf8, magazine: utf8) -> bool {
     }
     let mut i: usize = 0
     while i < ransomNote.length() {
-        let ch: char = ransomNote.char_at(i + 1).unwrap()
+        let ch: char = ransomNote⁅i⁆
         let code: u32 = ch as u32
         let key: i64 = code as i64
         let mut left: i64 = 0

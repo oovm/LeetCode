@@ -927,6 +927,7 @@
     ],
     "invoke": {
         "python": "Solution().isMonotonic",
-        "typescript": "Solution().isMonotonic"
+        "typescript": "Solution().isMonotonic",
+        "valkyrie": "Solution().isMonotonic"
     }
 }

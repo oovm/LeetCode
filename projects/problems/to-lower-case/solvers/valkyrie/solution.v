@@ -6,7 +6,7 @@ micro to_lower_case(s: utf8) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(n)
     let mut i: usize = 0
     while i < n {
-        let c: char = s.char_at(i + 1).unwrap()
+        let c: char = s⁅i⁆
         let code: u32 = c as u32
         if code >= 65 && code <= 90 {
             builder.append(char::from(code + 32))

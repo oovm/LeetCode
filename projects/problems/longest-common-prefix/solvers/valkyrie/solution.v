@@ -9,7 +9,7 @@ micro prefix_slice(source: utf8, end: usize) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(end)
     let mut k: usize = 0
     while k < end {
-        builder.append(source.char_at(k + 1).unwrap())
+        builder.append(source⁅k⁆)
         k = k + 1
     }
     let result: utf8 = builder.build()
@@ -30,7 +30,7 @@ micro longest_common_prefix(strs: ArrayList<utf8>) -> utf8 {
             if s.length() <= i {
                 return prefix_slice(first, i)
             }
-            if s.char_at(i + 1).unwrap() as u32 != first.char_at(i + 1).unwrap() as u32 {
+            if s⁅i⁆ as u32 != first⁅i⁆ as u32 {
                 return prefix_slice(first, i)
             }
             j = j + 1

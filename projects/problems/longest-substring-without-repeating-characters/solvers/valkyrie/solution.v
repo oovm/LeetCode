@@ -10,7 +10,7 @@ micro length_of_longest_substring(s: utf8) -> i64 {
     let mut ans: i64 = 0
     let mut j: usize = 0
     while j < s.length() {
-        let code: i64 = s.char_at(j + 1).unwrap() as u32 as i64
+        let code: i64 = s⁅j⁆ as u32 as i64
         if last.contains_key(code) {
             let prev: i64 = last.get(code).unwrap()
             if prev + 1 > left {

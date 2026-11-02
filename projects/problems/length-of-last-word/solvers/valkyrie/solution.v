@@ -8,7 +8,7 @@ micro length_of_last_word(s: utf8) -> i64 {
     let mut seen_word: bool = false
     let mut done: bool = false
     while i > 0 && done == false {
-        let c: u32 = s.char_at(i).unwrap() as u32
+        let c: u32 = s⁅i - 1⁆ as u32
         if c == 32 {
             if seen_word {
                 done = true

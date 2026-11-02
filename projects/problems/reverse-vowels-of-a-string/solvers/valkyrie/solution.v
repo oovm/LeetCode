@@ -8,7 +8,7 @@ micro reverse_vowels(s: utf8) -> utf8 {
     let mut chars: ArrayList<char> = ArrayList::new(s.length())
     let mut i: usize = 0
     while i < s.length() {
-        chars.push(s.char_at(i + 1).unwrap())
+        chars.push(s⁅i⁆)
         i = i + 1
     }
     let mut left: usize = 0

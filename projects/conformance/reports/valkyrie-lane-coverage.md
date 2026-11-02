@@ -1,10 +1,10 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56；同日语料精度修根，全绿累计 59；同日四 lane 覆盖重新拉起，全绿累计 72；同日按本地 dev 工具链复跑，全绿累计 80；同日双解对照扩题，全绿累计 81）
+- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56；同日语料精度修根，全绿累计 59；同日四 lane 覆盖重新拉起，全绿累计 72；同日按本地 dev 工具链复跑，全绿累计 80；同日双解对照扩题，全绿累计 81；同日工具链推进至 `0a531be2`+`706ecec`（D15 修复、`char_at` 退役、`⁅ ⁆`/`[ ]` 索引落地），`char_at` 25 调用点统一转索引写法，本批双解新增 11 题，全绿累计 87）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
-- 工具链来源（本轮起）：`../nyar-vm.rs` 本地 dev `7d4df3c2`（含 char、copy-discipline、数组 pattern、解析多错、oak `1f766c07`），`../valkyrie.v` 本地 dev `e25b3bb`（`std::operator`、`Ordinal`、`[constructor]` 标注）。两者经独立 `git worktree` 检出（不动既有工作树），`valkyrie-napi` 经 `RUSTUP_TOOLCHAIN=nightly` 重建 `.node`；leetcode 经 `VALKYRIE_NATIVE` 指向该 `.node`、`legions.von` 指向 worktree std。结果是工作树快照，不是发布依赖复验。
-- **工具链当前状态**：纯 `i64` 标量题四 lane 全绿（D13 `position` 撞名已随 oak 解析修复而消除，`pass-the-pillow` 复绿）；字符串题（`char_at`）与数组题（`push`/`⁅ ⁆`/`unwrap`）仍 build blocked；ovm 另有 `infix ==` 多类型共存导出歧义（D15）。详见「按根因聚合的阻塞清单」D12'、D12''、D14、D15。
+- 工具链来源（本轮起）：`../nyar-vm.rs` 本地 dev `0a531be2`（含 D15 ovm 导出消歧、`Raise` resume 参数定型、`Cardinal` 索引覆盖、oak `1f766c07`），`../valkyrie.v` 本地 dev `706ecec`（`Utf8Text` 索引重定向码点并退役 `char_at`、`usize`/`isize` 指针宽别名、`char` 的 `==`/`!=`、`std::operator`、`Ordinal`、`[constructor]` 标注）。两者经独立 `git worktree` 检出（不动既有工作树），`valkyrie-napi` 经 `RUSTUP_TOOLCHAIN=nightly` 重建 `.node`；leetcode 经 `VALKYRIE_NATIVE` 指向该 `.node`、`legions.von` 指向 worktree std。结果是工作树快照，不是发布依赖复验。
+- **工具链当前状态**：纯 `i64` 标量题四 lane 全绿；`char_at` 已退役，字符串读取改走 `s⁅i⁆`（0 基基数直接取 `char`）/`s[i]`（1 基序数取 `Option<char>`），语法层已落地。阻塞面：数组 `⁅ ⁆`/`push`/HashMap 为 D12''；`loop in` 为 D1（`into_iterator` 构造器）；含 Utf8Text `⁅ ⁆` 的闭包 wasm 受阻 D16（`Raise` 无目标合同）、ovm/jvm/clr 受阻 D17（std `infix !=` 实例）；`counting-bits` managed 缺 `__u64_lt`（D14）。D12'（panic SSA）与 D15（ovm `infix ==` 导出歧义）已修复。详见「按根因聚合的阻塞清单」。
 
 ## lane 口径
 
@@ -231,6 +231,7 @@ micro sum_loop(nums: ArrayList<i64>) -> i64 {
 | `intersection-of-two-arrays-ii` | `unresolved call `<computed>` in intersect at solution.v:247..266`（`cnt.contains_key(x)`） |
 
 - 修复线：前端 `loop in` 迭代项类型应解 `Option<T>` 为 `T`（或明确规定迭代协议）。修复后 4 题可复跑。
+- 现状（同日工具链 `0a531be2`+`706ecec` 复跑）：错误面已迁移——`loop x in nums` 现统一报 `unresolved constructor \`_` in into_iterator`（`source/_.v:7:1`），即迭代解析已推进到 `into_iterator`，但 std 迭代器实现内存在未解析构造器。`single-number`、`best-time-to-buy-and-sell-stock`、`majority-element` 三题四 lane 同因复跑确认。能力未通，非修复。
 
 ### D2. `match` 对 `Option<T>` 的 `case Some(x)` 绑定不传导 payload 类型
 
@@ -413,6 +414,7 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 - 最小复现：任一调用 `s.char_at(1).unwrap()`（`char_at` 为 **1 基序数**，`char_at(0)` 非法；`⁅ ⁆` 索引为 0 基基数，不受影响）的函数——经 `Option<char>` 的 `unwrap()` 触发 `panic`。
 - 受影响题目（四 lane 同因）：`valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`count-asterisks`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`detect-capital`、`day-of-the-year`、`jewels-and-stones`、`is-subsequence`、`excel-sheet-column-number`、`length-of-last-word`、`counting-bits`（wasm/ovm）。其中 `is-subsequence`、`excel-sheet-column-number`、`length-of-last-word` 经同日 sweep 复跑确认。
 - 修复线：std `panic` 的 block 参数补 SSA 类型（`nyar-vm.rs` MIR / `valkyrie.v` std 协同）。
+- 现状（同日工具链 `0a531be2`+`706ecec` 复跑）：**已修复**——`Raise` resume 参数定型（`d42b8b4d`）后 SMIR001 不再复现；且 `char_at` 已随 `706ecec` 退役，25 个调用点全部转为 `s⁅i⁆` 索引写法（见「`char_at` 序数 sweep」节）。原 D12' 题组当前落点：纯索引读取题 wasm 受阻 D16（`Raise` 目标合同）、ovm/jvm/clr 受阻 D17（std `infix !=` 实例）；含 builder/push/HashMap 的题 wasm 受阻 D12''。
 
 #### D12''. 数组题（`push`/`⁅ ⁆`/`unwrap`/`==`）：HIR `unresolved call <computed>` / `infix ==`
 
@@ -428,12 +430,12 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 - 受影响题目：`add-two-numbers`、`concatenation-of-array`、`move-zeroes`、`missing-number`、`squares-of-a-sorted-array`、`decode-xored-array`、`number-of-steps-to-reduce-a-number-in-binary-representation-to-one`、`final-value-of-variable-after-performing-operations`、`counting-words-with-a-given-prefix`、`running-sum-of-1d-array`，以及同日 sweep 复跑确认的 `defanging-an-ip-address`、`to-lower-case`、`zigzag-conversion`、`longest-palindromic-substring`、`longest-common-prefix`、`reverse-vowels-of-a-string`、`integer-to-roman`（D5 迁移）、`two-sum`、`valid-anagram`、`ransom-note`、`longest-substring-without-repeating-characters`（D4 迁移）、`happy-number`、`contains-duplicate`（D3 迁移）。
 - 修复线：`⁅ ⁆` 索引与 `Option.unwrap()`/`push` 的 `<computed>` 解析、`infix ==` 绑定（`nyar-vm.rs`/`valkyrie.v` 重构面）。
 
-#### D14. `counting-bits` jvm/clr 缺 `__isize_sub` host provider
+#### D14. `counting-bits` managed 缺 `__u64_lt` host provider
 
-- 归属：jvm/clr host provider（`counting-bits` wasm/ovm 同 D12'）。
-- 原文：`host contract `std.primitive.__isize_sub` (instance `ItemInstanceId(11)`) has a resolved call but no host provider is bound`。
-- 受影响题目：`counting-bits`（jvm/clr lane）。
-- 修复线：`std.primitive.__isize_sub` 的 jvm/clr host provider 绑定。
+- 归属：jvm/clr host provider（`counting-bits` wasm 同 D16）。
+- 原文（同日工具链 `0a531be2`+`706ecec` 复跑）：`host contract \`std.primitive.__u64_lt\` (instance \`ItemInstanceId(12)\`) has a resolved call but no host provider is bound`。`usize`/`isize` 指针宽别名化（`25ce557`）后，原 `__isize_sub` 缺口已被 `__u64_lt` 取代。
+- 受影响题目：`counting-bits`（ovm/jvm/clr lane）。
+- 修复线：`std.primitive.__u64_lt` 的 managed host provider 绑定。
 
 ### D13. 局部变量名 `position` 与 std prelude `std::iterator::position` 撞名（dev 工具链已修复）
 
@@ -448,6 +450,23 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 - 最小复现：`.cache/probes/ovm-ne`（gitignored，不提交）——`i64 ==` 与 `bool !=` 各自单独构建通过，共存于同一模块即报上文。
 - 受影响题目：`largest-number-after-digit-swaps-by-parity`（ovm；wasm/jvm/clr GREEN 78/78）、`divide-two-integers`（ovm；wasm/jvm/clr GREEN 135/135）。
 - 修复线：ovm 导出决议对 `infix ==` 按实例类型消歧（`nyar-vm.rs` ovm 后端）。
+- 现状（同日工具链 `0a531be2` 复跑）：**已修复**——`0a531be2`（`Disambiguate ovm export names by instance identity`）后，`largest-number-after-digit-swaps-by-parity` 与 `divide-two-integers` 均**四 lane 全绿**（78/78、135/135），两题由 3/4 转为全绿。
+
+### D16. wasm 后端 `Raise` effect terminator 无目标合同
+
+- 归属：wasm 后端私有计划（`nyar-vm.rs` emitter）。D12' 的 MIR SSA 修复后，`panic`/`⁅ ⁆` 边界检查路径推进到 wasm 后端计划层，暴露 `Raise` 无目标合同。
+- 原文（wasm）：`legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): 后端私有计划生产失败: canonical effect terminator 尚无目标合同: PerformEffect { effect: Raise, payload: Some(MirValueId(0)), resume_target: CanonicalBlockId(1) }`。
+- 最小复现：任一使用 `s⁅i⁆`（Utf8Text 基数索引，其合同实现内含越界 `std::types::panic`）的函数，wasm 构建即失败。
+- 受影响题目（wasm lane，同日复跑确认）：`valid-palindrome-ii`、`counting-bits` 及 14 个纯索引读取字符串题（`count-asterisks`、`day-of-the-year`、`detect-capital`、`excel-sheet-column-number`、`is-subsequence`、`jewels-and-stones`、`length-of-last-word`、`roman-to-integer`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`string-to-integer-atoi`、`valid-palindrome`、`valid-parentheses`、`longest-common-prefix` 中 builder 前的读取路径另见 D12''）。
+- 修复线：wasm 后端为 `Raise` effect terminator 补目标合同。
+
+### D17. managed lane（ovm/jvm/clr）std `infix !=` 实例 HIR 未解析
+
+- 归属：managed HIR 解析（`nyar-vm.rs`/`valkyrie.v`）。std 文本/容器实现内的 `infix !=`（`char` 经 u32 码点相等实现，内部为 `prefix !` + `infix ==` 复合）在 ovm/jvm/clr 无法解析；纯 `i64` 用户层 `!=`（如 `three-divisors` 的 `r * r != n`）不受影响，四 lane 全绿。
+- 原文（ovm 为例）：`error[valkyrie.hir.unresolved_call]: unresolved call \`prefix !\` in infix != --> source/_.v:7:1` + `unresolved call \`infix ==\` in infix !=`（同坐标）。
+- 最小复现：任一使用 `s⁅i⁆`（Utf8Text 基数索引）或走到 std `char !=` 的函数，ovm/jvm/clr 构建即失败。
+- 受影响题目：全部 25 个索引写法字符串题与 `valid-palindrome-ii`、`first-unique-character-in-a-string`、`largest-number-at-least-twice-of-others` 的 ovm/jvm/clr lane（wasm 侧同闭包分别落 D16/D12''）。
+- 修复线：managed 侧 std `infix !=` 实例的 HIR 解析（`char`/文本内部实例）。
 
 ## 语料精度修根（同日，字符串表示 + 全量回填）
 
@@ -563,6 +582,35 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 
 **全绿累计：81 题**（矩阵实证 80 + 本轮 `n-queens-ii` 四 lane 全绿）。
 
+### 第二批（同日，工具链 `0a531be2`+`706ecec`）
+
+按语言特性分批：布尔/位运算（标量）4 题、数组/容器 4 题、字符串 1 题、map/hash 1 题、泛型/约束 1 题。TypeScript 基准 11/11 全过（`prime-arrangements` 修复参考侧 double 精度缺陷后）。
+
+| 题目 | 批次 | 用例数 | V wasm | V ovm | V jvm | V clr | TS 基准 | 根因 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `check-if-number-is-a-sum-of-powers-of-three` | 标量 | 110 | GREEN 110/110 | GREEN 110/110 | GREEN 110/110 | GREEN 110/110 | PASS | — |
+| `three-divisors` | 标量 | 144 | GREEN 144/144 | GREEN 144/144 | GREEN 144/144 | GREEN 144/144 | PASS | — |
+| `minimum-cuts-to-divide-a-circle` | 标量 | 44 | GREEN 44/44 | GREEN 44/44 | GREEN 44/44 | GREEN 44/44 | PASS | — |
+| `prime-arrangements` | 标量 | 27 | GREEN 27/27 | GREEN 27/27 | GREEN 27/27 | GREEN 27/27 | PASS | — |
+| `max-consecutive-ones` | 数组 | 97 | build blocked | build blocked | build blocked | build blocked | PASS | D12'' |
+| `monotonic-array` | 数组 | 151 | build blocked | build blocked | build blocked | build blocked | PASS | D12'' |
+| `search-insert-position` | 数组 | 119 | build blocked | build blocked | build blocked | build blocked | PASS | D12'' |
+| `largest-number-at-least-twice-of-others` | 数组 | 143 | build blocked | build blocked | build blocked | build blocked | PASS | D12''（wasm）+ D17（managed） |
+| `valid-palindrome-ii` | 字符串 | 108 | build blocked | build blocked | build blocked | build blocked | PASS | D16（wasm）+ D17（managed） |
+| `first-unique-character-in-a-string` | hash | 91 | build blocked | build blocked | build blocked | build blocked | PASS | D12''（wasm）+ D17（managed） |
+| `number-of-good-pairs` | 泛型 | 102 | build blocked | build blocked | build blocked | build blocked | PASS | D12'' |
+
+特性缺口 / 复杂度差异（逐题，TS 仅对照不掩盖）：
+
+- `prime-arrangements`（V 四 lane 全绿）：TS 末步 `(a * b) % m` 在 `a`、`b` 接近 $10^9+7$ 时乘积约 $10^{18}$ 超出 double $2^{53}$，首版 TS 得 75763862（期望 75763854）；V `i64` 直接精确。TS 末步改 `BigInt` 后对齐——双解对照首次在参考侧暴露精度缺口，V 侧无 fallback。
+- `largest-number-at-least-twice-of-others`：语料 `tests[7]`（`nums=[1]`，合法输入）期望值为生成器 Python 解包错误占位符，按参考算法修为 0（同 `confusing-number` 先例）；解法内 `v != best` 的 `!=` 使 managed 三 lane 落 D17。
+- `valid-palindrome-ii`：首个按新索引写法（`s⁅i⁆` 0 基基数直接取 `char`，不再经 `char_at`/`unwrap`）的字符串解；语法层已落地，wasm 落 D16、managed 落 D17。
+- `first-unique-character-in-a-string`：`HashMap` 计数 + `s⁅i⁆` 读取，wasm 落 D12''（HashMap `get`/`rehash`），managed 落 D17。
+- `number-of-good-pairs`：自定义 `eq_count<T>(a: T, b: T) -> i64 where T: Equal` 泛型约束 helper；构建受阻于 `⁅ ⁆`（D12''），未观察到泛型约束本身的新错误。
+- 数组 4 题（`max-consecutive-ones`、`monotonic-array`、`search-insert-position`、`largest-number-at-least-twice-of-others`）：单趟扫描/二分仅需 `⁅ ⁆` 读，仍统一受阻 D12''。
+
+**全绿累计：87 题**（81 + 本批 4 题标量全绿 + D15 修复转绿 2 题：`largest-number-after-digit-swaps-by-parity`、`divide-two-integers`）。
+
 ## `char_at` 序数 sweep（同日，1 基序数统一）
 
 按更正后的合同（`char_at` 为 **1 基序数**，`char_at(0)` 非法；`⁅ ⁆` 索引维持 0 基基数）把全库 `solution.v` 的 `char_at` 调用点统一改为 1 基：调用点 `+1`（如 `char_at(i)` → `char_at(i + 1)`），循环游标数学保持 0 基不动；`roman-to-integer` 的末位 `char_at(len - 1)` → `char_at(len)`、邻位 `char_at(i + 1)` → `char_at(i + 2)`，`zigzag-conversion` 的算术位置 `(idx + 1) as usize`；`day-of-the-year` 的自建 helper `digit_at` 在 helper 内部 `+1`，调用点字面量不动；`length-of-last-word` 的倒序游标 `i` 本就跑在 `n..1`，直接 `char_at(i)`。TypeScript 参考解未动。
@@ -573,6 +621,7 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 - **未验证：21 题**——D12' 10 题（`count-asterisks`、`day-of-the-year`、`is-subsequence`、`jewels-and-stones`、`valid-parentheses`、`valid-palindrome`、`roman-to-integer`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`string-to-integer-atoi`），D12'' 11 题（`counting-words-with-a-given-prefix`、`defanging-an-ip-address`、`longest-common-prefix`、`longest-palindromic-substring`、`longest-substring-without-repeating-characters`、`zigzag-conversion`、`number-of-steps-to-reduce-a-number-in-binary-representation-to-one`、`valid-anagram`、`ransom-note`、`reverse-vowels-of-a-string`、`to-lower-case`）。
 - 新增 D 根因：无。
 - 变化的 D 根因（错误面迁移，非修复）：D3（std 容器内 `infix ==`）、D4（HashMap 实例未声明）、D5（限定路径 turbofish）的原始错误文本在当前 dev 工具链下全部不再复现，统一迁移为 std 泛型容器内部的 `unresolved call `<computed>`` / `infix +`` / `infix ==``（`source/_.v:7:1`），表面并入 D12''；对应题组（`two-sum`、`valid-anagram`、`ransom-note`、`longest-substring-without-repeating-characters`、`contains-duplicate`、`happy-number`、`integer-to-roman`、`longest-common-prefix`、`reverse-vowels-of-a-string`、`defanging-an-ip-address`、`to-lower-case`）能力仍未通，四 lane build blocked 不变。另抽查 `intersection-of-two-arrays`（D4）、`convert-a-number-to-hexadecimal`、`fizz-buzz`（D5）本轮未复跑，保留原归类待复跑确认。
+- 后续（同日工具链 `706ecec`）：`char_at` 退役、`Utf8Text` 索引重定向码点落地后，25 个调用点已全部从 `s.char_at(x).unwrap()`（1 基序数）转为索引写法——`s⁅x - 1⁆`（0 基基数直接取 `char`，不再经 `unwrap`）。逐点映射：`char_at(i + 1)` → `⁅i⁆`，`char_at(len)` → `⁅len - 1⁆`，`char_at(1)` → `⁅0⁆`，`char_at(2)` → `⁅1⁆`，`roman-to-integer` 邻位 `char_at(i + 2)` → `⁅i + 1⁆`，`length-of-last-word` 倒序 `char_at(i)` → `⁅i - 1⁆`。全库 `solution.v` 已零 `char_at`。复跑验证（工具链 `0a531be2`+`706ecec`）：纯索引读取题 wasm 受阻 D16、ovm/jvm/clr 受阻 D17；含 builder/push/HashMap 的题 wasm 受阻 D12''。**已验证数仍为 0，25 题全部维持 build blocked，不计已修。**
 
 ## managed lane 真实执行
 

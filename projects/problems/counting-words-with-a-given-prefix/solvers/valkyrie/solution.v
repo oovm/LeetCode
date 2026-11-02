@@ -8,7 +8,7 @@ micro starts_with(word: utf8, pref: utf8) -> bool {
     }
     let mut i: usize = 0
     while i < pn {
-        if word.char_at(i + 1).unwrap() as u32 != pref.char_at(i + 1).unwrap() as u32 {
+        if word⁅i⁆ as u32 != pref⁅i⁆ as u32 {
             return false
         }
         i = i + 1

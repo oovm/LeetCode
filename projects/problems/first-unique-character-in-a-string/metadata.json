@@ -553,6 +553,7 @@
     ],
     "invoke": {
         "python": "Solution().firstUniqChar",
-        "typescript": "Solution().firstUniqChar"
+        "typescript": "Solution().firstUniqChar",
+        "valkyrie": "Solution().firstUniqChar"
     }
 }

@@ -7,8 +7,8 @@ micro is_subsequence(s: utf8, t: utf8) -> bool {
     let slen: usize = s.length()
     let tlen: usize = t.length()
     while i < slen && j < tlen {
-        let sc: char = s.char_at(i + 1).unwrap()
-        let tc: char = t.char_at(j + 1).unwrap()
+        let sc: char = s⁅i⁆
+        let tc: char = t⁅j⁆
         if (sc as u32) == (tc as u32) {
             i = i + 1
         }

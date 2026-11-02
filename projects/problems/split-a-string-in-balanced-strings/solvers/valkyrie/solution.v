@@ -7,7 +7,7 @@ micro balanced_string_split(s: utf8) -> i64 {
     let mut balance: i64 = 0
     let mut count: i64 = 0
     while i < n {
-        let code: u32 = s.char_at(i + 1).unwrap() as u32
+        let code: u32 = s⁅i⁆ as u32
         if code == 76 {
             balance = balance + 1
         } else {

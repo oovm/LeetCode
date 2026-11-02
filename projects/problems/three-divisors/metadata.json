@@ -871,6 +871,7 @@
     ],
     "invoke": {
         "python": "Solution().isThree",
-        "typescript": "Solution().isThree"
+        "typescript": "Solution().isThree",
+        "valkyrie": "Solution().isThree"
     }
 }

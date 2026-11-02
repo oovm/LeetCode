@@ -853,6 +853,7 @@
     "invoke": {
         "python": "Solution().searchInsert",
         "typescript": "Solution().searchInsert",
+        "valkyrie": "Solution().searchInsert",
         "wolframSxo": "searchInsert",
         "matlabSxo": "searchInsert"
     }

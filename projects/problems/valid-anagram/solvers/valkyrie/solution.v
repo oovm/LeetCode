@@ -11,7 +11,7 @@ micro is_anagram(s: utf8, t: utf8) -> bool {
     let mut counts: HashMap<i64, i64> = HashMap::new(0)
     let mut i: usize = 0
     while i < s.length() {
-        let ch: char = s.char_at(i + 1).unwrap()
+        let ch: char = s⁅i⁆
         let code: u32 = ch as u32
         let key: i64 = code as i64
         let mut seen: i64 = 0
@@ -23,7 +23,7 @@ micro is_anagram(s: utf8, t: utf8) -> bool {
     }
     let mut k: usize = 0
     while k < t.length() {
-        let ch: char = t.char_at(k + 1).unwrap()
+        let ch: char = t⁅k⁆
         let code: u32 = ch as u32
         let key: i64 = code as i64
         let mut left: i64 = 0

@@ -50,7 +50,7 @@
             "args": {
                 "nums": [1]
             },
-            "expected": "Error: not enough values to unpack (expected 2, got 1)"
+            "expected": 0
         },
         {
             "args": {
@@ -899,6 +899,7 @@
     ],
     "invoke": {
         "python": "Solution().dominantIndex",
-        "typescript": "Solution().dominantIndex"
+        "typescript": "Solution().dominantIndex",
+        "valkyrie": "Solution().dominantIndex"
     }
 }

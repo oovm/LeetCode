@@ -630,6 +630,7 @@
     ],
     "invoke": {
         "python": "Solution().findMaxConsecutiveOnes",
-        "typescript": "Solution().findMaxConsecutiveOnes"
+        "typescript": "Solution().findMaxConsecutiveOnes",
+        "valkyrie": "Solution().findMaxConsecutiveOnes"
     }
 }

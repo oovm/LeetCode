@@ -13,11 +13,11 @@ micro convert(s: utf8, num_rows: i64) -> utf8 {
     while r < rows {
         let mut idx: i64 = r
         while idx < n as i64 {
-            builder.append(s.char_at((idx + 1) as usize).unwrap())
+            builder.append(s⁅idx as usize⁆)
             if r > 0 && r < rows - 1 {
                 let mirror: i64 = idx + cycle - 2 * r
                 if mirror < n as i64 {
-                    builder.append(s.char_at((mirror + 1) as usize).unwrap())
+                    builder.append(s⁅mirror as usize⁆)
                 }
             }
             idx = idx + cycle

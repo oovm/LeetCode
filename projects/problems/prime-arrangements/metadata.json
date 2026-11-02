@@ -169,6 +169,7 @@
     ],
     "invoke": {
         "python": "Solution().numPrimeArrangements",
-        "typescript": "Solution().numPrimeArrangements"
+        "typescript": "Solution().numPrimeArrangements",
+        "valkyrie": "Solution().numPrimeArrangements"
     }
 }
