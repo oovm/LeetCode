@@ -2,7 +2,10 @@
     "id": "pass-the-pillow",
     "questionId": 2582,
     "difficulty": "Easy",
-    "tags": ["Math", "Simulation"],
+    "tags": [
+        "Math",
+        "Simulation"
+    ],
     "tests": [
         {
             "args": {
@@ -665,6 +668,7 @@
     ],
     "invoke": {
         "python": "Solution().passThePillow",
-        "typescript": "Solution().passThePillow"
+        "typescript": "Solution().passThePillow",
+        "valkyrie": "passThePillow"
     }
 }

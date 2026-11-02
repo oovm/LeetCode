@@ -2,7 +2,9 @@
     "id": "number-of-bit-changes-to-make-two-integers-equal",
     "questionId": 3226,
     "difficulty": "Easy",
-    "tags": ["Bit Manipulation"],
+    "tags": [
+        "Bit Manipulation"
+    ],
     "tests": [
         {
             "args": {
@@ -644,6 +646,7 @@
     ],
     "invoke": {
         "python": "Solution().minChanges",
-        "typescript": "Solution().minChanges"
+        "typescript": "Solution().minChanges",
+        "valkyrie": "minChanges"
     }
 }

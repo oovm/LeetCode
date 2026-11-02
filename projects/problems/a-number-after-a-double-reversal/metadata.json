@@ -403,6 +403,7 @@
     ],
     "invoke": {
         "python": "Solution().isSameAfterReversals",
-        "typescript": "Solution().isSameAfterReversals"
+        "typescript": "Solution().isSameAfterReversals",
+        "valkyrie": "isSameAfterReversals"
     }
 }

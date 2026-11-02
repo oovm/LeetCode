@@ -2,7 +2,9 @@
     "id": "minimum-flips-to-make-a-or-b-equal-to-c",
     "questionId": 1318,
     "difficulty": "Medium",
-    "tags": ["Bit Manipulation"],
+    "tags": [
+        "Bit Manipulation"
+    ],
     "tests": [
         {
             "args": {
@@ -743,6 +745,7 @@
     ],
     "invoke": {
         "python": "Solution().minFlips",
-        "typescript": "Solution().minFlips"
+        "typescript": "Solution().minFlips",
+        "valkyrie": "minFlips"
     }
 }

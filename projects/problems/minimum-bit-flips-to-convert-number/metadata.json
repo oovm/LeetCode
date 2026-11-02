@@ -2,7 +2,9 @@
     "id": "minimum-bit-flips-to-convert-number",
     "questionId": 2220,
     "difficulty": "Easy",
-    "tags": ["Bit Manipulation"],
+    "tags": [
+        "Bit Manipulation"
+    ],
     "tests": [
         {
             "args": {
@@ -602,6 +604,7 @@
     ],
     "invoke": {
         "python": "Solution().minBitFlips",
-        "typescript": "Solution().minBitFlips"
+        "typescript": "Solution().minBitFlips",
+        "valkyrie": "minBitFlips"
     }
 }

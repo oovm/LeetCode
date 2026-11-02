@@ -2,7 +2,11 @@
     "id": "nim-game",
     "questionId": 292,
     "difficulty": "Easy",
-    "tags": ["Brainteaser", "Math", "Game Theory"],
+    "tags": [
+        "Brainteaser",
+        "Math",
+        "Game Theory"
+    ],
     "tests": [
         {
             "args": {
@@ -691,6 +695,7 @@
     ],
     "invoke": {
         "python": "Solution().canWinNim",
-        "typescript": "Solution().canWinNim"
+        "typescript": "Solution().canWinNim",
+        "valkyrie": "canWinNim"
     }
 }

@@ -2,7 +2,10 @@
     "id": "2-keys-keyboard",
     "questionId": 650,
     "difficulty": "Medium",
-    "tags": ["Math", "Dynamic Programming"],
+    "tags": [
+        "Math",
+        "Dynamic Programming"
+    ],
     "tests": [
         {
             "args": {
@@ -397,6 +400,7 @@
     ],
     "invoke": {
         "python": "Solution().minSteps",
-        "typescript": "Solution().minSteps"
+        "typescript": "Solution().minSteps",
+        "valkyrie": "minSteps"
     }
 }

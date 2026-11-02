@@ -2,7 +2,9 @@
     "id": "find-the-key-of-the-numbers",
     "questionId": 3270,
     "difficulty": "Easy",
-    "tags": ["Math"],
+    "tags": [
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -775,6 +777,7 @@
     ],
     "invoke": {
         "python": "Solution().generateKey",
-        "typescript": "Solution().generateKey"
+        "typescript": "Solution().generateKey",
+        "valkyrie": "generateKey"
     }
 }

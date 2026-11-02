@@ -2,7 +2,9 @@
     "id": "number-of-days-in-a-month",
     "questionId": 1118,
     "difficulty": "Easy",
-    "tags": ["Math"],
+    "tags": [
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -238,6 +240,7 @@
     ],
     "invoke": {
         "python": "Solution().numberOfDays",
-        "typescript": "Solution().numberOfDays"
+        "typescript": "Solution().numberOfDays",
+        "valkyrie": "numberOfDays"
     }
 }

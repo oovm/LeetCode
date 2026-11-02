@@ -2,7 +2,10 @@
     "id": "water-bottles",
     "questionId": 1518,
     "difficulty": "Easy",
-    "tags": ["Math", "Simulation"],
+    "tags": [
+        "Math",
+        "Simulation"
+    ],
     "tests": [
         {
             "args": {
@@ -518,6 +521,7 @@
     ],
     "invoke": {
         "python": "Solution().numWaterBottles",
-        "typescript": "Solution().numWaterBottles"
+        "typescript": "Solution().numWaterBottles",
+        "valkyrie": "numWaterBottles"
     }
 }

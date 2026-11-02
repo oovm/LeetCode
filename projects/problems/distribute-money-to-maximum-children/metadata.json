@@ -2,7 +2,10 @@
     "id": "distribute-money-to-maximum-children",
     "questionId": 2591,
     "difficulty": "Easy",
-    "tags": ["Greedy", "Math"],
+    "tags": [
+        "Greedy",
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -336,6 +339,7 @@
     ],
     "invoke": {
         "python": "Solution().distMoney",
-        "typescript": "Solution().distMoney"
+        "typescript": "Solution().distMoney",
+        "valkyrie": "distMoney"
     }
 }

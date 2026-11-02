@@ -2,7 +2,10 @@
     "id": "stone-removal-game",
     "questionId": 3360,
     "difficulty": "Easy",
-    "tags": ["Math", "Simulation"],
+    "tags": [
+        "Math",
+        "Simulation"
+    ],
     "tests": [
         {
             "args": {
@@ -181,6 +184,7 @@
     ],
     "invoke": {
         "python": "Solution().canAliceWin",
-        "typescript": "Solution().canAliceWin"
+        "typescript": "Solution().canAliceWin",
+        "valkyrie": "canAliceWin"
     }
 }

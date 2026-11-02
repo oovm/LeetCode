@@ -331,6 +331,7 @@
     ],
     "invoke": {
         "python": "Solution().accountBalanceAfterPurchase",
-        "typescript": "Solution().accountBalanceAfterPurchase"
+        "typescript": "Solution().accountBalanceAfterPurchase",
+        "valkyrie": "accountBalanceAfterPurchase"
     }
 }

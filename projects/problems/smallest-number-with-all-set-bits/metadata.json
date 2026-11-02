@@ -2,7 +2,10 @@
     "id": "smallest-number-with-all-set-bits",
     "questionId": 3370,
     "difficulty": "Easy",
-    "tags": ["Bit Manipulation", "Math"],
+    "tags": [
+        "Bit Manipulation",
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -343,6 +346,7 @@
     ],
     "invoke": {
         "python": "Solution().smallestNumber",
-        "typescript": "Solution().smallestNumber"
+        "typescript": "Solution().smallestNumber",
+        "valkyrie": "smallestNumber"
     }
 }

@@ -224,6 +224,7 @@
     ],
     "invoke": {
         "python": "Solution().findDelayedArrivalTime",
-        "typescript": "Solution().findDelayedArrivalTime"
+        "typescript": "Solution().findDelayedArrivalTime",
+        "valkyrie": "findDelayedArrivalTime"
     }
 }

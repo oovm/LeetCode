@@ -2,7 +2,10 @@
     "id": "k-items-with-the-maximum-sum",
     "questionId": 2600,
     "difficulty": "Easy",
-    "tags": ["Greedy", "Math"],
+    "tags": [
+        "Greedy",
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -952,6 +955,7 @@
     ],
     "invoke": {
         "python": "Solution().kItemsWithMaximumSum",
-        "typescript": "Solution().kItemsWithMaximumSum"
+        "typescript": "Solution().kItemsWithMaximumSum",
+        "valkyrie": "kItemsWithMaximumSum"
     }
 }
