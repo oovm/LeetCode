@@ -334,6 +334,15 @@ micro first_len(words: ArrayList<utf8>) -> i64 { ... words⁅0⁆.unwrap().lengt
 | `counting-words-with-a-given-prefix` | `Error: tests[0]: expected 4, got 0`（元素为空致 `starts_with` 全 false） |
 
 - 修复线：wasm ABI 字符串数组元素（`ArrayList<utf8>` 元素）编组。修复后 2 题可复跑。
+- **状态：已修（`d5a80074`，回归测试 `74034ca6`）**。元素 schema 只取声明身份的唯一 `generic_arg`，`utf8` 元素经 `hostIntern` / `hostResolve` 编组，不再按 i32 宽度直转。
+- 端到端证据（原 wasm 不变，仅替换 glue 模板，`countWords(['ab','cde'])` 均为 2）：
+
+| 调用 | 修复前 glue | 修复后 glue |
+| --- | --- | --- |
+| `firstLen(['ab','cde'])` | `0`（空字符串句柄） | `2` |
+| `firstLen([])` | `-1` | `-1` |
+
+- 两题矩阵复跑仍被外部阻塞：`valkyrie.v` 的 std 工作树正在改（`projects/std/source/text/Utf8Text.v`、`ArrayList.v` dirty），std 自身即报 `unresolved call <computed> in char_width`，矩阵在编译 std 阶段就失败；待 std 稳定后复跑。
 
 ### D8. ovm 后端 fixed-array 布局合同缺失并 panic（进程终止）
 
@@ -353,6 +362,8 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 - 关键机制：含 `Option`（`unwrap`/typed sum）的题目先在语义层被 D9 挡住；`counting-bits` 不用 `Option`，越过语义门后在 ovm 后端触发此 panic。panic 杀掉整个矩阵进程，导致该题无 JSON 证据行（wasm 正确性已手动 `legion build` + 调用验证）。
 - 受影响题目：`counting-bits`（ovm panic；jvm/clr 为 `[i64]` 载体缺失 D10）。
 - 修复线：ovm 后端 fixed-array 布局合同。修复后 `counting-bits` 矩阵可完整跑通并补回 JSON 证据。
+- **状态：已修（`da699be0`）**。`ArrayFromElements` 不再依赖前端未冻结的 `layout_id`，按元素个数铸造后端私有 `OdinLayout`；布局/字段身份缺失一律改结构化 `Err`，进程不再 panic，矩阵已产出 JSON。回归 `lowering_ovm_fixed_array` 2 例绿。
+- 残留（另一根因，未在本条处理）：`counting-bits` 的 ovm lane 现报 `Nyar 入口 std::infix + 必须对应唯一明确函数导出`；jvm/clr 报 `最小 lowering 尚不支持指令 Cast`。
 
 ### D9. ovm typed sum 表示计划缺失
 
@@ -360,6 +371,8 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 - 原文：`Nyar backend requires a typed sum representation plan; semantic sum operation has no target contract`。
 - 受影响题目（ovm lane build blocked；wasm 均 GREEN）：`valid-parentheses`、`add-two-numbers`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`concatenation-of-array`、`move-zeroes`、`missing-number`、`squares-of-a-sorted-array`、`decode-xored-array`、`count-asterisks`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`detect-capital`、`day-of-the-year`、`number-of-steps-to-reduce-a-number-in-binary-representation-to-one`、`jewels-and-stones`、`final-value-of-variable-after-performing-operations`、`counting-words-with-a-given-prefix`。
 - 修复线：ovm typed sum（`Option`）表示计划。修复后 19 题 ovm lane 可复跑。
+- **状态：合同已补（`5709478e`，回归测试 `8a4f83cd`）**。`SumNew` / `SumPayloadGet` / `SumVariantIs` 只消费计划冻结的 `SumRepresentation`：variant tag 与 payload 类型按 nominal 身份查表，物理载体固定为后端私有 `[i32 tag, payload]` 两槽对象，标量载荷直接入槽不装箱；表示缺失、tag 宽度越界、payload 合同不一致、对无 payload variant 取值均为结构化 `Err`，无按短名 / `Option` / `Result` 特判。`lowering_ovm_typed_sum` 8 例绿。
+- 19 题矩阵复跑待 std 稳定后进行（当前 std 编译期失败，见 D7）。
 
 ### D10. jvm/clr 定长数组载体合同缺失（`[i64]` / `[u8]`）
 
