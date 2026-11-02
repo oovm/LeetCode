@@ -12,6 +12,7 @@
 
 import { spawnSync } from 'node:child_process';
 
+import { coerceIntegerArgument, compareIntegerResult, I64_MAX, I64_MIN } from '../../domain/integer-literal.ts';
 import { emptySolverCaseStats, extractTestFailureIndex, type SolverCaseStats } from '../shared/solver-case-stats.ts';
 import { loadMetadata, requireValkyrieInvokeEntry, resolveWasmExportSymbol, type TestCase } from '../valkyrie-node/ref.ts';
 import { findManagedAbiEntry, ManagedAbiError, type ManagedAbiContract, type ManagedAbiEntry, type ManagedContrastLane } from './managed-abi.ts';
@@ -41,12 +42,15 @@ function formatCommand(binary: string, argumentsList: string[]): string {
 function formatArgument(value: unknown, parameterType: string, path: string): string {
     switch (parameterType) {
         case 'i64':
-        case 'i32':
-            if (typeof value !== 'number' || !Number.isInteger(value)) {
+        case 'i32': {
+            // 数值（≤2^53 精确）与十进制字符串（新表示，精确）统一按十进制规整；
+            // `Number.prototype.toString()` 对数值取最短可往返文本，字符串按原文精确解析。
+            const text = coerceIntegerArgument(value, I64_MIN, I64_MAX, path);
+            if (text === null) {
                 throw new ManagedAbiError(`${path} 需要整数实参，实际 ${JSON.stringify(value)}`);
             }
-            // `Number.prototype.toString()` 返回最短可往返十进制，保留 2^53 以上的原始整数文本。
-            return value.toString();
+            return text;
+        }
         case 'f64':
             if (typeof value !== 'number') {
                 throw new ManagedAbiError(`${path} 需要数值实参，实际 ${JSON.stringify(value)}`);
@@ -86,7 +90,8 @@ function parseManagedReturnValue(stdout: string, returnType: string): unknown {
             if (!/^-?\d+$/.test(lastLine)) {
                 throw new ManagedAbiError(`managed 整数返回值无法解析: \`${lastLine}\``);
             }
-            return Number(lastLine);
+            // 保留精确十进制文本，不经 `Number` 损失；比较时按 `compareIntegerResult` 规整。
+            return lastLine;
         case 'f64':
             if (Number.isNaN(Number(lastLine))) {
                 throw new ManagedAbiError(`managed 浮点返回值无法解析: \`${lastLine}\``);
@@ -180,7 +185,12 @@ export function runManagedReference(
             }
             const actual = parseManagedReturnValue(launched.stdout, entry.return_type);
             const expected = testCase.expected ?? null;
-            if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+            // 整数返回按十进制文本比较（expected 可能是字符串新表示或数值）；其余按结构比较。
+            const isIntegerReturn = entry.return_type === 'i64' || entry.return_type === 'i32';
+            const matches = isIntegerReturn
+                ? compareIntegerResult(actual, expected) ?? JSON.stringify(actual) === JSON.stringify(expected)
+                : JSON.stringify(actual) === JSON.stringify(expected);
+            if (!matches) {
                 throw new ManagedAbiError(
                     `tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}（${launched.command}）`,
                 );

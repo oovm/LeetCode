@@ -9,6 +9,33 @@ import time
 from pathlib import Path
 from typing import Any, Callable
 
+# 生成器侧只把越过 Number.MAX_SAFE_INTEGER 的整数写成十进制字符串；
+# 「超安全整数的字符串整数」即被转换的那类数值，按十进制还原为 int（任意精度，无损失）。
+# 形如 "11101110111" 的真实字符串参数（值未超安全整数）原样保留。
+_MAX_SAFE = 9007199254740991
+_INT_LITERAL = re.compile(r"^-?\d+$")
+
+
+def _is_unsafe_int_string(value: Any) -> bool:
+    return isinstance(value, str) and bool(_INT_LITERAL.match(value)) and abs(int(value)) > _MAX_SAFE
+
+
+def _coerce_int_args(value: Any) -> Any:
+    if _is_unsafe_int_string(value):
+        return int(value)
+    if isinstance(value, list):
+        return [_coerce_int_args(item) for item in value]
+    return value
+
+
+def _compare(actual: Any, expected: Any) -> bool:
+    # expected 为超安全整数字符串、actual 为 int（非 bool）时按十进制还原比较。
+    if _is_unsafe_int_string(expected) and isinstance(actual, int) and not isinstance(actual, bool):
+        return actual == int(expected)
+    if isinstance(expected, list) and isinstance(actual, list):
+        return len(actual) == len(expected) and all(_compare(a, e) for a, e in zip(actual, expected))
+    return actual == expected
+
 
 def slug_to_python_project(slug: str) -> str:
     name = slug.replace("-", "_")
@@ -73,8 +100,9 @@ def run_check(candidate: Callable[..., Any], tests: list[dict[str, Any]]) -> Non
         if not isinstance(args, dict):
             raise ValueError(f"tests[{index}].args 必须是 object")
         expected = case["expected"]
+        coerced_args = {key: _coerce_int_args(value) for key, value in args.items()}
         try:
-            actual = candidate(**args)
+            actual = candidate(**coerced_args)
         except Exception as exc:  # noqa: BLE001
             if isinstance(expected, str) and expected.startswith("Error:"):
                 actual_err = f"Error: {exc}"
@@ -88,7 +116,7 @@ def run_check(candidate: Callable[..., Any], tests: list[dict[str, Any]]) -> Non
             raise AssertionError(
                 f"tests[{index}]: expected {expected!r}, no exception raised, args={args!r}",
             )
-        if actual != expected:
+        if not _compare(actual, expected):
             raise AssertionError(f"tests[{index}]: expected {expected!r}, got {actual!r}, args={args!r}")
 
 

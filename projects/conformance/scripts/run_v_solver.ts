@@ -14,6 +14,7 @@ import {
     type LibraryInvokeSchema,
     loadLibraryInvokeSchema,
     orderArgsBySchema,
+    type WasmAbiType,
 } from '../src/adapters/valkyrie-node/abi.ts';
 import {
     ensureVBuild,
@@ -26,6 +27,7 @@ import {
 } from '../src/adapters/valkyrie-node/ref.ts';
 import { valkyrieProjectDir } from '../src/catalog/index.ts';
 import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
+import { coerceIntegerArgument, I64_MAX, I64_MIN, integerResultText } from '../src/domain/integer-literal.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
 
 type InvokeHost = {
@@ -66,15 +68,16 @@ function lookupAbiExport(schema: LibraryInvokeSchema, entry: string): AbiLookup 
  * 而 glue 的 `BigInt(number)` 取的是丢失后的二进制值。`Number.prototype.toString()`
  * 返回最短且可往返的十进制文本，`BigInt("...")` 能按原始文本精确恢复，
  * 从而让 wasm lane 与 `ovm`/managed lane 看到同一个整数。
+ *
+ * 新表示：超出安全整数的整数在 metadata 里直接写成十进制字符串，
+ * `coerceIntegerArgument` 按十进制解析校验后把精确文本原样交给 glue，
+ * 越出 `[i64::MIN, i64::MAX]` 时抛结构化错误，绝不静默截断。
  */
 function preserveI64Precision(param: AbiParameter, value: unknown): unknown {
     if (param.type.kind !== 'I64') {
         return value;
     }
-    if (typeof value === 'number' || typeof value === 'bigint') {
-        return value.toString();
-    }
-    return value;
+    return coerceIntegerArgument(value, I64_MIN, I64_MAX, `args.${param.name}`) ?? value;
 }
 
 /**
@@ -105,6 +108,23 @@ async function runCandidate(
         return raw instanceof Promise ? await raw : raw;
     }
     throw new Error('node glue 未暴露 invokeLeetCode / callExport，无法 invoke wasm 产物');
+}
+
+/**
+ * 按 ABI 返回类型把整数结果（含数组元素）规整为精确十进制文本。
+ *
+ * expected 在 metadata 里可能是十进制字符串（新表示，精确）或数值（≤2^53 精确）；
+ * actual 可能是数值或 `bigint`。类型为 `I64`/`I32` 时统一规整为十进制文本再比较，
+ * 数组/定长数组递归处理，其余类型（`Utf8`、`Bool` 等）保持原值按结构比较。
+ */
+function normalizeResultByAbiType(value: unknown, type: WasmAbiType): unknown {
+    if (type.kind === 'I64' || type.kind === 'I32') {
+        return integerResultText(value) ?? value;
+    }
+    if ((type.kind === 'Array' || type.kind === 'FixedArray') && Array.isArray(value)) {
+        return value.map((item) => normalizeResultByAbiType(item, type.element));
+    }
+    return value;
 }
 
 function emitStats(stats: SolverCaseStats): void {
@@ -183,8 +203,13 @@ async function main(): Promise<number> {
                     void runCandidate(host, entry, case_.args, needsAbi ? abi : null);
                 });
             } else {
-                const actual = normalizeTsTestResult(await runCandidate(host, entry, case_.args, needsAbi ? abi : null));
-                const expected = normalizeTsTestResult(case_.expected);
+                const actualRaw = normalizeTsTestResult(await runCandidate(host, entry, case_.args, needsAbi ? abi : null));
+                const expectedRaw = normalizeTsTestResult(case_.expected);
+                // 按 ABI 返回类型把整数结果规整为精确十进制文本再比较；
+                // 无 ABI（invokeLeetCode 路径）时退回结构比较。
+                const returns = abi?.lookup.exportSchema.returns;
+                const actual = returns ? normalizeResultByAbiType(actualRaw, returns) : actualRaw;
+                const expected = returns ? normalizeResultByAbiType(expectedRaw, returns) : expectedRaw;
                 if (JSON.stringify(actual) !== JSON.stringify(expected)) {
                     throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
                 }

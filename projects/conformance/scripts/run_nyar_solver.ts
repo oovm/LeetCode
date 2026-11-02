@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 /** 对旧 OVM lane 产物运行 `metadata.tests`（通过 @nyar/valkyrie N-API 调用 `.nyar` 导出）。 */
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readFileSync, realpathSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { arch, platform } from 'node:os';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { isArtifactCacheFresh, legionInvokeOvmExport } from '@nyar/valkyrie';
 
 import { readNyarExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
+import { compareIntegerResult, isUnsafeIntegerLiteralString } from '../src/domain/integer-literal.ts';
 import {
     extractTestFailureIndex,
     formatSolverResultLine,
@@ -25,8 +29,82 @@ import { resolveLaneTargetPlan } from '../src/adapters/shared/compile-target-pla
 import { NYAR_BUILD_TARGET } from '../src/adapters/valkyrie-nyar/valkyrie.ts';
 import { resolveWasmExportSymbol } from '../src/adapters/valkyrie-node/ref.ts';
 
+type OvmNativeAddon = {
+    legionInvokeOvmExport: (module: string, entry: string, argsJson: string) => string;
+};
+
+/**
+ * 直接加载平台 `valkyrie-napi` 绑定，绕过包装层的 `JSON.stringify(args)`。
+ *
+ * ovm 的 `json_bridge.rs` 只把 JSON **数字**按 `as_i64` 精确解析，字符串会变成
+ * `Value::String` 触发 type mismatch。因此超安全整数的十进制字符串必须以**裸数字文本**
+ * 注入 argsJson，serde 才能按 `as_i64` 精确还原；这是 ovm 侧接收字符串整数的唯一通道。
+ */
+function loadOvmNative(): OvmNativeAddon | null {
+    const require = createRequire(import.meta.url);
+    const override = process.env.VALKYRIE_NATIVE;
+    if (override && override.trim().length > 0) {
+        return require(override) as OvmNativeAddon;
+    }
+    const os = platform();
+    const cpu = arch();
+    const triple =
+        os === 'win32' && cpu === 'x64'
+            ? 'win32-x64-msvc'
+            : os === 'linux' && cpu === 'x64'
+              ? 'linux-x64-gnu'
+              : os === 'darwin'
+                ? `darwin-${cpu}`
+                : `${os}-${cpu}`;
+    const short = triple.startsWith('win32-') ? 'win32-x64' : triple.startsWith('linux-') ? 'linux-x64' : triple;
+    const binary = `valkyrie.${triple}.node`;
+    // `@nyar/valkyrie` 是 workspace Junction，沿 realpath 找真实包目录，再按候选路径找平台 .node
+    const scriptDir = dirname(fileURLToPath(import.meta.url));
+    let packageRoot: string | null = null;
+    try {
+        packageRoot = realpathSync(join(scriptDir, '..', 'node_modules', '@nyar', 'valkyrie'));
+    } catch {
+        return null;
+    }
+    const candidates = [
+        join(packageRoot, 'platforms', `valkyrie-${short}`, 'lib', binary),
+        join(packageRoot, 'platforms', `valkyrie-${short}`, binary),
+        join(packageRoot, '..', '..', 'node_modules', `@nyar/valkyrie-${short}`, 'lib', binary),
+        join(packageRoot, '..', '..', 'platforms', `valkyrie-${short}`, 'lib', binary),
+        join(packageRoot, '..', '..', 'platforms', `valkyrie-${short}`, binary),
+    ];
+    for (const candidate of candidates) {
+        if (existsSync(candidate)) {
+            return require(candidate) as OvmNativeAddon;
+        }
+    }
+    return null;
+}
+
+/** 把单个实参序列化为 argsJson 片段；超安全整数的字符串整数注入为裸数字文本。 */
+function serializeOvmArg(value: unknown): string {
+    if (isUnsafeIntegerLiteralString(value)) {
+        return value;
+    }
+    return JSON.stringify(value);
+}
+
+let cachedNative: OvmNativeAddon | null | undefined;
+
 function runNyarExport(nyarPath: string, exportName: string, args: Record<string, unknown>): unknown {
-    return legionInvokeOvmExport(nyarPath, exportName, args);
+    const hasUnsafeInteger = Object.values(args).some((value) => isUnsafeIntegerLiteralString(value));
+    if (!hasUnsafeInteger) {
+        return legionInvokeOvmExport(nyarPath, exportName, args);
+    }
+    // 含超安全整数：绕过包装层，直接把裸数字文本注入 argsJson，serde 按 as_i64 精确还原。
+    if (cachedNative === undefined) {
+        cachedNative = loadOvmNative();
+    }
+    if (!cachedNative) {
+        throw new Error('ovm 实参含超安全整数的十进制字符串，但平台 valkyrie-napi 绑定不可用，无法精确注入');
+    }
+    const argsJson = `[${Object.values(args).map(serializeOvmArg).join(',')}]`;
+    return JSON.parse(cachedNative.legionInvokeOvmExport(nyarPath, exportName, argsJson)) as unknown;
 }
 
 function emitStats(stats: SolverCaseStats): void {
@@ -95,7 +173,13 @@ async function main(): Promise<number> {
             } else {
                 const actual = normalizeTsTestResult(runNyarExport(artifacts.nyarPath, exportName, case_.args));
                 const expected = normalizeTsTestResult(case_.expected);
-                if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                // 超安全整数的十进制字符串 expected 与数值 actual 按十进制文本比较。
+                if (isUnsafeIntegerLiteralString(expected) && (typeof actual === 'number' || typeof actual === 'bigint')) {
+                    const cmp = compareIntegerResult(actual, expected);
+                    if (cmp !== true) {
+                        throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+                    }
+                } else if (JSON.stringify(actual) !== JSON.stringify(expected)) {
                     throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
                 }
             }
