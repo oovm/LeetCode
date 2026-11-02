@@ -1116,6 +1116,7 @@
     ],
     "invoke": {
         "python": "Solution().floodFill",
-        "typescript": "Solution().floodFill"
+        "typescript": "Solution().floodFill",
+        "valkyrie": "floodFill"
     }
 }

@@ -75,15 +75,13 @@ def is_same_tree(p, q):
     else:
         return is_same_tree(p.left, q.left) and is_same_tree(p.right, q.right)
 
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
 class Solution:
-    def maxDepth(self, root: TreeNode) -> int:
-        if root is None:
-            return 0
-        l, r = self.maxDepth(root.left), self.maxDepth(root.right)
-        return 1 + max(l, r)
+    def maxDepth(self, root) -> int:
+        # metadata 的 root 是层序数组序列化：索引 i 的左右孩子为 2i+1 与 2i+2，
+        # 越界或 None 表示缺子节点。递归语义与 TreeNode 形态完全一致。
+        def depth(i: int) -> int:
+            if i >= len(root) or root[i] is None:
+                return 0
+            return 1 + max(depth(2 * i + 1), depth(2 * i + 2))
+
+        return depth(0)

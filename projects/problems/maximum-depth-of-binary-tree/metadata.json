@@ -105,6 +105,7 @@
     ],
     "invoke": {
         "python": "Solution().maxDepth",
-        "typescript": "Solution().maxDepth"
+        "typescript": "Solution().maxDepth",
+        "valkyrie": "maxDepth"
     }
 }

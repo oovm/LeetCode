@@ -833,6 +833,7 @@
     ],
     "invoke": {
         "python": "Solution().nextGreaterElement",
-        "typescript": "Solution().nextGreaterElement"
+        "typescript": "Solution().nextGreaterElement",
+        "valkyrie": "nextGreaterElement"
     }
 }
