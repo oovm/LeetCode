@@ -2,7 +2,7 @@
 
 > 口径：本报告只记录外部可观测的编译/运行现象（错误文本、通道、用例计数），不含内部缺陷编号。
 
-- 生成时间：2026-11-03（历程：全绿累计 53 → 56 → 59 → 72 → 80 → 81 → 87 → 90 → 91 → 95）
+- 生成时间：2026-11-03（历程：全绿累计 53 → 56 → 59 → 72 → 80 → 81 → 87 → 90 → 91 → 95 → 96）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
 - 工具链来源：本地 dev 工具链快照（经独立 worktree 构建的 napi 产物，`VALKYRIE_NATIVE` 指向该产物，`legions.von` 指向工作树 std）。结果为工作树快照，不是发布依赖复验。
@@ -260,12 +260,34 @@
 
 **全绿累计：95 题**（91 + `poor-pigs`、`minimize-xor`、`split-with-minimum-sum`、`find-the-k-beauty-of-a-number`）。
 
+### 第六批（8 题，V + TypeScript + Python 三参考）
+
+| 题目 | 专题 | 用例数 | V wasm | V ovm | V jvm | V clr | 三参考 | 现象 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `sum-of-number-and-its-reverse` | 数学/数位 | 180 | GREEN 180/180 | GREEN 180/180 | GREEN 180/180 | GREEN 180/180 | TS+PY 对齐 | — |
+| `two-sum-ii-input-array-is-sorted` | 双指针 | 89 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻（报 `infix -`，诊断归因同 `abs_i64` 族） |
+| `next-greater-element-i` | hashing/栈 | 118 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻（wasm）+ std `pop` 内部 `infix ==`（managed） |
+| `baseball-game` | 栈队列 | 83 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻（wasm）+ managed `infix !=` 受阻 |
+| `maximum-depth-of-binary-tree` | 树遍历 | 15 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | wasm/ovm `Raise` 计划受阻 + jvm/clr 缺 `__u64_add`（见问题清单） |
+| `flood-fill` | 图搜索 | 88 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻（wasm）+ managed `infix !=` 受阻 |
+| `subsets` | 位运算组合 | 93 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻（wasm）+ std `pop` 内部 `infix ==`（managed） |
+| `sort-characters-by-frequency` | 有序容器/字典序 | 54 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻（四通道 `<computed>`） |
+
+- `sum-of-number-and-its-reverse`（V 四 lane 全绿）：反转数用算术循环重建，与参考解同为 $O(num)$ 扫描。语料 21 例越官方上限（$num \le 10^5$，原含 $\sim 9.9\times10^{16}$ 的超安全整数字符串）已按约束取模派生并重算 `expected`。
+- `subsets`：输出顺序为参考实现 DFS「先跳过后取」的固定枚举序，三端按同一顺序产出。语料 `tests[63]`、`tests[70]` 两处 `"Execution timed out"` 占位符已按参考解回填（各 2048 子集）。全局扫描另有 94 题共 802 处同类占位符，已另行登记待回填。
+- `maximum-depth-of-binary-tree`：metadata 以层序数组序列化树，Python 参考解改写为数组下标递归（与 TreeNode 递归同语义）后 harness 恢复可跑；V/TS 同为数组形态。该题是首个 HIR 全量闭合的 `ArrayList<i64>` 参数函数，暴露 wasm/ovm 后端 `Raise` 计划缺口与 jvm/clr 的 `__u64_add` provider 缺口（见「编译器/标准库问题清单」）。
+- `sort-characters-by-frequency`：参考实现依赖稳定排序（同频次保持首见顺序），V 无稳定排序原语，用按首见顺序的稳定选择排序模拟。
+- `two-sum-ii-input-array-is-sorted`：无解用例按约定返回 `null`（TS 与 Python 一致返回 `null`/`None`）；`baseball-game` 空栈 `C`/`+`/`D` 的 `Error:` 期望由 TS 以相同消息文本抛错对齐。
+
+**全绿累计：96 题**（95 + `sum-of-number-and-its-reverse`）。
+
 ## 编译器/标准库问题清单
 
 | 现象 | 最小复现 | 涉及题目 |
 | --- | --- | --- |
 | 导出 micro 的多词形参以 snake_case 书写时，wasm 通道运行期报 `AbiSchemaError: args.<snake> 缺少参数`；ovm/jvm/clr 未报。形参按字面量进入 ABI schema，不经 case 变换 | `micro poor_pigs(buckets: i64, minutes_to_die: i64, minutes_to_test: i64)` + args 键 `minutesToDie` → `args.minutes_to_die 缺少参数`；改为 camelCase 后四 lane 全绿 | `poor-pigs`（已按约定修正） |
-| `⁅ ⁆` 参数子树解析失败时，诊断名归到最外层具名调用而非 `<computed>` | `abs_i64(arr⁅i⁆.unwrap() - arr⁅j⁆.unwrap())` 报 `unresolved call `abs_i64``；`result.push(nums⁅i⁆.unwrap())` 报 `unresolved call `<computed>`` | `count-good-triplets`（现象 A 的诊断形态） |
+| `⁅ ⁆` 参数子树解析失败时，诊断名归到最外层具名调用而非 `<computed>` | `abs_i64(arr⁅i⁆.unwrap() - arr⁅j⁆.unwrap())` 报 `unresolved call `abs_i64``；`result.push(nums⁅i⁆.unwrap())` 报 `unresolved call `<computed>``；同族：`target - numbers⁅i⁆.unwrap()` 报 `unresolved call `infix -``（`two-sum-ii-input-array-is-sorted`） | `count-good-triplets`、`two-sum-ii-input-array-is-sorted`（现象 A 的诊断形态） |
+| HIR 全量闭合的 `ArrayList<i64>` 参数递归函数在 wasm/ovm 后端计划层报 `Raise` 无目标合同；jvm/clr 报缺 `__u64_add` host provider | `micro depth_of(root: ArrayList<i64>, i: usize) -> i64 { if i >= root.length() { return 0 } ... }`（函数体仅含 `length()`、递归与 usize 算术）；wasm/ovm：`canonical effect terminator 尚无目标合同: PerformEffect { effect: Raise, ... }`；jvm/clr：`host contract `std::primitive::__u64_add` ... no host provider is bound` | `maximum-depth-of-binary-tree` |
 
 ## 按现象归类的阻塞清单
 
