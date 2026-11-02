@@ -2,7 +2,9 @@
     "id": "length-of-last-word",
     "questionId": 58,
     "difficulty": "Easy",
-    "tags": ["String"],
+    "tags": [
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -295,6 +297,7 @@
     ],
     "invoke": {
         "python": "Solution().lengthOfLastWord",
-        "typescript": "Solution().lengthOfLastWord"
+        "typescript": "Solution().lengthOfLastWord",
+        "valkyrie": "Solution().lengthOfLastWord"
     }
 }

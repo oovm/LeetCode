@@ -1,10 +1,10 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56；同日语料精度修根，全绿累计 59；同日四 lane 覆盖重新拉起，全绿累计 72；同日按本地 dev 工具链复跑，全绿累计 73）
+- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56；同日语料精度修根，全绿累计 59；同日四 lane 覆盖重新拉起，全绿累计 72；同日按本地 dev 工具链复跑，全绿累计 80；同日双解对照扩题，全绿累计 81）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
 - 工具链来源（本轮起）：`../nyar-vm.rs` 本地 dev `7d4df3c2`（含 char、copy-discipline、数组 pattern、解析多错、oak `1f766c07`），`../valkyrie.v` 本地 dev `e25b3bb`（`std::operator`、`Ordinal`、`[constructor]` 标注）。两者经独立 `git worktree` 检出（不动既有工作树），`valkyrie-napi` 经 `RUSTUP_TOOLCHAIN=nightly` 重建 `.node`；leetcode 经 `VALKYRIE_NATIVE` 指向该 `.node`、`legions.von` 指向 worktree std。结果是工作树快照，不是发布依赖复验。
-- **工具链当前状态**：纯 `i64` 标量题四 lane 全绿（D13 `position` 撞名已随 oak 解析修复而消除，`pass-the-pillow` 复绿）；字符串题（`char_at`）与数组题（`push`/`⁅ ⁆`/`unwrap`）仍 build blocked，详见「按根因聚合的阻塞清单」D12'、D12''、D14。
+- **工具链当前状态**：纯 `i64` 标量题四 lane 全绿（D13 `position` 撞名已随 oak 解析修复而消除，`pass-the-pillow` 复绿）；字符串题（`char_at`）与数组题（`push`/`⁅ ⁆`/`unwrap`）仍 build blocked；ovm 另有 `infix ==` 多类型共存导出歧义（D15）。详见「按根因聚合的阻塞清单」D12'、D12''、D14、D15。
 
 ## lane 口径
 
@@ -407,7 +407,7 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 
 - 归属：MIR / std `panic`（`unwrap` 内部对 `None` 调用 `std.types::panic`，其 block 参数缺 SSA 类型）。
 - 原文（四 lane 同因，wasm 为例）：`compile pipeline rejected module (SMIR001): Semantic MIR 合同失败: function=std.types::panic#186, location=block 1 parameter 0, detail=block parameter has no SSA type`。
-- 最小复现：任一调用 `s.char_at(i).unwrap()`（经 `Option<char>` 触发 `panic`）的函数。
+- 最小复现：任一调用 `s.char_at(1).unwrap()`（`char_at` 为 **1 基序数**，`char_at(0)` 非法；`⁅ ⁆` 索引为 0 基基数，不受影响）的函数——经 `Option<char>` 的 `unwrap()` 触发 `panic`。
 - 受影响题目（四 lane 同因）：`valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`count-asterisks`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`detect-capital`、`day-of-the-year`、`jewels-and-stones`、`counting-bits`（wasm/ovm）。
 - 修复线：std `panic` 的 block 参数补 SSA 类型（`nyar-vm.rs` MIR / `valkyrie.v` std 协同）。
 
@@ -433,6 +433,14 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 - 结论：**已随 dev 工具链（oak `1f766c07` 解析修复）消除**。`pass-the-pillow`（含 `let position: i64`）在 `7d4df3c2`+`e25b3bb` 下四 lane 复绿（94/94），不再触发对 std `position` 的 `Some` 解析。
 - 历史坐标（前工具链 `f502b9ea`/`eeac899` 快照）：std prelude `using! std::iterator::{... position ...}` 把 `std::iterator::position` 引入作用域，用户同名局部变量触发对该 std 函数的 `Some` 解析而失败；改名 `pos` 即规避。当前快照下该撞名不再发生。
 - 受影响题目：`pass-the-pillow`（前序转红，本轮复绿）。
+
+### D15. ovm `std::infix ==` 多类型共存时无法唯一导出入口
+
+- 归属：ovm 后端导出决议。同一模块内 `std::infix ==` 在多种类型（如 `i64` 与 `bool`）上同时被解析时，ovm 要求入口对应唯一明确函数导出；wasm/jvm/clr 不受影响。
+- 原文：`legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): Nyar 入口 \`std::infix ==\` 必须对应唯一明确函数导出`。
+- 最小复现：`.cache/probes/ovm-ne`（gitignored，不提交）——`i64 ==` 与 `bool !=` 各自单独构建通过，共存于同一模块即报上文。
+- 受影响题目：`largest-number-after-digit-swaps-by-parity`（ovm；wasm/jvm/clr GREEN 78/78）、`divide-two-integers`（ovm；wasm/jvm/clr GREEN 135/135）。
+- 修复线：ovm 导出决议对 `infix ==` 按实例类型消歧（`nyar-vm.rs` ovm 后端）。
 
 ## 语料精度修根（同日，字符串表示 + 全量回填）
 
@@ -521,9 +529,32 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 | D12'' HIR `unresolved call <computed>` / `infix ==` | 数组题（`push`/`⁅ ⁆`/`unwrap`）9 题 | `concatenation-of-array` 于 `solution.v:8:9`（`result.push(nums⁅i⁆.unwrap())`） |
 | D14 jvm/clr 缺 `__isize_sub` provider | `counting-bits` | `host contract `std.primitive.__isize_sub` ... no host provider is bound` |
 
-**全绿累计：73 题**（前序 58 纯 `i64` + `pass-the-pillow` 复绿 + 上轮 14 新增）。
+**全绿累计：80 题**（矩阵实证口径：按 `.cache/matrix-*.json` 逐题 recount 四 lane 全绿；原手工累计 73 漏算跨轮次转绿题，以实证为准）。
 
 **剩余阻塞**：字符串题 11 题（D12'）、数组题 9 题（D12''）、`counting-bits`（D12' + D14）。修复线分属 `nyar-vm.rs`/`valkyrie.v`：std `panic` block 参数补 SSA 类型、`⁅ ⁆`/`unwrap`/`push` 的 `<computed>` 解析与 `infix ==` 绑定、`__isize_sub` 的 jvm/clr host provider。
+
+## 双解对照扩题（同日，Valkyrie + TypeScript 双解对照）
+
+本轮起每道新题同时交付 Valkyrie `solution.v` 与 TypeScript 参考解（`solvers/typescript/solution.ts`），两解共用同一套 `metadata.tests`；TypeScript 仅作语义基准与复杂度对照，不用来掩盖 V 侧缺口。V 解四 lane 全跑；TypeScript 基准经 `run_ts_solver.ts` 全量用例通过（6/6）。
+
+| 题目 | 用例数 | V wasm | V ovm | V jvm | V clr | TS 基准 | 根因 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `n-queens-ii` | 9 | GREEN 9/9 | GREEN 9/9 | GREEN 9/9 | GREEN 9/9 | PASS 9/9 | — |
+| `largest-number-after-digit-swaps-by-parity` | 78 | GREEN 78/78 | build blocked | GREEN 78/78 | GREEN 78/78 | PASS 78/78 | D15 |
+| `excel-sheet-column-number` | 201 | build blocked | build blocked | build blocked | build blocked | PASS 201/201 | D12' |
+| `length-of-last-word` | 48 | build blocked | build blocked | build blocked | build blocked | PASS 48/48 | D12' |
+| `running-sum-of-1d-array` | 95 | build blocked | build blocked | build blocked | build blocked | PASS 95/95 | D12'' |
+| `contains-duplicate` | 94 | build blocked | build blocked | build blocked | build blocked | PASS 94/94 | D3 + D4 |
+
+### 特性缺口 / 复杂度差异（逐题，TS 仅对照不掩盖）
+
+- `n-queens-ii`（V 四 lane 全绿）：V `i64` 无 `bit_or`/`bit_not`/左移，位掩码回溯写法明显更绕——TS 用 `mask & ~(cols|d1|d2)`、`(d1|bit)<<1`、`(d2|bit)>>1` 直表达；V 以 `bitor(a, b) = a + b - a.bit_and(b)` 求位并（cols/d1/d2 在皇后列重叠，直接相加会重复计入）、`mask.bit_xor(banned)` 代 mask 内位反、`*2`/`/2` 代左右移。算法与复杂度同阶（$O(N!)$ 回溯），差异仅在表达。最小复现（写法差异，非缺陷）：`a.bit_or(b)` 未定义 → `a + b - a.bit_and(b)`。
+- `largest-number-after-digit-swaps-by-parity`（V 3/4）：V 数组路径受阻（D12''），无法写 TS 的「按奇偶 filter/sort 分组」数组表达，改用 nibble 打包计数排序——`evens`/`odds` 两个 `i64` 把各数字值计数压进 4-bit 槽位（`+= pow16(d)`），逐位按原数字奇偶取该奇偶剩余最大者重建。代码量约为 TS 数组版两倍，复杂度同阶 $O(d)$。ovm lane 另受阻 D15。语料侧：65 例越出官方约束（$8 \le num \le 10^8$，原含约 $10^{99}$ 的垃圾值）已按约束派生并用参考算法重算 `expected`，78 例全一致。
+- `excel-sheet-column-number`、`length-of-last-word`（V 0/4，D12'）：TS 的 `for (const ch of s)` / `charCodeAt` 在 V 需走 `s.char_at(i).unwrap()`（`char_at` 为 1 基序数），`unwrap()` 内部调 `std.types::panic` 触发 SMIR001 而四 lane build blocked——既有根因 D12'，非新缺陷。本轮已把解法内 `char_at` 调用统一修正为 1 基序数（`char_at(0)` 非法；`detect-capital`、`final-value-of-variable-after-performing-operations` 同步修正），`⁅ ⁆` 索引维持 0 基基数不变。
+- `running-sum-of-1d-array`（V 0/4，D12''）：TS 的 `out.push(acc)` 与下标读在 V 为 `result.push(sum)` / `nums⁅i⁆.unwrap()`（`⁅ ⁆` 为 0 基基数），`⁅ ⁆` 索引与 `push` 的 `<computed>` 解析未过 HIR——既有根因 D12''，非新缺陷。
+- `contains-duplicate`（V 0/4，D3 + D4）：TS 的 `Set.has`/`Set.add` 在 V 走 `HashSet.contains`/`insert`，dev 工具链下报 `unresolved call `<computed>` in insert`（22 处同源）、`unresolved call `infix ==` in find_slot`、`unresolved constructor `_` in into_iterator`（均位于 `source/_.v:7:1`）——既有根因 D3（泛型 `==`）与 D4（HashMap 实例），非新缺陷。
+
+**全绿累计：81 题**（矩阵实证 80 + 本轮 `n-queens-ii` 四 lane 全绿）。
 
 ## managed lane 真实执行
 

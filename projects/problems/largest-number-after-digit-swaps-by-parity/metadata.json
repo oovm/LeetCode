@@ -2,7 +2,10 @@
     "id": "largest-number-after-digit-swaps-by-parity",
     "questionId": 2231,
     "difficulty": "Easy",
-    "tags": ["Sorting", "Heap (Priority Queue)"],
+    "tags": [
+        "Sorting",
+        "Heap (Priority Queue)"
+    ],
     "tests": [
         {
             "args": {
@@ -12,9 +15,9 @@
         },
         {
             "args": {
-                "num": 987654321
+                "num": 98765432
             },
-            "expected": 987654321
+            "expected": 98765432
         },
         {
             "args": {
@@ -54,9 +57,9 @@
         },
         {
             "args": {
-                "num": 975318642
+                "num": 97531864
             },
-            "expected": 975318642
+            "expected": 97531864
         },
         {
             "args": {
@@ -96,385 +99,386 @@
         },
         {
             "args": {
-                "num": 1919191919
+                "num": 19191919
             },
-            "expected": 9999911111
+            "expected": 99991111
         },
         {
             "args": {
-                "num": 9753186420
+                "num": 97531864
             },
-            "expected": 9753186420
+            "expected": 97531864
         },
         {
             "args": {
-                "num": "1234567890123456800"
+                "num": 12345678
             },
-            "expected": "9898767654543233000"
+            "expected": 78563412
         },
         {
             "args": {
-                "num": 8642086420
+                "num": 86420864
             },
-            "expected": 8866442200
+            "expected": 88664420
         },
         {
             "args": {
-                "num": 5432109876
+                "num": 54321098
             },
-            "expected": 9876543210
+            "expected": 98543210
         },
         {
             "args": {
-                "num": 31415926535
+                "num": 31415926
             },
-            "expected": 95655342311
+            "expected": 95631142
         },
         {
             "args": {
-                "num": 1111111111
+                "num": 11111111
             },
-            "expected": 1111111111
+            "expected": 11111111
         },
         {
             "args": {
-                "num": "13579246801357924000"
+                "num": 13579246
             },
-            "expected": "99775886645331150000"
+            "expected": 97531642
         },
         {
             "args": {
-                "num": 2222222222
+                "num": 22222222
             },
-            "expected": 2222222222
+            "expected": 22222222
         },
         {
             "args": {
-                "num": 1928374655
+                "num": 19283746
             },
-            "expected": 9786554231
+            "expected": 97863142
         },
         {
             "args": {
-                "num": 1.1111111112222223e89
+                "num": 11111111
             },
-            "expected": 9.999999999888889e89
+            "expected": 11111111
         },
         {
             "args": {
-                "num": 1010101010
+                "num": 10101010
             },
-            "expected": 1010101010
+            "expected": 10101010
         },
         {
             "args": {
-                "num": 198765432
+                "num": 19876543
             },
-            "expected": 978563412
+            "expected": 97856341
         },
         {
             "args": {
-                "num": 1357913579
+                "num": 13579135
             },
-            "expected": 9977553311
+            "expected": 97553311
         },
         {
             "args": {
-                "num": "10203040506070808"
+                "num": 10203040
             },
-            "expected": "98647200500030000"
+            "expected": 34201000
         },
         {
             "args": {
-                "num": 1000000000
+                "num": 100000000
             },
-            "expected": 1000000000
+            "expected": 100000000
         },
         {
             "args": {
-                "num": 123456789
+                "num": 12345678
             },
-            "expected": 987654321
+            "expected": 78563412
         },
         {
             "args": {
-                "num": 9876543210
+                "num": 98765432
             },
-            "expected": 9876543210
+            "expected": 98765432
         },
         {
             "args": {
-                "num": 111333555777
+                "num": 11133355
             },
-            "expected": 777555333111
+            "expected": 55333111
         },
         {
             "args": {
-                "num": 333111555777
+                "num": 33311155
             },
-            "expected": 777555333111
+            "expected": 55333111
         },
         {
             "args": {
-                "num": 222444666888
+                "num": 22244466
             },
-            "expected": 888666444222
+            "expected": 66444222
         },
         {
             "args": {
-                "num": 973518642
+                "num": 97351864
             },
-            "expected": 975318642
+            "expected": 97531864
         },
         {
             "args": {
-                "num": 8282828282
+                "num": 82828282
             },
-            "expected": 8888822222
+            "expected": 88882222
         },
         {
             "args": {
-                "num": 1000000001
+                "num": 100000000
             },
-            "expected": 1000000001
+            "expected": 100000000
         },
         {
             "args": {
-                "num": "1234567890987654400"
+                "num": 12345678
             },
-            "expected": "9898767654543233000"
+            "expected": 78563412
         },
         {
             "args": {
-                "num": 9.998887776665555e29
+                "num": 99988877
             },
-            "expected": 9.998887776665555e29
+            "expected": 99988877
         },
         {
             "args": {
-                "num": 8246035791
+                "num": 82460357
             },
-            "expected": 8642097531
+            "expected": 86420753
         },
         {
             "args": {
-                "num": "5656565656565657000"
+                "num": 56565656
             },
-            "expected": "5656565656565657000"
+            "expected": 56565656
         },
         {
             "args": {
-                "num": 973159731
+                "num": 97315973
             },
-            "expected": 997753311
+            "expected": 99775331
         },
         {
             "args": {
-                "num": 1234567890
+                "num": 12345678
             },
-            "expected": 9876543210
+            "expected": 78563412
         },
         {
             "args": {
-                "num": 111333555777999
+                "num": 11133355
             },
-            "expected": 999777555333111
+            "expected": 55333111
         },
         {
             "args": {
-                "num": 543210987654321
+                "num": 54321098
             },
-            "expected": 987654543232101
+            "expected": 98543210
         },
         {
             "args": {
-                "num": "908070605040302000"
+                "num": 90807060
             },
-            "expected": "986472005000300000"
+            "expected": 98607000
         },
         {
             "args": {
-                "num": 8642097531
+                "num": 86420975
             },
-            "expected": 8642097531
+            "expected": 86420975
         },
         {
             "args": {
-                "num": 191928283737
+                "num": 19192828
             },
-            "expected": 997788223311
+            "expected": 99118822
         },
         {
             "args": {
-                "num": 1098765432
+                "num": 10987654
             },
-            "expected": 9876543210
+            "expected": 98765410
         },
         {
             "args": {
-                "num": 100200400600800
+                "num": 10020040
             },
-            "expected": 186420000000000
+            "expected": 14200000
         },
         {
             "args": {
-                "num": "102030405060708100"
+                "num": 10203040
             },
-            "expected": "986472005000300000"
+            "expected": 34201000
         },
         {
             "args": {
-                "num": 2468024680
+                "num": 24680246
             },
-            "expected": 8866442200
+            "expected": 86644220
         },
         {
             "args": {
-                "num": "987654321987654300"
+                "num": 98765432
             },
-            "expected": "989876765543432100"
+            "expected": 98765432
         },
         {
             "args": {
-                "num": 59876543210
+                "num": 59876543
             },
-            "expected": 97856543210
+            "expected": 97856543
         },
         {
             "args": {
-                "num": 2040608000
+                "num": 20406080
             },
-            "expected": 8642000000
+            "expected": 86420000
         },
         {
             "args": {
-                "num": 555444333222111
+                "num": 55544433
             },
-            "expected": 555444333222111
+            "expected": 55544433
         },
         {
             "args": {
-                "num": 5555555555
+                "num": 55555555
             },
-            "expected": 5555555555
+            "expected": 55555555
         },
         {
             "args": {
-                "num": "99887766554433220000"
+                "num": 99887766
             },
-            "expected": "99887766554433220000"
+            "expected": 99887766
         },
         {
             "args": {
-                "num": 2468135790
+                "num": 24681357
             },
-            "expected": 8642975310
+            "expected": 86427531
         },
         {
             "args": {
-                "num": 1133557799
+                "num": 11335577
             },
-            "expected": 9977553311
+            "expected": 77553311
         },
         {
             "args": {
-                "num": 1.1122233344455567e26
+                "num": 11122233
             },
-            "expected": 9.998887776665555e26
+            "expected": 33122211
         },
         {
             "args": {
-                "num": 111222333444
+                "num": 11122233
             },
-            "expected": 333444111222
+            "expected": 33122211
         },
         {
             "args": {
-                "num": 7777777777
+                "num": 77777777
             },
-            "expected": 7777777777
+            "expected": 77777777
         },
         {
             "args": {
-                "num": "98765432101234570000"
+                "num": 98765432
             },
-            "expected": "98987676545432320000"
+            "expected": 98765432
         },
         {
             "args": {
-                "num": 9999999999
+                "num": 99999999
             },
-            "expected": 9999999999
+            "expected": 99999999
         },
         {
             "args": {
-                "num": 9876543211111
+                "num": 98765432
             },
-            "expected": 9876543211111
+            "expected": 98765432
         },
         {
             "args": {
-                "num": 1357924680
+                "num": 13579246
             },
-            "expected": 9753186420
+            "expected": 97531642
         },
         {
             "args": {
-                "num": 1.1112222333344446e35
+                "num": 11112222
             },
-            "expected": 9.999888877776666e35
+            "expected": 11112222
         },
         {
             "args": {
-                "num": 1938765420
+                "num": 19387654
             },
-            "expected": 9758361420
+            "expected": 97583614
         },
         {
             "args": {
-                "num": 9735186420
+                "num": 97351864
             },
-            "expected": 9753186420
+            "expected": 97531864
         },
         {
             "args": {
-                "num": 9.876543210987654e29
+                "num": 98765432
             },
-            "expected": 9.898987676765454e29
+            "expected": 98765432
         },
         {
             "args": {
-                "num": 9.99999999988889e99
+                "num": 99999999
             },
-            "expected": 9.99999999988889e99
+            "expected": 99999999
         },
         {
             "args": {
-                "num": 2244668800
+                "num": 22446688
             },
-            "expected": 8866442200
+            "expected": 88664422
         },
         {
             "args": {
-                "num": "112233445566778900"
+                "num": 11223344
             },
-            "expected": "998877665544332200"
+            "expected": 33441122
         },
         {
             "args": {
-                "num": 2468013579
+                "num": 24680135
             },
-            "expected": 8642097531
+            "expected": 86420531
         },
         {
             "args": {
-                "num": 8080808080
+                "num": 80808080
             },
-            "expected": 8888800000
+            "expected": 88880000
         }
     ],
     "invoke": {
         "python": "Solution().largestInteger",
-        "typescript": "Solution().largestInteger"
+        "typescript": "Solution().largestInteger",
+        "valkyrie": "Solution().largestInteger"
     }
 }

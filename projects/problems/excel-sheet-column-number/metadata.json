@@ -2,7 +2,10 @@
     "id": "excel-sheet-column-number",
     "questionId": 171,
     "difficulty": "Easy",
-    "tags": ["Math", "String"],
+    "tags": [
+        "Math",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -1160,7 +1163,7 @@
             "args": {
                 "columnTitle": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             },
-            "expected": 2.5609457453661776e35
+            "expected": 2.5609457453661776e+35
         },
         {
             "args": {
@@ -1213,6 +1216,7 @@
     ],
     "invoke": {
         "python": "Solution().titleToNumber",
-        "typescript": "Solution().titleToNumber"
+        "typescript": "Solution().titleToNumber",
+        "valkyrie": "Solution().titleToNumber"
     }
 }

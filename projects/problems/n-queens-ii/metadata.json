@@ -2,7 +2,9 @@
     "id": "n-queens-ii",
     "questionId": 52,
     "difficulty": "Hard",
-    "tags": ["Backtracking"],
+    "tags": [
+        "Backtracking"
+    ],
     "tests": [
         {
             "args": {
@@ -61,6 +63,7 @@
     ],
     "invoke": {
         "python": "Solution().totalNQueens",
-        "typescript": "Solution().totalNQueens"
+        "typescript": "Solution().totalNQueens",
+        "valkyrie": "Solution().totalNQueens"
     }
 }
