@@ -2,7 +2,11 @@
     "id": "sum-of-square-numbers",
     "questionId": 633,
     "difficulty": "Medium",
-    "tags": ["Math", "Two Pointers", "Binary Search"],
+    "tags": [
+        "Math",
+        "Two Pointers",
+        "Binary Search"
+    ],
     "tests": [
         {
             "args": {
@@ -78,7 +82,7 @@
         },
         {
             "args": {
-                "c": 100000000000
+                "c": 1000000000
             },
             "expected": true
         },
@@ -102,7 +106,7 @@
         },
         {
             "args": {
-                "c": 80779853361
+                "c": 807798533
             },
             "expected": false
         },
@@ -126,7 +130,7 @@
         },
         {
             "args": {
-                "c": 999999999999
+                "c": 999999999
             },
             "expected": false
         },
@@ -180,21 +184,21 @@
         },
         {
             "args": {
-                "c": 10000000000
+                "c": 1000000000
             },
             "expected": true
         },
         {
             "args": {
-                "c": "18014398509481982"
+                "c": 1801439850
             },
-            "expected": "Execution timed out"
+            "expected": false
         },
         {
             "args": {
-                "c": 4294967296
+                "c": 429496729
             },
-            "expected": true
+            "expected": false
         },
         {
             "args": {
@@ -222,7 +226,7 @@
         },
         {
             "args": {
-                "c": 3249000000
+                "c": 324900000
             },
             "expected": true
         },
@@ -234,15 +238,15 @@
         },
         {
             "args": {
-                "c": "846269696200635600"
+                "c": 846269696
             },
             "expected": true
         },
         {
             "args": {
-                "c": "18014398509481984"
+                "c": 1801439850
             },
-            "expected": true
+            "expected": false
         },
         {
             "args": {
@@ -264,7 +268,7 @@
         },
         {
             "args": {
-                "c": 4294967295
+                "c": 429496729
             },
             "expected": false
         },
@@ -306,7 +310,7 @@
         },
         {
             "args": {
-                "c": 9876543210
+                "c": 987654321
             },
             "expected": true
         },
@@ -318,13 +322,14 @@
         },
         {
             "args": {
-                "c": 67280421310721
+                "c": 672804213
             },
-            "expected": true
+            "expected": false
         }
     ],
     "invoke": {
         "python": "Solution().judgeSquareSum",
-        "typescript": "Solution().judgeSquareSum"
+        "typescript": "Solution().judgeSquareSum",
+        "valkyrie": "Solution().judgeSquareSum"
     }
 }

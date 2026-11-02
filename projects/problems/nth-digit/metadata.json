@@ -2,7 +2,10 @@
     "id": "nth-digit",
     "questionId": 400,
     "difficulty": "Medium",
-    "tags": ["Math", "Binary Search"],
+    "tags": [
+        "Math",
+        "Binary Search"
+    ],
     "tests": [
         {
             "args": {
@@ -307,6 +310,7 @@
     ],
     "invoke": {
         "python": "Solution().findNthDigit",
-        "typescript": "Solution().findNthDigit"
+        "typescript": "Solution().findNthDigit",
+        "valkyrie": "Solution().findNthDigit"
     }
 }

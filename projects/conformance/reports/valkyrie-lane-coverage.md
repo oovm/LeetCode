@@ -1,10 +1,10 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56；同日语料精度修根，全绿累计 59）
+- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56；同日语料精度修根，全绿累计 59；同日四 lane 覆盖重新拉起，全绿累计 72）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
-- 工具链来源：`../nyar-vm.rs` HEAD `8a4f83cd` 加工作树，napi 二进制已重建；`../valkyrie.v` HEAD `7125ce0` 加工作树。结果是工作树快照，不是发布依赖复验。
-- **工具链当前处于中间破损态**：本次会话期间 `nyar-vm.rs`（`5709478e`→`d5a80074`→`8a4f83cd`）与 `valkyrie.v`（`eed8459`→`7125ce0`）被连续改动，当前所有字符串/char 题（`char_width` 处 `unresolved call <computed>`）与数组题（`push`/`unwrap` 处 `unresolved call <computed>`）的 `legion build` 全线失败。这是工具链自身回归，与本仓 harness/语料改动无关；纯 `i64` 标量题（无 `Option`/容器/字符串）不受影响。下列「字符串/数组题」的四 lane 证据以修复前快照为准，`i64` 题为当前快照。
+- 工具链来源：`../nyar-vm.rs` HEAD `f502b9ea` 加工作树，napi 二进制已重建；`../valkyrie.v` HEAD `eeac899` 加工作树。结果是工作树快照，不是发布依赖复验。
+- **工具链当前处于中间破损态（两路根因）**：本次会话期间 `nyar-vm.rs`（`5709478e`→`d5a80074`→`8a4f83cd`→`f502b9ea`）与 `valkyrie.v`（`eed8459`→`7125ce0`→`eeac899`）被连续改动，当前字符串/char 题与数组题在 `Option` 变体 `Some` 处全线 `unresolved call`（命中 `char_at` 与 `⁅ ⁆` 索引），且局部变量名 `position` 与 std prelude 的 `std::iterator::position` 撞名触发额外失败。这是工具链自身回归，与本仓 harness/语料改动无关；纯 `i64` 标量题（无 `Option`/容器/字符串、无 `position` 变量名）不受影响。详见「按根因聚合的阻塞清单」D12、D13。
 
 ## lane 口径
 
@@ -399,6 +399,34 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 
 - 修复线：语料生成器拒绝越界/占位符用例，越安全整数一律写十进制字符串；`scan --assert` 挂为 `pnpm test:corpus` 断言。存量 `float_literal=939` 处（53 slug）为后续回填清单。
 
+### D12. `Option` 变体 `Some` 在 `char_at` 与 `⁅ ⁆` 索引处未解析（当前工具链中间态）
+
+- 归属：前端语义 / 载体与 typed sum（工具链正在重构 `Option`/`Cardinal` 索引，`Some` 构造器暂不解析）。
+- 原文（四 lane 同因，wasm 为例）：
+  - 字符串题：`error[valkyrie.hir.unresolved_call]: unresolved call `Some` in char_at   --> source/_.v:7:1`
+  - 数组/索引题：`error[valkyrie.hir.unresolved_call]: unresolved call `Some` in suffix [ ]   --> source/_.v:7:1`
+- 最小复现：任一调用 `s.char_at(i)`（返回 `Option<char>`）或 `nums⁅i⁆`（返回 `Option<T>`）的函数；二者内部构造 `Some`，当前不解析。
+- 受影响题目（四 lane build blocked）：`valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`count-asterisks`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`detect-capital`、`day-of-the-year`、`jewels-and-stones`、`add-two-numbers`、`concatenation-of-array`、`move-zeroes`、`missing-number`、`squares-of-a-sorted-array`、`decode-xored-array`、`number-of-steps-to-reduce-a-number-in-binary-representation-to-one`、`final-value-of-variable-after-performing-operations`、`counting-words-with-a-given-prefix`、`counting-bits`。
+- 说明：此根因在当前快照**遮蔽**了 D7（wasm 字符串数组编组）、D8（ovm fixed-array panic）、D9（ovm typed sum）——这些 lane 特有问题在 `Some` 修复后才可能重新暴露；D10（jvm/clr `[i64]`/`[u8]` 载体）同理。修复线：`Some` 变体构造器解析（`Option`/typed sum 表示与 `Cardinal` 索引合同），属 `nyar-vm.rs`/`valkyrie.v` 正在进行的重构。
+
+### D13. 局部变量名 `position` 与 std prelude `std::iterator::position` 撞名
+
+- 归属：前端语义（std prelude `using!` 把 `std::iterator::position` 引入作用域，其内部 `Some` 未解析；用户同名局部变量触发对该 std 函数的解析）。
+- 原文：`error[valkyrie.hir.unresolved_call]: unresolved call `Some` in position   --> source/_.v:7:1`。
+- 最小复现（`.cache/probes/position-name`，wasm 构建）：
+
+```text
+micro with_position(a: i64, b: i64) -> i64 {
+    let position: i64 = a % b
+    return position + 1
+}
+```
+
+对照：同函数体把 `position` 改名 `pos` 即构建通过。证明是变量名与 std prelude 的 `position` 函数撞名触发，而非 `%` 运算符。
+
+- 受影响题目：`pass-the-pillow`（前序四 lane 全绿，本轮转红；其余四 lane build blocked）。
+- 修复线：std prelude 的 `using!` 不应让用户同名变量触发对未用 std 函数的 `Some` 解析（名字隔离 / 惰性解析），属 `nyar-vm.rs`/`valkyrie.v` 重构面。未在 solution 中改名规避——按「不在 runner/harness/题解里绕过」记录根因，待工具链修复。
+
 ## 语料精度修根（同日，字符串表示 + 全量回填）
 
 本轮把「大整数因 JSON 精度丢失被判不可执行」修到根：表示、消费、回填、断言四位一体。
@@ -438,6 +466,37 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 **全绿累计：59 题**（前序 56 + 本轮 3 道位运算回填转绿）。`hamming-distance`、`binary-number-with-alternating-bits`、`reverse-bits` 三题由「语料受阻」转为四 lane 全绿，回填算法经全部既有非缺陷用例 100% 校验一致。
 
 `corpusDefect` 现状：本轮 5 题的生成器 bug 全部修根，标注已删。该标注今后只保留给「超出语言可表示范围且题目语义本身需要」的用例，不再给生成器写坏的值当遮羞布。
+
+## 四 lane 覆盖重新拉起（同日，当前 HEAD `f502b9ea` + 工作树）
+
+本轮以防过拟合为目的复跑全 lane（不只看 wasm/ovm），纯 `i64` 标量题确认仍全绿，并扩出 14 题四 lane 新增。工具链处于中间破损态，字符串/数组题与 `position` 变量名题被两路根因压住（见「按根因聚合的阻塞清单」D12、D13）。
+
+**纯 `i64` 组复跑**：58/59 题四 lane 全绿，仅 `pass-the-pillow` 因局部变量名 `position` 与 std prelude 的 `std::iterator::position` 撞名转红（D13）。
+
+**本轮 14 题四 lane 新增全绿**（含 11 题既有解法首跑转绿 + 3 题新写解法；用例数取自 `metadata.json`，四 lane 各自真实跑测）：
+
+| 题目 | wasm | ovm | jvm | clr |
+| --- | --- | --- | --- | --- |
+| `arranging-coins` | GREEN 54/54 | GREEN 54/54 | GREEN 54/54 | GREEN 54/54 |
+| `armstrong-number` | GREEN 56/56 | GREEN 56/56 | GREEN 56/56 | GREEN 56/56 |
+| `bulb-switcher` | GREEN 85/85 | GREEN 85/85 | GREEN 85/85 | GREEN 85/85 |
+| `consecutive-numbers-sum` | GREEN 53/53 | GREEN 53/53 | GREEN 53/53 | GREEN 53/53 |
+| `integer-replacement` | GREEN 37/37 | GREEN 37/37 | GREEN 37/37 | GREEN 37/37 |
+| `count-numbers-with-unique-digits` | GREEN 11/11 | GREEN 11/11 | GREEN 11/11 | GREEN 11/11 |
+| `n-th-tribonacci-number` | GREEN 18/18 | GREEN 18/18 | GREEN 18/18 | GREEN 18/18 |
+| `smallest-integer-divisible-by-k` | GREEN 90/90 | GREEN 90/90 | GREEN 90/90 | GREEN 90/90 |
+| `number-of-digit-one` | GREEN 76/76 | GREEN 76/76 | GREEN 76/76 | GREEN 76/76 |
+| `reach-a-number` | GREEN 70/70 | GREEN 70/70 | GREEN 70/70 | GREEN 70/70 |
+| `integer-break` | GREEN 30/30 | GREEN 30/30 | GREEN 30/30 | GREEN 30/30 |
+| `nth-digit` | GREEN 50/50 | GREEN 50/50 | GREEN 50/50 | GREEN 50/50 |
+| `sum-of-square-numbers` | GREEN 53/53 | GREEN 53/53 | GREEN 53/53 | GREEN 53/53 |
+| `monotone-increasing-digits` | GREEN 111/111 | GREEN 111/111 | GREEN 111/111 | GREEN 111/111 |
+
+- `smallest-integer-divisible-by-k`、`number-of-digit-one`、`reach-a-number`、`integer-break` 四题首跑时 jvm/clr 报「缺少 execution manifest」，系旧工具链产出的过期 `.cache/*-bench-{jvm,clr}` 缓存（无 `managed-abi.json`/`run-contracts.txt`）被 `legion build` 按源不变判 fresh 而未重生成；清除过期缓存后四 lane 转绿。非 runner/harness 改动，仅失效构建产物。
+- `sum-of-square-numbers` 与 `monotone-increasing-digits` 语料含超官方约束值（`sum-of-square` 官方上限 `2^31-1`、`monotone` 上限 `1e9`），按官方约束重生成并用参考算法重算 `expected` 后写解法转绿；`monotone` 解法为纯算术贪心（不依赖当前被 D12 阻塞的 `⁅ ⁆` 数组索引）。
+- `nth-digit` 语料全在约束内，直接写解法转绿。
+
+**全绿累计：72 题**（前序 58 + 本轮 14）。
 
 ## managed lane 真实执行
 
