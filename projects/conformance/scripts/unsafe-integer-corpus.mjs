@@ -21,7 +21,7 @@
  *   float_literal   浮点字面量（含 `.`/`e`）→ 转字符串仅保留原文，非 i64 输入。
  */
 
-import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -55,8 +55,13 @@ export function scanJsonNumbers(text) {
             const start = i;
             if (text[i] === '-') i++;
             let hasDigits = false;
-            while (i < n && text[i] >= '0' && text[i] <= '9') { i++; hasDigits = true; }
-            if (!hasDigits) { continue; }
+            while (i < n && text[i] >= '0' && text[i] <= '9') {
+                i++;
+                hasDigits = true;
+            }
+            if (!hasDigits) {
+                continue;
+            }
             let isFloat = false;
             if (i < n && text[i] === '.') {
                 isFloat = true;
@@ -144,7 +149,14 @@ function scan() {
         bySlug.push({ slug, occurrences: hits.length, counts });
     }
     bySlug.sort((a, b) => b.occurrences - a.occurrences);
-    return { scannedFiles: files.length, totalOccurrences: unsafe, bareIntegerOccurrences: bareInteger, floatLiteralAssertOccurrences: floatLiteralAssert, reasonTotals: totals, slugs: bySlug };
+    return {
+        scannedFiles: files.length,
+        totalOccurrences: unsafe,
+        bareIntegerOccurrences: bareInteger,
+        floatLiteralAssertOccurrences: floatLiteralAssert,
+        reasonTotals: totals,
+        slugs: bySlug,
+    };
 }
 
 function convert() {
@@ -187,8 +199,12 @@ if (isDirectRun) {
     if (mode === 'scan') {
         const result = scan();
         console.log(`扫描 ${result.scannedFiles} 份 metadata.json，命中超安全整数字面量 ${result.totalOccurrences} 处`);
-        console.log(`  fits_i64=${result.reasonTotals.fits_i64} fits_u64=${result.reasonTotals.fits_u64} beyond_u64=${result.reasonTotals.beyond_u64} float_literal=${result.reasonTotals.float_literal}`);
-        console.log(`  受影响 slug：${result.slugs.length} 个；其中裸整数 ${result.bareIntegerOccurrences} 处、浮点字面量（断言口径，豁免 ${FLOAT_SEMANTIC_SLUGS.size} 个真浮点题）${result.floatLiteralAssertOccurrences} 处`);
+        console.log(
+            `  fits_i64=${result.reasonTotals.fits_i64} fits_u64=${result.reasonTotals.fits_u64} beyond_u64=${result.reasonTotals.beyond_u64} float_literal=${result.reasonTotals.float_literal}`,
+        );
+        console.log(
+            `  受影响 slug：${result.slugs.length} 个；其中裸整数 ${result.bareIntegerOccurrences} 处、浮点字面量（断言口径，豁免 ${FLOAT_SEMANTIC_SLUGS.size} 个真浮点题）${result.floatLiteralAssertOccurrences} 处`,
+        );
         if (writeReport) {
             mkdirSync(join(REPORT_PATH, '..'), { recursive: true });
             writeFileSync(
@@ -215,11 +231,15 @@ if (isDirectRun) {
         }
         if (assertMode) {
             if (result.bareIntegerOccurrences > 0) {
-                console.error(`断言失败：仍存在 ${result.bareIntegerOccurrences} 处裸数字形态的超安全整数（fits_i64/fits_u64/beyond_u64），须先转换为十进制字符串。`);
+                console.error(
+                    `断言失败：仍存在 ${result.bareIntegerOccurrences} 处裸数字形态的超安全整数（fits_i64/fits_u64/beyond_u64），须先转换为十进制字符串。`,
+                );
                 process.exit(1);
             }
             if (result.floatLiteralAssertOccurrences > 0) {
-                console.error(`断言失败：仍存在 ${result.floatLiteralAssertOccurrences} 处超安全整数的浮点字面量（float_literal，精度已损），须按参考算法回填为精确值。`);
+                console.error(
+                    `断言失败：仍存在 ${result.floatLiteralAssertOccurrences} 处超安全整数的浮点字面量（float_literal，精度已损），须按参考算法回填为精确值。`,
+                );
                 process.exit(1);
             }
             console.log('断言通过：不存在裸数字形态的超安全整数，也不存在待回填的浮点字面量（真浮点题豁免）。');

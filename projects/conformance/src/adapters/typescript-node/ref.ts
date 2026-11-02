@@ -11,8 +11,7 @@ import { coerceIntegerArgs as coerceTsArgs, inferIntegerArgKeys } from '../../do
 import { loadProblemMetadata, requireInvoke } from '../../domain/metadata.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 
-export { assertTestCase, normalizeTsTestResult };
-export { coerceTsArgs, inferIntegerArgKeys };
+export { assertTestCase, coerceTsArgs, inferIntegerArgKeys, normalizeTsTestResult };
 
 export function slugToTsProject(slug: string): string {
     let name = slug.replace(/-/g, '_');

@@ -1,9 +1,9 @@
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir } from '../../catalog/index.ts';
-import { BUN_BENCH_PARAMS } from '../../planning/bench-params.ts';
-import { bunRunnerReady, bunSkipReason, spawnBunSolver } from './bridge.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
+import { BUN_BENCH_PARAMS } from '../../planning/bench-params.ts';
 import { hasReadyTsSolver, tsSolverPath } from '../typescript-node/ref.ts';
+import { bunRunnerReady, bunSkipReason, spawnBunSolver } from './bridge.ts';
 
 export { hasReadyTsSolver as hasBunTsSolver };
 
