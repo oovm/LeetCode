@@ -1,9 +1,10 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56）
+- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56；同日语料精度修根，全绿累计 59）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
-- 工具链来源：`../nyar-vm.rs` HEAD `5709478e` 加工作树，napi 二进制已重建；`../valkyrie.v` HEAD `eed8459` 加工作树。结果是工作树快照，不是发布依赖复验。
+- 工具链来源：`../nyar-vm.rs` HEAD `8a4f83cd` 加工作树，napi 二进制已重建；`../valkyrie.v` HEAD `7125ce0` 加工作树。结果是工作树快照，不是发布依赖复验。
+- **工具链当前处于中间破损态**：本次会话期间 `nyar-vm.rs`（`5709478e`→`d5a80074`→`8a4f83cd`）与 `valkyrie.v`（`eed8459`→`7125ce0`）被连续改动，当前所有字符串/char 题（`char_width` 处 `unresolved call <computed>`）与数组题（`push`/`unwrap` 处 `unresolved call <computed>`）的 `legion build` 全线失败。这是工具链自身回归，与本仓 harness/语料改动无关；纯 `i64` 标量题（无 `Option`/容器/字符串）不受影响。下列「字符串/数组题」的四 lane 证据以修复前快照为准，`i64` 题为当前快照。
 
 ## lane 口径
 
@@ -386,17 +387,57 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 ### D11. 语料缺陷（生成器越界/占位符）
 
 - 归属：语料生成器。
-- 受影响题目与处置（均按 `corpusDefect` 登记，未删改值）：
+- **本轮已按「语料精度修根」全部修复**（见下节）：超范围/非整数值按官方约束重生成、占位符按参考算法重算，`corpusDefect` 标注随之删除。
 
-| 题目 | 缺陷 | 真实状态 |
+| 题目 | 原缺陷 | 修复后状态 |
 | --- | --- | --- |
-| `hamming-distance` | `tests[17]` 超 i64 | wasm/ovm 17/88，jvm/clr 解析失败 |
-| `binary-number-with-alternating-bits` | `tests[25]` 浮点字面量超安全整数 | wasm/ovm 25/72，jvm/clr 解析失败 |
-| `running-sum-of-1d-array` | `tests[19]` 含 11 个浮点元素 | wasm 止于 `tests[19]` BigInt 转换 |
-| `reverse-bits` | 18 例 ~1e31 浮点 | 四 lane 均止于首个浮点用例 |
-| `counting-bits` | 17 例 `"Execution timed out"` 占位符 | wasm 产物正确（手动验证），受 D8 阻塞无 JSON |
+| `hamming-distance` | `tests[17]` 超 u64 | 重生成到 `2^32-1` 内，**四 lane GREEN 88/88** |
+| `binary-number-with-alternating-bits` | `tests[25]` 浮点超安全整数 | 重生成到 `2^31-1` 内，**四 lane GREEN 72/72** |
+| `reverse-bits` | 18 例 ~1e31 浮点 | 逐例重生成到 `2^32-1` 内，**四 lane GREEN 24/24** |
+| `running-sum-of-1d-array` | `tests[19]` 非整数浮点元素 | 浮点截断取整并重算；wasm 构建受工具链破损态阻塞，非语料问题 |
+| `counting-bits` | 17 例 `"Execution timed out"` 占位符 | 按 `countBits` 重算 `expected`；矩阵受 D8/工具链破损态阻塞，非语料问题 |
 
-- 修复线：语料生成器拒绝越界/占位符用例。修复后 5 题可复跑。
+- 修复线：语料生成器拒绝越界/占位符用例，越安全整数一律写十进制字符串；`scan --assert` 挂为 `pnpm test:corpus` 断言。存量 `float_literal=939` 处（53 slug）为后续回填清单。
+
+## 语料精度修根（同日，字符串表示 + 全量回填）
+
+本轮把「大整数因 JSON 精度丢失被判不可执行」修到根：表示、消费、回填、断言四位一体。
+
+### 表示规则
+
+- 整数/浮点字面量凡越过 `Number.MAX_SAFE_INTEGER`，在 `metadata.json` 一律写成**十进制字符串**（保留原始十进制文本，不做 double 往返）。
+- 纯整数字面量分三档：`fits_i64`（合法 i64 输入）、`fits_u64`（需 u64 通道）、`beyond_u64`（生成器 bug，字符串仅保留原文，消费端按范围结构化报错）。
+- 浮点字面量超安全整数属生成器 bug，**不**在本轮 codemod 转换（避免把 TS/Python 合法浮点参数字符串化），留作回填清单。
+
+### 生成器侧（断言）
+
+- `projects/conformance/scripts/unsafe-integer-corpus.mjs`：`scan` 文本级扫描全部 `metadata.json` 分类统计；`convert` 把裸整数就地改写为十进制字符串。`scan --assert` 即生成器合同断言——输出里不存在裸数字形态的超安全整数，已挂为 `pnpm test:corpus`（CI 级检查，当前通过）。
+- **转换前后统计**：裸整数 `fits_i64=634 / fits_u64=116 / beyond_u64=219`（共 969 处、89 份文件）→ 全部转为十进制字符串（`fits_i64=0 / fits_u64=0 / beyond_u64=0`），断言通过。`float_literal=939` 处留作回填清单（53 个 slug）。重扫报告落盘 `reports/unsafe-integer-corpus.json`。
+
+### 消费侧（四 lane + 参考端）
+
+- 共享入口 `src/domain/integer-literal.ts`：按十进制解析校验 `i64`/`u64` 文本，越界/非法格式结构化报错（不静默截断）；`isUnsafeIntegerLiteralString` 以安全整数界区分「被转换的大整数」与「真实字符串参数」（如 `"11101110111"`）。
+- `run_v_solver.ts`（wasm）：字符串整数经既有 `I64` 十进制通道原样交 glue（`BigInt` 精确恢复）；按 ABI 返回类型把整数结果规整为十进制文本再比较。
+- `managed-runner.ts`（jvm/clr）：`i64`/`i32` 实参与返回值统一规整为精确十进制文本，argv 直传。
+- `run_nyar_solver.ts`（ovm）：ovm `json_bridge.rs` 只按 `as_i64` 解析 JSON 数字，故把超安全整数字符串以**裸数字文本**注入 `argsJson`（绕过包装层 `JSON.stringify`），直接加载平台 `valkyrie-napi` 绑定。
+- TS/Python 参考端：超安全整数字符串规整回数值（TS `Number`、Python `int`），与裸数字经 `JSON.parse` 同形，零回归；`assert.ts` 按十进制文本比较字符串期望与数值实得。
+- 验证：`ugly-number` 的 `72057594037927940` 转字符串后四 lane 仍全绿；`binary-gap` 裸数字向后兼容；TS 规整与裸数字同值，真字符串参数不受影响。
+
+### 回填已登记 `corpusDefect` 题
+
+按「生成器 bug 重生成 + 参考算法重算 `expected`」回填，`corpusDefect` 标注随之删除（真实用例），四 lane 复跑：
+
+| 题目 | 缺陷 | 处置 | 复跑结果 |
+| --- | --- | --- | --- |
+| `hamming-distance` | `tests[17]` `x≈2^64`（超 u64） | 派生到语料范围 `2^32-1` 内（`x=1844674407, y=922337203`）并重算 | **四 lane GREEN 88/88** |
+| `binary-number-with-alternating-bits` | `tests[25]` `n≈2^100` | 派生到 `2^31-1` 内（`n=1010101010`）并重算 | **四 lane GREEN 72/72** |
+| `reverse-bits` | 18 例 `~1e31` 浮点 | 逐例派生到 `2^32-1` 内并重算 | **四 lane GREEN 24/24** |
+| `running-sum-of-1d-array` | `tests[19]` 非整数浮点元素 | 浮点元素截断取整并重算 | wasm 构建受工具链破损态阻塞（见头部说明），非语料问题 |
+| `counting-bits` | 17 例 `"Execution timed out"` 占位符 | 按 `countBits` 重算 `expected` | wasm 产物经手动验证正确；矩阵受 ovm fixed-array panic（D8）与工具链破损态阻塞，非语料问题 |
+
+**全绿累计：59 题**（前序 56 + 本轮 3 道位运算回填转绿）。`hamming-distance`、`binary-number-with-alternating-bits`、`reverse-bits` 三题由「语料受阻」转为四 lane 全绿，回填算法经全部既有非缺陷用例 100% 校验一致。
+
+`corpusDefect` 现状：本轮 5 题的生成器 bug 全部修根，标注已删。该标注今后只保留给「超出语言可表示范围且题目语义本身需要」的用例，不再给生成器写坏的值当遮羞布。
 
 ## managed lane 真实执行
 

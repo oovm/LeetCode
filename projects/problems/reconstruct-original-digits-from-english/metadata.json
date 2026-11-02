@@ -938,7 +938,7 @@
             "args": {
                 "s": "onetwothreefourfivesixseveneightninenineeightsevenfoursixthreeonetwoeightseventhree"
             },
-            "expected": 11223334456677790000
+            "expected": "11223334456677790000"
         },
         {
             "args": {

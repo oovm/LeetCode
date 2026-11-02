@@ -210,7 +210,7 @@
         },
         {
             "args": {
-                "num": 1000000000000000000
+                "num": "1000000000000000000"
             },
             "expected": "Execution timed out"
         },

@@ -127,11 +127,10 @@
         },
         {
             "args": {
-                "x": 18446744073709552000,
-                "y": 9223372036854776000
+                "x": 1844674407,
+                "y": 922337203
             },
-            "expected": 1,
-            "corpusDefect": "beyond_safe_integer:x"
+            "expected": 13
         },
         {
             "args": {

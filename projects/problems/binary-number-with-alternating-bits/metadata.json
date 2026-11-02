@@ -158,10 +158,9 @@
         },
         {
             "args": {
-                "n": 1.0101010101010101e+30
+                "n": 1010101010
             },
-            "expected": false,
-            "corpusDefect": "beyond_safe_integer:n"
+            "expected": false
         },
         {
             "args": {

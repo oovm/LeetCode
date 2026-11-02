@@ -192,7 +192,7 @@
         },
         {
             "args": {
-                "num": 98765432123456780
+                "num": "98765432123456780"
             },
             "expected": "Execution timed out"
         },
@@ -264,7 +264,7 @@
         },
         {
             "args": {
-                "num": 12345678987654320
+                "num": "12345678987654320"
             },
             "expected": "Execution timed out"
         },

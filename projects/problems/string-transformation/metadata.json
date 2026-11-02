@@ -112,7 +112,7 @@
             "args": {
                 "s": "longstringlongstringlongstringlongstring",
                 "t": "stringlongstringlongstringlongstrin",
-                "k": 100000000000000000000
+                "k": "100000000000000000000"
             },
             "expected": 0
         },
@@ -144,7 +144,7 @@
             "args": {
                 "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
                 "t": "zzabcdefghijklmnopqrstuvwxyzabcd",
-                "k": 100000000000000000
+                "k": "100000000000000000"
             },
             "expected": 0
         },
@@ -184,7 +184,7 @@
             "args": {
                 "s": "abcabcabcabcabcabcabcabc",
                 "t": "cabcabcabcabcabcabcabcab",
-                "k": 123456789123456800000
+                "k": "123456789123456800000"
             },
             "expected": 60155055
         },
@@ -192,7 +192,7 @@
             "args": {
                 "s": "cryptography",
                 "t": "graphycrypto",
-                "k": 500000000000000000
+                "k": "500000000000000000"
             },
             "expected": 547734217
         },
@@ -216,7 +216,7 @@
             "args": {
                 "s": "abcdefabcdef",
                 "t": "defabcdefabc",
-                "k": 123456789123456780
+                "k": "123456789123456780"
             },
             "expected": 93349771
         },
@@ -272,7 +272,7 @@
             "args": {
                 "s": "rotationrotationrotation",
                 "t": "ionrotationrotationrotati",
-                "k": 111111111111111110000
+                "k": "111111111111111110000"
             },
             "expected": 0
         },
@@ -352,7 +352,7 @@
             "args": {
                 "s": "hellohellohellohellohello",
                 "t": "ohellohellohellohellohel",
-                "k": 987654321987654300
+                "k": "987654321987654300"
             },
             "expected": 0
         },
@@ -360,7 +360,7 @@
             "args": {
                 "s": "mississippi",
                 "t": "pimississi",
-                "k": 1000000000000000000
+                "k": "1000000000000000000"
             },
             "expected": 0
         },
@@ -368,7 +368,7 @@
             "args": {
                 "s": "abcdabcdabcdabcd",
                 "t": "cdabcdabcdabcdab",
-                "k": 666666666666666600
+                "k": "666666666666666600"
             },
             "expected": 518849396
         },
@@ -544,7 +544,7 @@
             "args": {
                 "s": "repeatedrepeated",
                 "t": "atedrepeatedrepe",
-                "k": 200000000000000000
+                "k": "200000000000000000"
             },
             "expected": 212764291
         },
@@ -576,7 +576,7 @@
             "args": {
                 "s": "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc",
                 "t": "cabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcab",
-                "k": 500000000000000000
+                "k": "500000000000000000"
             },
             "expected": 816699960
         },
@@ -592,7 +592,7 @@
             "args": {
                 "s": "abababababababababab",
                 "t": "babababababababababa",
-                "k": 1000000000000000000
+                "k": "1000000000000000000"
             },
             "expected": 238518966
         },
@@ -664,7 +664,7 @@
             "args": {
                 "s": "repeatthisrepeatthis",
                 "t": "thisrepeatthisrepeat",
-                "k": 654321987654322000
+                "k": "654321987654322000"
             },
             "expected": 726267327
         },
@@ -688,7 +688,7 @@
             "args": {
                 "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
                 "t": "zzabcdefghijklmnopqrstuvwxyzabcd",
-                "k": 222222222222222230000
+                "k": "222222222222222230000"
             },
             "expected": 0
         },
