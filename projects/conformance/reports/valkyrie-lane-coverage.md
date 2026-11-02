@@ -2,7 +2,7 @@
 
 > 口径：本报告只记录外部可观测的编译/运行现象（错误文本、通道、用例计数），不含内部缺陷编号。
 
-- 生成时间：2026-11-03（历程：全绿累计 53 → 56 → 59 → 72 → 80 → 81 → 87 → 90 → 91 → 95 → 96）
+- 生成时间：2026-11-03（历程：全绿累计 53 → 56 → 59 → 72 → 80 → 81 → 87 → 90 → 91 → 95 → 96 → 100）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
 - 工具链来源：本地 dev 工具链快照（经独立 worktree 构建的 napi 产物，`VALKYRIE_NATIVE` 指向该产物，`legions.von` 指向工作树 std）。结果为工作树快照，不是发布依赖复验。
@@ -281,13 +281,34 @@
 
 **全绿累计：96 题**（95 + `sum-of-number-and-its-reverse`）。
 
+### 第七批（9 题，V + TypeScript + Python 三参考）
+
+| 题目 | 专题 | 用例数 | V wasm | V ovm | V jvm | V clr | 三参考 | 现象 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `rotated-digits` | 数位 | 55 | GREEN 55/55 | GREEN 55/55 | GREEN 55/55 | GREEN 55/55 | TS+PY 对齐 | — |
+| `confusing-number` | 数位 | 131 | GREEN 131/131 | GREEN 131/131 | GREEN 131/131 | GREEN 131/131 | TS+PY 对齐 | — |
+| `find-the-minimum-number-of-fibonacci-numbers-whose-sum-is-k` | 数学/贪心 | 70 | GREEN 70/70 | GREEN 70/70 | GREEN 70/70 | GREEN 70/70 | TS+PY 对齐 | — |
+| `count-largest-group` | 计数 | 45 | GREEN 45/45 | GREEN 45/45 | GREEN 45/45 | GREEN 45/45 | TS+PY 对齐 | — |
+| `lexicographical-numbers` | 字典序 | — | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | wasm/ovm `Raise` 计划受阻 + jvm/clr 缺 `__u64_add`（push-only，HIR 全闭合） |
+| `gray-code` | 位宽推导 | — | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | wasm/ovm `Raise` 计划受阻 + jvm/clr 缺 `__u64_add`（push-only，HIR 全闭合） |
+| `combinations` | 迭代器组合 | — | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻 |
+| `letter-case-permutation` | 字符串切片 | — | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻（wasm `Utf8Builder`/字符串读取）+ managed `infix !=` 受阻 |
+| `next-permutation` | 字典序/数组 | — | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | 容器解析受阻 |
+
+- `count-largest-group`（V 四 lane 全绿）：官方 $n \le 10^4$ 下数位和 $\le 36$，V 无计数容器，用 36 趟按和分组的计数法替代单趟哈希计数，复杂度 $O(36n)$ 与参考 $O(n)$ 同阶可接受。
+- `rotated-digits`、`confusing-number`（均四 lane 全绿）：纯数位状态机，无需容器。`confusing-number` 语料 12 例越官方上限（$n \le 10^9$）已取模派生并重算 `expected`。
+- `lexicographical-numbers` 与 `gray-code`：均为**只含 `ArrayList::new` + `push`、无 `⁅ ⁆` 读取**的解法，HIR 全量闭合后统一打到 wasm/ovm 后端 `Raise` 计划缺口与 jvm/clr `__u64_add` provider 缺口——该现象现由 `maximum-depth-of-binary-tree`、`lexicographical-numbers`、`gray-code` 三题独立复现。
+- `combinations`、`letter-case-permutation`：输出顺序严格对齐参考实现的 DFS 枚举序（`combinations` 先取后跳、`letter-case-permutation` 先保原样后翻转），三端一致。
+
+**全绿累计：100 题**（96 + `rotated-digits`、`confusing-number`、`find-the-minimum-number-of-fibonacci-numbers-whose-sum-is-k`、`count-largest-group`）。
+
 ## 编译器/标准库问题清单
 
 | 现象 | 最小复现 | 涉及题目 |
 | --- | --- | --- |
 | 导出 micro 的多词形参以 snake_case 书写时，wasm 通道运行期报 `AbiSchemaError: args.<snake> 缺少参数`；ovm/jvm/clr 未报。形参按字面量进入 ABI schema，不经 case 变换 | `micro poor_pigs(buckets: i64, minutes_to_die: i64, minutes_to_test: i64)` + args 键 `minutesToDie` → `args.minutes_to_die 缺少参数`；改为 camelCase 后四 lane 全绿 | `poor-pigs`（已按约定修正） |
 | `⁅ ⁆` 参数子树解析失败时，诊断名归到最外层具名调用而非 `<computed>` | `abs_i64(arr⁅i⁆.unwrap() - arr⁅j⁆.unwrap())` 报 `unresolved call `abs_i64``；`result.push(nums⁅i⁆.unwrap())` 报 `unresolved call `<computed>``；同族：`target - numbers⁅i⁆.unwrap()` 报 `unresolved call `infix -``（`two-sum-ii-input-array-is-sorted`） | `count-good-triplets`、`two-sum-ii-input-array-is-sorted`（现象 A 的诊断形态） |
-| HIR 全量闭合的 `ArrayList<i64>` 参数递归函数在 wasm/ovm 后端计划层报 `Raise` 无目标合同；jvm/clr 报缺 `__u64_add` host provider | `micro depth_of(root: ArrayList<i64>, i: usize) -> i64 { if i >= root.length() { return 0 } ... }`（函数体仅含 `length()`、递归与 usize 算术）；wasm/ovm：`canonical effect terminator 尚无目标合同: PerformEffect { effect: Raise, ... }`；jvm/clr：`host contract `std::primitive::__u64_add` ... no host provider is bound` | `maximum-depth-of-binary-tree` |
+| HIR 全量闭合的 `ArrayList` 解法在 wasm/ovm 后端计划层报 `Raise` 无目标合同；jvm/clr 报缺 `__u64_add` host provider。push-only 构造（无 `⁅ ⁆` 读取）与纯递归形态均可触发 | `micro depth_of(root: ArrayList<i64>, i: usize) -> i64 { if i >= root.length() { return 0 } ... }`；`micro gray_code(n: i64) -> ArrayList<i64> { ... result.push(i.bit_xor(i / 2)) ... }`；`lexical_order` 的 `result.push(v)` 循环 | `maximum-depth-of-binary-tree`、`lexicographical-numbers`、`gray-code`（三题独立复现） |
 
 ## 按现象归类的阻塞清单
 
