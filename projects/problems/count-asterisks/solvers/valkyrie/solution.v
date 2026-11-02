@@ -7,7 +7,7 @@ micro count_asterisks(s: utf8) -> i64 {
     let mut inside: bool = false
     let mut count: i64 = 0
     while i < n {
-        let code: u32 = s.char_at(i).unwrap() as u32
+        let code: u32 = s.char_at(i + 1).unwrap() as u32
         if code == 124 {
             inside = !inside
         } else if code == 42 && inside == false {

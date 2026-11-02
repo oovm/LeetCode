@@ -24,7 +24,7 @@ micro month_days(m: i64, y: i64) -> i64 {
 }
 
 micro digit_at(s: utf8, i: usize) -> i64 {
-    return (s.char_at(i).unwrap() as u32 - 48) as i64
+    return (s.char_at(i + 1).unwrap() as u32 - 48) as i64
 }
 
 [export(case: "camelCase")]

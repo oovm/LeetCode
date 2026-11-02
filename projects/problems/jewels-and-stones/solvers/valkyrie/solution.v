@@ -7,11 +7,11 @@ micro num_jewels_in_stones(jewels: utf8, stones: utf8) -> i64 {
     let mut count: i64 = 0
     let mut si: usize = 0
     while si < sn {
-        let sc: u32 = stones.char_at(si).unwrap() as u32
+        let sc: u32 = stones.char_at(si + 1).unwrap() as u32
         let mut ji: usize = 0
         let mut hit: bool = false
         while ji < jn && hit == false {
-            if jewels.char_at(ji).unwrap() as u32 == sc {
+            if jewels.char_at(ji + 1).unwrap() as u32 == sc {
                 count = count + 1
                 hit = true
             }

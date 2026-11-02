@@ -40,7 +40,7 @@ micro parse_group(s: utf8, start: usize, closer: u32) -> i64 {
     let n: usize = s.length()
     let mut index: usize = start
     while index < n {
-        let code: u32 = s.char_at(index).unwrap() as u32
+        let code: u32 = s.char_at(index + 1).unwrap() as u32
         if is_bracket_code(code) == false {
             return -1
         }

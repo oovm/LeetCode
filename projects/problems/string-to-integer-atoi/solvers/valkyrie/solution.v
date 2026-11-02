@@ -8,7 +8,7 @@ micro my_atoi(s: utf8) -> i64 {
     }
     let mut i: usize = 0
     while i < n {
-        let ch: char = s.char_at(i).unwrap()
+        let ch: char = s.char_at(i + 1).unwrap()
         if ch as u32 != 32 {
             break
         }
@@ -18,7 +18,7 @@ micro my_atoi(s: utf8) -> i64 {
         return 0
     }
     let mut sign: i64 = 1
-    let first: char = s.char_at(i).unwrap()
+    let first: char = s.char_at(i + 1).unwrap()
     if first as u32 == 45 {
         sign = -1
         i = i + 1
@@ -30,7 +30,7 @@ micro my_atoi(s: utf8) -> i64 {
     let flag: i64 = mx / 10
     let mut res: i64 = 0
     while i < n {
-        let ch: char = s.char_at(i).unwrap()
+        let ch: char = s.char_at(i + 1).unwrap()
         if !ch.is_ascii_digit() {
             break
         }

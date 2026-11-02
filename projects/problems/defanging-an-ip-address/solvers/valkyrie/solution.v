@@ -6,7 +6,7 @@ micro defang_i_paddr(address: utf8) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(n + 6)
     let mut i: usize = 0
     while i < n {
-        let c: char = address.char_at(i).unwrap()
+        let c: char = address.char_at(i + 1).unwrap()
         let code: u32 = c as u32
         if code == 46 {
             builder.append(char::from(91))

@@ -265,6 +265,7 @@ micro eq_some(value: Option<i64>, num: i64) -> bool {
 | `happy-number` | `unresolved call `infix ==` in contains at source/_.v:4714..4727` |
 
 - 修复线：泛型约束 `where T: Equal` 向 `infix ==` 解析供给。修复后 2 题可复跑。
+- 现状（同日 sweep 复跑）：用户侧 `where T: Equal` + `infix ==` 已随 dev 工具链修复（探针 `generic-eq` 构建通过），但 std 泛型容器内部的 `infix ==` 仍未解析——`contains-duplicate`/`happy-number` 现报 `unresolved call `<computed>` in insert`（22–23 处同源）+ `unresolved call `infix ==` in find_slot`（`source/_.v:7:1`），原 `in contains` 坐标不再复现，表面并入 D12''。能力未通，2 题仍四 lane build blocked。
 
 ### D4. `HashMap` 内部 `find_slot`/`find_insert_slot`/`insert` 调用实例未声明
 
@@ -280,6 +281,7 @@ micro eq_some(value: Option<i64>, num: i64) -> bool {
 | `ransom-note` | 同形（`std::insert` + `std::find_slot`） |
 
 - 修复线：`HashMap` 内部槽位函数的实例声明/导入合同。修复后 4 题可复跑。
+- 现状（同日 sweep 复跑）：原 `调用实例 ItemInstanceId(...) 没有定义或显式导入合同` 错误面在当前 dev 工具链下不再复现；`two-sum`、`valid-anagram`、`ransom-note`、`longest-substring-without-repeating-characters` 现统一报 `unresolved call `<computed>` in get`（26 处同源）+ `unresolved call `infix ==` in rehash`（`source/_.v:7:1`），表面并入 D12''。`intersection-of-two-arrays` 本轮未复跑。能力未通，属错误面迁移而非修复。
 
 ### D5. 限定路径 turbofish `std::collection::array::new::<T>` 未解析
 
@@ -298,6 +300,7 @@ micro eq_some(value: Option<i64>, num: i64) -> bool {
 | `longest-common-prefix` | 同上 |
 
 - 修复线：限定路径 turbofish 合同绑定。修复后 7 题（含字符串输出链路 `Utf8Builder.build()`）可复跑。
+- 现状（同日 sweep 复跑）：原 `unresolved call `<computed>` in new at source/_.v:867..900` 错误面在当前 dev 工具链下不再复现；`integer-to-roman`、`longest-common-prefix`、`defanging-an-ip-address`、`to-lower-case` 现统一报 `unresolved call `infix +` in append`（6 处同源）+ `unresolved call `<computed>` in append`（`source/_.v:7:1`），`reverse-vowels-of-a-string` 另报 `unresolved call `prefix !`` 与 `suffix ⁅ ⁆=`（`solution.v:20` 起，为 `⁅ ⁆` 解析失败的级联），表面并入 D12''。`convert-a-number-to-hexadecimal`、`fizz-buzz` 本轮未复跑。能力未通，属错误面迁移而非修复。
 
 ### D6. `Utf8Text::from_bytes` 限定路径调用未解析
 
@@ -408,7 +411,7 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 - 归属：MIR / std `panic`（`unwrap` 内部对 `None` 调用 `std.types::panic`，其 block 参数缺 SSA 类型）。
 - 原文（四 lane 同因，wasm 为例）：`compile pipeline rejected module (SMIR001): Semantic MIR 合同失败: function=std.types::panic#186, location=block 1 parameter 0, detail=block parameter has no SSA type`。
 - 最小复现：任一调用 `s.char_at(1).unwrap()`（`char_at` 为 **1 基序数**，`char_at(0)` 非法；`⁅ ⁆` 索引为 0 基基数，不受影响）的函数——经 `Option<char>` 的 `unwrap()` 触发 `panic`。
-- 受影响题目（四 lane 同因）：`valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`count-asterisks`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`detect-capital`、`day-of-the-year`、`jewels-and-stones`、`counting-bits`（wasm/ovm）。
+- 受影响题目（四 lane 同因）：`valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`count-asterisks`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`detect-capital`、`day-of-the-year`、`jewels-and-stones`、`is-subsequence`、`excel-sheet-column-number`、`length-of-last-word`、`counting-bits`（wasm/ovm）。其中 `is-subsequence`、`excel-sheet-column-number`、`length-of-last-word` 经同日 sweep 复跑确认。
 - 修复线：std `panic` 的 block 参数补 SSA 类型（`nyar-vm.rs` MIR / `valkyrie.v` std 协同）。
 
 #### D12''. 数组题（`push`/`⁅ ⁆`/`unwrap`/`==`）：HIR `unresolved call <computed>` / `infix ==`
@@ -418,7 +421,11 @@ micro make_seq(n: i64) -> ArrayList<i64> {
   - `concatenation-of-array`：`unresolved call `<computed>` in get_concatenation --> solution.v:8:9`（`result.push(nums⁅i⁆.unwrap())`），另 3 处同根因。
   - `squares-of-a-sorted-array`：`unresolved call `suffix [ ]``（`⁅ ⁆` 索引）。
   - `number-of-steps-to-reduce-a-number-in-binary-representation-to-one`：`unresolved call `<computed>` in num_steps --> solution.v:17:12`（`bits⁅start⁆.unwrap()`）+ `unresolved call `infix ==``（`== 0`）。
-- 受影响题目：`add-two-numbers`、`concatenation-of-array`、`move-zeroes`、`missing-number`、`squares-of-a-sorted-array`、`decode-xored-array`、`number-of-steps-to-reduce-a-number-in-binary-representation-to-one`、`final-value-of-variable-after-performing-operations`、`counting-words-with-a-given-prefix`。
+  - `two-sum`（同日 sweep 复跑）：`unresolved call `<computed>` in get`（26 处同源，`source/_.v:7:1`）+ `unresolved call `infix ==` in rehash`——HashMap 题组（原 D4）当前表面。
+  - `integer-to-roman`（同日 sweep 复跑）：`unresolved call `infix +` in append`（6 处同源）+ `unresolved call `<computed>` in append`——`Utf8Builder` 输出链路题组（原 D5）当前表面。
+  - `reverse-vowels-of-a-string`（同日 sweep 复跑）：`unresolved call `prefix !``、`unresolved call `<computed>``（`solution.v:20` 起 8 处）、`unresolved call `suffix ⁅ ⁆=``（`solution.v:28:13`）——`⁅ ⁆` 解析失败的级联。
+  - `contains-duplicate`（双解对照轮）：`unresolved call `<computed>` in insert`（22 处同源）+ `unresolved call `infix ==` in find_slot` + `unresolved constructor `_` in into_iterator`——HashSet 题组（原 D3/D4）当前表面。
+- 受影响题目：`add-two-numbers`、`concatenation-of-array`、`move-zeroes`、`missing-number`、`squares-of-a-sorted-array`、`decode-xored-array`、`number-of-steps-to-reduce-a-number-in-binary-representation-to-one`、`final-value-of-variable-after-performing-operations`、`counting-words-with-a-given-prefix`、`running-sum-of-1d-array`，以及同日 sweep 复跑确认的 `defanging-an-ip-address`、`to-lower-case`、`zigzag-conversion`、`longest-palindromic-substring`、`longest-common-prefix`、`reverse-vowels-of-a-string`、`integer-to-roman`（D5 迁移）、`two-sum`、`valid-anagram`、`ransom-note`、`longest-substring-without-repeating-characters`（D4 迁移）、`happy-number`、`contains-duplicate`（D3 迁移）。
 - 修复线：`⁅ ⁆` 索引与 `Option.unwrap()`/`push` 的 `<computed>` 解析、`infix ==` 绑定（`nyar-vm.rs`/`valkyrie.v` 重构面）。
 
 #### D14. `counting-bits` jvm/clr 缺 `__isize_sub` host provider
@@ -555,6 +562,17 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 - `contains-duplicate`（V 0/4，D3 + D4）：TS 的 `Set.has`/`Set.add` 在 V 走 `HashSet.contains`/`insert`，dev 工具链下报 `unresolved call `<computed>` in insert`（22 处同源）、`unresolved call `infix ==` in find_slot`、`unresolved constructor `_` in into_iterator`（均位于 `source/_.v:7:1`）——既有根因 D3（泛型 `==`）与 D4（HashMap 实例），非新缺陷。
 
 **全绿累计：81 题**（矩阵实证 80 + 本轮 `n-queens-ii` 四 lane 全绿）。
+
+## `char_at` 序数 sweep（同日，1 基序数统一）
+
+按更正后的合同（`char_at` 为 **1 基序数**，`char_at(0)` 非法；`⁅ ⁆` 索引维持 0 基基数）把全库 `solution.v` 的 `char_at` 调用点统一改为 1 基：调用点 `+1`（如 `char_at(i)` → `char_at(i + 1)`），循环游标数学保持 0 基不动；`roman-to-integer` 的末位 `char_at(len - 1)` → `char_at(len)`、邻位 `char_at(i + 1)` → `char_at(i + 2)`，`zigzag-conversion` 的算术位置 `(idx + 1) as usize`；`day-of-the-year` 的自建 helper `digit_at` 在 helper 内部 `+1`，调用点字面量不动；`length-of-last-word` 的倒序游标 `i` 本就跑在 `n..1`，直接 `char_at(i)`。TypeScript 参考解未动。
+
+- sweep 文件：**25 个**（本轮 21 个 + 双解对照轮 4 个：`detect-capital`、`excel-sheet-column-number`、`length-of-last-word`、`final-value-of-variable-after-performing-operations`）。std 公共面无其它 `*_at` 序数 API 调用点；`merge-sorted-array` 的 `write_at` 为自建 `⁅ ⁆` 基数 helper，不在 sweep 范围。
+- 验证口径：21 题逐一四 lane 矩阵复跑（`.cache/matrix-<id>.json`，当前 dev 工具链）。
+- **已验证：0 题**——21 题全部仍 build blocked，按合同标「未验证」，不计已修。
+- **未验证：21 题**——D12' 10 题（`count-asterisks`、`day-of-the-year`、`is-subsequence`、`jewels-and-stones`、`valid-parentheses`、`valid-palindrome`、`roman-to-integer`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`string-to-integer-atoi`），D12'' 11 题（`counting-words-with-a-given-prefix`、`defanging-an-ip-address`、`longest-common-prefix`、`longest-palindromic-substring`、`longest-substring-without-repeating-characters`、`zigzag-conversion`、`number-of-steps-to-reduce-a-number-in-binary-representation-to-one`、`valid-anagram`、`ransom-note`、`reverse-vowels-of-a-string`、`to-lower-case`）。
+- 新增 D 根因：无。
+- 变化的 D 根因（错误面迁移，非修复）：D3（std 容器内 `infix ==`）、D4（HashMap 实例未声明）、D5（限定路径 turbofish）的原始错误文本在当前 dev 工具链下全部不再复现，统一迁移为 std 泛型容器内部的 `unresolved call `<computed>`` / `infix +`` / `infix ==``（`source/_.v:7:1`），表面并入 D12''；对应题组（`two-sum`、`valid-anagram`、`ransom-note`、`longest-substring-without-repeating-characters`、`contains-duplicate`、`happy-number`、`integer-to-roman`、`longest-common-prefix`、`reverse-vowels-of-a-string`、`defanging-an-ip-address`、`to-lower-case`）能力仍未通，四 lane build blocked 不变。另抽查 `intersection-of-two-arrays`（D4）、`convert-a-number-to-hexadecimal`、`fizz-buzz`（D5）本轮未复跑，保留原归类待复跑确认。
 
 ## managed lane 真实执行
 
@@ -695,9 +713,9 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 | `valid-parentheses` | 148 | wasm GREEN，其余三 lane build blocked | `ovm-typed-sum-plan-missing` + `managed-array-u8-unsupported` | ovm：`Nyar backend requires a typed sum representation plan; semantic sum operation has no target contract`。jvm/clr：`JVM/CLR 最小 lowering 不支持类型 \`[u8]\`：缺少该形状的 JVM/CLR 载体合同`。`__u32_or` provider 与 `char_at` 码点 0 编组缺陷已修，wasm 148/148 全绿 |
 | `roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi` | 94 / 21 / 185 | wasm GREEN，其余三 lane build blocked（本轮未复跑） | 上轮为 `ovm-provider-missing` + `managed-option-char-unsupported` | 上轮诊断：ovm `__u32_or` 无 provider、jvm/clr `Option<char>` 无载体。`__u32_or` provider 已随 `valid-parentheses` 复跑确认修复，三题未在本轮重跑，根因可能已推进至 typed sum / `[u8]` 载体，待复跑确认 |
 | `add-two-numbers` | 59 | wasm GREEN，其余三 lane build blocked | `ovm-typed-sum-plan-missing` + `managed-array-i64-unsupported` | ovm：`Nyar backend requires a typed sum representation plan; semantic sum operation has no target contract`。jvm/clr：`JVM/CLR 最小 lowering 不支持类型 \`[i64]\`：缺少该形状的 JVM/CLR 载体合同`（非 `ArrayList<i64>`） |
-| `two-sum`、`valid-anagram`、`ransom-note` | 80 / — / — | 四 lane build blocked | `hashmap-insert-instance-undeclared` | `调用实例 \`ItemInstanceId(...)\` 没有定义或显式导入合同；callers=[\"std::find_slot#...\", \"std::find_insert_slot#...\"]`（`valid-anagram`/`ransom-note` 为 `std::insert#...` + `std::find_slot#...`） |
-| `reverse-vowels-of-a-string`、`integer-to-roman`、`longest-common-prefix` | — | 四 lane build blocked | `qualified-turbofish-call-unresolved` | `unresolved call \`<computed>\` in new at source/_.v:867..900`；落在 `Array.v` 的 `push` 体内 `std::collection::array::new::<T>(old_len + 1)`。解析已恢复，语义解析仍未把限定路径 + `::<T>` 绑定到合同实例 |
-| `happy-number` | — | 四 lane build blocked | `generic-constraint-eq-unresolved` | `unresolved call \`infix ==\` in contains at source/_.v:4714..4727`；落在 `Array<T>::contains` 的 `where T: Equal` 约束内，约束未参与 `infix ==` 解析 |
+| `two-sum`、`valid-anagram`、`ransom-note` | 80 / — / — | 四 lane build blocked | `hashmap-insert-instance-undeclared`（同日 sweep 复跑：表面已迁移至 D12''） | 原文已变为 `unresolved call `<computed>` in get`（26 处同源）+ `unresolved call `infix ==` in rehash`（`source/_.v:7:1`），原 `ItemInstanceId(...) 没有定义或显式导入合同` 不再复现，能力未通 |
+| `reverse-vowels-of-a-string`、`integer-to-roman`、`longest-common-prefix` | — | 四 lane build blocked | `qualified-turbofish-call-unresolved`（同日 sweep 复跑：表面已迁移至 D12''） | 原文已变为 `unresolved call `infix +` in append`（6 处同源）+ `unresolved call `<computed>` in append`（`source/_.v:7:1`）；`reverse-vowels-of-a-string` 另报 `prefix !` / `suffix ⁅ ⁆=` 级联。原 `array::new::<T>` turbofish 错误不再复现，能力未通 |
+| `happy-number` | — | 四 lane build blocked | `generic-constraint-eq-unresolved`（同日 sweep 复跑：表面已迁移至 D12''） | 原文已变为 `unresolved call `<computed>` in insert`（23 处同源）+ `unresolved call `infix ==` in find_slot`（`source/_.v:7:1`），原 `in contains` 坐标不再复现，能力未通 |
 | `reverse-string` | — | 四 lane 崩溃（exit `-1073740791`） | `wasm-plan-encode-slot-conflict` | `panicked at compilers\nyar-emitter\src\lowering\backends\wasm\mir\calls.rs:245: WASM 编码结果与预规划槽冲突: %5 in std::at`，`left: 110`（anyref）/ `right: 127`（i32）。规划槽取 `NyarType::Parameter(T)` 的 Reference 表示，编码却按 `ArrayList::at` 实例化返回的 i32 载体发射 |
 | `hamming-distance` | 88 | wasm 17/88、ovm 17/88、jvm/clr 0/0（`runtimeStatus=ready`，非全绿） | 语料缺陷 `integer_beyond_i64` | `tests[17]` 输入 `x=18446744073709552000, y=9223372036854776000` 超出 i64 上限。wasm 以 BigInt 执行得 2，metadata 期望 1（i64 语义）；ovm `type mismatch: expected i64, got f64`；jvm `NumberFormatException`；clr `OverflowException`。已在该用例标注 `corpusDefect`，未删改值 |
 | `binary-number-with-alternating-bits` | 72 | wasm 25/72、ovm 25/72、jvm/clr 0/0（`runtimeStatus=ready`，非全绿） | 语料缺陷 `float_literal_beyond_safe_integer` | `tests[25]` 输入 `n=1.0101010101010101e+30` 为超出 safe integer 的浮点字面量。wasm `SyntaxError: Cannot convert ... to a BigInt`；ovm `type mismatch: expected i64, got f64`；jvm `NumberFormatException`；clr `FormatException`。已在该用例标注 `corpusDefect`，未删改值 |

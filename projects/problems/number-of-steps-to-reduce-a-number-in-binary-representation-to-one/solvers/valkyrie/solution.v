@@ -7,7 +7,7 @@ micro num_steps(s: utf8) -> i64 {
     let mut i: usize = n
     while i > 0 {
         i = i - 1
-        let code: u32 = s.char_at(i).unwrap() as u32
+        let code: u32 = s.char_at(i + 1).unwrap() as u32
         bits.push(code as i64 - 48)
     }
     let mut start: usize = 0

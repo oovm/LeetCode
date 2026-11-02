@@ -29,11 +29,11 @@ micro roman_to_int(s: utf8) -> i64 {
     if len == 0 {
         return 0
     }
-    let mut sum: i64 = roman_value(s.char_at(len - 1).unwrap())
+    let mut sum: i64 = roman_value(s.char_at(len).unwrap())
     let mut i: usize = 0
     while i < len - 1 {
-        let a: i64 = roman_value(s.char_at(i).unwrap())
-        let b: i64 = roman_value(s.char_at(i + 1).unwrap())
+        let a: i64 = roman_value(s.char_at(i + 1).unwrap())
+        let b: i64 = roman_value(s.char_at(i + 2).unwrap())
         if a < b {
             sum = sum - a
         } else {

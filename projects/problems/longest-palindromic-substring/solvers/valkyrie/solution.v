@@ -14,7 +14,7 @@ micro longest_palindrome(s: utf8) -> utf8 {
         let mut l: usize = center / 2
         let mut r: usize = (center + 1) / 2
         while r < n {
-            if s.char_at(l).unwrap() as u32 != s.char_at(r).unwrap() as u32 {
+            if s.char_at(l + 1).unwrap() as u32 != s.char_at(r + 1).unwrap() as u32 {
                 break
             }
             let len: usize = r - l + 1
@@ -33,7 +33,7 @@ micro longest_palindrome(s: utf8) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(best_len)
     let mut k: usize = 0
     while k < best_len {
-        builder.append(s.char_at(best_start + k).unwrap())
+        builder.append(s.char_at(best_start + k + 1).unwrap())
         k = k + 1
     }
     return builder.build()
