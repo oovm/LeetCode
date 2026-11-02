@@ -595,6 +595,7 @@
     ],
     "invoke": {
         "python": "Solution().splitNum",
-        "typescript": "Solution().splitNum"
+        "typescript": "Solution().splitNum",
+        "valkyrie": "splitNum"
     }
 }

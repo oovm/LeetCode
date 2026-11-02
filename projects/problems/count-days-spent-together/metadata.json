@@ -1051,6 +1051,7 @@
     ],
     "invoke": {
         "python": "Solution().countDaysTogether",
-        "typescript": "Solution().countDaysTogether"
+        "typescript": "Solution().countDaysTogether",
+        "valkyrie": "countDaysTogether"
     }
 }

@@ -973,6 +973,7 @@
     ],
     "invoke": {
         "python": "Solution().daysBetweenDates",
-        "typescript": "Solution().daysBetweenDates"
+        "typescript": "Solution().daysBetweenDates",
+        "valkyrie": "daysBetweenDates"
     }
 }

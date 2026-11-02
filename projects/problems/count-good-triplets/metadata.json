@@ -916,6 +916,7 @@
     ],
     "invoke": {
         "python": "Solution().countGoodTriplets",
-        "typescript": "Solution().countGoodTriplets"
+        "typescript": "Solution().countGoodTriplets",
+        "valkyrie": "countGoodTriplets"
     }
 }

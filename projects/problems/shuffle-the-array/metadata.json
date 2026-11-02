@@ -737,6 +737,7 @@
     ],
     "invoke": {
         "python": "Solution().shuffle",
-        "typescript": "Solution().shuffle"
+        "typescript": "Solution().shuffle",
+        "valkyrie": "shuffle"
     }
 }

@@ -602,6 +602,7 @@
     ],
     "invoke": {
         "python": "Solution().minimizeXor",
-        "typescript": "Solution().minimizeXor"
+        "typescript": "Solution().minimizeXor",
+        "valkyrie": "minimizeXor"
     }
 }

@@ -991,6 +991,7 @@
     ],
     "invoke": {
         "python": "Solution().canMakeArithmeticProgression",
-        "typescript": "Solution().canMakeArithmeticProgression"
+        "typescript": "Solution().canMakeArithmeticProgression",
+        "valkyrie": "canMakeArithmeticProgression"
     }
 }

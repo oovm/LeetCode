@@ -799,6 +799,7 @@
     ],
     "invoke": {
         "python": "Solution().poorPigs",
-        "typescript": "Solution().poorPigs"
+        "typescript": "Solution().poorPigs",
+        "valkyrie": "poorPigs"
     }
 }

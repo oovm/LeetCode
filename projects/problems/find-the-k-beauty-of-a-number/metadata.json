@@ -637,6 +637,7 @@
     ],
     "invoke": {
         "python": "Solution().divisorSubstrings",
-        "typescript": "Solution().divisorSubstrings"
+        "typescript": "Solution().divisorSubstrings",
+        "valkyrie": "divisorSubstrings"
     }
 }
