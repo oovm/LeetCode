@@ -1,10 +1,10 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56；同日语料精度修根，全绿累计 59；同日四 lane 覆盖重新拉起，全绿累计 72）
+- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56；同日语料精度修根，全绿累计 59；同日四 lane 覆盖重新拉起，全绿累计 72；同日按本地 dev 工具链复跑，全绿累计 73）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
-- 工具链来源：`../nyar-vm.rs` HEAD `f502b9ea` 加工作树，napi 二进制已重建；`../valkyrie.v` HEAD `eeac899` 加工作树。结果是工作树快照，不是发布依赖复验。
-- **工具链当前处于中间破损态（两路根因）**：本次会话期间 `nyar-vm.rs`（`5709478e`→`d5a80074`→`8a4f83cd`→`f502b9ea`）与 `valkyrie.v`（`eed8459`→`7125ce0`→`eeac899`）被连续改动，当前字符串/char 题与数组题在 `Option` 变体 `Some` 处全线 `unresolved call`（命中 `char_at` 与 `⁅ ⁆` 索引），且局部变量名 `position` 与 std prelude 的 `std::iterator::position` 撞名触发额外失败。这是工具链自身回归，与本仓 harness/语料改动无关；纯 `i64` 标量题（无 `Option`/容器/字符串、无 `position` 变量名）不受影响。详见「按根因聚合的阻塞清单」D12、D13。
+- 工具链来源（本轮起）：`../nyar-vm.rs` 本地 dev `7d4df3c2`（含 char、copy-discipline、数组 pattern、解析多错、oak `1f766c07`），`../valkyrie.v` 本地 dev `e25b3bb`（`std::operator`、`Ordinal`、`[constructor]` 标注）。两者经独立 `git worktree` 检出（不动既有工作树），`valkyrie-napi` 经 `RUSTUP_TOOLCHAIN=nightly` 重建 `.node`；leetcode 经 `VALKYRIE_NATIVE` 指向该 `.node`、`legions.von` 指向 worktree std。结果是工作树快照，不是发布依赖复验。
+- **工具链当前状态**：纯 `i64` 标量题四 lane 全绿（D13 `position` 撞名已随 oak 解析修复而消除，`pass-the-pillow` 复绿）；字符串题（`char_at`）与数组题（`push`/`⁅ ⁆`/`unwrap`）仍 build blocked，详见「按根因聚合的阻塞清单」D12'、D12''、D14。
 
 ## lane 口径
 
@@ -399,33 +399,40 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 
 - 修复线：语料生成器拒绝越界/占位符用例，越安全整数一律写十进制字符串；`scan --assert` 挂为 `pnpm test:corpus` 断言。存量 `float_literal=939` 处（53 slug）为后续回填清单。
 
-### D12. `Option` 变体 `Some` 在 `char_at` 与 `⁅ ⁆` 索引处未解析（当前工具链中间态）
+### D12. 字符串/数组题在 `Option`/索引/`unwrap` 路径 build blocked（dev 工具链 `7d4df3c2`+`e25b3bb` 快照）
 
-- 归属：前端语义 / 载体与 typed sum（工具链正在重构 `Option`/`Cardinal` 索引，`Some` 构造器暂不解析）。
-- 原文（四 lane 同因，wasm 为例）：
-  - 字符串题：`error[valkyrie.hir.unresolved_call]: unresolved call `Some` in char_at   --> source/_.v:7:1`
-  - 数组/索引题：`error[valkyrie.hir.unresolved_call]: unresolved call `Some` in suffix [ ]   --> source/_.v:7:1`
-- 最小复现：任一调用 `s.char_at(i)`（返回 `Option<char>`）或 `nums⁅i⁆`（返回 `Option<T>`）的函数；二者内部构造 `Some`，当前不解析。
-- 受影响题目（四 lane build blocked）：`valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`count-asterisks`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`detect-capital`、`day-of-the-year`、`jewels-and-stones`、`add-two-numbers`、`concatenation-of-array`、`move-zeroes`、`missing-number`、`squares-of-a-sorted-array`、`decode-xored-array`、`number-of-steps-to-reduce-a-number-in-binary-representation-to-one`、`final-value-of-variable-after-performing-operations`、`counting-words-with-a-given-prefix`、`counting-bits`。
-- 说明：此根因在当前快照**遮蔽**了 D7（wasm 字符串数组编组）、D8（ovm fixed-array panic）、D9（ovm typed sum）——这些 lane 特有问题在 `Some` 修复后才可能重新暴露；D10（jvm/clr `[i64]`/`[u8]` 载体）同理。修复线：`Some` 变体构造器解析（`Option`/typed sum 表示与 `Cardinal` 索引合同），属 `nyar-vm.rs`/`valkyrie.v` 正在进行的重构。
+本地 dev 工具链（`nyar-vm.rs 7d4df3c2` + `valkyrie.v e25b3bb`）下，`Option::Some` 已获 `[constructor]` 标注，`char_at` 路径推进过 HIR，但字符串/数组题仍 build blocked，按子根因分列：
 
-### D13. 局部变量名 `position` 与 std prelude `std::iterator::position` 撞名
+#### D12'. 字符串题（`char_at`+`unwrap`）：Semantic MIR `std.types::panic` SSA 缺型
 
-- 归属：前端语义（std prelude `using!` 把 `std::iterator::position` 引入作用域，其内部 `Some` 未解析；用户同名局部变量触发对该 std 函数的解析）。
-- 原文：`error[valkyrie.hir.unresolved_call]: unresolved call `Some` in position   --> source/_.v:7:1`。
-- 最小复现（`.cache/probes/position-name`，wasm 构建）：
+- 归属：MIR / std `panic`（`unwrap` 内部对 `None` 调用 `std.types::panic`，其 block 参数缺 SSA 类型）。
+- 原文（四 lane 同因，wasm 为例）：`compile pipeline rejected module (SMIR001): Semantic MIR 合同失败: function=std.types::panic#186, location=block 1 parameter 0, detail=block parameter has no SSA type`。
+- 最小复现：任一调用 `s.char_at(i).unwrap()`（经 `Option<char>` 触发 `panic`）的函数。
+- 受影响题目（四 lane 同因）：`valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`count-asterisks`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`detect-capital`、`day-of-the-year`、`jewels-and-stones`、`counting-bits`（wasm/ovm）。
+- 修复线：std `panic` 的 block 参数补 SSA 类型（`nyar-vm.rs` MIR / `valkyrie.v` std 协同）。
 
-```text
-micro with_position(a: i64, b: i64) -> i64 {
-    let position: i64 = a % b
-    return position + 1
-}
-```
+#### D12''. 数组题（`push`/`⁅ ⁆`/`unwrap`/`==`）：HIR `unresolved call <computed>` / `infix ==`
 
-对照：同函数体把 `position` 改名 `pos` 即构建通过。证明是变量名与 std prelude 的 `position` 函数撞名触发，而非 `%` 运算符。
+- 归属：前端语义（`⁅ ⁆` 索引操作、`Option.unwrap()`、`ArrayList::push` 与 `infix ==` 的 `<computed>` 解析未通过 HIR）。
+- 原文（wasm 为例，坐标随解法）：
+  - `concatenation-of-array`：`unresolved call `<computed>` in get_concatenation --> solution.v:8:9`（`result.push(nums⁅i⁆.unwrap())`），另 3 处同根因。
+  - `squares-of-a-sorted-array`：`unresolved call `suffix [ ]``（`⁅ ⁆` 索引）。
+  - `number-of-steps-to-reduce-a-number-in-binary-representation-to-one`：`unresolved call `<computed>` in num_steps --> solution.v:17:12`（`bits⁅start⁆.unwrap()`）+ `unresolved call `infix ==``（`== 0`）。
+- 受影响题目：`add-two-numbers`、`concatenation-of-array`、`move-zeroes`、`missing-number`、`squares-of-a-sorted-array`、`decode-xored-array`、`number-of-steps-to-reduce-a-number-in-binary-representation-to-one`、`final-value-of-variable-after-performing-operations`、`counting-words-with-a-given-prefix`。
+- 修复线：`⁅ ⁆` 索引与 `Option.unwrap()`/`push` 的 `<computed>` 解析、`infix ==` 绑定（`nyar-vm.rs`/`valkyrie.v` 重构面）。
 
-- 受影响题目：`pass-the-pillow`（前序四 lane 全绿，本轮转红；其余四 lane build blocked）。
-- 修复线：std prelude 的 `using!` 不应让用户同名变量触发对未用 std 函数的 `Some` 解析（名字隔离 / 惰性解析），属 `nyar-vm.rs`/`valkyrie.v` 重构面。未在 solution 中改名规避——按「不在 runner/harness/题解里绕过」记录根因，待工具链修复。
+#### D14. `counting-bits` jvm/clr 缺 `__isize_sub` host provider
+
+- 归属：jvm/clr host provider（`counting-bits` wasm/ovm 同 D12'）。
+- 原文：`host contract `std.primitive.__isize_sub` (instance `ItemInstanceId(11)`) has a resolved call but no host provider is bound`。
+- 受影响题目：`counting-bits`（jvm/clr lane）。
+- 修复线：`std.primitive.__isize_sub` 的 jvm/clr host provider 绑定。
+
+### D13. 局部变量名 `position` 与 std prelude `std::iterator::position` 撞名（dev 工具链已修复）
+
+- 结论：**已随 dev 工具链（oak `1f766c07` 解析修复）消除**。`pass-the-pillow`（含 `let position: i64`）在 `7d4df3c2`+`e25b3bb` 下四 lane 复绿（94/94），不再触发对 std `position` 的 `Some` 解析。
+- 历史坐标（前工具链 `f502b9ea`/`eeac899` 快照）：std prelude `using! std::iterator::{... position ...}` 把 `std::iterator::position` 引入作用域，用户同名局部变量触发对该 std 函数的 `Some` 解析而失败；改名 `pos` 即规避。当前快照下该撞名不再发生。
+- 受影响题目：`pass-the-pillow`（前序转红，本轮复绿）。
 
 ## 语料精度修根（同日，字符串表示 + 全量回填）
 
@@ -497,6 +504,26 @@ micro with_position(a: i64, b: i64) -> i64 {
 - `nth-digit` 语料全在约束内，直接写解法转绿。
 
 **全绿累计：72 题**（前序 58 + 本轮 14）。
+
+## 按本地 dev 工具链复跑（同日，`nyar-vm.rs 7d4df3c2` + `valkyrie.v e25b3bb`）
+
+本轮按本地 dev 工具链（worktree 检出 `7d4df3c2` 与 `e25b3bb`，`valkyrie-napi` 经 nightly 重建 `.node`，`VALKYRIE_NATIVE` 指向之）全量复跑，结果如下。
+
+**纯 `i64` 组**：全部四 lane 全绿（抽样复核 `binary-gap`、`arranging-coins`、`armstrong-number`、`bulb-switcher`、`nth-digit`、`sum-of-square-numbers`、`monotone-increasing-digits`、`hamming-distance`、`reverse-bits` 均 4/4）。
+
+**D13（`position` 撞名）**：**已修复**。`pass-the-pillow` 四 lane 复绿（94/94），变量名 `position` 不再触发对 std prelude `std::iterator::position` 的 `Some` 解析，随 oak `1f766c07` 解析修复而消除。
+
+**D12（`Some`/索引/`unwrap`）**：**未完全修复**。`Option::Some` 经 `[constructor]` 标注后 `char_at` 路径推进过 HIR，但字符串/数组题仍 build blocked，按子根因分列（详见 D12'、D12''、D14）：
+
+| 子根因 | 受影响题组 | 原文（取代表） |
+| --- | --- | --- |
+| D12' Semantic MIR `std.types::panic` SSA 缺型 | 字符串题（`char_at`+`unwrap`）11 题 | `Semantic MIR 合同失败: function=std.types::panic#186, block 1 parameter 0 has no SSA type` |
+| D12'' HIR `unresolved call <computed>` / `infix ==` | 数组题（`push`/`⁅ ⁆`/`unwrap`）9 题 | `concatenation-of-array` 于 `solution.v:8:9`（`result.push(nums⁅i⁆.unwrap())`） |
+| D14 jvm/clr 缺 `__isize_sub` provider | `counting-bits` | `host contract `std.primitive.__isize_sub` ... no host provider is bound` |
+
+**全绿累计：73 题**（前序 58 纯 `i64` + `pass-the-pillow` 复绿 + 上轮 14 新增）。
+
+**剩余阻塞**：字符串题 11 题（D12'）、数组题 9 题（D12''）、`counting-bits`（D12' + D14）。修复线分属 `nyar-vm.rs`/`valkyrie.v`：std `panic` block 参数补 SSA 类型、`⁅ ⁆`/`unwrap`/`push` 的 `<computed>` 解析与 `infix ==` 绑定、`__isize_sub` 的 jvm/clr host provider。
 
 ## managed lane 真实执行
 
