@@ -645,6 +645,7 @@
     ],
     "invoke": {
         "python": "Solution().sortByBits",
-        "typescript": "Solution().sortByBits"
+        "typescript": "Solution().sortByBits",
+        "valkyrie": "sortByBits"
     }
 }

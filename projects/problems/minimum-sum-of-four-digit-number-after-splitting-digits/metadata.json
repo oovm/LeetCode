@@ -505,6 +505,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumSum",
-        "typescript": "Solution().minimumSum"
+        "typescript": "Solution().minimumSum",
+        "valkyrie": "minimumSum"
     }
 }

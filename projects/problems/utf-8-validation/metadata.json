@@ -820,6 +820,7 @@
     ],
     "invoke": {
         "python": "Solution().validUtf8",
-        "typescript": "Solution().validUtf8"
+        "typescript": "Solution().validUtf8",
+        "valkyrie": "validUtf8"
     }
 }
