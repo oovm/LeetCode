@@ -28,6 +28,32 @@ def _coerce_int_args(value: Any) -> Any:
     return value
 
 
+def _has_bare_number(value: Any) -> bool:
+    # bool 是 int 子类，布尔实参不算裸数值。
+    if isinstance(value, bool):
+        return False
+    if isinstance(value, (int, float)):
+        return True
+    if isinstance(value, list):
+        return any(_has_bare_number(item) for item in value)
+    return False
+
+
+def _infer_int_keys(tests: list[dict[str, Any]]) -> set[str]:
+    # 生成器约定：整数型实参在不超安全整数时写裸数值；字符串型实参始终为字符串。
+    # 任一同键出现裸数值即判定整数型；仅对整数型键规整超安全整数字符串，
+    # 字符串型键（如二进制串）一律原样保留。
+    keys: set[str] = set()
+    for case in tests:
+        args = case.get("args")
+        if not isinstance(args, dict):
+            continue
+        for key, value in args.items():
+            if _has_bare_number(value):
+                keys.add(key)
+    return keys
+
+
 def _compare(actual: Any, expected: Any) -> bool:
     # expected 为超安全整数字符串、actual 为 int（非 bool）时按十进制还原比较。
     if _is_unsafe_int_string(expected) and isinstance(actual, int) and not isinstance(actual, bool):
@@ -95,12 +121,15 @@ def resolve_candidate(entry_point: str, namespace: dict[str, Any]) -> Callable[.
 
 
 def run_check(candidate: Callable[..., Any], tests: list[dict[str, Any]]) -> None:
+    int_keys = _infer_int_keys(tests)
     for index, case in enumerate(tests):
         args = case.get("args")
         if not isinstance(args, dict):
             raise ValueError(f"tests[{index}].args 必须是 object")
         expected = case["expected"]
-        coerced_args = {key: _coerce_int_args(value) for key, value in args.items()}
+        coerced_args = {
+            key: _coerce_int_args(value) if key in int_keys else value for key, value in args.items()
+        }
         try:
             actual = candidate(**coerced_args)
         except Exception as exc:  # noqa: BLE001

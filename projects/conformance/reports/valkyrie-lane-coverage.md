@@ -1,9 +1,9 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56；同日语料精度修根，全绿累计 59；同日四 lane 覆盖重新拉起，全绿累计 72；同日按本地 dev 工具链复跑，全绿累计 80；同日双解对照扩题，全绿累计 81；同日工具链推进至 `0a531be2`+`706ecec`（D15 修复、`char_at` 退役、`⁅ ⁆`/`[ ]` 索引落地），`char_at` 25 调用点统一转索引写法，本批双解新增 11 题，全绿累计 87）
+- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56；同日语料精度修根，全绿累计 59；同日四 lane 覆盖重新拉起，全绿累计 72；同日按本地 dev 工具链复跑，全绿累计 80；同日双解对照扩题，全绿累计 81；同日工具链推进至 `0a531be2`+`706ecec`（D15 修复、`char_at` 退役、`⁅ ⁆`/`[ ]` 索引落地），`char_at` 25 调用点统一转索引写法，本批双解新增 11 题，全绿累计 87；同日 V/TS/Python 三参考扩题，全绿累计 90）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
-- 工具链来源（本轮起）：`../nyar-vm.rs` 本地 dev `0a531be2`（含 D15 ovm 导出消歧、`Raise` resume 参数定型、`Cardinal` 索引覆盖、oak `1f766c07`），`../valkyrie.v` 本地 dev `706ecec`（`Utf8Text` 索引重定向码点并退役 `char_at`、`usize`/`isize` 指针宽别名、`char` 的 `==`/`!=`、`std::operator`、`Ordinal`、`[constructor]` 标注）。两者经独立 `git worktree` 检出（不动既有工作树），`valkyrie-napi` 经 `RUSTUP_TOOLCHAIN=nightly` 重建 `.node`；leetcode 经 `VALKYRIE_NATIVE` 指向该 `.node`、`legions.von` 指向 worktree std。结果是工作树快照，不是发布依赖复验。
+- 工具链来源（本轮起）：`../nyar-vm.rs` 本地 dev `0a531be2`（含 D15 ovm 导出消歧、`Raise` resume 参数定型、`Cardinal` 索引覆盖、oak `1f766c07`），`../valkyrie.v` 本地 dev `b4b7185`（`Utf8Text` 索引重定向码点并退役 `char_at`、std 内部 `char_at` 调用点迁移、`usize`/`isize` 指针宽别名、`char` 的 `==`/`!=`）。两者经独立 `git worktree` 检出（不动既有工作树），`valkyrie-napi` 经 `RUSTUP_TOOLCHAIN=nightly` 重建 `.node`；leetcode 经 `VALKYRIE_NATIVE` 指向该 `.node`、`legions.von` 指向 worktree std。结果是工作树快照，不是发布依赖复验。
 - **工具链当前状态**：纯 `i64` 标量题四 lane 全绿；`char_at` 已退役，字符串读取改走 `s⁅i⁆`（0 基基数直接取 `char`）/`s[i]`（1 基序数取 `Option<char>`），语法层已落地。阻塞面：数组 `⁅ ⁆`/`push`/HashMap 为 D12''；`loop in` 为 D1（`into_iterator` 构造器）；含 Utf8Text `⁅ ⁆` 的闭包 wasm 受阻 D16（`Raise` 无目标合同）、ovm/jvm/clr 受阻 D17（std `infix !=` 实例）；`counting-bits` managed 缺 `__u64_lt`（D14）。D12'（panic SSA）与 D15（ovm `infix ==` 导出歧义）已修复。详见「按根因聚合的阻塞清单」。
 
 ## lane 口径
@@ -491,6 +491,7 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 - `run_nyar_solver.ts`（ovm）：ovm `json_bridge.rs` 只按 `as_i64` 解析 JSON 数字，故把超安全整数字符串以**裸数字文本**注入 `argsJson`（绕过包装层 `JSON.stringify`），直接加载平台 `valkyrie-napi` 绑定。
 - TS/Python 参考端：超安全整数字符串规整回数值（TS `Number`、Python `int`），与裸数字经 `JSON.parse` 同形，零回归；`assert.ts` 按十进制文本比较字符串期望与数值实得。
 - 验证：`ugly-number` 的 `72057594037927940` 转字符串后四 lane 仍全绿；`binary-gap` 裸数字向后兼容；TS 规整与裸数字同值，真字符串参数不受影响。
+- 消费侧按题推断修根（同日第三批）：`add-binary` 暴露 TS/Python 规整的过度判定——31 位二进制串（词法上是超安全整数十进制串）被误 `Number(...)`/`int(...)`。两侧消费端改为**按题推断实参键类型**：任一同键在 `metadata.tests` 中出现裸 `number`/`bigint`（数组递归）即判定整数型，仅整数型键做字符串整数规整；字符串型键（二进制串等）一律原样保留。回归验证：`add-binary`（字符串保留）与 `ugly-number`、`hamming-distance`、`binary-number-with-alternating-bits`、`reverse-bits`（整数型键仍正确规整）Python 基准全过。
 
 ### 回填已登记 `corpusDefect` 题
 
@@ -610,6 +611,41 @@ micro make_seq(n: i64) -> ArrayList<i64> {
 - 数组 4 题（`max-consecutive-ones`、`monotonic-array`、`search-insert-position`、`largest-number-at-least-twice-of-others`）：单趟扫描/二分仅需 `⁅ ⁆` 读，仍统一受阻 D12''。
 
 **全绿累计：87 题**（81 + 本批 4 题标量全绿 + D15 修复转绿 2 题：`largest-number-after-digit-swaps-by-parity`、`divide-two-integers`）。
+
+### 第三批（同日，V + TypeScript + Python 三参考）
+
+规则调整：每题写 V 理想解 + TypeScript + Python 三份参考（TS/Python 只作语义与复杂度基准，三者同算法）；受阻题照样写完三份并照实记 D 编号。本批按专题分批：字符串 2、栈队列 2、数组 2、DP 2、图与搜索 2、位运算 1、数学 2、混合 1，共 14 题。TS/Python 基准 14/14 全过（经下列语料修根后）。
+
+| 题目 | 专题 | 用例数 | V wasm | V ovm | V jvm | V clr | 三参考 | 根因 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `unique-paths` | DP | 55 | GREEN 55/55 | GREEN 55/55 | GREEN 55/55 | GREEN 55/55 | TS+PY 对齐 | — |
+| `count-sorted-vowel-strings` | DP | 24 | GREEN 24/24 | GREEN 24/24 | GREEN 24/24 | GREEN 24/24 | TS+PY 对齐 | — |
+| `sqrtx` | 位运算/数学 | 67 | GREEN 67/67 | GREEN 67/67 | GREEN 67/67 | GREEN 67/67 | TS+PY 对齐 | — |
+| `goal-parser-interpretation` | 字符串 | 95 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | D12'' + D17 |
+| `add-binary` | 字符串/位 | 86 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | D12'' + D17 |
+| `backspace-string-compare` | 栈队列 | 109 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | D16 + D17 |
+| `remove-outermost-parentheses` | 栈队列 | 103 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | D12'' + D17 |
+| `find-the-highest-altitude` | 数组 | 110 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | D12'' |
+| `minimum-value-to-get-positive-step-by-step-sum` | 数组 | 95 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | D12'' |
+| `palindromic-substrings` | DP/字符串 | 140 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | D16 + D17 |
+| `island-perimeter` | 图与搜索 | 72 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | D12'' |
+| `find-the-town-judge` | 图与搜索 | 87 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | D12'' |
+| `excel-sheet-column-title` | 数学/字符串 | 38 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | D12'' + D17 |
+| `valid-boomerang` | 数学 | 116 | build blocked | build blocked | build blocked | build blocked | TS+PY 对齐 | D12'' + D17 |
+
+特性缺口 / 复杂度差异（逐题，TS/Python 仅对照不掩盖）：
+
+- `unique-paths`（V 四 lane 全绿）：组合数乘法公式逐步整除，V `i64` 中间量 ~$4\times10^{11}$ 无溢出；TS double 同式精确（< $2^{53}$）；Python 任意精度。三参考同算法同阶 $O(\min(m,n))$。
+- `sqrtx`（V 四 lane 全绿）：二分出 $mid^2 \approx 10^{18}$ 的用例（`x=2147483647`），V `i64` 精确；TS double 在该值域仍精确（< $2^{53}$）。语料 11 例越出官方约束（$x \le 2^{31}-1$，原含 $2^{64}-1$ 等）已派生回约束内并重算。
+- `backspace-string-compare`：V 无 `break`，用 `done`/`result` 标志展平反向双指针的提前退出；算法同阶 $O(n)$ 时间 $O(1)$ 空间，不落容器，wasm 落 D16（`⁅ ⁆` 边界 panic 的 `Raise` 合同），非 `!=` 使用。
+- `goal-parser-interpretation`：builder 输出路径 wasm 落 D12''（`append` 的 `<computed>`）；语料 14 例输入含文法外嵌套（如 `(G(al)G(al))`），按「剥掉以 `(G` 开头的非法外层括号」派生回合法文法并按参考算法重算 `expected`。
+- `add-binary`：语料 83 例 `expected` 为裸数值/精度损失值，全部按 BigInt 参考重算为二进制字符串；另暴露 TS/Python 消费端把 31 位二进制串误判为超安全整数十进制串的缺陷（见下「消费侧按题推断修根」）。
+- `remove-outermost-parentheses`：语料 6 例 `expected` 误写为空数组（如 `((()))` 应为 `(())`），按参考算法重算。
+- `unique-paths`：语料 31 例越官方约束（答案 $\le 2\times10^9$，原含 $\sim 10^{57}$ 浮点损失值），输入派生回 $m,n \in [1,100]$ 并按 BigInt 精确重算。
+- `find-the-town-judge`：`tests[26]` 的 `trust` 引用 $n$ 外之人（越约束，生成器 Python 崩溃占位），`n` 派生为 8 并按参考算法重算（期望 $-1$）。
+- `valid-boomerang`：嵌套数组入参（`ArrayList<ArrayList<i64>>`），wasm 落 D12''；`!=` 使 managed 落 D17。
+
+**全绿累计：90 题**（87 + 本批 3 题：`unique-paths`、`count-sorted-vowel-strings`、`sqrtx`）。
 
 ## `char_at` 序数 sweep（同日，1 基序数统一）
 

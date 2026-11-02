@@ -577,6 +577,7 @@
     ],
     "invoke": {
         "python": "Solution().minStartValue",
-        "typescript": "Solution().minStartValue"
+        "typescript": "Solution().minStartValue",
+        "valkyrie": "Solution().minStartValue"
     }
 }

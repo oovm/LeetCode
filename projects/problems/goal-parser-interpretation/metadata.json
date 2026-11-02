@@ -2,7 +2,9 @@
     "id": "goal-parser-interpretation",
     "questionId": 1678,
     "difficulty": "Easy",
-    "tags": ["String"],
+    "tags": [
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -30,9 +32,9 @@
         },
         {
             "args": {
-                "command": "G()(G)()"
+                "command": "G()(al)()"
             },
-            "expected": "Go(G)o"
+            "expected": "Goalo"
         },
         {
             "args": {
@@ -132,9 +134,9 @@
         },
         {
             "args": {
-                "command": "()(G(al)G(al))(G(al)G(al))"
+                "command": "()G(al)G(al)G(al)G(al)"
             },
-            "expected": "o(GalGal)(GalGal)"
+            "expected": "oGalGalGalGal"
         },
         {
             "args": {
@@ -210,9 +212,9 @@
         },
         {
             "args": {
-                "command": "(al)G(al)(G(al)(G(al)G(al)))G(al)"
+                "command": "(al)G(al)G(al)G(al)G(al)G(al)"
             },
-            "expected": "alGal(Gal(GalGal))Gal"
+            "expected": "alGalGalGalGalGal"
         },
         {
             "args": {
@@ -246,9 +248,9 @@
         },
         {
             "args": {
-                "command": "G()(G()(G()(G())))"
+                "command": "G()G()G()G()"
             },
-            "expected": "Go(Go(Go(Go)))"
+            "expected": "GoGoGoGo"
         },
         {
             "args": {
@@ -288,9 +290,9 @@
         },
         {
             "args": {
-                "command": "G()(G(al))(G(al))G()(G(al))(G(al))"
+                "command": "G()G(al)G(al)G()G(al)G(al)"
             },
-            "expected": "Go(Gal)(Gal)Go(Gal)(Gal)"
+            "expected": "GoGalGalGoGalGal"
         },
         {
             "args": {
@@ -318,15 +320,15 @@
         },
         {
             "args": {
-                "command": "G(al)(G(al)G(al))(G(al))"
+                "command": "G(al)G(al)G(al)G(al)"
             },
-            "expected": "Gal(GalGal)(Gal)"
+            "expected": "GalGalGalGal"
         },
         {
             "args": {
-                "command": "G()(G(al))G()(G(al))"
+                "command": "G()G(al)G()G(al)"
             },
-            "expected": "Go(Gal)Go(Gal)"
+            "expected": "GoGalGoGal"
         },
         {
             "args": {
@@ -360,9 +362,9 @@
         },
         {
             "args": {
-                "command": "(al)(G)(al)(G)(al)(G)(al)"
+                "command": "(al)G(al)G(al)G(al)"
             },
-            "expected": "al(G)al(G)al(G)al"
+            "expected": "alGalGalGal"
         },
         {
             "args": {
@@ -396,9 +398,9 @@
         },
         {
             "args": {
-                "command": "G()(G()(G)())"
+                "command": "G()G()G()"
             },
-            "expected": "Go(Go(G)o)"
+            "expected": "GoGoGo"
         },
         {
             "args": {
@@ -438,9 +440,9 @@
         },
         {
             "args": {
-                "command": "G(al)(G()(G)(G)())G(al)"
+                "command": "G(al)G()GG()G(al)"
             },
-            "expected": "Gal(Go(G)(G)o)Gal"
+            "expected": "GalGoGGoGal"
         },
         {
             "args": {
@@ -468,9 +470,9 @@
         },
         {
             "args": {
-                "command": "(al)(G(al))(G(al))(G(al))(G(al))(G(al))"
+                "command": "(al)G(al)G(al)G(al)G(al)G(al)"
             },
-            "expected": "al(Gal)(Gal)(Gal)(Gal)(Gal)"
+            "expected": "alGalGalGalGalGal"
         },
         {
             "args": {
@@ -504,9 +506,9 @@
         },
         {
             "args": {
-                "command": "G()(G()(G()(G)())())"
+                "command": "G()G()G()G()()"
             },
-            "expected": "Go(Go(Go(G)o)o)"
+            "expected": "GoGoGoGoo"
         },
         {
             "args": {
@@ -522,9 +524,9 @@
         },
         {
             "args": {
-                "command": "G(al)(G(al))(G(al))(G(al))G(al)"
+                "command": "G(al)G(al)G(al)G(al)G(al)"
             },
-            "expected": "Gal(Gal)(Gal)(Gal)Gal"
+            "expected": "GalGalGalGalGal"
         },
         {
             "args": {
@@ -534,9 +536,9 @@
         },
         {
             "args": {
-                "command": "G()(G()(G()(G()())))"
+                "command": "G()G()G()G()()"
             },
-            "expected": "Go(Go(Go(Goo)))"
+            "expected": "GoGoGoGoo"
         },
         {
             "args": {
@@ -577,6 +579,7 @@
     ],
     "invoke": {
         "python": "Solution().interpret",
-        "typescript": "Solution().interpret"
+        "typescript": "Solution().interpret",
+        "valkyrie": "Solution().interpret"
     }
 }

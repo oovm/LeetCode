@@ -770,6 +770,7 @@
     ],
     "invoke": {
         "python": "Solution().backspaceCompare",
-        "typescript": "Solution().backspaceCompare"
+        "typescript": "Solution().backspaceCompare",
+        "valkyrie": "Solution().backspaceCompare"
     }
 }

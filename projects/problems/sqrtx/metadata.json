@@ -2,7 +2,10 @@
     "id": "sqrtx",
     "questionId": 69,
     "difficulty": "Easy",
-    "tags": ["Math", "Binary Search"],
+    "tags": [
+        "Math",
+        "Binary Search"
+    ],
     "tests": [
         {
             "args": {
@@ -72,21 +75,21 @@
         },
         {
             "args": {
-                "x": "1234567890123456800"
+                "x": 2112454944
             },
-            "expected": 1111111106
+            "expected": 45961
         },
         {
             "args": {
-                "x": 40000000000
+                "x": 1345294336
             },
-            "expected": 200000
+            "expected": 36678
         },
         {
             "args": {
-                "x": "18014398509481984"
+                "x": 0
             },
-            "expected": 134217728
+            "expected": 0
         },
         {
             "args": {
@@ -120,9 +123,9 @@
         },
         {
             "args": {
-                "x": 4294967296
+                "x": 0
             },
-            "expected": 65536
+            "expected": 0
         },
         {
             "args": {
@@ -156,9 +159,9 @@
         },
         {
             "args": {
-                "x": "18446744073709552000"
+                "x": 384
             },
-            "expected": 4294967295
+            "expected": 19
         },
         {
             "args": {
@@ -174,9 +177,9 @@
         },
         {
             "args": {
-                "x": "18014398509481984"
+                "x": 0
             },
-            "expected": 134217727
+            "expected": 0
         },
         {
             "args": {
@@ -204,9 +207,9 @@
         },
         {
             "args": {
-                "x": 141421356237
+                "x": 1834919117
             },
-            "expected": 376060
+            "expected": 42835
         },
         {
             "args": {
@@ -216,9 +219,9 @@
         },
         {
             "args": {
-                "x": 4294967295
+                "x": 2147483647
             },
-            "expected": 65535
+            "expected": 46340
         },
         {
             "args": {
@@ -336,9 +339,9 @@
         },
         {
             "args": {
-                "x": "1234567890123456800"
+                "x": 2112454944
             },
-            "expected": 1111111106
+            "expected": 45961
         },
         {
             "args": {
@@ -354,9 +357,9 @@
         },
         {
             "args": {
-                "x": "9223372036854776000"
+                "x": 192
             },
-            "expected": 3037000499
+            "expected": 13
         },
         {
             "args": {
@@ -402,13 +405,14 @@
         },
         {
             "args": {
-                "x": "36028797018963970"
+                "x": 2
             },
-            "expected": 189812531
+            "expected": 1
         }
     ],
     "invoke": {
         "python": "Solution().mySqrt",
-        "typescript": "Solution().mySqrt"
+        "typescript": "Solution().mySqrt",
+        "valkyrie": "Solution().mySqrt"
     }
 }

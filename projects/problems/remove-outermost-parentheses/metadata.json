@@ -2,7 +2,10 @@
     "id": "remove-outermost-parentheses",
     "questionId": 1021,
     "difficulty": "Easy",
-    "tags": ["Stack", "String"],
+    "tags": [
+        "Stack",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -32,7 +35,7 @@
             "args": {
                 "s": "((()))"
             },
-            "expected": []
+            "expected": "(())"
         },
         {
             "args": {
@@ -56,7 +59,7 @@
             "args": {
                 "s": "(())"
             },
-            "expected": []
+            "expected": "()"
         },
         {
             "args": {
@@ -152,7 +155,7 @@
             "args": {
                 "s": "(((((())))))"
             },
-            "expected": []
+            "expected": "((((()))))"
         },
         {
             "args": {
@@ -422,13 +425,13 @@
             "args": {
                 "s": "()()(((())))()"
             },
-            "expected": []
+            "expected": "((()))"
         },
         {
             "args": {
                 "s": "(((())))"
             },
-            "expected": []
+            "expected": "((()))"
         },
         {
             "args": {
@@ -590,7 +593,7 @@
             "args": {
                 "s": "((((()))))"
             },
-            "expected": []
+            "expected": "(((())))"
         },
         {
             "args": {
@@ -625,6 +628,7 @@
     ],
     "invoke": {
         "python": "Solution().removeOuterParentheses",
-        "typescript": "Solution().removeOuterParentheses"
+        "typescript": "Solution().removeOuterParentheses",
+        "valkyrie": "Solution().removeOuterParentheses"
     }
 }

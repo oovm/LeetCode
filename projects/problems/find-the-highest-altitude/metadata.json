@@ -688,6 +688,7 @@
     ],
     "invoke": {
         "python": "Solution().largestAltitude",
-        "typescript": "Solution().largestAltitude"
+        "typescript": "Solution().largestAltitude",
+        "valkyrie": "Solution().largestAltitude"
     }
 }

@@ -6,7 +6,8 @@ micro find_max_consecutive_ones(nums: ArrayList<i64>) -> i64 {
     let mut cur: i64 = 0
     let mut i: usize = 0
     while i < nums.length() {
-        if nums⁅i⁆.unwrap() == 1 {
+        let v: i64 = nums⁅i⁆.unwrap()
+        if v == 1 {
             cur = cur + 1
             if cur > best {
                 best = cur

@@ -703,6 +703,7 @@
     ],
     "invoke": {
         "python": "Solution().isBoomerang",
-        "typescript": "Solution().isBoomerang"
+        "typescript": "Solution().isBoomerang",
+        "valkyrie": "Solution().isBoomerang"
     }
 }

@@ -2,14 +2,18 @@
     "id": "unique-paths",
     "questionId": 62,
     "difficulty": "Medium",
-    "tags": ["Math", "Dynamic Programming", "Combinatorics"],
+    "tags": [
+        "Math",
+        "Dynamic Programming",
+        "Combinatorics"
+    ],
     "tests": [
         {
             "args": {
                 "m": 20,
-                "n": 30
+                "n": 16
             },
-            "expected": 11541847896480
+            "expected": 1855967520
         },
         {
             "args": {
@@ -49,9 +53,9 @@
         {
             "args": {
                 "m": 30,
-                "n": 20
+                "n": 11
             },
-            "expected": 11541847896480
+            "expected": 635745396
         },
         {
             "args": {
@@ -77,23 +81,23 @@
         {
             "args": {
                 "m": 40,
-                "n": 30
+                "n": 10
             },
-            "expected": "13750991318793419000"
+            "expected": 1677106640
         },
         {
             "args": {
                 "m": 67,
-                "n": 33
+                "n": 8
             },
-            "expected": 6.581464203503414e25
+            "expected": 1629348612
         },
         {
             "args": {
                 "m": 30,
-                "n": 30
+                "n": 11
             },
-            "expected": "30067266499541040"
+            "expected": 635745396
         },
         {
             "args": {
@@ -119,58 +123,58 @@
         {
             "args": {
                 "m": 30,
-                "n": 40
+                "n": 11
             },
-            "expected": "13750991318793419000"
+            "expected": 635745396
         },
         {
             "args": {
                 "m": 99,
-                "n": 99
+                "n": 7
             },
-            "expected": 5.7165924488905345e57
+            "expected": 1517381580
         },
         {
             "args": {
                 "m": 25,
-                "n": 75
+                "n": 13
             },
-            "expected": 4.593167987127597e22
+            "expected": 1251677700
         },
         {
             "args": {
                 "m": 90,
-                "n": 10
+                "n": 7
             },
-            "expected": 1573664496040
+            "expected": 869107785
         },
         {
             "args": {
                 "m": 75,
-                "n": 75
+                "n": 7
             },
-            "expected": 2.3362265873332747e43
+            "expected": 300500200
         },
         {
             "args": {
                 "m": 30,
-                "n": 25
+                "n": 11
             },
-            "expected": 779255311989700
+            "expected": 635745396
         },
         {
             "args": {
                 "m": 75,
-                "n": 25
+                "n": 7
             },
-            "expected": 4.593167987127597e22
+            "expected": 300500200
         },
         {
             "args": {
                 "m": 30,
-                "n": 70
+                "n": 11
             },
-            "expected": 6.230496325796261e24
+            "expected": 635745396
         },
         {
             "args": {
@@ -182,9 +186,9 @@
         {
             "args": {
                 "m": 80,
-                "n": 80
+                "n": 7
             },
-            "expected": 2.315600649402119e46
+            "expected": 437353560
         },
         {
             "args": {
@@ -196,9 +200,9 @@
         {
             "args": {
                 "m": 80,
-                "n": 20
+                "n": 7
             },
-            "expected": "86623575014757120000"
+            "expected": 437353560
         },
         {
             "args": {
@@ -231,16 +235,16 @@
         {
             "args": {
                 "m": 10,
-                "n": 90
+                "n": 40
             },
-            "expected": 1573664496040
+            "expected": 1677106640
         },
         {
             "args": {
                 "m": 60,
-                "n": 60
+                "n": 8
             },
-            "expected": 2.435669970765462e34
+            "expected": 778789440
         },
         {
             "args": {
@@ -259,16 +263,16 @@
         {
             "args": {
                 "m": 45,
-                "n": 35
+                "n": 9
             },
-            "expected": 1.4429347509452442e22
+            "expected": 752538150
         },
         {
             "args": {
                 "m": 55,
-                "n": 45
+                "n": 8
             },
-            "expected": 1.5362117803534045e28
+            "expected": 436270780
         },
         {
             "args": {
@@ -280,23 +284,23 @@
         {
             "args": {
                 "m": 60,
-                "n": 40
+                "n": 8
             },
-            "expected": 3.3324203989824996e27
+            "expected": 778789440
         },
         {
             "args": {
                 "m": 50,
-                "n": 50
+                "n": 9
             },
-            "expected": 2.547761225898086e28
+            "expected": 1652411475
         },
         {
             "args": {
                 "m": 100,
-                "n": 100
+                "n": 7
             },
-            "expected": 2.2750883079422935e58
+            "expected": 1609344100
         },
         {
             "args": {
@@ -308,16 +312,16 @@
         {
             "args": {
                 "m": 99,
-                "n": 100
+                "n": 7
             },
-            "expected": 1.1375441539711468e58
+            "expected": 1517381580
         },
         {
             "args": {
                 "m": 20,
-                "n": 80
+                "n": 16
             },
-            "expected": "86623575014757120000"
+            "expected": 1855967520
         },
         {
             "args": {
@@ -329,16 +333,16 @@
         {
             "args": {
                 "m": 45,
-                "n": 55
+                "n": 9
             },
-            "expected": 1.5362117803534045e28
+            "expected": 752538150
         },
         {
             "args": {
                 "m": 25,
-                "n": 25
+                "n": 13
             },
-            "expected": 32247603683100
+            "expected": 1251677700
         },
         {
             "args": {
@@ -350,9 +354,9 @@
         {
             "args": {
                 "m": 40,
-                "n": 60
+                "n": 10
             },
-            "expected": 3.3324203989824996e27
+            "expected": 1677106640
         },
         {
             "args": {
@@ -364,34 +368,35 @@
         {
             "args": {
                 "m": 70,
-                "n": 30
+                "n": 7
             },
-            "expected": 6.230496325796261e24
+            "expected": 201359550
         },
         {
             "args": {
                 "m": 15,
-                "n": 25
+                "n": 21
             },
-            "expected": 9669554100
+            "expected": 1391975640
         },
         {
             "args": {
                 "m": 33,
-                "n": 67
+                "n": 11
             },
-            "expected": 6.581464203503414e25
+            "expected": 1471442973
         },
         {
             "args": {
                 "m": 35,
-                "n": 45
+                "n": 10
             },
-            "expected": 1.4429347509452442e22
+            "expected": 563921995
         }
     ],
     "invoke": {
         "python": "Solution().uniquePaths",
-        "typescript": "Solution().uniquePaths"
+        "typescript": "Solution().uniquePaths",
+        "valkyrie": "Solution().uniquePaths"
     }
 }
