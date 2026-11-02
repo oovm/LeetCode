@@ -2,7 +2,9 @@
     "id": "to-lower-case",
     "questionId": 709,
     "difficulty": "Easy",
-    "tags": ["String"],
+    "tags": [
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -253,6 +255,7 @@
     ],
     "invoke": {
         "python": "Solution().toLowerCase",
-        "typescript": "Solution().toLowerCase"
+        "typescript": "Solution().toLowerCase",
+        "valkyrie": "Solution().toLowerCase"
     }
 }

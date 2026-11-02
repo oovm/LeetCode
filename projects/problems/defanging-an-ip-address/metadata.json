@@ -2,7 +2,9 @@
     "id": "defanging-an-ip-address",
     "questionId": 1108,
     "difficulty": "Easy",
-    "tags": ["String"],
+    "tags": [
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -295,6 +297,7 @@
     ],
     "invoke": {
         "python": "Solution().defangIPaddr",
-        "typescript": "Solution().defangIPaddr"
+        "typescript": "Solution().defangIPaddr",
+        "valkyrie": "Solution().defangIPaddr"
     }
 }

@@ -2,13 +2,21 @@
     "id": "fizz-buzz",
     "questionId": 412,
     "difficulty": "Easy",
-    "tags": ["Math", "String", "Simulation"],
+    "tags": [
+        "Math",
+        "String",
+        "Simulation"
+    ],
     "tests": [
         {
             "args": {
                 "n": 3
             },
-            "expected": ["1", "2", "Fizz"]
+            "expected": [
+                "1",
+                "2",
+                "Fizz"
+            ]
         },
         {
             "args": {
@@ -121,7 +129,23 @@
             "args": {
                 "n": 15
             },
-            "expected": ["1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz"]
+            "expected": [
+                "1",
+                "2",
+                "Fizz",
+                "4",
+                "Buzz",
+                "Fizz",
+                "7",
+                "8",
+                "Fizz",
+                "Buzz",
+                "11",
+                "Fizz",
+                "13",
+                "14",
+                "FizzBuzz"
+            ]
         },
         {
             "args": {
@@ -133,7 +157,9 @@
             "args": {
                 "n": 1
             },
-            "expected": ["1"]
+            "expected": [
+                "1"
+            ]
         },
         {
             "args": {
@@ -196,7 +222,13 @@
             "args": {
                 "n": 5
             },
-            "expected": ["1", "2", "Fizz", "4", "Buzz"]
+            "expected": [
+                "1",
+                "2",
+                "Fizz",
+                "4",
+                "Buzz"
+            ]
         },
         {
             "args": {
@@ -15439,7 +15471,10 @@
             "args": {
                 "n": 2
             },
-            "expected": ["1", "2"]
+            "expected": [
+                "1",
+                "2"
+            ]
         },
         {
             "args": {
@@ -23846,7 +23881,14 @@
             "args": {
                 "n": 6
             },
-            "expected": ["1", "2", "Fizz", "4", "Buzz", "Fizz"]
+            "expected": [
+                "1",
+                "2",
+                "Fizz",
+                "4",
+                "Buzz",
+                "Fizz"
+            ]
         },
         {
             "args": {
@@ -24922,7 +24964,18 @@
             "args": {
                 "n": 10
             },
-            "expected": ["1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz"]
+            "expected": [
+                "1",
+                "2",
+                "Fizz",
+                "4",
+                "Buzz",
+                "Fizz",
+                "7",
+                "8",
+                "Fizz",
+                "Buzz"
+            ]
         },
         {
             "args": {
@@ -24959,6 +25012,7 @@
     ],
     "invoke": {
         "python": "Solution().fizzBuzz",
-        "typescript": "Solution().fizzBuzz"
+        "typescript": "Solution().fizzBuzz",
+        "valkyrie": "Solution().fizzBuzz"
     }
 }

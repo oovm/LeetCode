@@ -2,7 +2,9 @@
     "id": "day-of-the-week",
     "questionId": 1185,
     "difficulty": "Easy",
-    "tags": ["Math"],
+    "tags": [
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -159,6 +161,7 @@
     ],
     "invoke": {
         "python": "Solution().dayOfTheWeek",
-        "typescript": "Solution().dayOfTheWeek"
+        "typescript": "Solution().dayOfTheWeek",
+        "valkyrie": "Solution().dayOfTheWeek"
     }
 }

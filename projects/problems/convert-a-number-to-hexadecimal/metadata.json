@@ -2,7 +2,10 @@
     "id": "convert-a-number-to-hexadecimal",
     "questionId": 405,
     "difficulty": "Easy",
-    "tags": ["Bit Manipulation", "Math"],
+    "tags": [
+        "Bit Manipulation",
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -367,6 +370,7 @@
     ],
     "invoke": {
         "python": "Solution().toHex",
-        "typescript": "Solution().toHex"
+        "typescript": "Solution().toHex",
+        "valkyrie": "Solution().toHex"
     }
 }
