@@ -2,7 +2,9 @@
     "id": "binary-number-with-alternating-bits",
     "questionId": 693,
     "difficulty": "Easy",
-    "tags": ["Bit Manipulation"],
+    "tags": [
+        "Bit Manipulation"
+    ],
     "tests": [
         {
             "args": {
@@ -156,9 +158,10 @@
         },
         {
             "args": {
-                "n": 1.0101010101010101e30
+                "n": 1.0101010101010101e+30
             },
-            "expected": false
+            "expected": false,
+            "corpusDefect": "beyond_safe_integer:n"
         },
         {
             "args": {
@@ -439,6 +442,7 @@
     ],
     "invoke": {
         "python": "Solution().hasAlternatingBits",
-        "typescript": "Solution().hasAlternatingBits"
+        "typescript": "Solution().hasAlternatingBits",
+        "valkyrie": "hasAlternatingBits"
     }
 }

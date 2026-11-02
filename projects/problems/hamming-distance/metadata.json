@@ -2,7 +2,9 @@
     "id": "hamming-distance",
     "questionId": 461,
     "difficulty": "Easy",
-    "tags": ["Bit Manipulation"],
+    "tags": [
+        "Bit Manipulation"
+    ],
     "tests": [
         {
             "args": {
@@ -128,7 +130,8 @@
                 "x": 18446744073709552000,
                 "y": 9223372036854776000
             },
-            "expected": 1
+            "expected": 1,
+            "corpusDefect": "beyond_safe_integer:x"
         },
         {
             "args": {
@@ -623,6 +626,7 @@
     ],
     "invoke": {
         "python": "Solution().hammingDistance",
-        "typescript": "Solution().hammingDistance"
+        "typescript": "Solution().hammingDistance",
+        "valkyrie": "hammingDistance"
     }
 }
