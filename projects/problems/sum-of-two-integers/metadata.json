@@ -2,7 +2,10 @@
     "id": "sum-of-two-integers",
     "questionId": 371,
     "difficulty": "Medium",
-    "tags": ["Bit Manipulation", "Math"],
+    "tags": [
+        "Bit Manipulation",
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -567,6 +570,7 @@
     ],
     "invoke": {
         "python": "Solution().getSum",
-        "typescript": "Solution().getSum"
+        "typescript": "Solution().getSum",
+        "valkyrie": "Solution().getSum"
     }
 }

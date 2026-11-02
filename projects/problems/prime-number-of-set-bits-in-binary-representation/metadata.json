@@ -2,7 +2,10 @@
     "id": "prime-number-of-set-bits-in-binary-representation",
     "questionId": 762,
     "difficulty": "Easy",
-    "tags": ["Bit Manipulation", "Math"],
+    "tags": [
+        "Bit Manipulation",
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -560,6 +563,7 @@
     ],
     "invoke": {
         "python": "Solution().countPrimeSetBits",
-        "typescript": "Solution().countPrimeSetBits"
+        "typescript": "Solution().countPrimeSetBits",
+        "valkyrie": "Solution().countPrimeSetBits"
     }
 }

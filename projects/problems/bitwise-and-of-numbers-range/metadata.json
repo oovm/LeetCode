@@ -2,7 +2,9 @@
     "id": "bitwise-and-of-numbers-range",
     "questionId": 201,
     "difficulty": "Medium",
-    "tags": ["Bit Manipulation"],
+    "tags": [
+        "Bit Manipulation"
+    ],
     "tests": [
         {
             "args": {
@@ -686,6 +688,7 @@
     ],
     "invoke": {
         "python": "Solution().rangeBitwiseAnd",
-        "typescript": "Solution().rangeBitwiseAnd"
+        "typescript": "Solution().rangeBitwiseAnd",
+        "valkyrie": "Solution().rangeBitwiseAnd"
     }
 }
