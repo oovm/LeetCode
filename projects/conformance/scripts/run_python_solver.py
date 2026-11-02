@@ -9,6 +9,10 @@ import time
 from pathlib import Path
 from typing import Any, Callable
 
+# 十进制字符串还原走原生 int（任意精度）：放开默认 4300 位上限，
+# 覆盖大整数答案（如 4500 位数字串）的精确解析。
+sys.set_int_max_str_digits(200000)
+
 # 生成器侧只把越过 Number.MAX_SAFE_INTEGER 的整数写成十进制字符串；
 # 「超安全整数的字符串整数」即被转换的那类数值，按十进制还原为 int（任意精度，无损失）。
 # 形如 "11101110111" 的真实字符串参数（值未超安全整数）原样保留。

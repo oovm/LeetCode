@@ -7,61 +7,12 @@ import { median } from '@nyar/valkyrie';
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir } from '../../catalog/index.ts';
 import { assertTestCase, normalizeTsTestResult } from '../../domain/assert.ts';
-import { isUnsafeIntegerLiteralString } from '../../domain/integer-literal.ts';
+import { coerceIntegerArgs as coerceTsArgs, inferIntegerArgKeys } from '../../domain/integer-args.ts';
 import { loadProblemMetadata, requireInvoke } from '../../domain/metadata.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 
 export { assertTestCase, normalizeTsTestResult };
-
-/**
- * TS 解用 `number`（double）承载整数。metadata 新表示的超安全整数十进制字符串
- * 规整为 `Number(...)`，与裸数字经 `JSON.parse` 得到的 double 完全同形，
- * 不改变 TS 侧既有行为（>2^53 仍是 double，精度口径不变）。
- * 只规整超安全整数的字符串整数，形如 `"11101110111"` 的真实字符串参数原样保留。
- */
-function coerceTsIntegerValue(value: unknown): unknown {
-    if (isUnsafeIntegerLiteralString(value)) {
-        return Number(value);
-    }
-    if (Array.isArray(value)) {
-        return value.map(coerceTsIntegerValue);
-    }
-    return value;
-}
-
-/** 值内是否出现裸 `number` / `bigint`（数组递归）。生成器对整数型实参在不超过安全整数时写裸数值。 */
-function hasBareNumber(value: unknown): boolean {
-    if (typeof value === 'number' || typeof value === 'bigint') {
-        return true;
-    }
-    if (Array.isArray(value)) {
-        return value.some(hasBareNumber);
-    }
-    return false;
-}
-
-/**
- * 按本题的 `metadata.tests` 推断各实参键的类型：任一同键出现裸数值即判定整数型，
- * 仅对整数型键规整超安全整数字符串；字符串型键（如 `add-binary` 的二进制串，
- * 词法上与超安全整数十进制串无法区分）一律原样保留，不误判为大整数。
- */
-function inferIntegerArgKeys(tests: ReadonlyArray<{ args: Record<string, unknown> }>): ReadonlySet<string> {
-    const keys = new Set<string>();
-    for (const case_ of tests) {
-        for (const [key, value] of Object.entries(case_.args)) {
-            if (hasBareNumber(value)) {
-                keys.add(key);
-            }
-        }
-    }
-    return keys;
-}
-
-function coerceTsArgs(args: Record<string, unknown>, integerKeys: ReadonlySet<string>): Record<string, unknown> {
-    return Object.fromEntries(
-        Object.entries(args).map(([key, value]) => [key, integerKeys.has(key) ? coerceTsIntegerValue(value) : value]),
-    );
-}
+export { coerceTsArgs, inferIntegerArgKeys };
 
 export function slugToTsProject(slug: string): string {
     let name = slug.replace(/-/g, '_');

@@ -3,7 +3,7 @@ import { problemDir } from '../../catalog/index.ts';
 import { BUN_BENCH_PARAMS } from '../../planning/bench-params.ts';
 import { bunRunnerReady, bunSkipReason, spawnBunSolver } from './bridge.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
-import { hasReadyTsSolver, tsSolverPath } from './ref.ts';
+import { hasReadyTsSolver, tsSolverPath } from '../typescript-node/ref.ts';
 
 export { hasReadyTsSolver as hasBunTsSolver };
 

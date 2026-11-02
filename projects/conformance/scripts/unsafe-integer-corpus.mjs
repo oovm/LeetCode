@@ -22,7 +22,7 @@
  */
 
 import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // 脚本位于 `projects/conformance/scripts/`，仓根向上三级；不依赖进程 cwd。
@@ -104,8 +104,12 @@ export function classifyNumber(literal, isFloat) {
 // 浮点字面量（float_literal）是生成器 bug（非整数或超范围），留在回填清单，
 // 不在此转换——避免把 TS/Python 的合法浮点参数字符串化。
 const CONVERTIBLE = new Set(['fits_i64', 'fits_u64', 'beyond_u64']);
-// 断言口径：不得存在裸数字形态的超安全整数（fits_i64/fits_u64/beyond_u64）。
+// 断言口径：不得存在裸数字形态的超安全整数（fits_i64/fits_u64/beyond_u64），
+// 也不得存在超安全整数的浮点字面量（float_literal，精度已损）——真浮点题除外。
 const ASSERT_BARE = new Set(['fits_i64', 'fits_u64', 'beyond_u64']);
+// 真浮点题豁免清单：题意本身要求 f64 语义（`x^n` 等），超安全整数的浮点期望合法。
+// 只有这类题允许保留 float_literal；整数题与字符串题的浮点一律回填。
+const FLOAT_SEMANTIC_SLUGS = new Set(['powx-n']);
 
 function listMetadataFiles() {
     return readdirSync(PROBLEMS_DIR, { withFileTypes: true })
@@ -125,6 +129,7 @@ function scan() {
     const totals = { fits_i64: 0, fits_u64: 0, beyond_u64: 0, float_literal: 0 };
     let unsafe = 0;
     let bareInteger = 0;
+    let floatLiteralAssert = 0;
     for (const { slug, path } of files) {
         const hits = analyzeFile(path).filter((token) => token.kind !== 'safe');
         if (hits.length === 0) continue;
@@ -133,12 +138,13 @@ function scan() {
             counts[hit.kind] = (counts[hit.kind] ?? 0) + 1;
             totals[hit.kind] += 1;
             if (ASSERT_BARE.has(hit.kind)) bareInteger += 1;
+            if (hit.kind === 'float_literal' && !FLOAT_SEMANTIC_SLUGS.has(slug)) floatLiteralAssert += 1;
         }
         unsafe += hits.length;
         bySlug.push({ slug, occurrences: hits.length, counts });
     }
     bySlug.sort((a, b) => b.occurrences - a.occurrences);
-    return { scannedFiles: files.length, totalOccurrences: unsafe, bareIntegerOccurrences: bareInteger, reasonTotals: totals, slugs: bySlug };
+    return { scannedFiles: files.length, totalOccurrences: unsafe, bareIntegerOccurrences: bareInteger, floatLiteralAssertOccurrences: floatLiteralAssert, reasonTotals: totals, slugs: bySlug };
 }
 
 function convert() {
@@ -163,51 +169,69 @@ function convert() {
     return { filesChanged, literalsConverted, perFile };
 }
 
-const mode = process.argv[2] ?? 'scan';
-const assertMode = process.argv.includes('--assert');
-const writeReport = process.argv.includes('--report');
+const isDirectRun = (() => {
+    const entry = process.argv[1];
+    if (!entry) return false;
+    try {
+        return fileURLToPath(import.meta.url) === resolve(entry);
+    } catch {
+        return false;
+    }
+})();
 
-if (mode === 'scan') {
-    const result = scan();
-    console.log(`扫描 ${result.scannedFiles} 份 metadata.json，命中超安全整数字面量 ${result.totalOccurrences} 处`);
-    console.log(`  fits_i64=${result.reasonTotals.fits_i64} fits_u64=${result.reasonTotals.fits_u64} beyond_u64=${result.reasonTotals.beyond_u64} float_literal=${result.reasonTotals.float_literal}`);
-    console.log(`  受影响 slug：${result.slugs.length} 个；其中裸整数（断言口径）${result.bareIntegerOccurrences} 处`);
-    if (writeReport) {
-        mkdirSync(join(REPORT_PATH, '..'), { recursive: true });
-        writeFileSync(
-            REPORT_PATH,
-            JSON.stringify(
-                {
-                    generatedAt: new Date().toISOString().slice(0, 10),
-                    method: '文本级扫描 projects/problems/*/metadata.json 中越过 JSON 安全整数的数值字面量（不经 JSON.parse，字符串之外）',
-                    scannedFiles: result.scannedFiles,
-                    totalOccurrences: result.totalOccurrences,
-                    bareIntegerOccurrences: result.bareIntegerOccurrences,
-                    reasonTotals: result.reasonTotals,
-                    affectedSlugs: result.slugs.length,
-                    slugs: result.slugs,
-                },
-                null,
-                2,
-            ) + '\n',
-            'utf8',
-        );
-        console.log(`  报告已写入 ${REPORT_PATH}`);
-    }
-    if (assertMode) {
-        if (result.bareIntegerOccurrences > 0) {
-            console.error(`断言失败：仍存在 ${result.bareIntegerOccurrences} 处裸数字形态的超安全整数（fits_i64/fits_u64/beyond_u64），须先转换为十进制字符串。`);
-            process.exit(1);
+if (isDirectRun) {
+    const mode = process.argv[2] ?? 'scan';
+    const assertMode = process.argv.includes('--assert');
+    const writeReport = process.argv.includes('--report');
+
+    if (mode === 'scan') {
+        const result = scan();
+        console.log(`扫描 ${result.scannedFiles} 份 metadata.json，命中超安全整数字面量 ${result.totalOccurrences} 处`);
+        console.log(`  fits_i64=${result.reasonTotals.fits_i64} fits_u64=${result.reasonTotals.fits_u64} beyond_u64=${result.reasonTotals.beyond_u64} float_literal=${result.reasonTotals.float_literal}`);
+        console.log(`  受影响 slug：${result.slugs.length} 个；其中裸整数 ${result.bareIntegerOccurrences} 处、浮点字面量（断言口径，豁免 ${FLOAT_SEMANTIC_SLUGS.size} 个真浮点题）${result.floatLiteralAssertOccurrences} 处`);
+        if (writeReport) {
+            mkdirSync(join(REPORT_PATH, '..'), { recursive: true });
+            writeFileSync(
+                REPORT_PATH,
+                JSON.stringify(
+                    {
+                        generatedAt: new Date().toISOString().slice(0, 10),
+                        method: '文本级扫描 projects/problems/*/metadata.json 中越过 JSON 安全整数的数值字面量（不经 JSON.parse，字符串之外）',
+                        floatSemanticSlugs: [...FLOAT_SEMANTIC_SLUGS],
+                        scannedFiles: result.scannedFiles,
+                        totalOccurrences: result.totalOccurrences,
+                        bareIntegerOccurrences: result.bareIntegerOccurrences,
+                        floatLiteralAssertOccurrences: result.floatLiteralAssertOccurrences,
+                        reasonTotals: result.reasonTotals,
+                        affectedSlugs: result.slugs.length,
+                        slugs: result.slugs,
+                    },
+                    null,
+                    2,
+                ) + '\n',
+                'utf8',
+            );
+            console.log(`  报告已写入 ${REPORT_PATH}`);
         }
-        console.log('断言通过：不存在裸数字形态的超安全整数（fits_i64/fits_u64/beyond_u64）。');
+        if (assertMode) {
+            if (result.bareIntegerOccurrences > 0) {
+                console.error(`断言失败：仍存在 ${result.bareIntegerOccurrences} 处裸数字形态的超安全整数（fits_i64/fits_u64/beyond_u64），须先转换为十进制字符串。`);
+                process.exit(1);
+            }
+            if (result.floatLiteralAssertOccurrences > 0) {
+                console.error(`断言失败：仍存在 ${result.floatLiteralAssertOccurrences} 处超安全整数的浮点字面量（float_literal，精度已损），须按参考算法回填为精确值。`);
+                process.exit(1);
+            }
+            console.log('断言通过：不存在裸数字形态的超安全整数，也不存在待回填的浮点字面量（真浮点题豁免）。');
+        }
+    } else if (mode === 'convert') {
+        const result = convert();
+        console.log(`转换 ${result.filesChanged} 份文件，共 ${result.literalsConverted} 处裸数字 → 十进制字符串`);
+        for (const entry of result.perFile) {
+            console.log(`  ${entry.slug}: ${entry.converted}`);
+        }
+    } else {
+        console.error('usage: unsafe-integer-corpus.mjs <scan|convert> [--assert] [--report]');
+        process.exit(2);
     }
-} else if (mode === 'convert') {
-    const result = convert();
-    console.log(`转换 ${result.filesChanged} 份文件，共 ${result.literalsConverted} 处裸数字 → 十进制字符串`);
-    for (const entry of result.perFile) {
-        console.log(`  ${entry.slug}: ${entry.converted}`);
-    }
-} else {
-    console.error('usage: unsafe-integer-corpus.mjs <scan|convert> [--assert] [--report]');
-    process.exit(2);
 }

@@ -1,12 +1,13 @@
 /**
- * ÔÚ Bun ½ø³ÌÄÚÖ´ĞĞ£¨ÓÉ `run_bun_solver.ts` µ÷ÓÃ£©¡£
- * ¸´ÓÃ `solvers/typescript/solution.ts` Óë `metadata.invoke.typescript`¡£
+ * åœ¨ Bun è¿›ç¨‹å†…æ‰§è¡Œï¼ˆç”± `run_bun_solver.ts` è°ƒç”¨ï¼‰ã€‚
+ * å¤ç”¨ `solvers/typescript/solution.ts` ä¸ `metadata.invoke.typescript`ã€‚
  */
 import { pathToFileURL } from 'node:url';
 
 import { assertTestCase } from '../../domain/assert.ts';
+import { coerceIntegerArgs, inferIntegerArgKeys } from '../../domain/integer-args.ts';
 import { loadProblemMetadata, requireInvoke } from '../../domain/metadata.ts';
-import { makeTsCandidate, tsSolverPath } from './ref.ts';
+import { makeTsCandidate, tsSolverPath } from '../typescript-node/ref.ts';
 
 function median(values: number[]): number {
     if (!values.length) {
@@ -30,17 +31,19 @@ async function loadTsCandidate(problemRoot: string) {
 
 export async function runBunSolverOnce(problemRoot: string): Promise<void> {
     const { tests, candidate } = await loadTsCandidate(problemRoot);
+    const integerKeys = inferIntegerArgKeys(tests);
     for (const [index, case_] of tests.entries()) {
-        assertTestCase(index, case_.expected, () => candidate(case_.args));
+        assertTestCase(index, case_.expected, () => candidate(coerceIntegerArgs(case_.args, integerKeys)));
     }
 }
 
 export async function benchBunSolverInProcess(problemRoot: string, iterations: number, warmup: number): Promise<number> {
     const { tests, candidate } = await loadTsCandidate(problemRoot);
+    const integerKeys = inferIntegerArgKeys(tests);
 
     const runAll = () => {
         for (const [index, case_] of tests.entries()) {
-            assertTestCase(index, case_.expected, () => candidate(case_.args));
+            assertTestCase(index, case_.expected, () => candidate(coerceIntegerArgs(case_.args, integerKeys)));
         }
     };
 
