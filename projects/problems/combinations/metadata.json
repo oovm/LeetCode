@@ -8668,6 +8668,7 @@
     ],
     "invoke": {
         "python": "Solution().combine",
-        "typescript": "Solution().combine"
+        "typescript": "Solution().combine",
+        "valkyrie": "combine"
     }
 }

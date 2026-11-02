@@ -427,6 +427,7 @@
     ],
     "invoke": {
         "python": "Solution().findMinFibonacciNumbers",
-        "typescript": "Solution().findMinFibonacciNumbers"
+        "typescript": "Solution().findMinFibonacciNumbers",
+        "valkyrie": "findMinFibonacciNumbers"
     }
 }

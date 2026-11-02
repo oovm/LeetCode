@@ -597,6 +597,7 @@
         "python": "Solution().nextPermutation",
         "typescript": "Solution().nextPermutation",
         "wolframSxo": "nextPermutation",
-        "matlabSxo": "nextPermutation"
+        "matlabSxo": "nextPermutation",
+        "valkyrie": "nextPermutation"
     }
 }

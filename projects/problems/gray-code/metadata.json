@@ -464,6 +464,7 @@
     ],
     "invoke": {
         "python": "Solution().grayCode",
-        "typescript": "Solution().grayCode"
+        "typescript": "Solution().grayCode",
+        "valkyrie": "grayCode"
     }
 }

@@ -15369,6 +15369,7 @@
     ],
     "invoke": {
         "python": "Solution().letterCasePermutation",
-        "typescript": "Solution().letterCasePermutation"
+        "typescript": "Solution().letterCasePermutation",
+        "valkyrie": "letterCasePermutation"
     }
 }

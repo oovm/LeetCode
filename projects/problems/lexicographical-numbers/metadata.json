@@ -2750,6 +2750,7 @@
     ],
     "invoke": {
         "python": "Solution().lexicalOrder",
-        "typescript": "Solution().lexicalOrder"
+        "typescript": "Solution().lexicalOrder",
+        "valkyrie": "lexicalOrder"
     }
 }
