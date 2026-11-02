@@ -154,9 +154,9 @@
         {
             "args": {
                 "x": 41,
-                "target": 753195728
+                "target": 153195729
             },
-            "expected": 246
+            "expected": 130
         },
         {
             "args": {
@@ -168,9 +168,9 @@
         {
             "args": {
                 "x": 11,
-                "target": 1111111111
+                "target": 111111112
             },
-            "expected": 88
+            "expected": 96
         },
         {
             "args": {
@@ -231,9 +231,9 @@
         {
             "args": {
                 "x": 11,
-                "target": 214358881
+                "target": 14358882
             },
-            "expected": 7
+            "expected": 53
         },
         {
             "args": {
@@ -266,16 +266,16 @@
         {
             "args": {
                 "x": 25,
-                "target": 123456789012
+                "target": 56789013
             },
-            "expected": 207
+            "expected": 135
         },
         {
             "args": {
                 "x": 10,
-                "target": 1000000001
+                "target": 2
             },
-            "expected": 10
+            "expected": 3
         },
         {
             "args": {
@@ -301,16 +301,16 @@
         {
             "args": {
                 "x": 49,
-                "target": 1174711139839679
+                "target": 139839680
             },
-            "expected": 325
+            "expected": 187
         },
         {
             "args": {
                 "x": 30,
-                "target": 987654321098
+                "target": 54321099
             },
-            "expected": 265
+            "expected": 74
         },
         {
             "args": {
@@ -336,9 +336,9 @@
         {
             "args": {
                 "x": 67,
-                "target": 3521614606207
+                "target": 14606208
             },
-            "expected": 405
+            "expected": 144
         },
         {
             "args": {
@@ -406,16 +406,16 @@
         {
             "args": {
                 "x": 97,
-                "target": 8.862938119652502e22
+                "target": 20000001
             },
-            "expected": 1536
+            "expected": 199
         },
         {
             "args": {
                 "x": 59,
-                "target": "511116753300699300000"
+                "target": 99300001
             },
-            "expected": 340
+            "expected": 155
         },
         {
             "args": {
@@ -490,9 +490,9 @@
         {
             "args": {
                 "x": 31,
-                "target": 887503681
+                "target": 87503682
             },
-            "expected": 5
+            "expected": 94
         },
         {
             "args": {
@@ -511,9 +511,9 @@
         {
             "args": {
                 "x": 80,
-                "target": "9876543210987654"
+                "target": 10987655
             },
-            "expected": 341
+            "expected": 200
         },
         {
             "args": {
@@ -553,9 +553,9 @@
         {
             "args": {
                 "x": 59,
-                "target": 420746139
+                "target": 20746140
             },
-            "expected": 269
+            "expected": 129
         },
         {
             "args": {
@@ -588,30 +588,30 @@
         {
             "args": {
                 "x": 37,
-                "target": 864197532
+                "target": 64197533
             },
-            "expected": 157
+            "expected": 117
         },
         {
             "args": {
                 "x": 15,
-                "target": 1000000000
+                "target": 1
             },
-            "expected": 104
+            "expected": 1
         },
         {
             "args": {
                 "x": 11,
-                "target": 987654321
+                "target": 187654322
             },
-            "expected": 153
+            "expected": 67
         },
         {
             "args": {
                 "x": 67,
-                "target": 208653121
+                "target": 8653122
             },
-            "expected": 188
+            "expected": 151
         },
         {
             "args": {
@@ -623,16 +623,16 @@
         {
             "args": {
                 "x": 12,
-                "target": 9876543210
+                "target": 76543211
             },
-            "expected": 121
+            "expected": 84
         },
         {
             "args": {
                 "x": 31,
-                "target": 1999999999
+                "target": 200000000
             },
-            "expected": 139
+            "expected": 124
         },
         {
             "args": {
@@ -651,9 +651,9 @@
         {
             "args": {
                 "x": 53,
-                "target": 418195493
+                "target": 18195494
             },
-            "expected": 4
+            "expected": 124
         },
         {
             "args": {
@@ -707,9 +707,9 @@
         {
             "args": {
                 "x": 9,
-                "target": 387420489
+                "target": 187420490
             },
-            "expected": 8
+            "expected": 94
         },
         {
             "args": {
@@ -728,16 +728,16 @@
         {
             "args": {
                 "x": 47,
-                "target": 642839175
+                "target": 42839176
             },
-            "expected": 146
+            "expected": 118
         },
         {
             "args": {
                 "x": 40,
-                "target": 12345678901234
+                "target": 78901235
             },
-            "expected": 251
+            "expected": 96
         },
         {
             "args": {
@@ -749,16 +749,16 @@
         {
             "args": {
                 "x": 60,
-                "target": 98765432109876
+                "target": 32109877
             },
-            "expected": 523
+            "expected": 207
         },
         {
             "args": {
                 "x": 61,
-                "target": 309699630
+                "target": 109699631
             },
-            "expected": 232
+            "expected": 144
         },
         {
             "args": {
@@ -791,9 +791,9 @@
         {
             "args": {
                 "x": 23,
-                "target": 2222222222
+                "target": 22222223
             },
-            "expected": 121
+            "expected": 119
         },
         {
             "args": {
@@ -840,23 +840,23 @@
         {
             "args": {
                 "x": 19,
-                "target": 9876543210
+                "target": 76543211
             },
-            "expected": 138
+            "expected": 95
         },
         {
             "args": {
                 "x": 71,
-                "target": 1804229351
+                "target": 4229352
             },
-            "expected": 4
+            "expected": 110
         },
         {
             "args": {
                 "x": 17,
-                "target": 256256256
+                "target": 56256257
             },
-            "expected": 140
+            "expected": 124
         },
         {
             "args": {
@@ -882,9 +882,9 @@
         {
             "args": {
                 "x": 70,
-                "target": 1234567890123456
+                "target": 90123457
             },
-            "expected": 435
+            "expected": 138
         },
         {
             "args": {
@@ -987,9 +987,9 @@
         {
             "args": {
                 "x": 19,
-                "target": 999999999
+                "target": 200000000
             },
-            "expected": 88
+            "expected": 105
         },
         {
             "args": {
@@ -1057,9 +1057,9 @@
         {
             "args": {
                 "x": 23,
-                "target": 345345345
+                "target": 145345346
             },
-            "expected": 105
+            "expected": 86
         },
         {
             "args": {
@@ -1078,9 +1078,9 @@
         {
             "args": {
                 "x": 17,
-                "target": 1234567890
+                "target": 34567891
             },
-            "expected": 109
+            "expected": 83
         },
         {
             "args": {
@@ -1120,9 +1120,9 @@
         {
             "args": {
                 "x": 53,
-                "target": 531792648
+                "target": 131792649
             },
-            "expected": 196
+            "expected": 167
         },
         {
             "args": {

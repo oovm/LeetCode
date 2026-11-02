@@ -8,55 +8,55 @@
             "args": {
                 "s": "sevensixfivefourthree"
             },
-            "expected": 34567
+            "expected": "34567"
         },
         {
             "args": {
                 "s": "fivefivethree"
             },
-            "expected": 355
+            "expected": "355"
         },
         {
             "args": {
                 "s": "oneonetwothreefourfivesixseveneightnine"
             },
-            "expected": 1123456789
+            "expected": "1123456789"
         },
         {
             "args": {
                 "s": "fivefivesixsix"
             },
-            "expected": 5566
+            "expected": "5566"
         },
         {
             "args": {
                 "s": "sixseveneightnine"
             },
-            "expected": 6789
+            "expected": "6789"
         },
         {
             "args": {
                 "s": "nieseve"
             },
-            "expected": 79
+            "expected": "79"
         },
         {
             "args": {
                 "s": "onetwothree"
             },
-            "expected": 123
+            "expected": "123"
         },
         {
             "args": {
                 "s": "neon"
             },
-            "expected": 1
+            "expected": "1"
         },
         {
             "args": {
                 "s": "zerozerozerozerozero"
             },
-            "expected": 0
+            "expected": "00000"
         },
         {
             "args": {
@@ -68,7 +68,7 @@
             "args": {
                 "s": "zerozerozero"
             },
-            "expected": 0
+            "expected": "000"
         },
         {
             "args": {
@@ -92,19 +92,19 @@
             "args": {
                 "s": "giosx"
             },
-            "expected": 168
+            "expected": "168"
         },
         {
             "args": {
                 "s": "oneoneeightoneeightone"
             },
-            "expected": 111188
+            "expected": "111188"
         },
         {
             "args": {
                 "s": "fviefuro"
             },
-            "expected": 45
+            "expected": "45"
         },
         {
             "args": {
@@ -122,13 +122,13 @@
             "args": {
                 "s": "ennnoowewe"
             },
-            "expected": 22
+            "expected": "22"
         },
         {
             "args": {
                 "s": "eighteighteighthree"
             },
-            "expected": 3888
+            "expected": "3888"
         },
         {
             "args": {
@@ -140,7 +140,7 @@
             "args": {
                 "s": "sixsixsix"
             },
-            "expected": 666
+            "expected": "666"
         },
         {
             "args": {
@@ -152,13 +152,13 @@
             "args": {
                 "s": "nine"
             },
-            "expected": 9
+            "expected": "9"
         },
         {
             "args": {
                 "s": "oneeighttwothree"
             },
-            "expected": 1238
+            "expected": "1238"
         },
         {
             "args": {
@@ -170,43 +170,43 @@
             "args": {
                 "s": "twothree"
             },
-            "expected": 23
+            "expected": "23"
         },
         {
             "args": {
                 "s": "ninennine"
             },
-            "expected": 99
+            "expected": "99"
         },
         {
             "args": {
                 "s": "seven"
             },
-            "expected": 7
+            "expected": "7"
         },
         {
             "args": {
                 "s": "eight"
             },
-            "expected": 8
+            "expected": "8"
         },
         {
             "args": {
                 "s": "fivefivesevensevenseven"
             },
-            "expected": 55777
+            "expected": "55777"
         },
         {
             "args": {
                 "s": "six"
             },
-            "expected": 6
+            "expected": "6"
         },
         {
             "args": {
                 "s": "fourfoursixsix"
             },
-            "expected": 4466
+            "expected": "4466"
         },
         {
             "args": {
@@ -224,13 +224,13 @@
             "args": {
                 "s": "uqpie"
             },
-            "expected": 499
+            "expected": "499"
         },
         {
             "args": {
                 "s": "onetwothreefourfivesixseveneightnine"
             },
-            "expected": 123456789
+            "expected": "123456789"
         },
         {
             "args": {
@@ -242,7 +242,7 @@
             "args": {
                 "s": "threethreethreethreethreethreethreethreethreethree"
             },
-            "expected": 3333333333
+            "expected": "3333333333"
         },
         {
             "args": {
@@ -278,13 +278,13 @@
             "args": {
                 "s": "sixseveneightsixsixsixsixtwosix"
             },
-            "expected": 266666678
+            "expected": "266666678"
         },
         {
             "args": {
                 "s": "fourfourfourfourfourfourfourfourfourfour"
             },
-            "expected": 4444444444
+            "expected": "4444444444"
         },
         {
             "args": {
@@ -296,7 +296,7 @@
             "args": {
                 "s": "twotwotwothreeeighthree"
             },
-            "expected": 222338
+            "expected": "222338"
         },
         {
             "args": {
@@ -308,7 +308,7 @@
             "args": {
                 "s": "eightfiveeightfiveeight"
             },
-            "expected": 55888
+            "expected": "55888"
         },
         {
             "args": {
@@ -320,7 +320,7 @@
             "args": {
                 "s": "onetwoonetwoonetwoonetwoone"
             },
-            "expected": 111112222
+            "expected": "111112222"
         },
         {
             "args": {
@@ -332,7 +332,7 @@
             "args": {
                 "s": "twotwothreefourfoursix"
             },
-            "expected": 223446
+            "expected": "223446"
         },
         {
             "args": {
@@ -350,7 +350,7 @@
             "args": {
                 "s": "fivetwofivesixfivesevenfivethree"
             },
-            "expected": 23555567
+            "expected": "23555567"
         },
         {
             "args": {
@@ -374,7 +374,7 @@
             "args": {
                 "s": "sevensevensevensevenseven"
             },
-            "expected": 77777
+            "expected": "77777"
         },
         {
             "args": {
@@ -404,7 +404,7 @@
             "args": {
                 "s": "fourfourfoursixsixsix"
             },
-            "expected": 444666
+            "expected": "444666"
         },
         {
             "args": {
@@ -428,13 +428,13 @@
             "args": {
                 "s": "eighteightsevensevensevensixsixsixsixsixtwo"
             },
-            "expected": 26666677788
+            "expected": "26666677788"
         },
         {
             "args": {
                 "s": "nineninethreeeight"
             },
-            "expected": 3899
+            "expected": "3899"
         },
         {
             "args": {
@@ -452,37 +452,37 @@
             "args": {
                 "s": "sixsixsixsixsixsixsixsix"
             },
-            "expected": 66666666
+            "expected": "66666666"
         },
         {
             "args": {
                 "s": "oneoneoneoneoneone"
             },
-            "expected": 111111
+            "expected": "111111"
         },
         {
             "args": {
                 "s": "fiveseveneightsevensevenfoursixsixsix"
             },
-            "expected": 456667778
+            "expected": "456667778"
         },
         {
             "args": {
                 "s": "nineeightsevensixfivenineeightseven"
             },
-            "expected": 56778899
+            "expected": "56778899"
         },
         {
             "args": {
                 "s": "threeeightfivesixtwonine"
             },
-            "expected": 235689
+            "expected": "235689"
         },
         {
             "args": {
                 "s": "sixfivesixfivesixfive"
             },
-            "expected": 555666
+            "expected": "555666"
         },
         {
             "args": {
@@ -494,7 +494,7 @@
             "args": {
                 "s": "fiveeighteighteighteighteightsixsixsixsixsixtwo"
             },
-            "expected": 256666688888
+            "expected": "256666688888"
         },
         {
             "args": {
@@ -506,31 +506,31 @@
             "args": {
                 "s": "oneeighttwosixthreesevenfourfiveoneeight"
             },
-            "expected": 1123456788
+            "expected": "1123456788"
         },
         {
             "args": {
                 "s": "fivefivefivefive"
             },
-            "expected": 5555
+            "expected": "5555"
         },
         {
             "args": {
                 "s": "eighteenteeneighteeneighteen"
             },
-            "expected": 888
+            "expected": "888"
         },
         {
             "args": {
                 "s": "nineeightsevensixfivofoureightseven"
             },
-            "expected": 145677889
+            "expected": "145677889"
         },
         {
             "args": {
                 "s": "sixsixsixsixsixsixsixsixsixsixsixsixsixsixsixsixsixsixsixsixsixsixsixsixsixsix"
             },
-            "expected": 6.666666666666667e25
+            "expected": "66666666666666666666666666"
         },
         {
             "args": {
@@ -554,13 +554,13 @@
             "args": {
                 "s": "fivefivesixsixsevensevensevenseven"
             },
-            "expected": 55667777
+            "expected": "55667777"
         },
         {
             "args": {
                 "s": "seveneightnineeightseven"
             },
-            "expected": 77889
+            "expected": "77889"
         },
         {
             "args": {
@@ -584,13 +584,13 @@
             "args": {
                 "s": "onetwothreefourfivesixseveneightnineseveneight"
             },
-            "expected": 12345677889
+            "expected": "12345677889"
         },
         {
             "args": {
                 "s": "sevenfoursixsixthreeeight"
             },
-            "expected": 346678
+            "expected": "346678"
         },
         {
             "args": {
@@ -614,7 +614,7 @@
             "args": {
                 "s": "sevensixsixsixseven"
             },
-            "expected": 66677
+            "expected": "66677"
         },
         {
             "args": {
@@ -632,7 +632,7 @@
             "args": {
                 "s": "twotwosixsixsixthreeeight"
             },
-            "expected": 2236668
+            "expected": "2236668"
         },
         {
             "args": {
@@ -644,19 +644,19 @@
             "args": {
                 "s": "sixsixsixsixsixsixsixsixsixsixsixsixsixsix"
             },
-            "expected": 66666666666666
+            "expected": "66666666666666"
         },
         {
             "args": {
                 "s": "onetwothreefourfivesixseveneightnineseven"
             },
-            "expected": 1234567789
+            "expected": "1234567789"
         },
         {
             "args": {
                 "s": "nineteennineteennineeighteighteight"
             },
-            "expected": 888999
+            "expected": "888999"
         },
         {
             "args": {
@@ -674,7 +674,7 @@
             "args": {
                 "s": "sixsixsixfivefivetwoonetwoonetwo"
             },
-            "expected": 1122255666
+            "expected": "1122255666"
         },
         {
             "args": {
@@ -686,7 +686,7 @@
             "args": {
                 "s": "oneeighteighteightsixsixtwoonetwo"
             },
-            "expected": 112266888
+            "expected": "112266888"
         },
         {
             "args": {
@@ -698,7 +698,7 @@
             "args": {
                 "s": "sixsixsixsixsixsixsix"
             },
-            "expected": 6666666
+            "expected": "6666666"
         },
         {
             "args": {
@@ -722,19 +722,19 @@
             "args": {
                 "s": "sixsevensixsevensixsevensix"
             },
-            "expected": 6666777
+            "expected": "6666777"
         },
         {
             "args": {
                 "s": "nineeightsevenfoursixthreeonetwo"
             },
-            "expected": 12346789
+            "expected": "12346789"
         },
         {
             "args": {
                 "s": "onetwothreefourfivesixseveneightnineninenine"
             },
-            "expected": 12345678999
+            "expected": "12345678999"
         },
         {
             "args": {
@@ -752,7 +752,7 @@
             "args": {
                 "s": "twothreefourfivesixseveneightnineeightseven"
             },
-            "expected": 2345677889
+            "expected": "2345677889"
         },
         {
             "args": {
@@ -776,13 +776,13 @@
             "args": {
                 "s": "fivefivefivefivefivefivefivefivefivefiveonetwothreefourthreeonetwothreefourthreeonetwothreefourthreeonetwothreefourthreeonetwothreefour"
             },
-            "expected": 1.1111222223333334e33
+            "expected": "1111122222333333333444445555555555"
         },
         {
             "args": {
                 "s": "sixsixsixsixsixfivefivefive"
             },
-            "expected": 55566666
+            "expected": "55566666"
         },
         {
             "args": {
@@ -794,7 +794,7 @@
             "args": {
                 "s": "sixsixsixsixsixsixsixsixsixsix"
             },
-            "expected": 6666666666
+            "expected": "6666666666"
         },
         {
             "args": {
@@ -812,7 +812,7 @@
             "args": {
                 "s": "twosevensixsixeighttwosix"
             },
-            "expected": 2266678
+            "expected": "2266678"
         },
         {
             "args": {
@@ -824,13 +824,13 @@
             "args": {
                 "s": "threethreeeighttwofivefour"
             },
-            "expected": 233458
+            "expected": "233458"
         },
         {
             "args": {
                 "s": "sixeighteighteensixeighteighteen"
             },
-            "expected": 668888
+            "expected": "668888"
         },
         {
             "args": {
@@ -848,7 +848,7 @@
             "args": {
                 "s": "eighteighteightsevensevensevenfoursixsixsix"
             },
-            "expected": 4666777888
+            "expected": "4666777888"
         },
         {
             "args": {
@@ -860,19 +860,19 @@
             "args": {
                 "s": "fivethreefournineeighttwoseven"
             },
-            "expected": 2345789
+            "expected": "2345789"
         },
         {
             "args": {
                 "s": "threeeightthreeeightthreeeight"
             },
-            "expected": 333888
+            "expected": "333888"
         },
         {
             "args": {
                 "s": "twotwotwofourfourfourfoursixsixsixsix"
             },
-            "expected": 22244446666
+            "expected": "22244446666"
         },
         {
             "args": {
@@ -890,25 +890,25 @@
             "args": {
                 "s": "ninenineninenineninenineninenineninenine"
             },
-            "expected": 9999999999
+            "expected": "9999999999"
         },
         {
             "args": {
                 "s": "sixsixsixsevensevensevenfivefifivefive"
             },
-            "expected": 5555666777
+            "expected": "5555666777"
         },
         {
             "args": {
                 "s": "threeeightsevenfourfivesixtwothree"
             },
-            "expected": 23345678
+            "expected": "23345678"
         },
         {
             "args": {
                 "s": "sixsixsixsixsixtwoonetwoonetwo"
             },
-            "expected": 1122266666
+            "expected": "1122266666"
         },
         {
             "args": {
@@ -920,13 +920,13 @@
             "args": {
                 "s": "eightsevenfoursixthreeonetwoeightseventhree"
             },
-            "expected": 1233467788
+            "expected": "1233467788"
         },
         {
             "args": {
                 "s": "eightsevenfoursixthreeonetwoeightseven"
             },
-            "expected": 123467788
+            "expected": "123467788"
         },
         {
             "args": {
@@ -938,7 +938,7 @@
             "args": {
                 "s": "onetwothreefourfivesixseveneightninenineeightsevenfoursixthreeonetwoeightseventhree"
             },
-            "expected": "11223334456677790000"
+            "expected": "11223334456677788899"
         },
         {
             "args": {
@@ -980,7 +980,7 @@
             "args": {
                 "s": "fivefivefivefivefivefivefivefivefivefive"
             },
-            "expected": 5555555555
+            "expected": "5555555555"
         },
         {
             "args": {
@@ -1004,13 +1004,13 @@
             "args": {
                 "s": "onetwothreefourfivesixseveneightninenineninenine"
             },
-            "expected": 123456789999
+            "expected": "123456789999"
         },
         {
             "args": {
                 "s": "sevenonesevenoneseven"
             },
-            "expected": 11777
+            "expected": "11777"
         },
         {
             "args": {
@@ -1040,25 +1040,25 @@
             "args": {
                 "s": "twofourfivesixeighteight"
             },
-            "expected": 245688
+            "expected": "245688"
         },
         {
             "args": {
                 "s": "onetwothreefourfivesixseveneightnineonetwothreefourfivesixseveneightnineonetwothreefourfivesixseveneightnine"
             },
-            "expected": 1.1122233344455567e26
+            "expected": "111222333444555666777888999"
         },
         {
             "args": {
                 "s": "ninethreetwoeightsevenfivesixonefour"
             },
-            "expected": 123456789
+            "expected": "123456789"
         },
         {
             "args": {
                 "s": "twoseventhreesixthreeeight"
             },
-            "expected": 233678
+            "expected": "233678"
         },
         {
             "args": {
@@ -1088,25 +1088,25 @@
             "args": {
                 "s": "nineeightsixfoureeightfoureeighttwo"
             },
-            "expected": 24468889
+            "expected": "24468889"
         },
         {
             "args": {
                 "s": "nineeighteensixeightsixsixsix"
             },
-            "expected": 6666889
+            "expected": "6666889"
         },
         {
             "args": {
                 "s": "onetwothreefourfivesixseveneightninenine"
             },
-            "expected": 1234567899
+            "expected": "1234567899"
         },
         {
             "args": {
                 "s": "threeeightonethreeeightthree"
             },
-            "expected": 133388
+            "expected": "133388"
         },
         {
             "args": {

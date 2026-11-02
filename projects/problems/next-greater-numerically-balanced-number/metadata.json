@@ -12,9 +12,9 @@
         },
         {
             "args": {
-                "n": 987654321
+                "n": 653334
             },
-            "expected": "Execution timed out"
+            "expected": 666666
         },
         {
             "args": {
@@ -60,15 +60,15 @@
         },
         {
             "args": {
-                "n": 1234567
+                "n": 234566
             },
-            "expected": 1242444
+            "expected": 242444
         },
         {
             "args": {
-                "n": 111222333
+                "n": 222222
             },
-            "expected": "Execution timed out"
+            "expected": 223133
         },
         {
             "args": {
@@ -96,9 +96,9 @@
         },
         {
             "args": {
-                "n": 1224444
+                "n": 224443
             },
-            "expected": 1242444
+            "expected": 224444
         },
         {
             "args": {
@@ -114,27 +114,27 @@
         },
         {
             "args": {
-                "n": 122333444
+                "n": 333322
             },
-            "expected": 122666666
+            "expected": 422444
         },
         {
             "args": {
-                "n": 1122233344455555
+                "n": 223333
             },
-            "expected": "Execution timed out"
+            "expected": 224444
         },
         {
             "args": {
-                "n": 2233445566
+                "n": 443333
             },
-            "expected": 2233535555
+            "expected": 444224
         },
         {
             "args": {
-                "n": 11223334444
+                "n": 323221
             },
-            "expected": "Execution timed out"
+            "expected": 323231
         },
         {
             "args": {
@@ -144,21 +144,21 @@
         },
         {
             "args": {
-                "n": "12233445566778900"
+                "n": 345567
             },
-            "expected": "Execution timed out"
+            "expected": 422444
         },
         {
             "args": {
-                "n": 3333333
+                "n": 333330
             },
-            "expected": 3334444
+            "expected": 422444
         },
         {
             "args": {
-                "n": "1112223334444555500"
+                "n": 333278
             },
-            "expected": "Execution timed out"
+            "expected": 422444
         },
         {
             "args": {
@@ -168,9 +168,9 @@
         },
         {
             "args": {
-                "n": 11222233
+                "n": 222222
             },
-            "expected": 12255555
+            "expected": 223133
         },
         {
             "args": {
@@ -180,105 +180,105 @@
         },
         {
             "args": {
-                "n": 1223334444
+                "n": 333221
             },
-            "expected": 1223343444
+            "expected": 422444
         },
         {
             "args": {
-                "n": 221133444555555
+                "n": 422332
             },
-            "expected": "Execution timed out"
+            "expected": 422444
         },
         {
             "args": {
-                "n": 9.998887776665555e26
+                "n": 278778
             },
-            "expected": "Execution timed out"
+            "expected": 312233
         },
         {
             "args": {
-                "n": 8.887776665554444e23
+                "n": 333379
             },
-            "expected": "Execution timed out"
+            "expected": 422444
         },
         {
             "args": {
-                "n": 1.1112222333344446e35
+                "n": 667752
             },
-            "expected": "Execution timed out"
+            "expected": 1224444
         },
         {
             "args": {
-                "n": 100111222
+                "n": 111122
             },
-            "expected": "Execution timed out"
+            "expected": 122333
         },
         {
             "args": {
-                "n": 2222222
+                "n": 222220
             },
-            "expected": 2241444
+            "expected": 223133
         },
         {
             "args": {
-                "n": 1.2233344455566679e23
+                "n": 655433
             },
-            "expected": "Execution timed out"
+            "expected": 666666
         },
         {
             "args": {
-                "n": 11223344555
+                "n": 333332
             },
-            "expected": "Execution timed out"
+            "expected": 422444
         },
         {
             "args": {
-                "n": 999999111222333
+                "n": 224222
             },
-            "expected": "Execution timed out"
+            "expected": 224444
         },
         {
             "args": {
-                "n": 44445555
+                "n": 445511
             },
-            "expected": 51225555
+            "expected": 515555
         },
         {
             "args": {
-                "n": 6665554443332211
+                "n": 784434
             },
-            "expected": 6665554444155666
+            "expected": 1224444
         },
         {
             "args": {
-                "n": 1233333
+                "n": 233332
             },
-            "expected": 1242444
+            "expected": 242444
         },
         {
             "args": {
-                "n": 122111333
+                "n": 111211
             },
-            "expected": 122666666
+            "expected": 122333
         },
         {
             "args": {
-                "n": 1111222233334444
+                "n": 113322
             },
-            "expected": "Execution timed out"
+            "expected": 122333
         },
         {
             "args": {
-                "n": 22333444
+                "n": 333422
             },
-            "expected": 22515555
+            "expected": 422444
         },
         {
             "args": {
-                "n": 12223334444
+                "n": 322221
             },
-            "expected": "Execution timed out"
+            "expected": 322313
         },
         {
             "args": {
@@ -288,9 +288,9 @@
         },
         {
             "args": {
-                "n": 5555554443332211
+                "n": 783324
             },
-            "expected": "Execution timed out"
+            "expected": 1224444
         },
         {
             "args": {
@@ -300,9 +300,9 @@
         },
         {
             "args": {
-                "n": 665544332211
+                "n": 666668
             },
-            "expected": 665551556666
+            "expected": 1224444
         },
         {
             "args": {
@@ -312,63 +312,63 @@
         },
         {
             "args": {
-                "n": 88888888
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "n": 123456789
-            },
-            "expected": 126266666
-        },
-        {
-            "args": {
-                "n": "122333444555666780000"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "n": 10111222333
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "n": 1122333444455555
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "n": 1223334
+                "n": 888800
             },
             "expected": 1224444
         },
         {
             "args": {
-                "n": 5555555
+                "n": 456666
             },
-            "expected": 6166666
+            "expected": 515555
         },
         {
             "args": {
-                "n": 999999999
+                "n": 557656
             },
-            "expected": "Execution timed out"
+            "expected": 666666
         },
         {
             "args": {
-                "n": "111222333444555670000"
+                "n": 212222
             },
-            "expected": "Execution timed out"
+            "expected": 212333
         },
         {
             "args": {
-                "n": 223334444555
+                "n": 123233
             },
-            "expected": 223336166666
+            "expected": 123323
+        },
+        {
+            "args": {
+                "n": 223333
+            },
+            "expected": 224444
+        },
+        {
+            "args": {
+                "n": 555550
+            },
+            "expected": 555551
+        },
+        {
+            "args": {
+                "n": 999000
+            },
+            "expected": 1224444
+        },
+        {
+            "args": {
+                "n": 447667
+            },
+            "expected": 515555
+        },
+        {
+            "args": {
+                "n": 221221
+            },
+            "expected": 221333
         },
         {
             "args": {
@@ -378,105 +378,105 @@
         },
         {
             "args": {
-                "n": 999999999999
+                "n": 0
             },
-            "expected": "Execution timed out"
+            "expected": 1
         },
         {
             "args": {
-                "n": 7777777
-            },
-            "expected": 12255555
-        },
-        {
-            "args": {
-                "n": 1112233
+                "n": 777770
             },
             "expected": 1224444
         },
         {
             "args": {
-                "n": "44444441112223336"
+                "n": 112232
             },
-            "expected": "Execution timed out"
+            "expected": 122333
         },
         {
             "args": {
-                "n": 122333444555555
-            },
-            "expected": 122333445445555
-        },
-        {
-            "args": {
-                "n": 2233444
-            },
-            "expected": 2241444
-        },
-        {
-            "args": {
-                "n": 1222333
+                "n": 826669
             },
             "expected": 1224444
         },
         {
             "args": {
-                "n": 1.1122233344455566e22
+                "n": 222233
             },
-            "expected": "Execution timed out"
+            "expected": 223133
         },
         {
             "args": {
-                "n": 2121212121
+                "n": 233442
             },
-            "expected": 2123334444
+            "expected": 242444
         },
         {
             "args": {
-                "n": 1.1223344455566677e23
+                "n": 222332
             },
-            "expected": "Execution timed out"
+            "expected": 223133
         },
         {
             "args": {
-                "n": 1112223334445555
+                "n": 766657
             },
-            "expected": "Execution timed out"
+            "expected": 1224444
         },
         {
             "args": {
-                "n": 122444455555
+                "n": 210000
             },
-            "expected": 122444545555
+            "expected": 212333
         },
         {
             "args": {
-                "n": 12233344
+                "n": 665553
             },
-            "expected": 12255555
+            "expected": 666666
         },
         {
             "args": {
-                "n": 122222333333
+                "n": 223333
             },
-            "expected": "Execution timed out"
+            "expected": 224444
         },
         {
             "args": {
-                "n": 112233445566
+                "n": 333111
             },
-            "expected": "Execution timed out"
+            "expected": 333122
         },
         {
             "args": {
-                "n": 1122334455
+                "n": 233332
             },
-            "expected": "Execution timed out"
+            "expected": 242444
         },
         {
             "args": {
-                "n": "666666555444333200000"
+                "n": 211111
             },
-            "expected": "666666555444333200000"
+            "expected": 212333
+        },
+        {
+            "args": {
+                "n": 333333
+            },
+            "expected": 422444
+        },
+        {
+            "args": {
+                "n": 333333
+            },
+            "expected": 422444
+        },
+        {
+            "args": {
+                "n": 421556
+            },
+            "expected": 422444
         },
         {
             "args": {
@@ -486,51 +486,51 @@
         },
         {
             "args": {
-                "n": 1.1122233344455567e26
+                "n": 552334
             },
-            "expected": "Execution timed out"
+            "expected": 555155
         },
         {
             "args": {
-                "n": 22222222
+                "n": 222200
             },
-            "expected": 22515555
+            "expected": 223133
         },
         {
             "args": {
-                "n": 7.777776665554444e23
+                "n": 444379
             },
-            "expected": "Execution timed out"
+            "expected": 444422
         },
         {
             "args": {
-                "n": "77777665544332210"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "n": 122333444555666
-            },
-            "expected": 122333445445555
-        },
-        {
-            "args": {
-                "n": 1221221
+                "n": 744444
             },
             "expected": 1224444
         },
         {
             "args": {
-                "n": 5555544332211
+                "n": 222344
             },
-            "expected": 5555544333144
+            "expected": 223133
         },
         {
             "args": {
-                "n": 1233322
+                "n": 221220
             },
-            "expected": 1242444
+            "expected": 221333
+        },
+        {
+            "args": {
+                "n": 776673
+            },
+            "expected": 1224444
+        },
+        {
+            "args": {
+                "n": 233321
+            },
+            "expected": 242444
         },
         {
             "args": {
@@ -540,39 +540,39 @@
         },
         {
             "args": {
-                "n": 122334444
+                "n": 334322
             },
-            "expected": 122666666
+            "expected": 422444
         },
         {
             "args": {
-                "n": 1.234432111111111e25
+                "n": 656803
             },
-            "expected": "Execution timed out"
+            "expected": 666666
         },
         {
             "args": {
-                "n": 222333444555
+                "n": 222222
             },
-            "expected": "Execution timed out"
+            "expected": 223133
         },
         {
             "args": {
-                "n": 1222233333
+                "n": 232111
             },
-            "expected": 1223334444
+            "expected": 232133
         },
         {
             "args": {
-                "n": 1333331
+                "n": 333330
             },
-            "expected": 1422444
+            "expected": 422444
         },
         {
             "args": {
-                "n": 666666777777
+                "n": 111111
             },
-            "expected": "Execution timed out"
+            "expected": 122333
         }
     ],
     "invoke": {

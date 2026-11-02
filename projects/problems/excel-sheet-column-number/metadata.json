@@ -387,9 +387,9 @@
         },
         {
             "args": {
-                "columnTitle": "ALGORITHM"
+                "columnTitle": "GORITHM"
             },
-            "expected": 307557815253
+            "expected": 2349028565
         },
         {
             "args": {
@@ -411,9 +411,9 @@
         },
         {
             "args": {
-                "columnTitle": "ALPHABET"
+                "columnTitle": "LPHABET"
             },
-            "expected": 11932576390
+            "expected": 3900766214
         },
         {
             "args": {
@@ -465,9 +465,9 @@
         },
         {
             "args": {
-                "columnTitle": "QWJRTYUP"
+                "columnTitle": "WJRTYUP"
             },
-            "expected": 143773244150
+            "expected": 7232471158
         },
         {
             "args": {
@@ -795,9 +795,9 @@
         },
         {
             "args": {
-                "columnTitle": "UPPERCASE"
+                "columnTitle": "PERCASE"
             },
-            "expected": 4518887657679
+            "expected": 5010338767
         },
         {
             "args": {
@@ -825,9 +825,9 @@
         },
         {
             "args": {
-                "columnTitle": "PROGRAMMING"
+                "columnTitle": "RAMMING"
             },
-            "expected": 2359598803856431
+            "expected": 5578540975
         },
         {
             "args": {
@@ -861,9 +861,9 @@
         },
         {
             "args": {
-                "columnTitle": "STUVWXYZ"
+                "columnTitle": "TUVWXYZ"
             },
-            "expected": 159042692380
+            "expected": 6438299036
         },
         {
             "args": {
@@ -975,9 +975,9 @@
         },
         {
             "args": {
-                "columnTitle": "LEETCODE"
+                "columnTitle": "EETCODE"
             },
-            "expected": 97994910369
+            "expected": 1613188257
         },
         {
             "args": {
@@ -987,9 +987,9 @@
         },
         {
             "args": {
-                "columnTitle": "ASDFGHJKL"
+                "columnTitle": "DFGHJKL"
             },
-            "expected": 362741755778
+            "expected": 1310297858
         },
         {
             "args": {
@@ -1101,15 +1101,15 @@
         },
         {
             "args": {
-                "columnTitle": "JKLMNOPQR"
+                "columnTitle": "LMNOPQR"
             },
-            "expected": 2180488677476
+            "expected": 3868119780
         },
         {
             "args": {
-                "columnTitle": "SPREADSHEET"
+                "columnTitle": "ADSHEET"
             },
-            "expected": 2772846287758970
+            "expected": 365267962
         },
         {
             "args": {
@@ -1161,9 +1161,9 @@
         },
         {
             "args": {
-                "columnTitle": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                "columnTitle": "TUVWXYZ"
             },
-            "expected": 2.5609457453661776e+35
+            "expected": 6438299036
         },
         {
             "args": {

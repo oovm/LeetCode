@@ -24,9 +24,9 @@
         },
         {
             "args": {
-                "num": 1111111111
+                "num": 111111130
             },
-            "expected": 22222
+            "expected": 2224
         },
         {
             "args": {
@@ -60,9 +60,9 @@
         },
         {
             "args": {
-                "num": 9876543210
+                "num": 876543301
             },
-            "expected": 16047
+            "expected": 4825
         },
         {
             "args": {
@@ -72,15 +72,15 @@
         },
         {
             "args": {
-                "num": 1999999999
+                "num": 27
             },
-            "expected": 119998
+            "expected": 9
         },
         {
             "args": {
-                "num": 1020304050
+                "num": 20304069
             },
-            "expected": 159
+            "expected": 285
         },
         {
             "args": {
@@ -102,9 +102,9 @@
         },
         {
             "args": {
-                "num": 5555555555
+                "num": 555555610
             },
-            "expected": 111110
+            "expected": 7111
         },
         {
             "args": {
@@ -114,9 +114,9 @@
         },
         {
             "args": {
-                "num": 9191919191
+                "num": 191919282
             },
-            "expected": 23198
+            "expected": 12588
         },
         {
             "args": {
@@ -126,9 +126,9 @@
         },
         {
             "args": {
-                "num": 1357924680
+                "num": 357924699
             },
-            "expected": 16047
+            "expected": 28278
         },
         {
             "args": {
@@ -138,15 +138,15 @@
         },
         {
             "args": {
-                "num": "444444444444444400"
+                "num": 444444442
             },
-            "expected": 888888888
+            "expected": 28888
         },
         {
             "args": {
-                "num": 2233445566778899
+                "num": 586879914
             },
-            "expected": 46913578
+            "expected": 20478
         },
         {
             "args": {
@@ -162,163 +162,163 @@
         },
         {
             "args": {
-                "num": 5647382910
+                "num": 647382965
             },
-            "expected": 16047
+            "expected": 28247
         },
         {
             "args": {
-                "num": 1000000009
+                "num": 28
             },
             "expected": 10
         },
         {
             "args": {
-                "num": 100100100100
+                "num": 100101010
             },
             "expected": 22
         },
         {
             "args": {
-                "num": 4444444444
+                "num": 444444490
             },
-            "expected": 88888
+            "expected": 8893
         },
         {
             "args": {
-                "num": "99887766554433220000"
+                "num": 423127087
             },
-            "expected": 246913578
+            "expected": 3625
         },
         {
             "args": {
-                "num": 303030303030
+                "num": 30305767
             },
-            "expected": 666
+            "expected": 724
         },
         {
             "args": {
-                "num": 4444455555
+                "num": 444455601
             },
-            "expected": 89010
+            "expected": 5901
         },
         {
             "args": {
-                "num": 111222333444
+                "num": 222334453
             },
-            "expected": 234678
+            "expected": 24679
         },
         {
             "args": {
-                "num": 1.1122233344455567e26
+                "num": 10010130
             },
-            "expected": 12456901345788
+            "expected": 24
         },
         {
             "args": {
-                "num": 3030303030
+                "num": 30303067
             },
-            "expected": 366
+            "expected": 373
         },
         {
             "args": {
-                "num": 1.1112222333344446e35
+                "num": 17102809
             },
-            "expected": "224466891133557800"
+            "expected": 307
         },
         {
             "args": {
-                "num": 594939291909
+                "num": 939297265
             },
-            "expected": 160998
+            "expected": 26278
         },
         {
             "args": {
-                "num": 7070707070
+                "num": 70707143
             },
-            "expected": 854
+            "expected": 524
         },
         {
             "args": {
-                "num": "12345678987654320"
+                "num": 98765441
             },
-            "expected": 135802467
+            "expected": 6047
         },
         {
             "args": {
-                "num": 8642013579
+                "num": 642013661
             },
-            "expected": 16047
+            "expected": 2612
         },
         {
             "args": {
-                "num": 8642086420
+                "num": 642086502
             },
-            "expected": 4936
+            "expected": 2724
         },
         {
             "args": {
-                "num": 1298765432
+                "num": 298765451
             },
-            "expected": 36047
+            "expected": 17147
         },
         {
             "args": {
-                "num": 111222333444555
+                "num": 334445563
             },
-            "expected": 12456900
+            "expected": 36901
         },
         {
             "args": {
-                "num": 2.223334445556668e23
+                "num": 819010013
             },
-            "expected": 456901345788
+            "expected": 257
         },
         {
             "args": {
-                "num": 2222222222
+                "num": 222222250
             },
-            "expected": 44444
+            "expected": 4447
         },
         {
             "args": {
-                "num": 2020202020
+                "num": 20202048
             },
-            "expected": 244
+            "expected": 252
         },
         {
             "args": {
-                "num": 2.2222222222222223e35
+                "num": 2098
             },
-            "expected": "444444444444444400"
+            "expected": 37
         },
         {
             "args": {
-                "num": 1357913579
+                "num": 357913598
             },
-            "expected": 27158
+            "expected": 17168
         },
         {
             "args": {
-                "num": 2323232323
+                "num": 323232351
             },
-            "expected": 44566
+            "expected": 14568
         },
         {
             "args": {
-                "num": 6060606060
+                "num": 60606124
             },
-            "expected": 732
+            "expected": 412
         },
         {
             "args": {
-                "num": 3.141592653589793e100
+                "num": 883711022
             },
-            "expected": 1.2223444445666667e46
+            "expected": 2516
         },
         {
             "args": {
-                "num": 1000000001
+                "num": 20
             },
             "expected": 2
         },
@@ -330,117 +330,117 @@
         },
         {
             "args": {
-                "num": 9.999988888777776e44
+                "num": 892639378
             },
-            "expected": 1.2244566890113346e22
+            "expected": 27478
         },
         {
             "args": {
-                "num": "12345678901234567000"
+                "num": 345678118
             },
-            "expected": 246913578
+            "expected": 15046
         },
         {
             "args": {
-                "num": 1111222233334444
+                "num": 243335452
             },
-            "expected": 22446688
+            "expected": 25690
         },
         {
             "args": {
-                "num": 2468024680
+                "num": 468024708
             },
-            "expected": 4936
+            "expected": 2946
         },
         {
             "args": {
-                "num": 1122334455
+                "num": 122334474
             },
-            "expected": 24690
+            "expected": 14691
         },
         {
             "args": {
-                "num": 333311112222
+                "num": 311115229
             },
-            "expected": 224466
+            "expected": 12364
         },
         {
             "args": {
-                "num": 999111222333
+                "num": 111231334
             },
-            "expected": 234738
+            "expected": 12367
         },
         {
             "args": {
-                "num": 123456789012
+                "num": 456790129
             },
-            "expected": 136047
+            "expected": 4048
         },
         {
             "args": {
-                "num": 9.998887776665555e26
+                "num": 989991221
             },
-            "expected": 12456901345788
+            "expected": 14198
         },
         {
             "args": {
-                "num": 8080808080
+                "num": 80808162
             },
-            "expected": 976
+            "expected": 456
         },
         {
             "args": {
-                "num": 321123321123
+                "num": 123324022
             },
-            "expected": 224466
+            "expected": 3457
         },
         {
             "args": {
-                "num": "98765432109876540000"
+                "num": 765436992
             },
-            "expected": 246913578
+            "expected": 28248
         },
         {
             "args": {
-                "num": 1223334444
+                "num": 223334463
             },
-            "expected": 35688
+            "expected": 25680
         },
         {
             "args": {
-                "num": 1010101010
+                "num": 10101029
             },
-            "expected": 122
+            "expected": 131
         },
         {
             "args": {
-                "num": 9.999888877776666e35
+                "num": 982900352
             },
-            "expected": "224466891133557800"
+            "expected": 2648
         },
         {
             "args": {
-                "num": 8051726349
+                "num": 51726431
             },
-            "expected": 16047
+            "expected": 2603
         },
         {
             "args": {
-                "num": 4040404040
+                "num": 40404086
             },
-            "expected": 488
+            "expected": 494
         },
         {
             "args": {
-                "num": "777777777777777800"
+                "num": 777777866
             },
-            "expected": 1555555554
+            "expected": 74555
         },
         {
             "args": {
-                "num": 5959595959
+                "num": 959596014
             },
-            "expected": 111598
+            "expected": 6168
         },
         {
             "args": {
@@ -450,9 +450,9 @@
         },
         {
             "args": {
-                "num": 2929292929
+                "num": 929292957
             },
-            "expected": 45298
+            "expected": 25398
         },
         {
             "args": {
@@ -462,39 +462,39 @@
         },
         {
             "args": {
-                "num": "765432109876543200"
+                "num": 765432254
             },
-            "expected": 24691357
+            "expected": 25913
         },
         {
             "args": {
-                "num": 333322221111
+                "num": 322224118
             },
-            "expected": 224466
+            "expected": 13462
         },
         {
             "args": {
-                "num": 9999999999
+                "num": 99
             },
-            "expected": 199998
+            "expected": 18
         },
         {
             "args": {
-                "num": "112233445566778900"
+                "num": 576879924
             },
-            "expected": 246913578
+            "expected": 30468
         },
         {
             "args": {
-                "num": "1234567890123456800"
+                "num": 234567919
             },
-            "expected": 246913578
+            "expected": 16048
         },
         {
             "args": {
-                "num": 5432109876
+                "num": 432109931
             },
-            "expected": 16047
+            "expected": 2588
         },
         {
             "args": {
@@ -504,93 +504,93 @@
         },
         {
             "args": {
-                "num": 5678901234
+                "num": 678901289
             },
-            "expected": 16047
+            "expected": 4478
         },
         {
             "args": {
-                "num": 8070605040302010
+                "num": 112937465
             },
-            "expected": 3825
+            "expected": 13826
         },
         {
             "args": {
-                "num": 5432112345
+                "num": 432112400
             },
-            "expected": 24690
+            "expected": 1358
         },
         {
             "args": {
-                "num": 2468013579
+                "num": 468013607
             },
-            "expected": 16047
+            "expected": 1835
         },
         {
             "args": {
-                "num": "1234567890987654400"
+                "num": 98765528
             },
-            "expected": 246913578
+            "expected": 8267
         },
         {
             "args": {
-                "num": 1.2233344445555566e43
+                "num": 72981253
             },
-            "expected": 3.5689112334555776e21
+            "expected": 3637
         },
         {
             "args": {
-                "num": 1234567890
+                "num": 234567909
             },
-            "expected": 16047
+            "expected": 6048
         },
         {
             "args": {
-                "num": 9090909090
+                "num": 90909181
             },
-            "expected": 1098
+            "expected": 388
         },
         {
             "args": {
-                "num": 7654321098
+                "num": 654321171
             },
-            "expected": 16047
+            "expected": 12603
         },
         {
             "args": {
-                "num": "8888888888888889000"
+                "num": 888889722
             },
-            "expected": 9777777776
+            "expected": 30777
         },
         {
             "args": {
-                "num": 5050505050
+                "num": 50505105
             },
-            "expected": 610
+            "expected": 210
         },
         {
             "args": {
-                "num": "333333333333333300"
+                "num": 333333334
             },
-            "expected": 666666666
+            "expected": 36667
         },
         {
             "args": {
-                "num": 5432109876543210
+                "num": 925432201
             },
-            "expected": 2469147
+            "expected": 3484
         },
         {
             "args": {
-                "num": 98765432100
+                "num": 765432992
             },
-            "expected": 16047
+            "expected": 26048
         },
         {
             "args": {
-                "num": 90909090909090
+                "num": 91727281
             },
-            "expected": 10998
+            "expected": 2557
         }
     ],
     "invoke": {
