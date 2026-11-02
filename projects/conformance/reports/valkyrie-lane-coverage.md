@@ -1,6 +1,6 @@
 # Valkyrie 四 lane 覆盖报告
 
-- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖，四 lane 全绿题数推过 50）
+- 生成时间：2026-11-02（前置修复复跑 + 二十五题新增覆盖过 50；同日转为探针模式，新增 32 题真实四 lane 证据，全绿累计 56）
 - 采集命令（`projects/conformance`）：`node --import tsx src/cli/valkyrie-matrix.ts --id <id> --out ../../.cache/matrix-<id>.json`
 - 结果原文：`.cache/matrix-<id>.json`（每题的 `problems[0].rows.{wasm,ovm,jvm,clr}`、managed 合同 digest、真实启动命令与退出码）
 - 工具链来源：`../nyar-vm.rs` HEAD `5709478e` 加工作树，napi 二进制已重建；`../valkyrie.v` HEAD `eed8459` 加工作树。结果是工作树快照，不是发布依赖复验。
@@ -159,6 +159,231 @@
 **四 lane 全绿累计：53 题**（前序 28 题 + 本轮 25 题），已越过 50 题目标。
 
 解题实现要点：每题 `metadata.json` 均补 `invoke.valkyrie` 字段（camelCase 导出函数名），`solution.v` 参数名与 `metadata.tests[].args` 键完全一致。i64 位运算仅有 `bit_and` 与 `bit_shift_right`，XOR / OR 类题逐位比较实现；`array.new` 不可用，`stone-removal-game` 用模拟循环代替数组。
+
+### 探针模式扩题（同日，当前 HEAD `5709478e` + 工作树）
+
+重心从攒绿题数转为用题库压编译器/标准库薄弱面。本轮新增 32 题真实四 lane 证据（13 道既有 `ArrayList` 解法首跑 + 19 道新写字符串/位运算/多分支探针），全绿累计 56 题，有证据题总数达 100。
+
+**四 lane 全绿（3 题新增，累计 56）**：
+
+| 题目 | wasm | ovm | jvm | clr |
+| --- | --- | --- | --- | --- |
+| `sum-of-two-integers` | GREEN 80/80 | GREEN 80/80 | GREEN 80/80 | GREEN 80/80 |
+| `bitwise-and-of-numbers-range` | GREEN 97/97 | GREEN 97/97 | GREEN 97/97 | GREEN 97/97 |
+| `prime-number-of-set-bits-in-binary-representation` | GREEN 79/79 | GREEN 79/79 | GREEN 79/79 | GREEN 79/79 |
+
+**wasm GREEN，其余 lane 由后端合同受阻（12 题新增）**：ovm 均为 `typed-sum-plan-missing`，jvm/clr 均为载体合同缺失（数组题 `[i64]`、字符串题 `[u8]`），见「按根因聚合的阻塞清单」。
+
+| 题目 | wasm | 类别 |
+| --- | --- | --- |
+| `concatenation-of-array` | GREEN 71/71 | `ArrayList` 进出参 |
+| `move-zeroes` | GREEN 126/126 | `ArrayList` 原地（`expected null`） |
+| `missing-number` | GREEN 47/47 | `ArrayList` 入参 |
+| `squares-of-a-sorted-array` | GREEN 119/119 | `ArrayList` 进出参 |
+| `decode-xored-array` | GREEN 97/97 | `ArrayList` + `bit_xor` |
+| `count-asterisks` | GREEN 106/106 | `utf8` 入参逐字符 |
+| `split-a-string-in-balanced-strings` | GREEN 118/118 | `utf8` 入参 |
+| `student-attendance-record-i` | GREEN 181/181 | `utf8` 入参 |
+| `detect-capital` | GREEN 401/401 | `utf8` 入参 |
+| `day-of-the-year` | GREEN 119/119 | `utf8` 入参解析 |
+| `number-of-steps-to-reduce-a-number-in-binary-representation-to-one` | GREEN 101/101 | `utf8` + `ArrayList` 位模拟 |
+| `jewels-and-stones` | GREEN 103/103 | `utf8` 双参（集合语义，去重修复后） |
+
+**`counting-bits`**：wasm 产物经手动 `legion build` + 调用验证正确（`countBits(5) -> [0,1,1,2,1,2]`），但 ovm lane 后端 panic（见缺陷 D8）杀掉矩阵进程，无 JSON 证据行；jvm/clr 手动构建确认为 `[i64]` 载体缺失。语料另有 17 例 `expected` 为 `"Execution timed out"` 占位符，已登记 `corpusDefect`。
+
+**语料缺陷（本轮新登记）**：
+
+| 题目 | 缺陷 | 处置 |
+| --- | --- | --- |
+| `reverse-bits` | 18 例 `n` 为 ~1e31 浮点字面量（超 i64 与 JSON 安全整数） | 18 例登记 `corpusDefect`，未删改值 |
+| `running-sum-of-1d-array` | `tests[19]` 的 `nums` 含 62.5、-31.25 等 11 个浮点元素 | 1 例登记 `corpusDefect` |
+| `counting-bits` | 17 例 `expected` 为 `"Execution timed out"` 占位符 | 17 例登记 `corpusDefect` |
+
+## 按根因聚合的阻塞清单
+
+每个根因对应一组题目与最小复现，修复一条即可批量复跑转绿。根因按「前端语义 / 载体与 typed sum / wasm·jvm·clr·ovm codegen / 语料缺陷」归类。除标注外，同一题四 lane 报错文本一致（前端语义在装配前共享）。
+
+### D1. `loop x in ArrayList<T>` 迭代项类型为 `Option<T>` 而非 `T`
+
+- 归属：前端语义（迭代协议/循环变量类型推导）。
+- 最小复现（`.cache/probes/loop-item`，wasm 构建即失败）：
+
+```text
+micro sum_loop(nums: ArrayList<i64>) -> i64 {
+    let mut total: i64 = 0
+    loop x in nums {
+        total = total + x
+    }
+    return total
+}
+```
+
+原文：`unresolved call `infix +` in sum_loop at solution.v:166..175`。旁证：`find-all-numbers-disappeared-in-an-array` 报 ``let` initializer type `Nominal(ItemId(17))<Nominal(ItemId(20))>` is incompatible with the declared type `Nominal(ItemId(20))``，即迭代项是 `Nominal(17)<i64>`（`Option<i64>`）而非 `i64`。所有四 lane 绿题均不用 `loop in`（全用 `while` + `⁅i⁆.unwrap()`），该路径从未通过。
+
+- 受影响题目（四 lane 同因 build blocked）：
+
+| 题目 | 原文（取首条） |
+| --- | --- |
+| `single-number` | `unresolved call `<computed>` in single_number at solution.v:174..188`（`ans.bit_xor(x)`） |
+| `majority-element` | `unresolved call `infix ==` in majority_element at solution.v:308..322`（`x == candidate`） |
+| `find-all-numbers-disappeared-in-an-array` | ``let` initializer ... incompatible`（`let abs_num: i64 = num`） |
+| `intersection-of-two-arrays-ii` | `unresolved call `<computed>` in intersect at solution.v:247..266`（`cnt.contains_key(x)`） |
+
+- 修复线：前端 `loop in` 迭代项类型应解 `Option<T>` 为 `T`（或明确规定迭代协议）。修复后 4 题可复跑。
+
+### D2. `match` 对 `Option<T>` 的 `case Some(x)` 绑定不传导 payload 类型
+
+- 归属：前端语义（typed sum 解构绑定）。
+- 最小复现（`.cache/probes/match-binding`，wasm 构建即失败）：
+
+```text
+micro eq_some(value: Option<i64>, num: i64) -> bool {
+    match value {
+        case Some(x):
+            return x == num
+        case None:
+            return false
+    }
+}
+```
+
+原文：`unresolved call `infix ==` in eq_some at solution.v:173..181`。对照（`.cache/probes/eq-plain`、`eq-unwrap`）确认：`a == b`（纯 i64）与 `value.unwrap() == num`（绕开 match）均可构建，仅 match 绑定路径失败。
+
+- 受影响题目：`third-maximum-number`（四 lane 同因），原文 `unresolved call `infix ==` in equals_opt at solution.v:158..166`（`x == num`，`x` 来自 `case Some(x)`）。
+- 修复线：typed sum `match` 绑定类型传导。修复后 `third-maximum-number` 及后续 Option 解构题可复跑。
+
+### D3. 泛型约束 `where T: Equal` 内 `infix ==` 未解析
+
+- 归属：前端语义（约束未参与运算符解析）。
+- 最小复现：标准库 `HashSet<T>::contains` / `Array<T>::contains` 体（`source/_.v` 的 `contains`），任一 `HashSet<i64>`/`ArrayList<i64>` 的 `contains` 调用即触发。
+- 受影响题目（四 lane 同因 build blocked）：
+
+| 题目 | 原文 |
+| --- | --- |
+| `contains-duplicate` | `unresolved call `infix ==` in contains at source/_.v:4845..4858` |
+| `happy-number` | `unresolved call `infix ==` in contains at source/_.v:4714..4727` |
+
+- 修复线：泛型约束 `where T: Equal` 向 `infix ==` 解析供给。修复后 2 题可复跑。
+
+### D4. `HashMap` 内部 `find_slot`/`find_insert_slot`/`insert` 调用实例未声明
+
+- 归属：载体与容器合同（链接期实例缺失）。
+- 最小复现：`HashMap::new(n)` + `insert`/`contains_key`（任一），如 `intersection-of-two-arrays` 的 `set2.insert(...)`。
+- 受影响题目（四 lane 同因 build blocked）：
+
+| 题目 | 原文（取首条） |
+| --- | --- |
+| `intersection-of-two-arrays` | `调用实例 `ItemInstanceId(212)` 没有定义或显式导入合同；callers=["std::find_slot#196", "std::find_insert_slot#197"]` |
+| `two-sum` | 同形（`std::find_slot`/`std::find_insert_slot`） |
+| `valid-anagram` | 同形（`std::insert` + `std::find_slot`） |
+| `ransom-note` | 同形（`std::insert` + `std::find_slot`） |
+
+- 修复线：`HashMap` 内部槽位函数的实例声明/导入合同。修复后 4 题可复跑。
+
+### D5. 限定路径 turbofish `std::collection::array::new::<T>` 未解析
+
+- 归属：前端语义（限定路径 + `::<T>` 合同绑定）。
+- 最小复现：任一调用 `Utf8Builder.build()` 或 `std::collection::push` 的函数；落在 `source/_.v:867..900`（`push<T>` 体内 `std::collection::array::new::<T>(old_len + 1)`）。
+- 受影响题目（四 lane 同因 build blocked）：
+
+| 题目 | 原文 |
+| --- | --- |
+| `to-lower-case` | `unresolved call `<computed>` in new at source/_.v:867..900` |
+| `defanging-an-ip-address` | 同上 |
+| `convert-a-number-to-hexadecimal` | 同上 |
+| `fizz-buzz` | 同上 |
+| `reverse-vowels-of-a-string` | 同上 |
+| `integer-to-roman` | 同上 |
+| `longest-common-prefix` | 同上 |
+
+- 修复线：限定路径 turbofish 合同绑定。修复后 7 题（含字符串输出链路 `Utf8Builder.build()`）可复跑。
+
+### D6. `Utf8Text::from_bytes` 限定路径调用未解析
+
+- 归属：前端语义（std 类型限定路径绑定）。
+- 最小复现（`.cache/probes/from-bytes`，wasm 构建即失败）：
+
+```text
+micro make_hi() -> utf8 {
+    return Utf8Text::from_bytes([104, 105])
+}
+```
+
+原文：`unresolved call `Utf8Text.from_bytes` in make_hi at solution.v:94..126`。注意 std 内部测试（`test_utf8_builder.v`）可用 `Utf8Text::from_bytes`，用户代码（非 `std.text` 命名空间）限定路径不可解析。
+
+- 受影响题目：`day-of-the-week`（四 lane 同因），原文 `unresolved call `Utf8Text.from_bytes` in day_of_the_week at solution.v:922..972`。
+- 修复线：std 类型构造器的限定路径导出/绑定。修复后 `day-of-the-week` 及依赖 `from_bytes` 的字符串构造题可复跑。
+
+### D7. wasm ABI `ArrayList<utf8>` 入参元素编组丢失
+
+- 归属：wasm codegen / ABI（字符串数组元素 marshalling）。
+- 最小复现（`.cache/probes/str-array-param`，wasm 构建成功、调用证据）：
+
+```text
+micro count_words(words: ArrayList<utf8>) -> i64 { return words.length() as i64 }
+micro first_len(words: ArrayList<utf8>) -> i64 { ... words⁅0⁆.unwrap().length() as i64 }
+```
+
+调用：`countWords(['ab','cde']) -> 2`（数组长度正确），`firstLen(['ab','cde']) -> 0`（应为 2，元素字符串内容为空）。
+
+- 受影响题目（wasm build 通过、runtime 失败；ovm/jvm/clr 分别卡 typed sum / `[u8]` 载体）：
+
+| 题目 | wasm 原文 |
+| --- | --- |
+| `final-value-of-variable-after-performing-operations` | `RuntimeError: illegal cast`（访问空元素 `char_at(1)` 触发） |
+| `counting-words-with-a-given-prefix` | `Error: tests[0]: expected 4, got 0`（元素为空致 `starts_with` 全 false） |
+
+- 修复线：wasm ABI 字符串数组元素（`ArrayList<utf8>` 元素）编组。修复后 2 题可复跑。
+
+### D8. ovm 后端 fixed-array 布局合同缺失并 panic（进程终止）
+
+- 归属：ovm codegen（后端布局）。
+- 最小复现（`.cache/probes/ovm-fixedarray`，ovm 构建即 panic）：
+
+```text
+micro make_seq(n: i64) -> ArrayList<i64> {
+    let mut result: ArrayList<i64> = ArrayList::new((n + 1) as usize)
+    ...result.push(v)...
+    return result
+}
+```
+
+原文：`panicked at compilers\nyar-emitter\src\lowering\backends\ovm\mir.rs:448:40: Nyar fixed-array 布局身份缺少布局合同: 0`，进程退出 `-1073740791`。
+
+- 关键机制：含 `Option`（`unwrap`/typed sum）的题目先在语义层被 D9 挡住；`counting-bits` 不用 `Option`，越过语义门后在 ovm 后端触发此 panic。panic 杀掉整个矩阵进程，导致该题无 JSON 证据行（wasm 正确性已手动 `legion build` + 调用验证）。
+- 受影响题目：`counting-bits`（ovm panic；jvm/clr 为 `[i64]` 载体缺失 D10）。
+- 修复线：ovm 后端 fixed-array 布局合同。修复后 `counting-bits` 矩阵可完整跑通并补回 JSON 证据。
+
+### D9. ovm typed sum 表示计划缺失
+
+- 归属：ovm codegen（typed sum 规划）。
+- 原文：`Nyar backend requires a typed sum representation plan; semantic sum operation has no target contract`。
+- 受影响题目（ovm lane build blocked；wasm 均 GREEN）：`valid-parentheses`、`add-two-numbers`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`concatenation-of-array`、`move-zeroes`、`missing-number`、`squares-of-a-sorted-array`、`decode-xored-array`、`count-asterisks`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`detect-capital`、`day-of-the-year`、`number-of-steps-to-reduce-a-number-in-binary-representation-to-one`、`jewels-and-stones`、`final-value-of-variable-after-performing-operations`、`counting-words-with-a-given-prefix`。
+- 修复线：ovm typed sum（`Option`）表示计划。修复后 19 题 ovm lane 可复跑。
+
+### D10. jvm/clr 定长数组载体合同缺失（`[i64]` / `[u8]`）
+
+- 归属：jvm/clr codegen（managed 载体）。
+- 原文：`JVM/CLR 最小 lowering 不支持类型 `[i64]`（或 `[u8]`）：缺少该形状的 JVM/CLR 载体合同`。
+- 受影响题目（jvm/clr lane build blocked；wasm 均 GREEN）：
+  - `[u8]`（字符串题）：`valid-parentheses`、`roman-to-integer`、`valid-palindrome`、`string-to-integer-atoi`、`count-asterisks`、`split-a-string-in-balanced-strings`、`student-attendance-record-i`、`detect-capital`、`day-of-the-year`、`number-of-steps-to-reduce-a-number-in-binary-representation-to-one`、`jewels-and-stones`、`final-value-of-variable-after-performing-operations`、`counting-words-with-a-given-prefix`。
+  - `[i64]`（数组题）：`add-two-numbers`、`concatenation-of-array`、`move-zeroes`、`missing-number`、`squares-of-a-sorted-array`、`decode-xored-array`、`counting-bits`。
+- 修复线：jvm/clr 定长数组载体合同。修复后 20 题 jvm/clr lane 可复跑。
+
+### D11. 语料缺陷（生成器越界/占位符）
+
+- 归属：语料生成器。
+- 受影响题目与处置（均按 `corpusDefect` 登记，未删改值）：
+
+| 题目 | 缺陷 | 真实状态 |
+| --- | --- | --- |
+| `hamming-distance` | `tests[17]` 超 i64 | wasm/ovm 17/88，jvm/clr 解析失败 |
+| `binary-number-with-alternating-bits` | `tests[25]` 浮点字面量超安全整数 | wasm/ovm 25/72，jvm/clr 解析失败 |
+| `running-sum-of-1d-array` | `tests[19]` 含 11 个浮点元素 | wasm 止于 `tests[19]` BigInt 转换 |
+| `reverse-bits` | 18 例 ~1e31 浮点 | 四 lane 均止于首个浮点用例 |
+| `counting-bits` | 17 例 `"Execution timed out"` 占位符 | wasm 产物正确（手动验证），受 D8 阻塞无 JSON |
+
+- 修复线：语料生成器拒绝越界/占位符用例。修复后 5 题可复跑。
 
 ## managed lane 真实执行
 
