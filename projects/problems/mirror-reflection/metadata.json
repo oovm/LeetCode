@@ -2,7 +2,11 @@
     "id": "mirror-reflection",
     "questionId": 858,
     "difficulty": "Medium",
-    "tags": ["Geometry", "Math", "Number Theory"],
+    "tags": [
+        "Geometry",
+        "Math",
+        "Number Theory"
+    ],
     "tests": [
         {
             "args": {
@@ -595,6 +599,7 @@
     ],
     "invoke": {
         "python": "Solution().mirrorReflection",
-        "typescript": "Solution().mirrorReflection"
+        "typescript": "Solution().mirrorReflection",
+        "valkyrie": "Solution().mirrorReflection"
     }
 }

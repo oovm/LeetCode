@@ -2,7 +2,9 @@
     "id": "factorial-trailing-zeroes",
     "questionId": 172,
     "difficulty": "Medium",
-    "tags": ["Math"],
+    "tags": [
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -433,6 +435,7 @@
     ],
     "invoke": {
         "python": "Solution().trailingZeroes",
-        "typescript": "Solution().trailingZeroes"
+        "typescript": "Solution().trailingZeroes",
+        "valkyrie": "Solution().trailingZeroes"
     }
 }

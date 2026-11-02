@@ -2,7 +2,9 @@
     "id": "confusing-number",
     "questionId": 1056,
     "difficulty": "Easy",
-    "tags": ["Math"],
+    "tags": [
+        "Math"
+    ],
     "tests": [
         {
             "args": {
@@ -260,7 +262,7 @@
             "args": {
                 "n": "6969696969696970000"
             },
-            "expected": true
+            "expected": false
         },
         {
             "args": {
@@ -793,6 +795,7 @@
     ],
     "invoke": {
         "python": "Solution().confusingNumber",
-        "typescript": "Solution().confusingNumber"
+        "typescript": "Solution().confusingNumber",
+        "valkyrie": "Solution().confusingNumber"
     }
 }

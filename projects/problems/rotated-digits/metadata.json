@@ -2,7 +2,10 @@
     "id": "rotated-digits",
     "questionId": 788,
     "difficulty": "Medium",
-    "tags": ["Math", "Dynamic Programming"],
+    "tags": [
+        "Math",
+        "Dynamic Programming"
+    ],
     "tests": [
         {
             "args": {
@@ -337,6 +340,7 @@
     ],
     "invoke": {
         "python": "Solution().rotatedDigits",
-        "typescript": "Solution().rotatedDigits"
+        "typescript": "Solution().rotatedDigits",
+        "valkyrie": "Solution().rotatedDigits"
     }
 }

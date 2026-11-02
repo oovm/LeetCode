@@ -2,7 +2,11 @@
     "id": "clumsy-factorial",
     "questionId": 1006,
     "difficulty": "Medium",
-    "tags": ["Stack", "Math", "Simulation"],
+    "tags": [
+        "Stack",
+        "Math",
+        "Simulation"
+    ],
     "tests": [
         {
             "args": {
@@ -235,6 +239,7 @@
     ],
     "invoke": {
         "python": "Solution().clumsy",
-        "typescript": "Solution().clumsy"
+        "typescript": "Solution().clumsy",
+        "valkyrie": "Solution().clumsy"
     }
 }
