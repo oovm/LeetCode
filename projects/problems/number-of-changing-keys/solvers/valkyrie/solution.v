@@ -1,5 +1,31 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 相邻字符大小写不敏感变化计数。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：相邻变化计数，时间 O(n) 空间 O(1)。
+namespace leetcode.number_of_changing_keys;
+
+micro normalize(code: u32) -> u32 {
+    if code >= 65 && code <= 90 {
+        return code + 32
+    }
+    return code
+}
+
+# 相邻按键忽略大小写后不同即记一次变化。
+[export(case: "camelCase")]
+micro count_key_changes(s: utf8) -> i64 {
+    let n: usize = s.length()
+    let mut changes: i64 = 0
+    let mut i: usize = 1
+    while i < n {
+        let before: u32 = normalize(s⁅i - 1⁆ as u32)
+        let after: u32 = normalize(s⁅i⁆ as u32)
+        if before != after {
+            changes = changes + 1
+        }
+        i = i + 1
+    }
+    return changes
+}
+
+class Solution {
+    micro countKeyChanges(self, s: utf8): i64 {
+        return count_key_changes(s)
+    }
+}

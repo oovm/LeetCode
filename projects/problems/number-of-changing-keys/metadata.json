@@ -475,6 +475,7 @@
     ],
     "invoke": {
         "python": "Solution().countKeyChanges",
-        "typescript": "Solution().countKeyChanges"
+        "typescript": "Solution().countKeyChanges",
+        "valkyrie": "countKeyChanges"
     }
 }

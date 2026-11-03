@@ -331,6 +331,7 @@
     ],
     "invoke": {
         "python": "Solution().possibleStringCount",
-        "typescript": "Solution().possibleStringCount"
+        "typescript": "Solution().possibleStringCount",
+        "valkyrie": "possibleStringCount"
     }
 }

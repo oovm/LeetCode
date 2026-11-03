@@ -1117,6 +1117,7 @@
     ],
     "invoke": {
         "python": "Solution().findTheLongestBalancedSubstring",
-        "typescript": "Solution().findTheLongestBalancedSubstring"
+        "typescript": "Solution().findTheLongestBalancedSubstring",
+        "valkyrie": "findTheLongestBalancedSubstring"
     }
 }

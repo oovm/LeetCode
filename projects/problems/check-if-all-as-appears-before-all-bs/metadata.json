@@ -919,6 +919,7 @@
     ],
     "invoke": {
         "python": "Solution().checkString",
-        "typescript": "Solution().checkString"
+        "typescript": "Solution().checkString",
+        "valkyrie": "checkString"
     }
 }

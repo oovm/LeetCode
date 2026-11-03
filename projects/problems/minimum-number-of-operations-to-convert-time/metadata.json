@@ -973,6 +973,7 @@
     ],
     "invoke": {
         "python": "Solution().convertTime",
-        "typescript": "Solution().convertTime"
+        "typescript": "Solution().convertTime",
+        "valkyrie": "convertTime"
     }
 }

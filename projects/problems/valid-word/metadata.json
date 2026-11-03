@@ -301,6 +301,7 @@
     ],
     "invoke": {
         "python": "Solution().isValid",
-        "typescript": "Solution().isValid"
+        "typescript": "Solution().isValid",
+        "valkyrie": "isValid"
     }
 }

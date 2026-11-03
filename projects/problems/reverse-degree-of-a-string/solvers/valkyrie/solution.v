@@ -1,5 +1,21 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 逆序字母序乘位标累加。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：加权和，时间 O(n) 空间 O(1)。
+namespace leetcode.reverse_degree_of_a_string;
+
+# 各位逆序字母序（z 为 1）乘以 1 基下标后累加。
+[export(case: "camelCase")]
+micro reverse_degree(s: utf8) -> i64 {
+    let n: usize = s.length()
+    let mut total: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        let position: i64 = 26 - (s⁅i⁆ as u32 as i64 - 97)
+        total = total + position * (i as i64 + 1)
+        i = i + 1
+    }
+    return total
+}
+
+class Solution {
+    micro reverseDegree(self, s: utf8): i64 {
+        return reverse_degree(s)
+    }
+}

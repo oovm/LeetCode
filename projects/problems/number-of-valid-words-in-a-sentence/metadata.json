@@ -2269,6 +2269,7 @@
     ],
     "invoke": {
         "python": "Solution().countValidWords",
-        "typescript": "Solution().countValidWords"
+        "typescript": "Solution().countValidWords",
+        "valkyrie": "countValidWords"
     }
 }

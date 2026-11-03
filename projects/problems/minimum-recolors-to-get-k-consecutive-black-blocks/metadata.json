@@ -714,6 +714,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumRecolors",
-        "typescript": "Solution().minimumRecolors"
+        "typescript": "Solution().minimumRecolors",
+        "valkyrie": "minimumRecolors"
     }
 }

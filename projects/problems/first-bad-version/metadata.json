@@ -450,6 +450,7 @@
     ],
     "invoke": {
         "python": "Solution().firstBadVersion",
-        "typescript": "Solution().firstBadVersion"
+        "typescript": "Solution().firstBadVersion",
+        "valkyrie": "firstBadVersion"
     }
 }

@@ -812,6 +812,7 @@
     ],
     "invoke": {
         "python": "Solution().countKConstraintSubstrings",
-        "typescript": "Solution().countKConstraintSubstrings"
+        "typescript": "Solution().countKConstraintSubstrings",
+        "valkyrie": "countKConstraintSubstrings"
     }
 }

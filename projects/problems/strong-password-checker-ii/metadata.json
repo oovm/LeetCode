@@ -427,6 +427,7 @@
     ],
     "invoke": {
         "python": "Solution().strongPasswordCheckerII",
-        "typescript": "Solution().strongPasswordCheckerII"
+        "typescript": "Solution().strongPasswordCheckerII",
+        "valkyrie": "strongPasswordCheckerII"
     }
 }

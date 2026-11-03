@@ -1,5 +1,37 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`blocks⁅i⁆` 定窗长 k 计 W 取最小。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：定窗计数，时间 O(n) 空间 O(1)。
+namespace leetcode.minimum_recolors_to_get_k_consecutive_black_blocks;
+
+[export(case: "camelCase")]
+micro minimum_recolors(blocks: utf8, k: i64) -> i64 {
+    let n: usize = blocks.length()
+    let kk: usize = k as usize
+    let mut whites: i64 = 0
+    let mut i: usize = 0
+    while i < kk {
+        if blocks⁅i⁆ as u32 == 87 {
+            whites = whites + 1
+        }
+        i = i + 1
+    }
+    let mut best: i64 = whites
+    i = kk
+    while i < n {
+        if blocks⁅i⁆ as u32 == 87 {
+            whites = whites + 1
+        }
+        let left: usize = i - kk
+        if blocks⁅left⁆ as u32 == 87 {
+            whites = whites - 1
+        }
+        if whites < best {
+            best = whites
+        }
+        i = i + 1
+    }
+    return best
+}
+
+class Solution {
+    micro minimumRecolors(self, blocks: utf8, k: i64): i64 {
+        return minimum_recolors(blocks, k)
+    }
+}

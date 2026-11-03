@@ -1,5 +1,42 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s1⁅i⁆`/`s2⁅i⁆`/`s3⁅i⁆` 逐位求公共前缀。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：公共前缀长定总操作数，时间 O(n) 空间 O(1)。
+namespace leetcode.make_three_strings_equal;
+
+[export(case: "camelCase")]
+micro find_minimum_operations(s1: utf8, s2: utf8, s3: utf8) -> i64 {
+    let a: usize = s1.length()
+    let b: usize = s2.length()
+    let c: usize = s3.length()
+    let total_len: i64 = a as i64 + b as i64 + c as i64
+    let mut limit: usize = a
+    if b < limit {
+        limit = b
+    }
+    if c < limit {
+        limit = c
+    }
+    let mut i: usize = 0
+    let mut same: bool = true
+    while i < limit && same {
+        let x: u32 = s1⁅i⁆ as u32
+        let y: u32 = s2⁅i⁆ as u32
+        let z: u32 = s3⁅i⁆ as u32
+        if (x == y) && (y == z) {
+            i = i + 1
+        } else {
+            same = false
+        }
+    }
+    if i == 0 {
+        if total_len == 0 {
+            return 0
+        }
+        return -1
+    }
+    let prefix: i64 = i as i64
+    return total_len - 3 * prefix
+}
+
+class Solution {
+    micro findMinimumOperations(self, s1: utf8, s2: utf8, s3: utf8): i64 {
+        return find_minimum_operations(s1, s2, s3)
+    }
+}

@@ -1043,6 +1043,7 @@
     ],
     "invoke": {
         "python": "Solution().checkAlmostEquivalent",
-        "typescript": "Solution().checkAlmostEquivalent"
+        "typescript": "Solution().checkAlmostEquivalent",
+        "valkyrie": "checkAlmostEquivalent"
     }
 }

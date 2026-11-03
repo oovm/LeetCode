@@ -1,5 +1,39 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：两串 `s⁅i⁆` 频次差绝对值均 ≤3（计数表另需定长数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：频次差校验，时间 O(n) 空间 O(字符集)。
+namespace leetcode.check_whether_two_strings_are_almost_equivalent;
+
+[export(case: "camelCase")]
+micro check_almost_equivalent(word1: utf8, word2: utf8) -> bool {
+    let n1: usize = word1.length()
+    let n2: usize = word2.length()
+    let mut letter: i64 = 97
+    while letter <= 122 {
+        let mut difference: i64 = 0
+        let mut i: usize = 0
+        while i < n1 {
+            if (word1⁅i⁆ as u32 as i64) == letter {
+                difference = difference + 1
+            }
+            i = i + 1
+        }
+        let mut j: usize = 0
+        while j < n2 {
+            if (word2⁅j⁆ as u32 as i64) == letter {
+                difference = difference - 1
+            }
+            j = j + 1
+        }
+        if difference < 0 {
+            difference = 0 - difference
+        }
+        if difference > 3 {
+            return false
+        }
+        letter = letter + 1
+    }
+    return true
+}
+
+class Solution {
+    micro checkAlmostEquivalent(self, word1: utf8, word2: utf8): bool {
+        return check_almost_equivalent(word1, word2)
+    }
+}

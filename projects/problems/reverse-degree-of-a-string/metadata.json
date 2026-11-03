@@ -337,6 +337,7 @@
     ],
     "invoke": {
         "python": "Solution().reverseDegree",
-        "typescript": "Solution().reverseDegree"
+        "typescript": "Solution().reverseDegree",
+        "valkyrie": "reverseDegree"
     }
 }

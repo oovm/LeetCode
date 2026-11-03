@@ -913,6 +913,7 @@
     ],
     "invoke": {
         "python": "Solution().furthestDistanceFromOrigin",
-        "typescript": "Solution().furthestDistanceFromOrigin"
+        "typescript": "Solution().furthestDistanceFromOrigin",
+        "valkyrie": "furthestDistanceFromOrigin"
     }
 }

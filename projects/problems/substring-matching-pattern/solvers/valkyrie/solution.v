@@ -1,5 +1,51 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`p` 按 * 切成前后缀并在 `s` 中顺序夹逼匹配（切片/包含）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：星号前后缀夹逼，时间 O(n·m) 空间 O(m)。
+namespace leetcode.substring_matching_pattern;
+
+micro segment_from(s: utf8, p: utf8, begin: usize, end: usize, from: usize) -> i64 {
+    let width: usize = end - begin
+    let n: usize = s.length()
+    let mut i: usize = from
+    while i + width <= n {
+        let mut j: usize = 0
+        let mut matched: bool = true
+        while j < width && matched {
+            if (s⁅i + j⁆ as u32) != (p⁅begin + j⁆ as u32) {
+                matched = false
+            }
+            j = j + 1
+        }
+        if matched {
+            return i as i64
+        }
+        i = i + 1
+    }
+    return -1
+}
+
+# 按 '*' 切成若干字面段，段间可跳过任意字符，依次在 s 中定位即匹配。
+[export(case: "camelCase")]
+micro has_match(s: utf8, p: utf8) -> bool {
+    let m: usize = p.length()
+    let mut cursor: usize = 0
+    let mut i: usize = 0
+    while i < m {
+        let mut j: usize = i
+        while j < m && (p⁅j⁆ as u32) != 42 {
+            j = j + 1
+        }
+        if j > i {
+            let found: i64 = segment_from(s, p, i, j, cursor)
+            if found < 0 {
+                return false
+            }
+            cursor = found as usize + (j - i)
+        }
+        i = j + 1
+    }
+    return true
+}
+
+class Solution {
+    micro hasMatch(self, s: utf8, p: utf8): bool {
+        return has_match(s, p)
+    }
+}

@@ -1,5 +1,26 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 相邻字符码差绝对值累加。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：相邻差累加，时间 O(n) 空间 O(1)。
+namespace leetcode.score_of_a_string;
+
+# 累加相邻字符码差的绝对值。
+[export(case: "camelCase")]
+micro score_of_string(s: utf8) -> i64 {
+    let n: usize = s.length()
+    let mut score: i64 = 0
+    let mut i: usize = 1
+    while i < n {
+        let before: i64 = s⁅i - 1⁆ as u32 as i64
+        let current: i64 = s⁅i⁆ as u32 as i64
+        if current >= before {
+            score = score + current - before
+        } else {
+            score = score + before - current
+        }
+        i = i + 1
+    }
+    return score
+}
+
+class Solution {
+    micro scoreOfString(self, s: utf8): i64 {
+        return score_of_string(s)
+    }
+}

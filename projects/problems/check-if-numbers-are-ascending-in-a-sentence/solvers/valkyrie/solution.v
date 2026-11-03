@@ -1,5 +1,45 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：切词滤数字段并严格递增校验。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：数字段递增扫描，时间 O(n) 空间 O(1)。
+namespace leetcode.check_if_numbers_are_ascending_in_a_sentence;
+
+[export(case: "camelCase")]
+micro are_numbers_ascending(s: utf8) -> bool {
+    let n: usize = s.length()
+    let mut previous: i64 = -1
+    let mut i: usize = 0
+    while i < n {
+        while i < n && (s⁅i⁆ as u32 as i64) == 32 {
+            i = i + 1
+        }
+        if i < n {
+            let mut j: usize = i
+            while j < n && (s⁅j⁆ as u32 as i64) != 32 {
+                j = j + 1
+            }
+            let mut value: i64 = 0
+            let mut numeric: bool = true
+            let mut k: usize = i
+            while k < j {
+                let code: i64 = s⁅k⁆ as u32 as i64
+                if code >= 48 && code <= 57 {
+                    value = value * 10 + (code - 48)
+                } else {
+                    numeric = false
+                }
+                k = k + 1
+            }
+            if numeric {
+                if value <= previous {
+                    return false
+                }
+                previous = value
+            }
+            i = j
+        }
+    }
+    return true
+}
+
+class Solution {
+    micro areNumbersAscending(self, s: utf8): bool {
+        return are_numbers_ascending(s)
+    }
+}

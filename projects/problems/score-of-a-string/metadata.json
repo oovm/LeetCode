@@ -529,6 +529,7 @@
     ],
     "invoke": {
         "python": "Solution().scoreOfString",
-        "typescript": "Solution().scoreOfString"
+        "typescript": "Solution().scoreOfString",
+        "valkyrie": "scoreOfString"
     }
 }

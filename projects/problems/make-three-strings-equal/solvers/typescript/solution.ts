@@ -6,6 +6,9 @@ export class Solution {
             prefix += 1;
         }
         if (prefix === 0) {
+            if (s1.length + s2.length + s3.length === 0) {
+                return 0;
+            }
             return -1;
         }
         return s1.length + s2.length + s3.length - 3 * prefix;

@@ -1,5 +1,21 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`coordinate1⁅i⁆` 与 `coordinate2⁅i⁆` 取行列字符判格色。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：双色奇偶对比，时间 O(1) 空间 O(1)。
+namespace leetcode.check_if_two_chessboard_squares_have_the_same_color;
+
+micro square_parity(coordinate: utf8) -> i64 {
+    let zero: usize = 0
+    let one: usize = 1
+    let column: u32 = coordinate⁅zero⁆ as u32
+    let row: u32 = coordinate⁅one⁆ as u32
+    return ((column + row) % 2) as i64
+}
+
+# 棋盘格色由列号与行号之和的奇偶决定。
+[export(case: "camelCase")]
+micro check_two_chessboards(coordinate1: utf8, coordinate2: utf8) -> bool {
+    return square_parity(coordinate1) == square_parity(coordinate2)
+}
+
+class Solution {
+    micro checkTwoChessboards(self, coordinate1: utf8, coordinate2: utf8): bool {
+        return check_two_chessboards(coordinate1, coordinate2)
+    }
+}

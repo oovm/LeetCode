@@ -871,6 +871,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumChairs",
-        "typescript": "Solution().minimumChairs"
+        "typescript": "Solution().minimumChairs",
+        "valkyrie": "minimumChairs"
     }
 }

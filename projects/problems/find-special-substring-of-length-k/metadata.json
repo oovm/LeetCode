@@ -784,6 +784,7 @@
     ],
     "invoke": {
         "python": "Solution().hasSpecialSubstring",
-        "typescript": "Solution().hasSpecialSubstring"
+        "typescript": "Solution().hasSpecialSubstring",
+        "valkyrie": "hasSpecialSubstring"
     }
 }

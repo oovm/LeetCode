@@ -1,13 +1,17 @@
 export class Solution {
     hasMatch(s: string, p: string): boolean {
-        const star = p.indexOf('*');
-        const head = p.slice(0, star);
-        const tail = p.slice(star + 1);
-        const start = s.indexOf(head);
-        if (start === -1) {
-            return false;
+        let cursor = 0;
+        let i = 0;
+        while (i < p.length) {
+            let j = i;
+            while (j < p.length && p[j] !== '*') j += 1;
+            if (j > i) {
+                const found = s.indexOf(p.slice(i, j), cursor);
+                if (found === -1) return false;
+                cursor = found + (j - i);
+            }
+            i = j + 1;
         }
-        const end = s.indexOf(tail, start + head.length);
-        return end !== -1;
+        return true;
     }
 }

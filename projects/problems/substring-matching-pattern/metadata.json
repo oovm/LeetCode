@@ -1470,6 +1470,7 @@
     ],
     "invoke": {
         "python": "Solution().hasMatch",
-        "typescript": "Solution().hasMatch"
+        "typescript": "Solution().hasMatch",
+        "valkyrie": "hasMatch"
     }
 }

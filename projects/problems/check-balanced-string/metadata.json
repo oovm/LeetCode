@@ -625,6 +625,7 @@
     ],
     "invoke": {
         "python": "Solution().isBalanced",
-        "typescript": "Solution().isBalanced"
+        "typescript": "Solution().isBalanced",
+        "valkyrie": "isBalanced"
     }
 }

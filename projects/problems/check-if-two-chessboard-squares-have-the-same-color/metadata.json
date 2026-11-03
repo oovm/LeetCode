@@ -1085,6 +1085,7 @@
     ],
     "invoke": {
         "python": "Solution().checkTwoChessboards",
-        "typescript": "Solution().checkTwoChessboards"
+        "typescript": "Solution().checkTwoChessboards",
+        "valkyrie": "checkTwoChessboards"
     }
 }

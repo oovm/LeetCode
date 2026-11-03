@@ -1,5 +1,28 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` E/L 占用平衡取峰值。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：平衡峰值，时间 O(n) 空间 O(1)。
+namespace leetcode.minimum_number_of_chairs_in_a_waiting_room;
+
+# 进出相抵后取在场人数的峰值。
+[export(case: "camelCase")]
+micro minimum_chairs(s: utf8) -> i64 {
+    let n: usize = s.length()
+    let mut current: i64 = 0
+    let mut peak: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        if (s⁅i⁆ as u32) == 69 {
+            current = current + 1
+        } else {
+            current = current - 1
+        }
+        if current > peak {
+            peak = current
+        }
+        i = i + 1
+    }
+    return peak
+}
+
+class Solution {
+    micro minimumChairs(self, s: utf8): i64 {
+        return minimum_chairs(s)
+    }
+}

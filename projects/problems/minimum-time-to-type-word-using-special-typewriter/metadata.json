@@ -781,6 +781,7 @@
     ],
     "invoke": {
         "python": "Solution().minTimeToType",
-        "typescript": "Solution().minTimeToType"
+        "typescript": "Solution().minTimeToType",
+        "valkyrie": "minTimeToType"
     }
 }

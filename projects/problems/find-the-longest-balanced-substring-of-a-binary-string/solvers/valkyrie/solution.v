@@ -1,5 +1,45 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 游程后相邻 0/1 段取 2·min。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：相邻游程取最大，时间 O(n) 空间 O(1)。
+namespace leetcode.find_the_longest_balanced_substring_of_a_binary_string;
+
+[export(case: "camelCase")]
+micro find_the_longest_balanced_substring(s: utf8) -> i64 {
+    let n: usize = s.length()
+    let mut best: i64 = 0
+    let mut prev: i64 = 0
+    let mut cur: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        cur = cur + 1
+        let code: u32 = s⁅i⁆ as u32
+        let mut at_end: bool = false
+        if i + 1 == n {
+            at_end = true
+        } else {
+            let next: u32 = s⁅i + 1⁆ as u32
+            if next != code {
+                at_end = true
+            }
+        }
+        if at_end {
+            if code == 49 {
+                let mut small: i64 = cur
+                if prev < small {
+                    small = prev
+                }
+                let span: i64 = small * 2
+                if span > best {
+                    best = span
+                }
+            }
+            prev = cur
+            cur = 0
+        }
+        i = i + 1
+    }
+    return best
+}
+
+class Solution {
+    micro findTheLongestBalancedSubstring(self, s: utf8): i64 {
+        return find_the_longest_balanced_substring(s)
+    }
+}

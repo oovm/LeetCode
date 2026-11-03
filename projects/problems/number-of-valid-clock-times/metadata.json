@@ -691,6 +691,7 @@
     ],
     "invoke": {
         "python": "Solution().countTime",
-        "typescript": "Solution().countTime"
+        "typescript": "Solution().countTime",
+        "valkyrie": "countTime"
     }
 }

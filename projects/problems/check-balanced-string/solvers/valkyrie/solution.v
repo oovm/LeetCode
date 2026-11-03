@@ -1,5 +1,26 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`num⁅i⁆` 奇偶位数字和对比。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：奇偶位和对比，时间 O(n) 空间 O(1)。
+namespace leetcode.check_balanced_string;
+
+# 偶数位数字和与奇数位数字和相等即平衡。
+[export(case: "camelCase")]
+micro is_balanced(num: utf8) -> bool {
+    let n: usize = num.length()
+    let mut even_sum: i64 = 0
+    let mut odd_sum: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        let digit: i64 = num⁅i⁆ as u32 as i64 - 48
+        if (i as i64) % 2 == 0 {
+            even_sum = even_sum + digit
+        } else {
+            odd_sum = odd_sum + digit
+        }
+        i = i + 1
+    }
+    return even_sum == odd_sum
+}
+
+class Solution {
+    micro isBalanced(self, num: utf8): bool {
+        return is_balanced(num)
+    }
+}
