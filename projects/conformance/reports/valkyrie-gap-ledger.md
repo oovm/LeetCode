@@ -454,77 +454,309 @@ Easy 133 题实测 30 题有缺陷、Medium 37 题实测 8 题有缺陷，该「
 
 ### 大整数精度扫描（全库，2026-11-04 实测）
 
-- 范围：全部 2841 个可解析的 `projects/problems/*/metadata.json`（2869 目录 − 27 个无 metadata
-  − 1 个解析失败），`tests[].args` 与 `tests[].expected` 中的整数字面量和纯十进制整数字符串，
-  阈值 `|v| > 2^53-1`。候选 **17,545 行 / 182 题**。
-  扫描期间顺带发现 `palindrome-partitioning` 的 `metadata.json` 是 **0 字节空文件**（另一类语料缺陷，
-  本节不处理，仅登记坐标）。
+- 范围：全部 2842 个 `projects/problems/*/metadata.json`（2869 目录 − 27 个无 metadata），
+  `tests[].args` 与 `tests[].expected` 中的整数字面量和纯十进制整数字符串，阈值 `|v| > 2^53-1`。
+  候选 **17,545 行 / 182 题**。工作区里 `palindrome-partitioning/metadata.json` 是 0 字节
+  （成因见本节末尾的完整性扫描），因此实际可解析 2841 个。
 - 判定规则（不靠「尾零」观感，靠可表示性）：
   - 十进制整数 `v` 能被 double 精确表示，当且仅当 `bitlen(v) <= 53` 或 `v % 2^(bitlen-53) == 0`；
   - JSON number 不满足该条件 → `JSON.parse` 得到的已不是文本里的值（文本 ≠ 运行值）；
   - 字符串不满足该条件且 `String(Number(s)) === s` → 该串本身是 double 的十进制输出（抹平痕迹）；
   - 参数是否数值型：优先取 V 导出签名类型，无解法的题用「同一 key 在任一用例中出现过 JSON number」；
   - 纯二进制文本串（`^[01]+$`）与 `utf8` 参数一律按文本，不参与数值判定。
-- 分类结果：
+- 分类结果（缺陷行 180 条）：
 
 | 类 | 含义 | 行 | 题 |
 | --- | --- | --- | --- |
 | A | args 精度丢失，用例无法表达，V 根本没跑 | 127 | 21 |
-| B | expected 精度丢失，会制造假失败 | 49 | 9 |
+| B | expected 精度丢失，会制造假失败 | 24 | 8 |
 | C | 精确大整数但超出 `i64` 表示 / 官方约束 | 4 | 3 |
+| S | 语义性语料错误（不是精度问题） | 25 | 1 |
 | D | 无精度损失（精确整数 / 文本 / 二进制串 / 无类型串） | 17365 | 171 |
 
-- 逐条坐标与证据在 `valkyrie-corpus-precision-defects.json`（本目录），每条 case 就是一条
-  quarantine 记录，**metadata 与 expected 数值一行未改**。
+- 逐条坐标与证据在 `valkyrie-corpus-precision-defects.json`（本目录），**metadata 与 expected 数值一行未改**。
 
-A（21 题，127 行；括号为该题行数）：`find-original-array-from-doubled-array`（55）、
-`minimum-addition-to-make-integer-beautiful`（18）、`maximum-number-that-makes-result-of-bitwise-and-zero`
-（11）、`string-transformation`（7）、`sort-the-jumbled-numbers`（5）、`count-the-number-of-powerful-integers`
-（4）、`maximum-sized-array`（4）、`maximum-swap`（3）、`smallest-number-with-given-digit-product`（3）、
-`binary-trees-with-factors`（2）、`maximum-xor-product`（2）、`minimum-cost-to-make-array-equalindromic`（2）、
-`number-of-subarrays-with-lcm-equal-to-k`（2）、`ugly-number`（2）、`count-special-integers`、
-`find-the-k-th-character-in-string-game-ii`、`find-the-sum-of-encrypted-integers`、
-`max-difference-you-can-get-from-changing-an-integer`、`numbers-with-repeated-digits`、
-`reordered-power-of-2`、`separate-the-digits-in-an-array`。
+#### quarantine 落地与覆盖率剔除（2026-11-04 落定）
 
-C（3 题，4 行，值本身精确但超 i64 且越官方约束）：`find-original-array-from-doubled-array`
-（`tests[122].args.changed[210]` = `36000567021771776000`）、`string-transformation`
-（`tests[13].args.k` = `100000000000000000000`，约束 `k <= 10^15`）、
-`minimum-garden-perimeter-to-collect-enough-apples`（`neededApples` = `10^20` / `10^19`，约束 `<= 10^15`）。
+- 清单：本目录 `valkyrie-corpus-precision-defects.json`，坐标是 `cases[].field`（如
+  `tests[85].expected`、`tests[51].args.changed[60]`）。缺陷类 A/B/C/S 全部参与隔离，D 不参与。
+- 执行单位：`metadata.tests` 下标（整条用例）。180 条缺陷行收敛为 **99 条用例 / 25 题**
+  （同一用例内多个元素命中只隔离一次；单个 args 元素无法单独执行，不能按元素隔离）。
+- 解析与扣减：`projects/conformance/src/reporting/corpus-quarantine.ts`；
+  矩阵报告 `valkyrie-lane-matrix.ts` 新增 `quarantine` 选项；CLI `src/cli/valkyrie-matrix.ts`
+  读取清单。扣减同时作用于行级分母 `testCaseTotal` 与 `executed_pass / executed_fail / blocked / not_run`。
+- 归类重建规则：`blocked` 行整行记 blocked；`ok` 行整行记通过；其余行
+  `firstFailureIndex` 之前记通过、该下标记失败、其后记未运行。用 176 条判题记录逐行核对，
+  **0 失配**；越界下标（清单与当前 metadata 不一致）不扣减。
+- 可整体撤销：清单文件缺失时 `loadCorpusQuarantine` 返回 `null`，隔离整体失效；回滚一笔提交
+  即可恢复原分母。未新增 metadata 字段、未动生成器、未动判题器。
+- 不越权：`green / runtimeOk` 仍是实测值，剔除只改行级分母与四字段；不把未复判的题算成通过。
 
-B（9 题，49 行）**不改 expected，等裁定**。已重算证明的三处：
+剔除前 → 剔除后的分母：
 
-| slug | 用例 | 存储 expected | 精确重算 | 差异 / 约束 |
+| 维度 | 剔除前 | 剔除后 | 说明 |
+| --- | --- | --- | --- |
+| 题级（矩阵报告 `hasValkyrieSolver`，2869 题） | 2869 | 2869 | 无整题用例全被隔离（0 题） |
+| 题级（canonical 515 题） | 515 | 515 | 同上 |
+| 题级（本批判题集 176 题） | 176 | 176 | 同上 |
+| 行级（本批 176 题 `testCaseTotal`） | 15575 | 15504 | −71 条用例 |
+| 行级（canonical 515 题 `metadata.tests` 总数） | 46534 | 46460 | −74 条用例 |
+
+- 四字段：`executed_pass` 13452 → 13424，`executed_fail` 31 → 24，`blocked` 0 → 0，
+  `not_run` 2092 → 2056。
+
+#### 对「176 通过 / 38 失败」的影响
+
+- 构建：**176 / 38 不变**。构建与判题都以「题」为单位，隔离只作用于行级用例，不改变任何 `status`。
+- 判题：实测仍是 **142 `ok=true`**。剔除后，7 题的 `firstFailureIndex` 正好落在隔离坐标，
+  是纸面上的翻绿候选；其首个失败之后的 `not_run` 用例没有复判，**不能直接算通过**，
+  账本通过数保持 142，std 修复后整批复判再改：
+
+| slug | 首个失败 | 用例总数 | 隔离坐标 |
+| --- | --- | --- | --- |
+| `max-difference-you-can-get-from-changing-an-integer` | 26 | 81 | 26 |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | 20 | 88 | 20,21,43,45,58,60,71,73,75,77,78,80 |
+| `maximum-sized-array` | 19 | 69 | 19,28,38,56 |
+| `maximum-swap` | 85 | 119 | 32,54,85 |
+| `maximum-xor-product` | 58 | 74 | 58 |
+| `minimum-garden-perimeter-to-collect-enough-apples` | 50 | 68 | 50,66 |
+| `numbers-with-repeated-digits` | 23 | 59 | 23 |
+
+- 归族纠正：`maximum-swap`（85/119）此前记在「算法结果不符 14 题」，实为 B 类期望污染
+  （重算差 800），不是算法错；`minimum-garden-perimeter` / `maximum-xor-product` 也是语料缺陷。
+
+#### A 类逐坐标（127 行 / 21 题）
+
+每行 = `tests[下标].args` 内的精确坐标 + 存储值 + 无法表达原因。数组元素保留 `[k]` 下标。
+
+- `binary-trees-with-factors`（2）：
+  - `tests[89].args.arr[7]` = `63842579163398340` —— double 抹平（bitlen=56，ulp=8，低位非零）
+  - `tests[89].args.arr[8]` = `112840242932266120000` —— 超 i64（存储值 112840242932266120000，bitlen=67）
+- `count-special-integers`（1）：
+  - `tests[19].args.n` = `102030405060708100` —— double 抹平（bitlen=57，ulp=16，低位非零）
+- `count-the-number-of-powerful-integers`（4）：
+  - `tests[51].args.start` = `1234567890123456800` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[51].args.finish` = `9876543210987655000` —— 超 i64（存储值 9876543210987655000，bitlen=64）
+  - `tests[85].args.finish` = `987654321987654300` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[92].args.finish` = `1234567890123456800` —— double 抹平（bitlen=61，ulp=256，低位非零）
+- `find-original-array-from-doubled-array`（55）：
+  - `tests[51].args.changed[60]` = `20266198323167230` —— double 抹平（bitlen=55，ulp=4，低位非零）
+  - `tests[51].args.changed[61]` = `40532396646334460` —— double 抹平（bitlen=56，ulp=8，低位非零）
+  - `tests[51].args.changed[62]` = `81064793292668930` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[51].args.changed[63]` = `162129586585337860` —— double 抹平（bitlen=58，ulp=32，低位非零）
+  - `tests[51].args.changed[64]` = `324259173170675700` —— double 抹平（bitlen=59，ulp=64，低位非零）
+  - `tests[51].args.changed[65]` = `648518346341351400` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[51].args.changed[66]` = `1297036692682702800` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[51].args.changed[67]` = `2594073385365405700` —— double 抹平（bitlen=62，ulp=512，低位非零）
+  - `tests[51].args.changed[68]` = `5188146770730811000` —— double 抹平（bitlen=63，ulp=1024，低位非零）
+  - `tests[51].args.changed[69]` = `10376293541461623000` —— 超 i64（存储值 10376293541461623000，bitlen=64）
+  - `tests[51].args.changed[70]` = `20752587082923246000` —— 超 i64（存储值 20752587082923246000，bitlen=65）
+  - `tests[51].args.changed[71]` = `41505174165846490000` —— 超 i64（存储值 41505174165846490000，bitlen=66）
+  - `tests[51].args.changed[72]` = `83010348331692980000` —— 超 i64（存储值 83010348331692980000，bitlen=67）
+  - `tests[51].args.changed[73]` = `166020696663385960000` —— 超 i64（存储值 166020696663385960000，bitlen=68）
+  - `tests[122].args.changed[163]` = `43998436091802430` —— double 抹平（bitlen=56，ulp=8，低位非零）
+  - `tests[122].args.changed[164]` = `46474474833634210` —— double 抹平（bitlen=56，ulp=8，低位非零）
+  - `tests[122].args.changed[167]` = `81348611215888540` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[122].args.changed[170]` = `139342930911092290` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[122].args.changed[174]` = `253068831957584770` —— double 抹平（bitlen=58，ulp=32，低位非零）
+  - `tests[122].args.changed[175]` = `306386488715214100` —— double 抹平（bitlen=59，ulp=64，低位非零）
+  - `tests[122].args.changed[176]` = `323015096392658900` —— double 抹平（bitlen=59，ulp=64，低位非零）
+  - `tests[122].args.changed[177]` = `386797763385011500` —— double 抹平（bitlen=59，ulp=64，低位非零）
+  - `tests[122].args.changed[179]` = `484522644589988200` —— double 抹平（bitlen=59，ulp=64，低位非零）
+  - `tests[122].args.changed[181]` = `719158822845642200` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[122].args.changed[182]` = `726783966884982300` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[122].args.changed[183]` = `875809045506491500` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[122].args.changed[184]` = `1078318430193856300` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[122].args.changed[185]` = `1090175950327473400` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[122].args.changed[186]` = `1313710568259737300` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[122].args.changed[187]` = `1617491260261184500` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[122].args.changed[188]` = `1635263925491210000` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[122].args.changed[189]` = `1970565852389606000` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[122].args.changed[190]` = `2434982520522369000` —— double 抹平（bitlen=62，ulp=512，低位非零）
+  - `tests[122].args.changed[191]` = `2452895888236815000` —— double 抹平（bitlen=62，ulp=512，低位非零）
+  - `tests[122].args.changed[192]` = `2956131704779212000` —— double 抹平（bitlen=62，ulp=512，低位非零）
+  - `tests[122].args.changed[193]` = `3669965041044738000` —— double 抹平（bitlen=62，ulp=512，低位非零）
+  - `tests[122].args.changed[194]` = `3679343832355222500` —— double 抹平（bitlen=62，ulp=512，低位非零）
+  - `tests[122].args.changed[195]` = `4434197557168817700` —— double 抹平（bitlen=62，ulp=512，低位非零）
+  - `tests[122].args.changed[196]` = `5539930082089476000` —— double 抹平（bitlen=63，ulp=1024，低位非零）
+  - `tests[122].args.changed[197]` = `5519015748532833000` —— double 抹平（bitlen=63，ulp=1024，低位非零）
+  - `tests[122].args.changed[198]` = `6651296335753226000` —— double 抹平（bitlen=63，ulp=1024，低位非零）
+  - `tests[122].args.changed[199]` = `8303893443132714000` —— double 抹平（bitlen=63，ulp=1024，低位非零）
+  - `tests[122].args.changed[200]` = `8278523622799250000` —— double 抹平（bitlen=63，ulp=1024，低位非零）
+  - `tests[122].args.changed[201]` = `10666592671504839000` —— 超 i64（存储值 10666592671504839000，bitlen=64）
+  - `tests[122].args.changed[202]` = `13338186886263570000` —— 超 i64（存储值 13338186886263570000，bitlen=64）
+  - `tests[122].args.changed[203]` = `13317785434198876000` —— 超 i64（存储值 13317785434198876000，bitlen=64）
+  - `tests[122].args.changed[204]` = `16000189007257258000` —— 超 i64（存储值 16000189007257258000，bitlen=64）
+  - `tests[122].args.changed[205]` = `20450915848351430000` —— 超 i64（存储值 20450915848351430000，bitlen=65）
+  - `tests[122].args.changed[206]` = `20423678151298314000` —— 超 i64（存储值 20423678151298314000，bitlen=65）
+  - `tests[122].args.changed[207]` = `24000378014514516000` —— 超 i64（存储值 24000378014514516000，bitlen=65）
+  - `tests[122].args.changed[208]` = `30676373772527140000` —— 超 i64（存储值 30676373772527140000，bitlen=65）
+  - `tests[122].args.changed[209]` = `30635517226947470000` —— 超 i64（存储值 30635517226947470000，bitlen=65）
+  - `tests[122].args.changed[211]` = `46014560658790710000` —— 超 i64（存储值 46014560658790710000，bitlen=66）
+  - `tests[122].args.changed[212]` = `46002688140418460000` —— 超 i64（存储值 46002688140418460000，bitlen=66）
+  - `tests[122].args.changed[213]` = `54000850532657660000` —— 超 i64（存储值 54000850532657660000，bitlen=66）
+- `find-the-k-th-character-in-string-game-ii`（1）：
+  - `tests[73].args.k` = `9223372036854776000` —— 超 i64（存储值 9223372036854776000，bitlen=64）
+- `find-the-sum-of-encrypted-integers`（1）：
+  - `tests[97].args.nums[2]` = `112233445566778900` —— double 抹平（bitlen=57，ulp=16，低位非零）
+- `max-difference-you-can-get-from-changing-an-integer`（1）：
+  - `tests[26].args.num` = `98765432109876540000` —— 超 i64（存储值 98765432109876540000，bitlen=67）
+- `maximum-number-that-makes-result-of-bitwise-and-zero`（11）：
+  - `tests[20].args.n` = `576460752303423500` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[21].args.n` = `4611686018427388000` —— double 抹平（bitlen=63，ulp=1024，低位非零）
+  - `tests[43].args.n` = `144115188075855870` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[45].args.n` = `9223372036854776000` —— 超 i64（存储值 9223372036854776000，bitlen=64）
+  - `tests[58].args.n` = `72057594037927940` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[60].args.n` = `288230376151711740` —— double 抹平（bitlen=58，ulp=32，低位非零）
+  - `tests[71].args.n` = `2305843009213694000` —— double 抹平（bitlen=62，ulp=512，低位非零）
+  - `tests[73].args.n` = `1152921504606847000` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[75].args.n` = `36028797018963970` —— double 抹平（bitlen=56，ulp=8，低位非零）
+  - `tests[77].args.n` = `1234567890123456800` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[78].args.n` = `18446744073709552000` —— 超 i64（存储值 18446744073709552000，bitlen=65）
+- `maximum-sized-array`（4）：
+  - `tests[19].args.s` = `9223372036854776000` —— 超 i64（存储值 9223372036854776000，bitlen=64）
+  - `tests[28].args.s` = `987654321987654300` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[38].args.s` = `1234567890123456800` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[56].args.s` = `18446744073709552000` —— 超 i64（存储值 18446744073709552000，bitlen=65）
+- `maximum-swap`（3）：
+  - `tests[32].args.num` = `98877665544332210` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[54].args.num` = `987654321987654300` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[85].args.num` = `112233445566778900` —— double 抹平（bitlen=57，ulp=16，低位非零）
+- `maximum-xor-product`（2）：
+  - `tests[58].args.a` = `18446744073709552000` —— 超 i64（存储值 18446744073709552000，bitlen=65）
+  - `tests[58].args.b` = `18446744073709552000` —— 超 i64（存储值 18446744073709552000，bitlen=65）
+- `minimum-addition-to-make-integer-beautiful`（18）：
+  - `tests[25].args.n` = `345678901234567900` —— double 抹平（bitlen=59，ulp=64，低位非零）
+  - `tests[30].args.n` = `9876543210987655000` —— 超 i64（存储值 9876543210987655000，bitlen=64）
+  - `tests[32].args.n` = `1234567890123456800` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[34].args.n` = `987654321098765400` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[36].args.n` = `2222222222222222300` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[37].args.n` = `111111111111111100` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[46].args.n` = `555555555555555600` —— double 抹平（bitlen=59，ulp=64，低位非零）
+  - `tests[50].args.n` = `123456789123456780` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[52].args.n` = `3333333333333333500` —— double 抹平（bitlen=62，ulp=512，低位非零）
+  - `tests[57].args.n` = `1111111111111111200` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[64].args.n` = `505050505050505000` —— double 抹平（bitlen=59，ulp=64，低位非零）
+  - `tests[66].args.n` = `1234567890123456800` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[67].args.n` = `1234567890123456800` —— double 抹平（bitlen=61，ulp=256，低位非零）
+  - `tests[70].args.n` = `9876543210987655000` —— 超 i64（存储值 9876543210987655000，bitlen=64）
+  - `tests[72].args.n` = `12345678901234567000` —— 超 i64（存储值 12345678901234567000，bitlen=64）
+  - `tests[76].args.n` = `112233445566778900` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[92].args.n` = `1111111111111111200` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[101].args.n` = `2222222222222222300` —— double 抹平（bitlen=61，ulp=256，低位非零）
+- `minimum-cost-to-make-array-equalindromic`（2）：
+  - `tests[66].args.nums[1]` = `98765432123456780` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[66].args.nums[4]` = `65432109890123460` —— double 抹平（bitlen=56，ulp=8，低位非零）
+- `number-of-subarrays-with-lcm-equal-to-k`（2）：
+  - `tests[55].args.k` = `1046527167431103500` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[76].args.k` = `1046527167431103500` —— double 抹平（bitlen=60，ulp=128，低位非零）
+- `numbers-with-repeated-digits`（1）：
+  - `tests[23].args.n` = `1234567890123456800` —— double 抹平（bitlen=61，ulp=256，低位非零）
+- `reordered-power-of-2`（1）：
+  - `tests[62].args.n` = `112233445566778900` —— double 抹平（bitlen=57，ulp=16，低位非零）
+- `separate-the-digits-in-an-array`（1）：
+  - `tests[48].args.nums[2]` = `112233445566778900` —— double 抹平（bitlen=57，ulp=16，低位非零）
+- `smallest-number-with-given-digit-product`（3）：
+  - `tests[21].args.n` = `111111111111111100` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[23].args.n` = `888888888888888800` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[30].args.n` = `222222222222222200` —— double 抹平（bitlen=58，ulp=32，低位非零）
+- `sort-the-jumbled-numbers`（5）：
+  - `tests[28].args.nums[2]` = `112233445566778900` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[55].args.nums[1]` = `102030405060708100` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[55].args.nums[2]` = `98765432109876540000` —— 超 i64（存储值 98765432109876540000，bitlen=67）
+  - `tests[106].args.nums[2]` = `112233445566778900` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[106].args.nums[3]` = `223344556677889900` —— double 抹平（bitlen=58，ulp=32，低位非零）
+- `string-transformation`（7）：
+  - `tests[22].args.k` = `123456789123456800000` —— 超 i64（存储值 123456789123456800000，bitlen=67）
+  - `tests[26].args.k` = `123456789123456780` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[33].args.k` = `111111111111111110000` —— 超 i64（存储值 111111111111111110000，bitlen=67）
+  - `tests[43].args.k` = `987654321987654300` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[45].args.k` = `666666666666666600` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[82].args.k` = `654321987654322000` —— double 抹平（bitlen=60，ulp=128，低位非零）
+  - `tests[85].args.k` = `222222222222222230000` —— 超 i64（存储值 222222222222222230000，bitlen=68）
+- `ugly-number`（2）：
+  - `tests[17].args.n` = `72057594037927940` —— double 抹平（bitlen=57，ulp=16，低位非零）
+  - `tests[68].args.n` = `72057594037927940` —— double 抹平（bitlen=57，ulp=16，低位非零）
+
+#### C 类逐坐标（4 行 / 3 题）
+
+值本身精确，但超出 `i64` 表示或官方约束；这三题无论精度与否都不该进入语料。
+
+| slug | 坐标 | 存储值 | 官方约束（`readme.md` 原文） | 判定 |
 | --- | --- | --- | --- | --- |
-| `paint-fence` | `tests[5]` | `4865562720460260000` | `401321198` | 存储值是未取模计数的 double 抹平物，答案本应 `mod 10^9+7` |
-| `paint-fence` | `tests[23]` | `999306098405019900` | `409877263` | 同上 |
-| `paint-fence` | `tests[26]` | `1591919797017362000` | `873923505` | 同上 |
-| `paint-fence` | `tests[28]` | `6249999995000050000` | `250050343` | 同上 |
-| `maximum-swap` | `tests[85]` | `912233445566778900` | `912233445566778100` | **差 800**，正确解法必被判错 |
-| `arithmetic-slices-ii-subsequence` | `tests[59]` | `1152921504606845200` | `1152921504606845145` | **差 55**，正确解法必被判错 |
+| `find-original-array-from-doubled-array` | `tests[122].args.changed[210]` | `36000567021771776000` | `0 <= changed[i] <= 10^5` | 超 `i64`（bitlen=65）且超官方约束 |
+| `string-transformation` | `tests[13].args.k` | `100000000000000000000` | `1 <= k <= 10^15` | 超 `i64`（bitlen=67）且超官方约束 |
+| `minimum-garden-perimeter-to-collect-enough-apples` | `tests[50].args.neededApples` | `100000000000000000000` | `1 <= neededApples <= 10^15` | 超 `i64`（bitlen=67）且超官方约束 |
+| `minimum-garden-perimeter-to-collect-enough-apples` | `tests[66].args.neededApples` | `10000000000000000000` | `1 <= neededApples <= 10^15` | 超 `i64`（bitlen=64）且超官方约束 |
 
-其余 6 题以官方约束判定（期望超出答案上界即不可信）：`maximum-number-that-makes-result-of-bitwise-and-zero`
-（11 行，期望 ≥ `2.3×10^18`，约束 `n <= 10^15`）、`sort-the-jumbled-numbers`（5 行，期望 `10^17`，
-约束 `nums[i] < 10^9`）、`maximum-swap`（另 2 行，约束 `num <= 10^8`）、
-`find-the-array-concatenation-value`（1 行，期望 `1.78×10^18`，答案上界 `~10^11`）、
-`find-the-sum-of-encrypted-integers`（1 行，期望 `10^18`，答案上界 `~5×10^4`）、
-`max-difference-you-can-get-from-changing-an-integer`（1 行，约束 `num <= 10^8`）、
-`minimum-cost-to-make-array-equalindromic`（1 行，代价上界 `~10^14`）。
+#### B 类逐坐标（24 行 / 8 题，保留存储值 / ulp / 精确重算）
+
+| slug | 坐标 | 存储值 | bitlen | ulp | 精确重算 | 差异 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `arithmetic-slices-ii-subsequence` | `tests[59].expected` | `1152921504606845200` | 60 | 128 | `1152921504606845145` | 重算差 55（正确解法必被判错） |
+| `find-the-array-concatenation-value` | `tests[58].expected` | `1780022446776676900` | 61 | 256 | — | —（未重算，按官方约束判定期望不可信） |
+| `find-the-sum-of-encrypted-integers` | `tests[97].expected` | `1000000003111111200` | 60 | 128 | — | —（未重算，按官方约束判定期望不可信） |
+| `max-difference-you-can-get-from-changing-an-integer` | `tests[26].expected` | `81000000008100000000` | 67 | 16384 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `tests[20].expected` | `288230376151711740` | 58 | 32 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `tests[21].expected` | `2305843009213694000` | 62 | 512 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `tests[43].expected` | `72057594037927940` | 57 | 16 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `tests[45].expected` | `4611686018427388000` | 63 | 1024 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `tests[58].expected` | `36028797018963970` | 56 | 8 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `tests[60].expected` | `144115188075855870` | 57 | 16 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `tests[71].expected` | `1152921504606847000` | 61 | 256 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `tests[73].expected` | `576460752303423500` | 60 | 128 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `tests[77].expected` | `1152921504606847000` | 61 | 256 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `tests[78].expected` | `9223372036854776000` | 64 | 2048 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `tests[80].expected` | `576460752303423500` | 60 | 128 | — | —（未重算，按官方约束判定期望不可信） |
+| `maximum-swap` | `tests[32].expected` | `98877665544332210` | 57 | 16 | `98877665544332210` | 重算与存储一致，未被证明有差异，按保守口径一并隔离 |
+| `maximum-swap` | `tests[54].expected` | `997654321887654300` | 60 | 128 | `997654321887654300` | 重算与存储一致，未被证明有差异，按保守口径一并隔离 |
+| `maximum-swap` | `tests[85].expected` | `912233445566778900` | 60 | 128 | `912233445566778100` | 重算差 800（正确解法必被判错） |
+| `minimum-cost-to-make-array-equalindromic` | `tests[66].expected` | `340740252914814800` | 59 | 64 | — | —（未重算，按官方约束判定期望不可信） |
+| `sort-the-jumbled-numbers` | `tests[28].expected[2]` | `112233445566778900` | 57 | 16 | — | —（未重算，按官方约束判定期望不可信） |
+| `sort-the-jumbled-numbers` | `tests[55].expected[1]` | `102030405060708100` | 57 | 16 | — | —（未重算，按官方约束判定期望不可信） |
+| `sort-the-jumbled-numbers` | `tests[55].expected[2]` | `98765432109876540000` | 67 | 16384 | — | —（未重算，按官方约束判定期望不可信） |
+| `sort-the-jumbled-numbers` | `tests[106].expected[2]` | `112233445566778900` | 57 | 16 | — | —（未重算，按官方约束判定期望不可信） |
+| `sort-the-jumbled-numbers` | `tests[106].expected[3]` | `223344556677889900` | 58 | 32 | — | —（未重算，按官方约束判定期望不可信） |
+
+#### S 类：语义性语料错误（25 行 / 1 题）
+
+`paint-fence` 的 25 条 `expected` 不是「精度丢失」，而是**语料算错了语义**：存的是未取模的计数，再被 double 抹平。题目要求答案 `mod 10^9+7`，所以“存储值 → 正确值”不能用 double 舍入解释，这 25 条整体标为语义性语料错误（`S`），不并入 `B`。
+
+有精确重算证明的 4 条：
+
+| 坐标 | 存储值 | 正确值 `mod 10^9+7` | 判定 |
+| --- | --- | --- | --- |
+| `tests[5].expected` | `4865562720460260000` | `401321198` | 存储值是未取模计数，超答案上界 |
+| `tests[23].expected` | `999306098405019900` | `409877263` | 存储值是未取模计数，超答案上界 |
+| `tests[26].expected` | `1591919797017362000` | `873923505` | 存储值是未取模计数，超答案上界 |
+| `tests[28].expected` | `6249999995000050000` | `250050343` | 存储值是未取模计数，超答案上界 |
+
+其余 21 条同型（`tests[34].expected`、`tests[40].expected`、`tests[45].expected`、`tests[48].expected`、
+`tests[57].expected`、`tests[62].expected`、`tests[63].expected`、`tests[68].expected`、`tests[74].expected`、
+`tests[75].expected`、`tests[80].expected`、`tests[82].expected`、`tests[85].expected`、`tests[86].expected`、
+`tests[87].expected`、`tests[88].expected`、`tests[91].expected`、`tests[97].expected`、`tests[99].expected`、
+`tests[101].expected`、`tests[102].expected`），存储值同样是未取模计数的 double 抹平物，未逐条做 128 位模幂重算。
 
 B 复核时已排除的 6 题（输出本就是字符串或浮点，不构成 B，已归 D）：`maximum-value-after-insertion`、
 `calculate-digit-sum-of-a-string`、`largest-multiple-of-three`、`largest-number-after-mutating-substring`、
 `lexicographically-smallest-string-after-a-swap`、`powx-n`（浮点按容差比较）。
 
-quarantine 形态选型：不用在 `metadata.json` 里加 `defect` 字段，改用**侧车清单**
-`valkyrie-corpus-precision-defects.json`。理由：metadata 由生成器/校验链按固定 schema 产出，
-就地加未登记字段会被下游当未知字段或需同步改 schema 与生成器；侧车文件不动数据、不动期望、
-不动判题器，且与 `reports/` 既有 JSON 报告同构，能逐条带坐标与证据，便于裁定后再决定修复。
-
 D 对照（证明扫描器不把正常值当污染）：`permutations-iv` 的 `k` = `2432902008176640000`（20!）
 与 `minimum-garden-perimeter-to-collect-enough-apples` 的 `neededApples` = `18014398509481984`（`2^54`）
 都被判 D —— 二者都满足精确可表示性，未因「值大 / 尾零多」被误报。误报口径：候选 17,545 行里
-标 A/B/C 共 180 行（1.03%），其中可表示性判定本身零误报；语义层（文本串 vs 数值字面量）误报
+标 A/B/C/S 共 180 行（1.03%），其中可表示性判定本身零误报；语义层（文本串 vs 数值字面量）误报
 经人工复核为 0，B 侧另有 11 行因输出类型是字符串/浮点被移出，已单列在上。
+
+#### metadata 完整性扫描（2026-11-04）
+
+- `palindrome-partitioning/metadata.json` 的 0 字节**不是生成器写到一半中断，也不是上游数据源缺失**：
+  HEAD 里的 blob 完整（4146 行 / 233,318 字符，可正常解析）；0 字节只存在于工作区未提交改动
+  （`git diff` 是 4146 行全删除）。它是本轮 22 个既有 dirty metadata 之一，按纪律不 stage、不还原；
+  扫描器读到工作区文件才把它记成 `metadataParseErrors: 1`。
+- 全库 2869 个题目目录：无 metadata 27 个，有 metadata 2842 个；其中 0 字节 1 个（上条，且仅工作区）、
+  `< 400` 字节 0 个、`JSON.parse` 失败 0 个（0 字节文件不参与解析）、其余 2841 个全部可解析。
+  半截 / 截断文件 0 个。清单：`palindrome-partitioning`（1 个）。
+
 
 ## 已恢复
 
