@@ -749,6 +749,7 @@
     ],
     "invoke": {
         "python": "Solution().minEnd",
-        "typescript": "Solution().minEnd"
+        "typescript": "Solution().minEnd",
+        "valkyrie": "Solution().minEnd"
     }
 }
