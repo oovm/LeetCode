@@ -959,6 +959,7 @@
     ],
     "invoke": {
         "python": "Solution().findInteger",
-        "typescript": "Solution().findInteger"
+        "typescript": "Solution().findInteger",
+        "valkyrie": "findInteger"
     }
 }

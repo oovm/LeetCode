@@ -13,7 +13,7 @@ export class Solution {
                 return cached;
             }
             let best = current - y;
-            for (const divisor of [2, 5, 7]) {
+            for (const divisor of [5, 11]) {
                 best = Math.min(best, 1 + (current % divisor) + solve(Math.floor(current / divisor)));
                 best = Math.min(best, 1 + (divisor - (current % divisor)) + solve(Math.ceil(current / divisor)));
             }

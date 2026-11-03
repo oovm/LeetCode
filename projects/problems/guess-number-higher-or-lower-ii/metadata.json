@@ -175,6 +175,7 @@
     ],
     "invoke": {
         "python": "Solution().getMoneyAmount",
-        "typescript": "Solution().getMoneyAmount"
+        "typescript": "Solution().getMoneyAmount",
+        "valkyrie": "getMoneyAmount"
     }
 }

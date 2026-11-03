@@ -79,6 +79,7 @@
     ],
     "invoke": {
         "python": "Solution().selfDivisiblePermutationCount",
-        "typescript": "Solution().selfDivisiblePermutationCount"
+        "typescript": "Solution().selfDivisiblePermutationCount",
+        "valkyrie": "selfDivisiblePermutationCount"
     }
 }

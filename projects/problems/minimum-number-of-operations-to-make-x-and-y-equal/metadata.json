@@ -938,6 +938,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumOperationsToMakeEqual",
-        "typescript": "Solution().minimumOperationsToMakeEqual"
+        "typescript": "Solution().minimumOperationsToMakeEqual",
+        "valkyrie": "minimumOperationsToMakeEqual"
     }
 }

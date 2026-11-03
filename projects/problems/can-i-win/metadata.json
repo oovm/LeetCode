@@ -532,6 +532,7 @@
     ],
     "invoke": {
         "python": "Solution().canIWin",
-        "typescript": "Solution().canIWin"
+        "typescript": "Solution().canIWin",
+        "valkyrie": "canIWin"
     }
 }

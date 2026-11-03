@@ -880,6 +880,7 @@
     ],
     "invoke": {
         "python": "Solution().goodBinaryStrings",
-        "typescript": "Solution().goodBinaryStrings"
+        "typescript": "Solution().goodBinaryStrings",
+        "valkyrie": "goodBinaryStrings"
     }
 }

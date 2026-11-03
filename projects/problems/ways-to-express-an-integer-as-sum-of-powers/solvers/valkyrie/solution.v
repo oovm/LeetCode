@@ -1,4 +1,43 @@
-# 阻塞：std.collection 数组分配与索引
-# 题内触发点：幂次子集计数表 `dp[s]`（i^x 面值的 0/1 背包）—— 次幂和计数的理想写法是 DP 表。
-# 期望语义：DP 表分配与下标读写；实际同「数组分配与索引」缺口（首记于 get-maximum-in-generated-array）。
-# 理想算法：对每个底数 i（i^x ≤ n）做 0/1 背包 dp[s] += dp[s - i^x]，模 10^9+7。时间 O(n·n^{1/x}) 空间 O(n)。
+namespace leetcode.ways_to_express_an_integer_as_sum_of_powers;
+
+[export(case: "camelCase")]
+micro numberOfWays(n: i64, x: i64) -> i64 {
+    let mod: i64 = 1000000007
+    let mut dp: ArrayList<i64> = ArrayList::new((n + 1) as usize)
+    let mut slot: i64 = 0
+    while slot <= n {
+        dp.push(0)
+        slot = slot + 1
+    }
+    dp⁅0 as usize⁆ = 1
+
+    let mut base: i64 = 1
+    let mut running: bool = true
+    while running {
+        let mut power: i64 = 1
+        let mut k: i64 = 0
+        while k < x && power <= n {
+            power = power * base
+            k = k + 1
+        }
+        if power > n {
+            running = false
+        } else {
+            let mut sum: i64 = n
+            while sum >= power {
+                let index: usize = sum as usize
+                let rest: usize = (sum - power) as usize
+                dp⁅index⁆ = (dp⁅index⁆ + dp⁅rest⁆) % mod
+                sum = sum - 1
+            }
+            base = base + 1
+        }
+    }
+    return dp⁅n as usize⁆
+}
+
+class Solution {
+    micro numberOfWays(self, n: i64, x: i64): i64 {
+        return numberOfWays(n, x)
+    }
+}

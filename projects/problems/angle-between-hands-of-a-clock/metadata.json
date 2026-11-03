@@ -511,6 +511,7 @@
     ],
     "invoke": {
         "python": "Solution().angleClock",
-        "typescript": "Solution().angleClock"
+        "typescript": "Solution().angleClock",
+        "valkyrie": "angleClock"
     }
 }

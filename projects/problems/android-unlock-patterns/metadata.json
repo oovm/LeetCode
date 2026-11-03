@@ -273,6 +273,7 @@
     ],
     "invoke": {
         "python": "Solution().numberOfPatterns",
-        "typescript": "Solution().numberOfPatterns"
+        "typescript": "Solution().numberOfPatterns",
+        "valkyrie": "numberOfPatterns"
     }
 }

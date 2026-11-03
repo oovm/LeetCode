@@ -1,4 +1,32 @@
-# 阻塞：std.collection 数组分配与索引
-# 题内触发点：0/1 背包计数表 `dp[0..n]` —— 「用恰好 n 张牌搭房」= 互不相同的 3t-1 面值子集计数，需要 DP 表。
-# 期望语义：DP 表分配与下标读写；实际同「数组分配与索引」缺口（首记于 get-maximum-in-generated-array）。
-# 理想算法：面值 3t-1（t≥1）逐个 0/1 加入，dp[s] += dp[s-(3t-1)]。时间 O(n²) 空间 O(n)。
+namespace leetcode.number_of_ways_to_build_house_of_cards;
+
+[export(case: "camelCase")]
+micro houseOfCards(n: i64) -> i64 {
+    let mut dp: ArrayList<i64> = ArrayList::new((n + 1) as usize)
+    let mut slot: i64 = 0
+    while slot <= n {
+        dp.push(0)
+        slot = slot + 1
+    }
+    dp⁅0 as usize⁆ = 1
+
+    let mut t: i64 = 1
+    while 3 * t - 1 <= n {
+        let cost: i64 = 3 * t - 1
+        let mut sum: i64 = n
+        while sum >= cost {
+            let index: usize = sum as usize
+            let rest: usize = (sum - cost) as usize
+            dp⁅index⁆ = dp⁅index⁆ + dp⁅rest⁆
+            sum = sum - 1
+        }
+        t = t + 1
+    }
+    return dp⁅n as usize⁆
+}
+
+class Solution {
+    micro houseOfCards(self, n: i64): i64 {
+        return houseOfCards(n)
+    }
+}

@@ -199,6 +199,7 @@
     ],
     "invoke": {
         "python": "Solution().nthPersonGetsNthSeat",
-        "typescript": "Solution().nthPersonGetsNthSeat"
+        "typescript": "Solution().nthPersonGetsNthSeat",
+        "valkyrie": "nthPersonGetsNthSeat"
     }
 }

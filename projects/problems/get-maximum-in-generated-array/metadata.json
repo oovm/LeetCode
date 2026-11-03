@@ -193,6 +193,7 @@
     ],
     "invoke": {
         "python": "Solution().getMaximumGenerated",
-        "typescript": "Solution().getMaximumGenerated"
+        "typescript": "Solution().getMaximumGenerated",
+        "valkyrie": "getMaximumGenerated"
     }
 }

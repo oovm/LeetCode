@@ -775,6 +775,7 @@
     ],
     "invoke": {
         "python": "Solution().peopleAwareOfSecret",
-        "typescript": "Solution().peopleAwareOfSecret"
+        "typescript": "Solution().peopleAwareOfSecret",
+        "valkyrie": "peopleAwareOfSecret"
     }
 }

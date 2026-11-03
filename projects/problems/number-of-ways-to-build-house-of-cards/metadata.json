@@ -541,6 +541,7 @@
     ],
     "invoke": {
         "python": "Solution().houseOfCards",
-        "typescript": "Solution().houseOfCards"
+        "typescript": "Solution().houseOfCards",
+        "valkyrie": "houseOfCards"
     }
 }

@@ -259,6 +259,7 @@
     ],
     "invoke": {
         "python": "Solution().knightDialer",
-        "typescript": "Solution().knightDialer"
+        "typescript": "Solution().knightDialer",
+        "valkyrie": "knightDialer"
     }
 }

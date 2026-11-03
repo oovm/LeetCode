@@ -1,24 +1,35 @@
 export class Solution {
     selfDivisiblePermutationCount(n: number): number {
-        const visited = new Array<boolean>(n + 1).fill(false);
-        const dfs = (position: number): number => {
+        const states = 1 << n;
+        const dp = new Array<number>(states).fill(0);
+        dp[0] = 1;
+        for (let mask = 0; mask < states; mask++) {
+            const position = popcount(mask) + 1;
             if (position > n) {
-                return 1;
+                continue;
             }
-            let total = 0;
             for (let value = 1; value <= n; value++) {
-                if (visited[value]) {
+                const bit = 1 << (value - 1);
+                if ((mask & bit) !== 0 || gcd(position, value) !== 1) {
                     continue;
                 }
-                if (value % position !== 0 && position % value !== 0) {
-                    continue;
-                }
-                visited[value] = true;
-                total += dfs(position + 1);
-                visited[value] = false;
+                dp[mask | bit] = (dp[mask | bit] as number) + (dp[mask] as number);
             }
-            return total;
-        };
-        return dfs(1);
+        }
+        return dp[states - 1] as number;
     }
+}
+
+function popcount(value: number): number {
+    let count = 0;
+    let rest = value;
+    while (rest > 0) {
+        count += rest & 1;
+        rest >>= 1;
+    }
+    return count;
+}
+
+function gcd(a: number, b: number): number {
+    return b === 0 ? a : gcd(b, a % b);
 }

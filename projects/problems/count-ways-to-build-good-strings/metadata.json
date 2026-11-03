@@ -412,6 +412,7 @@
     ],
     "invoke": {
         "python": "Solution().countGoodStrings",
-        "typescript": "Solution().countGoodStrings"
+        "typescript": "Solution().countGoodStrings",
+        "valkyrie": "countGoodStrings"
     }
 }

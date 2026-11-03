@@ -609,6 +609,7 @@
     ],
     "invoke": {
         "python": "Solution().countBalls",
-        "typescript": "Solution().countBalls"
+        "typescript": "Solution().countBalls",
+        "valkyrie": "countBalls"
     }
 }

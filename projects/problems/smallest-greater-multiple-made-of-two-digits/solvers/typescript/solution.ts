@@ -18,11 +18,14 @@ export class Solution {
                 if (value > k && value % k === 0) {
                     return value;
                 }
-                if (value > Number.MAX_SAFE_INTEGER / 10) {
+                if (value > 2147483647 / 10) {
                     continue;
                 }
                 for (const d of digits) {
                     const candidate = value * 10 + d;
+                    if (candidate > 2147483647) {
+                        continue;
+                    }
                     if (!seen.has(candidate)) {
                         seen.add(candidate);
                         next.push(candidate);

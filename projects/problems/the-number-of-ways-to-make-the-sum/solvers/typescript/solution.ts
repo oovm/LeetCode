@@ -8,6 +8,13 @@ export class Solution {
                 dp[sum] = ((dp[sum] as number) + (dp[sum - coin] as number)) % MOD;
             }
         }
-        return dp[n] as number;
+        let answer = dp[n] as number;
+        if (n >= 4) {
+            answer = (answer + (dp[n - 4] as number)) % MOD;
+        }
+        if (n >= 8) {
+            answer = (answer + (dp[n - 8] as number)) % MOD;
+        }
+        return answer;
     }
 }

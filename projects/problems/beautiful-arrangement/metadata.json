@@ -97,6 +97,7 @@
     ],
     "invoke": {
         "python": "Solution().countArrangement",
-        "typescript": "Solution().countArrangement"
+        "typescript": "Solution().countArrangement",
+        "valkyrie": "countArrangement"
     }
 }

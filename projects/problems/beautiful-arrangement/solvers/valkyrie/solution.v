@@ -1,4 +1,36 @@
-# 阻塞：std.collection 数组分配与索引
-# 题内触发点：`visited` 布尔表在回溯中按位置置位/复位 —— 排列回溯需要可写定长表。
-# 期望语义：定长表分配与下标读写；实际同「数组分配与索引」缺口（首记于 get-maximum-in-generated-array）。
-# 理想算法：回溯枚举排列，位置 i 只放满足 i % v == 0 或 v % i == 0 的 v。时间 O(n!) 空间 O(n)。
+namespace leetcode.beautiful_arrangement;
+
+micro arrange(position: i64, n: i64, visited: ArrayList<bool>) -> i64 {
+    if position > n {
+        return 1
+    }
+    let mut total: i64 = 0
+    let mut value: i64 = 1
+    while value <= n {
+        let index: usize = value as usize
+        if visited⁅index⁆ == false && (value % position == 0 || position % value == 0) {
+            visited⁅index⁆ = true
+            total = total + arrange(position + 1, n, visited)
+            visited⁅index⁆ = false
+        }
+        value = value + 1
+    }
+    return total
+}
+
+[export(case: "camelCase")]
+micro countArrangement(n: i64) -> i64 {
+    let mut visited: ArrayList<bool> = ArrayList::new((n + 1) as usize)
+    let mut slot: i64 = 0
+    while slot <= n {
+        visited.push(false)
+        slot = slot + 1
+    }
+    return arrange(1, n, visited)
+}
+
+class Solution {
+    micro countArrangement(self, n: i64): i64 {
+        return countArrangement(n)
+    }
+}

@@ -1,5 +1,53 @@
-# 阻塞：std.collection 哈希表 / 备忘表
-# 题内触发点：`let memo: HashMap<i64, bool> = ...` —— 极大极小博弈的位掩码备忘需要键值容器（或 2^20 备忘表，同落数组分配缺口）。
-# 期望语义：HashMap::new + insert/get；实际：HashMap 内部调用在 std 容器实现内报 unresolved call `<computed>`（`source/_.v:7:1`），四 lane 同阻。
-# 最小复现（本能力首记）：`let mut m: HashMap<i64, i64> = HashMap::new(16) m.insert(1, 2) return m.get(1).unwrap()`，期望返回 2，实际 unresolved call `<computed>` in insert。
-# 理想算法：位掩码记忆化博弈，used 掩码 + 当前和递归，先手能否使对手必败。时间 O(2^m·m) 空间 O(2^m)。
+namespace leetcode.can_i_win;
+
+micro winner(used: i64, remaining: i64, maxPick: i64, memo: ArrayList<i64>) -> bool {
+    let cached: i64 = memo⁅used as usize⁆
+    if cached == 1 {
+        return true
+    }
+    if cached == 2 {
+        return false
+    }
+    let mut pick: i64 = 1
+    while pick <= maxPick {
+        let bit: i64 = 1 << (pick - 1)
+        if (used & bit) == 0 {
+            if pick >= remaining {
+                memo⁅used as usize⁆ = 1
+                return true
+            }
+            if !winner(used | bit, remaining - pick, maxPick, memo) {
+                memo⁅used as usize⁆ = 1
+                return true
+            }
+        }
+        pick = pick + 1
+    }
+    memo⁅used as usize⁆ = 2
+    return false
+}
+
+[export(case: "camelCase")]
+micro canIWin(maxChoosableInteger: i64, desiredTotal: i64) -> bool {
+    let total: i64 = maxChoosableInteger * (maxChoosableInteger + 1) / 2
+    if total < desiredTotal {
+        return false
+    }
+    if desiredTotal <= 0 {
+        return true
+    }
+    let states: i64 = 1 << maxChoosableInteger
+    let mut memo: ArrayList<i64> = ArrayList::new(states as usize)
+    let mut slot: i64 = 0
+    while slot < states {
+        memo.push(0)
+        slot = slot + 1
+    }
+    return winner(0, desiredTotal, maxChoosableInteger, memo)
+}
+
+class Solution {
+    micro canIWin(self, maxChoosableInteger: i64, desiredTotal: i64): bool {
+        return canIWin(maxChoosableInteger, desiredTotal)
+    }
+}
