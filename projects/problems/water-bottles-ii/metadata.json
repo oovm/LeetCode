@@ -609,6 +609,7 @@
     ],
     "invoke": {
         "python": "Solution().maxBottlesDrunk",
-        "typescript": "Solution().maxBottlesDrunk"
+        "typescript": "Solution().maxBottlesDrunk",
+        "valkyrie": "Solution().maxBottlesDrunk"
     }
 }

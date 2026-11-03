@@ -767,6 +767,7 @@
     ],
     "invoke": {
         "python": "Solution().findKthNumber",
-        "typescript": "Solution().findKthNumber"
+        "typescript": "Solution().findKthNumber",
+        "valkyrie": "Solution().findKthNumber"
     }
 }

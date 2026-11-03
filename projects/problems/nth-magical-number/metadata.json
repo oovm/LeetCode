@@ -839,6 +839,7 @@
     ],
     "invoke": {
         "python": "Solution().nthMagicalNumber",
-        "typescript": "Solution().nthMagicalNumber"
+        "typescript": "Solution().nthMagicalNumber",
+        "valkyrie": "Solution().nthMagicalNumber"
     }
 }

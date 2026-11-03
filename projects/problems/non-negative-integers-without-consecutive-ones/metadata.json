@@ -163,6 +163,7 @@
     ],
     "invoke": {
         "python": "Solution().findIntegers",
-        "typescript": "Solution().findIntegers"
+        "typescript": "Solution().findIntegers",
+        "valkyrie": "Solution().findIntegers"
     }
 }

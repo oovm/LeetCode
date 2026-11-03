@@ -986,6 +986,7 @@
     ],
     "invoke": {
         "python": "Solution().minMovesToCaptureTheQueen",
-        "typescript": "Solution().minMovesToCaptureTheQueen"
+        "typescript": "Solution().minMovesToCaptureTheQueen",
+        "valkyrie": "Solution().minMovesToCaptureTheQueen"
     }
 }

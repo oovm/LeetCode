@@ -448,6 +448,7 @@
     ],
     "invoke": {
         "python": "Solution().valueAfterKSeconds",
-        "typescript": "Solution().valueAfterKSeconds"
+        "typescript": "Solution().valueAfterKSeconds",
+        "valkyrie": "Solution().valueAfterKSeconds"
     }
 }

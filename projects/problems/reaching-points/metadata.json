@@ -916,6 +916,7 @@
     ],
     "invoke": {
         "python": "Solution().reachingPoints",
-        "typescript": "Solution().reachingPoints"
+        "typescript": "Solution().reachingPoints",
+        "valkyrie": "Solution().reachingPoints"
     }
 }

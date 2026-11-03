@@ -355,6 +355,7 @@
     ],
     "invoke": {
         "python": "Solution().newInteger",
-        "typescript": "Solution().newInteger"
+        "typescript": "Solution().newInteger",
+        "valkyrie": "Solution().newInteger"
     }
 }

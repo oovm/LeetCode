@@ -421,6 +421,7 @@
     ],
     "invoke": {
         "python": "Solution().maxSizedArray",
-        "typescript": "Solution().maxSizedArray"
+        "typescript": "Solution().maxSizedArray",
+        "valkyrie": "Solution().maxSizedArray"
     }
 }

@@ -55,6 +55,7 @@
     ],
     "invoke": {
         "python": "Solution().largestPalindrome",
-        "typescript": "Solution().largestPalindrome"
+        "typescript": "Solution().largestPalindrome",
+        "valkyrie": "Solution().largestPalindrome"
     }
 }

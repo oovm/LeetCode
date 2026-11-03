@@ -367,6 +367,7 @@
     ],
     "invoke": {
         "python": "Solution().confusingNumberII",
-        "typescript": "Solution().confusingNumberII"
+        "typescript": "Solution().confusingNumberII",
+        "valkyrie": "Solution().confusingNumberII"
     }
 }

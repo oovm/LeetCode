@@ -889,6 +889,7 @@
     ],
     "invoke": {
         "python": "Solution().findMaximumNumber",
-        "typescript": "Solution().findMaximumNumber"
+        "typescript": "Solution().findMaximumNumber",
+        "valkyrie": "Solution().findMaximumNumber"
     }
 }
