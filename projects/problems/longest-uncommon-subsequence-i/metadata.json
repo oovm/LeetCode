@@ -882,6 +882,7 @@
     ],
     "invoke": {
         "python": "Solution().findLUSlength",
-        "typescript": "Solution().findLUSlength"
+        "typescript": "Solution().findLUSlength",
+        "valkyrie": "findLUSlength"
     }
 }

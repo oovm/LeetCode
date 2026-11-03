@@ -1087,6 +1087,7 @@
     ],
     "invoke": {
         "python": "Solution().isStrobogrammatic",
-        "typescript": "Solution().isStrobogrammatic"
+        "typescript": "Solution().isStrobogrammatic",
+        "valkyrie": "isStrobogrammatic"
     }
 }

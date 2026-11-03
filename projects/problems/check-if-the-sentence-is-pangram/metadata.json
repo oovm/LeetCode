@@ -595,6 +595,7 @@
     ],
     "invoke": {
         "python": "Solution().checkIfPangram",
-        "typescript": "Solution().checkIfPangram"
+        "typescript": "Solution().checkIfPangram",
+        "valkyrie": "checkIfPangram"
     }
 }

@@ -427,6 +427,7 @@
     ],
     "invoke": {
         "python": "Solution().maxPower",
-        "typescript": "Solution().maxPower"
+        "typescript": "Solution().maxPower",
+        "valkyrie": "maxPower"
     }
 }

@@ -1,5 +1,41 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`abbr⁅j⁆` 判数字段并跳 `word⁅i⁆` 对齐 —— 理想写法需要双指针文本下标读。
-# 期望语义：文本按下标读字符。实际：std.text 下标/长度能力未就绪（工具链冻结），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：双指针逐段校验（数字段禁前导零），时间 O(|word|+|abbr|) 空间 O(1)。
+namespace leetcode.valid_word_abbreviation;
+
+# 双指针按缩写规则推进，O(n)
+[export(case: "camelCase")]
+micro valid_word_abbreviation(word: utf8, abbr: utf8) -> bool {
+    let wn: usize = word.length()
+    let an: usize = abbr.length()
+    let mut i: usize = 0
+    let mut j: usize = 0
+    while j < an {
+        let code: u32 = abbr⁅j⁆ as u32
+        if code >= 48 && code <= 57 {
+            if code == 48 {
+                return false
+            }
+            let mut skip: i64 = 0
+            while j < an && (abbr⁅j⁆ as u32) >= 48 && (abbr⁅j⁆ as u32) <= 57 {
+                skip = skip * 10 + (abbr⁅j⁆ as u32 as i64) - 48
+                j = j + 1
+            }
+            let step: usize = skip as usize
+            i = i + step
+        } else {
+            if i >= wn {
+                return false
+            }
+            if (word⁅i⁆ as u32) != code {
+                return false
+            }
+            i = i + 1
+            j = j + 1
+        }
+    }
+    return i == wn
+}
+
+class Solution {
+    micro validWordAbbreviation(self, word: utf8, abbr: utf8): bool {
+        return valid_word_abbreviation(word, abbr)
+    }
+}

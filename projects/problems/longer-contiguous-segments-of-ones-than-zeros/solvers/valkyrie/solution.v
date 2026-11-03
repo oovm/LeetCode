@@ -1,5 +1,35 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 扫描 0/1 双游程取各自最长。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：最长 1 段 > 最长 0 段，时间 O(n) 空间 O(1)。
+namespace leetcode.longer_contiguous_segments_of_ones_than_zeros;
+
+[export(case: "camelCase")]
+micro check_zero_ones(s: utf8) -> bool {
+    let n: usize = s.length()
+    let mut max_ones: i64 = 0
+    let mut max_zeros: i64 = 0
+    let mut run_ones: i64 = 0
+    let mut run_zeros: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        let code: i64 = s⁅i⁆ as u32 as i64
+        if code == 49 {
+            run_ones = run_ones + 1
+            run_zeros = 0
+        } else {
+            run_zeros = run_zeros + 1
+            run_ones = 0
+        }
+        if run_ones > max_ones {
+            max_ones = run_ones
+        }
+        if run_zeros > max_zeros {
+            max_zeros = run_zeros
+        }
+        i = i + 1
+    }
+    return max_ones > max_zeros
+}
+
+class Solution {
+    micro checkZeroOnes(self, s: utf8): bool {
+        return check_zero_ones(s)
+    }
+}

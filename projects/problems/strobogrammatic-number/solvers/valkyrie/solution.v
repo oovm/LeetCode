@@ -1,5 +1,41 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`num⁅i⁆` 与 `num⁅len-1-i⁆` 对位读字符并查旋转对（0/1/8 自旋、6/9 互旋）。
-# 期望语义：文本按下标读字符。实际：std.text 下标/长度能力未就绪（工具链冻结），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：双指针对位校验，时间 O(n) 空间 O(1)。
+namespace leetcode.strobogrammatic_number;
+
+# 旋转 180 度后的对应数字，非法字符返回 -1
+micro mirror_digit(code: u32) -> i64 {
+    if code == 48 || code == 49 || code == 56 {
+        return code as i64
+    }
+    if code == 54 {
+        return 57
+    }
+    if code == 57 {
+        return 54
+    }
+    return -1
+}
+
+# 双指针对位校验，O(n)
+[export(case: "camelCase")]
+micro is_strobogrammatic(num: utf8) -> bool {
+    let n: usize = num.length()
+    let mut i: usize = 0
+    while i <= n / 2 {
+        let left: u32 = num⁅i⁆ as u32
+        let right: u32 = num⁅n - 1 - i⁆ as u32
+        let mirrored: i64 = mirror_digit(left)
+        if mirrored < 0 {
+            return false
+        }
+        if mirrored != right as i64 {
+            return false
+        }
+        i = i + 1
+    }
+    return true
+}
+
+class Solution {
+    micro isStrobogrammatic(self, num: utf8): bool {
+        return is_strobogrammatic(num)
+    }
+}

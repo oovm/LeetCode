@@ -1,5 +1,40 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 扫描同字符游程并取相邻游程最小值累加 —— 理想写法需要文本下标读。
-# 期望语义：文本按下标读字符。实际：std.text 下标/长度能力未就绪（工具链冻结），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：游程分组相邻取 min，时间 O(n) 空间 O(1)。
+namespace leetcode.count_binary_substrings;
+
+# 统计相邻同值游程，每对游程贡献 min(prev, cur)，O(n)
+[export(case: "camelCase")]
+micro count_binary_substrings(s: utf8) -> i64 {
+    let n: usize = s.length()
+    if n == 0 {
+        return 0
+    }
+    let mut total: i64 = 0
+    let mut prev: i64 = 0
+    let mut cur: i64 = 1
+    let mut i: usize = 1
+    while i < n {
+        if (s⁅i⁆ as u32) == (s⁅i - 1⁆ as u32) {
+            cur = cur + 1
+        } else {
+            if prev < cur {
+                total = total + prev
+            } else {
+                total = total + cur
+            }
+            prev = cur
+            cur = 1
+        }
+        i = i + 1
+    }
+    if prev < cur {
+        total = total + prev
+    } else {
+        total = total + cur
+    }
+    return total
+}
+
+class Solution {
+    micro countBinarySubstrings(self, s: utf8): i64 {
+        return count_binary_substrings(s)
+    }
+}

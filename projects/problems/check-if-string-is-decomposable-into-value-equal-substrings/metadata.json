@@ -91,6 +91,7 @@
     ],
     "invoke": {
         "python": "Solution().isDecomposable",
-        "typescript": "Solution().isDecomposable"
+        "typescript": "Solution().isDecomposable",
+        "valkyrie": "isDecomposable"
     }
 }

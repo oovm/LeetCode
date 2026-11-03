@@ -1,5 +1,27 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：双指针游程对比 `name⁅i⁆` 与 `typed⁅j⁆`。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：游程对齐且 typed 游程不短于 name，时间 O(n) 空间 O(1)。
+namespace leetcode.long_pressed_name;
+
+# 贪心匹配，允许重复已匹配字符，O(n)
+[export(case: "camelCase")]
+micro is_long_pressed_name(name: utf8, typed: utf8) -> bool {
+    let nn: usize = name.length()
+    let tn: usize = typed.length()
+    let mut i: usize = 0
+    let mut j: usize = 0
+    while j < tn {
+        if i < nn && (name⁅i⁆ as u32) == (typed⁅j⁆ as u32) {
+            i = i + 1
+            j = j + 1
+        } else if j > 0 && (typed⁅j⁆ as u32) == (typed⁅j - 1⁆ as u32) {
+            j = j + 1
+        } else {
+            return false
+        }
+    }
+    return i == nn
+}
+
+class Solution {
+    micro isLongPressedName(self, name: utf8, typed: utf8): bool {
+        return is_long_pressed_name(name, typed)
+    }
+}

@@ -1,5 +1,24 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`sentence⁅i⁆` 逐字符置位掩码。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：位掩码满 26 位即真，时间 O(n) 空间 O(1)。
+namespace leetcode.check_if_the_sentence_is_pangram;
+
+[export(case: "camelCase")]
+micro check_if_pangram(sentence: utf8) -> bool {
+    let n: usize = sentence.length()
+    let mut mask: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        let code: i64 = sentence⁅i⁆ as u32 as i64
+        if code >= 97 && code <= 122 {
+            let bit: i64 = 1 << (code - 97)
+            mask = mask | bit
+        }
+        i = i + 1
+    }
+    let complete: i64 = 67108863
+    return mask == complete
+}
+
+class Solution {
+    micro checkIfPangram(self, sentence: utf8): bool {
+        return check_if_pangram(sentence)
+    }
+}

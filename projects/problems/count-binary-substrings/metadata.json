@@ -955,6 +955,7 @@
     ],
     "invoke": {
         "python": "Solution().countBinarySubstrings",
-        "typescript": "Solution().countBinarySubstrings"
+        "typescript": "Solution().countBinarySubstrings",
+        "valkyrie": "countBinarySubstrings"
     }
 }

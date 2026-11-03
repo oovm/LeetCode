@@ -973,6 +973,7 @@
     ],
     "invoke": {
         "python": "Solution().checkZeroOnes",
-        "typescript": "Solution().checkZeroOnes"
+        "typescript": "Solution().checkZeroOnes",
+        "valkyrie": "checkZeroOnes"
     }
 }

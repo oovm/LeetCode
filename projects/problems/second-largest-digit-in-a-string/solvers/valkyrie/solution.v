@@ -1,5 +1,29 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 判数字字符并维护前两大值。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：一次扫描维护 top2，时间 O(n) 空间 O(1)。
+namespace leetcode.second_largest_digit_in_a_string;
+
+[export(case: "camelCase")]
+micro second_highest(s: utf8) -> i64 {
+    let n: usize = s.length()
+    let mut first: i64 = -1
+    let mut second: i64 = -1
+    let mut i: usize = 0
+    while i < n {
+        let code: i64 = s⁅i⁆ as u32 as i64
+        if code >= 48 && code <= 57 {
+            let digit: i64 = code - 48
+            if digit > first {
+                second = first
+                first = digit
+            } else if digit < first && digit > second {
+                second = digit
+            }
+        }
+        i = i + 1
+    }
+    return second
+}
+
+class Solution {
+    micro secondHighest(self, s: utf8): i64 {
+        return second_highest(s)
+    }
+}

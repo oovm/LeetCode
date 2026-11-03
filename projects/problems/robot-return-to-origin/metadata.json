@@ -679,6 +679,7 @@
     ],
     "invoke": {
         "python": "Solution().judgeCircle",
-        "typescript": "Solution().judgeCircle"
+        "typescript": "Solution().judgeCircle",
+        "valkyrie": "judgeCircle"
     }
 }

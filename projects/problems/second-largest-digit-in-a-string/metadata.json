@@ -793,6 +793,7 @@
     ],
     "invoke": {
         "python": "Solution().secondHighest",
-        "typescript": "Solution().secondHighest"
+        "typescript": "Solution().secondHighest",
+        "valkyrie": "secondHighest"
     }
 }

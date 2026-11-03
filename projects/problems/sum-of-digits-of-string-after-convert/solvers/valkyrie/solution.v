@@ -1,5 +1,30 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 映字母序数求数字和并迭代 k 轮。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：字母值数位和迭代，时间 O(n + k·位数) 空间 O(1)。
+namespace leetcode.sum_of_digits_of_string_after_convert;
+
+[export(case: "camelCase")]
+micro get_lucky(s: utf8, k: i64) -> i64 {
+    let n: usize = s.length()
+    let mut total: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        let value: i64 = s⁅i⁆ as u32 as i64 - 96
+        total = total + value % 10 + value / 10
+        i = i + 1
+    }
+    let mut round: i64 = 1
+    while round < k {
+        let mut next: i64 = 0
+        while total > 0 {
+            next = next + total % 10
+            total = total / 10
+        }
+        total = next
+        round = round + 1
+    }
+    return total
+}
+
+class Solution {
+    micro getLucky(self, s: utf8, k: i64): i64 {
+        return get_lucky(s, k)
+    }
+}

@@ -1,5 +1,31 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 与两种交错模式比对计数取小。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：双模式比对，时间 O(n) 空间 O(1)。
+namespace leetcode.minimum_changes_to_make_alternating_binary_string;
+
+[export(case: "camelCase")]
+micro min_operations(s: utf8) -> i64 {
+    let n: usize = s.length()
+    let mut mismatches: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        let code: i64 = s⁅i⁆ as u32 as i64
+        let mut expected: i64 = 48
+        if i % 2 == 1 {
+            expected = 49
+        }
+        if code != expected {
+            mismatches = mismatches + 1
+        }
+        i = i + 1
+    }
+    let total: i64 = n as i64
+    let other: i64 = total - mismatches
+    if mismatches < other {
+        return mismatches
+    }
+    return other
+}
+
+class Solution {
+    micro minOperations(self, s: utf8): i64 {
+        return min_operations(s)
+    }
+}

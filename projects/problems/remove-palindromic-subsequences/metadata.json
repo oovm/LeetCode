@@ -1039,6 +1039,7 @@
     ],
     "invoke": {
         "python": "Solution().removePalindromeSub",
-        "typescript": "Solution().removePalindromeSub"
+        "typescript": "Solution().removePalindromeSub",
+        "valkyrie": "removePalindromeSub"
     }
 }

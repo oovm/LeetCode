@@ -1,5 +1,29 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`moves⁅i⁆` 逐指令读字符并增减坐标 —— 理想写法需要文本下标读。
-# 期望语义：文本按下标读字符。实际：std.text 下标/长度能力未就绪（工具链冻结），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：坐标模拟，时间 O(n) 空间 O(1)。
+namespace leetcode.robot_return_to_origin;
+
+# 累计位移后回到原点，O(n)
+[export(case: "camelCase")]
+micro judge_circle(moves: utf8) -> bool {
+    let mut x: i64 = 0
+    let mut y: i64 = 0
+    let mut i: usize = 0
+    while i < moves.length() {
+        let code: u32 = moves⁅i⁆ as u32
+        if code == 85 {
+            y = y + 1
+        } else if code == 68 {
+            y = y - 1
+        } else if code == 76 {
+            x = x - 1
+        } else if code == 82 {
+            x = x + 1
+        }
+        i = i + 1
+    }
+    return x == 0 && y == 0
+}
+
+class Solution {
+    micro judgeCircle(self, moves: utf8): bool {
+        return judge_circle(moves)
+    }
+}

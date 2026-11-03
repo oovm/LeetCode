@@ -1645,6 +1645,7 @@
     ],
     "invoke": {
         "python": "Solution().validWordAbbreviation",
-        "typescript": "Solution().validWordAbbreviation"
+        "typescript": "Solution().validWordAbbreviation",
+        "valkyrie": "validWordAbbreviation"
     }
 }

@@ -591,6 +591,7 @@
     ],
     "invoke": {
         "python": "Solution().isSumEqual",
-        "typescript": "Solution().isSumEqual"
+        "typescript": "Solution().isSumEqual",
+        "valkyrie": "isSumEqual"
     }
 }

@@ -1211,6 +1211,7 @@
     ],
     "invoke": {
         "python": "Solution().isPrefixOfWord",
-        "typescript": "Solution().isPrefixOfWord"
+        "typescript": "Solution().isPrefixOfWord",
+        "valkyrie": "isPrefixOfWord"
     }
 }

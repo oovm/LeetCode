@@ -1,5 +1,23 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：三串逐位 `s⁅i⁆` 映 a=0..j=9 求值。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：字母值求和对比，时间 O(n) 空间 O(1)。
+namespace leetcode.check_if_word_equals_summation_of_two_words;
+
+micro word_value(word: utf8) -> i64 {
+    let n: usize = word.length()
+    let mut value: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        value = value * 10 + (word⁅i⁆ as u32 as i64 - 97)
+        i = i + 1
+    }
+    return value
+}
+
+[export(case: "camelCase")]
+micro is_sum_equal(first_word: utf8, second_word: utf8, target_word: utf8) -> bool {
+    return word_value(first_word) + word_value(second_word) == word_value(target_word)
+}
+
+class Solution {
+    micro isSumEqual(self, firstWord: utf8, secondWord: utf8, targetWord: utf8): bool {
+        return is_sum_equal(firstWord, secondWord, targetWord)
+    }
+}

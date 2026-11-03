@@ -349,6 +349,7 @@
     ],
     "invoke": {
         "python": "Solution().countLetters",
-        "typescript": "Solution().countLetters"
+        "typescript": "Solution().countLetters",
+        "valkyrie": "countLetters"
     }
 }

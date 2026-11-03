@@ -987,6 +987,7 @@
     ],
     "invoke": {
         "python": "Solution().isLongPressedName",
-        "typescript": "Solution().isLongPressedName"
+        "typescript": "Solution().isLongPressedName",
+        "valkyrie": "isLongPressedName"
     }
 }

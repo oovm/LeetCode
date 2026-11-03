@@ -1,5 +1,31 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`a == b` 文本相等判定。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：相等返回 -1，否则取 max(|a|,|b|)，时间 O(n) 空间 O(1)。
+namespace leetcode.longest_uncommon_subsequence_i;
+
+# 等长时逐位比较，不同则答案为长度，相同则 -1，O(n)
+[export(case: "camelCase")]
+micro find_l_u_slength(a: utf8, b: utf8) -> i64 {
+    let an: usize = a.length()
+    let bn: usize = b.length()
+    if an == bn {
+        let mut same: bool = true
+        let mut i: usize = 0
+        while i < an {
+            if (a⁅i⁆ as u32) != (b⁅i⁆ as u32) {
+                same = false
+            }
+            i = i + 1
+        }
+        if same {
+            return -1
+        }
+    }
+    if an > bn {
+        return an as i64
+    }
+    return bn as i64
+}
+
+class Solution {
+    micro findLUSlength(self, a: utf8, b: utf8): i64 {
+        return find_l_u_slength(a, b)
+    }
+}

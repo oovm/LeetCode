@@ -1,5 +1,14 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`coordinates⁅0⁆` 与 `coordinates⁅1⁆` 取列行字符。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：列行差奇偶判定，时间 O(1) 空间 O(1)。
+namespace leetcode.determine_color_of_a_chessboard_square;
+
+[export(case: "camelCase")]
+micro square_is_white(coordinates: utf8) -> bool {
+    let col: i64 = coordinates⁅0⁆ as u32 as i64 - 97
+    let row: i64 = coordinates⁅1⁆ as u32 as i64 - 49
+    return (col + row) % 2 == 1
+}
+
+class Solution {
+    micro squareIsWhite(self, coordinates: utf8): bool {
+        return square_is_white(coordinates)
+    }
+}

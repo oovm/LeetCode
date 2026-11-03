@@ -1,5 +1,34 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 前后两半元音计数对比。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：双半元音计数，时间 O(n) 空间 O(1)。
+namespace leetcode.determine_if_string_halves_are_alike;
+
+micro is_vowel_code(code: u32) -> bool {
+    let lower: u32 = code
+    if code >= 65 && code <= 90 {
+        lower = code + 32
+    }
+    return lower == 97 || lower == 101 || lower == 105 || lower == 111 || lower == 117
+}
+
+[export(case: "camelCase")]
+micro halves_are_alike(s: utf8) -> bool {
+    let n: usize = s.length()
+    let half: usize = n / 2
+    let mut left: i64 = 0
+    let mut right: i64 = 0
+    let mut i: usize = 0
+    while i < half {
+        if is_vowel_code(s⁅i⁆ as u32) {
+            left = left + 1
+        }
+        if is_vowel_code(s⁅half + i⁆ as u32) {
+            right = right + 1
+        }
+        i = i + 1
+    }
+    return left == right
+}
+
+class Solution {
+    micro halvesAreAlike(self, s: utf8): bool {
+        return halves_are_alike(s)
+    }
+}

@@ -553,6 +553,7 @@
     ],
     "invoke": {
         "python": "Solution().areOccurrencesEqual",
-        "typescript": "Solution().areOccurrencesEqual"
+        "typescript": "Solution().areOccurrencesEqual",
+        "valkyrie": "areOccurrencesEqual"
     }
 }

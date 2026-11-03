@@ -685,6 +685,7 @@
     ],
     "invoke": {
         "python": "Solution().checkOnesSegment",
-        "typescript": "Solution().checkOnesSegment"
+        "typescript": "Solution().checkOnesSegment",
+        "valkyrie": "checkOnesSegment"
     }
 }
