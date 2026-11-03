@@ -805,6 +805,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumNumbers",
-        "typescript": "Solution().minimumNumbers"
+        "typescript": "Solution().minimumNumbers",
+        "valkyrie": "Solution().minimumNumbers"
     }
 }

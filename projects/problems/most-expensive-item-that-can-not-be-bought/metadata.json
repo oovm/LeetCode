@@ -567,6 +567,7 @@
     ],
     "invoke": {
         "python": "Solution().mostExpensiveItem",
-        "typescript": "Solution().mostExpensiveItem"
+        "typescript": "Solution().mostExpensiveItem",
+        "valkyrie": "Solution().mostExpensiveItem"
     }
 }

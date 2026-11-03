@@ -415,6 +415,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumPerimeter",
-        "typescript": "Solution().minimumPerimeter"
+        "typescript": "Solution().minimumPerimeter",
+        "valkyrie": "Solution().minimumPerimeter"
     }
 }

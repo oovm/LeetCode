@@ -253,6 +253,7 @@
     ],
     "invoke": {
         "python": "Solution().smallestNumber",
-        "typescript": "Solution().smallestNumber"
+        "typescript": "Solution().smallestNumber",
+        "valkyrie": "Solution().smallestNumber"
     }
 }

@@ -599,6 +599,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumXorProduct",
-        "typescript": "Solution().maximumXorProduct"
+        "typescript": "Solution().maximumXorProduct",
+        "valkyrie": "Solution().maximumXorProduct"
     }
 }

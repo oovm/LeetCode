@@ -861,6 +861,7 @@
     ],
     "invoke": {
         "python": "Solution().makeTheIntegerZero",
-        "typescript": "Solution().makeTheIntegerZero"
+        "typescript": "Solution().makeTheIntegerZero",
+        "valkyrie": "Solution().makeTheIntegerZero"
     }
 }

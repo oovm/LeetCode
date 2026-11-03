@@ -711,6 +711,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumScore",
-        "typescript": "Solution().maximumScore"
+        "typescript": "Solution().maximumScore",
+        "valkyrie": "Solution().maximumScore"
     }
 }

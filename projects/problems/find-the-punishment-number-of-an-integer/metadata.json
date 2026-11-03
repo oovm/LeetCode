@@ -133,6 +133,7 @@
     ],
     "invoke": {
         "python": "Solution().punishmentNumber",
-        "typescript": "Solution().punishmentNumber"
+        "typescript": "Solution().punishmentNumber",
+        "valkyrie": "Solution().punishmentNumber"
     }
 }

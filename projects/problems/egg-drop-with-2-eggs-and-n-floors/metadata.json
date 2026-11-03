@@ -283,6 +283,7 @@
     ],
     "invoke": {
         "python": "Solution().twoEggDrop",
-        "typescript": "Solution().twoEggDrop"
+        "typescript": "Solution().twoEggDrop",
+        "valkyrie": "Solution().twoEggDrop"
     }
 }

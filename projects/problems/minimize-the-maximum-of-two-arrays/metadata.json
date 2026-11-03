@@ -979,6 +979,7 @@
     ],
     "invoke": {
         "python": "Solution().minimizeSet",
-        "typescript": "Solution().minimizeSet"
+        "typescript": "Solution().minimizeSet",
+        "valkyrie": "Solution().minimizeSet"
     }
 }

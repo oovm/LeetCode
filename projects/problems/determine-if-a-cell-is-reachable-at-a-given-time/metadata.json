@@ -897,6 +897,7 @@
     ],
     "invoke": {
         "python": "Solution().isReachableAtTime",
-        "typescript": "Solution().isReachableAtTime"
+        "typescript": "Solution().isReachableAtTime",
+        "valkyrie": "Solution().isReachableAtTime"
     }
 }

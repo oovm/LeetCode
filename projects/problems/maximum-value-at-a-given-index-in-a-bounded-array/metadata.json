@@ -743,6 +743,7 @@
     ],
     "invoke": {
         "python": "Solution().maxValue",
-        "typescript": "Solution().maxValue"
+        "typescript": "Solution().maxValue",
+        "valkyrie": "Solution().maxValue"
     }
 }

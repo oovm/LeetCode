@@ -823,6 +823,7 @@
     ],
     "invoke": {
         "python": "Solution().waysToBuyPensPencils",
-        "typescript": "Solution().waysToBuyPensPencils"
+        "typescript": "Solution().waysToBuyPensPencils",
+        "valkyrie": "Solution().waysToBuyPensPencils"
     }
 }

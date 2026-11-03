@@ -588,6 +588,7 @@
     ],
     "invoke": {
         "python": "Solution().findTheWinner",
-        "typescript": "Solution().findTheWinner"
+        "typescript": "Solution().findTheWinner",
+        "valkyrie": "Solution().findTheWinner"
     }
 }

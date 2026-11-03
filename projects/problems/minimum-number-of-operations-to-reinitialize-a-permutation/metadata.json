@@ -235,6 +235,7 @@
     ],
     "invoke": {
         "python": "Solution().reinitializePermutation",
-        "typescript": "Solution().reinitializePermutation"
+        "typescript": "Solution().reinitializePermutation",
+        "valkyrie": "Solution().reinitializePermutation"
     }
 }
