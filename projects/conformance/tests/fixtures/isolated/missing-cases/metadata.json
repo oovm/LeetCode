@@ -1,0 +1,8 @@
+{
+    "id": "missing-cases",
+    "questionId": 0,
+    "difficulty": "easy",
+    "tags": ["fixture"],
+    "tests": [],
+    "invoke": { "typescript": "Solution().echoPlusOne", "python": "Solution().echo_plus_one" }
+}

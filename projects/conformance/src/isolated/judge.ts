@@ -1,0 +1,428 @@
+/**
+ * 隔离判题器（父进程侧）。
+ *
+ * 判题器只负责：装载用例（`<slug>.cases.ts` 或 metadata.json 回退）、校验 schema 与数值保真、
+ * 经 NDJSON 协议把用例发给独立的解法子进程、回收结果并断言、汇总计时。
+ * 判题进程从不 import 解法；解法子进程从不加载判题/断言代码 —— JIT 上下文完全分离。
+ * Node 与 Bun 子进程跑同一份 `child-typescript.ts`，同协议同计时口径。
+ */
+import { spawn } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+import { bunExecutable } from '../adapters/typescript-bun/bridge.ts';
+import { assertTestCase, normalizeTsTestResult } from '../domain/assert.ts';
+import { coerceIntegerArgs, inferIntegerArgKeys } from '../domain/integer-args.ts';
+import { CONFORMANCE_ROOT } from '../domain/paths.ts';
+import { partitionCases, validateCasesModule, type ProblemCase } from './cases.ts';
+import {
+    createLineAssembler,
+    decodeLine,
+    decodeValue,
+    encodeLine,
+    encodeValue,
+    PROTOCOL_VERSION,
+    ProtocolDecodeError,
+    UnsafeNumberError,
+    type CaseOutcome,
+    type JudgeMessage,
+    type RunCase,
+    type SolverMessage,
+    type TaggedValue,
+} from './protocol.ts';
+import { normalizeResultByAbiType } from './v-shared.ts';
+import type { WasmAbiType } from '../adapters/valkyrie-node/abi.ts';
+
+export type JudgeLane = 'typescript' | 'typescript-bun' | 'python' | 'valkyrie';
+
+export type JudgeFailureKind =
+    | 'cases_missing'
+    | 'cases_schema'
+    | 'unsafe_number'
+    | 'spawn_failed'
+    | 'load_failed'
+    | 'solver_exit'
+    | 'solver_timeout'
+    | 'protocol_error'
+    | 'assert_failed'
+    | 'solver_error';
+
+export type JudgeOptions = {
+    problemDir: string;
+    lane: JudgeLane;
+    /** 显式用例模块路径；缺省按 `<problemDir>/<id>.cases.ts` 探测，再回退 metadata.json。 */
+    casesPath?: string;
+    /** valkyrie lane 必填：legion build 产物目录（含 *.mjs glue 与 *.wasm）。 */
+    artifactDir?: string;
+    iterations?: number;
+    warmup?: number;
+    /** run 阶段看门狗（毫秒），超时杀子进程并结构化失败。 */
+    runTimeoutMs?: number;
+};
+
+export type JudgeResult = {
+    ok: boolean;
+    failureKind: JudgeFailureKind | null;
+    message: string | null;
+    slug: string;
+    lane: JudgeLane;
+    isolation: 'process';
+    protocol: typeof PROTOCOL_VERSION;
+    casesSource: string;
+    casesTotal: number;
+    defectSkipped: number;
+    executed: number;
+    passed: number;
+    failed: number;
+    firstFailureIndex: number | null;
+    runtimeMs: number | null;
+    iterations: number;
+    warmup: number;
+    childPid: number | null;
+    command: string;
+};
+
+const CHILD_TYPESCRIPT = join(CONFORMANCE_ROOT, 'src', 'isolated', 'child-typescript.ts');
+const CHILD_VALKYRIE = join(CONFORMANCE_ROOT, 'src', 'isolated', 'child-valkyrie.ts');
+const CHILD_PYTHON = join(CONFORMANCE_ROOT, 'scripts', 'isolated_python_child.py');
+
+const DEFAULT_ITERATIONS = 50;
+const DEFAULT_WARMUP = 5;
+const DEFAULT_RUN_TIMEOUT_MS = 240_000;
+
+function median(values: number[]): number {
+    const sorted = [...values].sort((left, right) => left - right);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 0 ? (sorted[mid - 1]! + sorted[mid]!) / 2 : sorted[mid]!;
+}
+
+type ProblemMeta = { id: string; invoke: Record<string, string | undefined> };
+
+function loadEnvelope(problemDir: string): ProblemMeta {
+    const metaPath = join(problemDir, 'metadata.json');
+    if (!existsSync(metaPath)) {
+        throw new Error(`missing metadata: ${metaPath}`);
+    }
+    const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as { id?: string; tests?: unknown; invoke?: Record<string, string | undefined> };
+    const id = meta.id?.trim();
+    if (!id) {
+        throw new Error('metadata.id 缺失');
+    }
+    return { id, invoke: meta.invoke ?? {} };
+}
+
+function invokeKeyForLane(lane: JudgeLane): string {
+    return lane === 'python' ? 'python' : lane === 'valkyrie' ? 'valkyrie' : 'typescript';
+}
+
+function spawnCommand(lane: JudgeLane): { command: string; args: string[]; display: string } {
+    if (lane === 'typescript-bun') {
+        const exe = bunExecutable();
+        return { command: exe, args: [CHILD_TYPESCRIPT], display: `bun ${CHILD_TYPESCRIPT}` };
+    }
+    if (lane === 'python') {
+        return { command: 'python', args: [CHILD_PYTHON], display: `python ${CHILD_PYTHON}` };
+    }
+    if (lane === 'valkyrie') {
+        return { command: process.execPath, args: ['--import', 'tsx', CHILD_VALKYRIE], display: `node --import tsx ${CHILD_VALKYRIE}` };
+    }
+    return { command: process.execPath, args: ['--import', 'tsx', CHILD_TYPESCRIPT], display: `node --import tsx ${CHILD_TYPESCRIPT}` };
+}
+
+async function loadCases(
+    options: JudgeOptions,
+    meta: ProblemMeta,
+): Promise<
+    | { ok: true; cases: ProblemCase[]; source: string }
+    | { ok: false; failureKind: 'cases_missing' | 'cases_schema' | 'unsafe_number'; message: string }
+> {
+    const defaultCasesPath = join(options.problemDir, `${meta.id}.cases.ts`);
+    const explicit = options.casesPath;
+    const candidatesPath = explicit ?? (existsSync(defaultCasesPath) ? defaultCasesPath : null);
+    if (candidatesPath !== null) {
+        if (!existsSync(candidatesPath)) {
+            return { ok: false, failureKind: 'cases_missing', message: `用例模块不存在：${candidatesPath}` };
+        }
+        const mod = (await import(pathToFileURL(candidatesPath).href)) as { cases?: unknown };
+        const validation = validateCasesModule(mod.cases, candidatesPath);
+        if (!validation.ok) {
+            return validation;
+        }
+        return { ok: true, cases: [...validation.cases], source: candidatesPath };
+    }
+    const metaPath = join(options.problemDir, 'metadata.json');
+    const parsed = JSON.parse(readFileSync(metaPath, 'utf8')) as { tests?: unknown };
+    const validation = validateCasesModule(parsed.tests, `${metaPath}#tests`);
+    if (!validation.ok) {
+        return validation;
+    }
+    return { ok: true, cases: [...validation.cases], source: `${metaPath}#tests` };
+}
+
+export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResult> {
+    const iterations = options.iterations ?? DEFAULT_ITERATIONS;
+    const warmup = options.warmup ?? DEFAULT_WARMUP;
+    const runTimeoutMs = options.runTimeoutMs ?? DEFAULT_RUN_TIMEOUT_MS;
+
+    const meta = loadEnvelope(options.problemDir);
+    const invokeKey = invokeKeyForLane(options.lane);
+    const base: Omit<JudgeResult, 'ok' | 'failureKind' | 'message'> = {
+        slug: meta.id,
+        lane: options.lane,
+        isolation: 'process',
+        protocol: PROTOCOL_VERSION,
+        casesSource: '',
+        casesTotal: 0,
+        defectSkipped: 0,
+        executed: 0,
+        passed: 0,
+        failed: 0,
+        firstFailureIndex: null,
+        runtimeMs: null,
+        iterations,
+        warmup,
+        childPid: null,
+        command: '',
+    };
+    const fail = (failureKind: JudgeFailureKind, message: string, extra?: Partial<JudgeResult>): JudgeResult => ({
+        ...base,
+        ...extra,
+        ok: false,
+        failureKind,
+        message,
+    });
+
+    const invoke = meta.invoke[invokeKey]?.trim();
+    if (!invoke) {
+        return fail('load_failed', `metadata.invoke.${invokeKey} 缺失`);
+    }
+
+    const loaded = await loadCases(options, meta);
+    if (!loaded.ok) {
+        return fail(loaded.failureKind, loaded.message, { casesSource: options.casesPath ?? '' });
+    }
+    const partitioned = partitionCases(loaded.cases);
+    const integerKeys = inferIntegerArgKeys(partitioned.executable);
+
+    let wireCases: RunCase[];
+    try {
+        wireCases = partitioned.executable.map((entry, index) => ({
+            index,
+            args: encodeValue(coerceIntegerArgs(entry.args, integerKeys), `cases[${index}].args`) as Record<string, TaggedValue>,
+        }));
+    } catch (err) {
+        if (err instanceof UnsafeNumberError) {
+            return fail('unsafe_number', err.message, { casesSource: loaded.source, casesTotal: loaded.cases.length });
+        }
+        throw err;
+    }
+
+    const lane = spawnCommand(options.lane);
+    base.command = lane.display;
+    const child = spawn(lane.command, lane.args, { cwd: CONFORMANCE_ROOT, stdio: ['pipe', 'pipe', 'pipe'] });
+    base.childPid = child.pid ?? null;
+
+    let stderrTail = '';
+    child.stderr.on('data', (chunk: Buffer | string) => {
+        stderrTail = `${stderrTail}${String(chunk)}`.slice(-8192);
+    });
+
+    const inbox: SolverMessage[] = [];
+    let exited: { code: number | null; signal: string | null } | null = null;
+    let spawnError: string | null = null;
+    let protocolError: string | null = null;
+    child.on('error', (err) => {
+        spawnError = err.message;
+        exited = { code: null, signal: 'SPAWN_ERROR' };
+    });
+    child.stdin.on('error', () => {
+        // 子进程已退出时 stdin 写失败（EPIPE）属预期路径，由 solver_exit 统一承载。
+    });
+    child.on('exit', (code, signal) => {
+        exited = { code, signal };
+    });
+    child.stdout.on(
+        'data',
+        createLineAssembler((line) => {
+            try {
+                inbox.push(decodeLine(line) as SolverMessage);
+            } catch (err) {
+                protocolError = err instanceof ProtocolDecodeError ? err.message : String(err);
+            }
+        }),
+    );
+
+    const send = (message: JudgeMessage): void => {
+        try {
+            child.stdin.write(encodeLine(message));
+        } catch {
+            // 子进程已断开；后续 waitFor 观察到 exited 后按 solver_exit 结构化失败。
+        }
+    };
+
+    const waitFor = async (predicate: (message: SolverMessage) => boolean, timeoutMs: number): Promise<SolverMessage | null> => {
+        const started = Date.now();
+        for (;;) {
+            if (protocolError !== null) {
+                throw new ProtocolDecodeError(protocolError);
+            }
+            const index = inbox.findIndex(predicate);
+            if (index >= 0) {
+                return inbox.splice(index, 1)[0]!;
+            }
+            if (exited !== null) {
+                return null;
+            }
+            if (Date.now() - started > timeoutMs) {
+                return null;
+            }
+            await new Promise((resolve) => setTimeout(resolve, 5));
+        }
+    };
+
+    const cleanup = async (): Promise<void> => {
+        try {
+            if (exited === null) {
+                send({ type: 'bye' });
+                await new Promise((resolve) => setTimeout(resolve, 200));
+            }
+        } catch {
+            // 子进程已断开
+        }
+        if (exited === null) {
+            child.kill();
+        }
+    };
+
+    const exitDescription = (): string => {
+        const spawnNote = spawnError !== null ? `spawn 失败：${spawnError}；` : '';
+        const suffix = stderrTail.trim().length > 0 ? `；stderr 尾部：${stderrTail.trim().slice(-500)}` : '';
+        return `${spawnNote}解法子进程异常退出（code=${exited?.code ?? 'null'} signal=${exited?.signal ?? 'null'}）${suffix}`;
+    };
+
+    try {
+        send({ type: 'load', invoke, solution: solutionPathForLane(options), artifactDir: options.artifactDir });
+        const ready = await waitFor((message) => message.type === 'ready' || message.type === 'error', 60_000);
+        if (ready === null) {
+            const kind = exited !== null ? 'solver_exit' : 'solver_timeout';
+            return fail(kind, exited !== null ? exitDescription() : 'load 阶段超时', { casesSource: loaded.source, casesTotal: loaded.cases.length });
+        }
+        if (ready.type === 'error') {
+            return fail('load_failed', ready.message, { casesSource: loaded.source, casesTotal: loaded.cases.length });
+        }
+        const returnsAbi = (ready.returnsAbi ?? null) as WasmAbiType | null;
+
+        send({ type: 'run', warmup, iterations, cases: wireCases });
+        let done: SolverMessage | null;
+        try {
+            done = await waitFor((message) => message.type === 'done' || message.type === 'error', runTimeoutMs);
+        } catch (err) {
+            if (err instanceof ProtocolDecodeError) {
+                return fail('protocol_error', err.message, { casesSource: loaded.source, casesTotal: loaded.cases.length });
+            }
+            throw err;
+        }
+        if (done === null) {
+            if (exited !== null) {
+                return fail('solver_exit', exitDescription(), { casesSource: loaded.source, casesTotal: loaded.cases.length });
+            }
+            child.kill();
+            return fail('solver_timeout', `run 阶段超过 ${runTimeoutMs}ms 未回包，已终止子进程`, {
+                casesSource: loaded.source,
+                casesTotal: loaded.cases.length,
+            });
+        }
+        if (done.type === 'error') {
+            return fail('solver_error', done.message, { casesSource: loaded.source, casesTotal: loaded.cases.length });
+        }
+
+        let passed = 0;
+        let firstFailureIndex: number | null = null;
+        let firstFailure: string | null = null;
+        for (const outcome of done.results) {
+            const entry = partitioned.executable[outcome.index]!;
+            const expectedRaw = normalizeTsTestResult(entry.expected);
+            try {
+                if (options.lane === 'valkyrie') {
+                    assertValkyrieOutcome(outcome, expectedRaw, returnsAbi);
+                } else {
+                    assertManagedOutcome(outcome, expectedRaw);
+                }
+                passed += 1;
+            } catch (err) {
+                firstFailureIndex = outcome.index;
+                firstFailure = err instanceof Error ? err.message : String(err);
+                break;
+            }
+        }
+
+        const failed = done.results.length - passed;
+        return {
+            ...base,
+            ok: failed === 0,
+            failureKind: failed === 0 ? null : 'assert_failed',
+            message: firstFailure,
+            casesSource: loaded.source,
+            casesTotal: loaded.cases.length,
+            defectSkipped: partitioned.defect.length,
+            executed: done.results.length,
+            passed,
+            failed,
+            firstFailureIndex,
+            runtimeMs: done.samples.length > 0 ? median(done.samples) : null,
+        };
+    } catch (err) {
+        if (err instanceof ProtocolDecodeError) {
+            return fail('protocol_error', err.message, { casesSource: loaded.source, casesTotal: loaded.cases.length });
+        }
+        throw err;
+    } finally {
+        await cleanup();
+    }
+}
+
+function solutionPathForLane(options: JudgeOptions): string | undefined {
+    if (options.lane === 'python') {
+        return join(options.problemDir, 'solvers', 'python', 'solution.py');
+    }
+    if (options.lane === 'valkyrie') {
+        return undefined;
+    }
+    return join(options.problemDir, 'solvers', 'typescript', 'solution.ts');
+}
+
+/** TS/Python lane：解法异常与 `Error:` 期望按既有 `assertTestCase` 口径比对。 */
+function assertManagedOutcome(outcome: CaseOutcome, expected: unknown): void {
+    if (!outcome.ok) {
+        if (typeof expected === 'string' && expected.startsWith('Error:')) {
+            const actual = `Error: ${outcome.error}`;
+            if (actual === expected) {
+                return;
+            }
+            throw new Error(`tests[${outcome.index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+        }
+        throw new Error(`tests[${outcome.index}]: 解法抛错 ${outcome.error}`);
+    }
+    const value = decodeValue(outcome.value, `tests[${outcome.index}].result`);
+    assertTestCase(outcome.index, expected, () => value);
+}
+
+/** valkyrie lane：按 ABI 返回类型把期望值同样规整为十进制文本后结构比较（对齐 `run_v_solver.ts`）。 */
+function assertValkyrieOutcome(outcome: CaseOutcome, expected: unknown, returnsAbi: WasmAbiType | null): void {
+    if (!outcome.ok) {
+        if (typeof expected === 'string' && expected.startsWith('Error:')) {
+            const actual = `Error: ${outcome.error}`;
+            if (actual === expected) {
+                return;
+            }
+            throw new Error(`tests[${outcome.index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+        }
+        throw new Error(`tests[${outcome.index}]: 解法抛错 ${outcome.error}`);
+    }
+    const actual = decodeValue(outcome.value, `tests[${outcome.index}].result`);
+    const normalizedExpected = returnsAbi ? normalizeResultByAbiType(expected, returnsAbi) : expected;
+    if (JSON.stringify(actual) !== JSON.stringify(normalizedExpected)) {
+        throw new Error(`tests[${outcome.index}]: expected ${JSON.stringify(normalizedExpected)}, got ${JSON.stringify(actual)}`);
+    }
+}
