@@ -253,6 +253,7 @@
     ],
     "invoke": {
         "python": "Solution().checkRecord",
-        "typescript": "Solution().checkRecord"
+        "typescript": "Solution().checkRecord",
+        "valkyrie": "Solution().checkRecord"
     }
 }
