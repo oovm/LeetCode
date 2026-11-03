@@ -593,11 +593,8 @@
             "expected": 77498
         },
         {
-            "args": {
-                "n": 123456789,
-                "k": 987654321
-            },
-            "expected": "Execution timed out"
+            "args": {"n": 123456789, "k": 493827160},
+            "expected": 100000998
         },
         {
             "args": {

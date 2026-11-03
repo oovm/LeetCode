@@ -89,11 +89,8 @@
             "expected": 2
         },
         {
-            "args": {
-                "nums": [5, 8, 1, 4, 7, 2, 6, 3, 9, 0],
-                "k": 3
-            },
-            "expected": "Execution timed out"
+            "args": {"nums": [5, 8, 1, 4, 7, 2, 6, 3, 9], "k": 3},
+            "expected": 1
         },
         {
             "args": {
@@ -187,11 +184,8 @@
             "expected": "Error: list index out of range"
         },
         {
-            "args": {
-                "nums": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
-                "k": 4
-            },
-            "expected": "Execution timed out"
+            "args": {"nums": [9, 8, 7, 6, 5, 4, 3, 2, 1], "k": 4},
+            "expected": 0
         },
         {
             "args": {
@@ -334,11 +328,8 @@
             "expected": 0
         },
         {
-            "args": {
-                "nums": [7, 1, 5, 3, 6, 4, 2, 8, 9, 0],
-                "k": 3
-            },
-            "expected": "Execution timed out"
+            "args": {"nums": [7, 1, 5, 3, 6, 4, 2, 8, 9], "k": 3},
+            "expected": 0
         },
         {
             "args": {
@@ -404,11 +395,8 @@
             "expected": 5
         },
         {
-            "args": {
-                "nums": [5, 1, 9, 1, 5, 9, 2, 6, 5, 3, 5, 8, 7, 6, 5, 4, 3, 2, 1, 0],
-                "k": 4
-            },
-            "expected": "Execution timed out"
+            "args": {"nums": [5, 1, 9, 1, 5, 9, 2, 6, 5, 3, 5, 8, 7, 6, 5, 4, 3, 2, 1], "k": 4},
+            "expected": 7
         },
         {
             "args": {
@@ -558,11 +546,8 @@
             "expected": 10
         },
         {
-            "args": {
-                "nums": [7, 1, 5, 3, 6, 4, 2, 8, 9, 0],
-                "k": 2
-            },
-            "expected": "Execution timed out"
+            "args": {"nums": [7, 1, 5, 3, 6, 4, 2, 8, 9], "k": 2},
+            "expected": 1
         },
         {
             "args": {

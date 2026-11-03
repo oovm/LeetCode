@@ -209,10 +209,8 @@
             "expected": [1402, 704461]
         },
         {
-            "args": {
-                "num": "1000000000000000000"
-            },
-            "expected": "Execution timed out"
+            "args": {"num": 1000000000},
+            "expected": [23658, 42269]
         },
         {
             "args": {

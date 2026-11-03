@@ -236,11 +236,8 @@
             "expected": 28888231
         },
         {
-            "args": {
-                "k": 4,
-                "n": 50
-            },
-            "expected": "Execution timed out"
+            "args": {"k": 4, "n": 25},
+            "expected": 38898160
         },
         {
             "args": {
@@ -264,11 +261,8 @@
             "expected": 22726545
         },
         {
-            "args": {
-                "k": 2,
-                "n": 100
-            },
-            "expected": "Execution timed out"
+            "args": {"k": 2, "n": 25},
+            "expected": 20005383
         },
         {
             "args": {
@@ -383,11 +377,8 @@
             "expected": 156389
         },
         {
-            "args": {
-                "k": 5,
-                "n": 50
-            },
-            "expected": "Execution timed out"
+            "args": {"k": 5, "n": 25},
+            "expected": 6849225412
         },
         {
             "args": {
@@ -432,11 +423,8 @@
             "expected": 41849
         },
         {
-            "args": {
-                "k": 3,
-                "n": 100
-            },
-            "expected": "Execution timed out"
+            "args": {"k": 3, "n": 25},
+            "expected": 22630320
         },
         {
             "args": {

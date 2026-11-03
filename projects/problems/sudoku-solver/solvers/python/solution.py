@@ -1,6 +1,5 @@
 import heapq
 import itertools
-from sortedcontainers import SortedList
 import random
 import functools
 import collections
@@ -80,31 +79,46 @@ def is_same_tree(p, q):
 
 class Solution:
     def solveSudoku(self, board: List[List[str]]) -> None:
-        def dfs(k):
-            nonlocal ok
-            if k == len(t):
-                ok = True
-                return
-            i, j = t[k]
-            for v in range(9):
-                if row[i][v] == col[j][v] == block[i // 3][j // 3][v] == False:
-                    row[i][v] = col[j][v] = block[i // 3][j // 3][v] = True
-                    board[i][j] = str(v + 1)
-                    dfs(k + 1)
-                    row[i][v] = col[j][v] = block[i // 3][j // 3][v] = False
-                if ok:
-                    return
-
+        # 最少候选优先的回溯：与逐格顺序 DFS 同语义，保证硬实例可终止。
         row = [[False] * 9 for _ in range(9)]
         col = [[False] * 9 for _ in range(9)]
         block = [[[False] * 9 for _ in range(3)] for _ in range(3)]
-        t = []
-        ok = False
+        empties = []
         for i in range(9):
             for j in range(9):
                 if board[i][j] == '.':
-                    t.append((i, j))
+                    empties.append((i, j))
                 else:
                     v = int(board[i][j]) - 1
                     row[i][v] = col[j][v] = block[i // 3][j // 3][v] = True
-        dfs(0)
+
+        def dfs() -> bool:
+            best = None
+            best_opts: list[int] | None = None
+            for i, j in empties:
+                if board[i][j] != '.':
+                    continue
+                opts = [
+                    v
+                    for v in range(9)
+                    if not (row[i][v] or col[j][v] or block[i // 3][j // 3][v])
+                ]
+                if not opts:
+                    return False
+                if best_opts is None or len(opts) < len(best_opts):
+                    best, best_opts = (i, j), opts
+                    if len(opts) == 1:
+                        break
+            if best is None:
+                return True
+            i, j = best
+            for v in best_opts:
+                row[i][v] = col[j][v] = block[i // 3][j // 3][v] = True
+                board[i][j] = str(v + 1)
+                if dfs():
+                    return True
+                row[i][v] = col[j][v] = block[i // 3][j // 3][v] = False
+                board[i][j] = '.'
+            return False
+
+        dfs()

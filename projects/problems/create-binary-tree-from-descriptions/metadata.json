@@ -987,23 +987,8 @@
             "expected": [30, 20, 40, 10, null, null, 50, 5, null, null, 60, 2]
         },
         {
-            "args": {
-                "descriptions": [
-                    [99, 66, 1],
-                    [99, 33, 0],
-                    [66, 33, 1],
-                    [66, 22, 0],
-                    [33, 11, 1],
-                    [33, 44, 0],
-                    [22, 77, 1],
-                    [22, 88, 0],
-                    [11, 55, 1],
-                    [11, 66, 0],
-                    [44, 22, 1],
-                    [44, 33, 0]
-                ]
-            },
-            "expected": "Execution timed out"
+            "args": {"descriptions": [[99, 66, 1], [99, 33, 0], [66, 22, 0], [33, 11, 1], [33, 44, 0], [22, 77, 1], [22, 88, 0], [11, 55, 1]]},
+            "expected": [99, 66, 33, null, 22, 11, 44, 77, 88, 55]
         },
         {
             "args": {
@@ -1116,7 +1101,7 @@
         }
     ],
     "invoke": {
-        "python": "Solution().createBinaryTree",
+        "python": "Solution().createBinaryTreeAsList",
         "typescript": "Solution().createBinaryTree"
     }
 }

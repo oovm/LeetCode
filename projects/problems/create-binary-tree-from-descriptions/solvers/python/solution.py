@@ -97,3 +97,20 @@ class Solution:
                 nodes[parent].right = nodes[child]
         root = (set(nodes.keys()) - children).pop()
         return nodes[root]
+
+    def createBinaryTreeAsList(self, descriptions: List[List[int]]) -> List[Optional[int]]:
+        # 层序数组序列化（裁掉末尾 null），与 metadata 的期望形态一致。
+        root = self.createBinaryTree(descriptions)
+        out: List[Optional[int]] = []
+        queue = deque([root])
+        while queue:
+            node = queue.popleft()
+            if node is None:
+                out.append(None)
+                continue
+            out.append(node.val)
+            queue.append(node.left)
+            queue.append(node.right)
+        while out and out[-1] is None:
+            out.pop()
+        return out
