@@ -2,7 +2,10 @@
     "id": "single-row-keyboard",
     "questionId": 1165,
     "difficulty": "Easy",
-    "tags": ["Hash Table", "String"],
+    "tags": [
+        "Hash Table",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -139,13 +142,6 @@
         },
         {
             "args": {
-                "keyboard": "vbnm,./asdfghjkl;'qwertyuiop[]",
-                "word": "datastructures"
-            },
-            "expected": "Error: 'c'"
-        },
-        {
-            "args": {
                 "keyboard": "abcdefghijklmnopqrstuvwxyz",
                 "word": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
             },
@@ -206,13 +202,6 @@
                 "word": "exponentially"
             },
             "expected": 114
-        },
-        {
-            "args": {
-                "keyboard": "qwrtypsdfghjklzxcvbnm",
-                "word": "rhythmically"
-            },
-            "expected": "Error: 'i'"
         },
         {
             "args": {
@@ -369,10 +358,6 @@
             "expected": 25
         },
         {
-            "args": {},
-            "expected": "Error: Solution.calculateTime() missing 2 required positional arguments: 'keyboard' and 'word'"
-        },
-        {
             "args": {
                 "keyboard": "vbnm,asdfghjklpoiuytrewqzxc",
                 "word": "elephant"
@@ -427,10 +412,6 @@
                 "word": "supercalifragilisticexpialidocious"
             },
             "expected": 293
-        },
-        {
-            "args": {},
-            "expected": "Error: Solution.calculateTime() missing 2 required positional arguments: 'keyboard' and 'word'"
         },
         {
             "args": {
@@ -494,13 +475,6 @@
                 "word": "floccinaucinihilipilification"
             },
             "expected": 330
-        },
-        {
-            "args": {
-                "keyboard": "yuiophjklnmxcvzawdsertgbq",
-                "word": "abcdefghijklmnopqrstuvwxyzzzyxwvutsrqponmlkjihgfedcba"
-            },
-            "expected": "Error: 'f'"
         },
         {
             "args": {
@@ -606,13 +580,6 @@
                 "word": "floccinaucinihilipilification"
             },
             "expected": 242
-        },
-        {
-            "args": {
-                "keyboard": "fedcbaonmlkjihgtsrqpzyxwvu",
-                "word": "1234567890"
-            },
-            "expected": "Error: '1'"
         },
         {
             "args": {

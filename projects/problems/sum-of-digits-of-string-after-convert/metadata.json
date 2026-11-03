@@ -2,7 +2,10 @@
     "id": "sum-of-digits-of-string-after-convert",
     "questionId": 1945,
     "difficulty": "Easy",
-    "tags": ["String", "Simulation"],
+    "tags": [
+        "String",
+        "Simulation"
+    ],
     "tests": [
         {
             "args": {
@@ -248,13 +251,6 @@
                 "k": 9
             },
             "expected": 2
-        },
-        {
-            "args": {
-                "s": "mixedcaseLOWER",
-                "k": 3
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-'"
         },
         {
             "args": {

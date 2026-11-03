@@ -2,7 +2,10 @@
     "id": "reverse-only-letters",
     "questionId": 917,
     "difficulty": "Easy",
-    "tags": ["Two Pointers", "String"],
+    "tags": [
+        "Two Pointers",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -38,7 +41,7 @@
             "args": {
                 "s": "12345"
             },
-            "expected": 12345
+            "expected": "12345"
         },
         {
             "args": {
@@ -446,7 +449,7 @@
             "args": {
                 "s": "1234567890"
             },
-            "expected": 1234567890
+            "expected": "1234567890"
         },
         {
             "args": {

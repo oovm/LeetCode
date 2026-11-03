@@ -2,32 +2,12 @@
     "id": "maximum-difference-between-even-and-odd-frequency-i",
     "questionId": 3442,
     "difficulty": "Easy",
-    "tags": ["Hash Table", "String", "Counting"],
+    "tags": [
+        "Hash Table",
+        "String",
+        "Counting"
+    ],
     "tests": [
-        {
-            "args": {
-                "s": "pqrstuvwabcdef"
-            },
-            "expected": "-inf"
-        },
-        {
-            "args": {
-                "s": "mnopqrstuvwxyza"
-            },
-            "expected": "-inf"
-        },
-        {
-            "args": {
-                "s": "abcdefghijklmnopqrstuvwxyz"
-            },
-            "expected": "-inf"
-        },
-        {
-            "args": {
-                "s": "abcdefghi"
-            },
-            "expected": "-inf"
-        },
         {
             "args": {
                 "s": "abacabadabacaba"
@@ -54,12 +34,6 @@
         },
         {
             "args": {
-                "s": "abcdefghijklmnopqrstuvwxyzaa"
-            },
-            "expected": "-inf"
-        },
-        {
-            "args": {
                 "s": "aabbccdde"
             },
             "expected": -1
@@ -69,12 +43,6 @@
                 "s": "aabbccddeeffg"
             },
             "expected": -1
-        },
-        {
-            "args": {
-                "s": "xyzxyzxyz"
-            },
-            "expected": "-inf"
         },
         {
             "args": {
@@ -102,12 +70,6 @@
         },
         {
             "args": {
-                "s": "aaabbbcccdddeeefffggghhhiiijjjkkklllmmmnnnooopppqqqrrrssstttuuuvvvwwwxxxyyyzzz"
-            },
-            "expected": "-inf"
-        },
-        {
-            "args": {
                 "s": "zzzzzzzzzzyyyyxxwwvvuuttssrrqqppoonnmmlkkjjiihhggffeeddccbbaa"
             },
             "expected": -1
@@ -117,12 +79,6 @@
                 "s": "qqqqwwwweeeerrrrtttt"
             },
             "expected": -4
-        },
-        {
-            "args": {
-                "s": "xyzxyzxyzxyzxyz"
-            },
-            "expected": "-inf"
         },
         {
             "args": {
@@ -291,12 +247,6 @@
                 "s": "zzzzzzzzzyyyyyyyyxxxxxwwwwwvvvvvuuuuuttttssssrrrrqqqqppppooooonnnnmmmm"
             },
             "expected": 5
-        },
-        {
-            "args": {
-                "s": "abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij"
-            },
-            "expected": "-inf"
         }
     ],
     "invoke": {

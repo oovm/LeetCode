@@ -2,25 +2,15 @@
     "id": "rearrange-spaces-between-words",
     "questionId": 1592,
     "difficulty": "Easy",
-    "tags": ["String"],
+    "tags": [
+        "String"
+    ],
     "tests": [
-        {
-            "args": {
-                "text": "  leading and trailing spaces  "
-            },
-            "expected": "leading  and  trailing  spaces"
-        },
         {
             "args": {
                 "text": "one"
             },
             "expected": "one"
-        },
-        {
-            "args": {
-                "text": "  a  "
-            },
-            "expected": "a"
         },
         {
             "args": {
@@ -54,39 +44,9 @@
         },
         {
             "args": {
-                "text": "  multiple    spaces  here "
-            },
-            "expected": "multiple    spaces    here"
-        },
-        {
-            "args": {
-                "text": "the    quick brown   fox"
-            },
-            "expected": "the  quick  brown  fox"
-        },
-        {
-            "args": {
-                "text": "    a    "
-            },
-            "expected": "a"
-        },
-        {
-            "args": {
-                "text": "uneven    spacing in   text"
-            },
-            "expected": "uneven  spacing  in  text"
-        },
-        {
-            "args": {
                 "text": "  hello world  "
             },
             "expected": "hello     world"
-        },
-        {
-            "args": {
-                "text": " practice   makes   perfect"
-            },
-            "expected": "practice   makes   perfect"
         },
         {
             "args": {
@@ -108,21 +68,9 @@
         },
         {
             "args": {
-                "text": "  one    two  three four "
-            },
-            "expected": "one   two   three   four"
-        },
-        {
-            "args": {
                 "text": "a b"
             },
             "expected": "a b"
-        },
-        {
-            "args": {
-                "text": "  welcome to  the jungle "
-            },
-            "expected": "welcome  to  the  jungle"
         },
         {
             "args": {
@@ -174,39 +122,9 @@
         },
         {
             "args": {
-                "text": "  spaces  before  and  after  and  in  between  "
-            },
-            "expected": "spaces  before  and  after  and  in  between"
-        },
-        {
-            "args": {
                 "text": "equal   spaces   should   be   here"
             },
             "expected": "equal   spaces   should   be   here"
-        },
-        {
-            "args": {
-                "text": "   spaces before and after and    in between    "
-            },
-            "expected": "spaces  before  and  after  and  in  between"
-        },
-        {
-            "args": {
-                "text": "spaces at the beginning and end      of the sentence"
-            },
-            "expected": "spaces at the beginning and end of the sentence"
-        },
-        {
-            "args": {
-                "text": "   uneven   spaces   distribution   is   tricky   "
-            },
-            "expected": "uneven    spaces    distribution    is    tricky"
-        },
-        {
-            "args": {
-                "text": "               a"
-            },
-            "expected": "a"
         },
         {
             "args": {
@@ -234,12 +152,6 @@
         },
         {
             "args": {
-                "text": "a  b   c    d     e"
-            },
-            "expected": "a   b   c   d   e"
-        },
-        {
-            "args": {
                 "text": "   equal    spacing    here "
             },
             "expected": "equal      spacing      here"
@@ -264,12 +176,6 @@
         },
         {
             "args": {
-                "text": "     singlewordwithmanyspacesbeforeandafterspaces      "
-            },
-            "expected": "singlewordwithmanyspacesbeforeandafterspaces"
-        },
-        {
-            "args": {
                 "text": "one two three four five six seven eight nine ten"
             },
             "expected": "one two three four five six seven eight nine ten"
@@ -279,12 +185,6 @@
                 "text": "tiny gaps"
             },
             "expected": "tiny gaps"
-        },
-        {
-            "args": {
-                "text": "   one   two   three   four   five   six   seven   eight   nine   ten   "
-            },
-            "expected": "one   two   three   four   five   six   seven   eight   nine   ten"
         },
         {
             "args": {
@@ -312,33 +212,9 @@
         },
         {
             "args": {
-                "text": "this is a test with multiple     spaces"
-            },
-            "expected": "this is a test with multiple spaces"
-        },
-        {
-            "args": {
-                "text": " one  two three four five six seven eight nine ten "
-            },
-            "expected": "one two three four five six seven eight nine ten"
-        },
-        {
-            "args": {
                 "text": "leading         oneword"
             },
             "expected": "leading         oneword"
-        },
-        {
-            "args": {
-                "text": "many       spaces      in      the      middle"
-            },
-            "expected": "many      spaces      in      the      middle"
-        },
-        {
-            "args": {
-                "text": "  singleword  "
-            },
-            "expected": "singleword"
         },
         {
             "args": {
@@ -354,33 +230,9 @@
         },
         {
             "args": {
-                "text": "  uneven    spacing   in    this   sentence  "
-            },
-            "expected": "uneven    spacing    in    this    sentence"
-        },
-        {
-            "args": {
-                "text": "    verylongwordwithnospaces    "
-            },
-            "expected": "verylongwordwithnospaces"
-        },
-        {
-            "args": {
-                "text": "     multiple        spaces      between     words    "
-            },
-            "expected": "multiple         spaces         between         words"
-        },
-        {
-            "args": {
                 "text": "equal equal equal equal"
             },
             "expected": "equal equal equal equal"
-        },
-        {
-            "args": {
-                "text": "a very long sentence with multiple    spaces between words to test the algorithm"
-            },
-            "expected": "a very long sentence with multiple spaces between words to test the algorithm"
         },
         {
             "args": {
@@ -390,63 +242,15 @@
         },
         {
             "args": {
-                "text": "words     with     uneven      spaces"
-            },
-            "expected": "words     with     uneven     spaces"
-        },
-        {
-            "args": {
-                "text": "      many        spaces      around        each    word      "
-            },
-            "expected": "many         spaces         around         each         word"
-        },
-        {
-            "args": {
-                "text": "spaces   at   the   beginning   and   the   end   "
-            },
-            "expected": "spaces   at   the   beginning   and   the   end"
-        },
-        {
-            "args": {
-                "text": "   multiple     spaces     between     words    "
-            },
-            "expected": "multiple       spaces       between       words"
-        },
-        {
-            "args": {
-                "text": "  onewordwithspacesonbothends"
-            },
-            "expected": "onewordwithspacesonbothends"
-        },
-        {
-            "args": {
                 "text": "equal    spaces    between    words"
             },
             "expected": "equal    spaces    between    words"
         },
         {
             "args": {
-                "text": "uneven    spacing between     words"
-            },
-            "expected": "uneven   spacing   between   words"
-        },
-        {
-            "args": {
                 "text": "spaces    at    the    beginning    and    end    spaces"
             },
             "expected": "spaces    at    the    beginning    and    end    spaces"
-        },
-        {
-            "args": {
-                "text": "    a    b    c    d    e    f    g    "
-            },
-            "expected": "a     b     c     d     e     f     g"
-        },
-        {
-            "args": {
-                "text": "lastwordwithaspaceattheend "
-            },
-            "expected": "lastwordwithaspaceattheend"
         },
         {
             "args": {
@@ -474,12 +278,6 @@
         },
         {
             "args": {
-                "text": "equal spaces   should   be   here"
-            },
-            "expected": "equal  spaces  should  be  here"
-        },
-        {
-            "args": {
                 "text": "a b c d e f g"
             },
             "expected": "a b c d e f g"
@@ -489,12 +287,6 @@
                 "text": "one twothree four five six seven"
             },
             "expected": "one twothree four five six seven"
-        },
-        {
-            "args": {
-                "text": "   onebigwordwith  manyspaces   and  a few   words"
-            },
-            "expected": "onebigwordwith  manyspaces  and  a  few  words"
         },
         {
             "args": {
@@ -510,33 +302,9 @@
         },
         {
             "args": {
-                "text": "     spacesatthestart"
-            },
-            "expected": "spacesatthestart"
-        },
-        {
-            "args": {
-                "text": "    one    two    three    four    five    six    seven    eight    nine    ten    eleven    twelve    thirteen    fourteen    fifteen"
-            },
-            "expected": "one    two    three    four    five    six    seven    eight    nine    ten    eleven    twelve    thirteen    fourteen    fifteen"
-        },
-        {
-            "args": {
-                "text": "spacesattheend     "
-            },
-            "expected": "spacesattheend"
-        },
-        {
-            "args": {
                 "text": "many   many   many   spaces"
             },
             "expected": "many   many   many   spaces"
-        },
-        {
-            "args": {
-                "text": "    multiple      spaces     between words    "
-            },
-            "expected": "multiple      spaces      between      words"
         },
         {
             "args": {
@@ -552,30 +320,6 @@
         },
         {
             "args": {
-                "text": "   extra    spaces   should    go    to    the    end"
-            },
-            "expected": "extra    spaces    should    go    to    the    end"
-        },
-        {
-            "args": {
-                "text": "     a     b     c     d     "
-            },
-            "expected": "a        b        c        d"
-        },
-        {
-            "args": {
-                "text": "                             singlewordwithmanyspaces"
-            },
-            "expected": "singlewordwithmanyspaces"
-        },
-        {
-            "args": {
-                "text": "averylongword   with  spaces"
-            },
-            "expected": "averylongword  with  spaces"
-        },
-        {
-            "args": {
                 "text": "equal spaces between words"
             },
             "expected": "equal spaces between words"
@@ -588,12 +332,6 @@
         },
         {
             "args": {
-                "text": "    singleword    "
-            },
-            "expected": "singleword"
-        },
-        {
-            "args": {
                 "text": "beginning spaces are    here"
             },
             "expected": "beginning  spaces  are  here"
@@ -603,12 +341,6 @@
                 "text": "justoneverylongwordwithoutspaces"
             },
             "expected": "justoneverylongwordwithoutspaces"
-        },
-        {
-            "args": {
-                "text": "    a    b    c    d    e    f    g    h    i    j    "
-            },
-            "expected": "a    b    c    d    e    f    g    h    i    j"
         },
         {
             "args": {
@@ -642,45 +374,15 @@
         },
         {
             "args": {
-                "text": "multiple    spaces   between    words"
-            },
-            "expected": "multiple   spaces   between   words"
-        },
-        {
-            "args": {
                 "text": "singleword"
             },
             "expected": "singleword"
         },
         {
             "args": {
-                "text": "onewordwithspacesonbothends  "
-            },
-            "expected": "onewordwithspacesonbothends"
-        },
-        {
-            "args": {
-                "text": "uneven    spaces at the end"
-            },
-            "expected": "uneven spaces at the end"
-        },
-        {
-            "args": {
                 "text": "shorttext"
             },
             "expected": "shorttext"
-        },
-        {
-            "args": {
-                "text": " firstwordwithaspaceatthebeginning"
-            },
-            "expected": "firstwordwithaspaceatthebeginning"
-        },
-        {
-            "args": {
-                "text": "singlewordwithmanyspaces                               "
-            },
-            "expected": "singlewordwithmanyspaces"
         },
         {
             "args": {
@@ -708,57 +410,9 @@
         },
         {
             "args": {
-                "text": "just     one    word    but    many    spaces"
-            },
-            "expected": "just    one    word    but    many    spaces"
-        },
-        {
-            "args": {
-                "text": "a               "
-            },
-            "expected": "a"
-        },
-        {
-            "args": {
-                "text": "    spaces    at    the    beginning    and    the    end    "
-            },
-            "expected": "spaces     at     the     beginning     and     the     end"
-        },
-        {
-            "args": {
-                "text": " spaces at the end of the sentence    "
-            },
-            "expected": "spaces at the end of the sentence"
-        },
-        {
-            "args": {
                 "text": "a    single    word    surrounded    by    spaces"
             },
             "expected": "a    single    word    surrounded    by    spaces"
-        },
-        {
-            "args": {
-                "text": "    "
-            },
-            "expected": ""
-        },
-        {
-            "args": {
-                "text": "    multiple    spaces    between    words    "
-            },
-            "expected": "multiple      spaces      between      words"
-        },
-        {
-            "args": {
-                "text": "  word  with  multiple  spaces  in  between  words  "
-            },
-            "expected": "word  with  multiple  spaces  in  between  words"
-        },
-        {
-            "args": {
-                "text": "      justone      "
-            },
-            "expected": "justone"
         },
         {
             "args": {
@@ -768,21 +422,9 @@
         },
         {
             "args": {
-                "text": "     multiple      spaces      between      words     "
-            },
-            "expected": "multiple         spaces         between         words"
-        },
-        {
-            "args": {
                 "text": "just   one   more   test   case"
             },
             "expected": "just   one   more   test   case"
-        },
-        {
-            "args": {
-                "text": "a    b c   d e    f g"
-            },
-            "expected": "a  b  c  d  e  f  g"
         },
         {
             "args": {
@@ -807,12 +449,6 @@
                 "text": "multiple    spaces    between    words"
             },
             "expected": "multiple    spaces    between    words"
-        },
-        {
-            "args": {
-                "text": "multiple   spaces    between    words"
-            },
-            "expected": "multiple   spaces   between   words"
         }
     ],
     "invoke": {

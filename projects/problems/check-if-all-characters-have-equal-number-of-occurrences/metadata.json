@@ -2,7 +2,11 @@
     "id": "check-if-all-characters-have-equal-number-of-occurrences",
     "questionId": 1941,
     "difficulty": "Easy",
-    "tags": ["Hash Table", "String", "Counting"],
+    "tags": [
+        "Hash Table",
+        "String",
+        "Counting"
+    ],
     "tests": [
         {
             "args": {
@@ -57,12 +61,6 @@
                 "s": "abc"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "s": ""
-            },
-            "expected": false
         },
         {
             "args": {

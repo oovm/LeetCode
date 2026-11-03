@@ -2,7 +2,9 @@
     "id": "reformat-the-string",
     "questionId": 1417,
     "difficulty": "Easy",
-    "tags": ["String"],
+    "tags": [
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -206,7 +208,7 @@
             "args": {
                 "s": "1"
             },
-            "expected": 1
+            "expected": "1"
         },
         {
             "args": {

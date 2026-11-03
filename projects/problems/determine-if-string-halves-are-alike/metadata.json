@@ -2,14 +2,11 @@
     "id": "determine-if-string-halves-are-alike",
     "questionId": 1704,
     "difficulty": "Easy",
-    "tags": ["String", "Counting"],
+    "tags": [
+        "String",
+        "Counting"
+    ],
     "tests": [
-        {
-            "args": {
-                "s": "UFO"
-            },
-            "expected": false
-        },
         {
             "args": {
                 "s": "aAeEiIoOuU"
@@ -19,24 +16,6 @@
         {
             "args": {
                 "s": "Leetcode"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "abcdefgihjklmno"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "Regal"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "Reinholdmes"
             },
             "expected": true
         },
@@ -60,12 +39,6 @@
         },
         {
             "args": {
-                "s": "pYthOnPrOgRaMmInG"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "AaEeIiOoUu"
             },
             "expected": true
@@ -73,30 +46,6 @@
         {
             "args": {
                 "s": "leetcode"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "Eve"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "racecar"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "VoIcE"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "Madam"
             },
             "expected": true
         },
@@ -120,25 +69,7 @@
         },
         {
             "args": {
-                "s": "Uncopyrightable"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "DAD"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "MerryChristmas"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "ComputerScience"
             },
             "expected": false
         },
@@ -174,25 +105,7 @@
         },
         {
             "args": {
-                "s": "LyoPHiNiC"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "VowelCOnsonAnt"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "SyNtHeSiS"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "CoMpUterScIeNcE"
             },
             "expected": false
         },
@@ -201,12 +114,6 @@
                 "s": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "s": "Pneumonoultramicroscopicsilicovolcanoconiosis"
-            },
-            "expected": false
         },
         {
             "args": {
@@ -222,12 +129,6 @@
         },
         {
             "args": {
-                "s": "Supercalifragilisticexpialidocioussuper"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "EqUiVaLeNt"
             },
             "expected": false
@@ -240,25 +141,7 @@
         },
         {
             "args": {
-                "s": "MachineLearning"
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "s": "QuantumComputing"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "Pneumonoultramicroscopicsilicovolcanoconioses"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "DeViScIoN"
             },
             "expected": true
         },
@@ -270,31 +153,7 @@
         },
         {
             "args": {
-                "s": "CoRaL"
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "s": "Internationalization"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "CaSeInSeNsItIvE"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "EvEnAnDdOuD"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "CoMpLeX"
             },
             "expected": true
         },
@@ -330,24 +189,6 @@
         },
         {
             "args": {
-                "s": "OpenAIChatGPT"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "Incomprehensibility"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "ThEoReTiCaL"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "VoWaElCoUnTiNg"
             },
             "expected": true
@@ -366,18 +207,6 @@
         },
         {
             "args": {
-                "s": "Honorificabilitudinitatibus"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "ConsonantsToo"
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "s": "abcdefghijABCDEFGHIJ"
             },
             "expected": true
@@ -385,12 +214,6 @@
         {
             "args": {
                 "s": "METHINKSITISLIKEALITTLEIODEUCALYPTUS"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "Alphabetization"
             },
             "expected": false
         },
@@ -420,12 +243,6 @@
         },
         {
             "args": {
-                "s": "MississippiRiverOdd"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "RoMaNiCa"
             },
             "expected": true
@@ -433,18 +250,6 @@
         {
             "args": {
                 "s": "aAaAaAaAaAbBbBbBbB"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "MiwEldrom"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "AQuickBrownFoxJumpsOverTheLazyDog"
             },
             "expected": false
         },
@@ -474,19 +279,7 @@
         },
         {
             "args": {
-                "s": "ImAgInAtIoN"
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "s": "Pseudopseudohypoparathyroidism"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "PaLInDoRoMa"
             },
             "expected": true
         },
@@ -504,39 +297,15 @@
         },
         {
             "args": {
-                "s": "sYmMeTrIcVoWaEl"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "QwErTyUiOpAsDfGhJkLzXcVbNm"
             },
             "expected": false
         },
         {
             "args": {
-                "s": "cOmPlExStRiNgWitHaLoTOfVoWels"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "AlEpInAtIoN"
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "s": "AEIOUaeiouAEIOUaeiou"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "s": "Environmental"
-            },
-            "expected": false
         },
         {
             "args": {
@@ -552,12 +321,6 @@
         },
         {
             "args": {
-                "s": "Interpolation"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "Floccinaucinihilipilifications"
             },
             "expected": true
@@ -570,30 +333,6 @@
         },
         {
             "args": {
-                "s": "BiChRoChO"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "SoftwareEngineering"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "Mississippi"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "NaturalLanguageProcessing"
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "s": "VowelsInBoth"
             },
             "expected": true
@@ -601,12 +340,6 @@
         {
             "args": {
                 "s": "FLUtTuAtIoNs"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "SuPeRaLpHaBeT"
             },
             "expected": false
         },
@@ -684,19 +417,7 @@
         },
         {
             "args": {
-                "s": "Vowelsareeverywhere"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "vowelvowelvowelvowel"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "DataStructure"
             },
             "expected": true
         },
@@ -714,49 +435,13 @@
         },
         {
             "args": {
-                "s": "XiLoPhOnE"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "Floccinaucinihilipilification"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "PythonCoding"
             },
             "expected": false
         },
         {
             "args": {
-                "s": "VowelsAreVowels"
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "s": "aEiOuUaEiO"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "NotSoBalanced"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "Engineering"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "SuBiT"
             },
             "expected": true
         },
@@ -780,21 +465,9 @@
         },
         {
             "args": {
-                "s": "PyThOnIsFuN"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "s": "AnNiHaLiLaToR"
-            },
-            "expected": true
         },
         {
             "args": {
@@ -804,31 +477,7 @@
         },
         {
             "args": {
-                "s": "consonantsAEIOUconsonants"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "Thyroparathyroidectomized"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "EvenlyDistributed"
-            },
-            "expected": true
-        },
-        {
-            "args": {
                 "s": "DataAnalysis"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "CyberSecurity"
             },
             "expected": false
         },
@@ -858,19 +507,7 @@
         },
         {
             "args": {
-                "s": "AlGoRiThM"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "Antidisestablishmentarianism"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "CoNtRoVeRtEdbUt"
             },
             "expected": false
         },
@@ -895,12 +532,6 @@
         {
             "args": {
                 "s": "SystemAnalysis"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "VowelsAndConsonants"
             },
             "expected": true
         },
@@ -931,12 +562,6 @@
         {
             "args": {
                 "s": "GrApHiTe"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "AnAgrAm"
             },
             "expected": false
         },
@@ -978,54 +603,6 @@
         },
         {
             "args": {
-                "s": "VowelsAreEven"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "cHiCaGo"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "PythonIsAwesome"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "FeBrIfIoN"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "Electroencephalographically"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "mIxEdCaSeTeStStRiNg"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "ProgrammingLanguage"
-            },
-            "expected": true
-        },
-        {
-            "args": {
-                "s": "MississippiUniversity"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "equalvowelcounts"
             },
             "expected": false
@@ -1035,18 +612,6 @@
                 "s": "EnvironmentalStudies"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "s": "InDeXeS"
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "s": "Supercalifragilisticexpialidociousxyz"
-            },
-            "expected": false
         },
         {
             "args": {

@@ -2,7 +2,10 @@
     "id": "greatest-common-divisor-of-strings",
     "questionId": 1071,
     "difficulty": "Easy",
-    "tags": ["Math", "String"],
+    "tags": [
+        "Math",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -524,13 +527,6 @@
         },
         {
             "args": {
-                "str1": "A",
-                "str2": ""
-            },
-            "expected": ""
-        },
-        {
-            "args": {
                 "str1": "WOWOWOWOWOWO",
                 "str2": "WOWOWO"
             },
@@ -598,13 +594,6 @@
                 "str2": "ABCABCABC"
             },
             "expected": "ABCABCABC"
-        },
-        {
-            "args": {
-                "str1": "",
-                "str2": "A"
-            },
-            "expected": ""
         },
         {
             "args": {
@@ -1109,13 +1098,6 @@
                 "str2": "PYTHONPYTHON"
             },
             "expected": "PYTHONPYTHON"
-        },
-        {
-            "args": {
-                "str1": "",
-                "str2": ""
-            },
-            "expected": ""
         },
         {
             "args": {

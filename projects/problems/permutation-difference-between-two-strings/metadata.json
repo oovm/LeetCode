@@ -2,7 +2,10 @@
     "id": "permutation-difference-between-two-strings",
     "questionId": 3146,
     "difficulty": "Easy",
-    "tags": ["Hash Table", "String"],
+    "tags": [
+        "Hash Table",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -111,24 +114,10 @@
         },
         {
             "args": {
-                "s": "abcdefghijknopq",
-                "t": "qponljihgfedcba"
-            },
-            "expected": "Error: 'l'"
-        },
-        {
-            "args": {
                 "s": "qazwsxedcrfvtgbyhnujmiklop",
                 "t": "plokmijnuhbygvtfcrdxeszwaq"
             },
             "expected": 338
-        },
-        {
-            "args": {
-                "s": "opqrstuvwxyz",
-                "t": "zyxwvutsrqponmlkjihgfedcba"
-            },
-            "expected": "Error: 'n'"
         },
         {
             "args": {
@@ -188,13 +177,6 @@
         },
         {
             "args": {
-                "s": "fghjklmno",
-                "t": "onmlkjihgf"
-            },
-            "expected": "Error: 'i'"
-        },
-        {
-            "args": {
                 "s": "hijklmnop",
                 "t": "ponmlkjih"
             },
@@ -209,13 +191,6 @@
         },
         {
             "args": {
-                "s": "abcdefghijknopqrstu",
-                "t": "ustsrqpnljihgfedcba"
-            },
-            "expected": "Error: 'l'"
-        },
-        {
-            "args": {
                 "s": "xyzabcdefghijklmnopqrstuvw",
                 "t": "wvutsrqponmlkjihgfedcbazyx"
             },
@@ -227,34 +202,6 @@
                 "t": "ponmlkjihgfedcba"
             },
             "expected": 128
-        },
-        {
-            "args": {
-                "s": "abcdefghijkno",
-                "t": "onljihgfedcba"
-            },
-            "expected": "Error: 'l'"
-        },
-        {
-            "args": {
-                "s": "nopqrstuvwxyzabcde",
-                "t": "edcbaonmlkjihgfptsrqvuwxzy"
-            },
-            "expected": "Error: 'm'"
-        },
-        {
-            "args": {
-                "s": "abcdefghijknopqrs",
-                "t": "srqpnljihgfedcba"
-            },
-            "expected": "Error: 'l'"
-        },
-        {
-            "args": {
-                "s": "abcdefghijknopqrstuvwx",
-                "t": "xwvustsrqpnljihgfedcba"
-            },
-            "expected": "Error: 'l'"
         },
         {
             "args": {
@@ -307,13 +254,6 @@
         },
         {
             "args": {
-                "s": "mnopqrlkjihgfedcba",
-                "t": "abcdefghijklmnopqrstuvwxzyml"
-            },
-            "expected": "Error: 's'"
-        },
-        {
-            "args": {
                 "s": "asdfghjkl",
                 "t": "lkjhgfdsa"
             },
@@ -342,13 +282,6 @@
         },
         {
             "args": {
-                "s": "abcdefghklmnopqrstuvwxyz",
-                "t": "zyxwvutsrqponmlkjihgfedcba"
-            },
-            "expected": "Error: 'j'"
-        },
-        {
-            "args": {
                 "s": "pqrstuvw",
                 "t": "vutsrqwp"
             },
@@ -367,13 +300,6 @@
                 "t": "abcdefghijklmnopqrstuvwxyza"
             },
             "expected": 26
-        },
-        {
-            "args": {
-                "s": "qrstuvwxyza",
-                "t": "azyxwvutsrqponmlkjihgfe"
-            },
-            "expected": "Error: 'p'"
         },
         {
             "args": {
@@ -398,13 +324,6 @@
         },
         {
             "args": {
-                "s": "mnopqrstuvwxyz",
-                "t": "zzyxwvutsrqponmlkjihgfedcba"
-            },
-            "expected": "Error: 'l'"
-        },
-        {
-            "args": {
                 "s": "abcdefghijkmnopqrstuvwxyzl",
                 "t": "lmnopqrstuvwxyzabcdefghijk"
             },
@@ -419,13 +338,6 @@
         },
         {
             "args": {
-                "s": "aquickbrownfoxjumped",
-                "t": "xqjumoifpvwkenrdcba"
-            },
-            "expected": "Error: 'v'"
-        },
-        {
-            "args": {
                 "s": "abcdefghilmnopqrstuvwxyzjk",
                 "t": "jklmnopqrstuvwxyzabcdefghi"
             },
@@ -437,13 +349,6 @@
                 "t": "cba"
             },
             "expected": 4
-        },
-        {
-            "args": {
-                "s": "abcdefghij",
-                "t": "ijklmnopab"
-            },
-            "expected": "Error: 'k'"
         },
         {
             "args": {
@@ -468,13 +373,6 @@
         },
         {
             "args": {
-                "s": "abcdefghijknop",
-                "t": "ponljihgfedcba"
-            },
-            "expected": "Error: 'l'"
-        },
-        {
-            "args": {
                 "s": "abcdxyz",
                 "t": "zyxcba"
             },
@@ -482,31 +380,10 @@
         },
         {
             "args": {
-                "s": "abcdefghijknopqrstuvw",
-                "t": "wvustsrqpnljihgfedcba"
-            },
-            "expected": "Error: 'l'"
-        },
-        {
-            "args": {
                 "s": "abcdefghijklmnopqrstuvwxyz",
                 "t": "qrstuvwxyabcdefghijklmnop"
             },
             "expected": 288
-        },
-        {
-            "args": {
-                "s": "abcdefghijkmnopqrstuvwxyz",
-                "t": "zyxwvustsrqpnljihgfedcba"
-            },
-            "expected": "Error: 'l'"
-        },
-        {
-            "args": {
-                "s": "abcdefghijknopqrstuv",
-                "t": "vustsrqpnljihgfedcba"
-            },
-            "expected": "Error: 'l'"
         },
         {
             "args": {
@@ -531,24 +408,10 @@
         },
         {
             "args": {
-                "s": "mnopqrstvuwxyz",
-                "t": "zyxwvuprstqomnkljihgfedcba"
-            },
-            "expected": "Error: 'k'"
-        },
-        {
-            "args": {
                 "s": "rplumabc",
                 "t": "mucrlpba"
             },
             "expected": 22
-        },
-        {
-            "args": {
-                "s": "abcdefghijknopqr",
-                "t": "rqpnljihgfedcba"
-            },
-            "expected": "Error: 'l'"
         },
         {
             "args": {
@@ -587,20 +450,6 @@
         },
         {
             "args": {
-                "s": "abcdefghijknopqrstuvwxy",
-                "t": "yxwvustsrqpnljihgfedcba"
-            },
-            "expected": "Error: 'l'"
-        },
-        {
-            "args": {
-                "s": "abcdefghijknopqrst",
-                "t": "tsrqpnljihgfedcba"
-            },
-            "expected": "Error: 'l'"
-        },
-        {
-            "args": {
                 "s": "lkjhgfdsapoiuytrewqmnbvcxz",
                 "t": "xcvbnmqwertypoiuytsdfghjkl"
             },
@@ -615,24 +464,10 @@
         },
         {
             "args": {
-                "s": "abcdefghij",
-                "t": "efghijklab"
-            },
-            "expected": "Error: 'k'"
-        },
-        {
-            "args": {
                 "s": "xyzabcdefghijklmnopqrstuvw",
                 "t": "stuvwxabcdefghijklmnopqrzy"
             },
             "expected": 210
-        },
-        {
-            "args": {
-                "s": "abcdefghijkmnopqrstuvwxyz",
-                "t": "zyxwvutsrqponmlkjihgfedcba"
-            },
-            "expected": "Error: 'l'"
         },
         {
             "args": {
@@ -678,13 +513,6 @@
         },
         {
             "args": {
-                "s": "abcdefghijn",
-                "t": "nljihgfedcba"
-            },
-            "expected": "Error: 'l'"
-        },
-        {
-            "args": {
                 "s": "abcdefghijk",
                 "t": "kijhgfedcba"
             },
@@ -717,13 +545,6 @@
                 "t": "tuvwsrq"
             },
             "expected": 24
-        },
-        {
-            "args": {
-                "s": "hijklmnopqrstuvwxyzabcde",
-                "t": "mnopqrstuvwxyzabcdefghijkl"
-            },
-            "expected": "Error: 'f'"
         },
         {
             "args": {

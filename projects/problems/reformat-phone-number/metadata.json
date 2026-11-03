@@ -2,7 +2,9 @@
     "id": "reformat-phone-number",
     "questionId": 1694,
     "difficulty": "Easy",
-    "tags": ["String"],
+    "tags": [
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -66,12 +68,6 @@
         },
         {
             "args": {
-                "number": "1"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "number": "1 2 3 4 5 6 7 8 9 0"
             },
             "expected": "123-456-78-90"
@@ -110,7 +106,7 @@
             "args": {
                 "number": "12"
             },
-            "expected": 12
+            "expected": "12"
         },
         {
             "args": {
@@ -152,7 +148,7 @@
             "args": {
                 "number": "123"
             },
-            "expected": 123
+            "expected": "123"
         },
         {
             "args": {

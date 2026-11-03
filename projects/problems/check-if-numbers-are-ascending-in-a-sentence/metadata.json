@@ -2,7 +2,9 @@
     "id": "check-if-numbers-are-ascending-in-a-sentence",
     "questionId": 2042,
     "difficulty": "Easy",
-    "tags": ["String"],
+    "tags": [
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -186,12 +188,6 @@
         },
         {
             "args": {
-                "s": "0 is not a valid number 1 is"
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "s": "3 14 15 9 26 53 59"
             },
             "expected": false
@@ -360,12 +356,6 @@
         },
         {
             "args": {
-                "s": "she won 2nd place with 23 points out of 30 and 45 points out of 50"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '2nd'"
-        },
-        {
-            "args": {
                 "s": "1 one 2 two 3 three 4 four 5 five 6 six 7 seven"
             },
             "expected": true
@@ -402,12 +392,6 @@
         },
         {
             "args": {
-                "s": "the floors in the building are 1st 2nd 3rd 4th 5th and the numbers are 1 2 3 4 5"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '1st'"
-        },
-        {
-            "args": {
                 "s": "1000 apples 2000 bananas 3000 cherries 4000 dates"
             },
             "expected": true
@@ -429,12 +413,6 @@
                 "s": "a1 b2 c3 4 d5 e6 f7 g8 h9 i10"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "s": "with punctuation 1, 2, 3, 4, 5"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '1,'"
         },
         {
             "args": {
@@ -471,12 +449,6 @@
                 "s": "12 monkeys and 13 gorillas but only 7 chimpanzees"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "s": "the distances are 100m 200m 300m 400m 500m and they are strictly increasing"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '100m'"
         },
         {
             "args": {
@@ -555,12 +527,6 @@
                 "s": "the sequence of numbers is 1 3 6 10 15 21 and 28"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "s": "the heights are 150cm 160cm 170cm 180cm 190cm"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '150cm'"
         },
         {
             "args": {
@@ -888,12 +854,6 @@
         },
         {
             "args": {
-                "s": "1st 2nd 3rd 4th 5th 6th 7th 8th 9th 10th"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '1st'"
-        },
-        {
-            "args": {
                 "s": "the ages are 5 10 15 20 25 30 35 40"
             },
             "expected": true
@@ -909,12 +869,6 @@
                 "s": "she played 1 game 2 matches 3 tournaments"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "s": "with hyphens 1-2-3-4-5"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '1-2-3-4-5'"
         },
         {
             "args": {

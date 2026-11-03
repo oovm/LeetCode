@@ -2,7 +2,10 @@
     "id": "hexspeak",
     "questionId": 1271,
     "difficulty": "Easy",
-    "tags": ["Math", "String"],
+    "tags": [
+        "Math",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -225,12 +228,6 @@
                 "num": "16777216"
             },
             "expected": "IOOOOOO"
-        },
-        {
-            "args": {
-                "num": "7FFFFFFFFFFFFFFF"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '7FFFFFFFFFFFFFFF'"
         },
         {
             "args": {

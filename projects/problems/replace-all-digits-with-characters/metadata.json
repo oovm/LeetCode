@@ -2,7 +2,9 @@
     "id": "replace-all-digits-with-characters",
     "questionId": 1844,
     "difficulty": "Easy",
-    "tags": ["String"],
+    "tags": [
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -282,12 +284,6 @@
         },
         {
             "args": {
-                "s": "a23b45c67d89e01f23g45h67i89j01k23l45m67n89o01p23q45r67s89t01u23v45w67x89y01z23"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'b'"
-        },
-        {
-            "args": {
                 "s": "a1b1c1d1e1f1g1h1i1j1k1l1m1n1o1p1q1r1s1t1u1v1w1x1y1z1"
             },
             "expected": "abbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{"
@@ -504,18 +500,6 @@
         },
         {
             "args": {
-                "s": "abcdefghijklmnopqrstuv1234567890"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'b'"
-        },
-        {
-            "args": {
-                "s": "x23x23x23x23x23x23x23x23x23x23x23x23x23x23x23x23x23x23x23x23x23"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'x'"
-        },
-        {
-            "args": {
                 "s": "l8k7j6i5h4g3f2e1d0c9b8a7z6y5x4w3v2u1t0s9r8q7p6o5n4m3l2"
             },
             "expected": "ltkrjpinhlgjfhefddclbjahzy~x|wzvxuvtts|rzqxpvotnrmpln"
@@ -675,12 +659,6 @@
                 "s": "m8n7o6p5q4r3s2t1u0v9w8x7y6z5a4b3c2d1e0f9g8h7i6j5k4l3m2"
             },
             "expected": "munuoupuqurusutuuuvwxyzaebecedeeefogohoiojokolomo"
-        },
-        {
-            "args": {
-                "s": "abcdef1234567890"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'b'"
         },
         {
             "args": {

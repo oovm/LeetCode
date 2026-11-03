@@ -2,7 +2,10 @@
     "id": "merge-strings-alternately",
     "questionId": 1768,
     "difficulty": "Easy",
-    "tags": ["Two Pointers", "String"],
+    "tags": [
+        "Two Pointers",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -356,14 +359,6 @@
         },
         {
             "args": {
-                "word1": "a",
-                "word2": "b",
-                "word3": "c"
-            },
-            "expected": "Error: Solution.mergeAlternately() got an unexpected keyword argument 'word3'"
-        },
-        {
-            "args": {
                 "word1": "hello",
                 "word2": "worldthisisaverylongstring"
             },
@@ -501,14 +496,6 @@
                 "word2": "twothreefour"
             },
             "expected": "otnweothreefour"
-        },
-        {
-            "args": {
-                "word1": "merge",
-                "word2": "these",
-                "word3": "strings"
-            },
-            "expected": "Error: Solution.mergeAlternately() got an unexpected keyword argument 'word3'"
         },
         {
             "args": {

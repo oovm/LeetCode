@@ -2,7 +2,12 @@
     "id": "find-the-difference",
     "questionId": 389,
     "difficulty": "Easy",
-    "tags": ["Bit Manipulation", "Hash Table", "String", "Sorting"],
+    "tags": [
+        "Bit Manipulation",
+        "Hash Table",
+        "String",
+        "Sorting"
+    ],
     "tests": [
         {
             "args": {
@@ -17,13 +22,6 @@
                 "t": "aeiouf"
             },
             "expected": "f"
-        },
-        {
-            "args": {
-                "s": "python",
-                "t": "ypthon"
-            },
-            "expected": null
         },
         {
             "args": {
@@ -83,13 +81,6 @@
         },
         {
             "args": {
-                "s": "hello",
-                "t": "ohell"
-            },
-            "expected": null
-        },
-        {
-            "args": {
                 "s": "ae",
                 "t": "aea"
             },
@@ -132,13 +123,6 @@
         },
         {
             "args": {
-                "s": "thisisaverylongstringwithsomerepeatingcharacters",
-                "t": "thisisaverylongstringwithsomerepeatingcharactersist"
-            },
-            "expected": "i"
-        },
-        {
-            "args": {
                 "s": "sameletters",
                 "t": "samesletters"
             },
@@ -150,13 +134,6 @@
                 "t": "mississippix"
             },
             "expected": "x"
-        },
-        {
-            "args": {
-                "s": "thisisaverylongstringthatcontainsavarietyofcharacters",
-                "t": "thisisaverylongstringthatcontainsavarietyofcharactorst"
-            },
-            "expected": "o"
         },
         {
             "args": {
@@ -314,13 +291,6 @@
         },
         {
             "args": {
-                "s": "short",
-                "t": "horst"
-            },
-            "expected": null
-        },
-        {
-            "args": {
                 "s": "abracadabra",
                 "t": "abracadabrak"
             },
@@ -342,13 +312,6 @@
         },
         {
             "args": {
-                "s": "qwert",
-                "t": "wqret"
-            },
-            "expected": null
-        },
-        {
-            "args": {
                 "s": "repeatedcharactershhhhh",
                 "t": "repeatedcharactershhhhha"
             },
@@ -367,13 +330,6 @@
                 "t": "abcdabcde"
             },
             "expected": "e"
-        },
-        {
-            "args": {
-                "s": "uniqueletters",
-                "t": "enuiqtelrstsu"
-            },
-            "expected": "s"
         },
         {
             "args": {
@@ -426,13 +382,6 @@
         },
         {
             "args": {
-                "s": "repeatedletters",
-                "t": "repeadetletters"
-            },
-            "expected": null
-        },
-        {
-            "args": {
                 "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
                 "t": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzzz"
             },
@@ -447,24 +396,10 @@
         },
         {
             "args": {
-                "s": "onetwothree",
-                "t": "onetwothreefour"
-            },
-            "expected": "f"
-        },
-        {
-            "args": {
                 "s": "short",
                 "t": "shorrt"
             },
             "expected": "r"
-        },
-        {
-            "args": {
-                "s": "uniqueletters",
-                "t": "eniqulettersu"
-            },
-            "expected": null
         },
         {
             "args": {
@@ -549,13 +484,6 @@
                 "t": "ooblaanl"
             },
             "expected": "a"
-        },
-        {
-            "args": {
-                "s": "sameletters",
-                "t": "smaleetters"
-            },
-            "expected": null
         },
         {
             "args": {

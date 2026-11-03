@@ -2,7 +2,10 @@
     "id": "reverse-words-in-a-string-iii",
     "questionId": 557,
     "difficulty": "Easy",
-    "tags": ["Two Pointers", "String"],
+    "tags": [
+        "Two Pointers",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -60,12 +63,6 @@
         },
         {
             "args": {
-                "s": "spaces    at    the    end    of    the    sentence    "
-            },
-            "expected": "secaps ta eht dne fo eht ecnetnes"
-        },
-        {
-            "args": {
                 "s": "longwordswithoutspaces"
             },
             "expected": "secapstuohtiwsdrowgnol"
@@ -99,12 +96,6 @@
                 "s": "Qwen AI assistant"
             },
             "expected": "newQ IA tnatsissa"
-        },
-        {
-            "args": {
-                "s": "multiple    spaces between words"
-            },
-            "expected": "elpitlum secaps neewteb sdrow"
         },
         {
             "args": {
@@ -270,12 +261,6 @@
         },
         {
             "args": {
-                "s": "Multiple   spaces   in   between"
-            },
-            "expected": "elpitluM secaps ni neewteb"
-        },
-        {
-            "args": {
                 "s": "special!@# characters $%^&* should be reversed"
             },
             "expected": "#@!laiceps sretcarahc *&^%$ dluohs eb desrever"
@@ -315,12 +300,6 @@
                 "s": "Alibaba Cloud Services"
             },
             "expected": "ababilA duolC secivreS"
-        },
-        {
-            "args": {
-                "s": "multiple   spaces between words"
-            },
-            "expected": "elpitlum secaps neewteb sdrow"
         },
         {
             "args": {
@@ -432,21 +411,9 @@
         },
         {
             "args": {
-                "s": "spaces   between   words"
-            },
-            "expected": "secaps neewteb sdrow"
-        },
-        {
-            "args": {
                 "s": "reversed words in this sentence should be flipped"
             },
             "expected": "desrever sdrow ni siht ecnetnes dluohs eb deppilf"
-        },
-        {
-            "args": {
-                "s": "Multiple    spaces between words"
-            },
-            "expected": "elpitluM secaps neewteb sdrow"
         },
         {
             "args": {
@@ -537,18 +504,6 @@
                 "s": "Another EdgeCase!"
             },
             "expected": "rehtonA !esaCegdE"
-        },
-        {
-            "args": {
-                "s": "Multiple    spaces    between words"
-            },
-            "expected": "elpitluM secaps neewteb sdrow"
-        },
-        {
-            "args": {
-                "s": "multiple     spaces between words should be preserved"
-            },
-            "expected": "elpitlum secaps neewteb sdrow dluohs eb devreserp"
         }
     ],
     "invoke": {

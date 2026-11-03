@@ -2,7 +2,12 @@
     "id": "first-letter-to-appear-twice",
     "questionId": 2351,
     "difficulty": "Easy",
-    "tags": ["Bit Manipulation", "Hash Table", "String", "Counting"],
+    "tags": [
+        "Bit Manipulation",
+        "Hash Table",
+        "String",
+        "Counting"
+    ],
     "tests": [
         {
             "args": {
@@ -27,18 +32,6 @@
                 "s": "zabcdefghijkkl"
             },
             "expected": "k"
-        },
-        {
-            "args": {
-                "s": "first"
-            },
-            "expected": null
-        },
-        {
-            "args": {
-                "s": "second"
-            },
-            "expected": null
         },
         {
             "args": {

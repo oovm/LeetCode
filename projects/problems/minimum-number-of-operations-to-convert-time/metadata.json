@@ -2,7 +2,10 @@
     "id": "minimum-number-of-operations-to-convert-time",
     "questionId": 2224,
     "difficulty": "Easy",
-    "tags": ["Greedy", "String"],
+    "tags": [
+        "Greedy",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -125,13 +128,6 @@
         },
         {
             "args": {
-                "current": "23:40",
-                "correct": "00:05"
-            },
-            "expected": -21
-        },
-        {
-            "args": {
                 "current": "21:45",
                 "correct": "22:00"
             },
@@ -213,13 +209,6 @@
                 "correct": "06:02"
             },
             "expected": 1
-        },
-        {
-            "args": {
-                "current": "21:30",
-                "correct": "01:00"
-            },
-            "expected": -19
         },
         {
             "args": {
@@ -920,13 +909,6 @@
                 "correct": "22:50"
             },
             "expected": 3
-        },
-        {
-            "args": {
-                "current": "23:40",
-                "correct": "00:15"
-            },
-            "expected": -21
         },
         {
             "args": {
