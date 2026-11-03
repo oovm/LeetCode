@@ -72,8 +72,10 @@ export type LaneMatrixSummary = {
     runtimePass: number;
     runtime: LaneRuntimeCounts;
     testCaseTotal: number;
-    testCasePass: number;
-    testCaseFail: number;
+    executed_pass: number;
+    executed_fail: number;
+    blocked: number;
+    not_run: number;
     problemPassRate: number;
     buildPassRate: number;
     runtimePassRate: number;
@@ -111,8 +113,10 @@ function summarizeLane(rows: ValkyrieLaneRow[], denominator: number): LaneMatrix
         runtime[row.runtimeStatus] += 1;
     }
     const testCaseTotal = rows.reduce((sum, row) => sum + row.testCaseTotal, 0);
-    const testCasePass = rows.reduce((sum, row) => sum + row.testCasePass, 0);
-    const testCaseFail = rows.reduce((sum, row) => sum + row.testCaseFail, 0);
+    const executedPass = rows.reduce((sum, row) => sum + row.executed_pass, 0);
+    const executedFail = rows.reduce((sum, row) => sum + row.executed_fail, 0);
+    const blocked = rows.reduce((sum, row) => sum + row.blocked, 0);
+    const notRun = rows.reduce((sum, row) => sum + row.not_run, 0);
     const rate = (count: number, denom = denominator) => (denom === 0 ? 0 : count / denom);
     return {
         denominator,
@@ -125,12 +129,14 @@ function summarizeLane(rows: ValkyrieLaneRow[], denominator: number): LaneMatrix
         runtimePass,
         runtime,
         testCaseTotal,
-        testCasePass,
-        testCaseFail,
+        executed_pass: executedPass,
+        executed_fail: executedFail,
+        blocked,
+        not_run: notRun,
         problemPassRate: rate(green),
         buildPassRate: rate(buildPass),
         runtimePassRate: rate(runtimePass),
-        casePassRate: rate(testCasePass, testCaseTotal),
+        casePassRate: rate(executedPass, testCaseTotal),
         greenRate: rate(green),
     };
 }

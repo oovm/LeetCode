@@ -207,8 +207,10 @@ export function runManagedReference(
             caseStats: {
                 ok: true,
                 testCaseTotal: tests.length,
-                testCasePass: pass,
-                testCaseFail: 0,
+                executed_pass: pass,
+                executed_fail: 0,
+                blocked: 0,
+                not_run: 0,
                 firstFailureIndex: null,
                 firstFailure: null,
             },

@@ -1,21 +1,25 @@
-/** Ë« target ¾ØÕó¹²ÓÃµÄËÄÃÅÂÌÃÅ½û¡£ */
+/** åŒ target çŸ©é˜µå…±ç”¨çš„å››é—¨ç»¿é—¨ç¦ã€‚ */
 export type MatrixGreenFlags = {
     buildStatus: number;
     testStatus: number;
     manifestFresh: boolean;
     runtimeOk: boolean;
     testCaseTotal: number;
-    testCasePass: number;
-    testCaseFail: number;
+    executed_pass: number;
+    executed_fail: number;
+    blocked: number;
+    not_run: number;
 };
 
-/** ÂÌ£ºÄÜ±à¡¢`legion test` Í¨¹ý¡¢manifest ÐÂÏÊÇÒ `metadata.tests` È«Á¿Í¨¹ý¡£ */
+/** ç»¿ï¼šèƒ½ç¼–ã€`legion test` é€šè¿‡ã€manifest æ–°é²œä¸” `metadata.tests` å…¨é‡çœŸå®žæ‰§è¡Œé€šè¿‡ã€‚ */
 export function isMatrixRowGreen(row: MatrixGreenFlags): boolean {
     return row.buildStatus === 0
         && row.testStatus === 0
         && row.manifestFresh
         && row.runtimeOk
         && row.testCaseTotal > 0
-        && row.testCasePass === row.testCaseTotal
-        && row.testCaseFail === 0;
+        && row.executed_pass === row.testCaseTotal
+        && row.executed_fail === 0
+        && row.blocked === 0
+        && row.not_run === 0;
 }

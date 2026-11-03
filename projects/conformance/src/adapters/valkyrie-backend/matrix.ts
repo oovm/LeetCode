@@ -81,8 +81,10 @@ export type ValkyrieBackendMatrixRow = {
     /** managed 全量用例统一为 0 时记 0；未执行时为 null。 */
     managedInvokeExitStatus: number | null;
     testCaseTotal: number;
-    testCasePass: number;
-    testCaseFail: number;
+    executed_pass: number;
+    executed_fail: number;
+    blocked: number;
+    not_run: number;
     firstFailureIndex: number | null;
     firstFailure: string | null;
     solverNote: string | null;
@@ -95,8 +97,10 @@ function withCaseStats(row: ValkyrieBackendMatrixRowNoGreen, stats: SolverCaseSt
     return {
         ...row,
         testCaseTotal: stats.testCaseTotal,
-        testCasePass: stats.testCasePass,
-        testCaseFail: stats.testCaseFail,
+        executed_pass: stats.executed_pass,
+        executed_fail: stats.executed_fail,
+        blocked: stats.blocked,
+        not_run: stats.not_run,
         firstFailureIndex: stats.firstFailureIndex,
         firstFailure: stats.firstFailure,
         green: false,
@@ -131,8 +135,10 @@ function baseRow(problem: ProblemDefinition): ValkyrieBackendMatrixRowNoGreen {
         managedInvokeCommand: null,
         managedInvokeExitStatus: null,
         testCaseTotal: 0,
-        testCasePass: 0,
-        testCaseFail: 0,
+        executed_pass: 0,
+        executed_fail: 0,
+        blocked: 0,
+        not_run: 0,
         firstFailureIndex: null,
         firstFailure: null,
         solverNote: null,

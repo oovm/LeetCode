@@ -33,8 +33,10 @@ function greenWasm(id: string): ValkyrieMatrixRow {
         runtimeOk: true,
         runtimeError: null,
         testCaseTotal: 2,
-        testCasePass: 2,
-        testCaseFail: 0,
+        executed_pass: 2,
+        executed_fail: 0,
+        blocked: 0,
+        not_run: 0,
         firstFailureIndex: null,
         firstFailure: null,
         solverNote: null,
@@ -67,8 +69,10 @@ function backendRow(id: string, overrides: Partial<ValkyrieBackendMatrixRow> = {
         runtimeOk: false,
         runtimeError: 'compile failed',
         testCaseTotal: 2,
-        testCasePass: 0,
-        testCaseFail: 2,
+        executed_pass: 0,
+        executed_fail: 0,
+        blocked: 2,
+        not_run: 0,
         firstFailureIndex: 0,
         firstFailure: 'compile failed',
         solverNote: null,
@@ -92,8 +96,10 @@ function greenOvm(id: string): ValkyrieBackendMatrixRow {
         hostProviderBindingHash: 'c',
         runtimeOk: true,
         runtimeError: null,
-        testCasePass: 2,
-        testCaseFail: 0,
+        executed_pass: 2,
+        executed_fail: 0,
+        blocked: 0,
+        not_run: 0,
         firstFailureIndex: null,
         firstFailure: null,
         green: true,
@@ -113,8 +119,10 @@ function blockedContrast(id: string, lane: 'jvm' | 'clr'): ValkyrieBackendMatrix
         runtimeError: reason,
         firstFailure: reason,
         testCaseTotal: 0,
-        testCasePass: 0,
-        testCaseFail: 0,
+        executed_pass: 0,
+        executed_fail: 0,
+        blocked: 0,
+        not_run: 0,
     });
 }
 
@@ -152,6 +160,10 @@ describe('valkyrie lane matrix report', () => {
         expect(report.summary.wasm.greenRate).toBe(1);
         expect(report.summary.jvm.buildPassRate).toBe(0);
         expect(report.summary.wasm.testCaseTotal).toBe(4);
+        expect(report.summary.wasm.executed_pass).toBe(4);
+        expect(report.summary.wasm.executed_fail).toBe(0);
+        expect(report.summary.wasm.blocked).toBe(0);
+        expect(report.summary.wasm.not_run).toBe(0);
         expect(report.summary.wasm.casePassRate).toBe(1);
         expect(report.summary.jvm.casePassRate).toBe(0);
         expect(report.summary.wasm.runtime).toEqual({ ready: 2, blocked: 0, pending: 0 });

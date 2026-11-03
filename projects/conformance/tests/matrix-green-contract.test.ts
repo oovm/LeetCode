@@ -34,8 +34,10 @@ function baseNodeRow(overrides: Partial<ValkyrieMatrixRow> = {}): ValkyrieMatrix
         runtimeOk: true,
         runtimeError: null,
         testCaseTotal: 3,
-        testCasePass: 3,
-        testCaseFail: 0,
+        executed_pass: 3,
+        executed_fail: 0,
+        blocked: 0,
+        not_run: 0,
         firstFailureIndex: null,
         firstFailure: null,
         solverNote: null,
@@ -69,8 +71,10 @@ function baseNyarRow(overrides: Partial<ValkyrieNyarMatrixRow> = {}): ValkyrieNy
         runtimeOk: true,
         runtimeError: null,
         testCaseTotal: 3,
-        testCasePass: 3,
-        testCaseFail: 0,
+        executed_pass: 3,
+        executed_fail: 0,
+        blocked: 0,
+        not_run: 0,
         firstFailureIndex: null,
         firstFailure: null,
         solverNote: null,
@@ -103,7 +107,11 @@ describe('Valkyrie lane 矩阵绿门禁', () => {
     });
 
     it('a row with no executed metadata cases cannot be green', () => {
-        expect(isMatrixRowGreen(baseNodeRow({ testCaseTotal: 0, testCasePass: 0, testCaseFail: 0 }))).toBe(false);
-        expect(isValkyrieGreen(baseNodeRow({ testCaseTotal: 2, testCasePass: 1, testCaseFail: 1 }))).toBe(false);
+        expect(isMatrixRowGreen(baseNodeRow({ testCaseTotal: 0, executed_pass: 0, executed_fail: 0 }))).toBe(false);
+        expect(isValkyrieGreen(baseNodeRow({ testCaseTotal: 2, executed_pass: 1, executed_fail: 1 }))).toBe(false);
+    });
+
+    it('blocked cases cannot be green even when no case failed', () => {
+        expect(isValkyrieGreen(baseNodeRow({ testCaseTotal: 3, executed_pass: 0, executed_fail: 0, blocked: 3 }))).toBe(false);
     });
 });

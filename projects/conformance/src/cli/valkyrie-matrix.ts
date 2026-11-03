@@ -86,8 +86,9 @@ async function main(): Promise<number> {
 
     const laneLine = (label: string, summary: (typeof report.summary)['wasm'], note: string) =>
         `lane ${label}: green ${summary.green}/${summary.denominator} ` +
-        `(${(summary.greenRate * 100).toFixed(1)}%) cases ${summary.testCasePass}/${summary.testCaseTotal} ` +
-        `(${(summary.casePassRate * 100).toFixed(1)}%) runtime ready/blocked/pending ` +
+        `(${(summary.greenRate * 100).toFixed(1)}%) cases pass ${summary.executed_pass}/${summary.testCaseTotal} ` +
+        `(${(summary.casePassRate * 100).toFixed(1)}%) executed_fail ${summary.executed_fail} ` +
+        `blocked ${summary.blocked} not_run ${summary.not_run} runtime ready/blocked/pending ` +
         `${summary.runtime.ready}/${summary.runtime.blocked}/${summary.runtime.pending} ${note}`;
     const laneNotes: Record<string, string> = {
         wasm: '(delivery, target=manifest-declared)',

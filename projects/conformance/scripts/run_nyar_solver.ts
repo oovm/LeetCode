@@ -13,6 +13,7 @@ import { compareIntegerResult, isUnsafeIntegerLiteralString } from '../src/domai
 import {
     extractTestFailureIndex,
     formatSolverResultLine,
+    isBlockedSolverMessage,
     type SolverCaseStats,
 } from '../src/adapters/shared/solver-case-stats.ts';
 import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
@@ -186,11 +187,14 @@ async function main(): Promise<number> {
             pass += 1;
         } catch (err) {
             const message = String(err);
+            const infrastructureBlocked = isBlockedSolverMessage(message);
             emitStats({
                 ok: false,
                 testCaseTotal: tests.length,
-                testCasePass: pass,
-                testCaseFail: tests.length - pass,
+                executed_pass: pass,
+                executed_fail: infrastructureBlocked ? 0 : 1,
+                blocked: infrastructureBlocked ? tests.length - pass : 0,
+                not_run: infrastructureBlocked ? 0 : tests.length - pass - 1,
                 firstFailureIndex: extractTestFailureIndex(message) ?? index,
                 firstFailure: message,
             });
@@ -202,8 +206,10 @@ async function main(): Promise<number> {
     emitStats({
         ok: true,
         testCaseTotal: tests.length,
-        testCasePass: pass,
-        testCaseFail: 0,
+        executed_pass: pass,
+        executed_fail: 0,
+        blocked: 0,
+        not_run: 0,
         firstFailureIndex: null,
         firstFailure: null,
     });
@@ -215,8 +221,10 @@ main().catch((err) => {
     emitStats({
         ok: false,
         testCaseTotal: 0,
-        testCasePass: 0,
-        testCaseFail: 0,
+        executed_pass: 0,
+        executed_fail: 0,
+        blocked: 0,
+        not_run: 0,
         firstFailureIndex: extractTestFailureIndex(message),
         firstFailure: message,
     });
