@@ -452,6 +452,80 @@ Easy 133 题实测 30 题有缺陷、Medium 37 题实测 8 题有缺陷，该「
 `count-the-number-of-special-characters-i` 的失败是实现缺陷而非语料：非字母字符参与
 `1 << (code - 65)` 位运算产生伪重叠，已改为只对 `A-Z` / `a-z` 置位。
 
+### 大整数精度扫描（全库，2026-11-04 实测）
+
+- 范围：全部 2841 个可解析的 `projects/problems/*/metadata.json`（2869 目录 − 27 个无 metadata
+  − 1 个解析失败），`tests[].args` 与 `tests[].expected` 中的整数字面量和纯十进制整数字符串，
+  阈值 `|v| > 2^53-1`。候选 **17,545 行 / 182 题**。
+  扫描期间顺带发现 `palindrome-partitioning` 的 `metadata.json` 是 **0 字节空文件**（另一类语料缺陷，
+  本节不处理，仅登记坐标）。
+- 判定规则（不靠「尾零」观感，靠可表示性）：
+  - 十进制整数 `v` 能被 double 精确表示，当且仅当 `bitlen(v) <= 53` 或 `v % 2^(bitlen-53) == 0`；
+  - JSON number 不满足该条件 → `JSON.parse` 得到的已不是文本里的值（文本 ≠ 运行值）；
+  - 字符串不满足该条件且 `String(Number(s)) === s` → 该串本身是 double 的十进制输出（抹平痕迹）；
+  - 参数是否数值型：优先取 V 导出签名类型，无解法的题用「同一 key 在任一用例中出现过 JSON number」；
+  - 纯二进制文本串（`^[01]+$`）与 `utf8` 参数一律按文本，不参与数值判定。
+- 分类结果：
+
+| 类 | 含义 | 行 | 题 |
+| --- | --- | --- | --- |
+| A | args 精度丢失，用例无法表达，V 根本没跑 | 127 | 21 |
+| B | expected 精度丢失，会制造假失败 | 49 | 9 |
+| C | 精确大整数但超出 `i64` 表示 / 官方约束 | 4 | 3 |
+| D | 无精度损失（精确整数 / 文本 / 二进制串 / 无类型串） | 17365 | 171 |
+
+- 逐条坐标与证据在 `valkyrie-corpus-precision-defects.json`（本目录），每条 case 就是一条
+  quarantine 记录，**metadata 与 expected 数值一行未改**。
+
+A（21 题，127 行；括号为该题行数）：`find-original-array-from-doubled-array`（55）、
+`minimum-addition-to-make-integer-beautiful`（18）、`maximum-number-that-makes-result-of-bitwise-and-zero`
+（11）、`string-transformation`（7）、`sort-the-jumbled-numbers`（5）、`count-the-number-of-powerful-integers`
+（4）、`maximum-sized-array`（4）、`maximum-swap`（3）、`smallest-number-with-given-digit-product`（3）、
+`binary-trees-with-factors`（2）、`maximum-xor-product`（2）、`minimum-cost-to-make-array-equalindromic`（2）、
+`number-of-subarrays-with-lcm-equal-to-k`（2）、`ugly-number`（2）、`count-special-integers`、
+`find-the-k-th-character-in-string-game-ii`、`find-the-sum-of-encrypted-integers`、
+`max-difference-you-can-get-from-changing-an-integer`、`numbers-with-repeated-digits`、
+`reordered-power-of-2`、`separate-the-digits-in-an-array`。
+
+C（3 题，4 行，值本身精确但超 i64 且越官方约束）：`find-original-array-from-doubled-array`
+（`tests[122].args.changed[210]` = `36000567021771776000`）、`string-transformation`
+（`tests[13].args.k` = `100000000000000000000`，约束 `k <= 10^15`）、
+`minimum-garden-perimeter-to-collect-enough-apples`（`neededApples` = `10^20` / `10^19`，约束 `<= 10^15`）。
+
+B（9 题，49 行）**不改 expected，等裁定**。已重算证明的三处：
+
+| slug | 用例 | 存储 expected | 精确重算 | 差异 / 约束 |
+| --- | --- | --- | --- | --- |
+| `paint-fence` | `tests[5]` | `4865562720460260000` | `401321198` | 存储值是未取模计数的 double 抹平物，答案本应 `mod 10^9+7` |
+| `paint-fence` | `tests[23]` | `999306098405019900` | `409877263` | 同上 |
+| `paint-fence` | `tests[26]` | `1591919797017362000` | `873923505` | 同上 |
+| `paint-fence` | `tests[28]` | `6249999995000050000` | `250050343` | 同上 |
+| `maximum-swap` | `tests[85]` | `912233445566778900` | `912233445566778100` | **差 800**，正确解法必被判错 |
+| `arithmetic-slices-ii-subsequence` | `tests[59]` | `1152921504606845200` | `1152921504606845145` | **差 55**，正确解法必被判错 |
+
+其余 6 题以官方约束判定（期望超出答案上界即不可信）：`maximum-number-that-makes-result-of-bitwise-and-zero`
+（11 行，期望 ≥ `2.3×10^18`，约束 `n <= 10^15`）、`sort-the-jumbled-numbers`（5 行，期望 `10^17`，
+约束 `nums[i] < 10^9`）、`maximum-swap`（另 2 行，约束 `num <= 10^8`）、
+`find-the-array-concatenation-value`（1 行，期望 `1.78×10^18`，答案上界 `~10^11`）、
+`find-the-sum-of-encrypted-integers`（1 行，期望 `10^18`，答案上界 `~5×10^4`）、
+`max-difference-you-can-get-from-changing-an-integer`（1 行，约束 `num <= 10^8`）、
+`minimum-cost-to-make-array-equalindromic`（1 行，代价上界 `~10^14`）。
+
+B 复核时已排除的 6 题（输出本就是字符串或浮点，不构成 B，已归 D）：`maximum-value-after-insertion`、
+`calculate-digit-sum-of-a-string`、`largest-multiple-of-three`、`largest-number-after-mutating-substring`、
+`lexicographically-smallest-string-after-a-swap`、`powx-n`（浮点按容差比较）。
+
+quarantine 形态选型：不用在 `metadata.json` 里加 `defect` 字段，改用**侧车清单**
+`valkyrie-corpus-precision-defects.json`。理由：metadata 由生成器/校验链按固定 schema 产出，
+就地加未登记字段会被下游当未知字段或需同步改 schema 与生成器；侧车文件不动数据、不动期望、
+不动判题器，且与 `reports/` 既有 JSON 报告同构，能逐条带坐标与证据，便于裁定后再决定修复。
+
+D 对照（证明扫描器不把正常值当污染）：`permutations-iv` 的 `k` = `2432902008176640000`（20!）
+与 `minimum-garden-perimeter-to-collect-enough-apples` 的 `neededApples` = `18014398509481984`（`2^54`）
+都被判 D —— 二者都满足精确可表示性，未因「值大 / 尾零多」被误报。误报口径：候选 17,545 行里
+标 A/B/C 共 180 行（1.03%），其中可表示性判定本身零误报；语义层（文本串 vs 数值字面量）误报
+经人工复核为 0，B 侧另有 11 行因输出类型是字符串/浮点被移出，已单列在上。
+
 ## 已恢复
 
 ### G0 `ArrayList` 运行期长度 + 下标读写
