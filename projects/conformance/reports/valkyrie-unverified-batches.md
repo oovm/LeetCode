@@ -1,10 +1,11 @@
 # Valkyrie 待验证批次清单
 
-口径：本清单只登记**理想解已写、尚未构建验证**的批次。构建通过数不等同于本清单题数，
-见 `valkyrie-gap-ledger.md` 的「批次状态」小节。
+口径：本清单登记**理想解已写**的批次及其验证状态。只有「构建 `status=0` 且隔离判题
+`ok=true`」才计入构建通过数，见 `valkyrie-gap-ledger.md` 的「批次状态」小节与缺口编号。
+未验证不等于通过；实测列是本次验证窗口逐题跑出的证据。
 
-复跑方式：对应能力恢复后，按下面的 slug 列表批量跑 `legionBuildProject` +
-隔离判题；TS 侧已在 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
+复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
+`projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
 ## 批次 E-2026-11-03（Easy 标量/文本池，133 题）
 
@@ -170,68 +171,76 @@ TS 实跑：131/133 通过。未通过 2 题：`calculate-digit-sum-of-a-string`
 | --- | --- | --- |
 | `first-bad-version` | `first_bad_version(n: i64, bad: i64)` → `i64` | 通过 |
 
-## 批次 M-2026-11-03（Medium 三组，37 题）
+## 批次 M-2026-11-03（Medium 三组，37 题，已实测）
 
-| 组 | 题数 | 依赖能力 | 解锁前置条件 |
-| --- | --- | --- | --- |
-| ArrayList 表（DP / 背包 / 区间） | 12 | `ArrayList<i64>` 参数与局部表、`ArrayList<ArrayList<i64>>` 二维读、下标读写、`usize` 转换 | G0 已恢复；待复验二维 `⁅i⁆.unwrap()⁅j⁆` 写穿透 |
-| 位运算 | 13 | `<<`、`>>`（变量位移）、`&`、`|`、`^`、`HashMap<i64,i64>` 前缀集合 | 待复验变量右移与 `HashMap` 批量插入 |
-| 纯递推 / 序列生成 | 12 | 滚动 DP、BFS 队列（`ArrayList` + head 下标）、筛法、`ArrayList<bool>`、`Utf8Builder`、二维输出 | G0 已恢复；待复验 `ArrayList` 变量整体重新赋值 |
+构建口径：`resolveCompileTargetPlan` → `legionBuildProject`，canonical target
+`wasm32-unknown-unknown-wasm`，逐题 `build=0`。判题口径：`run_v_solver.ts` 对全量
+`metadata.tests` 实跑；`fail` 列按 harness 口径（首个失败后中止，剩余用例也计入 fail）。
 
-TS 实跑：37/37 通过（提交前逐题 `run_ts_solver.ts`）。本批 8 题含语料缺陷（错误签名串、越官方约束输入），已按
-`valkyrie-gap-ledger.md` 的「语料缺陷」小节处理，未改动任何期望值的语义。
+| 组 | 题数 | 编译 | 判题 | 阻断 |
+| --- | --- | --- | --- | --- |
+| ArrayList 表（DP / 背包 / 区间） | 12 | 12/12 `build=0` | 0 通过 | G3 入参 marshal 12 题 |
+| 位运算 | 13 | 13/13 `build=0` | 0 通过 | G3 入参 marshal 13 题 |
+| 纯递推 / 序列生成 | 12 | 12/12 `build=0` | 1 通过 | 1 通过 + G3 返回值 demarshal 11 题 |
+
+合计：编译 37/37，判题 1/37 通过（`number-of-dice-rolls-with-target-sum` 108/108）。
+用例总量 3283：真实通过 108，首个用例即失败 36（每道受阻题 1 个），其余 3139 未执行
+（harness 将未执行计入 fail，故其 `fail` 合计为 3175）。构建通过数 18 → 19。
+
+TS 实跑：37/37 通过（提交前逐题 `run_ts_solver.ts`）。本批 8 题含语料缺陷（错误签名串、
+越官方约束输入），已按 `valkyrie-gap-ledger.md` 的「语料缺陷」小节处理，未改动期望值语义。
 
 ### ArrayList 表（12 题）
 
-| slug | V 入口签名 | TS 实跑 |
-| --- | --- | --- |
-| `house-robber` | `rob(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `house-robber-ii` | `rob(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `jump-game` | `can_jump(nums: ArrayList<i64>)` → `bool` | 通过 |
-| `jump-game-ii` | `jump(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `maximum-product-subarray` | `max_product(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `longest-increasing-subsequence` | `length_of_l_i_s(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `coin-change` | `coin_change(coins: ArrayList<i64>, amount: i64)` → `i64` | 通过 |
-| `minimum-path-sum` | `min_path_sum(grid: ArrayList<ArrayList<i64>>)` → `i64` | 通过 |
-| `triangle` | `minimum_total(triangle: ArrayList<ArrayList<i64>>)` → `i64` | 通过 |
-| `last-stone-weight-ii` | `last_stone_weight_i_i(stones: ArrayList<i64>)` → `i64` | 通过 |
-| `delete-and-earn` | `delete_and_earn(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `arithmetic-slices` | `number_of_arithmetic_slices(nums: ArrayList<i64>)` → `i64` | 通过 |
+| slug | V 入口签名 | TS 实跑 | V 实测 |
+| --- | --- | --- | --- |
+| `house-robber` | `rob(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/117，marshal 阻断 |
+| `house-robber-ii` | `rob(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/122，marshal 阻断 |
+| `jump-game` | `can_jump(nums: ArrayList<i64>)` → `bool` | 通过 | `build=0`；判题 0/66，marshal 阻断 |
+| `jump-game-ii` | `jump(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/44，marshal 阻断 |
+| `maximum-product-subarray` | `max_product(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/91，marshal 阻断 |
+| `longest-increasing-subsequence` | `length_of_l_i_s(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/134，marshal 阻断 |
+| `coin-change` | `coin_change(coins: ArrayList<i64>, amount: i64)` → `i64` | 通过 | `build=0`；判题 0/127，marshal 阻断 |
+| `minimum-path-sum` | `min_path_sum(grid: ArrayList<ArrayList<i64>>)` → `i64` | 通过 | `build=0`；判题 0/77，marshal 阻断（嵌套 `ArrayList`） |
+| `triangle` | `minimum_total(triangle: ArrayList<ArrayList<i64>>)` → `i64` | 通过 | `build=0`；判题 0/88，marshal 阻断（嵌套 `ArrayList`） |
+| `last-stone-weight-ii` | `last_stone_weight_i_i(stones: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/100，marshal 阻断 |
+| `delete-and-earn` | `delete_and_earn(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/115，marshal 阻断 |
+| `arithmetic-slices` | `number_of_arithmetic_slices(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/171，marshal 阻断 |
 
 ### 位运算（13 题）
 
-| slug | V 入口签名 | TS 实跑 |
-| --- | --- | --- |
-| `single-number-ii` | `single_number(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `single-number-iii` | `single_number(nums: ArrayList<i64>)` → `ArrayList<i64>` | 通过 |
-| `total-hamming-distance` | `total_hamming_distance(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `maximum-xor-of-two-numbers-in-an-array` | `find_maximum_x_o_r(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `bitwise-ors-of-subarrays` | `subarray_bitwise_o_r_s(arr: ArrayList<i64>)` → `i64` | 通过 |
-| `bitwise-xor-of-all-pairings` | `xor_all_nums(nums1: ArrayList<i64>, nums2: ArrayList<i64>)` → `i64` | 通过 |
-| `maximum-xor-for-each-query` | `get_maximum_x_o_r(nums: ArrayList<i64>, maximumBit: i64)` → `ArrayList<i64>` | 通过 |
-| `count-triplets-that-can-form-two-arrays-of-equal-xor` | `count_triplets(arr: ArrayList<i64>)` → `i64` | 通过 |
-| `score-after-flipping-matrix` | `matrix_score(grid: ArrayList<ArrayList<i64>>)` → `i64` | 通过 |
-| `maximum-possible-number-by-binary-concatenation` | `max_good_number(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `minimum-impossible-or` | `min_impossible_o_r(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `maximum-xor-after-operations` | `maximum_x_o_r(nums: ArrayList<i64>)` → `i64` | 通过 |
-| `find-xor-beauty-of-array` | `xor_beauty(nums: ArrayList<i64>)` → `i64` | 通过 |
+| slug | V 入口签名 | TS 实跑 | V 实测 |
+| --- | --- | --- | --- |
+| `single-number-ii` | `single_number(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/86，marshal 阻断 |
+| `single-number-iii` | `single_number(nums: ArrayList<i64>)` → `ArrayList<i64>` | 通过 | `build=0`；判题 0/50，marshal 阻断 |
+| `total-hamming-distance` | `total_hamming_distance(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/98，marshal 阻断 |
+| `maximum-xor-of-two-numbers-in-an-array` | `find_maximum_x_o_r(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/102，marshal 阻断 |
+| `bitwise-ors-of-subarrays` | `subarray_bitwise_o_rs(arr: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/93，marshal 阻断 |
+| `bitwise-xor-of-all-pairings` | `xor_all_nums(nums1: ArrayList<i64>, nums2: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/96，marshal 阻断 |
+| `maximum-xor-for-each-query` | `get_maximum_xor(nums: ArrayList<i64>, maximumBit: i64)` → `ArrayList<i64>` | 通过 | `build=0`；判题 0/79，marshal 阻断 |
+| `count-triplets-that-can-form-two-arrays-of-equal-xor` | `count_triplets(arr: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/93，marshal 阻断 |
+| `score-after-flipping-matrix` | `matrix_score(grid: ArrayList<ArrayList<i64>>)` → `i64` | 通过 | `build=0`；判题 0/80，marshal 阻断（嵌套 `ArrayList`） |
+| `maximum-possible-number-by-binary-concatenation` | `max_good_number(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/91，marshal 阻断 |
+| `minimum-impossible-or` | `min_impossible_o_r(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/108，marshal 阻断 |
+| `maximum-xor-after-operations` | `maximum_x_o_r(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/101，marshal 阻断 |
+| `find-xor-beauty-of-array` | `xor_beauty(nums: ArrayList<i64>)` → `i64` | 通过 | `build=0`；判题 0/81，marshal 阻断 |
 
 ### 纯递推 / 序列生成（12 题）
 
-| slug | V 入口签名 | TS 实跑 |
-| --- | --- | --- |
-| `number-of-dice-rolls-with-target-sum` | `num_rolls_to_target(n: i64, k: i64, target: i64)` → `i64` | 通过 |
-| `sequential-digits` | `sequential_digits(low: i64, high: i64)` → `ArrayList<i64>` | 通过 |
-| `stepping-numbers` | `count_stepping_numbers(low: i64, high: i64)` → `ArrayList<i64>` | 通过 |
-| `numbers-with-same-consecutive-differences` | `nums_same_consec_diff(n: i64, k: i64)` → `ArrayList<i64>` | 通过 |
-| `generate-binary-strings-without-adjacent-zeros` | `valid_strings(n: i64)` → `ArrayList<utf8>` | 通过 |
-| `prime-pairs-with-target-sum` | `find_prime_pairs(n: i64)` → `ArrayList<ArrayList<i64>>` | 通过 |
-| `closest-prime-numbers-in-range` | `closest_primes(left: i64, right: i64)` → `ArrayList<i64>` | 通过 |
-| `maximum-split-of-positive-even-integers` | `maximum_even_split(finalSum: i64)` → `ArrayList<i64>` | 通过 |
-| `moving-stones-until-consecutive` | `num_moves_stones(a: i64, b: i64, c: i64)` → `ArrayList<i64>` | 通过 |
-| `spiral-matrix-ii` | `generate_matrix(n: i64)` → `ArrayList<ArrayList<i64>>` | 通过 |
-| `find-three-consecutive-integers-that-sum-to-a-given-number` | `sum_of_three(num: i64)` → `ArrayList<i64>` | 通过 |
-| `incremental-memory-leak` | `mem_leak(memory1: i64, memory2: i64)` → `ArrayList<i64>` | 通过 |
+| slug | V 入口签名 | TS 实跑 | V 实测 |
+| --- | --- | --- | --- |
+| `number-of-dice-rolls-with-target-sum` | `num_rolls_to_target(n: i64, k: i64, target: i64)` → `i64` | 通过 | `build=0`；判题 **108/108 通过** |
+| `sequential-digits` | `sequential_digits(low: i64, high: i64)` → `ArrayList<i64>` | 通过 | `build=0`；判题 0/88，demarshal 阻断 |
+| `stepping-numbers` | `count_stepping_numbers(low: i64, high: i64)` → `ArrayList<i64>` | 通过 | `build=0`；判题 0/98，demarshal 阻断 |
+| `numbers-with-same-consecutive-differences` | `nums_same_consec_diff(n: i64, k: i64)` → `ArrayList<i64>` | 通过 | `build=0`；判题 0/61，demarshal 阻断 |
+| `generate-binary-strings-without-adjacent-zeros` | `valid_strings(n: i64)` → `ArrayList<utf8>` | 通过 | `build=0`；判题 0/14，demarshal 阻断（`ArrayList<utf8>`） |
+| `prime-pairs-with-target-sum` | `find_prime_pairs(n: i64)` → `ArrayList<ArrayList<i64>>` | 通过 | `build=0`；判题 0/60，demarshal 阻断（嵌套 `ArrayList`） |
+| `closest-prime-numbers-in-range` | `closest_primes(left: i64, right: i64)` → `ArrayList<i64>` | 通过 | `build=0`；判题 0/95，demarshal 阻断 |
+| `maximum-split-of-positive-even-integers` | `maximum_even_split(finalSum: i64)` → `ArrayList<i64>` | 通过 | `build=0`；判题 0/66，demarshal 阻断 |
+| `moving-stones-until-consecutive` | `num_moves_stones(a: i64, b: i64, c: i64)` → `ArrayList<i64>` | 通过 | `build=0`；判题 0/130，demarshal 阻断 |
+| `spiral-matrix-ii` | `generate_matrix(n: i64)` → `ArrayList<ArrayList<i64>>` | 通过 | `build=0`；判题 0/20，demarshal 阻断（嵌套 `ArrayList`） |
+| `find-three-consecutive-integers-that-sum-to-a-given-number` | `sum_of_three(num: i64)` → `ArrayList<i64>` | 通过 | `build=0`；判题 0/52，demarshal 阻断 |
+| `incremental-memory-leak` | `mem_leak(memory1: i64, memory2: i64)` → `ArrayList<i64>` | 通过 | `build=0`；判题 0/81，demarshal 阻断 |
 
 ## 复跑命令
 
@@ -239,4 +248,6 @@ TS 实跑：37/37 通过（提交前逐题 `run_ts_solver.ts`）。本批 8 题�
 node --import tsx projects/conformance/scripts/run_ts_solver.ts projects/problems/<slug>
 ```
 
-V 侧复跑：对表中 slug 逐个跑 `legionBuildProject`，产物落 `leetcode.v/.cache/build-<slug>`，再用隔离判题。
+V 侧复跑：在 `projects/conformance` 下执行 `node --import tsx scripts/run_v_solver.ts ../problems/<slug>`，
+内部先 `resolveCompileTargetPlan` 再 `ensureVBuild`（`legion build`）并跑全量 `metadata.tests`。
+批量编译口径：`resolveCompileTargetPlan(solverDir)` → `legionBuildProject(solverDir, plan.canonicalTarget, outDir)`。

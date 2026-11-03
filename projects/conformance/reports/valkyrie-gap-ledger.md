@@ -8,6 +8,8 @@
 - 仅写完未编译的题不计入覆盖数，也不标 `blocked`；按能力分组登记在
   `valkyrie-unverified-batches.md`，等对应能力复跑。
 - 每题有且只有两个状态：已构建通过 / 未验证。未验证不等于通过。
+- 验证窗口额外记录三态证据（编译通过 / 编译失败 + 诊断坐标 / 因缺口无法判题），
+  逐题结果写在 `valkyrie-unverified-batches.md` 的实测列。
 - 每条缺口只保留一个最小复现；题内触发点写在对应 `solution.v` 的 `# 题内触发点:`。
 
 ## 未恢复
@@ -44,6 +46,33 @@ micro half() -> f64 {
   尝试 `let one: f64 = 1.0`、`1.0 as f64`、`-> std::primitive::f64` 均失败（`浮点常量没有 canonical 形状`）。
 - 影响题：`airplane-seat-assignment-probability`（1227）、`angle-between-hands-of-a-clock`（1344）。
 
+### G3 wasm JS glue 的 `ArrayList` ABI bridge 缺失（入参 marshal / 返回值 demarshal）
+
+- 状态：未恢复（2026-11-03 实测，Medium 37 题复跑暴露）
+- 最小复现（入参方向，25 题）：
+
+```v
+# `house-robber/solvers/valkyrie/solution.v`
+micro rob(nums: ArrayList<i64>) -> i64
+```
+
+  实测：`Error: [wasm-js-glue] Cannot marshal schema kind "NamedAggregate": no ABI bridge implemented.
+  Schema: {"generic_args":[{"kind":"I64"}],"kind":"NamedAggregate","module_path":"std::collection","name":"ArrayList"}`
+- 最小复现（返回值方向，11 题）：
+
+```v
+# `sequential-digits/solvers/valkyrie/solution.v`
+micro sequential_digits(low: i64, high: i64) -> ArrayList<i64>
+```
+
+  实测：`Error: [wasm-js-glue] Cannot demarshal NamedAggregate "ArrayList": no field access contract in ABI schema.`
+- 同族形态：`ArrayList<ArrayList<i64>>`（`minimum-path-sum`、`triangle`、`spiral-matrix-ii`）、
+  `ArrayList<utf8>`（`generate-binary-strings-without-adjacent-zeros`）均命中同一 bridge 缺口。
+- 定位：产物自带的 wasm JS glue（ABI marshal/demarshal 层），`std::collection::ArrayList` 的
+  schema 已生成，缺的是 glue 侧聚合类型的字段访问合同；编译期全部 `build=0`，与题目解法无关。
+- 影响：本批 36 题判题 0 通过（25 marshal + 11 demarshal）。该项恢复前，任何返回或接收
+  `ArrayList` 的题都不能计入构建通过数。
+
 ## 批次状态：Easy 标量/文本池（2026-11-03）
 
 - 范围：`metadata.tests` 的参数与期望均为 `number` / `boolean` / `string` 的 Easy 题，共 133 题。
@@ -53,17 +82,45 @@ micro half() -> f64 {
 - 缺口：本批未新增编译器/std 坐标。`utf8` 下标读、`Utf8Builder`、`ArrayList`、`HashMap`
   属既有已恢复能力，按理想写法直接使用，不写降级实现。
 
-## 批次状态：Medium 三组（2026-11-03）
+## 批次状态：Medium 三组（2026-11-03 实测）
 
 - 范围：`ArrayList 表` 12 题 + `位运算` 13 题 + `纯递推 / 序列生成` 12 题，共 37 题。
-- 状态：理想解已写，**未构建验证**，不计入覆盖数；清单见 `valkyrie-unverified-batches.md`
-  的「批次 M-2026-11-03」。
+- 构建：**37/37 通过**。逐题走 `resolveCompileTargetPlan` → `legionBuildProject`，canonical
+  target 为 `wasm32-unknown-unknown-wasm`（由各题 `legion.von` 的 `build[].target` 经 `legionPlan`
+  规范化，无本地默认值），单题 0.56–1.26 s。逐题证据见 `valkyrie-unverified-batches.md`
+  的「批次 M-2026-11-03」每行实测列。
+- 判题：**1/37 通过**（`number-of-dice-rolls-with-target-sum` 108/108）；36 题在 wasm JS glue
+  ABI 边界被 G3 阻断（25 题入参 marshal、11 题返回值 demarshal），**0 题因算法结果不符而失败**。
+- 构建通过数：**18 → 19**。唯一增量为 `number-of-dice-rolls-with-target-sum`（签名全标量，
+  108/108 实跑通过）；其余 36 题虽有 `build=0` 产物，但判题未通过，按维护口径不计入覆盖数。
 - TS 侧：37 题全部用 `run_ts_solver.ts` 实跑，**37/37 通过**；跑红后修的是语料与两处算法
   （`minimum-impossible-or` 判定规则、`numbers-with-same-consecutive-differences` BFS 子节点顺序），
   未为通过而改期望值。
-- 缺口：本批未新增已确认编译器/std 坐标。以下写法只有历史单点证据、尚无构建验证，登记为
-  「待复验」而不是缺口：变量右移 `x >> bit`、`ArrayList` 变量整体重新赋值、`ArrayList<bool>`
-  下标读写、`HashMap` 批量插入后跨循环查询。
+
+编译期失败族（均已修复，不再是当前失败项）：
+
+| 族 | 命中 | 最小复现 | 诊断与坐标 |
+| --- | --- | --- | --- |
+| F1 下标值再调 `.unwrap()` | 18 题 / 58 处 | `nums⁅i⁆.unwrap()` | `error[valkyrie.hir.unresolved_call]`，报告无 `unwrap` 方法候选；例 `house-robber-ii/solution.v:8:22`、`spiral-matrix-ii/solution.v:26:13` |
+| F2 `i32` 字面量移位越界 | 1 题 | `return 1 << 32` | `error[valkyrie.hir.unresolved_call]`，`minimum-impossible-or/solution.v:18:12`；字面量 `1` 取默认 `i32`，改为字面量 `4294967296` 后 `build=0` |
+| F4 导出名与 `invoke.valkyrie` 不一致 | 2 题 | `subarray_bitwise_o_r_s` 导出 `subarrayBitwiseORS` | 运行期找不到 export；按 `snake_case_to_camel_case` 只大写 `_` 后首字符的规则，改为 `subarray_bitwise_o_rs` / `get_maximum_xor`，同步后 `build=0` |
+
+F1、F2、F4 均为**非缺口、是我写错**：删 `.unwrap()` 改直接下标、改越界字面量、按导出规则命名，
+未为凑通过数改算法或期望。F4 的两题修名后落入 G3（marshal），不再作为独立族存在。
+
+全仓扫描补充：F1 的 `⁅…⁆.unwrap()` 写法在本批之外仍有 **287 处 / 96 个** `solution.v`
+（主要是 Easy 133 题批次）。它们同属写法错误、不是缺口；本窗口只修 Medium 37 题，
+Easy 批次复跑时须先按 F1 清理，否则首轮构建会再次大面积报
+`error[valkyrie.hir.unresolved_call]`。
+
+4 类「待复验」写法的实测结论：
+
+| 探针 | 命中题 | 实测结果 | 结论 |
+| --- | --- | --- | --- |
+| 变量右移 `x >> bit` | `single-number-ii` | `build=0`；`x`、`bit` 均为 `i64` 变量 | 编译器已支持，非缺口。仅字面量 `1 << 32` 受 `i32` 默认类型限制（F2） |
+| `ArrayList` 变量整体赋值 | `number-of-dice-rolls-with-target-sum` | `build=0` 且判题 108/108 | 编译器与运行期均支持，非缺口 |
+| `ArrayList<bool>` 下标读写 | `prime-pairs-with-target-sum`、`closest-prime-numbers-in-range` | `build=0`；筛法体执行至返回值边界，随后才在 demarshal 处报 G3 | 语言与运行期支持，非缺口；断言被 G3 阻断 |
+| `HashMap` 批量插入 | `maximum-xor-of-two-numbers-in-an-array` | `build=0`；`insert` 在循环内批量写入 | 编译期支持，非缺口；运行期未执行（marshal 先阻断） |
 
 ## 语料缺陷（corpusDefect，2026-11-03 实测）
 
@@ -119,5 +176,8 @@ Easy 133 题实测 30 题有缺陷、Medium 37 题实测 8 题有缺陷，该「
 - 状态：已恢复（2026-11-03 复测）
 - 证据：探针工程（`ArrayList::new(n)` + `push` + `⁅usize⁆` 读 / 赋值）`status=0`。
 - 用法：下标必须是 `usize` 变量或 `expr as usize`；字面量 `⁅0⁆` 会解析到 `Nominal(ItemId(17))`。
+- 更正（2026-11-03）：下标读出元素后**直接**用 `arr⁅i⁆`，不要再接 `.unwrap()`。Medium 批次
+  18 题 58 处 `arr⁅i⁆.unwrap()` 均报 `error[valkyrie.hir.unresolved_call]`（无 `unwrap` 方法候选）；
+  改为直接下标后全部 `build=0`。这是合法写法差异，不是缺口。
 - 说明：`HashMap<K,V>` 作为递归参数时未见缓存生效（`can-i-win` 曾 240s 超时）；
   改用 `ArrayList<i64>` 三态记忆表后 75/75 通过。该条按待验证项保留，不单列缺口。
