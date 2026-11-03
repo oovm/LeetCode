@@ -1,5 +1,46 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：逆序扫 `s⁅i⁆` 跳过 '-' 并每 k 个插 '-' 再整体反转 —— 需要文本下标读、字符大写化与拼串。
-# 期望语义：文本按下标读、逐字符拼串、大小写转换。实际：std.text 这些能力未就绪（工具链冻结），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：逆序分组重排，时间 O(n) 空间 O(n)。
+namespace leetcode.license_key_formatting;
+
+# 去掉连字符、转大写并按 k 从右分组，O(n)
+[export(case: "camelCase")]
+micro license_key_formatting(s: utf8, k: i64) -> utf8 {
+    let n: usize = s.length()
+    let mut count: usize = 0
+    let mut i: usize = 0
+    while i < n {
+        if (s⁅i⁆ as u32) != 45 {
+            count = count + 1
+        }
+        i = i + 1
+    }
+    let mut first_group: i64 = (count as i64) % k
+    if first_group == 0 && count > 0 {
+        first_group = k
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(count + 1)
+    let mut column: i64 = 0
+    let mut j: usize = 0
+    while j < n {
+        let code: u32 = s⁅j⁆ as u32
+        if code != 45 {
+            if column == first_group {
+                builder.append(char::from(45))
+                column = 0
+                first_group = k
+            }
+            let mut out: u32 = code
+            if code >= 97 && code <= 122 {
+                out = code - 32
+            }
+            builder.append(char::from(out))
+            column = column + 1
+        }
+        j = j + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro licenseKeyFormatting(self, s: utf8, k: i64): utf8 {
+        return license_key_formatting(s, k)
+    }
+}

@@ -919,6 +919,7 @@
     ],
     "invoke": {
         "python": "Solution().longestNiceSubstring",
-        "typescript": "Solution().longestNiceSubstring"
+        "typescript": "Solution().longestNiceSubstring",
+        "valkyrie": "longestNiceSubstring"
     }
 }

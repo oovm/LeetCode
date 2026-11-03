@@ -1085,6 +1085,7 @@
     ],
     "invoke": {
         "python": "Solution().maxRepeating",
-        "typescript": "Solution().maxRepeating"
+        "typescript": "Solution().maxRepeating",
+        "valkyrie": "maxRepeating"
     }
 }

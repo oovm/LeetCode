@@ -42,6 +42,15 @@ micro half() -> f64 {
   尝试 `let one: f64 = 1.0`、`1.0 as f64`、`-> std::primitive::f64` 均失败（`浮点常量没有 canonical 形状`）。
 - 影响题：`airplane-seat-assignment-probability`（1227）、`angle-between-hands-of-a-clock`（1344）。
 
+## 批次状态：Easy 标量/文本池（2026-11-03）
+
+- 范围：`metadata.tests` 的参数与期望均为 `number` / `boolean` / `string` 的 Easy 题，共 133 题。
+- 状态：理想解已写，**未构建验证**。本轮不跑 `legionBuildProject`，这 133 题不计入覆盖数。
+- 缺口：本批未新增编译器/std 坐标。`utf8` 下标读、`Utf8Builder`、`ArrayList`、`HashMap`
+  属既有已恢复能力，按理想写法直接使用，不写降级实现。
+- 非缺口：部分题的 `metadata.tests` 期望为 `Error: ...` 或 `null`（Python 签名残留、越界用例），
+  属题面数据缺陷。题解按真实语义实现，不为该缺陷改算法。
+
 ## 已恢复
 
 ### G0 `ArrayList` 运行期长度 + 下标读写

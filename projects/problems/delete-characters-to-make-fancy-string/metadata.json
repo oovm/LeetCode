@@ -211,6 +211,7 @@
     ],
     "invoke": {
         "python": "Solution().makeFancyString",
-        "typescript": "Solution().makeFancyString"
+        "typescript": "Solution().makeFancyString",
+        "valkyrie": "makeFancyString"
     }
 }

@@ -1,11 +1,18 @@
 export class Solution {
-    categorizeBox(height: number, mass: number, length: number, width: number): string {
+    categorizeBox(length: number, width: number, height: number, mass: number): string {
         const bulky =
-            Math.max(height, length, width) >= 10000 || height * length * width >= 1_000_000_000;
+            Math.max(length, width, height) >= 10000 ||
+            length * width * height >= 1000000000;
         const heavy = mass >= 100;
-        if (bulky && heavy) return 'Both';
-        if (bulky) return 'Bulky';
-        if (heavy) return 'Heavy';
+        if (bulky && heavy) {
+            return 'Both';
+        }
+        if (bulky) {
+            return 'Bulky';
+        }
+        if (heavy) {
+            return 'Heavy';
+        }
         return 'Neither';
     }
 }

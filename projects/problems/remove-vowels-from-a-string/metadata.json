@@ -349,6 +349,7 @@
     ],
     "invoke": {
         "python": "Solution().removeVowels",
-        "typescript": "Solution().removeVowels"
+        "typescript": "Solution().removeVowels",
+        "valkyrie": "removeVowels"
     }
 }

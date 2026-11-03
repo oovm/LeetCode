@@ -1,5 +1,5 @@
 export class Solution {
-    removeDigit(digit: string, number: string): string {
+    removeDigit(number: string, digit: string): string {
         let best = '';
         for (let i = 0; i < number.length; i++) {
             if (number[i] === digit) {

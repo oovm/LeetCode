@@ -1,5 +1,39 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 分段取字符、逆置后拼回结果串。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：每 2k 一段逆置前 k 个字符，时间 O(n) 空间 O(n)。
+namespace leetcode.reverse_string_ii;
+
+# 每 2k 段翻转前 k 个字符，O(n)
+[export(case: "camelCase")]
+micro reverse_str(s: utf8, k: i64) -> utf8 {
+    let n: usize = s.length()
+    let size: usize = k as usize
+    let step: usize = size * 2
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut start: usize = 0
+    while start < n {
+        let mut end: usize = start + size
+        if end > n {
+            end = n
+        }
+        let mut p: usize = end
+        while p > start {
+            builder.append(s⁅p - 1⁆)
+            p = p - 1
+        }
+        let mut limit: usize = start + step
+        if limit > n {
+            limit = n
+        }
+        let mut q: usize = end
+        while q < limit {
+            builder.append(s⁅q⁆)
+            q = q + 1
+        }
+        start = start + step
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro reverseStr(self, s: utf8, k: i64): utf8 {
+        return reverse_str(s, k)
+    }
+}

@@ -721,6 +721,7 @@
     ],
     "invoke": {
         "python": "Solution().replaceDigits",
-        "typescript": "Solution().replaceDigits"
+        "typescript": "Solution().replaceDigits",
+        "valkyrie": "replaceDigits"
     }
 }

@@ -805,6 +805,7 @@
     ],
     "invoke": {
         "python": "Solution().largestGoodInteger",
-        "typescript": "Solution().largestGoodInteger"
+        "typescript": "Solution().largestGoodInteger",
+        "valkyrie": "largestGoodInteger"
     }
 }

@@ -1,5 +1,21 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：返回单字符文本（理想写法按 popcount(k-1) 对 a 偏移构造）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：popcount(k-1) 偏移构造，时间 O(log k) 空间 O(1)。
+namespace leetcode.find_the_k_th_character_in_string_game_i;
+
+# 第 k 位相对 'a' 的偏移等于 k-1 的二进制 1 位数。
+[export(case: "camelCase")]
+micro kth_character(k: i64) -> utf8 {
+    let mut value: i64 = k - 1
+    let mut shifts: i64 = 0
+    while value > 0 {
+        shifts = shifts + (value % 2)
+        value = value / 2
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(1)
+    builder.append(char::from((97 + shifts % 26) as u32))
+    return builder.build()
+}
+
+class Solution {
+    micro kthCharacter(self, k: i64): utf8 {
+        return kth_character(k)
+    }
+}

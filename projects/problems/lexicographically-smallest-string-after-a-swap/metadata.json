@@ -751,6 +751,7 @@
     ],
     "invoke": {
         "python": "Solution().getSmallestString",
-        "typescript": "Solution().getSmallestString"
+        "typescript": "Solution().getSmallestString",
+        "valkyrie": "getSmallestString"
     }
 }

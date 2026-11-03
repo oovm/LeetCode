@@ -1,5 +1,61 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：切词后长度 >2 首字母大写、其余小写再拼接。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：逐词大小写规整，时间 O(n) 空间 O(n)。
+namespace leetcode.capitalize_the_title;
+
+[export(case: "camelCase")]
+micro capitalize_title(title: utf8) -> utf8 {
+    let n: usize = title.length()
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut first: bool = true
+    let mut i: usize = 0
+    while i < n {
+        while (i < n) && ((title⁅i⁆ as u32) == 32) {
+            i = i + 1
+        }
+        let start: usize = i
+        while (i < n) && ((title⁅i⁆ as u32) != 32) {
+            i = i + 1
+        }
+        if i > start {
+            if !first {
+                builder.append(char::from(32))
+            }
+            first = false
+            let len: usize = i - start
+            if len > 2 {
+                let c0: u32 = title⁅start⁆ as u32
+                if c0 >= 97 && c0 <= 122 {
+                    builder.append(char::from(c0 - 32))
+                } else {
+                    builder.append(char::from(c0))
+                }
+                let mut j: usize = start + 1
+                while j < i {
+                    let c: u32 = title⁅j⁆ as u32
+                    if c >= 65 && c <= 90 {
+                        builder.append(char::from(c + 32))
+                    } else {
+                        builder.append(char::from(c))
+                    }
+                    j = j + 1
+                }
+            } else {
+                let mut k: usize = start
+                while k < i {
+                    let c: u32 = title⁅k⁆ as u32
+                    if c >= 65 && c <= 90 {
+                        builder.append(char::from(c + 32))
+                    } else {
+                        builder.append(char::from(c))
+                    }
+                    k = k + 1
+                }
+            }
+        }
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro capitalizeTitle(self, title: utf8): utf8 {
+        return capitalize_title(title)
+    }
+}

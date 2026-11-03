@@ -229,6 +229,7 @@
     ],
     "invoke": {
         "python": "Solution().kthCharacter",
-        "typescript": "Solution().kthCharacter"
+        "typescript": "Solution().kthCharacter",
+        "valkyrie": "kthCharacter"
     }
 }

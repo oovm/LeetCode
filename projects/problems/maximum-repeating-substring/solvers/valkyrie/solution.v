@@ -1,5 +1,67 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`sequence.contains(word·k)` 递增倍串包含判定。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：递增倍串包含，时间 O(n·m) 空间 O(m)。
+namespace leetcode.maximum_repeating_substring;
+
+micro contains_text(hay: utf8, needle: utf8) -> bool {
+    let n: usize = hay.length()
+    let m: usize = needle.length()
+    if m == 0 {
+        return true
+    }
+    if n < m {
+        return false
+    }
+    let mut i: usize = 0
+    while i + m <= n {
+        let mut j: usize = 0
+        let mut same: bool = true
+        while j < m && same {
+            if (hay⁅i + j⁆ as u32) != (needle⁅j⁆ as u32) {
+                same = false
+            }
+            j = j + 1
+        }
+        if same {
+            return true
+        }
+        i = i + 1
+    }
+    return false
+}
+
+micro concat_text(a: utf8, b: utf8) -> utf8 {
+    let mut builder: Utf8Builder = Utf8Builder::new(a.length() + b.length())
+    let mut i: usize = 0
+    while i < a.length() {
+        builder.append(a⁅i⁆)
+        i = i + 1
+    }
+    i = 0
+    while i < b.length() {
+        builder.append(b⁅i⁆)
+        i = i + 1
+    }
+    return builder.build()
+}
+
+[export(case: "camelCase")]
+micro max_repeating(sequence: utf8, word: utf8) -> i64 {
+    let mut empty_builder: Utf8Builder = Utf8Builder::new(0)
+    let mut text: utf8 = empty_builder.build()
+    let mut k: i64 = 0
+    let mut more: bool = true
+    while more {
+        let candidate: utf8 = concat_text(text, word)
+        if contains_text(sequence, candidate) {
+            text = candidate
+            k = k + 1
+        } else {
+            more = false
+        }
+    }
+    return k
+}
+
+class Solution {
+    micro maxRepeating(self, sequence: utf8, word: utf8): i64 {
+        return max_repeating(sequence, word)
+    }
+}

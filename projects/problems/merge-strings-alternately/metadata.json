@@ -667,6 +667,7 @@
     ],
     "invoke": {
         "python": "Solution().mergeAlternately",
-        "typescript": "Solution().mergeAlternately"
+        "typescript": "Solution().mergeAlternately",
+        "valkyrie": "mergeAlternately"
     }
 }

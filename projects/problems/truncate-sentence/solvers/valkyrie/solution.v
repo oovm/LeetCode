@@ -1,5 +1,33 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：按空格切词取前 k 个再拼接。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：切词截断，时间 O(n) 空间 O(n)。
+namespace leetcode.truncate_sentence;
+
+[export(case: "camelCase")]
+micro truncate_sentence(s: utf8, k: i64) -> utf8 {
+    let n: usize = s.length()
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut words: i64 = 0
+    let mut first: bool = true
+    let mut i: usize = 0
+    while i < n && words < k {
+        while i < n && (s⁅i⁆ as u32 as i64) == 32 {
+            i = i + 1
+        }
+        if i < n {
+            if first == false {
+                builder.append(char::from(32))
+            }
+            while i < n && (s⁅i⁆ as u32 as i64) != 32 {
+                builder.append(s⁅i⁆)
+                i = i + 1
+            }
+            words = words + 1
+            first = false
+        }
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro truncateSentence(self, s: utf8, k: i64): utf8 {
+        return truncate_sentence(s, k)
+    }
+}

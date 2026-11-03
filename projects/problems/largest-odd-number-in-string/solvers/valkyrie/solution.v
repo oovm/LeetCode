@@ -1,5 +1,32 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：逆扫 `num⁅i⁆` 找末个奇数位并取前缀。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：逆扫截前缀，时间 O(n) 空间 O(1)。
+namespace leetcode.largest_odd_number_in_string;
+
+[export(case: "camelCase")]
+micro largest_odd_number(num: utf8) -> utf8 {
+    let n: usize = num.length()
+    let mut last: i64 = -1
+    let mut i: usize = 0
+    while i < n {
+        let digit: i64 = num⁅i⁆ as u32 as i64 - 48
+        if digit % 2 == 1 {
+            last = i as i64
+        }
+        i = i + 1
+    }
+    if last < 0 {
+        return Utf8Builder::new(0).build()
+    }
+    let count: usize = (last + 1) as usize
+    let mut builder: Utf8Builder = Utf8Builder::new(count)
+    let mut k: usize = 0
+    while k < count {
+        builder.append(num⁅k⁆)
+        k = k + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro largestOddNumber(self, num: utf8): utf8 {
+        return largest_odd_number(num)
+    }
+}

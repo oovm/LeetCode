@@ -679,6 +679,7 @@
     ],
     "invoke": {
         "python": "Solution().findTheDifference",
-        "typescript": "Solution().findTheDifference"
+        "typescript": "Solution().findTheDifference",
+        "valkyrie": "findTheDifference"
     }
 }

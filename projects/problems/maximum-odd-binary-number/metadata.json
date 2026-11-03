@@ -475,6 +475,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumOddBinaryNumber",
-        "typescript": "Solution().maximumOddBinaryNumber"
+        "typescript": "Solution().maximumOddBinaryNumber",
+        "valkyrie": "maximumOddBinaryNumber"
     }
 }

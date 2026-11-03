@@ -1,5 +1,5 @@
 export class Solution {
     truncateSentence(s: string, k: number): string {
-        return s.split(' ').slice(0, k).join(' ');
+        return s.trim().split(/\s+/).slice(0, k).join(' ');
     }
 }

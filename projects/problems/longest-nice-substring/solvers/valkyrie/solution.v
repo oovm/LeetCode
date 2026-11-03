@@ -1,5 +1,44 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 分治按缺失大小写的字符切分。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：分治求最长nice子串，时间 O(n²) 空间 O(n)。
+namespace leetcode.longest_nice_substring;
+
+[export(case: "camelCase")]
+micro longest_nice_substring(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut best_len: usize = 0
+    let mut best_start: usize = 0
+    let mut i: usize = 0
+    while i < n {
+        let mut lower: i64 = 0
+        let mut upper: i64 = 0
+        let mut j: usize = i
+        while j < n {
+            let code: i64 = s⁅j⁆ as u32 as i64
+            if code >= 97 && code <= 122 {
+                let bit: i64 = 1 << (code - 97)
+                lower = lower | bit
+            } else if code >= 65 && code <= 90 {
+                let bit: i64 = 1 << (code - 65)
+                upper = upper | bit
+            }
+            let span: usize = j - i + 1
+            if lower == upper && span > best_len {
+                best_len = span
+                best_start = i
+            }
+            j = j + 1
+        }
+        i = i + 1
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(best_len)
+    let mut k: usize = 0
+    while k < best_len {
+        builder.append(s⁅best_start + k⁆)
+        k = k + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro longestNiceSubstring(self, s: utf8): utf8 {
+        return longest_nice_substring(s)
+    }
+}

@@ -733,6 +733,7 @@
     ],
     "invoke": {
         "python": "Solution().findLatestTime",
-        "typescript": "Solution().findLatestTime"
+        "typescript": "Solution().findLatestTime",
+        "valkyrie": "findLatestTime"
     }
 }

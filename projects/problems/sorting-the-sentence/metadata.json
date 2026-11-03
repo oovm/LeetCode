@@ -877,6 +877,7 @@
     ],
     "invoke": {
         "python": "Solution().sortSentence",
-        "typescript": "Solution().sortSentence"
+        "typescript": "Solution().sortSentence",
+        "valkyrie": "sortSentence"
     }
 }

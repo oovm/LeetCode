@@ -1,5 +1,39 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`num⁅i⁆` 三连同字符取最大。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：三连扫描，时间 O(n) 空间 O(1)。
+namespace leetcode.largest_3_same_digit_number_in_string;
+
+micro empty_text() -> utf8 {
+    let mut builder: Utf8Builder = Utf8Builder::new(0)
+    return builder.build()
+}
+
+[export(case: "camelCase")]
+micro largest_good_integer(num: utf8) -> utf8 {
+    let n: usize = num.length()
+    let mut best: i64 = -1
+    let mut i: usize = 0
+    while i + 2 < n {
+        let a: u32 = num⁅i⁆ as u32
+        let b: u32 = num⁅i + 1⁆ as u32
+        let c: u32 = num⁅i + 2⁆ as u32
+        if (a == b) && (b == c) {
+            let d: i64 = a as i64 - 48
+            if d > best {
+                best = d
+            }
+        }
+        i = i + 1
+    }
+    if best < 0 {
+        return empty_text()
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(3)
+    builder.append(char::from((48 + best) as u32))
+    builder.append(char::from((48 + best) as u32))
+    builder.append(char::from((48 + best) as u32))
+    return builder.build()
+}
+
+class Solution {
+    micro largestGoodInteger(self, num: utf8): utf8 {
+        return largest_good_integer(num)
+    }
+}

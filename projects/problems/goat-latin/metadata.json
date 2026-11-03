@@ -817,6 +817,7 @@
     ],
     "invoke": {
         "python": "Solution().toGoatLatin",
-        "typescript": "Solution().toGoatLatin"
+        "typescript": "Solution().toGoatLatin",
+        "valkyrie": "toGoatLatin"
     }
 }

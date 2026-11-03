@@ -1,5 +1,25 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：构造 n 个 a（n 偶则末位换 b）的结果串。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：奇偶构造，时间 O(n) 空间 O(n)。
+namespace leetcode.generate_a_string_with_characters_that_have_odd_counts;
+
+[export(case: "camelCase")]
+micro generate_the_string(n: i64) -> utf8 {
+    let mut builder: Utf8Builder = Utf8Builder::new(n as usize)
+    let mut count: i64 = n
+    if n % 2 == 0 {
+        count = n - 1
+    }
+    let mut i: i64 = 0
+    while i < count {
+        builder.append(char::from(97))
+        i = i + 1
+    }
+    if n % 2 == 0 {
+        builder.append(char::from(98))
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro generateTheString(self, n: i64): utf8 {
+        return generate_the_string(n)
+    }
+}

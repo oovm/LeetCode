@@ -623,6 +623,7 @@
     ],
     "invoke": {
         "python": "Solution().getEncryptedString",
-        "typescript": "Solution().getEncryptedString"
+        "typescript": "Solution().getEncryptedString",
+        "valkyrie": "getEncryptedString"
     }
 }

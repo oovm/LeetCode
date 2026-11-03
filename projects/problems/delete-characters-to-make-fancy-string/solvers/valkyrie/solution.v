@@ -1,5 +1,30 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 三连同字符则跳过拼串。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：限长 2 游程过滤，时间 O(n) 空间 O(n)。
+namespace leetcode.delete_characters_to_make_fancy_string;
+
+[export(case: "camelCase")]
+micro make_fancy_string(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut prev: i64 = -1
+    let mut run: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        let code: i64 = s⁅i⁆ as u32 as i64
+        if code == prev {
+            run = run + 1
+        } else {
+            prev = code
+            run = 1
+        }
+        if run < 3 {
+            builder.append(s⁅i⁆)
+        }
+        i = i + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro makeFancyString(self, s: utf8): utf8 {
+        return make_fancy_string(s)
+    }
+}

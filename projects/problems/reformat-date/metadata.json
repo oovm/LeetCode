@@ -673,6 +673,7 @@
     ],
     "invoke": {
         "python": "Solution().reformatDate",
-        "typescript": "Solution().reformatDate"
+        "typescript": "Solution().reformatDate",
+        "valkyrie": "reformatDate"
     }
 }

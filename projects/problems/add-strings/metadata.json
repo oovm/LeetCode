@@ -672,6 +672,7 @@
     ],
     "invoke": {
         "python": "Solution().addStrings",
-        "typescript": "Solution().addStrings"
+        "typescript": "Solution().addStrings",
+        "valkyrie": "addStrings"
     }
 }

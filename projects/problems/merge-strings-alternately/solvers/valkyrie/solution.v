@@ -1,5 +1,25 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`word1⁅i⁆`、`word2⁅i⁆` 交错取字符拼串。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：交错合并，时间 O(n) 空间 O(n)。
+namespace leetcode.merge_strings_alternately;
+
+[export(case: "camelCase")]
+micro merge_alternately(word1: utf8, word2: utf8) -> utf8 {
+    let n1: usize = word1.length()
+    let n2: usize = word2.length()
+    let mut builder: Utf8Builder = Utf8Builder::new(n1 + n2)
+    let mut i: usize = 0
+    while i < n1 || i < n2 {
+        if i < n1 {
+            builder.append(word1⁅i⁆)
+        }
+        if i < n2 {
+            builder.append(word2⁅i⁆)
+        }
+        i = i + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro mergeAlternately(self, word1: utf8, word2: utf8): utf8 {
+        return merge_alternately(word1, word2)
+    }
+}

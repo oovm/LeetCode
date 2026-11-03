@@ -1033,6 +1033,7 @@
     ],
     "invoke": {
         "python": "Solution().categorizeBox",
-        "typescript": "Solution().categorizeBox"
+        "typescript": "Solution().categorizeBox",
+        "valkyrie": "categorizeBox"
     }
 }

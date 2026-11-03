@@ -1,5 +1,64 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`str1 + str2 == str2 + str1` 拼接比较并取 gcd 长度前缀。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：拼接交换律 + gcd 长度前缀，时间 O(n) 空间 O(n)。
+namespace leetcode.greatest_common_divisor_of_strings;
+
+micro same_text(a: utf8, b: utf8) -> bool {
+    if a.length() != b.length() {
+        return false
+    }
+    let mut i: usize = 0
+    while i < a.length() {
+        if (a⁅i⁆ as u32) != (b⁅i⁆ as u32) {
+            return false
+        }
+        i = i + 1
+    }
+    return true
+}
+
+micro concat(a: utf8, b: utf8) -> utf8 {
+    let mut builder: Utf8Builder = Utf8Builder::new(a.length() + b.length())
+    let mut i: usize = 0
+    while i < a.length() {
+        builder.append(a⁅i⁆)
+        i = i + 1
+    }
+    i = 0
+    while i < b.length() {
+        builder.append(b⁅i⁆)
+        i = i + 1
+    }
+    return builder.build()
+}
+
+micro gcd_of(a: i64, b: i64) -> i64 {
+    let mut x: i64 = a
+    let mut y: i64 = b
+    while y != 0 {
+        let t: i64 = x % y
+        x = y
+        y = t
+    }
+    return x
+}
+
+# 两串拼接交换律成立时，最短公共重复单元长度等于两串长度的 gcd。
+[export(case: "camelCase")]
+micro gcd_of_strings(str1: utf8, str2: utf8) -> utf8 {
+    let mut builder: Utf8Builder = Utf8Builder::new(0)
+    if !same_text(concat(str1, str2), concat(str2, str1)) {
+        return builder.build()
+    }
+    let g: usize = gcd_of(str1.length() as i64, str2.length() as i64) as usize
+    let mut out: Utf8Builder = Utf8Builder::new(g)
+    let mut i: usize = 0
+    while i < g {
+        out.append(str1⁅i⁆)
+        i = i + 1
+    }
+    return out.build()
+}
+
+class Solution {
+    micro gcdOfStrings(self, str1: utf8, str2: utf8): utf8 {
+        return gcd_of_strings(str1, str2)
+    }
+}

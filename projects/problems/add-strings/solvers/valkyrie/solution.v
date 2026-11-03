@@ -1,5 +1,38 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`num1⁅i⁆ - '0'` 逐位取数字并向前拼结果串 —— 需要文本下标读与结果串逐字符构造。
-# 期望语义：文本按下标读字符、逐字符拼串。实际：std.text 下标/构造能力未就绪（工具链冻结），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：双指针从低位起逐位加带进位，时间 O(max(m,n)) 空间 O(max(m,n))。
+namespace leetcode.add_strings;
+
+# 末位对齐逐位相加，低位先写入再反转，O(n)
+[export(case: "camelCase")]
+micro add_strings(num1: utf8, num2: utf8) -> utf8 {
+    let mut i: usize = num1.length()
+    let mut j: usize = num2.length()
+    let mut carry: i64 = 0
+    let mut digits: Utf8Builder = Utf8Builder::new(i + j + 1)
+    while i > 0 || j > 0 || carry > 0 {
+        let mut sum: i64 = carry
+        if i > 0 {
+            sum = sum + (num1⁅i - 1⁆ as u32 as i64) - 48
+            i = i - 1
+        }
+        if j > 0 {
+            sum = sum + (num2⁅j - 1⁆ as u32 as i64) - 48
+            j = j - 1
+        }
+        digits.append(char::from((sum % 10 + 48) as u32))
+        carry = sum / 10
+    }
+    let reversed: utf8 = digits.build()
+    let n: usize = reversed.length()
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut k: usize = n
+    while k > 0 {
+        builder.append(reversed⁅k - 1⁆)
+        k = k - 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro addStrings(self, num1: utf8, num2: utf8): utf8 {
+        return add_strings(num1, num2)
+    }
+}

@@ -742,6 +742,7 @@
     ],
     "invoke": {
         "python": "Solution().licenseKeyFormatting",
-        "typescript": "Solution().licenseKeyFormatting"
+        "typescript": "Solution().licenseKeyFormatting",
+        "valkyrie": "licenseKeyFormatting"
     }
 }

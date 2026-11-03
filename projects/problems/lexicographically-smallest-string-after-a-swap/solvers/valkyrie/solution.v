@@ -1,5 +1,38 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 找首对同奇偶且前大后小的位对交换。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：一次交换贪心，时间 O(n) 空间 O(n)。
+namespace leetcode.lexicographically_smallest_string_after_a_swap;
+
+# 至多一次交换：找首个同奇偶且前大后小的相邻位对。
+[export(case: "camelCase")]
+micro get_smallest_string(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut swap_at: usize = n
+    let mut found: bool = false
+    let mut i: usize = 0
+    while i + 1 < n && !found {
+        let first: i64 = s⁅i⁆ as u32 as i64 - 48
+        let second: i64 = s⁅i + 1⁆ as u32 as i64 - 48
+        if first % 2 == second % 2 && first > second {
+            swap_at = i
+            found = true
+        }
+        i = i + 1
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut j: usize = 0
+    while j < n {
+        if found && j == swap_at {
+            builder.append(s⁅swap_at + 1⁆)
+        } else if found && j == swap_at + 1 {
+            builder.append(s⁅swap_at⁆)
+        } else {
+            builder.append(s⁅j⁆)
+        }
+        j = j + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro getSmallestString(self, s: utf8): utf8 {
+        return get_smallest_string(s)
+    }
+}

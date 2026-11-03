@@ -1,5 +1,21 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅(i+k)%n⁆` 轮换取字符拼新串。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：轮转拼接，时间 O(n) 空间 O(n)。
+namespace leetcode.find_the_encrypted_string;
+
+# 第 i 位取原串 (i + k) mod n 处字符。
+[export(case: "camelCase")]
+micro get_encrypted_string(s: utf8, k: i64) -> utf8 {
+    let n: usize = s.length()
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut i: usize = 0
+    while i < n {
+        let offset: i64 = (i as i64 + k % n as i64) % n as i64
+        builder.append(s⁅offset as usize⁆)
+        i = i + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro getEncryptedString(self, s: utf8, k: i64): utf8 {
+        return get_encrypted_string(s, k)
+    }
+}

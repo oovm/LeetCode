@@ -355,6 +355,7 @@
     ],
     "invoke": {
         "python": "Solution().generateTheString",
-        "typescript": "Solution().generateTheString"
+        "typescript": "Solution().generateTheString",
+        "valkyrie": "generateTheString"
     }
 }

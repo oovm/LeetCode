@@ -1,5 +1,62 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：切词后按词尾数字归位、去尾再拼接。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：词尾数字排序，时间 O(n) 空间 O(n)。
+namespace leetcode.sorting_the_sentence;
+
+[export(case: "camelCase")]
+micro sort_sentence(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut max_pos: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        while i < n && (s⁅i⁆ as u32 as i64) == 32 {
+            i = i + 1
+        }
+        if i < n {
+            let mut j: usize = i
+            while j < n && (s⁅j⁆ as u32 as i64) != 32 {
+                j = j + 1
+            }
+            let last: i64 = s⁅j - 1⁆ as u32 as i64 - 48
+            if last > max_pos {
+                max_pos = last
+            }
+            i = j
+        }
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut pos: i64 = 1
+    let mut first: bool = true
+    while pos <= max_pos {
+        let mut j: usize = 0
+        while j < n {
+            while j < n && (s⁅j⁆ as u32 as i64) == 32 {
+                j = j + 1
+            }
+            if j < n {
+                let mut a: usize = j
+                while a < n && (s⁅a⁆ as u32 as i64) != 32 {
+                    a = a + 1
+                }
+                let last: i64 = s⁅a - 1⁆ as u32 as i64 - 48
+                if last == pos {
+                    if first == false {
+                        builder.append(char::from(32))
+                    }
+                    let mut k: usize = j
+                    while k + 1 < a {
+                        builder.append(s⁅k⁆)
+                        k = k + 1
+                    }
+                    first = false
+                }
+                j = a
+            }
+        }
+        pos = pos + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro sortSentence(self, s: utf8): utf8 {
+        return sort_sentence(s)
+    }
+}

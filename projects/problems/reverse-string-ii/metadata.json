@@ -735,6 +735,7 @@
     ],
     "invoke": {
         "python": "Solution().reverseStr",
-        "typescript": "Solution().reverseStr"
+        "typescript": "Solution().reverseStr",
+        "valkyrie": "reverseStr"
     }
 }

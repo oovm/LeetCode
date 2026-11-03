@@ -1,5 +1,26 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 逆序扫描，遇 `#` 取前两位映射字符。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：逆扫映射拼串，时间 O(n) 空间 O(n)。
+namespace leetcode.decrypt_string_from_alphabet_to_integer_mapping;
+
+[export(case: "camelCase")]
+micro freq_alphabets(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut i: usize = 0
+    while i < n {
+        if i + 2 < n && (s⁅i + 2⁆ as u32) == 35 {
+            let value: u32 = (s⁅i⁆ as u32 - 48) * 10 + (s⁅i + 1⁆ as u32 - 48)
+            builder.append(char::from(value + 96))
+            i = i + 3
+        } else {
+            let value: u32 = s⁅i⁆ as u32 - 48
+            builder.append(char::from(value + 96))
+            i = i + 1
+        }
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro freqAlphabets(self, s: utf8): utf8 {
+        return freq_alphabets(s)
+    }
+}

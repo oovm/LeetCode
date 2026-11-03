@@ -889,6 +889,7 @@
     ],
     "invoke": {
         "python": "Solution().removeDigit",
-        "typescript": "Solution().removeDigit"
+        "typescript": "Solution().removeDigit",
+        "valkyrie": "removeDigit"
     }
 }

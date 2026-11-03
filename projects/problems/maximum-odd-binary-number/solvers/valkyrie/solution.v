@@ -1,5 +1,33 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 计 1 的个数并重排为 1..10..0 形态。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：计数重排，时间 O(n) 空间 O(n)。
+namespace leetcode.maximum_odd_binary_number;
+
+[export(case: "camelCase")]
+micro maximum_odd_binary_number(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut ones: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        if s⁅i⁆ as u32 == 49 {
+            ones = ones + 1
+        }
+        i = i + 1
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut k: i64 = ones - 1
+    while k > 0 {
+        builder.append(char::from(49))
+        k = k - 1
+    }
+    let mut zeros: i64 = n as i64 - ones
+    while zeros > 0 {
+        builder.append(char::from(48))
+        zeros = zeros - 1
+    }
+    builder.append(char::from(49))
+    return builder.build()
+}
+
+class Solution {
+    micro maximumOddBinaryNumber(self, s: utf8): utf8 {
+        return maximum_odd_binary_number(s)
+    }
+}

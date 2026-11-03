@@ -938,6 +938,7 @@
     ],
     "invoke": {
         "python": "Solution().reversePrefix",
-        "typescript": "Solution().reversePrefix"
+        "typescript": "Solution().reversePrefix",
+        "valkyrie": "reversePrefix"
     }
 }

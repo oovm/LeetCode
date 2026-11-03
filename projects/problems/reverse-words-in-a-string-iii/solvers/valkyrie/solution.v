@@ -1,5 +1,33 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：按空格切词、逐词逆置再拼接。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：逐词原地逆置，时间 O(n) 空间 O(n)。
+namespace leetcode.reverse_words_in_a_string_iii;
+
+# 逐词翻转，空格原样保留，O(n)
+[export(case: "camelCase")]
+micro reverse_words(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut i: usize = 0
+    while i < n {
+        if (s⁅i⁆ as u32) == 32 {
+            builder.append(char::from(32))
+            i = i + 1
+        } else {
+            let mut end: usize = i
+            while end < n && (s⁅end⁆ as u32) != 32 {
+                end = end + 1
+            }
+            let mut p: usize = end
+            while p > i {
+                builder.append(s⁅p - 1⁆)
+                p = p - 1
+            }
+            i = end
+        }
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro reverseWords(self, s: utf8): utf8 {
+        return reverse_words(s)
+    }
+}

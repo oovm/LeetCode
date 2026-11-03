@@ -665,6 +665,7 @@
     ],
     "invoke": {
         "python": "Solution().truncateSentence",
-        "typescript": "Solution().truncateSentence"
+        "typescript": "Solution().truncateSentence",
+        "valkyrie": "truncateSentence"
     }
 }

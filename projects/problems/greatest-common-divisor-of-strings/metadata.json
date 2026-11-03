@@ -1232,6 +1232,7 @@
     ],
     "invoke": {
         "python": "Solution().gcdOfStrings",
-        "typescript": "Solution().gcdOfStrings"
+        "typescript": "Solution().gcdOfStrings",
+        "valkyrie": "gcdOfStrings"
     }
 }

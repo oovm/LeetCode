@@ -787,6 +787,7 @@
     ],
     "invoke": {
         "python": "Solution().freqAlphabets",
-        "typescript": "Solution().freqAlphabets"
+        "typescript": "Solution().freqAlphabets",
+        "valkyrie": "freqAlphabets"
     }
 }
