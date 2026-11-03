@@ -1,0 +1,15 @@
+{
+    "id": "convert-sample",
+    "questionId": 0,
+    "difficulty": "easy",
+    "tags": ["fixture"],
+    "tests": [
+        { "args": { "n": 7 }, "expected": 8 },
+        { "args": { "n": 123456789012345678901234567890 }, "expected": 123456789012345678901234567891 },
+        { "args": { "n": "340282366920938463463374607431768211455" }, "expected": "340282366920938463463374607431768211456" },
+        { "args": { "s": "1011001101110000110100100101011001011010100111001010100110101001" }, "expected": "ok" },
+        { "args": { "n": "18446744073709551615" }, "expected": "18446744073709551616", "corpusDefect": { "kind": "beyond_i64", "reason": "synthetic recoverable" } },
+        { "args": { "n": 1 }, "expected": 1.0000000000000001e+30, "corpusDefect": { "kind": "float_literal", "reason": "原文已浮点化，无法恢复原值" } }
+    ],
+    "invoke": { "typescript": "Solution().echoPlusOne", "python": "Solution().echo_plus_one" }
+}
