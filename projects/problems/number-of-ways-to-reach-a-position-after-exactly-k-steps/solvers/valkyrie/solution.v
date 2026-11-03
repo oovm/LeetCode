@@ -16,8 +16,8 @@ micro mod_pow(base: i64, exp: i64) -> i64 {
 
 # d=|差|，奇偶相符时 C(k, (k-d)/2)。
 [export(case: "camelCase")]
-micro number_of_ways(start_pos: i64, end_pos: i64, k: i64) -> i64 {
-    let mut d: i64 = start_pos - end_pos
+micro number_of_ways(startPos: i64, endPos: i64, k: i64) -> i64 {
+    let mut d: i64 = startPos - endPos
     if d < 0 {
         d = 0 - d
     }

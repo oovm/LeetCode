@@ -26,10 +26,10 @@ micro choose_mod(a: i64, b: i64) -> i64 {
 
 # 以 v 结尾的链 = 各素幂 e 上 C(n-1+e, e) 之积（星棒法单调指数序列）。
 [export(case: "camelCase")]
-micro ideal_arrays(n: i64, max_value: i64) -> i64 {
+micro ideal_arrays(n: i64, maxValue: i64) -> i64 {
     let mut total: i64 = 0
     let mut v: i64 = 1
-    while v <= max_value {
+    while v <= maxValue {
         let mut rest: i64 = v
         let mut ways: i64 = 1
         let mut d: i64 = 2

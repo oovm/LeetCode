@@ -12,8 +12,8 @@ micro word_value(word: utf8) -> i64 {
 }
 
 [export(case: "camelCase")]
-micro is_sum_equal(first_word: utf8, second_word: utf8, target_word: utf8) -> bool {
-    return word_value(first_word) + word_value(second_word) == word_value(target_word)
+micro is_sum_equal(firstWord: utf8, secondWord: utf8, targetWord: utf8) -> bool {
+    return word_value(firstWord) + word_value(secondWord) == word_value(targetWord)
 }
 
 class Solution {

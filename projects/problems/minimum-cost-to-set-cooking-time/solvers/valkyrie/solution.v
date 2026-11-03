@@ -53,13 +53,13 @@ micro cost_of(m: i64, s: i64, start_at: i64, move_cost: i64, push_cost: i64) -> 
 }
 
 [export(case: "camelCase")]
-micro min_cost_set_time(start_at: i64, move_cost: i64, push_cost: i64, target_seconds: i64) -> i64 {
+micro min_cost_set_time(startAt: i64, moveCost: i64, pushCost: i64, targetSeconds: i64) -> i64 {
     let mut best: i64 = 9223372036854775807
     let mut m: i64 = 0
     while m <= 99 {
-        let s: i64 = target_seconds - 60 * m
+        let s: i64 = targetSeconds - 60 * m
         if s >= 0 && s <= 99 {
-            let c: i64 = cost_of(m, s, start_at, move_cost, push_cost)
+            let c: i64 = cost_of(m, s, startAt, moveCost, pushCost)
             if c < best {
                 best = c
             }

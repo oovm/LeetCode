@@ -16,11 +16,11 @@ micro mod_pow(base: i64, exp: i64) -> i64 {
 
 # 不交叉握手数 = Catalan(m)，m = numPeople/2，奇数为零。
 [export(case: "camelCase")]
-micro number_of_ways(num_people: i64) -> i64 {
-    if num_people % 2 == 1 {
+micro number_of_ways(numPeople: i64) -> i64 {
+    if numPeople % 2 == 1 {
         return 0
     }
-    let m: i64 = num_people / 2
+    let m: i64 = numPeople / 2
     let mut c: i64 = 1
     let mut i: i64 = 1
     while i <= m {
