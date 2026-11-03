@@ -22,7 +22,37 @@ V 实测（2026-11-04，形态 A 清理块）：本批 40 个含 `⁅ ⁆.unwrap
 复扫残留 0，形态 B 未动。这 40 题真构建 **20 `status=0` / 20 `status=1`**：20 题失败全部命中
 G4（`std::text::Utf8Builder.append(char)`）；`minimum-string-length-after-removing-substrings`
 另因 `char` 覆盖 `u8`（写法错，非缺口）改回 `u8` 后 `status=0`。其余 93 题未构建，仍属未验证。
-构建通过数不变（19）。
+
+判题实测（2026-11-04）：上述 20 题逐个隔离判题，四字段合计 `executed_pass 2099 / executed_fail 1 /
+blocked 0 / not_run 170`（`testCaseTotal 2270`），**19 题 `ok=true`**，构建通过数 19 → 38。
+唯一未通过为 `minimum-number-of-pushes-to-type-word-i`（已登记 oracle 模型缺陷）。
+`single-row-keyboard` 首判 `RuntimeError: unreachable`，原因是 11 例键盘越官方约束，删除后 84/84 通过。
+
+| slug | testCaseTotal | executed_pass | executed_fail | blocked | not_run | ok |
+| --- | --- | --- | --- | --- | --- | --- |
+| `buddy-strings` | 126 | 126 | 0 | 0 | 0 | true |
+| `check-if-digits-are-equal-in-string-after-operations-i` | 127 | 127 | 0 | 0 | 0 | true |
+| `check-if-number-has-equal-digit-count-and-digit-value` | 150 | 150 | 0 | 0 | 0 | true |
+| `count-the-number-of-special-characters-i` | 159 | 159 | 0 | 0 | 0 | true |
+| `existence-of-a-substring-in-a-string-and-its-reverse` | 122 | 122 | 0 | 0 | 0 | true |
+| `find-the-index-of-the-first-occurrence-in-a-string` | 144 | 144 | 0 | 0 | 0 | true |
+| `largest-substring-between-two-equal-characters` | 74 | 74 | 0 | 0 | 0 | true |
+| `maximum-difference-between-even-and-odd-frequency-i` | 40 | 40 | 0 | 0 | 0 | true |
+| `maximum-length-substring-with-two-occurrences` | 78 | 78 | 0 | 0 | 0 | true |
+| `maximum-number-of-balloons` | 117 | 117 | 0 | 0 | 0 | true |
+| `minimize-string-length` | 112 | 112 | 0 | 0 | 0 | true |
+| `minimum-number-of-pushes-to-type-word-i` | 202 | 31 | 1 | 0 | 170 | false |
+| `minimum-string-length-after-removing-substrings` | 153 | 153 | 0 | 0 | 0 | true |
+| `permutation-difference-between-two-strings` | 80 | 80 | 0 | 0 | 0 | true |
+| `rearrange-characters-to-make-target-string` | 129 | 129 | 0 | 0 | 0 | true |
+| `remove-letter-to-equalize-frequency` | 74 | 74 | 0 | 0 | 0 | true |
+| `repeated-substring-pattern` | 87 | 87 | 0 | 0 | 0 | true |
+| `rings-and-rods` | 99 | 99 | 0 | 0 | 0 | true |
+| `rotate-string` | 113 | 113 | 0 | 0 | 0 | true |
+| `single-row-keyboard` | 84 | 84 | 0 | 0 | 0 | true |
+
+`single-row-keyboard` 的 `testCaseTotal` 是删除 11 条越约束用例后的 84（原 95）。未通过题的
+`firstFailure` 为 `tests[31]: expected "64", got "55"`。
 
 ### 集合状态（`ArrayList` / `HashMap`）（48 题）
 
