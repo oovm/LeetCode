@@ -17,12 +17,27 @@ import { probeValkyrieBackendProblem } from '../adapters/valkyrie-backend/matrix
 import { valkyrieNativeRunnerReady, valkyrieNativeSkipReason } from '../adapters/valkyrie-node/valkyrie.ts';
 import { valkyrieNyarRunnerReady, valkyrieNyarSkipReason } from '../adapters/valkyrie-nyar/valkyrie.ts';
 import { parseBatchLimit, problemsForBatch } from '../planning/batch-limit.ts';
-import { buildValkyrieLaneMatrixReport } from '../reporting/valkyrie-lane-matrix.ts';
+import { buildValkyrieLaneMatrixReport, type LaneQuarantine } from '../reporting/valkyrie-lane-matrix.ts';
+import { loadCorpusQuarantine } from '../reporting/corpus-quarantine.ts';
 
 const CONFORMANCE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const LEETCODE_ROOT = join(CONFORMANCE_ROOT, '..', '..');
 /** 历史报告路径保持不变，避免丢失既有报告数据；内容已按 lane 分类。 */
 const DEFAULT_REPORT_PATH = join(CONFORMANCE_ROOT, 'reports', 'valkyrie-dual-matrix.json');
+/** 隔离坐标来自侧车缺陷清单；清单缺失即不隔离，整体撤销只需删除该清单。 */
+const QUARANTINE_MANIFEST = join(CONFORMANCE_ROOT, 'reports', 'valkyrie-corpus-precision-defects.json');
+
+function resolveQuarantine(): LaneQuarantine | null {
+    const quarantine = loadCorpusQuarantine(QUARANTINE_MANIFEST, 'reports/valkyrie-corpus-precision-defects.json');
+    if (!quarantine) {
+        return null;
+    }
+    const indices = new Map<string, ReadonlySet<number>>();
+    for (const [slug, cases] of quarantine.byProblem) {
+        indices.set(slug, new Set(cases.keys()));
+    }
+    return { source: quarantine.source, caseCount: quarantine.caseCount, problemCount: quarantine.problemCount, indices };
+}
 
 function parseArgs(argv: string[]): { outPath: string; idFilter: string | null } {
     let outPath = DEFAULT_REPORT_PATH;
@@ -80,6 +95,7 @@ async function main(): Promise<number> {
     const report = buildValkyrieLaneMatrixReport(entries, {
         corpusIds: corpus.map((problem) => problem.id),
         batchLimit,
+        quarantine: resolveQuarantine(),
     });
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
@@ -99,6 +115,7 @@ async function main(): Promise<number> {
     console.log(
         `wrote ${outPath}\n` +
             `denominator=${report.denominator} executed=${report.executedIds.length} notExecuted=${report.notExecutedIds.length} complete=${report.complete} batchLimit=${batchLimit ?? 'all'}\n` +
+            `quarantine=${report.quarantine ? `${report.quarantine.caseCount} cases / ${report.quarantine.problemCount} problems (excluded from case totals, source=${report.quarantine.source})` : 'none'}\n` +
             `delivery lane: ${report.deliveryLane}（只有该 lane 计入交付完成度）\n` +
             report.lanes.map((lane) => laneLine(lane.id, report.summary[lane.id], laneNotes[lane.id] ?? '')).join('\n'),
     );

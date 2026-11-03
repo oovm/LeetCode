@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildValkyrieLaneMatrixReport, MATRIX_LANES } from '../src/reporting/valkyrie-lane-matrix.ts';
+import { buildValkyrieLaneMatrixReport, MATRIX_LANES, type LaneQuarantine } from '../src/reporting/valkyrie-lane-matrix.ts';
+import { parseCorpusQuarantine } from '../src/reporting/corpus-quarantine.ts';
 import type { ValkyrieMatrixRow } from '../src/adapters/valkyrie-node/matrix.ts';
 import type { ValkyrieBackendMatrixRow } from '../src/adapters/valkyrie-backend/matrix.ts';
 
@@ -41,6 +42,22 @@ function greenWasm(id: string): ValkyrieMatrixRow {
         firstFailure: null,
         solverNote: null,
         green: true,
+    };
+}
+
+/** 第 2 条用例失败的真实形态：前 2 条通过、1 条失败、后面 2 条未执行。 */
+function failingWasm(id: string): ValkyrieMatrixRow {
+    return {
+        ...greenWasm(id),
+        runtimeOk: false,
+        runtimeError: 'tests[2]: expected 2, got 3',
+        testCaseTotal: 5,
+        executed_pass: 2,
+        executed_fail: 1,
+        not_run: 2,
+        firstFailureIndex: 2,
+        firstFailure: 'tests[2]: expected 2, got 3',
+        green: false,
     };
 }
 
@@ -200,6 +217,44 @@ describe('valkyrie lane matrix report', () => {
         expect(report.summary.wasm.notExecuted).toBe(1);
         expect(report.notExecutedIds).toEqual(['three-sum']);
         expect(report.complete).toBe(false);
+    });
+
+    it('excludes quarantined cases from the case denominator without claiming a re-judge', () => {
+        const quarantine: LaneQuarantine = {
+            source: 'test-list.json',
+            caseCount: 2,
+            problemCount: 1,
+            indices: new Map([['two-sum', new Set([0, 2])]]),
+        };
+        const report = buildValkyrieLaneMatrixReport([entry('two-sum', { wasm: failingWasm('two-sum') })], {
+            corpusIds: ['two-sum'],
+            quarantine,
+        });
+        expect(report.summary.wasm.testCaseTotal).toBe(3);
+        expect(report.summary.wasm.executed_pass).toBe(1);
+        expect(report.summary.wasm.executed_fail).toBe(0);
+        expect(report.summary.wasm.not_run).toBe(2);
+        expect(report.summary.wasm.quarantinedCases).toBe(2);
+        // 未配置隔离时无扣减。
+        expect(report.summary.jvm.quarantinedCases).toBe(0);
+        expect(report.problems[0]!.rows.wasm.green).toBe(false);
+        expect(report.quarantine).toEqual({ source: 'test-list.json', caseCount: 2, problemCount: 1 });
+    });
+
+    it('parses quarantine coordinates from the sidecar manifest and ignores class D', () => {
+        const manifest = JSON.stringify({
+            cases: [
+                { slug: 'two-sum', class: 'A', field: 'tests[3].args.k' },
+                { slug: 'two-sum', class: 'S', field: 'tests[3].expected' },
+                { slug: 'three-sum', class: 'A', field: 'tests[7].args.nums[2]' },
+                { slug: 'three-sum', class: 'D', field: 'tests[9].args.n' },
+            ],
+        });
+        const parsed = parseCorpusQuarantine(manifest, 'reports/fixture.json');
+        expect(parsed.problemCount).toBe(2);
+        expect(parsed.caseCount).toBe(2);
+        expect(parsed.byProblem.get('two-sum')!.get(3)!.classes).toEqual(['A', 'S']);
+        expect(parsed.byProblem.get('three-sum')!.has(9)).toBe(false);
     });
 
     it('rejects rows outside the corpus, duplicated identities and missing lane rows', () => {

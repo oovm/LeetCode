@@ -3,6 +3,8 @@ import type { ArtifactRuntimeStatus } from '../adapters/shared/artifact-runtime-
 import type { ValkyrieMatrixRow } from '../adapters/valkyrie-node/matrix.ts';
 import type { ValkyrieBackendMatrixRow } from '../adapters/valkyrie-backend/matrix.ts';
 
+import { quarantineCaseStats } from './corpus-quarantine.ts';
+
 export type ValkyrieLaneRow = ValkyrieMatrixRow | ValkyrieBackendMatrixRow;
 
 export type MatrixLaneId = 'wasm' | 'ovm' | 'jvm' | 'clr';
@@ -61,6 +63,14 @@ export const DELIVERY_LANE: MatrixLaneId = 'wasm';
 
 export type LaneRuntimeCounts = Record<ArtifactRuntimeStatus, number>;
 
+/** 侧车隔离坐标：slug → 被排除的 `metadata.tests` 下标。 */
+export type LaneQuarantine = {
+    source: string;
+    caseCount: number;
+    problemCount: number;
+    indices: ReadonlyMap<string, ReadonlySet<number>>;
+};
+
 export type LaneMatrixSummary = {
     denominator: number;
     executed: number;
@@ -76,6 +86,8 @@ export type LaneMatrixSummary = {
     executed_fail: number;
     blocked: number;
     not_run: number;
+    /** 从 `testCaseTotal` 与四字段中剔除的隔离用例数。 */
+    quarantinedCases: number;
     problemPassRate: number;
     buildPassRate: number;
     runtimePassRate: number;
@@ -95,6 +107,8 @@ export type ValkyrieLaneMatrixReport = {
     lanes: readonly MatrixLaneDescriptor[];
     summary: Record<MatrixLaneId, LaneMatrixSummary>;
     problems: LaneMatrixProblemEntry[];
+    /** 本次报告实际生效的隔离清单；未配置时为 null。 */
+    quarantine: { source: string; caseCount: number; problemCount: number } | null;
 };
 
 export type LaneMatrixProblemEntry = {
@@ -102,7 +116,7 @@ export type LaneMatrixProblemEntry = {
     rows: Record<MatrixLaneId, ValkyrieLaneRow>;
 };
 
-function summarizeLane(rows: ValkyrieLaneRow[], denominator: number): LaneMatrixSummary {
+function summarizeLane(rows: ValkyrieLaneRow[], denominator: number, baselineRows?: ValkyrieLaneRow[]): LaneMatrixSummary {
     const green = rows.filter((row) => row.green).length;
     const buildPass = rows.filter((row) => row.buildStatus === 0).length;
     const testPass = rows.filter((row) => row.testStatus === 0).length;
@@ -113,6 +127,7 @@ function summarizeLane(rows: ValkyrieLaneRow[], denominator: number): LaneMatrix
         runtime[row.runtimeStatus] += 1;
     }
     const testCaseTotal = rows.reduce((sum, row) => sum + row.testCaseTotal, 0);
+    const baselineTotal = baselineRows ? baselineRows.reduce((sum, row) => sum + row.testCaseTotal, 0) : testCaseTotal;
     const executedPass = rows.reduce((sum, row) => sum + row.executed_pass, 0);
     const executedFail = rows.reduce((sum, row) => sum + row.executed_fail, 0);
     const blocked = rows.reduce((sum, row) => sum + row.blocked, 0);
@@ -133,6 +148,7 @@ function summarizeLane(rows: ValkyrieLaneRow[], denominator: number): LaneMatrix
         executed_fail: executedFail,
         blocked,
         not_run: notRun,
+        quarantinedCases: baselineTotal - testCaseTotal,
         problemPassRate: rate(green),
         buildPassRate: rate(buildPass),
         runtimePassRate: rate(runtimePass),
@@ -143,11 +159,36 @@ function summarizeLane(rows: ValkyrieLaneRow[], denominator: number): LaneMatrix
 
 export function buildValkyrieLaneMatrixReport(
     entries: LaneMatrixProblemEntry[],
-    options: { corpusIds: readonly string[]; generatedAt?: string; batchLimit?: number | null },
+    options: {
+        corpusIds: readonly string[];
+        generatedAt?: string;
+        batchLimit?: number | null;
+        /** 侧车隔离坐标；命中题目的用例从行级分母与四字段里剔除。 */
+        quarantine?: LaneQuarantine | null;
+    },
 ): ValkyrieLaneMatrixReport {
     const corpusIds = [...options.corpusIds];
     const corpus = new Set(corpusIds);
-    const executedIds = entries.map((entry) => entry.id);
+    const quarantine = options.quarantine ?? null;
+    const appliedEntries = quarantine
+        ? entries.map((entry) => {
+            const indices = quarantine.indices.get(entry.id);
+            if (!indices || indices.size === 0) {
+                return entry;
+            }
+            const adjust = (row: ValkyrieLaneRow): ValkyrieLaneRow => ({ ...row, ...quarantineCaseStats(row, indices) });
+            return {
+                id: entry.id,
+                rows: {
+                    wasm: adjust(entry.rows.wasm),
+                    ovm: adjust(entry.rows.ovm),
+                    jvm: adjust(entry.rows.jvm),
+                    clr: adjust(entry.rows.clr),
+                },
+            };
+        })
+        : entries;
+    const executedIds = appliedEntries.map((entry) => entry.id);
     const executed = new Set(executedIds);
     if (corpus.size !== corpusIds.length || executed.size !== executedIds.length) {
         throw new Error('矩阵总体与执行范围不得包含重复题目身份');
@@ -155,7 +196,7 @@ export function buildValkyrieLaneMatrixReport(
     if (executedIds.some((id) => !corpus.has(id))) {
         throw new Error('执行题目必须属于固定总体');
     }
-    for (const entry of entries) {
+    for (const entry of appliedEntries) {
         for (const lane of MATRIX_LANE_IDS) {
             if (entry.rows[lane]?.id !== entry.id) {
                 throw new Error(`题目 ${entry.id} 缺少 ${lane} lane 行或 lane 行绑定了错误题目身份`);
@@ -164,7 +205,14 @@ export function buildValkyrieLaneMatrixReport(
     }
     const notExecutedIds = corpusIds.filter((id) => !executed.has(id));
     const summary = Object.fromEntries(
-        MATRIX_LANE_IDS.map((lane) => [lane, summarizeLane(entries.map((entry) => entry.rows[lane]), corpusIds.length)]),
+        MATRIX_LANE_IDS.map((lane) => [
+            lane,
+            summarizeLane(
+                appliedEntries.map((entry) => entry.rows[lane]),
+                corpusIds.length,
+                quarantine ? entries.map((entry) => entry.rows[lane]) : undefined,
+            ),
+        ]),
     ) as Record<MatrixLaneId, LaneMatrixSummary>;
     return {
         generatedAt: options.generatedAt ?? new Date().toISOString(),
@@ -177,6 +225,9 @@ export function buildValkyrieLaneMatrixReport(
         deliveryLane: DELIVERY_LANE,
         lanes: MATRIX_LANES,
         summary,
-        problems: entries,
+        problems: appliedEntries,
+        quarantine: quarantine
+            ? { source: quarantine.source, caseCount: quarantine.caseCount, problemCount: quarantine.problemCount }
+            : null,
     };
 }
