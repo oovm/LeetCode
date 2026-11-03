@@ -4,28 +4,28 @@ namespace leetcode.minimum_path_sum;
 [export(case: "camelCase")]
 micro min_path_sum(grid: ArrayList<ArrayList<i64>>) -> i64 {
     let m: usize = grid.length()
-    let first_row: ArrayList<i64> = grid⁅0⁆.unwrap()
+    let first_row: ArrayList<i64> = grid⁅0⁆
     let n: usize = first_row.length()
     let mut dp: ArrayList<i64> = ArrayList::new(n)
     let mut j: usize = 0
     while j < n {
-        let cell: i64 = first_row⁅j⁆.unwrap()
+        let cell: i64 = first_row⁅j⁆
         if j == 0 {
             dp.push(cell)
         } else {
-            dp.push(dp⁅j - 1⁆.unwrap() + cell)
+            dp.push(dp⁅j - 1⁆ + cell)
         }
         j = j + 1
     }
     let mut i: usize = 1
     while i < m {
-        let row: ArrayList<i64> = grid⁅i⁆.unwrap()
+        let row: ArrayList<i64> = grid⁅i⁆
         j = 0
         while j < n {
-            let cell: i64 = row⁅j⁆.unwrap()
-            let mut before: i64 = dp⁅j⁆.unwrap()
+            let cell: i64 = row⁅j⁆
+            let mut before: i64 = dp⁅j⁆
             if j > 0 {
-                let left: i64 = dp⁅j - 1⁆.unwrap()
+                let left: i64 = dp⁅j - 1⁆
                 if left < before {
                     before = left
                 }
@@ -35,7 +35,7 @@ micro min_path_sum(grid: ArrayList<ArrayList<i64>>) -> i64 {
         }
         i = i + 1
     }
-    return dp⁅n - 1⁆.unwrap()
+    return dp⁅n - 1⁆
 }
 
 class Solution {

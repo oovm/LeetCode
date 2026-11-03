@@ -16,7 +16,7 @@ micro maximum_even_split(finalSum: i64) -> ArrayList<i64> {
     }
     if remaining > 0 {
         let last: usize = answer.length() - 1
-        answer⁅last⁆ = answer⁅last⁆.unwrap() + remaining
+        answer⁅last⁆ = answer⁅last⁆ + remaining
     }
     return answer
 }

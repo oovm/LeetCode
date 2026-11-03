@@ -3,7 +3,7 @@ namespace leetcode.maximum_product_subarray;
 # 同时滚动当前最大值与最小值，负数翻转时交换角色。
 [export(case: "camelCase")]
 micro max_product(nums: ArrayList<i64>) -> i64 {
-    let mut best: i64 = nums⁅0⁆.unwrap()
+    let mut best: i64 = nums⁅0⁆
     let mut hi: i64 = 1
     let mut lo: i64 = 1
     loop x in nums {

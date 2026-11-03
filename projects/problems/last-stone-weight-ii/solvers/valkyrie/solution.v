@@ -18,7 +18,7 @@ micro last_stone_weight_i_i(stones: ArrayList<i64>) -> i64 {
     loop stone in stones {
         let mut w: i64 = target
         while w >= stone {
-            if reachable⁅(w - stone) as usize⁆.unwrap() {
+            if reachable⁅(w - stone) as usize⁆ {
                 reachable⁅w as usize⁆ = true
             }
             w = w - 1
@@ -26,7 +26,7 @@ micro last_stone_weight_i_i(stones: ArrayList<i64>) -> i64 {
     }
     let mut best: i64 = target
     while best > 0 {
-        if reachable⁅best as usize⁆.unwrap() {
+        if reachable⁅best as usize⁆ {
             return total - 2 * best
         }
         best = best - 1

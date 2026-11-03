@@ -24,7 +24,7 @@ micro num_rolls_to_target(n: i64, k: i64, target: i64) -> i64 {
             let mut face: i64 = 1
             while face <= k {
                 if s >= face {
-                    next⁅s as usize⁆ = (next⁅s as usize⁆.unwrap() + dp⁅(s - face) as usize⁆.unwrap()) % modulus
+                    next⁅s as usize⁆ = (next⁅s as usize⁆ + dp⁅(s - face) as usize⁆) % modulus
                 }
                 face = face + 1
             }
@@ -33,7 +33,7 @@ micro num_rolls_to_target(n: i64, k: i64, target: i64) -> i64 {
         dp = next
         roll = roll + 1
     }
-    return dp⁅target as usize⁆.unwrap()
+    return dp⁅target as usize⁆
 }
 
 class Solution {

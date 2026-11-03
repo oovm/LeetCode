@@ -15,7 +15,7 @@ micro build_sieve(limit: i64) -> ArrayList<bool> {
     }
     let mut factor: i64 = 2
     while factor * factor <= limit {
-        if prime⁅factor as usize⁆.unwrap() {
+        if prime⁅factor as usize⁆ {
             let mut multiple: i64 = factor * factor
             while multiple <= limit {
                 prime⁅multiple as usize⁆ = false
@@ -37,7 +37,7 @@ micro closest_primes(left: i64, right: i64) -> ArrayList<i64> {
     let mut second: i64 = -1
     let mut value: i64 = left
     while value <= right {
-        if prime⁅value as usize⁆.unwrap() {
+        if prime⁅value as usize⁆ {
             if previous >= 0 {
                 let gap: i64 = value - previous
                 if best_gap == 0 || gap < best_gap {

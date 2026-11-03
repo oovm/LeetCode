@@ -16,13 +16,13 @@ micro delete_and_earn(nums: ArrayList<i64>) -> i64 {
         v = v + 1
     }
     loop x in nums {
-        counts⁅x as usize⁆ = counts⁅x as usize⁆.unwrap() + 1
+        counts⁅x as usize⁆ = counts⁅x as usize⁆ + 1
     }
     let mut take: i64 = 0
     let mut skip: i64 = 0
     v = 0
     while v <= maximum {
-        let gain: i64 = v * counts⁅v as usize⁆.unwrap()
+        let gain: i64 = v * counts⁅v as usize⁆
         let next_take: i64 = skip + gain
         let mut next_skip: i64 = skip
         if take > skip {

@@ -12,7 +12,7 @@ micro count_stepping_numbers(low: i64, high: i64) -> ArrayList<i64> {
         digit = digit + 1
     }
     while head < queue.length() {
-        let value: i64 = queue⁅head⁆.unwrap()
+        let value: i64 = queue⁅head⁆
         head = head + 1
         if value >= low && value <= high {
             answer.push(value)

@@ -23,14 +23,14 @@ micro generate_matrix(n: i64) -> ArrayList<ArrayList<i64>> {
     while top <= bottom && left <= right {
         let mut c: i64 = left
         while c <= right {
-            matrix⁅top as usize⁆.unwrap()⁅c as usize⁆ = value
+            matrix⁅top as usize⁆⁅c as usize⁆ = value
             value = value + 1
             c = c + 1
         }
         top = top + 1
         let mut row: i64 = top
         while row <= bottom {
-            matrix⁅row as usize⁆.unwrap()⁅right as usize⁆ = value
+            matrix⁅row as usize⁆⁅right as usize⁆ = value
             value = value + 1
             row = row + 1
         }
@@ -38,7 +38,7 @@ micro generate_matrix(n: i64) -> ArrayList<ArrayList<i64>> {
         if top <= bottom {
             let mut c: i64 = right
             while c >= left {
-                matrix⁅bottom as usize⁆.unwrap()⁅c as usize⁆ = value
+                matrix⁅bottom as usize⁆⁅c as usize⁆ = value
                 value = value + 1
                 c = c - 1
             }
@@ -47,7 +47,7 @@ micro generate_matrix(n: i64) -> ArrayList<ArrayList<i64>> {
         if left <= right {
             let mut row: i64 = bottom
             while row >= top {
-                matrix⁅row as usize⁆.unwrap()⁅left as usize⁆ = value
+                matrix⁅row as usize⁆⁅left as usize⁆ = value
                 value = value + 1
                 row = row - 1
             }

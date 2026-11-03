@@ -22,7 +22,7 @@ micro nums_same_consec_diff(n: i64, k: i64) -> ArrayList<i64> {
         digit = digit + 1
     }
     while head < queue.length() {
-        let value: i64 = queue⁅head⁆.unwrap()
+        let value: i64 = queue⁅head⁆
         head = head + 1
         if digit_count(value) == n {
             answer.push(value)

@@ -13,15 +13,15 @@ micro bit_length(value: i64) -> i64 {
 # 全排列比较拼接后的二进制数值，元素个数最多 4 个。
 micro best_order(nums: ArrayList<i64>, mut used: ArrayList<bool>, current: i64, depth: i64, limit: i64, mut best: ArrayList<i64>) -> i64 {
     if depth == limit {
-        if current > best⁅0⁆.unwrap() {
+        if current > best⁅0⁆ {
             best⁅0⁆ = current
         }
-        return best⁅0⁆.unwrap()
+        return best⁅0⁆
     }
     let mut i: usize = 0
     while i < nums.length() {
-        if !used⁅i⁆.unwrap() {
-            let value: i64 = nums⁅i⁆.unwrap()
+        if !used⁅i⁆ {
+            let value: i64 = nums⁅i⁆
             used⁅i⁆ = true
             let shifted: i64 = (current << bit_length(value)) | value
             best_order(nums, used, shifted, depth + 1, limit, best)
@@ -29,7 +29,7 @@ micro best_order(nums: ArrayList<i64>, mut used: ArrayList<bool>, current: i64, 
         }
         i = i + 1
     }
-    return best⁅0⁆.unwrap()
+    return best⁅0⁆
 }
 
 [export(case: "camelCase")]

@@ -4,7 +4,7 @@ namespace leetcode.score_after_flipping_matrix;
 [export(case: "camelCase")]
 micro matrix_score(grid: ArrayList<ArrayList<i64>>) -> i64 {
     let rows: usize = grid.length()
-    let first: ArrayList<i64> = grid⁅0⁆.unwrap()
+    let first: ArrayList<i64> = grid⁅0⁆
     let cols: usize = first.length()
     let mut total: i64 = 0
     let mut c: usize = 0
@@ -12,10 +12,10 @@ micro matrix_score(grid: ArrayList<ArrayList<i64>>) -> i64 {
         let mut ones: i64 = 0
         let mut r: usize = 0
         while r < rows {
-            let row: ArrayList<i64> = grid⁅r⁆.unwrap()
-            let value: i64 = row⁅c⁆.unwrap()
+            let row: ArrayList<i64> = grid⁅r⁆
+            let value: i64 = row⁅c⁆
             let flipped: i64 = 1 - value
-            if row⁅0⁆.unwrap() == 0 {
+            if row⁅0⁆ == 0 {
                 ones = ones + flipped
             } else {
                 ones = ones + value

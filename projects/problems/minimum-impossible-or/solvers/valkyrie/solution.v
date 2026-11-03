@@ -15,7 +15,7 @@ micro min_impossible_o_r(nums: ArrayList<i64>) -> i64 {
         }
         bit = bit + 1
     }
-    return 1 << 32
+    return 4294967296
 }
 
 class Solution {

@@ -10,7 +10,7 @@ micro count_triplets(arr: ArrayList<i64>) -> i64 {
         let mut running: i64 = 0
         let mut j: usize = i
         while j < n {
-            running = running ^ arr⁅j⁆.unwrap()
+            running = running ^ arr⁅j⁆
             if running == 0 {
                 total = total + (j as i64) - (i as i64)
             }

@@ -8,9 +8,9 @@ micro number_of_arithmetic_slices(nums: ArrayList<i64>) -> i64 {
     let mut run: i64 = 0
     let mut i: usize = 2
     while i < n {
-        let current: i64 = nums⁅i⁆.unwrap()
-        let middle: i64 = nums⁅i - 1⁆.unwrap()
-        let before: i64 = nums⁅i - 2⁆.unwrap()
+        let current: i64 = nums⁅i⁆
+        let middle: i64 = nums⁅i - 1⁆
+        let before: i64 = nums⁅i - 2⁆
         if current - middle == middle - before {
             run = run + 1
             total = total + run

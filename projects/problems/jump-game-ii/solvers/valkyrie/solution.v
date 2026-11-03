@@ -9,7 +9,7 @@ micro jump(nums: ArrayList<i64>) -> i64 {
     let mut farthest: i64 = 0
     let mut i: usize = 0
     while (i as i64) + 1 < (n as i64) {
-        let reach: i64 = (i as i64) + nums⁅i⁆.unwrap()
+        let reach: i64 = (i as i64) + nums⁅i⁆
         if reach > farthest {
             farthest = reach
         }

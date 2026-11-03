@@ -5,7 +5,7 @@ micro rob_range(nums: ArrayList<i64>, start: usize, end: usize) -> i64 {
     let mut skip: i64 = 0
     let mut i: usize = start
     while i < end {
-        let x: i64 = nums⁅i⁆.unwrap()
+        let x: i64 = nums⁅i⁆
         let next_take: i64 = skip + x
         let mut next_skip: i64 = skip
         if take > skip {
@@ -26,7 +26,7 @@ micro rob_range(nums: ArrayList<i64>, start: usize, end: usize) -> i64 {
 micro rob(nums: ArrayList<i64>) -> i64 {
     let n: usize = nums.length()
     if n == 1 {
-        return nums⁅0⁆.unwrap()
+        return nums⁅0⁆
     }
     let without_last: i64 = rob_range(nums, 0, n - 1)
     let without_first: i64 = rob_range(nums, 1, n)

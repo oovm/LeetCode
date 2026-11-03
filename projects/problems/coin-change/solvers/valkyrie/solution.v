@@ -14,10 +14,10 @@ micro coin_change(coins: ArrayList<i64>, amount: i64) -> i64 {
     while a <= amount {
         loop coin in coins {
             if coin <= a {
-                let rest: i64 = dp⁅(a - coin) as usize⁆.unwrap()
+                let rest: i64 = dp⁅(a - coin) as usize⁆
                 if rest >= 0 {
                     let candidate: i64 = rest + 1
-                    let current: i64 = dp⁅a as usize⁆.unwrap()
+                    let current: i64 = dp⁅a as usize⁆
                     if current < 0 || candidate < current {
                         dp⁅a as usize⁆ = candidate
                     }
@@ -26,7 +26,7 @@ micro coin_change(coins: ArrayList<i64>, amount: i64) -> i64 {
         }
         a = a + 1
     }
-    return dp⁅amount as usize⁆.unwrap()
+    return dp⁅amount as usize⁆
 }
 
 class Solution {

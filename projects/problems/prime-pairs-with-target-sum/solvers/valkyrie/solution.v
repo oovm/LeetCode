@@ -15,7 +15,7 @@ micro build_sieve(limit: i64) -> ArrayList<bool> {
     }
     let mut factor: i64 = 2
     while factor * factor <= limit {
-        if prime⁅factor as usize⁆.unwrap() {
+        if prime⁅factor as usize⁆ {
             let mut multiple: i64 = factor * factor
             while multiple <= limit {
                 prime⁅multiple as usize⁆ = false
@@ -34,7 +34,7 @@ micro find_prime_pairs(n: i64) -> ArrayList<ArrayList<i64>> {
     let mut answer: ArrayList<ArrayList<i64>> = ArrayList::new(0)
     let mut a: i64 = 2
     while a <= n / 2 {
-        if prime⁅a as usize⁆.unwrap() && prime⁅(n - a) as usize⁆.unwrap() {
+        if prime⁅a as usize⁆ && prime⁅(n - a) as usize⁆ {
             let mut pair: ArrayList<i64> = ArrayList::new(2)
             pair.push(a)
             pair.push(n - a)

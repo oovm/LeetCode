@@ -10,7 +10,7 @@ micro length_of_l_i_s(nums: ArrayList<i64>) -> i64 {
         let mut hi: usize = len
         while lo < hi {
             let mid: usize = (lo + hi) / 2
-            if tails⁅mid⁆.unwrap() < x {
+            if tails⁅mid⁆ < x {
                 lo = mid + 1
             } else {
                 hi = mid

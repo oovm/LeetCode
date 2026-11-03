@@ -7,7 +7,7 @@ micro can_jump(nums: ArrayList<i64>) -> bool {
     let mut farthest: i64 = 0
     let mut i: usize = 0
     while i < n && (i as i64) <= farthest {
-        let reach: i64 = (i as i64) + nums⁅i⁆.unwrap()
+        let reach: i64 = (i as i64) + nums⁅i⁆
         if reach > farthest {
             farthest = reach
         }
