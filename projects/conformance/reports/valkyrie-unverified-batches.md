@@ -7,6 +7,16 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 C-2026-11-04（canonical 未构建 214 题）
+
+- 范围与口径：`solution.v` 与非空 `metadata.invoke.valkyrie` 的 canonical 集合（496 题）中，
+  扫描起点尚无 `.cache/<slug>-bench-node` 产物的 214 题。
+- 构建：176 `status=0` / 38 `status=1`。失败族与题数见 `valkyrie-gap-ledger.md` 的
+  「批次状态：canonical 未构建 214 题」，按块级口径不逐题罗列。
+- 判题：176 个 `status=0` 题导出签名均为标量 / `utf8`，无 G3 阻断；142 题 `ok=true`，
+  四字段合计 `executed_pass 13452` / `executed_fail 31` / `blocked 0` / `not_run 2092`。
+  未通过 34 题的分类与示例同账本本节。
+
 ## 批次 E-2026-11-03（Easy 标量/文本池，133 题）
 
 | 组 | 题数 | 依赖能力 | 解锁前置条件 |
