@@ -493,6 +493,7 @@
     ],
     "invoke": {
         "python": "Solution().maxDiff",
-        "typescript": "Solution().maxDiff"
+        "typescript": "Solution().maxDiff",
+        "valkyrie": "Solution().maxDiff"
     }
 }
