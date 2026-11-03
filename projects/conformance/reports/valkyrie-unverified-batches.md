@@ -175,7 +175,8 @@ TS 实跑：131/133 通过。未通过 2 题：`calculate-digit-sum-of-a-string`
 
 构建口径：`resolveCompileTargetPlan` → `legionBuildProject`，canonical target
 `wasm32-unknown-unknown-wasm`，逐题 `build=0`。判题口径：`run_v_solver.ts` 对全量
-`metadata.tests` 实跑；`fail` 列按 harness 口径（首个失败后中止，剩余用例也计入 fail）。
+`metadata.tests` 实跑，用例四分类独立计数：`executed_pass` / `executed_fail` / `blocked` /
+`not_run`，四者之和恒等于 `testCaseTotal`。基础设施阻断不计入 `executed_fail`。
 
 | 组 | 题数 | 编译 | 判题 | 阻断 |
 | --- | --- | --- | --- | --- |
@@ -184,8 +185,9 @@ TS 实跑：131/133 通过。未通过 2 题：`calculate-digit-sum-of-a-string`
 | 纯递推 / 序列生成 | 12 | 12/12 `build=0` | 1 通过 | 1 通过 + G3 返回值 demarshal 11 题 |
 
 合计：编译 37/37，判题 1/37 通过（`number-of-dice-rolls-with-target-sum` 108/108）。
-用例总量 3283：真实通过 108，首个用例即失败 36（每道受阻题 1 个），其余 3139 未执行
-（harness 将未执行计入 fail，故其 `fail` 合计为 3175）。构建通过数 18 → 19。
+用例总量 3283：`executed_pass` **108**，`executed_fail` **0**，`blocked` **3175**，
+`not_run` **0**。下行每道受阻题的「0/N … 阻断」即 `executed_pass=0`、`blocked=N`、
+`executed_fail=0`、`not_run=0`。构建通过数 18 → 19。
 
 TS 实跑：37/37 通过（提交前逐题 `run_ts_solver.ts`）。本批 8 题含语料缺陷（错误签名串、
 越官方约束输入），已按 `valkyrie-gap-ledger.md` 的「语料缺陷」小节处理，未改动期望值语义。

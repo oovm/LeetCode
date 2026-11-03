@@ -101,17 +101,27 @@ micro sequential_digits(low: i64, high: i64) -> ArrayList<i64>
 
 | 族 | 命中 | 最小复现 | 诊断与坐标 |
 | --- | --- | --- | --- |
-| F1 下标值再调 `.unwrap()` | 18 题 / 58 处 | `nums⁅i⁆.unwrap()` | `error[valkyrie.hir.unresolved_call]`，报告无 `unwrap` 方法候选；例 `house-robber-ii/solution.v:8:22`、`spiral-matrix-ii/solution.v:26:13` |
+| F1 下标值再调 `.unwrap()` | 18 题 / 58 处 | `nums⁅i⁆.unwrap()` | 非缺口（`⁅ ⁆` 返回裸 `T`，见 G0）；`error[valkyrie.hir.unresolved_call]`，无 `unwrap` 方法候选；例 `house-robber-ii/solution.v:8:22`、`spiral-matrix-ii/solution.v:26:13` |
 | F2 `i32` 字面量移位越界 | 1 题 | `return 1 << 32` | `error[valkyrie.hir.unresolved_call]`，`minimum-impossible-or/solution.v:18:12`；字面量 `1` 取默认 `i32`，改为字面量 `4294967296` 后 `build=0` |
 | F4 导出名与 `invoke.valkyrie` 不一致 | 2 题 | `subarray_bitwise_o_r_s` 导出 `subarrayBitwiseORS` | 运行期找不到 export；按 `snake_case_to_camel_case` 只大写 `_` 后首字符的规则，改为 `subarray_bitwise_o_rs` / `get_maximum_xor`，同步后 `build=0` |
 
-F1、F2、F4 均为**非缺口、是我写错**：删 `.unwrap()` 改直接下标、改越界字面量、按导出规则命名，
-未为凑通过数改算法或期望。F4 的两题修名后落入 G3（marshal），不再作为独立族存在。
+F1、F2、F4 均为**非缺口、是我写错**：`⁅ ⁆` 返回裸 `T`，`.unwrap()` 属非法写法；改越界字面量、
+按导出规则命名，未为凑通过数改算法或期望。F4 的两题修名后落入 G3（marshal），
+不再作为独立族存在。
 
-全仓扫描补充：F1 的 `⁅…⁆.unwrap()` 写法在本批之外仍有 **287 处 / 96 个** `solution.v`
-（主要是 Easy 133 题批次）。它们同属写法错误、不是缺口；本窗口只修 Medium 37 题，
-Easy 批次复跑时须先按 F1 清理，否则首轮构建会再次大面积报
-`error[valkyrie.hir.unresolved_call]`。
+全仓 `.unwrap()` 形态拆分（`projects/problems/**/solvers/valkyrie/solution.v` 实测）：
+
+| 形态 | 次数 | 文件数 | 合法性 |
+| --- | --- | --- | --- |
+| A 下标值再调：`nums⁅i⁆.unwrap()` | 289 | 96 | **非法**：`⁅ ⁆` 返回裸 `T`，非缺口 |
+| B 可选取值：`nums.get(i).unwrap()` | 22 | 13 | **合法**：`get` 返回 `Option<T>`，`Option::unwrap` 存在 |
+| B 其它可选值：`Option` 变量 / 返回 `Option` 的访问器再 `.unwrap()` | 7 | 2 | **合法**：`third-maximum-number` 5 处、`valid-palindrome` 的 `ascii_alnum_key(): Option<i64>` 2 处 |
+
+先前「287 处」是简单正则口径，漏掉了 `sort-characters-by-frequency` 同一行嵌套下标的
+2 处外层 `.unwrap()`，按形态归并后 A 为 **289 处 / 96 个文件**。B 形态 29 处 / 15 个文件
+（其中 13 个文件是 `.get()`，2 个是其它可选值），均不属缺口、不需要改写。Medium 37 题
+本窗口只清理了 A 形态；Easy 批次复跑前须先按 A 形态清理，否则首轮构建会再次报
+`error[valkyrie.hir.unresolved_call]`。B 形态在 Easy 批次中保留原样，未做任何改写。
 
 4 类「待复验」写法的实测结论：
 
@@ -176,8 +186,34 @@ Easy 133 题实测 30 题有缺陷、Medium 37 题实测 8 题有缺陷，该「
 - 状态：已恢复（2026-11-03 复测）
 - 证据：探针工程（`ArrayList::new(n)` + `push` + `⁅usize⁆` 读 / 赋值）`status=0`。
 - 用法：下标必须是 `usize` 变量或 `expr as usize`；字面量 `⁅0⁆` 会解析到 `Nominal(ItemId(17))`。
-- 更正（2026-11-03）：下标读出元素后**直接**用 `arr⁅i⁆`，不要再接 `.unwrap()`。Medium 批次
-  18 题 58 处 `arr⁅i⁆.unwrap()` 均报 `error[valkyrie.hir.unresolved_call]`（无 `unwrap` 方法候选）；
-  改为直接下标后全部 `build=0`。这是合法写法差异，不是缺口。
+- 结论（2026-11-04 实测）：`⁅ ⁆` 返回**裸 `T`**，不是 `Option<T>`，因此 `arr⁅i⁆.unwrap()`
+  是在裸值上多调一次 `unwrap`，**属非法写法，非缺口**。证据：
+  - `valkyrie.v/projects/std/source/collection/ArrayList.v:205`：
+    `suffix `⁅ `(self, offset: usize): T`
+  - `Array.v:54`、`array_view.v:38`、`cardinal.v:23` 同样返回裸元素类型；`Utf8Text.v:372` 返回 `u8`
+  - 对照：`ArrayList.v:261` `get(self, ordinal: isize): Option<T>` 返回 `Option`；
+    `Option.v:49` `unwrap(self): T` 存在，所以 `.get(i).unwrap()` 是合法惯用写法
+  - `Option` 无 `expect` 成员（`std/source` 检索 0 命中）；语料 0 处使用 `.expect()`，暂不构成缺口
+- 最小复现（3 行）：
+
+```v
+micro probe(nums: ArrayList<i64>, i: usize) -> i64 {
+    return nums⁅i⁆.unwrap()
+}
+```
+
+  完整诊断：`error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>.unwrap` in probe:
+  no method candidate named `unwrap` exists for receiver type `Nominal(ItemId(9))`，
+  `--> solution.v:5:12`，`error: aborting due to 1 previous error`。
+- `.get(...).unwrap()` 正例（3 行）构建 `status=0`，无诊断：
+
+```v
+micro probe(nums: ArrayList<i64>) -> i64 {
+    return nums.get(0).unwrap()
+}
+```
+
+  `get(self, ordinal: isize): Option<T>`（`ArrayList.v:261`）与 `unwrap(self): T`
+  （`Option.v:49`）组合成立，故 B 形态无需任何改写。
 - 说明：`HashMap<K,V>` 作为递归参数时未见缓存生效（`can-i-win` 曾 240s 超时）；
   改用 `ArrayList<i64>` 三态记忆表后 75/75 通过。该条按待验证项保留，不单列缺口。
