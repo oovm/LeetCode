@@ -3,7 +3,9 @@
 import { runIsolatedJudge, type JudgeLane } from '../src/isolated/judge.ts';
 
 function usage(): never {
-    console.error('usage: run_isolated_judge.ts <problem-dir> --lang <typescript|typescript-bun|python|valkyrie>');
+    console.error(
+        'usage: run_isolated_judge.ts <problem-dir> --lang <typescript|typescript-bun|python|valkyrie-wasm|valkyrie-ovm|valkyrie-jvm|valkyrie-clr>',
+    );
     console.error('       [--cases <path>] [--artifact-dir <dir>] [--iterations N] [--warmup N] [--run-timeout-ms N]');
     process.exit(2);
 }
@@ -19,7 +21,8 @@ async function main(): Promise<number> {
         return index >= 0 ? args[index + 1] : undefined;
     };
     const lane = flag('--lang') as JudgeLane | undefined;
-    if (!lane || !['typescript', 'typescript-bun', 'python', 'valkyrie'].includes(lane)) {
+    const lanes: JudgeLane[] = ['typescript', 'typescript-bun', 'python', 'valkyrie-wasm', 'valkyrie-ovm', 'valkyrie-jvm', 'valkyrie-clr'];
+    if (!lane || !lanes.includes(lane)) {
         usage();
     }
     const result = await runIsolatedJudge({

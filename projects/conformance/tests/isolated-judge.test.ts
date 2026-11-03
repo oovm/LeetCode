@@ -22,8 +22,6 @@ describe('isolated judge 正例：bigint 用例跨运行时判题', () => {
         expect(result.executed).toBe(4);
         expect(result.passed).toBe(4);
         expect(result.runtimeMs).not.toBeNull();
-        expect(result.isolation).toBe('process');
-        expect(result.protocol).toBe('ndjson-v1');
         expect(result.casesSource.endsWith('bigint-echo.cases.ts')).toBe(true);
     }, 60_000);
 

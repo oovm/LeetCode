@@ -14,6 +14,7 @@ import { pathToFileURL } from 'node:url';
 import { bunExecutable } from '../adapters/typescript-bun/bridge.ts';
 import { assertTestCase, normalizeTsTestResult } from '../domain/assert.ts';
 import { coerceIntegerArgs, inferIntegerArgKeys } from '../domain/integer-args.ts';
+import { compareIntegerResult } from '../domain/integer-literal.ts';
 import { CONFORMANCE_ROOT } from '../domain/paths.ts';
 import { partitionCases, validateCasesModule, type ProblemCase } from './cases.ts';
 import {
@@ -22,7 +23,6 @@ import {
     decodeValue,
     encodeLine,
     encodeValue,
-    PROTOCOL_VERSION,
     ProtocolDecodeError,
     UnsafeNumberError,
     type CaseOutcome,
@@ -34,7 +34,14 @@ import {
 import { normalizeResultByAbiType } from './v-shared.ts';
 import type { WasmAbiType } from '../adapters/valkyrie-node/abi.ts';
 
-export type JudgeLane = 'typescript' | 'typescript-bun' | 'python' | 'valkyrie';
+export type JudgeLane =
+    | 'typescript'
+    | 'typescript-bun'
+    | 'python'
+    | 'valkyrie-wasm'
+    | 'valkyrie-ovm'
+    | 'valkyrie-jvm'
+    | 'valkyrie-clr';
 
 export type JudgeFailureKind =
     | 'cases_missing'
@@ -67,8 +74,6 @@ export type JudgeResult = {
     message: string | null;
     slug: string;
     lane: JudgeLane;
-    isolation: 'process';
-    protocol: typeof PROTOCOL_VERSION;
     casesSource: string;
     casesTotal: number;
     defectSkipped: number;
@@ -84,7 +89,9 @@ export type JudgeResult = {
 };
 
 const CHILD_TYPESCRIPT = join(CONFORMANCE_ROOT, 'src', 'isolated', 'child-typescript.ts');
-const CHILD_VALKYRIE = join(CONFORMANCE_ROOT, 'src', 'isolated', 'child-valkyrie.ts');
+const CHILD_VALKYRIE_WASM = join(CONFORMANCE_ROOT, 'src', 'isolated', 'child-valkyrie-wasm.ts');
+const CHILD_VALKYRIE_OVM = join(CONFORMANCE_ROOT, 'src', 'isolated', 'child-valkyrie-ovm.ts');
+const CHILD_VALKYRIE_MANAGED = join(CONFORMANCE_ROOT, 'src', 'isolated', 'child-valkyrie-managed.ts');
 const CHILD_PYTHON = join(CONFORMANCE_ROOT, 'scripts', 'isolated_python_child.py');
 
 const DEFAULT_ITERATIONS = 50;
@@ -113,7 +120,7 @@ function loadEnvelope(problemDir: string): ProblemMeta {
 }
 
 function invokeKeyForLane(lane: JudgeLane): string {
-    return lane === 'python' ? 'python' : lane === 'valkyrie' ? 'valkyrie' : 'typescript';
+    return lane === 'python' ? 'python' : lane.startsWith('valkyrie') ? 'valkyrie' : 'typescript';
 }
 
 function spawnCommand(lane: JudgeLane): { command: string; args: string[]; display: string } {
@@ -124,8 +131,14 @@ function spawnCommand(lane: JudgeLane): { command: string; args: string[]; displ
     if (lane === 'python') {
         return { command: 'python', args: [CHILD_PYTHON], display: `python ${CHILD_PYTHON}` };
     }
-    if (lane === 'valkyrie') {
-        return { command: process.execPath, args: ['--import', 'tsx', CHILD_VALKYRIE], display: `node --import tsx ${CHILD_VALKYRIE}` };
+    if (lane === 'valkyrie-ovm') {
+        return { command: process.execPath, args: ['--import', 'tsx', CHILD_VALKYRIE_OVM], display: `node --import tsx ${CHILD_VALKYRIE_OVM}` };
+    }
+    if (lane === 'valkyrie-jvm' || lane === 'valkyrie-clr') {
+        return { command: process.execPath, args: ['--import', 'tsx', CHILD_VALKYRIE_MANAGED], display: `node --import tsx ${CHILD_VALKYRIE_MANAGED}` };
+    }
+    if (lane === 'valkyrie-wasm') {
+        return { command: process.execPath, args: ['--import', 'tsx', CHILD_VALKYRIE_WASM], display: `node --import tsx ${CHILD_VALKYRIE_WASM}` };
     }
     return { command: process.execPath, args: ['--import', 'tsx', CHILD_TYPESCRIPT], display: `node --import tsx ${CHILD_TYPESCRIPT}` };
 }
@@ -170,8 +183,6 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
     const base: Omit<JudgeResult, 'ok' | 'failureKind' | 'message'> = {
         slug: meta.id,
         lane: options.lane,
-        isolation: 'process',
-        protocol: PROTOCOL_VERSION,
         casesSource: '',
         casesTotal: 0,
         defectSkipped: 0,
@@ -302,7 +313,13 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
     };
 
     try {
-        send({ type: 'load', invoke, solution: solutionPathForLane(options), artifactDir: options.artifactDir });
+        send({
+            type: 'load',
+            invoke,
+            solution: solutionPathForLane(options),
+            artifactDir: options.artifactDir,
+            lane: managedLaneFor(options.lane),
+        });
         const ready = await waitFor((message) => message.type === 'ready' || message.type === 'error', 60_000);
         if (ready === null) {
             const kind = exited !== null ? 'solver_exit' : 'solver_timeout';
@@ -344,10 +361,12 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
             const entry = partitioned.executable[outcome.index]!;
             const expectedRaw = normalizeTsTestResult(entry.expected);
             try {
-                if (options.lane === 'valkyrie') {
+                if (options.lane === 'valkyrie-wasm') {
                     assertValkyrieOutcome(outcome, expectedRaw, returnsAbi);
+                } else if (options.lane.startsWith('valkyrie')) {
+                    assertNumericTextOutcome(outcome, expectedRaw);
                 } else {
-                    assertManagedOutcome(outcome, expectedRaw);
+                    assertScriptOutcome(outcome, expectedRaw);
                 }
                 passed += 1;
             } catch (err) {
@@ -386,14 +405,24 @@ function solutionPathForLane(options: JudgeOptions): string | undefined {
     if (options.lane === 'python') {
         return join(options.problemDir, 'solvers', 'python', 'solution.py');
     }
-    if (options.lane === 'valkyrie') {
+    if (options.lane.startsWith('valkyrie')) {
         return undefined;
     }
     return join(options.problemDir, 'solvers', 'typescript', 'solution.ts');
 }
 
+function managedLaneFor(lane: JudgeLane): 'jvm' | 'clr' | undefined {
+    if (lane === 'valkyrie-jvm') {
+        return 'jvm';
+    }
+    if (lane === 'valkyrie-clr') {
+        return 'clr';
+    }
+    return undefined;
+}
+
 /** TS/Python lane：解法异常与 `Error:` 期望按既有 `assertTestCase` 口径比对。 */
-function assertManagedOutcome(outcome: CaseOutcome, expected: unknown): void {
+function assertScriptOutcome(outcome: CaseOutcome, expected: unknown): void {
     if (!outcome.ok) {
         if (typeof expected === 'string' && expected.startsWith('Error:')) {
             const actual = `Error: ${outcome.error}`;
@@ -408,7 +437,7 @@ function assertManagedOutcome(outcome: CaseOutcome, expected: unknown): void {
     assertTestCase(outcome.index, expected, () => value);
 }
 
-/** valkyrie lane：按 ABI 返回类型把期望值同样规整为十进制文本后结构比较（对齐 `run_v_solver.ts`）。 */
+/** valkyrie lane（wasm）：按 ABI 返回类型把期望值同样规整为十进制文本后结构比较（对齐 `run_v_solver.ts`）。 */
 function assertValkyrieOutcome(outcome: CaseOutcome, expected: unknown, returnsAbi: WasmAbiType | null): void {
     if (!outcome.ok) {
         if (typeof expected === 'string' && expected.startsWith('Error:')) {
@@ -424,5 +453,33 @@ function assertValkyrieOutcome(outcome: CaseOutcome, expected: unknown, returnsA
     const normalizedExpected = returnsAbi ? normalizeResultByAbiType(expected, returnsAbi) : expected;
     if (JSON.stringify(actual) !== JSON.stringify(normalizedExpected)) {
         throw new Error(`tests[${outcome.index}]: expected ${JSON.stringify(normalizedExpected)}, got ${JSON.stringify(actual)}`);
+    }
+}
+
+/**
+ * valkyrie ovm/jvm/clr lane：整数结果两侧规整为精确十进制文本比较
+ * （对齐 `run_nyar_solver.ts` 与 `managed-runner.ts` 口径），其余形态按结构比较。
+ */
+function assertNumericTextOutcome(outcome: CaseOutcome, expected: unknown): void {
+    if (!outcome.ok) {
+        if (typeof expected === 'string' && expected.startsWith('Error:')) {
+            const actual = `Error: ${outcome.error}`;
+            if (actual === expected) {
+                return;
+            }
+            throw new Error(`tests[${outcome.index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+        }
+        throw new Error(`tests[${outcome.index}]: 解法抛错 ${outcome.error}`);
+    }
+    const actual = decodeValue(outcome.value, `tests[${outcome.index}].result`);
+    const cmp = compareIntegerResult(actual, expected);
+    if (cmp === true) {
+        return;
+    }
+    if (cmp === false) {
+        throw new Error(`tests[${outcome.index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+    }
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+        throw new Error(`tests[${outcome.index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
     }
 }

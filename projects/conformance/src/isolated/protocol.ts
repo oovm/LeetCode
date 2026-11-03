@@ -133,9 +133,9 @@ export type RunCase = {
     args: Record<string, TaggedValue>;
 };
 
-/** judge → solver 子进程。 */
+/** judge → solver 子进程。`lane` 仅 managed 子进程使用（jvm/clr 分发）。 */
 export type JudgeMessage =
-    | { type: 'load'; invoke: string; solution?: string; artifactDir?: string }
+    | { type: 'load'; invoke: string; solution?: string; artifactDir?: string; lane?: 'jvm' | 'clr' }
     | { type: 'run'; warmup: number; iterations: number; cases: RunCase[] }
     | { type: 'bye' };
 
