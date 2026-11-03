@@ -995,6 +995,7 @@
     ],
     "invoke": {
         "python": "Solution().computeArea",
-        "typescript": "Solution().computeArea"
+        "typescript": "Solution().computeArea",
+        "valkyrie": "Solution().computeArea"
     }
 }

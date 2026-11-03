@@ -529,6 +529,7 @@
     ],
     "invoke": {
         "python": "Solution().reorderedPowerOf2",
-        "typescript": "Solution().reorderedPowerOf2"
+        "typescript": "Solution().reorderedPowerOf2",
+        "valkyrie": "Solution().reorderedPowerOf2"
     }
 }

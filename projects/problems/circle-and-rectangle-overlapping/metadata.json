@@ -1375,6 +1375,7 @@
     ],
     "invoke": {
         "python": "Solution().checkOverlap",
-        "typescript": "Solution().checkOverlap"
+        "typescript": "Solution().checkOverlap",
+        "valkyrie": "Solution().checkOverlap"
     }
 }

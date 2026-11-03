@@ -475,6 +475,7 @@
     ],
     "invoke": {
         "python": "Solution().lastRemaining",
-        "typescript": "Solution().lastRemaining"
+        "typescript": "Solution().lastRemaining",
+        "valkyrie": "Solution().lastRemaining"
     }
 }

@@ -187,6 +187,7 @@
     ],
     "invoke": {
         "python": "Solution().numTilings",
-        "typescript": "Solution().numTilings"
+        "typescript": "Solution().numTilings",
+        "valkyrie": "Solution().numTilings"
     }
 }

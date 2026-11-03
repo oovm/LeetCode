@@ -151,6 +151,7 @@
     ],
     "invoke": {
         "python": "Solution().findDerangement",
-        "typescript": "Solution().findDerangement"
+        "typescript": "Solution().findDerangement",
+        "valkyrie": "Solution().findDerangement"
     }
 }

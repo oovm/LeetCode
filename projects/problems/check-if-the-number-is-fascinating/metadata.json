@@ -367,6 +367,7 @@
     ],
     "invoke": {
         "python": "Solution().isFascinating",
-        "typescript": "Solution().isFascinating"
+        "typescript": "Solution().isFascinating",
+        "valkyrie": "Solution().isFascinating"
     }
 }

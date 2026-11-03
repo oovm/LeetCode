@@ -609,6 +609,7 @@
     ],
     "invoke": {
         "python": "Solution().kthGrammar",
-        "typescript": "Solution().kthGrammar"
+        "typescript": "Solution().kthGrammar",
+        "valkyrie": "Solution().kthGrammar"
     }
 }

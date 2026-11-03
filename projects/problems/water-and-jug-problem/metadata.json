@@ -1543,6 +1543,7 @@
     ],
     "invoke": {
         "python": "Solution().canMeasureWater",
-        "typescript": "Solution().canMeasureWater"
+        "typescript": "Solution().canMeasureWater",
+        "valkyrie": "Solution().canMeasureWater"
     }
 }

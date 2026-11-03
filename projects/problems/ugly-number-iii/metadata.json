@@ -1204,6 +1204,7 @@
     ],
     "invoke": {
         "python": "Solution().nthUglyNumber",
-        "typescript": "Solution().nthUglyNumber"
+        "typescript": "Solution().nthUglyNumber",
+        "valkyrie": "Solution().nthUglyNumber"
     }
 }

@@ -91,6 +91,7 @@
     ],
     "invoke": {
         "python": "Solution().numTrees",
-        "typescript": "Solution().numTrees"
+        "typescript": "Solution().numTrees",
+        "valkyrie": "Solution().numTrees"
     }
 }
