@@ -12,6 +12,40 @@
   逐题结果写在 `valkyrie-unverified-batches.md` 的实测列。
 - 每条缺口只保留一个最小复现；题内触发点写在对应 `solution.v` 的 `# 题内触发点:`。
 
+## 库内解法总量口径（2026-11-04 实测）
+
+此前同时出现过两个「总量」，本节是唯一口径来源：
+
+| 数 | 判定条件 | 实测 |
+| --- | --- | --- |
+| 2869 | `projects/problems/*` 目录数，不论是否含 `solution.v`、是否登记 `invoke` | 2869 |
+| 1375 | 其中 `solvers/valkyrie/solution.v` 非空（去空白后长度 > 0） | 1375 |
+| 494 | 其中 `solution.v` 文本含 `[export` | 494 |
+| 496 | `metadata.json` 的 `invoke.valkyrie` 非空（字符串或带 `entry` 的对象） | 496 |
+| **496** | **交集**：既有 `solution.v` 又有合法 `invoke.valkyrie` | **496** |
+
+- `solverOnly` = 2869 − 496 = 2373，且这 2373 个文件全部没有 `[export(`（`solverOnlyWithExport=0`）；
+  `invokeOnly` = 0。因此 496 就是两套条件的同一集合。
+- 统计命令（`leetcode.v` 根目录，PowerShell）：
+
+```powershell
+# 2869：题目目录数
+(Get-ChildItem projects/problems -Directory).Count
+
+# 496：metadata.invoke.valkyrie 非空（字符串或带 entry 的对象）
+$n = 0
+Get-ChildItem projects/problems -Directory | ForEach-Object {
+    $meta = Get-Content (Join-Path $_.FullName 'metadata.json') -Raw | ConvertFrom-Json
+    $invoke = $meta.invoke.valkyrie
+    if ($invoke -and ($invoke.entry -or ($invoke -is [string] -and $invoke.Trim()))) { $n++ }
+}
+$n
+```
+
+- 结论：**「库内解法总量」统一为 496（canonical）**；2869 只作为目录数，不再自称解法总量。
+  扫描起点已构建 282 题（`.cache/<slug>-bench-node` 产物存在），未构建 **496 − 282 = 214**，
+  不是此前误报的 2580。
+
 ## 未恢复
 
 ### G1 定长数组字面量 `[value; count]`
