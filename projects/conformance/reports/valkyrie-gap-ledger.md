@@ -163,6 +163,71 @@ micro probe(mut s: ArrayList<i64>, flag: bool) -> i64 {
 - 影响题（1）：`baseball-game`（`cal_points`，`stack.pop()` 位于 `else if` 分支，
   诊断 `location=block 4 terminator`）。该题未改写以规避缺口。
 
+### G6 标识符 `round` 误拉入 `std.adaptor.wasm.math::round`
+
+- 状态：未恢复（2026-11-04 实测，canonical 未构建 214 题扫块 1 题）
+- 最小复现（导出入口里出现同名的局部变量或形参即可）：
+
+```v
+[export(case: "camelCase")]
+micro probe(round: i64) -> i64 {
+    return round
+}
+```
+
+- 实际：`(SMIR007): Semantic MIR 合同失败: function=std.adaptor.wasm.math::round, location=block 0
+  terminator, detail=return operand type differs from function return type (actual=Float64,
+  expected=Nominal { ... primitive_identity: Some("std::primitive::f64") })`。
+- 对照（同日实跑，均 `status=0`）：同一函数把形参/局部变量改名为 `r`；或保留其它逻辑只改这一个名字。
+- 结论：**编译器问题**（入口闭包按未限定标识符名 `round` 误把 adaptor 的 `round` 实现纳入闭包，
+  该实现 `return f64(math_round(value))` 在 MIR 里产出 `Float64` 而非 nominal `f64`）。
+  修复位置在编译器的名字解析 / 闭包装配，不在 `solution.v`。
+- 影响题（1）：`sum-of-digits-of-string-after-convert`（局部变量 `round`）。
+
+### G7 `HashMap.insert` 作为 `else` 分支尾 + then 分支嵌套 early return
+
+- 状态：未恢复（2026-11-04 实测，canonical 未构建 214 题扫块 1 题）
+- 最小复现：
+
+```v
+[export(case: "camelCase")]
+micro probe(m: HashMap<i64, i64>, flag: bool, flag2: bool, a: i64, b: i64) -> bool {
+    if flag {
+        if flag2 {
+            return false
+        }
+    } else {
+        m.insert(a, b)
+    }
+    return true
+}
+```
+
+- 实际：`(SMIR007): Semantic MIR 合同失败: function=probe::probe, location=block 6 terminator,
+  detail=jump arity differs from target block parameters`。
+- 对照（同日实跑，均 `status=0`）：`else` 分支改为 `x = x + 1`；`else` 分支改为
+  `ArrayList.push(1)`；无 `else` 的嵌套 early return；`HashMap.insert` 不带嵌套 return。
+- 结论：**编译器问题**（`HashMap.insert` 作为 `else` 分支尾值、then 分支含嵌套 `return` 时，
+  MIR 合流块的参数个数与跳转实参不一致）。与 G5 同诊断码和同一 detail，但触发条件不同
+  （G5 是分支尾丢弃 `Option<T>`），不并入 G5。
+- 影响题（1）：`isomorphic-strings`（`is_isomorphic`，`forward.insert` 位于 `else`、
+  `if forward.get(a).unwrap() != b { return false }` 位于 then，诊断 `location=block 12 terminator`）。
+
+## 批次状态：canonical 未构建 214 题（2026-11-04 实测）
+
+- 范围：口径定为 496 后，扫描起点未构建的 **214 题**（分两个 107 题子块、单进程顺序构建）。
+- 构建：**176 `status=0` / 38 `status=1`**。
+- 失败归族（只列族与题数，不逐题贴结果）：
+  - G4 `Utf8Builder.append`：30 题，`source/text/Utf8Builder.v:46:29`（已登记族重复命中）。
+  - G2 浮点返回合同：2 题（`airplane-seat-assignment-probability`、`angle-between-hands-of-a-clock`，
+    诊断 `declares no [export]`）。
+  - G6 `round` 标识符误拉闭包：1 题（`sum-of-digits-of-string-after-convert`）。
+  - G7 `HashMap.insert` 分支 + 嵌套 early return：1 题（`isomorphic-strings`）。
+  - 写法错 4 题：`determine-if-string-halves-are-alike`（`let lower` 未声明 `mut`）；
+    `find-the-winning-player-in-coin-game`（`Utf8Text::from_bytes([65, ...])` 元素默认 `i32`，
+    显式 `as u8` 后 `status=0`）；`number-of-different-integers-in-a-string`、`word-pattern`
+    （`builder.append(<u8>)` 无匹配候选，`append` 只收 `char` / `&Utf8Text`）。
+
 ## 批次状态：未登记批次（历史题，2026-11-04 实测）
 
 - 范围：未进入 Easy / Medium 批次表、但含形态 A 的历史题，共 56 个 `solution.v` 文件。
