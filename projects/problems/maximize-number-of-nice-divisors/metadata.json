@@ -487,6 +487,7 @@
     ],
     "invoke": {
         "python": "Solution().maxNiceDivisors",
-        "typescript": "Solution().maxNiceDivisors"
+        "typescript": "Solution().maxNiceDivisors",
+        "valkyrie": "Solution().maxNiceDivisors"
     }
 }
