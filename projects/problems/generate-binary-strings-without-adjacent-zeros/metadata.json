@@ -2415,6 +2415,7 @@
     ],
     "invoke": {
         "python": "Solution().validStrings",
-        "typescript": "Solution().validStrings"
+        "typescript": "Solution().validStrings",
+        "valkyrie": "Solution().validStrings"
     }
 }

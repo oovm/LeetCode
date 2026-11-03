@@ -871,6 +871,7 @@
     ],
     "invoke": {
         "python": "Solution().numRollsToTarget",
-        "typescript": "Solution().numRollsToTarget"
+        "typescript": "Solution().numRollsToTarget",
+        "valkyrie": "Solution().numRollsToTarget"
     }
 }

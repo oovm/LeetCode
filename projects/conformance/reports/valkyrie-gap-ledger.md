@@ -53,6 +53,18 @@ micro half() -> f64 {
 - 缺口：本批未新增编译器/std 坐标。`utf8` 下标读、`Utf8Builder`、`ArrayList`、`HashMap`
   属既有已恢复能力，按理想写法直接使用，不写降级实现。
 
+## 批次状态：Medium 三组（2026-11-03）
+
+- 范围：`ArrayList 表` 12 题 + `位运算` 13 题 + `纯递推 / 序列生成` 12 题，共 37 题。
+- 状态：理想解已写，**未构建验证**，不计入覆盖数；清单见 `valkyrie-unverified-batches.md`
+  的「批次 M-2026-11-03」。
+- TS 侧：37 题全部用 `run_ts_solver.ts` 实跑，**37/37 通过**；跑红后修的是语料与两处算法
+  （`minimum-impossible-or` 判定规则、`numbers-with-same-consecutive-differences` BFS 子节点顺序），
+  未为通过而改期望值。
+- 缺口：本批未新增已确认编译器/std 坐标。以下写法只有历史单点证据、尚无构建验证，登记为
+  「待复验」而不是缺口：变量右移 `x >> bit`、`ArrayList` 变量整体重新赋值、`ArrayList<bool>`
+  下标读写、`HashMap` 批量插入后跨循环查询。
+
 ## 语料缺陷（corpusDefect，2026-11-03 实测）
 
 此前报告里「语料无缺陷 / 0 条」的说法只覆盖超安全整数扫描
@@ -70,6 +82,32 @@ micro half() -> f64 {
 | `Error:` 签名串混入 | `first-bad-version`、`clear-digits`、`decrypt-string-from-alphabet-to-integer-mapping`、`merge-strings-alternately`、`permutation-difference-between-two-strings`、`reformat-phone-number`、`replace-all-digits-with-characters`、`single-row-keyboard`、`sum-of-digits-of-string-after-convert`、`hexspeak`、`sorting-the-sentence`、`check-if-numbers-are-ascending-in-a-sentence` | 删除签名串用例；`first-bad-version` 的期望改为 `args.bad` 并删缺参用例 |
 | 违反官方约束的输入 | `determine-if-string-halves-are-alike`、`greatest-common-divisor-of-strings`、`check-if-all-characters-have-equal-number-of-occurrences`、`latest-time-by-replacing-hidden-digits`、`latest-time-you-can-obtain-after-replacing-characters`、`reverse-words-in-a-string-iii`、`sorting-the-sentence`、`check-if-numbers-are-ascending-in-a-sentence`、`calculate-digit-sum-of-a-string`、`minimum-number-of-operations-to-convert-time` | 删除越界用例（奇长度、空串、非 5 字符、多空格、序号 0/10、`0` 词元、`k=1`、负区间） |
 | oracle 模型错误（未改期望） | `minimum-number-of-pushes-to-type-word-i`、`calculate-digit-sum-of-a-string`、`rearrange-spaces-between-words`、`find-the-difference`、`maximum-difference-between-even-and-odd-frequency-i` | 保留理想解；仅删除无法自洽的个别用例。`pushes` 的 oracle 用「按字符位置分槽」，与官方按字母频次计价不符，故该题 TS 仍红 |
+
+### Medium 批次（37 题）实测缺陷
+
+本批 37 题里有 8 题在提交前实跑暴露出语料缺陷，全部按「只删明显非法用例、不改期望语义」处理：
+
+| 形态 | 题 | 删除/修法 | 数量 |
+| --- | --- | --- | --- |
+| 期望为 `Error:` 签名串，且入参形状非法（三角数组行宽不等） | `triangle` | 删除该用例 | 6 |
+| 期望为 `Error: ... missing 1 required positional argument`，入参缺键 | `incremental-memory-leak` | 删除该用例 | 1 |
+| 违反官方频次约束（「其余元素恰出现三次」） | `single-number-ii` | 删除该用例 | 11 |
+| 输入越官方约束 `abs(nums[i]) <= 10^9`，且需要超 32 位异或 | `single-number-iii` | 删除越界用例 | 51 |
+| 输入越官方约束 `nums[i] <= 10^9` | `bitwise-xor-of-all-pairings` | 删除越界用例 | 5 |
+| 输入越官方约束 `nums[i] < 2^maximumBit` | `maximum-xor-for-each-query` | 删除越界用例 | 1 |
+| 输入越官方约束 `nums[i] <= 10^9` | `maximum-xor-after-operations` | 删除越界用例 | 15 |
+| 输入越官方约束 `nums[i] <= 10^9` | `find-xor-beauty-of-array` | 删除越界用例 | 15 |
+
+实现缺陷（非语料，已修且 TS 转绿）：
+
+- `minimum-impossible-or`：首版按「所有元素按位或后缺失的最低位」判定，`[5,3,2]` 会得 8，正确规则是
+  「不在数组中的最小 2 的幂」，得 1。V/TS 同步改为集合查表。
+- `numbers-with-same-consecutive-differences`：BFS 子节点顺序必须是先 `last + k` 后 `last - k`，
+  否则与语料期望顺序相反。
+
+结论：`valkyrie-lane-coverage.md` 曾以超安全整数扫描得出「corpusDefect 0 条」，仅覆盖数值越界一种形态；
+Easy 133 题实测 30 题有缺陷、Medium 37 题实测 8 题有缺陷，该「全库零缺陷」结论在类型、占位值、签名串、
+约束四个维度上均已被证伪，以本节与上一节表格为准。
 
 `count-the-number-of-special-characters-i` 的失败是实现缺陷而非语料：非字母字符参与
 `1 << (code - 65)` 位运算产生伪重叠，已改为只对 `A-Z` / `a-z` 置位。

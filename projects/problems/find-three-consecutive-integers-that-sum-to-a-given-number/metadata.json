@@ -319,6 +319,7 @@
     ],
     "invoke": {
         "python": "Solution().sumOfThree",
-        "typescript": "Solution().sumOfThree"
+        "typescript": "Solution().sumOfThree",
+        "valkyrie": "Solution().sumOfThree"
     }
 }

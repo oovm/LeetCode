@@ -337,6 +337,7 @@
     ],
     "invoke": {
         "python": "Solution().generateMatrix",
-        "typescript": "Solution().generateMatrix"
+        "typescript": "Solution().generateMatrix",
+        "valkyrie": "Solution().generateMatrix"
     }
 }

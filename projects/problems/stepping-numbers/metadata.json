@@ -2757,6 +2757,7 @@
     ],
     "invoke": {
         "python": "Solution().countSteppingNumbers",
-        "typescript": "Solution().countSteppingNumbers"
+        "typescript": "Solution().countSteppingNumbers",
+        "valkyrie": "Solution().countSteppingNumbers"
     }
 }

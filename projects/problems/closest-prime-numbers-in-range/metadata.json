@@ -672,6 +672,7 @@
     ],
     "invoke": {
         "python": "Solution().closestPrimes",
-        "typescript": "Solution().closestPrimes"
+        "typescript": "Solution().closestPrimes",
+        "valkyrie": "Solution().closestPrimes"
     }
 }
