@@ -728,6 +728,7 @@
     ],
     "invoke": {
         "python": "Solution().makeIntegerBeautiful",
-        "typescript": "Solution().makeIntegerBeautiful"
+        "typescript": "Solution().makeIntegerBeautiful",
+        "valkyrie": "Solution().makeIntegerBeautiful"
     }
 }
