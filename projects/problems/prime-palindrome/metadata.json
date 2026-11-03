@@ -379,6 +379,7 @@
     ],
     "invoke": {
         "python": "Solution().primePalindrome",
-        "typescript": "Solution().primePalindrome"
+        "typescript": "Solution().primePalindrome",
+        "valkyrie": "Solution().primePalindrome"
     }
 }
