@@ -3,11 +3,9 @@
  * 读取 nyar-vm.rs 产出的权威 ABI JSON，按结构化 `WasmAbiType` 做 marshal/unmarshal。
  *
  * 设计原则：
- * - 唯一事实来源是 emitter 的 `{version, exports, glue_entries, abi_digest}`
+ * - 唯一事实来源是 emitter 的 `{version, exports, abi_digest}`
  * - 参数顺序由 schema 的 `params[index]` 决定，metadata 只按 `name` 供货；不依赖 metadata 键序
  * - 每个参数以 `{index, name, type, carrier}` 身份声明，`type` 是 marshal 权威，`carrier` 仅用于身份与展示
- * - glue 查找按 `module_path + name + generic_args` 的完整 aggregate 身份，
- *   与 emitter 的 registry 查询同构；禁止只按简单名匹配、禁止默认 carrier
  * - 未知 kind、缺 `abi_digest`、参数身份不完整一律抛结构化错误，不静默 fallback
  */
 
@@ -60,32 +58,11 @@ export interface AbiExport {
     returns: WasmAbiType;
 }
 
-/** glue operation 的 carrier 描述。 */
-export interface AbiGlueOperation {
-    operation: string;
-    export_name: string;
-    param_carriers: string[];
-    return_carrier: string;
-    export_source?: string;
-}
-
-/** `glue_entries` 里单个 aggregate 的语义身份与序列 helper 操作。 */
-export interface AbiGlueEntry {
-    kind?: 'NamedAggregate';
-    name: string;
-    module_path: string;
-    generic_args: WasmAbiType[];
-    operations: AbiGlueOperation[];
-    source?: string;
-    status?: string;
-}
-
 /** `nyar.library_invoke` section 的 JSON 根结构。 */
 export interface LibraryInvokeSchema {
     version: 0;
     /** key = wasm export 公开名。 */
     exports: Record<string, AbiExport>;
-    glue_entries: AbiGlueEntry[];
     abi_digest: string;
 }
 
@@ -97,16 +74,12 @@ export type AbiSchemaErrorCode =
     | 'unsupported_version'
     | 'missing_abi_digest'
     | 'missing_exports'
-    | 'missing_glue_entries'
     | 'invalid_type'
     | 'invalid_param_index'
     | 'duplicate_param_identity'
     | 'missing_argument'
     | 'unknown_argument'
     | 'unknown_kind'
-    | 'invalid_glue_entry'
-    | 'glue_entry_not_found'
-    | 'glue_operation_missing'
     | 'invalid_carrier'
     | 'unsupported_value';
 
@@ -213,8 +186,7 @@ export function loadLibraryInvokeSchema(wasmBytes: Uint8Array): LibraryInvokeSch
         throw new AbiSchemaError(
             'missing_section',
             LIBRARY_INVOKE_SECTION_NAME,
-            'wasm artifact 缺少 custom section。上游 emitter 必须产出 {version, exports, glue_entries, abi_digest}，' +
-                'harness 不按 metadata 键序兜底。',
+            'wasm artifact 缺少 custom section。上游 emitter 必须产出 {version, exports, abi_digest}，' + 'harness 不按 metadata 键序兜底。',
         );
     }
     return parseLibraryInvokeSchema(jsonText);
@@ -252,18 +224,13 @@ function validateSchema(raw: unknown): LibraryInvokeSchema {
     if (typeof root.exports !== 'object' || root.exports === null || Array.isArray(root.exports)) {
         throw new AbiSchemaError('missing_exports', '$.exports', 'ABI schema 缺少 exports 对象');
     }
-    if (!Array.isArray(root.glue_entries)) {
-        throw new AbiSchemaError('missing_glue_entries', '$.glue_entries', 'ABI schema 缺少 glue_entries 数组');
-    }
 
     const exports: Record<string, AbiExport> = {};
     for (const [exportSymbol, rawExport] of Object.entries(root.exports as Record<string, unknown>)) {
         exports[exportSymbol] = validateExport(exportSymbol, rawExport);
     }
 
-    const glue_entries = root.glue_entries.map((entry, index) => validateGlueEntry(`$.glue_entries[${index}]`, entry));
-
-    return { version: SCHEMA_VERSION, exports, glue_entries, abi_digest: root.abi_digest };
+    return { version: SCHEMA_VERSION, exports, abi_digest: root.abi_digest };
 }
 
 function validateExport(exportSymbol: string, raw: unknown): AbiExport {
@@ -343,75 +310,6 @@ function validateParameter(path: string, raw: unknown): AbiParameter {
     };
 }
 
-function validateGlueEntry(path: string, raw: unknown): AbiGlueEntry {
-    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
-        throw new AbiSchemaError('invalid_glue_entry', path, 'glue entry 必须是 object');
-    }
-    const obj = raw as Record<string, unknown>;
-    if (obj.kind !== undefined && obj.kind !== 'NamedAggregate') {
-        throw new AbiSchemaError(
-            'invalid_glue_entry',
-            `${path}.kind`,
-            `glue entry kind 只支持 "NamedAggregate"（实际 ${JSON.stringify(obj.kind)}）`,
-        );
-    }
-    if (typeof obj.name !== 'string' || obj.name.length === 0) {
-        throw new AbiSchemaError('invalid_glue_entry', `${path}.name`, 'glue entry 缺少非空 name');
-    }
-    if (typeof obj.module_path !== 'string') {
-        throw new AbiSchemaError('invalid_glue_entry', `${path}.module_path`, 'glue entry 缺少字符串 module_path');
-    }
-    if (!Array.isArray(obj.generic_args)) {
-        throw new AbiSchemaError('invalid_glue_entry', `${path}.generic_args`, 'glue entry 缺少 generic_args 数组');
-    }
-    if (!Array.isArray(obj.operations)) {
-        throw new AbiSchemaError('invalid_glue_entry', `${path}.operations`, 'glue entry 缺少 operations 数组');
-    }
-
-    const generic_args = obj.generic_args.map((arg, index) => validateType(`${path}.generic_args[${index}]`, arg));
-    const operations = obj.operations.map((operation, index) => validateGlueOperation(`${path}.operations[${index}]`, operation));
-
-    return {
-        ...(obj.kind === 'NamedAggregate' ? { kind: 'NamedAggregate' as const } : {}),
-        name: obj.name,
-        module_path: obj.module_path,
-        generic_args,
-        operations,
-        ...(typeof obj.source === 'string' ? { source: obj.source } : {}),
-        ...(typeof obj.status === 'string' ? { status: obj.status } : {}),
-    };
-}
-
-function validateGlueOperation(path: string, raw: unknown): AbiGlueOperation {
-    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
-        throw new AbiSchemaError('invalid_glue_entry', path, 'operation 必须是 object');
-    }
-    const obj = raw as Record<string, unknown>;
-    if (typeof obj.operation !== 'string' || obj.operation.length === 0) {
-        throw new AbiSchemaError('invalid_glue_entry', `${path}.operation`, 'operation 缺少非空 operation 名');
-    }
-    if (typeof obj.export_name !== 'string') {
-        throw new AbiSchemaError('invalid_glue_entry', `${path}.export_name`, 'operation 缺少字符串 export_name');
-    }
-    if (!Array.isArray(obj.param_carriers) || obj.param_carriers.some((carrier) => typeof carrier !== 'string')) {
-        throw new AbiSchemaError(
-            'invalid_glue_entry',
-            `${path}.param_carriers`,
-            'operation 缺少 param_carriers 字符串数组（不允许默认 carrier）',
-        );
-    }
-    if (typeof obj.return_carrier !== 'string' || obj.return_carrier.length === 0) {
-        throw new AbiSchemaError('invalid_glue_entry', `${path}.return_carrier`, 'operation 缺少非空 return_carrier（不允许默认 carrier）');
-    }
-    return {
-        operation: obj.operation,
-        export_name: obj.export_name,
-        param_carriers: obj.param_carriers as string[],
-        return_carrier: obj.return_carrier,
-        ...(typeof obj.export_source === 'string' ? { export_source: obj.export_source } : {}),
-    };
-}
-
 /** 校验结构化 `WasmAbiType`；未知 kind 直接抛错。 */
 function validateType(path: string, raw: unknown): WasmAbiType {
     if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
@@ -484,41 +382,6 @@ function validateType(path: string, raw: unknown): WasmAbiType {
     }
 }
 
-// ── glue registry 查找 ────────────────────────────────────────────────────────
-
-/**
- * 按 `kind + module_path + name + generic_args` 查找 glue entry。
- *
- * 与 emitter 的 registry 查询同构：module_path 精确比较，generic_args 结构化比较。
- * 只按简单名匹配会混淆不同命名空间/泛型实例，因此这里一律拒绝。
- */
-export function findGlueEntry(
-    schema: LibraryInvokeSchema,
-    aggregate: Pick<AbiNamedAggregateType, 'name' | 'module_path' | 'generic_args'>,
-): AbiGlueEntry {
-    const found = schema.glue_entries.find(
-        (entry) =>
-            entry.name === aggregate.name &&
-            entry.module_path === aggregate.module_path &&
-            sameAbiTypes(entry.generic_args, aggregate.generic_args),
-    );
-    if (!found) {
-        throw new AbiSchemaError(
-            'glue_entry_not_found',
-            '$.glue_entries',
-            `找不到 aggregate ${aggregate.module_path}.${aggregate.name}<${describeTypes(aggregate.generic_args)}> 的 glue entry`,
-        );
-    }
-    return found;
-}
-
-function sameAbiTypes(left: WasmAbiType[], right: WasmAbiType[]): boolean {
-    return left.length === right.length && left.every((type, index) => JSON.stringify(type) === JSON.stringify(right[index]));
-}
-
-function describeTypes(types: WasmAbiType[]): string {
-    return types.map((type) => type.kind).join(',');
-}
 
 // ── 参数位置展开 ──────────────────────────────────────────────────────────────
 

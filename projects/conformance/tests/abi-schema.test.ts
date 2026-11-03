@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import {
     type AbiNamedAggregateType,
     AbiSchemaError,
-    findGlueEntry,
     type LibraryInvokeSchema,
     orderArgsBySchema,
     parseLibraryInvokeSchema,
@@ -43,41 +42,6 @@ function rawSchema(): Record<string, unknown> {
                 },
             },
         },
-        glue_entries: [
-            {
-                kind: 'NamedAggregate',
-                name: 'ArrayList',
-                module_path: 'std::collections',
-                generic_args: [{ kind: 'I64' }],
-                operations: [
-                    {
-                        operation: 'construct',
-                        export_name: '$seq_i64_new',
-                        param_carriers: ['i32'],
-                        return_carrier: 'i32',
-                        export_source: 'declared',
-                    },
-                    {
-                        operation: 'push',
-                        export_name: '$seq_i64_push',
-                        param_carriers: ['i32', 'i64'],
-                        return_carrier: 'void',
-                    },
-                    {
-                        operation: 'length',
-                        export_name: '$seq_i64_len',
-                        param_carriers: ['i32'],
-                        return_carrier: 'i32',
-                    },
-                    {
-                        operation: 'at',
-                        export_name: '$seq_i64_at',
-                        param_carriers: ['i32', 'i32'],
-                        return_carrier: 'i64',
-                    },
-                ],
-            },
-        ],
         abi_digest: 'sha256-deadbeef',
     };
 }
@@ -109,7 +73,7 @@ function namedAggregate(type: WasmAbiType): AbiNamedAggregateType {
 }
 
 describe('nyar.library_invoke schema parsing', () => {
-    it('parses the authoritative {version, exports, glue_entries, abi_digest} format', () => {
+    it('parses the authoritative {version, exports, abi_digest} format', () => {
         const schema = parse(rawSchema());
         expect(schema.version).toBe(0);
         expect(schema.abi_digest).toBe('sha256-deadbeef');
@@ -117,8 +81,6 @@ describe('nyar.library_invoke schema parsing', () => {
         expect(schema.exports.twoSum?.params.map((param) => param.name)).toEqual(['nums', 'target']);
         expect(schema.exports.twoSum?.params.map((param) => param.type.kind)).toEqual(['NamedAggregate', 'I64']);
         expect(schema.exports.twoSum?.params.map((param) => param.carrier)).toEqual(['handle', 'i64']);
-        expect(schema.glue_entries).toHaveLength(1);
-        expect(schema.glue_entries[0]?.operations.map((operation) => operation.operation)).toEqual(['construct', 'push', 'length', 'at']);
     });
 
     it('parses nested NamedAggregate generic args', () => {
@@ -219,40 +181,6 @@ describe('parameter identity validation', () => {
         const params = twoSumExport(raw).params as Array<Record<string, unknown>>;
         delete params[1]!.carrier;
         expectAbiError(() => parse(raw), 'invalid_carrier');
-    });
-});
-
-describe('glue registry lookup', () => {
-    const schema = parse(rawSchema());
-
-    it('matches module_path + name + generic_args', () => {
-        const entry = findGlueEntry(schema, namedAggregate(schema.exports.twoSum!.returns));
-        expect(entry.name).toBe('ArrayList');
-        expect(entry.module_path).toBe('std::collections');
-    });
-
-    it('does not match by simple name when module_path differs', () => {
-        expectAbiError(
-            () =>
-                findGlueEntry(schema, {
-                    name: 'ArrayList',
-                    module_path: 'std::other',
-                    generic_args: [{ kind: 'I64' }],
-                }),
-            'glue_entry_not_found',
-        );
-    });
-
-    it('does not match when generic_args differ', () => {
-        expectAbiError(
-            () =>
-                findGlueEntry(schema, {
-                    name: 'ArrayList',
-                    module_path: 'std::collections',
-                    generic_args: [{ kind: 'I32' }],
-                }),
-            'glue_entry_not_found',
-        );
     });
 });
 
