@@ -1,5 +1,36 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: coinChange 需要 读取 coins 动态规划凑面额
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.coin_change;
+
+# 完全背包：dp[a] 为凑出金额 a 的最少硬币数，-1 表示不可达。
+[export(case: "camelCase")]
+micro coin_change(coins: ArrayList<i64>, amount: i64) -> i64 {
+    let mut dp: ArrayList<i64> = ArrayList::new((amount + 1) as usize)
+    let mut a: i64 = 0
+    while a <= amount {
+        dp.push(-1)
+        a = a + 1
+    }
+    dp⁅0⁆ = 0
+    a = 1
+    while a <= amount {
+        loop coin in coins {
+            if coin <= a {
+                let rest: i64 = dp⁅(a - coin) as usize⁆.unwrap()
+                if rest >= 0 {
+                    let candidate: i64 = rest + 1
+                    let current: i64 = dp⁅a as usize⁆.unwrap()
+                    if current < 0 || candidate < current {
+                        dp⁅a as usize⁆ = candidate
+                    }
+                }
+            }
+        }
+        a = a + 1
+    }
+    return dp⁅amount as usize⁆.unwrap()
+}
+
+class Solution {
+    micro coinChange(self, coins: ArrayList<i64>, amount: i64): i64 {
+        return coin_change(coins, amount)
+    }
+}

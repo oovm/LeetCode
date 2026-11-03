@@ -294,6 +294,7 @@
         "python": "Solution().jump",
         "typescript": "Solution().jump",
         "wolframSxo": "jump",
-        "matlabSxo": "jump"
+        "matlabSxo": "jump",
+        "valkyrie": "Solution().jump"
     }
 }

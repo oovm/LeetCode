@@ -557,6 +557,7 @@
     ],
     "invoke": {
         "python": "Solution().matrixScore",
-        "typescript": "Solution().matrixScore"
+        "typescript": "Solution().matrixScore",
+        "valkyrie": "Solution().matrixScore"
     }
 }

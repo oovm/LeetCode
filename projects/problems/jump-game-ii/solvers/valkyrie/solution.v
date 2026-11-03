@@ -1,5 +1,29 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: jump 需要 读取 nums 贪心最少跳跃
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.jump_game_ii;
+
+# 按跳跃层数推进：当前层走到边界时步数加一。
+[export(case: "camelCase")]
+micro jump(nums: ArrayList<i64>) -> i64 {
+    let n: usize = nums.length()
+    let mut jumps: i64 = 0
+    let mut end: i64 = 0
+    let mut farthest: i64 = 0
+    let mut i: usize = 0
+    while (i as i64) + 1 < (n as i64) {
+        let reach: i64 = (i as i64) + nums⁅i⁆.unwrap()
+        if reach > farthest {
+            farthest = reach
+        }
+        if i as i64 == end {
+            jumps = jumps + 1
+            end = farthest
+        }
+        i = i + 1
+    }
+    return jumps
+}
+
+class Solution {
+    micro jump(self, nums: ArrayList<i64>): i64 {
+        return jump(nums)
+    }
+}

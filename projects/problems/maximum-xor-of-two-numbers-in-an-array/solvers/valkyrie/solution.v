@@ -1,5 +1,32 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: findMaximumXOR 需要 读取 nums 前缀掩码哈希求最大异或
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.maximum_xor_of_two_numbers_in_an_array;
+
+# 从高位开始逐位确定答案：前缀哈希判定该位能否取 1。
+[export(case: "camelCase")]
+micro find_maximum_x_o_r(nums: ArrayList<i64>) -> i64 {
+    let mut best: i64 = 0
+    let mut mask: i64 = 0
+    let mut bit: i64 = 30
+    while bit >= 0 {
+        mask = mask | (1 << bit)
+        let mut prefixes: HashMap<i64, i64> = HashMap::new(0)
+        loop x in nums {
+            prefixes.insert(x & mask, 1)
+        }
+        let candidate: i64 = best | (1 << bit)
+        loop x in nums {
+            let prefix: i64 = x & mask
+            if prefixes.contains_key(candidate ^ prefix) {
+                best = candidate
+                bit = -1
+            }
+        }
+        bit = bit - 1
+    }
+    return best
+}
+
+class Solution {
+    micro findMaximumXOR(self, nums: ArrayList<i64>): i64 {
+        return find_maximum_x_o_r(nums)
+    }
+}

@@ -565,6 +565,7 @@
     ],
     "invoke": {
         "python": "Solution().subarrayBitwiseORs",
-        "typescript": "Solution().subarrayBitwiseORs"
+        "typescript": "Solution().subarrayBitwiseORs",
+        "valkyrie": "Solution().subarrayBitwiseORs"
     }
 }

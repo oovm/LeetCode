@@ -627,6 +627,7 @@
     ],
     "invoke": {
         "python": "Solution().lastStoneWeightII",
-        "typescript": "Solution().lastStoneWeightII"
+        "typescript": "Solution().lastStoneWeightII",
+        "valkyrie": "Solution().lastStoneWeightII"
     }
 }

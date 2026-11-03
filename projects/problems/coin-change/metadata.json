@@ -896,6 +896,7 @@
     ],
     "invoke": {
         "python": "Solution().coinChange",
-        "typescript": "Solution().coinChange"
+        "typescript": "Solution().coinChange",
+        "valkyrie": "Solution().coinChange"
     }
 }

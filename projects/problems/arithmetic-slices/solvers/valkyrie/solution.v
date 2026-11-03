@@ -1,5 +1,29 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: numberOfArithmeticSlices 需要 读取 nums 计数等差切片
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.arithmetic_slices;
+
+# 统计连续等差段：长度为 len 的等差段贡献 len-1 个等差子数组。
+[export(case: "camelCase")]
+micro number_of_arithmetic_slices(nums: ArrayList<i64>) -> i64 {
+    let n: usize = nums.length()
+    let mut total: i64 = 0
+    let mut run: i64 = 0
+    let mut i: usize = 2
+    while i < n {
+        let current: i64 = nums⁅i⁆.unwrap()
+        let middle: i64 = nums⁅i - 1⁆.unwrap()
+        let before: i64 = nums⁅i - 2⁆.unwrap()
+        if current - middle == middle - before {
+            run = run + 1
+            total = total + run
+        } else {
+            run = 0
+        }
+        i = i + 1
+    }
+    return total
+}
+
+class Solution {
+    micro numberOfArithmeticSlices(self, nums: ArrayList<i64>): i64 {
+        return number_of_arithmetic_slices(nums)
+    }
+}

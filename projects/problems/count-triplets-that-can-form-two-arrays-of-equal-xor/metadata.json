@@ -582,6 +582,7 @@
     ],
     "invoke": {
         "python": "Solution().countTriplets",
-        "typescript": "Solution().countTriplets"
+        "typescript": "Solution().countTriplets",
+        "valkyrie": "Solution().countTriplets"
     }
 }

@@ -728,6 +728,7 @@
     ],
     "invoke": {
         "python": "Solution().deleteAndEarn",
-        "typescript": "Solution().deleteAndEarn"
+        "typescript": "Solution().deleteAndEarn",
+        "valkyrie": "Solution().deleteAndEarn"
     }
 }

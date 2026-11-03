@@ -553,6 +553,7 @@
     ],
     "invoke": {
         "python": "Solution().maxGoodNumber",
-        "typescript": "Solution().maxGoodNumber"
+        "typescript": "Solution().maxGoodNumber",
+        "valkyrie": "Solution().maxGoodNumber"
     }
 }

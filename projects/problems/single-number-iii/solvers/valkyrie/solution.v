@@ -1,5 +1,30 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: singleNumber 需要 读取 nums 分组异或找两单元素
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.single_number_iii;
+
+# 先取全部异或得到两个目标数的差异位，再按该位分组异或。
+[export(case: "camelCase")]
+micro single_number(nums: ArrayList<i64>) -> ArrayList<i64> {
+    let mut merged: i64 = 0
+    loop x in nums {
+        merged = merged ^ x
+    }
+    let bit: i64 = merged & (0 - merged)
+    let mut first: i64 = 0
+    let mut second: i64 = 0
+    loop x in nums {
+        if (x & bit) != 0 {
+            first = first ^ x
+        } else {
+            second = second ^ x
+        }
+    }
+    let mut out: ArrayList<i64> = ArrayList::new(2)
+    out.push(first)
+    out.push(second)
+    return out
+}
+
+class Solution {
+    micro singleNumber(self, nums: ArrayList<i64>): ArrayList<i64> {
+        return single_number(nums)
+    }
+}

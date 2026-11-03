@@ -403,6 +403,7 @@
     ],
     "invoke": {
         "python": "Solution().canJump",
-        "typescript": "Solution().canJump"
+        "typescript": "Solution().canJump",
+        "valkyrie": "Solution().canJump"
     }
 }

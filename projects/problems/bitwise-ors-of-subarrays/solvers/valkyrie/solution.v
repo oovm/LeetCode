@@ -1,1 +1,40 @@
+namespace leetcode.bitwise_ors_of_subarrays;
 
+# 维护「以当前元素结尾的所有子数组 OR」去重集合，并累计全局去重集合。
+[export(case: "camelCase")]
+micro subarray_bitwise_o_r_s(arr: ArrayList<i64>) -> i64 {
+    let mut current: ArrayList<i64> = ArrayList::new(0)
+    let mut seen: HashMap<i64, i64> = HashMap::new(0)
+    let mut total: i64 = 0
+    loop x in arr {
+        let mut next: ArrayList<i64> = ArrayList::new(current.length() + 1)
+        let mut next_seen: HashMap<i64, i64> = HashMap::new(0)
+        next_seen.insert(x, 1)
+        next.push(x)
+        if !seen.contains_key(x) {
+            seen.insert(x, 1)
+            total = total + 1
+        }
+        let mut k: usize = 0
+        while k < current.length() {
+            let combined: i64 = current⁅k⁆.unwrap() | x
+            if !next_seen.contains_key(combined) {
+                next_seen.insert(combined, 1)
+                next.push(combined)
+            }
+            if !seen.contains_key(combined) {
+                seen.insert(combined, 1)
+                total = total + 1
+            }
+            k = k + 1
+        }
+        current = next
+    }
+    return total
+}
+
+class Solution {
+    micro subarrayBitwiseORs(self, arr: ArrayList<i64>): i64 {
+        return subarray_bitwise_o_r_s(arr)
+    }
+}

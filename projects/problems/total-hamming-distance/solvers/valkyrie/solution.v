@@ -1,5 +1,26 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: totalHammingDistance 需要 读取 nums 按位计数汉明距离
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.total_hamming_distance;
+
+# 每位的贡献为 1 的个数乘 0 的个数。
+[export(case: "camelCase")]
+micro total_hamming_distance(nums: ArrayList<i64>) -> i64 {
+    let n: i64 = nums.length() as i64
+    let mut total: i64 = 0
+    let mut bit: i64 = 0
+    while bit < 32 {
+        let mut ones: i64 = 0
+        loop x in nums {
+            if ((x >> bit) & 1) == 1 {
+                ones = ones + 1
+            }
+        }
+        total = total + ones * (n - ones)
+        bit = bit + 1
+    }
+    return total
+}
+
+class Solution {
+    micro totalHammingDistance(self, nums: ArrayList<i64>): i64 {
+        return total_hamming_distance(nums)
+    }
+}

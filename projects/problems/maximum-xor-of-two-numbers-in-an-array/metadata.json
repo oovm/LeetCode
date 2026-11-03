@@ -642,6 +642,7 @@
     ],
     "invoke": {
         "python": "Solution().findMaximumXOR",
-        "typescript": "Solution().findMaximumXOR"
+        "typescript": "Solution().findMaximumXOR",
+        "valkyrie": "Solution().findMaximumXOR"
     }
 }

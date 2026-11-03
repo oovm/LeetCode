@@ -1042,6 +1042,7 @@
     ],
     "invoke": {
         "python": "Solution().numberOfArithmeticSlices",
-        "typescript": "Solution().numberOfArithmeticSlices"
+        "typescript": "Solution().numberOfArithmeticSlices",
+        "valkyrie": "Solution().numberOfArithmeticSlices"
     }
 }
