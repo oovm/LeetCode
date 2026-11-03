@@ -13,10 +13,10 @@ micro max_length_between_equal_characters(s: utf8) -> i64 {
     while i < s.length() {
         let code: u32 = s⁅i⁆ as u32
         let idx: usize = (code as usize) - 97
-        if first⁅idx⁆.unwrap() < 0 {
+        if first⁅idx⁆ < 0 {
             first⁅idx⁆ = i as i64
         } else {
-            let span: i64 = i as i64 - first⁅idx⁆.unwrap() - 1
+            let span: i64 = i as i64 - first⁅idx⁆ - 1
             if span > best {
                 best = span
             }

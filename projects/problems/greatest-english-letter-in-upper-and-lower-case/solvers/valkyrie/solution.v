@@ -30,7 +30,7 @@ micro greatest_letter(s: utf8) -> utf8 {
     let mut idx: i64 = 25
     while idx >= 0 {
         let k: usize = idx as usize
-        if lower⁅k⁆.unwrap() == 1 && upper⁅k⁆.unwrap() == 1 {
+        if lower⁅k⁆ == 1 && upper⁅k⁆ == 1 {
             let mut builder: Utf8Builder = Utf8Builder::new(1)
             builder.append(char::from((65 + idx) as u32))
             return builder.build()

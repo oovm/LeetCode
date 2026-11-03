@@ -13,14 +13,14 @@ micro max_difference(s: utf8) -> i64 {
     let mut i: usize = 0
     while i < n {
         let slot: usize = (s⁅i⁆ as u32 - 97) as usize
-        counts⁅slot⁆ = counts⁅slot⁆.unwrap() + 1
+        counts⁅slot⁆ = counts⁅slot⁆ + 1
         i = i + 1
     }
     let mut max_odd: i64 = 0
     let mut min_even: i64 = n as i64
     k = 0
     while k < 26 {
-        let frequency: i64 = counts⁅k⁆.unwrap()
+        let frequency: i64 = counts⁅k⁆
         if frequency > 0 {
             if frequency % 2 == 1 {
                 if frequency > max_odd {

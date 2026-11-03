@@ -17,7 +17,7 @@ micro repeated_character(s: utf8) -> utf8 {
     while i < s.length() {
         let c: u32 = s⁅i⁆ as u32
         let idx: usize = (c - 97) as usize
-        if seen⁅idx⁆.unwrap() == 1 {
+        if seen⁅idx⁆ == 1 {
             let mut builder: Utf8Builder = Utf8Builder::new(1)
             builder.append(char::from(c))
             return builder.build()

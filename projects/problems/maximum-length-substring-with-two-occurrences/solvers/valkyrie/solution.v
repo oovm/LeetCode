@@ -15,10 +15,10 @@ micro maximum_length_substring(s: utf8) -> i64 {
     let mut best: i64 = 0
     while right < n {
         let slot: usize = (s⁅right⁆ as u32 - 97) as usize
-        counts⁅slot⁆ = counts⁅slot⁆.unwrap() + 1
-        while counts⁅slot⁆.unwrap() > 2 {
+        counts⁅slot⁆ = counts⁅slot⁆ + 1
+        while counts⁅slot⁆ > 2 {
             let drop: usize = (s⁅left⁆ as u32 - 97) as usize
-            counts⁅drop⁆ = counts⁅drop⁆.unwrap() - 1
+            counts⁅drop⁆ = counts⁅drop⁆ - 1
             left = left + 1
         }
         let width: i64 = (right - left + 1) as i64

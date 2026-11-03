@@ -73,14 +73,51 @@ micro sequential_digits(low: i64, high: i64) -> ArrayList<i64>
 - 影响：本批 36 题判题 0 通过（25 marshal + 11 demarshal）。该项恢复前，任何返回或接收
   `ArrayList` 的题都不能计入构建通过数。
 
+### G4 std `Utf8Builder.append(char)` 在 std 模块自编译时无法实例化
+
+- 状态：未恢复（2026-11-04 实测，Easy 文本重建组 20 题）
+- 最小复现（只用 std，无题解代码）：
+
+```v
+micro probe(c: char) -> i64 {
+    let mut b: Utf8Builder = Utf8Builder::new(4)
+    b.append(c)
+    return b.build().byte_length() as i64
+}
+```
+
+- 实际：`error[valkyrie.hir.unresolved_call]`，`infix +` 在 `append` 内 6 个候选无一匹配，
+  `--> source/text/Utf8Builder.v:46:29`；同根因 5 处（`Utf8Builder.v:46/50/51/55/56/57:29`）。
+  伴随 `code.bit_shift_right` 在 `append` 内无候选：`no method candidate named bit_shift_right
+  exists for receiver type Nominal(ItemId(65))`。
+- 对照（同日实跑，均 `status=0`，排除「写法错」与「清理引入」两个解释）：
+  - 顶层自由函数 `let code: u32 = c as u32` + `code.bit_shift_right(6)`；
+  - 用户工程 `imply Buf` + `self.bytes.push((192 + code.bit_shift_right(6)) as u8)`，
+    与 `Utf8Builder.append` 同形（`mut self`、`ArrayList<u8>`、`push`、`u32` 位运算）。
+  - `thousand-separator` 用 HEAD 版本（保留旧 `.unwrap()`）复建同样 `status=1`、同坐标。
+- 结论：**编译器问题**（`u32` 方法候选在 std 模块自编译的 impl 体内未命中；同表达式在用户工程可解析），
+  非题解写法错误、非形态 A 清理引入。影响修复位置在编译器的 std 闭包/方法解析，不在 `solution.v`。
+- 影响题（20）：`calculate-digit-sum-of-a-string`、`clear-digits`、`convert-date-to-binary`、
+  `faulty-keyboard`、`find-valid-pair-of-adjacent-digits-in-string`、`first-letter-to-appear-twice`、
+  `greatest-english-letter-in-upper-and-lower-case`、`hexspeak`、`increasing-decreasing-string`、
+  `latest-time-by-replacing-hidden-digits`、`lexicographically-smallest-palindrome`、`make-the-string-great`、
+  `rearrange-spaces-between-words`、`reformat-phone-number`、`reformat-the-string`、
+  `remove-all-adjacent-duplicates-in-string`、`replace-all-s-to-avoid-consecutive-repeating-characters`、
+  `reverse-only-letters`、`reverse-vowels-of-a-string`、`thousand-separator`。
+
 ## 批次状态：Easy 标量/文本池（2026-11-03）
 
 - 范围：`metadata.tests` 的参数与期望均为 `number` / `boolean` / `string` 的 Easy 题，共 133 题。
-- 状态：理想解已写，**未构建验证**。本轮不跑 `legionBuildProject`，这 133 题不计入覆盖数。
-- TS 侧：133 题全部用 `run_ts_solver.ts` 实跑，**131 通过 / 2 未通过**（未通过的 2 题见下节
-  「oracle 模型错误」，保留理想解，不改算法）。
-- 缺口：本批未新增编译器/std 坐标。`utf8` 下标读、`Utf8Builder`、`ArrayList`、`HashMap`
-  属既有已恢复能力，按理想写法直接使用，不写降级实现。
+- 状态：理想解已写。2026-11-04 完成其中 40 个含形态 A 的文件的首轮真构建（详见下一条）。
+- 形态 A 清理（2026-11-04）：40 文件 / 113 处 `⁅…⁆.unwrap()` 已逐处确认后删除（每处校验
+  `.unwrap()` 紧跟 `⁆` 且容器元素非 `Option`），清理后复扫残留 0 处；形态 B 一律未动。
+  本批 40 题真构建 **20 `status=0` / 20 `status=1`**，20 题失败全部命中 G4；另
+  `minimum-string-length-after-removing-substrings` 暴露 `char` 覆盖 `u8` 的写法错误（非缺口，
+  改为 `u8` 后 `status=0`）。其余 93 题本轮未构建，状态仍是未验证。
+- 构建通过数：本块未改变（仍为 19）。20 题构建通过但未判题，按口径不计入覆盖数。
+- TS 侧：133 题全部用 `run_ts_solver.ts` 实跑，**131 通过 / 2 未通过**（见「oracle 模型错误」，
+  保留理想解，不改算法）。
+- 缺口：新增 G4；`utf8` 下标读、`ArrayList`、`HashMap` 属既有已恢复能力。
 
 ## 批次状态：Medium 三组（2026-11-03 实测）
 

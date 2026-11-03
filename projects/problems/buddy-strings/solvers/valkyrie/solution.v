@@ -34,8 +34,8 @@ micro buddy_strings(s: utf8, goal: utf8) -> bool {
     if diff.length() != 2 {
         return false
     }
-    let a: usize = diff⁅0⁆.unwrap() as usize
-    let b: usize = diff⁅1⁆.unwrap() as usize
+    let a: usize = diff⁅0⁆ as usize
+    let b: usize = diff⁅1⁆ as usize
     return (s⁅a⁆ as u32) == (goal⁅b⁆ as u32) && (s⁅b⁆ as u32) == (goal⁅a⁆ as u32)
 }
 

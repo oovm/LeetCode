@@ -19,7 +19,7 @@ micro find_permutation_difference(s: utf8, t: utf8) -> i64 {
     i = 0
     while i < t.length() {
         let slot: usize = (t⁅i⁆ as u32 - 97) as usize
-        let diff: i64 = position⁅slot⁆.unwrap() - i as i64
+        let diff: i64 = position⁅slot⁆ - i as i64
         if diff < 0 {
             total = total - diff
         } else {

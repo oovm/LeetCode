@@ -13,7 +13,7 @@ micro build_failure(pattern: utf8) -> ArrayList<i64> {
     let mut j: usize = 0
     while k < n {
         while j > 0 && (pattern⁅k⁆ as u32) != (pattern⁅j⁆ as u32) {
-            j = fail⁅j - 1⁆.unwrap() as usize
+            j = fail⁅j - 1⁆ as usize
         }
         if (pattern⁅k⁆ as u32) == (pattern⁅j⁆ as u32) {
             j = j + 1
@@ -36,7 +36,7 @@ micro str_str(haystack: utf8, needle: utf8) -> i64 {
     let mut j: usize = 0
     while i < n {
         while j > 0 && (haystack⁅i⁆ as u32) != (needle⁅j⁆ as u32) {
-            j = fail⁅j - 1⁆.unwrap() as usize
+            j = fail⁅j - 1⁆ as usize
         }
         if (haystack⁅i⁆ as u32) == (needle⁅j⁆ as u32) {
             j = j + 1

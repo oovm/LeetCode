@@ -27,7 +27,7 @@ micro number_of_special_chars(word: utf8) -> i64 {
     let mut count: i64 = 0
     i = 0
     while i < 26 {
-        if lower⁅i⁆.unwrap() == 1 && upper⁅i⁆.unwrap() == 1 {
+        if lower⁅i⁆ == 1 && upper⁅i⁆ == 1 {
             count = count + 1
         }
         i = i + 1

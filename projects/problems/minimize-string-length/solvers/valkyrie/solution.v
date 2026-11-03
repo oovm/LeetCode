@@ -12,7 +12,7 @@ micro minimized_string_length(s: utf8) -> i64 {
     i = 0
     while i < s.length() {
         let idx: usize = (s⁅i⁆ as u32 - 97) as usize
-        if seen⁅idx⁆.unwrap() == 0 {
+        if seen⁅idx⁆ == 0 {
             seen⁅idx⁆ = 1
             total = total + 1
         }

@@ -11,18 +11,18 @@ micro equal_frequency(word: utf8) -> bool {
     i = 0
     while i < word.length() {
         let idx: usize = (word⁅i⁆ as u32 - 97) as usize
-        counts⁅idx⁆ = counts⁅idx⁆.unwrap() + 1
+        counts⁅idx⁆ = counts⁅idx⁆ + 1
         i = i + 1
     }
     let mut remove: usize = 0
     while remove < 26 {
-        if counts⁅remove⁆.unwrap() > 0 {
-            counts⁅remove⁆ = counts⁅remove⁆.unwrap() - 1
+        if counts⁅remove⁆ > 0 {
+            counts⁅remove⁆ = counts⁅remove⁆ - 1
             let mut target: i64 = 0
             let mut ok: bool = true
             let mut j: usize = 0
             while j < 26 {
-                let c: i64 = counts⁅j⁆.unwrap()
+                let c: i64 = counts⁅j⁆
                 if c > 0 {
                     if target == 0 {
                         target = c
@@ -35,7 +35,7 @@ micro equal_frequency(word: utf8) -> bool {
             if ok {
                 return true
             }
-            counts⁅remove⁆ = counts⁅remove⁆.unwrap() + 1
+            counts⁅remove⁆ = counts⁅remove⁆ + 1
         }
         remove = remove + 1
     }

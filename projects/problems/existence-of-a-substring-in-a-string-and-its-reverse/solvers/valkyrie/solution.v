@@ -23,7 +23,7 @@ micro is_substring_present(s: utf8) -> bool {
     i = 0
     while i + 1 < n {
         let slot: usize = pair_slot(s⁅i + 1⁆ as u32, s⁅i⁆ as u32)
-        if seen⁅slot⁆.unwrap() == 1 {
+        if seen⁅slot⁆ == 1 {
             return true
         }
         i = i + 1

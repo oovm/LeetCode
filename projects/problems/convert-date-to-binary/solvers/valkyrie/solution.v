@@ -28,7 +28,7 @@ micro binary_of(value: i64) -> utf8 {
     let mut i: usize = bits.length()
     while i > 0 {
         i = i - 1
-        builder.append(char::from((bits⁅i⁆.unwrap() + 48) as u32))
+        builder.append(char::from((bits⁅i⁆ + 48) as u32))
     }
     return builder.build()
 }

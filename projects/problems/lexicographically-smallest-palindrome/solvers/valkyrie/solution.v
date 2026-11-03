@@ -13,8 +13,8 @@ micro make_smallest_palindrome(s: utf8) -> utf8 {
     i = 0
     while i < half {
         let j: usize = n - 1 - i
-        let a: u32 = chars⁅i⁆.unwrap() as u32
-        let b: u32 = chars⁅j⁆.unwrap() as u32
+        let a: u32 = chars⁅i⁆ as u32
+        let b: u32 = chars⁅j⁆ as u32
         let mut m: u32 = a
         if b < a {
             m = b
@@ -26,7 +26,7 @@ micro make_smallest_palindrome(s: utf8) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(n)
     i = 0
     while i < n {
-        builder.append(chars⁅i⁆.unwrap())
+        builder.append(chars⁅i⁆)
         i = i + 1
     }
     return builder.build()

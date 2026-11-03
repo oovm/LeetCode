@@ -20,13 +20,13 @@ micro reverse_vowels(s: utf8) -> utf8 {
         right = right - 1
     }
     while left < right {
-        if !is_vowel(chars⁅left⁆.unwrap() as u32) {
+        if !is_vowel(chars⁅left⁆ as u32) {
             left = left + 1
-        } else if !is_vowel(chars⁅right⁆.unwrap() as u32) {
+        } else if !is_vowel(chars⁅right⁆ as u32) {
             right = right - 1
         } else {
-            let tmp: char = chars⁅left⁆.unwrap()
-            chars⁅left⁆ = chars⁅right⁆.unwrap()
+            let tmp: char = chars⁅left⁆
+            chars⁅left⁆ = chars⁅right⁆
             chars⁅right⁆ = tmp
             left = left + 1
             right = right - 1
@@ -35,7 +35,7 @@ micro reverse_vowels(s: utf8) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(n)
     let mut k: usize = 0
     while k < n {
-        builder.append(chars⁅k⁆.unwrap())
+        builder.append(chars⁅k⁆)
         k = k + 1
     }
     return builder.build()

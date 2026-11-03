@@ -13,12 +13,12 @@ micro find_valid_pair(s: utf8) -> utf8 {
     let mut i: usize = 0
     while i < n {
         let digit: usize = (s⁅i⁆ as u32 - 48) as usize
-        counts⁅digit⁆ = counts⁅digit⁆.unwrap() + 1
+        counts⁅digit⁆ = counts⁅digit⁆ + 1
         i = i + 1
     }
     k = 1
     while k < 10 {
-        if counts⁅k⁆.unwrap() != k as i64 {
+        if counts⁅k⁆ != k as i64 {
             counts⁅k⁆ = -1
         }
         k = k + 1
@@ -27,7 +27,7 @@ micro find_valid_pair(s: utf8) -> utf8 {
     while i + 1 < n {
         let first: i64 = s⁅i⁆ as u32 as i64 - 48
         let second: i64 = s⁅i + 1⁆ as u32 as i64 - 48
-        if first != second && counts⁅first as usize⁆.unwrap() == first && counts⁅second as usize⁆.unwrap() == second {
+        if first != second && counts⁅first as usize⁆ == first && counts⁅second as usize⁆ == second {
             let mut builder: Utf8Builder = Utf8Builder::new(2)
             builder.append(s⁅i⁆)
             builder.append(s⁅i + 1⁆)

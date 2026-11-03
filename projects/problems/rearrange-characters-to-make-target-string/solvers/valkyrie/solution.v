@@ -13,21 +13,21 @@ micro rearrange_characters(s: utf8, target: utf8) -> i64 {
     i = 0
     while i < s.length() {
         let idx: usize = (s⁅i⁆ as u32 - 97) as usize
-        have⁅idx⁆ = have⁅idx⁆.unwrap() + 1
+        have⁅idx⁆ = have⁅idx⁆ + 1
         i = i + 1
     }
     i = 0
     while i < target.length() {
         let idx: usize = (target⁅i⁆ as u32 - 97) as usize
-        need⁅idx⁆ = need⁅idx⁆.unwrap() + 1
+        need⁅idx⁆ = need⁅idx⁆ + 1
         i = i + 1
     }
     let mut best: i64 = 2147483647
     i = 0
     while i < 26 {
-        let want: i64 = need⁅i⁆.unwrap()
+        let want: i64 = need⁅i⁆
         if want > 0 {
-            let made: i64 = have⁅i⁆.unwrap() / want
+            let made: i64 = have⁅i⁆ / want
             if made < best {
                 best = made
             }

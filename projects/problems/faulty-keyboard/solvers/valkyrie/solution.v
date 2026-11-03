@@ -14,8 +14,8 @@ micro final_string(s: utf8) -> utf8 {
                 right = right - 1
             }
             while left < right {
-                let tmp: char = out⁅left⁆.unwrap()
-                out⁅left⁆ = out⁅right⁆.unwrap()
+                let tmp: char = out⁅left⁆
+                out⁅left⁆ = out⁅right⁆
                 out⁅right⁆ = tmp
                 left = left + 1
                 right = right - 1
@@ -28,7 +28,7 @@ micro final_string(s: utf8) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(n)
     i = 0
     while i < out.length() {
-        builder.append(out⁅i⁆.unwrap())
+        builder.append(out⁅i⁆)
         i = i + 1
     }
     return builder.build()

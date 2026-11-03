@@ -20,13 +20,13 @@ micro count_points(rings: utf8) -> i64 {
         }
         let digit: i64 = rings⁅p + 1⁆ as u32 as i64 - 48
         let slot: usize = digit as usize
-        rods⁅slot⁆ = rods⁅slot⁆.unwrap() | bit
+        rods⁅slot⁆ = rods⁅slot⁆ | bit
         p = p + 2
     }
     let mut total: i64 = 0
     let mut j: usize = 0
     while j < 10 {
-        if rods⁅j⁆.unwrap() == 7 {
+        if rods⁅j⁆ == 7 {
             total = total + 1
         }
         j = j + 1

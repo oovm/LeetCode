@@ -13,7 +13,7 @@ micro prefix_table(pattern: utf8) -> ArrayList<i64> {
     let mut j: usize = 0
     while k < n {
         while j > 0 && (pattern⁅k⁆ as u32) != (pattern⁅j⁆ as u32) {
-            j = fail⁅j - 1⁆.unwrap() as usize
+            j = fail⁅j - 1⁆ as usize
         }
         if (pattern⁅k⁆ as u32) == (pattern⁅j⁆ as u32) {
             j = j + 1
@@ -32,7 +32,7 @@ micro repeated_substring_pattern(s: utf8) -> bool {
         return false
     }
     let fail: ArrayList<i64> = prefix_table(s)
-    let border: i64 = fail⁅n - 1⁆.unwrap()
+    let border: i64 = fail⁅n - 1⁆
     let period: i64 = n as i64 - border
     if (n as i64) % period != 0 {
         return false

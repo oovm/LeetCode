@@ -12,7 +12,7 @@ micro build_failure(pattern: utf8) -> ArrayList<i64> {
     let mut j: usize = 0
     while k < n {
         while j > 0 && (pattern⁅k⁆ as u32) != (pattern⁅j⁆ as u32) {
-            j = fail⁅j - 1⁆.unwrap() as usize
+            j = fail⁅j - 1⁆ as usize
         }
         if (pattern⁅k⁆ as u32) == (pattern⁅j⁆ as u32) {
             j = j + 1
@@ -39,7 +39,7 @@ micro rotate_string(s: utf8, goal: utf8) -> bool {
     let mut j: usize = 0
     while i < 2 * n {
         while j > 0 && (s⁅i % n⁆ as u32) != (goal⁅j⁆ as u32) {
-            j = fail⁅j - 1⁆.unwrap() as usize
+            j = fail⁅j - 1⁆ as usize
         }
         if (s⁅i % n⁆ as u32) == (goal⁅j⁆ as u32) {
             j = j + 1

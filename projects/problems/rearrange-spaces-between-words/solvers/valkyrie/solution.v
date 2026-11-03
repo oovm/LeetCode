@@ -30,7 +30,7 @@ micro reorder_spaces(text: utf8) -> utf8 {
         return builder.build()
     }
     if wc == 1 {
-        let only: utf8 = words⁅0⁆.unwrap()
+        let only: utf8 = words⁅0⁆
         let mut p: usize = 0
         while p < only.length() {
             builder.append(only⁅p⁆)
@@ -54,7 +54,7 @@ micro reorder_spaces(text: utf8) -> utf8 {
                 g = g + 1
             }
         }
-        let word: utf8 = words⁅w⁆.unwrap()
+        let word: utf8 = words⁅w⁆
         let mut p: usize = 0
         while p < word.length() {
             builder.append(word⁅p⁆)

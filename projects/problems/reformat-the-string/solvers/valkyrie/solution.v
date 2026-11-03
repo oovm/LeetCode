@@ -31,9 +31,9 @@ micro reformat(s: utf8) -> utf8 {
     while k < n {
         let even: bool = k % 2 == 0
         if even == letters_first {
-            builder.append(letters⁅k / 2⁆.unwrap())
+            builder.append(letters⁅k / 2⁆)
         } else {
-            builder.append(digits⁅k / 2⁆.unwrap())
+            builder.append(digits⁅k / 2⁆)
         }
         k = k + 1
     }

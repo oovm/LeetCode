@@ -15,10 +15,10 @@ micro minimum_pushes(word: utf8) -> i64 {
         let c: u32 = word⁅i⁆ as u32
         if c >= 97 && c <= 122 {
             let idx: usize = (c - 97) as usize
-            if freq⁅idx⁆.unwrap() == 0 {
+            if freq⁅idx⁆ == 0 {
                 order.push(idx as i64)
             }
-            freq⁅idx⁆ = freq⁅idx⁆.unwrap() + 1
+            freq⁅idx⁆ = freq⁅idx⁆ + 1
         }
         i = i + 1
     }
@@ -27,7 +27,7 @@ micro minimum_pushes(word: utf8) -> i64 {
     while k < order.length() {
         let letter: i64 = order⁅k⁆
         let layer: i64 = (k as i64) / 8 + 1
-        total = total + layer * freq⁅letter as usize⁆.unwrap()
+        total = total + layer * freq⁅letter as usize⁆
         k = k + 1
     }
     return total

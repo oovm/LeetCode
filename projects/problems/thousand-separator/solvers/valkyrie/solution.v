@@ -19,7 +19,7 @@ micro thousand_separator(n: i64) -> utf8 {
         if i > 0 && (len - i) % 3 == 0 {
             builder.append(char::from(46))
         }
-        builder.append(char::from((digits⁅i⁆.unwrap() + 48) as u32))
+        builder.append(char::from((digits⁅i⁆ + 48) as u32))
     }
     return builder.build()
 }

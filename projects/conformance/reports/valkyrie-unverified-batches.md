@@ -18,6 +18,12 @@
 
 TS 实跑：131/133 通过。未通过 2 题：`calculate-digit-sum-of-a-string`（大用例 oracle 与题面规则不符）、`minimum-number-of-pushes-to-type-word-i`（oracle 用「按字符位置分槽」模型，与官方按字母频次计价不符）。两题 V/TS 均保留理想解，不为缺陷改算法。
 
+V 实测（2026-11-04，形态 A 清理块）：本批 40 个含 `⁅ ⁆.unwrap()` 的文件已逐处删除 113 处，
+复扫残留 0，形态 B 未动。这 40 题真构建 **20 `status=0` / 20 `status=1`**：20 题失败全部命中
+G4（`std::text::Utf8Builder.append(char)`）；`minimum-string-length-after-removing-substrings`
+另因 `char` 覆盖 `u8`（写法错，非缺口）改回 `u8` 后 `status=0`。其余 93 题未构建，仍属未验证。
+构建通过数不变（19）。
+
 ### 集合状态（`ArrayList` / `HashMap`）（48 题）
 
 | slug | V 入口签名 | TS 实跑 |

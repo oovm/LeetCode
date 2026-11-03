@@ -20,9 +20,9 @@ micro reformat_number(number: utf8) -> utf8 {
         if !first {
             builder.append(char::from(45))
         }
-        builder.append(digits⁅i⁆.unwrap())
-        builder.append(digits⁅i + 1⁆.unwrap())
-        builder.append(digits⁅i + 2⁆.unwrap())
+        builder.append(digits⁅i⁆)
+        builder.append(digits⁅i + 1⁆)
+        builder.append(digits⁅i + 2⁆)
         first = false
         i = i + 3
     }
@@ -30,15 +30,15 @@ micro reformat_number(number: utf8) -> utf8 {
         builder.append(char::from(45))
     }
     if dn == i + 4 {
-        builder.append(digits⁅i⁆.unwrap())
-        builder.append(digits⁅i + 1⁆.unwrap())
+        builder.append(digits⁅i⁆)
+        builder.append(digits⁅i + 1⁆)
         builder.append(char::from(45))
-        builder.append(digits⁅i + 2⁆.unwrap())
-        builder.append(digits⁅i + 3⁆.unwrap())
+        builder.append(digits⁅i + 2⁆)
+        builder.append(digits⁅i + 3⁆)
     } else {
         let mut k: usize = i
         while k < dn {
-            builder.append(digits⁅k⁆.unwrap())
+            builder.append(digits⁅k⁆)
             k = k + 1
         }
     }

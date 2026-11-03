@@ -19,7 +19,7 @@ micro clear_digits(s: utf8) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(n)
     let mut k: usize = 0
     while k < stack.length() {
-        builder.append(stack⁅k⁆.unwrap())
+        builder.append(stack⁅k⁆)
         k = k + 1
     }
     return builder.build()

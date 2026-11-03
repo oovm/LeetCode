@@ -35,7 +35,7 @@ micro digit_sum(s: utf8, k: i64) -> utf8 {
                     }
                     let mut d: usize = digits.length()
                     while d > 0 {
-                        builder.append(char::from((48 + digits⁅d - 1⁆.unwrap()) as u32))
+                        builder.append(char::from((48 + digits⁅d - 1⁆) as u32))
                         d = d - 1
                     }
                 }

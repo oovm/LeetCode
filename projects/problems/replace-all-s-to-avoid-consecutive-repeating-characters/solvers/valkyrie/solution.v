@@ -11,15 +11,15 @@ micro modify_string(s: utf8) -> utf8 {
     }
     i = 0
     while i < n {
-        if (chars⁅i⁆.unwrap() as u32) == 63 {
+        if (chars⁅i⁆ as u32) == 63 {
             let mut candidate: u32 = 97
             let mut chosen: bool = false
             while candidate <= 99 && !chosen {
                 let mut ok: bool = true
-                if i > 0 && (chars⁅i - 1⁆.unwrap() as u32) == candidate {
+                if i > 0 && (chars⁅i - 1⁆ as u32) == candidate {
                     ok = false
                 }
-                if i + 1 < n && (chars⁅i + 1⁆.unwrap() as u32) == candidate {
+                if i + 1 < n && (chars⁅i + 1⁆ as u32) == candidate {
                     ok = false
                 }
                 if ok {
@@ -34,7 +34,7 @@ micro modify_string(s: utf8) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(n)
     i = 0
     while i < n {
-        builder.append(chars⁅i⁆.unwrap())
+        builder.append(chars⁅i⁆)
         i = i + 1
     }
     return builder.build()

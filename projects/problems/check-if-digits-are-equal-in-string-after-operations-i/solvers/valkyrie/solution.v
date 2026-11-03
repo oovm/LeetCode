@@ -11,10 +11,10 @@ micro has_same_digits(s: utf8) -> bool {
         i = i + 1
     }
     while digits.length() > 2 {
-        let mut previous: i64 = digits⁅0⁆.unwrap()
+        let mut previous: i64 = digits⁅0⁆
         let mut j: usize = 1
         while j < digits.length() {
-            let current: i64 = digits⁅j⁆.unwrap()
+            let current: i64 = digits⁅j⁆
             let slot: usize = j - 1
             digits⁅slot⁆ = (previous + current) % 10
             previous = current
@@ -22,7 +22,7 @@ micro has_same_digits(s: utf8) -> bool {
         }
         digits.pop()
     }
-    return digits⁅0⁆.unwrap() == digits⁅1⁆.unwrap()
+    return digits⁅0⁆ == digits⁅1⁆
 }
 
 class Solution {

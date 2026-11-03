@@ -26,7 +26,7 @@ micro calculate_time(keyboard: utf8, word: utf8) -> i64 {
     let mut j: usize = 0
     while j < word.length() {
         let code: u32 = word⁅j⁆ as u32
-        let target: i64 = pos⁅(code as usize) - 97⁆.unwrap()
+        let target: i64 = pos⁅(code as usize) - 97⁆
         time = time + abs_i64(target - current)
         current = target
         j = j + 1

@@ -13,7 +13,7 @@ micro to_digits(num: utf8) -> ArrayList<i64> {
 micro all_zero(digits: ArrayList<i64>) -> bool {
     let mut i: usize = 0
     while i < digits.length() {
-        if digits⁅i⁆.unwrap() != 0 {
+        if digits⁅i⁆ != 0 {
             return false
         }
         i = i + 1
@@ -26,7 +26,7 @@ micro divide_by_16(digits: ArrayList<i64>) -> i64 {
     let mut rem: i64 = 0
     let mut i: usize = 0
     while i < digits.length() {
-        let cur: i64 = rem * 10 + digits⁅i⁆.unwrap()
+        let cur: i64 = rem * 10 + digits⁅i⁆
         digits⁅i⁆ = cur / 16
         rem = cur % 16
         i = i + 1
@@ -47,7 +47,7 @@ micro to_hexspeak(num: utf8) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(hex.length())
     let mut i: usize = hex.length()
     while i > 0 {
-        let d: i64 = hex⁅i - 1⁆.unwrap()
+        let d: i64 = hex⁅i - 1⁆
         if d == 0 {
             builder.append(char::from(79))
         } else if d == 1 {

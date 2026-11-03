@@ -14,7 +14,7 @@ micro make_good(s: utf8) -> utf8 {
     let mut i: usize = 0
     while i < n {
         let c: char = s⁅i⁆
-        if stack.length() > 0 && abss(stack⁅stack.length() - 1⁆.unwrap() as u32 as i64 - c as u32 as i64) == 32 {
+        if stack.length() > 0 && abss(stack⁅stack.length() - 1⁆ as u32 as i64 - c as u32 as i64) == 32 {
             stack.pop()
         } else {
             stack.push(c)
@@ -24,7 +24,7 @@ micro make_good(s: utf8) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(n)
     let mut k: usize = 0
     while k < stack.length() {
-        builder.append(stack⁅k⁆.unwrap())
+        builder.append(stack⁅k⁆)
         k = k + 1
     }
     return builder.build()

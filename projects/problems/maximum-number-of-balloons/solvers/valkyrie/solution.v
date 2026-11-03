@@ -11,23 +11,23 @@ micro max_number_of_balloons(text: utf8) -> i64 {
     i = 0
     while i < text.length() {
         let code: u32 = text⁅i⁆ as u32
-        counts⁅(code as usize) - 97⁆ = counts⁅(code as usize) - 97⁆.unwrap() + 1
+        counts⁅(code as usize) - 97⁆ = counts⁅(code as usize) - 97⁆ + 1
         i = i + 1
     }
-    let mut result: i64 = counts⁅1⁆.unwrap()
-    if counts⁅0⁆.unwrap() < result {
-        result = counts⁅0⁆.unwrap()
+    let mut result: i64 = counts⁅1⁆
+    if counts⁅0⁆ < result {
+        result = counts⁅0⁆
     }
-    let half_l: i64 = counts⁅11⁆.unwrap() / 2
+    let half_l: i64 = counts⁅11⁆ / 2
     if half_l < result {
         result = half_l
     }
-    let half_o: i64 = counts⁅14⁆.unwrap() / 2
+    let half_o: i64 = counts⁅14⁆ / 2
     if half_o < result {
         result = half_o
     }
-    if counts⁅13⁆.unwrap() < result {
-        result = counts⁅13⁆.unwrap()
+    if counts⁅13⁆ < result {
+        result = counts⁅13⁆
     }
     return result
 }
