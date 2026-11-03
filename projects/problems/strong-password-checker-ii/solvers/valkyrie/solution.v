@@ -1,6 +1,6 @@
 namespace leetcode.strong_password_checker_ii;
 
-[export(case: "camelCase")]
+[export(name: "strongPasswordCheckerII")]
 micro strong_password_checker_i_i(password: utf8) -> bool {
     let n: usize = password.length()
     if n < 8 {

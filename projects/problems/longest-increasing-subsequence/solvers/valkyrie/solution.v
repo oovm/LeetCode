@@ -1,7 +1,7 @@
 namespace leetcode.longest_increasing_subsequence;
 
 # tails[k] 保存长度为 k+1 的上升子序列的最小结尾值。
-[export(case: "camelCase")]
+[export(name: "lengthOfLIS")]
 micro length_of_l_i_s(nums: ArrayList<i64>) -> i64 {
     let mut tails: ArrayList<i64> = ArrayList::new(0)
     loop x in nums {

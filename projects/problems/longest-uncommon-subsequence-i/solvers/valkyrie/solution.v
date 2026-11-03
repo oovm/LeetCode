@@ -1,7 +1,7 @@
 namespace leetcode.longest_uncommon_subsequence_i;
 
 # 等长时逐位比较，不同则答案为长度，相同则 -1，O(n)
-[export(case: "camelCase")]
+[export(name: "findLUSlength")]
 micro find_l_u_slength(a: utf8, b: utf8) -> i64 {
     let an: usize = a.length()
     let bn: usize = b.length()

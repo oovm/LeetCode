@@ -11,7 +11,7 @@ micro hex_digit_value(code: u32) -> i64 {
 }
 
 # 每个通道取 17 的最近倍数，O(1)
-[export(case: "camelCase")]
+[export(name: "similarRGB")]
 micro similar_r_g_b(color: utf8) -> utf8 {
     let mut builder: Utf8Builder = Utf8Builder::new(8)
     builder.append(char::from(35))

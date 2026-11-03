@@ -1,7 +1,7 @@
 namespace leetcode.maximum_xor_of_two_numbers_in_an_array;
 
 # 从高位开始逐位确定答案：前缀哈希判定该位能否取 1。
-[export(case: "camelCase")]
+[export(name: "findMaximumXOR")]
 micro find_maximum_x_o_r(nums: ArrayList<i64>) -> i64 {
     let mut best: i64 = 0
     let mut mask: i64 = 0

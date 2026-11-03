@@ -1,7 +1,7 @@
 namespace leetcode.last_stone_weight_ii;
 
 # 0/1 背包：尽量把石头分成和最接近的两堆，答案即总和的差值。
-[export(case: "camelCase")]
+[export(name: "lastStoneWeightII")]
 micro last_stone_weight_i_i(stones: ArrayList<i64>) -> i64 {
     let mut total: i64 = 0
     loop stone in stones {
