@@ -583,6 +583,7 @@
     ],
     "invoke": {
         "python": "Solution().circularGameLosers",
-        "typescript": "Solution().circularGameLosers"
+        "typescript": "Solution().circularGameLosers",
+        "valkyrie": "circularGameLosers"
     }
 }

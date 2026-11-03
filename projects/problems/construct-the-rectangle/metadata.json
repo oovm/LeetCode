@@ -451,6 +451,7 @@
     ],
     "invoke": {
         "python": "Solution().constructRectangle",
-        "typescript": "Solution().constructRectangle"
+        "typescript": "Solution().constructRectangle",
+        "valkyrie": "constructRectangle"
     }
 }

@@ -152,6 +152,7 @@
     ],
     "invoke": {
         "python": "Solution().getRow",
-        "typescript": "Solution().getRow"
+        "typescript": "Solution().getRow",
+        "valkyrie": "getRow"
     }
 }

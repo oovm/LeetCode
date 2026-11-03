@@ -1966,6 +1966,7 @@
     ],
     "invoke": {
         "python": "Solution().generatePossibleNextMoves",
-        "typescript": "Solution().generatePossibleNextMoves"
+        "typescript": "Solution().generatePossibleNextMoves",
+        "valkyrie": "generatePossibleNextMoves"
     }
 }

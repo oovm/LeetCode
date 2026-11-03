@@ -786,6 +786,7 @@
     ],
     "invoke": {
         "python": "Solution().readBinaryWatch",
-        "typescript": "Solution().readBinaryWatch"
+        "typescript": "Solution().readBinaryWatch",
+        "valkyrie": "readBinaryWatch"
     }
 }

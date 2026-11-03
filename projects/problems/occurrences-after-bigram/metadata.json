@@ -834,6 +834,7 @@
     ],
     "invoke": {
         "python": "Solution().findOcurrences",
-        "typescript": "Solution().findOcurrences"
+        "typescript": "Solution().findOcurrences",
+        "valkyrie": "findOcurrences"
     }
 }

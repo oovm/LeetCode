@@ -2420,6 +2420,7 @@
     ],
     "invoke": {
         "python": "Solution().cellsInRange",
-        "typescript": "Solution().cellsInRange"
+        "typescript": "Solution().cellsInRange",
+        "valkyrie": "cellsInRange"
     }
 }

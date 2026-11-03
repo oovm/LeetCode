@@ -873,6 +873,7 @@
     ],
     "invoke": {
         "python": "Solution().shortestToChar",
-        "typescript": "Solution().shortestToChar"
+        "typescript": "Solution().shortestToChar",
+        "valkyrie": "shortestToChar"
     }
 }

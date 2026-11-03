@@ -887,6 +887,7 @@
     ],
     "invoke": {
         "python": "Solution().divideString",
-        "typescript": "Solution().divideString"
+        "typescript": "Solution().divideString",
+        "valkyrie": "divideString"
     }
 }

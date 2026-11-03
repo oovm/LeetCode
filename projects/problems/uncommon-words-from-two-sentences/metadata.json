@@ -944,6 +944,7 @@
     ],
     "invoke": {
         "python": "Solution().uncommonFromSentences",
-        "typescript": "Solution().uncommonFromSentences"
+        "typescript": "Solution().uncommonFromSentences",
+        "valkyrie": "uncommonFromSentences"
     }
 }

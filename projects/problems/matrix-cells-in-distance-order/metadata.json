@@ -13715,6 +13715,7 @@
     ],
     "invoke": {
         "python": "Solution().allCellsDistOrder",
-        "typescript": "Solution().allCellsDistOrder"
+        "typescript": "Solution().allCellsDistOrder",
+        "valkyrie": "allCellsDistOrder"
     }
 }

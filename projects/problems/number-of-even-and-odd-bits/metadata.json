@@ -379,6 +379,7 @@
     ],
     "invoke": {
         "python": "Solution().evenOddBit",
-        "typescript": "Solution().evenOddBit"
+        "typescript": "Solution().evenOddBit",
+        "valkyrie": "evenOddBit"
     }
 }

@@ -373,6 +373,7 @@
     ],
     "invoke": {
         "python": "Solution().generate",
-        "typescript": "Solution().generate"
+        "typescript": "Solution().generate",
+        "valkyrie": "generate"
     }
 }

@@ -460,6 +460,7 @@
     ],
     "invoke": {
         "python": "Solution().largeGroupPositions",
-        "typescript": "Solution().largeGroupPositions"
+        "typescript": "Solution().largeGroupPositions",
+        "valkyrie": "largeGroupPositions"
     }
 }

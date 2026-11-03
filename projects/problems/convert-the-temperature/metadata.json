@@ -241,6 +241,7 @@
     ],
     "invoke": {
         "python": "Solution().convertTemperature",
-        "typescript": "Solution().convertTemperature"
+        "typescript": "Solution().convertTemperature",
+        "valkyrie": "convertTemperature"
     }
 }

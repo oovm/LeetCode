@@ -697,6 +697,7 @@
     ],
     "invoke": {
         "python": "Solution().getNoZeroIntegers",
-        "typescript": "Solution().getNoZeroIntegers"
+        "typescript": "Solution().getNoZeroIntegers",
+        "valkyrie": "getNoZeroIntegers"
     }
 }
