@@ -229,6 +229,7 @@
     ],
     "invoke": {
         "python": "Solution().numOfWays",
-        "typescript": "Solution().numOfWays"
+        "typescript": "Solution().numOfWays",
+        "valkyrie": "Solution().numOfWays"
     }
 }

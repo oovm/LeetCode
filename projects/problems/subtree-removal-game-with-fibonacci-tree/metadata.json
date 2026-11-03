@@ -607,6 +607,7 @@
     ],
     "invoke": {
         "python": "Solution().findGameWinner",
-        "typescript": "Solution().findGameWinner"
+        "typescript": "Solution().findGameWinner",
+        "valkyrie": "Solution().findGameWinner"
     }
 }

@@ -349,6 +349,7 @@
     ],
     "invoke": {
         "python": "Solution().countSpecialNumbers",
-        "typescript": "Solution().countSpecialNumbers"
+        "typescript": "Solution().countSpecialNumbers",
+        "valkyrie": "Solution().countSpecialNumbers"
     }
 }

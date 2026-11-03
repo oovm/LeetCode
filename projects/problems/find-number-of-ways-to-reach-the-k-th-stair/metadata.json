@@ -481,6 +481,7 @@
     ],
     "invoke": {
         "python": "Solution().waysToReachStair",
-        "typescript": "Solution().waysToReachStair"
+        "typescript": "Solution().waysToReachStair",
+        "valkyrie": "Solution().waysToReachStair"
     }
 }

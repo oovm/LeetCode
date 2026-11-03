@@ -436,6 +436,7 @@
     ],
     "invoke": {
         "python": "Solution().kMirror",
-        "typescript": "Solution().kMirror"
+        "typescript": "Solution().kMirror",
+        "valkyrie": "Solution().kMirror"
     }
 }

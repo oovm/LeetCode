@@ -433,6 +433,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumOneBitOperations",
-        "typescript": "Solution().minimumOneBitOperations"
+        "typescript": "Solution().minimumOneBitOperations",
+        "valkyrie": "Solution().minimumOneBitOperations"
     }
 }

@@ -613,6 +613,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumBoxes",
-        "typescript": "Solution().minimumBoxes"
+        "typescript": "Solution().minimumBoxes",
+        "valkyrie": "Solution().minimumBoxes"
     }
 }

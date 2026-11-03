@@ -719,6 +719,7 @@
     ],
     "invoke": {
         "python": "Solution().distanceSum",
-        "typescript": "Solution().distanceSum"
+        "typescript": "Solution().distanceSum",
+        "valkyrie": "Solution().distanceSum"
     }
 }
