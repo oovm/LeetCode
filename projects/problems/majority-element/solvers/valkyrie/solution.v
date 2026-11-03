@@ -2,7 +2,7 @@ namespace leetcode.majority_element;
 
 [export(case: "camelCase")]
 micro majority_element(nums: ArrayList<i64>) -> i64 {
-    let mut candidate: i64 = nums⁅0⁆.unwrap()
+    let mut candidate: i64 = nums⁅0⁆
     let mut count: i64 = 0
     loop x in nums {
         if count == 0 {

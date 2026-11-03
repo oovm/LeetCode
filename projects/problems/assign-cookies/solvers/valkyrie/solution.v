@@ -19,8 +19,8 @@ micro find_content_children(mut g: ArrayList<i64>, mut s: ArrayList<i64>) -> i64
     let mut j: usize = 0
     let mut i: usize = 0
     while i < g.length() {
-        let need: i64 = g⁅i⁆.unwrap()
-        while j < s.length() && s⁅j⁆.unwrap() < need {
+        let need: i64 = g⁅i⁆
+        while j < s.length() && s⁅j⁆ < need {
             j = j + 1
         }
         if j >= s.length() {

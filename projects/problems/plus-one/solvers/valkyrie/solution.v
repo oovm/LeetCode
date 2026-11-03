@@ -5,7 +5,7 @@ micro plus_one(mut digits: ArrayList<i64>) -> ArrayList<i64> {
     let mut i: i64 = digits.length() as i64 - 1
     while i >= 0 {
         let idx: usize = i as usize
-        let d: i64 = digits⁅idx⁆.unwrap()
+        let d: i64 = digits⁅idx⁆
         if d < 9 {
             digits⁅idx⁆ = d + 1
             return digits

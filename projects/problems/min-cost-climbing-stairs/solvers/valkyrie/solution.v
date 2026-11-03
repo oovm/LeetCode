@@ -6,7 +6,7 @@ micro min_cost_climbing_stairs(cost: ArrayList<i64>) -> i64 {
     let mut f2: i64 = 0
     let mut i: usize = 0
     while i < cost.length() {
-        let c: i64 = cost⁅i⁆.unwrap()
+        let c: i64 = cost⁅i⁆
         let mut min_val: i64 = f1
         if f2 < min_val {
             min_val = f2

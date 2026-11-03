@@ -6,7 +6,7 @@ micro running_sum(nums: ArrayList<i64>) -> ArrayList<i64> {
     let mut sum: i64 = 0
     let mut i: usize = 0
     while i < nums.length() {
-        sum = sum + nums⁅i⁆.unwrap()
+        sum = sum + nums⁅i⁆
         result.push(sum)
         i = i + 1
     }

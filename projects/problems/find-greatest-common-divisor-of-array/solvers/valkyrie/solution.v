@@ -13,11 +13,11 @@ micro gcd(a: i64, b: i64) -> i64 {
 
 [export(case: "camelCase")]
 micro find_gcd(nums: ArrayList<i64>) -> i64 {
-    let mut min_val: i64 = nums⁅0⁆.unwrap()
-    let mut max_val: i64 = nums⁅0⁆.unwrap()
+    let mut min_val: i64 = nums⁅0⁆
+    let mut max_val: i64 = nums⁅0⁆
     let mut i: usize = 1
     while i < nums.length() {
-        let v: i64 = nums⁅i⁆.unwrap()
+        let v: i64 = nums⁅i⁆
         if v < min_val {
             min_val = v
         }

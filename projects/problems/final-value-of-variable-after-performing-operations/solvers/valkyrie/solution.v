@@ -5,7 +5,7 @@ micro final_value_after_operations(operations: ArrayList<utf8>) -> i64 {
     let mut x: i64 = 0
     let mut i: usize = 0
     while i < operations.length() {
-        let op: utf8 = operations⁅i⁆.unwrap()
+        let op: utf8 = operations⁅i⁆
         let mid: u32 = op⁅1⁆ as u32
         if mid == 43 {
             x = x + 1

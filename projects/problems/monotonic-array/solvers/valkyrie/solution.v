@@ -7,8 +7,8 @@ micro is_monotonic(nums: ArrayList<i64>) -> bool {
     let mut dec: bool = true
     let mut i: usize = 0
     while i + 1 < n {
-        let a: i64 = nums⁅i⁆.unwrap()
-        let b: i64 = nums⁅i + 1⁆.unwrap()
+        let a: i64 = nums⁅i⁆
+        let b: i64 = nums⁅i + 1⁆
         if a < b {
             dec = false
         }

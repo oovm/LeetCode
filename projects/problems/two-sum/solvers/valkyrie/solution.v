@@ -5,7 +5,7 @@ micro two_sum(nums: ArrayList<i64>, target: i64) -> ArrayList<i64>? {
     let mut index: HashMap<i64, i64> = HashMap::new(0)
     let mut i: usize = 0
     while i < nums.length() {
-        let x: i64 = nums⁅i⁆.unwrap()
+        let x: i64 = nums⁅i⁆
         let need: i64 = target - x
         if index.contains_key(need) {
             let mut result: ArrayList<i64> = ArrayList::new(2)

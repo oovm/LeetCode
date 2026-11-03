@@ -6,7 +6,7 @@ micro valid_utf8(data: ArrayList<i64>) -> bool {
     let n: usize = data.length()
     let mut i: usize = 0
     while i < n {
-        let v: i64 = data⁅i⁆.unwrap()
+        let v: i64 = data⁅i⁆
         if remaining > 0 {
             if v / 64 != 2 {
                 return false

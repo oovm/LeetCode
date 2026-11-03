@@ -17,9 +17,9 @@ micro count_good_triplets(arr: ArrayList<i64>, a: i64, b: i64, c: i64) -> i64 {
         while j < n {
             let mut k: usize = j + 1
             while k < n {
-                let ok_ij: bool = abs_i64(arr⁅i⁆.unwrap() - arr⁅j⁆.unwrap()) <= a
-                let ok_jk: bool = abs_i64(arr⁅j⁆.unwrap() - arr⁅k⁆.unwrap()) <= b
-                let ok_ik: bool = abs_i64(arr⁅i⁆.unwrap() - arr⁅k⁆.unwrap()) <= c
+                let ok_ij: bool = abs_i64(arr⁅i⁆ - arr⁅j⁆) <= a
+                let ok_jk: bool = abs_i64(arr⁅j⁆ - arr⁅k⁆) <= b
+                let ok_ik: bool = abs_i64(arr⁅i⁆ - arr⁅k⁆) <= c
                 if ok_ij && ok_jk && ok_ik {
                     ans = ans + 1
                 }

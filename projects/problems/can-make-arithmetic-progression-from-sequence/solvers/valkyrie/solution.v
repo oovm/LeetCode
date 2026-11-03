@@ -6,7 +6,7 @@ micro can_make_arithmetic_progression(arr: ArrayList<i64>) -> bool {
     let mut values: ArrayList<i64> = ArrayList::new(n)
     let mut i: usize = 0
     while i < n {
-        values.push(arr⁅i⁆.unwrap())
+        values.push(arr⁅i⁆)
         i = i + 1
     }
     i = 0
@@ -14,22 +14,22 @@ micro can_make_arithmetic_progression(arr: ArrayList<i64>) -> bool {
         let mut best: usize = i
         let mut j: usize = i + 1
         while j < n {
-            if values⁅j⁆.unwrap() < values⁅best⁆.unwrap() {
+            if values⁅j⁆ < values⁅best⁆ {
                 best = j
             }
             j = j + 1
         }
         if best != i {
-            let tmp: i64 = values⁅i⁆.unwrap()
-            values⁅i⁆ = values⁅best⁆.unwrap()
+            let tmp: i64 = values⁅i⁆
+            values⁅i⁆ = values⁅best⁆
             values⁅best⁆ = tmp
         }
         i = i + 1
     }
-    let step: i64 = values⁅1⁆.unwrap() - values⁅0⁆.unwrap()
+    let step: i64 = values⁅1⁆ - values⁅0⁆
     i = 1
     while i + 1 < n {
-        if values⁅i + 1⁆.unwrap() - values⁅i⁆.unwrap() != step {
+        if values⁅i + 1⁆ - values⁅i⁆ != step {
             return false
         }
         i = i + 1

@@ -6,7 +6,7 @@ micro largest_altitude(gain: ArrayList<i64>) -> i64 {
     let mut cur: i64 = 0
     let mut i: usize = 0
     while i < gain.length() {
-        cur = cur + gain⁅i⁆.unwrap()
+        cur = cur + gain⁅i⁆
         if cur > best {
             best = cur
         }

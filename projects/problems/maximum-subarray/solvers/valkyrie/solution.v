@@ -2,11 +2,11 @@ namespace leetcode.maximum_subarray;
 
 [export(case: "camelCase")]
 micro max_sub_array(nums: ArrayList<i64>) -> i64 {
-    let mut ans: i64 = nums⁅0⁆.unwrap()
-    let mut cur: i64 = nums⁅0⁆.unwrap()
+    let mut ans: i64 = nums⁅0⁆
+    let mut cur: i64 = nums⁅0⁆
     let mut i: usize = 1
     while i < nums.length() {
-        let x: i64 = nums⁅i⁆.unwrap()
+        let x: i64 = nums⁅i⁆
         if x > cur + x {
             cur = x
         } else {

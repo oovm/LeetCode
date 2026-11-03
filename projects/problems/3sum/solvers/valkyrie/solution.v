@@ -19,34 +19,34 @@ micro three_sum(mut nums: ArrayList<i64>) -> ArrayList<ArrayList<i64>> {
     let mut ans: ArrayList<ArrayList<i64>> = ArrayList::new(0)
     let mut i: usize = 0
     while i + 2 < n {
-        let vi: i64 = nums⁅i⁆.unwrap()
+        let vi: i64 = nums⁅i⁆
         if vi > 0 {
             break
         }
-        if i > 0 && nums⁅i⁆.unwrap() == nums⁅i - 1⁆.unwrap() {
+        if i > 0 && nums⁅i⁆ == nums⁅i - 1⁆ {
             i = i + 1
             continue
         }
         let mut j: usize = i + 1
         let mut k: usize = n - 1
         while j < k {
-            let sum: i64 = vi + nums⁅j⁆.unwrap() + nums⁅k⁆.unwrap()
+            let sum: i64 = vi + nums⁅j⁆ + nums⁅k⁆
             if sum < 0 {
                 j = j + 1
             } else if sum > 0 {
                 k = k - 1
             } else {
                 let mut triplet: ArrayList<i64> = ArrayList::new(3)
-                triplet.push(nums⁅i⁆.unwrap())
-                triplet.push(nums⁅j⁆.unwrap())
-                triplet.push(nums⁅k⁆.unwrap())
+                triplet.push(nums⁅i⁆)
+                triplet.push(nums⁅j⁆)
+                triplet.push(nums⁅k⁆)
                 ans.push(triplet)
                 j = j + 1
                 k = k - 1
-                while j < k && nums⁅j⁆.unwrap() == nums⁅j - 1⁆.unwrap() {
+                while j < k && nums⁅j⁆ == nums⁅j - 1⁆ {
                     j = j + 1
                 }
-                while j < k && nums⁅k⁆.unwrap() == nums⁅k + 1⁆.unwrap() {
+                while j < k && nums⁅k⁆ == nums⁅k + 1⁆ {
                     k = k - 1
                 }
             }

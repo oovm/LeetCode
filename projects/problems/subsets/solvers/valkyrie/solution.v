@@ -5,14 +5,14 @@ micro dfs(nums: ArrayList<i64>, i: usize, picked: ArrayList<i64>, out: ArrayList
         let mut copy: ArrayList<i64> = ArrayList::new(picked.length())
         let mut j: usize = 0
         while j < picked.length() {
-            copy.push(picked⁅j⁆.unwrap())
+            copy.push(picked⁅j⁆)
             j = j + 1
         }
         out.push(copy)
         return
     }
     dfs(nums, i + 1, picked, out)
-    picked.push(nums⁅i⁆.unwrap())
+    picked.push(nums⁅i⁆)
     dfs(nums, i + 1, picked, out)
     picked.pop()
 }

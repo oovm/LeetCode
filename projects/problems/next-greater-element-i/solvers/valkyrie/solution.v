@@ -10,25 +10,25 @@ micro next_greater_element(nums1: ArrayList<i64>, nums2: ArrayList<i64>) -> Arra
     let mut j: usize = n2
     while j > 0 {
         j = j - 1
-        let x: i64 = nums2⁅j⁆.unwrap()
-        while stack.length() > 0 && stack⁅stack.length() - 1⁆.unwrap() < x {
+        let x: i64 = nums2⁅j⁆
+        while stack.length() > 0 && stack⁅stack.length() - 1⁆ < x {
             stack.pop()
         }
         if stack.length() > 0 {
             keys.push(x)
-            values.push(stack⁅stack.length() - 1⁆.unwrap())
+            values.push(stack⁅stack.length() - 1⁆)
         }
         stack.push(x)
     }
     let mut result: ArrayList<i64> = ArrayList::new(n1)
     let mut i: usize = 0
     while i < n1 {
-        let x: i64 = nums1⁅i⁆.unwrap()
+        let x: i64 = nums1⁅i⁆
         let mut found: i64 = -1
         let mut k: usize = 0
         while k < keys.length() {
-            if keys⁅k⁆.unwrap() == x {
-                found = values⁅k⁆.unwrap()
+            if keys⁅k⁆ == x {
+                found = values⁅k⁆
                 k = keys.length()
             } else {
                 k = k + 1

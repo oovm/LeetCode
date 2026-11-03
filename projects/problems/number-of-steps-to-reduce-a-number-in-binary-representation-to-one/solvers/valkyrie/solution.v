@@ -14,7 +14,7 @@ micro num_steps(s: utf8) -> i64 {
     let mut len: usize = n
     let mut steps: i64 = 0
     while len > 1 {
-        if bits⁅start⁆.unwrap() == 0 {
+        if bits⁅start⁆ == 0 {
             start = start + 1
             len = len - 1
         } else {
@@ -25,7 +25,7 @@ micro num_steps(s: utf8) -> i64 {
                     bits.push(1)
                     len = len + 1
                     carry = false
-                } else if bits⁅pos⁆.unwrap() == 1 {
+                } else if bits⁅pos⁆ == 1 {
                     bits⁅pos⁆ = 0
                     pos = pos + 1
                 } else {

@@ -6,7 +6,7 @@ micro search_insert(nums: ArrayList<i64>, target: i64) -> i64 {
     let mut hi: usize = nums.length()
     while lo < hi {
         let mid: usize = (lo + hi) / 2
-        let v: i64 = nums⁅mid⁆.unwrap()
+        let v: i64 = nums⁅mid⁆
         if v == target {
             return mid as i64
         }

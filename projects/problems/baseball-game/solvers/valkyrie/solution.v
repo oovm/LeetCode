@@ -32,14 +32,14 @@ micro cal_points(operations: ArrayList<utf8>) -> i64 {
     let mut stack: ArrayList<i64> = ArrayList::new(operations.length())
     let mut i: usize = 0
     while i < operations.length() {
-        let op: utf8 = operations⁅i⁆.unwrap()
+        let op: utf8 = operations⁅i⁆
         let code: u32 = op⁅0⁆ as u32
         if code == 43 {
-            let last: i64 = stack⁅stack.length() - 1⁆.unwrap()
-            let prev: i64 = stack⁅stack.length() - 2⁆.unwrap()
+            let last: i64 = stack⁅stack.length() - 1⁆
+            let prev: i64 = stack⁅stack.length() - 2⁆
             stack.push(last + prev)
         } else if code == 68 {
-            let last: i64 = stack⁅stack.length() - 1⁆.unwrap()
+            let last: i64 = stack⁅stack.length() - 1⁆
             stack.push(last * 2)
         } else if code == 67 {
             stack.pop()
@@ -51,7 +51,7 @@ micro cal_points(operations: ArrayList<utf8>) -> i64 {
     let mut total: i64 = 0
     let mut j: usize = 0
     while j < stack.length() {
-        total = total + stack⁅j⁆.unwrap()
+        total = total + stack⁅j⁆
         j = j + 1
     }
     return total

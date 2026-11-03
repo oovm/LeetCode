@@ -75,7 +75,7 @@ micro sequential_digits(low: i64, high: i64) -> ArrayList<i64>
 
 ### G4 std `Utf8Builder.append(char)` 在 std 模块自编译时无法实例化
 
-- 状态：未恢复（2026-11-04 实测，Easy 文本重建组 20 题）
+- 状态：未恢复（2026-11-04 实测，Easy 文本重建组 20 题 + 未登记批次 4 题，共 24 题）
 - 最小复现（只用 std，无题解代码）：
 
 ```v
@@ -97,13 +97,48 @@ micro probe(c: char) -> i64 {
   - `thousand-separator` 用 HEAD 版本（保留旧 `.unwrap()`）复建同样 `status=1`、同坐标。
 - 结论：**编译器问题**（`u32` 方法候选在 std 模块自编译的 impl 体内未命中；同表达式在用户工程可解析），
   非题解写法错误、非形态 A 清理引入。影响修复位置在编译器的 std 闭包/方法解析，不在 `solution.v`。
-- 影响题（20）：`calculate-digit-sum-of-a-string`、`clear-digits`、`convert-date-to-binary`、
-  `faulty-keyboard`、`find-valid-pair-of-adjacent-digits-in-string`、`first-letter-to-appear-twice`、
-  `greatest-english-letter-in-upper-and-lower-case`、`hexspeak`、`increasing-decreasing-string`、
-  `latest-time-by-replacing-hidden-digits`、`lexicographically-smallest-palindrome`、`make-the-string-great`、
+- 影响题（24）：`calculate-digit-sum-of-a-string`、`clear-digits`、`convert-a-number-to-hexadecimal`、
+  `convert-date-to-binary`、`faulty-keyboard`、`find-valid-pair-of-adjacent-digits-in-string`、
+  `first-letter-to-appear-twice`、`greatest-english-letter-in-upper-and-lower-case`、`hexspeak`、
+  `increasing-decreasing-string`、`latest-time-by-replacing-hidden-digits`、
+  `lexicographically-smallest-palindrome`、`longest-common-prefix`、`make-the-string-great`、
   `rearrange-spaces-between-words`、`reformat-phone-number`、`reformat-the-string`、
   `remove-all-adjacent-duplicates-in-string`、`replace-all-s-to-avoid-consecutive-repeating-characters`、
-  `reverse-only-letters`、`reverse-vowels-of-a-string`、`thousand-separator`。
+  `reverse-only-letters`、`reverse-vowels-of-a-string`、`sort-characters-by-frequency`、
+  `summary-ranges`、`thousand-separator`。
+
+### G5 分支内丢弃 `Option<T>` 返回值触发 SMIR 跳转 arity 失败
+
+- 状态：未恢复（2026-11-04 实测，未登记批次 1 题）
+- 最小复现（4 行）：
+
+```v
+micro probe(mut s: ArrayList<i64>, flag: bool) -> i64 {
+    if flag { s.pop() } else { s.push(1) }
+    return s.length() as i64
+}
+```
+
+- 实际：`(SMIR007): Semantic MIR 合同失败: function=probe.popcompact::probe, location=block 2
+  terminator, detail=jump arity differs from target block parameters`。
+- 对照（同日实跑，`status=0`）：同一条 `s.pop()` 作为函数顶层语句丢弃返回值，可正常构建；
+  仅当它位于 `if` 分支内（作为分支尾表达式）时触发。`ArrayList.pop(mut self): Option<T>`
+  见 `std/source/collection/ArrayList.v:53`。
+- 结论：**编译器问题**（SMIR 降级把分支内被丢弃的 `Option<T>` 语句当作块尾值，导致跳转参数
+  数量与目标块不一致），非题解写法错误。修复位置在编译器的 MIR 降级，不在 `solution.v`。
+- 影响题（1）：`baseball-game`（`cal_points`，`stack.pop()` 位于 `else if` 分支，
+  诊断 `location=block 4 terminator`）。该题未改写以规避缺口。
+
+## 批次状态：未登记批次（历史题，2026-11-04 实测）
+
+- 范围：未进入 Easy / Medium 批次表、但含形态 A 的历史题，共 56 个 `solution.v` 文件。
+- 形态 A 清理：56 文件 / 176 处逐处校验后删除，复扫残留 0；形态 B 未动。
+- 构建：**51/56 `status=0`**。失败 5 题：G4 4 题（`convert-a-number-to-hexadecimal`、
+  `longest-common-prefix`、`sort-characters-by-frequency`、`summary-ranges`）、G5 1 题
+  （`baseball-game`）。另有 1 题 `shuffle-the-array` 在删除 `unwrap` 后暴露 `let limit` 未声明
+  `mut` 却被赋值（**写法错、非缺口**，改为 `let mut` 后 `status=0`）。
+- 判题：本块未判题，`executed_pass` / `executed_fail` / `blocked` / `not_run` 未产生实测值，
+  不计入构建通过数。
 
 ## 批次状态：Easy 标量/文本池（2026-11-03）
 

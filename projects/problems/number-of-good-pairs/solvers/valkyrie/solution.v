@@ -15,7 +15,7 @@ micro num_identical_pairs(nums: ArrayList<i64>) -> i64 {
     while i < n {
         let mut j: usize = i + 1
         while j < n {
-            count = count + eq_count(nums⁅i⁆.unwrap(), nums⁅j⁆.unwrap())
+            count = count + eq_count(nums⁅i⁆, nums⁅j⁆)
             j = j + 1
         }
         i = i + 1

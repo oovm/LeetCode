@@ -17,11 +17,11 @@ micro merge(mut nums1: ArrayList<i64>, m: i64, nums2: ArrayList<i64>, n: i64) ->
     let mut i: i64 = m - 1
     let mut j: i64 = n - 1
     while j >= 0 {
-        if i >= 0 && nums1⁅i as usize⁆.unwrap() > nums2⁅j as usize⁆.unwrap() {
-            write_at(nums1, k, nums1⁅i as usize⁆.unwrap())
+        if i >= 0 && nums1⁅i as usize⁆ > nums2⁅j as usize⁆ {
+            write_at(nums1, k, nums1⁅i as usize⁆)
             i = i - 1
         } else {
-            write_at(nums1, k, nums2⁅j as usize⁆.unwrap())
+            write_at(nums1, k, nums2⁅j as usize⁆)
             j = j - 1
         }
         k = k - 1

@@ -5,7 +5,7 @@ micro contains_nearby_duplicate(nums: ArrayList<i64>, k: i64) -> bool {
     let mut last: HashMap<i64, i64> = HashMap::new(0)
     let mut i: usize = 0
     while i < nums.length() {
-        let x: i64 = nums⁅i⁆.unwrap()
+        let x: i64 = nums⁅i⁆
         if last.contains_key(x) {
             let prev: i64 = last.get(x).unwrap()
             if (i as i64) - prev <= k {

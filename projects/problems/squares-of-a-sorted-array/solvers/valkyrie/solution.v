@@ -10,8 +10,8 @@ micro sorted_squares(nums: ArrayList<i64>) -> ArrayList<i64> {
     }
     let mut ans: ArrayList<i64> = ArrayList::new(0)
     while i <= j {
-        let a: i64 = nums⁅i⁆.unwrap()
-        let b: i64 = nums⁅j⁆.unwrap()
+        let a: i64 = nums⁅i⁆
+        let b: i64 = nums⁅j⁆
         let sq_left: i64 = a * a
         let sq_right: i64 = b * b
         if sq_left > sq_right {
@@ -32,8 +32,8 @@ micro sorted_squares(nums: ArrayList<i64>) -> ArrayList<i64> {
         r = r - 1
     }
     while l < r {
-        let tmp: i64 = ans⁅l⁆.unwrap()
-        ans⁅l⁆ = ans⁅r⁆.unwrap()
+        let tmp: i64 = ans⁅l⁆
+        ans⁅l⁆ = ans⁅r⁆
         ans⁅r⁆ = tmp
         l = l + 1
         r = r - 1

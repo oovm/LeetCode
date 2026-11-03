@@ -4,7 +4,7 @@ namespace leetcode.remove_duplicates_from_sorted_array;
 micro remove_duplicates(mut nums: ArrayList<i64>) -> i64 {
     let mut k: usize = 0
     loop x in nums {
-        if k == 0 || x != nums⁅k - 1⁆.unwrap() {
+        if k == 0 || x != nums⁅k - 1⁆ {
             nums⁅k⁆ = x
             k = k + 1
         }

@@ -12,10 +12,10 @@ micro add_two_numbers(l1: ArrayList<i64>, l2: ArrayList<i64>) -> ArrayList<i64> 
         let mut d1: i64 = 0
         let mut d2: i64 = 0
         if i < l1.length() {
-            d1 = l1⁅i⁆.unwrap()
+            d1 = l1⁅i⁆
         }
         if i < l2.length() {
-            d2 = l2⁅i⁆.unwrap()
+            d2 = l2⁅i⁆
         }
         let s: i64 = d1 + d2 + carry
         carry = s / 10

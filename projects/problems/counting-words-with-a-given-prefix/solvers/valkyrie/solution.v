@@ -21,7 +21,7 @@ micro prefix_count(words: ArrayList<utf8>, pref: utf8) -> i64 {
     let mut count: i64 = 0
     let mut i: usize = 0
     while i < words.length() {
-        if starts_with(words⁅i⁆.unwrap(), pref) {
+        if starts_with(words⁅i⁆, pref) {
             count = count + 1
         }
         i = i + 1

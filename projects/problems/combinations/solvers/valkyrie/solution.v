@@ -5,7 +5,7 @@ micro dfs(n: i64, k: i64, start: i64, picked: ArrayList<i64>, out: ArrayList<Arr
         let mut copy: ArrayList<i64> = ArrayList::new(k as usize)
         let mut j: usize = 0
         while j < picked.length() {
-            copy.push(picked⁅j⁆.unwrap())
+            copy.push(picked⁅j⁆)
             j = j + 1
         }
         out.push(copy)

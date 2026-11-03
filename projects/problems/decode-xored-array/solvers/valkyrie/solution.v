@@ -6,8 +6,8 @@ micro decode(encoded: ArrayList<i64>, first: i64) -> ArrayList<i64> {
     result.push(first)
     let mut i: usize = 0
     while i < encoded.length() {
-        let enc: i64 = encoded⁅i⁆.unwrap()
-        let prev: i64 = result⁅i⁆.unwrap()
+        let enc: i64 = encoded⁅i⁆
+        let prev: i64 = result⁅i⁆
         result.push(prev.bit_xor(enc))
         i = i + 1
     }

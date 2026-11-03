@@ -5,8 +5,8 @@ micro max_profit(prices: ArrayList<i64>) -> i64 {
     let mut ans: i64 = 0
     let mut i: usize = 1
     while i < prices.length() {
-        let prev: i64 = prices⁅i - 1⁆.unwrap()
-        let cur: i64 = prices⁅i⁆.unwrap()
+        let prev: i64 = prices⁅i - 1⁆
+        let cur: i64 = prices⁅i⁆
         if cur > prev {
             ans = ans + (cur - prev)
         }

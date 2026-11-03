@@ -8,7 +8,7 @@ micro find_disappeared_numbers(mut nums: ArrayList<i64>) -> ArrayList<i64> {
             abs_num = -abs_num
         }
         let idx: usize = (abs_num - 1) as usize
-        let marked: i64 = nums⁅idx⁆.unwrap()
+        let marked: i64 = nums⁅idx⁆
         if marked > 0 {
             nums⁅idx⁆ = -marked
         }
@@ -16,7 +16,7 @@ micro find_disappeared_numbers(mut nums: ArrayList<i64>) -> ArrayList<i64> {
     let mut ans: ArrayList<i64> = ArrayList::new(0)
     let mut i: usize = 0
     while i < nums.length() {
-        if nums⁅i⁆.unwrap() > 0 {
+        if nums⁅i⁆ > 0 {
             ans.push((i + 1) as i64)
         }
         i = i + 1

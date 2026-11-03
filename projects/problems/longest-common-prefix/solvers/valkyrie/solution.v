@@ -21,12 +21,12 @@ micro longest_common_prefix(strs: ArrayList<utf8>) -> utf8 {
     if strs.length() == 0 {
         return empty_utf8()
     }
-    let first: utf8 = strs⁅0⁆.unwrap()
+    let first: utf8 = strs⁅0⁆
     let mut i: usize = 0
     while i < first.length() {
         let mut j: usize = 1
         while j < strs.length() {
-            let s: utf8 = strs⁅j⁆.unwrap()
+            let s: utf8 = strs⁅j⁆
             if s.length() <= i {
                 return prefix_slice(first, i)
             }

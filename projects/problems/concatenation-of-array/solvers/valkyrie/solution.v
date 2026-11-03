@@ -5,12 +5,12 @@ micro get_concatenation(nums: ArrayList<i64>) -> ArrayList<i64> {
     let mut result: ArrayList<i64> = ArrayList::new(nums.length() * 2)
     let mut i: usize = 0
     while i < nums.length() {
-        result.push(nums⁅i⁆.unwrap())
+        result.push(nums⁅i⁆)
         i = i + 1
     }
     i = 0
     while i < nums.length() {
-        result.push(nums⁅i⁆.unwrap())
+        result.push(nums⁅i⁆)
         i = i + 1
     }
     return result

@@ -7,7 +7,7 @@ micro dominant_index(nums: ArrayList<i64>) -> i64 {
     let mut idx: i64 = -1
     let mut i: usize = 0
     while i < n {
-        let v: i64 = nums⁅i⁆.unwrap()
+        let v: i64 = nums⁅i⁆
         if v > best {
             best = v
             idx = i as i64
@@ -17,7 +17,7 @@ micro dominant_index(nums: ArrayList<i64>) -> i64 {
     let mut ok: bool = true
     let mut j: usize = 0
     while j < n {
-        let v: i64 = nums⁅j⁆.unwrap()
+        let v: i64 = nums⁅j⁆
         if v != best && v * 2 > best {
             ok = false
         }

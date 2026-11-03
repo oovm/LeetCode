@@ -12,7 +12,7 @@ micro count_primes(n: i64) -> i64 {
     let mut ans: i64 = 0
     i = 2
     while i < limit {
-        if primes⁅i⁆.unwrap() {
+        if primes⁅i⁆ {
             ans = ans + 1
             let mut j: usize = i + i
             while j < limit {

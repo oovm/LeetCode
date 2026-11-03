@@ -5,9 +5,9 @@ micro find_judge(n: i64, trust: ArrayList<ArrayList<i64>>) -> i64 {
     let mut score: HashMap<i64, i64> = HashMap::new(0)
     let mut i: usize = 0
     while i < trust.length() {
-        let pair: ArrayList<i64> = trust⁅i⁆.unwrap()
-        let a: i64 = pair⁅0⁆.unwrap()
-        let b: i64 = pair⁅1⁆.unwrap()
+        let pair: ArrayList<i64> = trust⁅i⁆
+        let a: i64 = pair⁅0⁆
+        let b: i64 = pair⁅1⁆
         let mut sa: i64 = 0
         if score.contains_key(a) {
             sa = score.get(a).unwrap()

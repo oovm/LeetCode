@@ -6,7 +6,7 @@ micro min_start_value(nums: ArrayList<i64>) -> i64 {
     let mut lowest: i64 = 0
     let mut i: usize = 0
     while i < nums.length() {
-        sum = sum + nums⁅i⁆.unwrap()
+        sum = sum + nums⁅i⁆
         if sum < lowest {
             lowest = sum
         }

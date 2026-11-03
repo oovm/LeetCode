@@ -27,7 +27,7 @@ micro to_hex(num: i64) -> utf8 {
     let mut i: usize = digits.length()
     while i > 0 {
         i = i - 1
-        builder.append(hex_digit(digits⁅i⁆.unwrap()))
+        builder.append(hex_digit(digits⁅i⁆))
     }
     return builder.build()
 }

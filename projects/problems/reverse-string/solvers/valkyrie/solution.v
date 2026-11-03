@@ -11,8 +11,8 @@ micro reverse_string(mut s: ArrayList<utf8>) -> unit {
         j = j - 1
     }
     while i < j {
-        let tmp: utf8 = s⁅i⁆.unwrap()
-        s⁅i⁆ = s⁅j⁆.unwrap()
+        let tmp: utf8 = s⁅i⁆
+        s⁅i⁆ = s⁅j⁆
         s⁅j⁆ = tmp
         i = i + 1
         j = j - 1

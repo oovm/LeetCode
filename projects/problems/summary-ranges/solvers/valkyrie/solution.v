@@ -17,10 +17,10 @@ micro summary_ranges(nums: ArrayList<i64>) -> ArrayList<utf8> {
     let n: usize = nums.length()
     while i < n {
         let mut j: usize = i
-        while j + 1 < n && nums⁅j + 1⁆.unwrap() == nums⁅j⁆.unwrap() + 1 {
+        while j + 1 < n && nums⁅j + 1⁆ == nums⁅j⁆ + 1 {
             j = j + 1
         }
-        ans.push(format_range(nums⁅i⁆.unwrap(), nums⁅j⁆.unwrap()))
+        ans.push(format_range(nums⁅i⁆, nums⁅j⁆))
         i = j + 1
     }
     return ans

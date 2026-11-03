@@ -207,6 +207,21 @@ blocked 0 / not_run 170`（`testCaseTotal 2270`），**19 题 `ok=true`**，构�
 | --- | --- | --- |
 | `first-bad-version` | `first_bad_version(n: i64, bad: i64)` → `i64` | 通过 |
 
+## 未登记批次（56 题，2026-11-04 构建实测）
+
+未进入上方 Easy / Medium 批次表的历史题，含形态 A 的文件共 56 个。
+
+- 形态 A 清理：56 文件 / 176 处 `⁅…⁆.unwrap()` 逐处校验后删除，复扫残留 0；形态 B 未动。
+- 构建：**51/56 `status=0`**，5 题失败：
+  - G4（`std::text::Utf8Builder.append`）4 题：`convert-a-number-to-hexadecimal`、
+    `longest-common-prefix`、`sort-characters-by-frequency`、`summary-ranges`（`file:line:col`
+    同 Easy 块的 `source/text/Utf8Builder.v:46:29`）；
+  - G5（分支内丢弃 `Option<T>` 返回值触发 SMIR007）1 题：`baseball-game`，
+    `cal_points` 的 `block 4 terminator`。
+- 写法错（非缺口）1 题：`shuffle-the-array` 的 `let limit` 未声明 `mut` 却被赋值，改 `let mut`
+  后 `status=0`（不计入上面 5 个失败）。
+- 判题：本块未跑，四字段无实测值。
+
 ## 批次 M-2026-11-03（Medium 三组，37 题，已实测）
 
 构建口径：`resolveCompileTargetPlan` → `legionBuildProject`，canonical target

@@ -7,7 +7,7 @@ micro find_length_of_lcis(nums: ArrayList<i64>) -> i64 {
     let mut cnt: i64 = 1
     let mut i: usize = 1
     while i < n {
-        if nums⁅i - 1⁆.unwrap() < nums⁅i⁆.unwrap() {
+        if nums⁅i - 1⁆ < nums⁅i⁆ {
             cnt = cnt + 1
             if cnt > ans {
                 ans = cnt
