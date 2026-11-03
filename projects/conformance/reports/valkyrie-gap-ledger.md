@@ -45,6 +45,8 @@ $n
 - 结论：**「库内解法总量」统一为 496（canonical）**；2869 只作为目录数，不再自称解法总量。
   扫描起点已构建 282 题（`.cache/<slug>-bench-node` 产物存在），未构建 **496 − 282 = 214**，
   不是此前误报的 2580。
+- 后续增量（2026-11-04）：新增「Easy 数组返回值补缺」19 题后，canonical 实测 **515**；
+  表中 496 仍是扫描起点口径，未构建按起点口径记为 233（见该批次小节）。
 
 ## 未恢复
 
@@ -107,9 +109,11 @@ micro sequential_digits(low: i64, high: i64) -> ArrayList<i64>
 - 影响：本批 36 题判题 0 通过（25 marshal + 11 demarshal）。该项恢复前，任何返回或接收
   `ArrayList` 的题都不能计入构建通过数。
 
-### G4 std `Utf8Builder.append(char)` 在 std 模块自编译时无法实例化
+### G4 std `Utf8Builder.append(char)` 在 std 模块自编译时无法实例化（疑似失效，待复验）
 
-- 状态：未恢复（2026-11-04 实测，Easy 文本重建组 20 题 + 未登记批次 4 题，共 24 题）
+- 状态：**疑似失效，待复验**（2026-11-04 编译线在 dev tip 实测）。旧的「未恢复 / 编译器问题」
+  结论作废，不再作为失败归族的依据扩散。旧分类共 24 题（Easy 文本重建组 20 题 + 未登记批次
+  4 题），std 修复后逐题重跑再归类。
 - 最小复现（只用 std，无题解代码）：
 
 ```v
@@ -120,18 +124,24 @@ micro probe(c: char) -> i64 {
 }
 ```
 
-- 实际：`error[valkyrie.hir.unresolved_call]`，`infix +` 在 `append` 内 6 个候选无一匹配，
-  `--> source/text/Utf8Builder.v:46:29`；同根因 5 处（`Utf8Builder.v:46/50/51/55/56/57:29`）。
-  伴随 `code.bit_shift_right` 在 `append` 内无候选：`no method candidate named bit_shift_right
-  exists for receiver type Nominal(ItemId(65))`。
-- 对照（同日实跑，均 `status=0`，排除「写法错」与「清理引入」两个解释）：
+- 旧测量（2026-11-04 早间，保留为历史证据）：`error[valkyrie.hir.unresolved_call]`，`infix +` 在
+  `append` 内 6 个候选无一匹配，`--> source/text/Utf8Builder.v:46:29`；同根因 5 处
+  （`Utf8Builder.v:46/50/51/55/56/57:29`）。伴随 `code.bit_shift_right` 在 `append` 内无候选：
+  `no method candidate named bit_shift_right exists for receiver type Nominal(ItemId(65))`。
+- dev tip 复测（2026-11-04，编译线交棒）：同一最小复现**不再报 append 相关错误**，10 条错误
+  **全部**落在 std 的 `from_iterator`，append / `infix +` / `bit_shift_right` **一条都没有**。
+- `from_iterator` 归因：**std 声明写错，不是编译器缺口** —— `where I: Iterator` 却在函数体
+  用 for-in，for-in 走的是 `IntoIterator`。`valkyrie.v` 的 `Array.v` / `ArrayList.v` 两处正在修。
+- 对照（旧测量同日实跑，均 `status=0`，排除「写法错」与「清理引入」两个解释）：
   - 顶层自由函数 `let code: u32 = c as u32` + `code.bit_shift_right(6)`；
   - 用户工程 `imply Buf` + `self.bytes.push((192 + code.bit_shift_right(6)) as u8)`，
     与 `Utf8Builder.append` 同形（`mut self`、`ArrayList<u8>`、`push`、`u32` 位运算）。
   - `thousand-separator` 用 HEAD 版本（保留旧 `.unwrap()`）复建同样 `status=1`、同坐标。
-- 结论：**编译器问题**（`u32` 方法候选在 std 模块自编译的 impl 体内未命中；同表达式在用户工程可解析），
-  非题解写法错误、非形态 A 清理引入。影响修复位置在编译器的 std 闭包/方法解析，不在 `solution.v`。
-- 影响题（24）：`calculate-digit-sum-of-a-string`、`clear-digits`、`convert-a-number-to-hexadecimal`、
+- 结论：旧「**编译器问题**」结论**作废**，上面 `status=1` 的对照也只是旧 std/旧二进制的测量。
+  G4 名下的题数（24 / 30 等）都是旧归族，**不可信、不扩散**。std 修复后按实测重验：若大部分
+  `status=0`，这批就是白记的缺口；若仍有失败，再按新的最小复现登记失败族，不沿用旧分类。
+- 待复验题（旧分类 24 题，std 修复后逐题重跑）：
+  `calculate-digit-sum-of-a-string`、`clear-digits`、`convert-a-number-to-hexadecimal`、
   `convert-date-to-binary`、`faulty-keyboard`、`find-valid-pair-of-adjacent-digits-in-string`、
   `first-letter-to-appear-twice`、`greatest-english-letter-in-upper-and-lower-case`、`hexspeak`、
   `increasing-decreasing-string`、`latest-time-by-replacing-hidden-digits`、
@@ -216,9 +226,12 @@ micro probe(m: HashMap<i64, i64>, flag: bool, flag2: bool, a: i64, b: i64) -> bo
 ## 批次状态：canonical 未构建 214 题（2026-11-04 实测）
 
 - 范围：口径定为 496 后，扫描起点未构建的 **214 题**（分两个 107 题子块、单进程顺序构建）。
+- 时点：本批构建与判题都在 **std `from_iterator` 修复前** 测得（2026-11-04 早间）。本轮不更新
+  任何构建通过数或判题结果；std 修复后必须重扫这 214 题再重判，不得沿用这批数字。
 - 构建：**176 `status=0` / 38 `status=1`**。
 - 失败归族（只列族与题数，不逐题贴结果）：
-  - G4 `Utf8Builder.append`：30 题，`source/text/Utf8Builder.v:46:29`（已登记族重复命中）。
+  - G4 `Utf8Builder.append`：30 题构建失败，但该归族在 dev tip 上已不成立（见 G4「疑似失效」），
+    **分类不可信**，std 修复后必须重验这 30 题再归类。
   - G2 浮点返回合同：2 题（`airplane-seat-assignment-probability`、`angle-between-hands-of-a-clock`，
     诊断 `declares no [export]`）。
   - G6 `round` 标识符误拉闭包：1 题（`sum-of-digits-of-string-after-convert`）。
@@ -242,13 +255,76 @@ micro probe(m: HashMap<i64, i64>, flag: bool, flag2: bool, a: i64, b: i64) -> bo
   - 判题进程超时 1 题（`closest-fair-integer`，无 `VALKYRIE_SOLVER_RESULT`，不计通过）。
 - 四字段合计：`executed_pass 13452` / `executed_fail 31` / `blocked 0` / `not_run 2092`。
 - 构建通过数：**38 → 180**（+142）。176 个 `status=0` 中 34 题判题未通过，按维护口径不计入。
+- 时点：以上判题与构建通过数同样是 **std 修复前** 的测量，本轮不更新、不再作为结论引用。
+
+### 判题未通过成因复核：`metadata` 参数名 7 题（2026-11-04）
+
+- 判定：**解法签名写错**，不是 metadata 缺陷。7 题的 `metadata.tests.args` 键与官方 `invoke`
+  逐字一致；是 `solution.v` 的导出形参用了 `snake_case`，而 V 导出 micro 的形参名必须与 `args`
+  键名逐字相同（`buildAbiArguments` 按 `param.name` 取 `args[param.name]`，不做 snake↔camel 归一）。
+- 修法：只改 7 个 `solution.v` 的导出 micro 形参与函数体内引用，**未改 metadata、未改期望值**。
+
+| slug | `metadata.tests.args` 键 | 修正后导出签名 |
+| --- | --- | --- |
+| `check-if-a-word-occurs-as-a-prefix-of-any-word-in-a-sentence` | `sentence`, `searchWord` | `is_prefix_of_word(sentence: utf8, searchWord: utf8)` |
+| `check-if-point-is-reachable` | `targetX`, `targetY` | `is_reachable(targetX: i64, targetY: i64)` |
+| `check-if-word-equals-summation-of-two-words` | `firstWord`, `secondWord`, `targetWord` | `is_sum_equal(firstWord: utf8, secondWord: utf8, targetWord: utf8)` |
+| `count-the-number-of-ideal-arrays` | `n`, `maxValue` | `ideal_arrays(n: i64, maxValue: i64)` |
+| `handshakes-that-dont-cross` | `numPeople` | `number_of_ways(numPeople: i64)` |
+| `minimum-cost-to-set-cooking-time` | `startAt`, `moveCost`, `pushCost`, `targetSeconds` | `min_cost_set_time(startAt: i64, moveCost: i64, pushCost: i64, targetSeconds: i64)` |
+| `number-of-ways-to-reach-a-position-after-exactly-k-steps` | `startPos`, `endPos`, `k` | `number_of_ways(startPos: i64, endPos: i64, k: i64)` |
+
+- 复验：本轮不构建不判题（std 未恢复），下次重扫时随批次复验。
+
+### 判题未通过成因复核：大整数参数 4 题（2026-11-04）
+
+- 判定：**语料缺陷**。既不是 V 侧解法溢出 `i64`，也不是 harness 把 `bigint` 转 `Number` 丢精度。
+  这几处实参在 `metadata.tests.args` 里以十进制字符串保存，字符串本身已超出 `i64` 表示范围，
+  判题器在入参规整阶段按设计拒绝，V 代码根本没有执行。
+- 坐标（4 题 6 处）：
+
+| slug | 用例 | 参数 | 字符串值 | 与官方约束 |
+| --- | --- | --- | --- | --- |
+| `max-difference-you-can-get-from-changing-an-integer` | `tests[26]` | `num` | `"98765432109876540000"` | 约束 `1 <= num <= 10^8`；字符串是 `Number` 精度丢失后的输出（`Number('98765432109876543210').toString()` 同值） |
+| `maximum-sized-array` | `tests[19]` | `s` | `"9223372036854776000"` | 约束 `s <= 10^15`；字符串恰等于 `Number(2^63).toString()` |
+| `maximum-sized-array` | `tests[56]` | `s` | `"18446744073709552000"` | 同上；字符串恰等于 `Number(2^64).toString()` |
+| `maximum-xor-product` | `tests[58]` | `a`, `b` | `"18446744073709552000"` | 约束 `a, b < 2^50`；两参数同值，均为 `Number(2^64)` 输出 |
+| `minimum-garden-perimeter-to-collect-enough-apples` | `tests[50]` | `neededApples` | `"100000000000000000000"` | 约束 `neededApples <= 10^15`；值本身精确（10 的幂） |
+| `minimum-garden-perimeter-to-collect-enough-apples` | `tests[66]` | `neededApples` | `"10000000000000000000"` | 同上 |
+
+- 判题侧坐标（正确行为，不是缺陷）：`projects/conformance/src/isolated/v-shared.ts:30`
+  `preserveI64Precision` 调 `coerceIntegerArgument(value, I64_MIN, I64_MAX, "args.<name>")`；
+  拒绝点在 `projects/conformance/src/domain/integer-literal.ts:77-79`，字符串整数字面量超出
+  `[min, max]` 即抛「超出表示范围」。
+- 修法：修语料 —— 删除这 6 处越官方约束（同时超 `i64`）的用例，或按官方约束替换参数并重算
+  `expected`。不改解法，不改判题器。本轮只登记坐标，未改 metadata。
+
+## 批次状态：Easy 数组返回值补缺（19 题，2026-11-04 写完未构建）
+
+- 范围：返回数组 / 矩阵的 Easy 题，此前 `solution.v` 为空或只有阻塞标记、且 `metadata.invoke`
+  无 `valkyrie` 入口，因此从未进入 canonical。本批补写 19 个理想解并在各自 `metadata.json` 的
+  `invoke` 块登记 `valkyrie` 入口（19/19 写入成功，JSON 全部可解析）。
+- 口径影响：canonical **496 → 515**（`invoke.valkyrie` 非空且 `solution.v` 非空的交集实测 515）；
+  未构建数按扫描起点口径为 214 + 19 = **233**（未构建，不新增覆盖数）。
+- 签名对齐：19/19 的导出形参名与 `metadata.tests.args` 键名逐字、同序一致（本轮脚本核对）。
+- 未构建 / 未判题：全部返回 `ArrayList`（`ArrayList<i64>` / `ArrayList<utf8>` /
+  `ArrayList<ArrayList<i64>>`），按 G3 现状预计在 wasm JS glue 的 marshal/demarshal 处阻断；
+  `convert-the-temperature` 另受 G2（浮点返回值合同）阻断。本批不计入构建通过数。
+- 题（19）：`binary-watch`、`cells-in-a-range-on-an-excel-sheet`、`construct-the-rectangle`、
+  `convert-integer-to-the-sum-of-two-no-zero-integers`、`convert-the-temperature`、`di-string-match`、
+  `distribute-candies-to-people`、`divide-a-string-into-groups-of-size-k`、
+  `find-n-unique-integers-sum-up-to-zero`、`find-the-losers-of-the-circular-game`、`flip-game`、
+  `matrix-cells-in-distance-order`、`number-of-even-and-odd-bits`、`occurrences-after-bigram`、
+  `pascals-triangle`、`pascals-triangle-ii`、`positions-of-large-groups`、
+  `shortest-distance-to-a-character`、`uncommon-words-from-two-sentences`。
 
 ## 批次状态：未登记批次（历史题，2026-11-04 实测）
 
 - 范围：未进入 Easy / Medium 批次表、但含形态 A 的历史题，共 56 个 `solution.v` 文件。
 - 形态 A 清理：56 文件 / 176 处逐处校验后删除，复扫残留 0；形态 B 未动。
 - 构建：**51/56 `status=0`**。失败 5 题：G4 4 题（`convert-a-number-to-hexadecimal`、
-  `longest-common-prefix`、`sort-characters-by-frequency`、`summary-ranges`）、G5 1 题
+  `longest-common-prefix`、`sort-characters-by-frequency`、`summary-ranges`；该归族见 G4「疑似失效」，
+  待 std 修复后复验）、G5 1 题
   （`baseball-game`）。另有 1 题 `shuffle-the-array` 在删除 `unwrap` 后暴露 `let limit` 未声明
   `mut` 却被赋值（**写法错、非缺口**，改为 `let mut` 后 `status=0`）。
 - 判题：本块未判题，`executed_pass` / `executed_fail` / `blocked` / `not_run` 未产生实测值，
@@ -260,7 +336,8 @@ micro probe(m: HashMap<i64, i64>, flag: bool, flag2: bool, a: i64, b: i64) -> bo
 - 状态：理想解已写。2026-11-04 完成其中 40 个含形态 A 的文件的首轮真构建（详见下一条）。
 - 形态 A 清理（2026-11-04）：40 文件 / 113 处 `⁅…⁆.unwrap()` 已逐处确认后删除（每处校验
   `.unwrap()` 紧跟 `⁆` 且容器元素非 `Option`），清理后复扫残留 0 处；形态 B 一律未动。
-  本批 40 题真构建 **20 `status=0` / 20 `status=1`**，20 题失败全部命中 G4；另
+  本批 40 题真构建 **20 `status=0` / 20 `status=1`**，20 题失败全部命中 G4（该归族见 G4
+  「疑似失效」，待 std 修复后逐题复验）；另
   `minimum-string-length-after-removing-substrings` 暴露 `char` 覆盖 `u8` 的写法错误（非缺口，
   改为 `u8` 后 `status=0`）。其余 93 题本轮未构建，状态仍是未验证。
 - 判题（2026-11-04）：20 个 `status=0` 题逐个隔离判题，**19 题 `ok=true`**。四字段合计
@@ -274,7 +351,8 @@ micro probe(m: HashMap<i64, i64>, flag: bool, flag2: bool, a: i64, b: i64) -> bo
   虽 `status=0` 但判题未通过，不计入）。
 - TS 侧：133 题全部用 `run_ts_solver.ts` 实跑，**131 通过 / 2 未通过**（见「oracle 模型错误」，
   保留理想解，不改算法）。
-- 缺口：新增 G4；`utf8` 下标读、`ArrayList`、`HashMap` 属既有已恢复能力。
+- 缺口：当时新增 G4（后经 dev tip 复测疑似失效，见 G4 节）；`utf8` 下标读、`ArrayList`、
+  `HashMap` 属既有已恢复能力。
 
 ## 批次状态：Medium 三组（2026-11-03 实测）
 

@@ -16,6 +16,42 @@
 - 判题：176 个 `status=0` 题导出签名均为标量 / `utf8`，无 G3 阻断；142 题 `ok=true`，
   四字段合计 `executed_pass 13452` / `executed_fail 31` / `blocked 0` / `not_run 2092`。
   未通过 34 题的分类与示例同账本本节。
+- 时点：以上是 **std `from_iterator` 修复前** 的测量，本轮不更新。G4 归族已被 dev tip 复测证伪
+  （见账本 G4「疑似失效」），std 修复后这 214 题必须整体重扫重判。
+
+## 批次 A-2026-11-04（Easy 数组返回值补缺，19 题，写完未构建）
+
+- 范围：返回数组 / 矩阵的 Easy 题，此前 `solution.v` 为空或仅阻塞标记、`metadata.invoke` 无
+  `valkyrie` 入口，从未进入 canonical。本批补写 19 个理想解并在 `metadata.json` 登记入口。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题（std `from_iterator` 未修复），
+  不产生 `status` 与四字段实测值，不计入构建通过数。
+- 预期阻断：19 题全部返回 `ArrayList`（`ArrayList<i64>` / `ArrayList<utf8>` /
+  `ArrayList<ArrayList<i64>>`），按 G3 现状预计在 wasm JS glue 的 marshal/demarshal 处阻断；
+  `convert-the-temperature` 另受 G2 阻断。
+- 签名：19/19 导出形参名与 `metadata.tests.args` 键名逐字、同序一致（脚本核对）。
+- 题（19）：
+
+| slug | 导出入口 | 返回类型 |
+| --- | --- | --- |
+| `binary-watch` | `readBinaryWatch` | `ArrayList<utf8>` |
+| `cells-in-a-range-on-an-excel-sheet` | `cellsInRange` | `ArrayList<utf8>` |
+| `construct-the-rectangle` | `constructRectangle` | `ArrayList<i64>` |
+| `convert-integer-to-the-sum-of-two-no-zero-integers` | `getNoZeroIntegers` | `ArrayList<i64>` |
+| `convert-the-temperature` | `convertTemperature` | `ArrayList<f64>` |
+| `di-string-match` | `diStringMatch` | `ArrayList<i64>` |
+| `distribute-candies-to-people` | `distributeCandies` | `ArrayList<i64>` |
+| `divide-a-string-into-groups-of-size-k` | `divideString` | `ArrayList<utf8>` |
+| `find-n-unique-integers-sum-up-to-zero` | `sumZero` | `ArrayList<i64>` |
+| `find-the-losers-of-the-circular-game` | `circularGameLosers` | `ArrayList<i64>` |
+| `flip-game` | `generatePossibleNextMoves` | `ArrayList<utf8>` |
+| `matrix-cells-in-distance-order` | `allCellsDistOrder` | `ArrayList<ArrayList<i64>>` |
+| `number-of-even-and-odd-bits` | `evenOddBit` | `ArrayList<i64>` |
+| `occurrences-after-bigram` | `findOcurrences` | `ArrayList<utf8>` |
+| `pascals-triangle` | `generate` | `ArrayList<ArrayList<i64>>` |
+| `pascals-triangle-ii` | `getRow` | `ArrayList<i64>` |
+| `positions-of-large-groups` | `largeGroupPositions` | `ArrayList<ArrayList<i64>>` |
+| `shortest-distance-to-a-character` | `shortestToChar` | `ArrayList<i64>` |
+| `uncommon-words-from-two-sentences` | `uncommonFromSentences` | `ArrayList<utf8>` |
 
 ## 批次 E-2026-11-03（Easy 标量/文本池，133 题）
 
