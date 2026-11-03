@@ -307,6 +307,7 @@
     ],
     "invoke": {
         "python": "Solution().distinctIntegers",
-        "typescript": "Solution().distinctIntegers"
+        "typescript": "Solution().distinctIntegers",
+        "valkyrie": "Solution().distinctIntegers"
     }
 }

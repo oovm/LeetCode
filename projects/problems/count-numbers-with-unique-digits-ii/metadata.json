@@ -553,6 +553,7 @@
     ],
     "invoke": {
         "python": "Solution().numberCount",
-        "typescript": "Solution().numberCount"
+        "typescript": "Solution().numberCount",
+        "valkyrie": "Solution().numberCount"
     }
 }

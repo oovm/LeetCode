@@ -581,6 +581,7 @@
     ],
     "invoke": {
         "python": "Solution().numberOfChild",
-        "typescript": "Solution().numberOfChild"
+        "typescript": "Solution().numberOfChild",
+        "valkyrie": "Solution().numberOfChild"
     }
 }

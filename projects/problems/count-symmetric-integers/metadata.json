@@ -511,6 +511,7 @@
     ],
     "invoke": {
         "python": "Solution().countSymmetricIntegers",
-        "typescript": "Solution().countSymmetricIntegers"
+        "typescript": "Solution().countSymmetricIntegers",
+        "valkyrie": "Solution().countSymmetricIntegers"
     }
 }
