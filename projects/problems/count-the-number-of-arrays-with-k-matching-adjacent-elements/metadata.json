@@ -1271,6 +1271,7 @@
     ],
     "invoke": {
         "python": "Solution().countGoodArrays",
-        "typescript": "Solution().countGoodArrays"
+        "typescript": "Solution().countGoodArrays",
+        "valkyrie": "Solution().countGoodArrays"
     }
 }
