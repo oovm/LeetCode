@@ -595,6 +595,7 @@
     ],
     "invoke": {
         "python": "Solution().reverseOnlyLetters",
-        "typescript": "Solution().reverseOnlyLetters"
+        "typescript": "Solution().reverseOnlyLetters",
+        "valkyrie": "reverseOnlyLetters"
     }
 }

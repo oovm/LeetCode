@@ -709,6 +709,7 @@
     ],
     "invoke": {
         "python": "Solution().maxNumberOfBalloons",
-        "typescript": "Solution().maxNumberOfBalloons"
+        "typescript": "Solution().maxNumberOfBalloons",
+        "valkyrie": "maxNumberOfBalloons"
     }
 }

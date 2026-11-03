@@ -1,5 +1,41 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`keyboard⁅i⁆` 建字符位置表，再扫 `word⁅j⁆` 累计位移（位置表另需定长数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：位置表累计位移，时间 O(n) 空间 O(字符集)。
+namespace leetcode.single_row_keyboard;
+
+micro abs_i64(x: i64) -> i64 {
+    if x < 0 {
+        return 0 - x
+    }
+    return x
+}
+
+[export(case: "camelCase")]
+micro calculate_time(keyboard: utf8, word: utf8) -> i64 {
+    let mut pos: ArrayList<i64> = ArrayList::new(26)
+    let mut i: usize = 0
+    while i < 26 {
+        pos.push(-1)
+        i = i + 1
+    }
+    i = 0
+    while i < keyboard.length() {
+        let code: u32 = keyboard⁅i⁆ as u32
+        pos⁅(code as usize) - 97⁆ = i as i64
+        i = i + 1
+    }
+    let mut time: i64 = 0
+    let mut current: i64 = 0
+    let mut j: usize = 0
+    while j < word.length() {
+        let code: u32 = word⁅j⁆ as u32
+        let target: i64 = pos⁅(code as usize) - 97⁆.unwrap()
+        time = time + abs_i64(target - current)
+        current = target
+        j = j + 1
+    }
+    return time
+}
+
+class Solution {
+    micro calculateTime(self, keyboard: utf8, word: utf8): i64 {
+        return calculate_time(keyboard, word)
+    }
+}

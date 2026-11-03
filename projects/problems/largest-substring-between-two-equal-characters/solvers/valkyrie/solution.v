@@ -1,5 +1,33 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 记录各字符首现位置（位置表另需定长数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：首现表取最大间距，时间 O(n) 空间 O(字符集)。
+namespace leetcode.largest_substring_between_two_equal_characters;
+
+[export(case: "camelCase")]
+micro max_length_between_equal_characters(s: utf8) -> i64 {
+    let mut first: ArrayList<i64> = ArrayList::new(26)
+    let mut i: usize = 0
+    while i < 26 {
+        first.push(-1)
+        i = i + 1
+    }
+    let mut best: i64 = -1
+    i = 0
+    while i < s.length() {
+        let code: u32 = s⁅i⁆ as u32
+        let idx: usize = (code as usize) - 97
+        if first⁅idx⁆.unwrap() < 0 {
+            first⁅idx⁆ = i as i64
+        } else {
+            let span: i64 = i as i64 - first⁅idx⁆.unwrap() - 1
+            if span > best {
+                best = span
+            }
+        }
+        i = i + 1
+    }
+    return best
+}
+
+class Solution {
+    micro maxLengthBetweenEqualCharacters(self, s: utf8): i64 {
+        return max_length_between_equal_characters(s)
+    }
+}

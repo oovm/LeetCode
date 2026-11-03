@@ -739,6 +739,7 @@
     ],
     "invoke": {
         "python": "Solution().modifyString",
-        "typescript": "Solution().modifyString"
+        "typescript": "Solution().modifyString",
+        "valkyrie": "modifyString"
     }
 }

@@ -817,6 +817,7 @@
     ],
     "invoke": {
         "python": "Solution().reorderSpaces",
-        "typescript": "Solution().reorderSpaces"
+        "typescript": "Solution().reorderSpaces",
+        "valkyrie": "reorderSpaces"
     }
 }

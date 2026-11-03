@@ -924,6 +924,7 @@
     ],
     "invoke": {
         "python": "Solution().isIsomorphic",
-        "typescript": "Solution().isIsomorphic"
+        "typescript": "Solution().isIsomorphic",
+        "valkyrie": "isIsomorphic"
     }
 }

@@ -1036,6 +1036,7 @@
     ],
     "invoke": {
         "python": "Solution().wordPattern",
-        "typescript": "Solution().wordPattern"
+        "typescript": "Solution().wordPattern",
+        "valkyrie": "wordPattern"
     }
 }

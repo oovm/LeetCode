@@ -649,6 +649,7 @@
     ],
     "invoke": {
         "python": "Solution().makeGood",
-        "typescript": "Solution().makeGood"
+        "typescript": "Solution().makeGood",
+        "valkyrie": "makeGood"
     }
 }

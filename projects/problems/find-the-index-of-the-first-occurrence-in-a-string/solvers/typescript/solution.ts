@@ -1,5 +1,8 @@
 export class Solution {
     strStr(haystack: string, needle: string): number {
+        if (needle.length === 0) {
+            return 0;
+        }
         const fail = new Array<number>(needle.length).fill(0);
         for (let i = 1, j = 0; i < needle.length; i++) {
             while (j > 0 && needle[i] !== needle[j]) {

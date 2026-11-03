@@ -708,6 +708,7 @@
     ],
     "invoke": {
         "python": "Solution().calculateTime",
-        "typescript": "Solution().calculateTime"
+        "typescript": "Solution().calculateTime",
+        "valkyrie": "calculateTime"
     }
 }

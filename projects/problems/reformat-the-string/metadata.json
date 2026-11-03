@@ -823,6 +823,7 @@
     ],
     "invoke": {
         "python": "Solution().reformat",
-        "typescript": "Solution().reformat"
+        "typescript": "Solution().reformat",
+        "valkyrie": "reformat"
     }
 }

@@ -1,5 +1,77 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：切词、计空格总数均分间隙并拼串（末尾兜底）。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：计数均分，时间 O(n) 空间 O(n)。
+namespace leetcode.rearrange_spaces_between_words;
+
+[export(case: "camelCase")]
+micro reorder_spaces(text: utf8) -> utf8 {
+    let n: usize = text.length()
+    let mut spaces: i64 = 0
+    let mut words: ArrayList<utf8> = ArrayList::new(0)
+    let mut i: usize = 0
+    while i < n {
+        if (text⁅i⁆ as u32) == 32 {
+            spaces = spaces + 1
+            i = i + 1
+        } else {
+            let mut word: Utf8Builder = Utf8Builder::new(n)
+            while i < n && (text⁅i⁆ as u32) != 32 {
+                word.append(text⁅i⁆)
+                i = i + 1
+            }
+            words.push(word.build())
+        }
+    }
+    let wc: i64 = words.length() as i64
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    if wc == 0 {
+        let mut s: i64 = 0
+        while s < spaces {
+            builder.append(char::from(32))
+            s = s + 1
+        }
+        return builder.build()
+    }
+    if wc == 1 {
+        let only: utf8 = words⁅0⁆.unwrap()
+        let mut p: usize = 0
+        while p < only.length() {
+            builder.append(only⁅p⁆)
+            p = p + 1
+        }
+        let mut s: i64 = 0
+        while s < spaces {
+            builder.append(char::from(32))
+            s = s + 1
+        }
+        return builder.build()
+    }
+    let gap: i64 = spaces / (wc - 1)
+    let rest: i64 = spaces % (wc - 1)
+    let mut w: usize = 0
+    while w < words.length() {
+        if w > 0 {
+            let mut g: i64 = 0
+            while g < gap {
+                builder.append(char::from(32))
+                g = g + 1
+            }
+        }
+        let word: utf8 = words⁅w⁆.unwrap()
+        let mut p: usize = 0
+        while p < word.length() {
+            builder.append(word⁅p⁆)
+            p = p + 1
+        }
+        w = w + 1
+    }
+    let mut r: i64 = 0
+    while r < rest {
+        builder.append(char::from(32))
+        r = r + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro reorderSpaces(self, text: utf8): utf8 {
+        return reorder_spaces(text)
+    }
+}

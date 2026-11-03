@@ -3,15 +3,18 @@ export class Solution {
         if (s.length !== t.length) {
             return false;
         }
-        const cnt = new Array<number>(26).fill(0);
+        const cnt = new Map<string, number>();
         for (let i = 0; i < s.length; i++) {
-            cnt[s.charCodeAt(i) - 97]++;
-            cnt[t.charCodeAt(i) - 97]--;
+            const ch = s[i];
+            cnt.set(ch, (cnt.get(ch) ?? 0) + 1);
         }
-        for (const c of cnt) {
-            if (c !== 0) {
+        for (let i = 0; i < t.length; i++) {
+            const ch = t[i];
+            const left = cnt.get(ch) ?? 0;
+            if (left === 0) {
                 return false;
             }
+            cnt.set(ch, left - 1);
         }
         return true;
     }

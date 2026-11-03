@@ -1,5 +1,31 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：n 转十进制串后每三位插点。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：分组插点，时间 O(log n) 空间 O(log n)。
+namespace leetcode.thousand_separator;
+
+[export(case: "camelCase")]
+micro thousand_separator(n: i64) -> utf8 {
+    let mut digits: ArrayList<i64> = ArrayList::new(12)
+    let mut x: i64 = n
+    if x == 0 {
+        digits.push(0)
+    }
+    while x > 0 {
+        digits.push(x % 10)
+        x = x / 10
+    }
+    let len: usize = digits.length()
+    let mut builder: Utf8Builder = Utf8Builder::new(len + len / 3)
+    let mut i: usize = len
+    while i > 0 {
+        i = i - 1
+        if i > 0 && (len - i) % 3 == 0 {
+            builder.append(char::from(46))
+        }
+        builder.append(char::from((digits⁅i⁆.unwrap() + 48) as u32))
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro thousandSeparator(self, n: i64): utf8 {
+        return thousand_separator(n)
+    }
+}

@@ -1123,6 +1123,7 @@
     ],
     "invoke": {
         "python": "Solution().isPathCrossing",
-        "typescript": "Solution().isPathCrossing"
+        "typescript": "Solution().isPathCrossing",
+        "valkyrie": "isPathCrossing"
     }
 }

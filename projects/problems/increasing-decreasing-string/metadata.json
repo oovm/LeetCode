@@ -421,6 +421,7 @@
     ],
     "invoke": {
         "python": "Solution().sortString",
-        "typescript": "Solution().sortString"
+        "typescript": "Solution().sortString",
+        "valkyrie": "sortString"
     }
 }

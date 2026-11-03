@@ -1,5 +1,30 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 逐字符读入并翻转对应计数位 —— 理想写法需要文本下标读（位掩码计数即可）。
-# 期望语义：文本按下标读字符。实际：std.text 下标/长度能力未就绪（工具链冻结），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：位掩码翻转奇偶，至多一位为奇，时间 O(n) 空间 O(1)。
+namespace leetcode.palindrome_permutation;
+
+# 统计奇频字符个数，至多一个，O(n)
+[export(case: "camelCase")]
+micro can_permute_palindrome(s: utf8) -> bool {
+    let mut counts: HashMap<i64, i64> = HashMap::new(0)
+    let mut odd: i64 = 0
+    let mut i: usize = 0
+    while i < s.length() {
+        let key: i64 = s⁅i⁆ as u32 as i64
+        let mut seen: i64 = 0
+        if counts.contains_key(key) {
+            seen = counts.get(key).unwrap()
+        }
+        if seen % 2 == 0 {
+            odd = odd + 1
+        } else {
+            odd = odd - 1
+        }
+        counts.insert(key, seen + 1)
+        i = i + 1
+    }
+    return odd <= 1
+}
+
+class Solution {
+    micro canPermutePalindrome(self, s: utf8): bool {
+        return can_permute_palindrome(s)
+    }
+}

@@ -1016,6 +1016,7 @@
     "invoke": {
         "python": "Solution().strStr",
         "typescript": "Solution().strStr",
+        "valkyrie": "strStr",
         "wolframSxo": "strStr",
         "matlabSxo": "strStr"
     }

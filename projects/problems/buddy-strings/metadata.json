@@ -889,6 +889,7 @@
     ],
     "invoke": {
         "python": "Solution().buddyStrings",
-        "typescript": "Solution().buddyStrings"
+        "typescript": "Solution().buddyStrings",
+        "valkyrie": "buddyStrings"
     }
 }

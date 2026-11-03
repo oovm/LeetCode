@@ -415,6 +415,7 @@
     ],
     "invoke": {
         "python": "Solution().longestPalindrome",
-        "typescript": "Solution().longestPalindrome"
+        "typescript": "Solution().longestPalindrome",
+        "valkyrie": "longestPalindrome"
     }
 }

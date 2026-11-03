@@ -1,5 +1,39 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`text⁅i⁆` 频次计数（计数表另需定长数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：balloon 频次取 min、l/o 折半，时间 O(n) 空间 O(1)。
+namespace leetcode.maximum_number_of_balloons;
+
+[export(case: "camelCase")]
+micro max_number_of_balloons(text: utf8) -> i64 {
+    let mut counts: ArrayList<i64> = ArrayList::new(26)
+    let mut i: usize = 0
+    while i < 26 {
+        counts.push(0)
+        i = i + 1
+    }
+    i = 0
+    while i < text.length() {
+        let code: u32 = text⁅i⁆ as u32
+        counts⁅(code as usize) - 97⁆ = counts⁅(code as usize) - 97⁆.unwrap() + 1
+        i = i + 1
+    }
+    let mut result: i64 = counts⁅1⁆.unwrap()
+    if counts⁅0⁆.unwrap() < result {
+        result = counts⁅0⁆.unwrap()
+    }
+    let half_l: i64 = counts⁅11⁆.unwrap() / 2
+    if half_l < result {
+        result = half_l
+    }
+    let half_o: i64 = counts⁅14⁆.unwrap() / 2
+    if half_o < result {
+        result = half_o
+    }
+    if counts⁅13⁆.unwrap() < result {
+        result = counts⁅13⁆.unwrap()
+    }
+    return result
+}
+
+class Solution {
+    micro maxNumberOfBalloons(self, text: utf8): i64 {
+        return max_number_of_balloons(text)
+    }
+}

@@ -1,5 +1,37 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：字符栈：相邻同字母异大小写则弹栈。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：栈式消除，时间 O(n) 空间 O(n)。
+namespace leetcode.make_the_string_great;
+
+micro abss(x: i64) -> i64 {
+    if x < 0 {
+        return 0 - x
+    }
+    return x
+}
+
+[export(case: "camelCase")]
+micro make_good(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut stack: ArrayList<char> = ArrayList::new(n)
+    let mut i: usize = 0
+    while i < n {
+        let c: char = s⁅i⁆
+        if stack.length() > 0 && abss(stack⁅stack.length() - 1⁆.unwrap() as u32 as i64 - c as u32 as i64) == 32 {
+            stack.pop()
+        } else {
+            stack.push(c)
+        }
+        i = i + 1
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut k: usize = 0
+    while k < stack.length() {
+        builder.append(stack⁅k⁆.unwrap())
+        k = k + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro makeGood(self, s: utf8): utf8 {
+        return make_good(s)
+    }
+}

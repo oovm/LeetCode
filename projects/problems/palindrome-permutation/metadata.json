@@ -637,6 +637,7 @@
     ],
     "invoke": {
         "python": "Solution().canPermutePalindrome",
-        "typescript": "Solution().canPermutePalindrome"
+        "typescript": "Solution().canPermutePalindrome",
+        "valkyrie": "canPermutePalindrome"
     }
 }

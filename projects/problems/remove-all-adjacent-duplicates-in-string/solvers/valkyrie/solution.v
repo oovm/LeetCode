@@ -1,5 +1,30 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：字符栈：`out` 顶与 `s⁅i⁆` 相同则弹栈否则压入。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：栈式相邻消除，时间 O(n) 空间 O(n)。
+namespace leetcode.remove_all_adjacent_duplicates_in_string;
+
+[export(case: "camelCase")]
+micro remove_duplicates(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut stack: ArrayList<char> = ArrayList::new(n)
+    let mut i: usize = 0
+    while i < n {
+        let c: char = s⁅i⁆
+        if stack.length() > 0 && (stack⁅stack.length() - 1⁆.unwrap() as u32) == (c as u32) {
+            stack.pop()
+        } else {
+            stack.push(c)
+        }
+        i = i + 1
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut k: usize = 0
+    while k < stack.length() {
+        builder.append(stack⁅k⁆.unwrap())
+        k = k + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro removeDuplicates(self, s: utf8): utf8 {
+        return remove_duplicates(s)
+    }
+}

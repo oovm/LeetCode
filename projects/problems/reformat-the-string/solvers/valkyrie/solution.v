@@ -1,5 +1,47 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 分字母/数字两队再交错拼串。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：分桶交错，时间 O(n) 空间 O(n)。
+namespace leetcode.reformat_the_string;
+
+micro is_digit_code(code: u32) -> bool {
+    return code >= 48 && code <= 57
+}
+
+[export(case: "camelCase")]
+micro reformat(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut letters: ArrayList<char> = ArrayList::new(n)
+    let mut digits: ArrayList<char> = ArrayList::new(n)
+    let mut i: usize = 0
+    while i < n {
+        let c: char = s⁅i⁆
+        if is_digit_code(c as u32) {
+            digits.push(c)
+        } else {
+            letters.push(c)
+        }
+        i = i + 1
+    }
+    let ln: usize = letters.length()
+    let dn: usize = digits.length()
+    let mut empty: Utf8Builder = Utf8Builder::new(0)
+    if ln > dn + 1 || dn > ln + 1 {
+        return empty.build()
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let letters_first: bool = ln >= dn
+    let mut k: usize = 0
+    while k < n {
+        let even: bool = k % 2 == 0
+        if even == letters_first {
+            builder.append(letters⁅k / 2⁆.unwrap())
+        } else {
+            builder.append(digits⁅k / 2⁆.unwrap())
+        }
+        k = k + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro reformat(self, s: utf8): utf8 {
+        return reformat(s)
+    }
+}

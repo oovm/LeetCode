@@ -259,6 +259,7 @@
     ],
     "invoke": {
         "python": "Solution().removeDuplicates",
-        "typescript": "Solution().removeDuplicates"
+        "typescript": "Solution().removeDuplicates",
+        "valkyrie": "removeDuplicates"
     }
 }

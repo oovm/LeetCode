@@ -1,5 +1,56 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`haystack⁅i⁆ == needle⁅j⁆` —— KMP 需要按位读字符并比较，失配表还需定长数组。
-# 期望语义：文本长度、按下标读字符、字符相等比较。实际：std 文本的下标/长度能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现（本能力首记）：`micro f(s: text) -> i64 { let c: char = s⁅0⁆ if c == 'a' { return 1 } return s.length() }`，期望编译并逐字读取，实际 std.text 无可用下标/长度入口。
-# 理想算法：KMP 前缀函数线性匹配，时间 O(|haystack|+|needle|) 空间 O(|needle|)。
+namespace leetcode.find_the_index_of_the_first_occurrence_in_a_string;
+
+# KMP 前缀函数，O(m)
+micro build_failure(pattern: utf8) -> ArrayList<i64> {
+    let n: usize = pattern.length()
+    let mut fail: ArrayList<i64> = ArrayList::new(n)
+    let mut i: usize = 0
+    while i < n {
+        fail.push(0)
+        i = i + 1
+    }
+    let mut k: usize = 1
+    let mut j: usize = 0
+    while k < n {
+        while j > 0 && (pattern⁅k⁆ as u32) != (pattern⁅j⁆ as u32) {
+            j = fail⁅j - 1⁆.unwrap() as usize
+        }
+        if (pattern⁅k⁆ as u32) == (pattern⁅j⁆ as u32) {
+            j = j + 1
+        }
+        fail⁅k⁆ = j as i64
+        k = k + 1
+    }
+    return fail
+}
+
+[export(case: "camelCase")]
+micro str_str(haystack: utf8, needle: utf8) -> i64 {
+    let m: usize = needle.length()
+    let n: usize = haystack.length()
+    if m == 0 {
+        return 0
+    }
+    let fail: ArrayList<i64> = build_failure(needle)
+    let mut i: usize = 0
+    let mut j: usize = 0
+    while i < n {
+        while j > 0 && (haystack⁅i⁆ as u32) != (needle⁅j⁆ as u32) {
+            j = fail⁅j - 1⁆.unwrap() as usize
+        }
+        if (haystack⁅i⁆ as u32) == (needle⁅j⁆ as u32) {
+            j = j + 1
+        }
+        if j == m {
+            return (i - m + 1) as i64
+        }
+        i = i + 1
+    }
+    return -1
+}
+
+class Solution {
+    micro strStr(self, haystack: utf8, needle: utf8): i64 {
+        return str_str(haystack, needle)
+    }
+}

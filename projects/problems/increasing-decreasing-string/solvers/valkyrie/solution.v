@@ -1,5 +1,47 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 频次计数后按升/降序多轮拼串（计数表另需定长数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：计数排序式多轮拼串，时间 O(n·字符集) 空间 O(字符集)。
+namespace leetcode.increasing_decreasing_string;
+
+[export(case: "camelCase")]
+micro sort_string(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut counts: ArrayList<i64> = ArrayList::new(26)
+    let mut i: usize = 0
+    while i < 26 {
+        counts.push(0)
+        i = i + 1
+    }
+    i = 0
+    while i < n {
+        let code: u32 = s⁅i⁆ as u32
+        counts⁅(code as usize) - 97⁆ = counts⁅(code as usize) - 97⁆.unwrap() + 1
+        i = i + 1
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    let mut produced: usize = 0
+    while produced < n {
+        let mut k: usize = 0
+        while k < 26 {
+            if counts⁅k⁆.unwrap() > 0 {
+                builder.append(char::from((k + 97) as u32))
+                counts⁅k⁆ = counts⁅k⁆.unwrap() - 1
+                produced = produced + 1
+            }
+            k = k + 1
+        }
+        k = 26
+        while k > 0 {
+            k = k - 1
+            if counts⁅k⁆.unwrap() > 0 {
+                builder.append(char::from((k + 97) as u32))
+                counts⁅k⁆ = counts⁅k⁆.unwrap() - 1
+                produced = produced + 1
+            }
+        }
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro sortString(self, s: utf8): utf8 {
+        return sort_string(s)
+    }
+}

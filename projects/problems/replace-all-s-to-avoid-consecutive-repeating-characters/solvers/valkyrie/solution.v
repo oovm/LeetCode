@@ -1,5 +1,47 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 遇 ? 选异于左右邻的字符拼串。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：逐位贪心替换，时间 O(n) 空间 O(n)。
+namespace leetcode.replace_all_s_to_avoid_consecutive_repeating_characters;
+
+[export(case: "camelCase")]
+micro modify_string(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut chars: ArrayList<char> = ArrayList::new(n)
+    let mut i: usize = 0
+    while i < n {
+        chars.push(s⁅i⁆)
+        i = i + 1
+    }
+    i = 0
+    while i < n {
+        if (chars⁅i⁆.unwrap() as u32) == 63 {
+            let mut candidate: u32 = 97
+            let mut chosen: bool = false
+            while candidate <= 99 && !chosen {
+                let mut ok: bool = true
+                if i > 0 && (chars⁅i - 1⁆.unwrap() as u32) == candidate {
+                    ok = false
+                }
+                if i + 1 < n && (chars⁅i + 1⁆.unwrap() as u32) == candidate {
+                    ok = false
+                }
+                if ok {
+                    chars⁅i⁆ = char::from(candidate)
+                    chosen = true
+                }
+                candidate = candidate + 1
+            }
+        }
+        i = i + 1
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    i = 0
+    while i < n {
+        builder.append(chars⁅i⁆.unwrap())
+        i = i + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro modifyString(self, s: utf8): utf8 {
+        return modify_string(s)
+    }
+}
