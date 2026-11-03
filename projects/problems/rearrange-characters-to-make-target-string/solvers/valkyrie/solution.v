@@ -1,5 +1,47 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：两串频次计数取逐字符商的最小值（计数表另需定长数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：频次商取 min，时间 O(n) 空间 O(字符集)。
+namespace leetcode.rearrange_characters_to_make_target_string;
+
+[export(case: "camelCase")]
+micro rearrange_characters(s: utf8, target: utf8) -> i64 {
+    let mut have: ArrayList<i64> = ArrayList::new(26)
+    let mut need: ArrayList<i64> = ArrayList::new(26)
+    let mut i: usize = 0
+    while i < 26 {
+        have.push(0)
+        need.push(0)
+        i = i + 1
+    }
+    i = 0
+    while i < s.length() {
+        let idx: usize = (s⁅i⁆ as u32 - 97) as usize
+        have⁅idx⁆ = have⁅idx⁆.unwrap() + 1
+        i = i + 1
+    }
+    i = 0
+    while i < target.length() {
+        let idx: usize = (target⁅i⁆ as u32 - 97) as usize
+        need⁅idx⁆ = need⁅idx⁆.unwrap() + 1
+        i = i + 1
+    }
+    let mut best: i64 = 2147483647
+    i = 0
+    while i < 26 {
+        let want: i64 = need⁅i⁆.unwrap()
+        if want > 0 {
+            let made: i64 = have⁅i⁆.unwrap() / want
+            if made < best {
+                best = made
+            }
+        }
+        i = i + 1
+    }
+    if best == 2147483647 {
+        return 0
+    }
+    return best
+}
+
+class Solution {
+    micro rearrangeCharacters(self, s: utf8, target: utf8): i64 {
+        return rearrange_characters(s, target)
+    }
+}

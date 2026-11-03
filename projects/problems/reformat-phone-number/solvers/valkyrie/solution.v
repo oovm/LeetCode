@@ -1,5 +1,52 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：过滤出数字后按 3/2 分组拼 -。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：分组重排，时间 O(n) 空间 O(n)。
+namespace leetcode.reformat_phone_number;
+
+[export(case: "camelCase")]
+micro reformat_number(number: utf8) -> utf8 {
+    let n: usize = number.length()
+    let mut digits: ArrayList<char> = ArrayList::new(n)
+    let mut i: usize = 0
+    while i < n {
+        let code: u32 = number⁅i⁆ as u32
+        if code != 45 && code != 32 {
+            digits.push(number⁅i⁆)
+        }
+        i = i + 1
+    }
+    let dn: usize = digits.length()
+    let mut builder: Utf8Builder = Utf8Builder::new(dn + dn / 3)
+    i = 0
+    let mut first: bool = true
+    while dn > i + 4 {
+        if !first {
+            builder.append(char::from(45))
+        }
+        builder.append(digits⁅i⁆.unwrap())
+        builder.append(digits⁅i + 1⁆.unwrap())
+        builder.append(digits⁅i + 2⁆.unwrap())
+        first = false
+        i = i + 3
+    }
+    if !first {
+        builder.append(char::from(45))
+    }
+    if dn == i + 4 {
+        builder.append(digits⁅i⁆.unwrap())
+        builder.append(digits⁅i + 1⁆.unwrap())
+        builder.append(char::from(45))
+        builder.append(digits⁅i + 2⁆.unwrap())
+        builder.append(digits⁅i + 3⁆.unwrap())
+    } else {
+        let mut k: usize = i
+        while k < dn {
+            builder.append(digits⁅k⁆.unwrap())
+            k = k + 1
+        }
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro reformatNumber(self, number: utf8): utf8 {
+        return reformat_number(number)
+    }
+}

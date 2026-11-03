@@ -1033,6 +1033,7 @@
     ],
     "invoke": {
         "python": "Solution().finalString",
-        "typescript": "Solution().finalString"
+        "typescript": "Solution().finalString",
+        "valkyrie": "finalString"
     }
 }

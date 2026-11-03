@@ -709,6 +709,7 @@
     ],
     "invoke": {
         "python": "Solution().greatestLetter",
-        "typescript": "Solution().greatestLetter"
+        "typescript": "Solution().greatestLetter",
+        "valkyrie": "greatestLetter"
     }
 }

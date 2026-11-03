@@ -907,6 +907,7 @@
     ],
     "invoke": {
         "python": "Solution().digitCount",
-        "typescript": "Solution().digitCount"
+        "typescript": "Solution().digitCount",
+        "valkyrie": "digitCount"
     }
 }

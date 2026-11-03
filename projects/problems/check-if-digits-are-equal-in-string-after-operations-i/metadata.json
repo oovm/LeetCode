@@ -769,6 +769,7 @@
     ],
     "invoke": {
         "python": "Solution().hasSameDigits",
-        "typescript": "Solution().hasSameDigits"
+        "typescript": "Solution().hasSameDigits",
+        "valkyrie": "hasSameDigits"
     }
 }

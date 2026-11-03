@@ -1,5 +1,44 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`time⁅i⁆` 逐位按规则替换 ?。
-# 期望语义：文本按下标读字符、切分/拼接/比较。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：逐位贪心替换，时间 O(1) 空间 O(1)。
+namespace leetcode.latest_time_by_replacing_hidden_digits;
+
+[export(case: "camelCase")]
+micro maximum_time(time: utf8) -> utf8 {
+    let mut chars: ArrayList<char> = ArrayList::new(5)
+    let mut i: usize = 0
+    while i < 5 {
+        chars.push(time⁅i⁆)
+        i = i + 1
+    }
+    if (chars⁅0⁆.unwrap() as u32) == 63 {
+        if (chars⁅1⁆.unwrap() as u32) == 63 || (chars⁅1⁆.unwrap() as u32) <= 51 {
+            chars⁅0⁆ = char::from(50)
+        } else {
+            chars⁅0⁆ = char::from(49)
+        }
+    }
+    if (chars⁅1⁆.unwrap() as u32) == 63 {
+        if (chars⁅0⁆.unwrap() as u32) == 50 {
+            chars⁅1⁆ = char::from(51)
+        } else {
+            chars⁅1⁆ = char::from(57)
+        }
+    }
+    if (chars⁅3⁆.unwrap() as u32) == 63 {
+        chars⁅3⁆ = char::from(53)
+    }
+    if (chars⁅4⁆.unwrap() as u32) == 63 {
+        chars⁅4⁆ = char::from(57)
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(5)
+    i = 0
+    while i < 5 {
+        builder.append(chars⁅i⁆.unwrap())
+        i = i + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro maximumTime(self, time: utf8): utf8 {
+        return maximum_time(time)
+    }
+}

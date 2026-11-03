@@ -749,6 +749,7 @@
     ],
     "invoke": {
         "python": "Solution().findPermutationDifference",
-        "typescript": "Solution().findPermutationDifference"
+        "typescript": "Solution().findPermutationDifference",
+        "valkyrie": "findPermutationDifference"
     }
 }

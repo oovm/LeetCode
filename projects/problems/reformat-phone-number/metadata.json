@@ -979,6 +979,7 @@
     ],
     "invoke": {
         "python": "Solution().reformatNumber",
-        "typescript": "Solution().reformatNumber"
+        "typescript": "Solution().reformatNumber",
+        "valkyrie": "reformatNumber"
     }
 }

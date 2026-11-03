@@ -799,6 +799,7 @@
     ],
     "invoke": {
         "python": "Solution().repeatedCharacter",
-        "typescript": "Solution().repeatedCharacter"
+        "typescript": "Solution().repeatedCharacter",
+        "valkyrie": "repeatedCharacter"
     }
 }

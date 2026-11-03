@@ -601,6 +601,7 @@
     ],
     "invoke": {
         "python": "Solution().countPoints",
-        "typescript": "Solution().countPoints"
+        "typescript": "Solution().countPoints",
+        "valkyrie": "countPoints"
     }
 }

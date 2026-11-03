@@ -475,6 +475,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumLengthSubstring",
-        "typescript": "Solution().maximumLengthSubstring"
+        "typescript": "Solution().maximumLengthSubstring",
+        "valkyrie": "maximumLengthSubstring"
     }
 }

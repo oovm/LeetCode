@@ -961,6 +961,7 @@
     ],
     "invoke": {
         "python": "Solution().numberOfSpecialChars",
-        "typescript": "Solution().numberOfSpecialChars"
+        "typescript": "Solution().numberOfSpecialChars",
+        "valkyrie": "numberOfSpecialChars"
     }
 }

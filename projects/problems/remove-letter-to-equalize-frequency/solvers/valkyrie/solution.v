@@ -1,5 +1,49 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`word⁅i⁆` 频次计数后枚举删一位可否全等（计数表另需定长数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：频次删一枚举，时间 O(n + 字符集²) 空间 O(字符集)。
+namespace leetcode.remove_letter_to_equalize_frequency;
+
+[export(case: "camelCase")]
+micro equal_frequency(word: utf8) -> bool {
+    let mut counts: ArrayList<i64> = ArrayList::new(26)
+    let mut i: usize = 0
+    while i < 26 {
+        counts.push(0)
+        i = i + 1
+    }
+    i = 0
+    while i < word.length() {
+        let idx: usize = (word⁅i⁆ as u32 - 97) as usize
+        counts⁅idx⁆ = counts⁅idx⁆.unwrap() + 1
+        i = i + 1
+    }
+    let mut remove: usize = 0
+    while remove < 26 {
+        if counts⁅remove⁆.unwrap() > 0 {
+            counts⁅remove⁆ = counts⁅remove⁆.unwrap() - 1
+            let mut target: i64 = 0
+            let mut ok: bool = true
+            let mut j: usize = 0
+            while j < 26 {
+                let c: i64 = counts⁅j⁆.unwrap()
+                if c > 0 {
+                    if target == 0 {
+                        target = c
+                    } else if c != target {
+                        ok = false
+                    }
+                }
+                j = j + 1
+            }
+            if ok {
+                return true
+            }
+            counts⁅remove⁆ = counts⁅remove⁆.unwrap() + 1
+        }
+        remove = remove + 1
+    }
+    return false
+}
+
+class Solution {
+    micro equalFrequency(self, word: utf8): bool {
+        return equal_frequency(word)
+    }
+}

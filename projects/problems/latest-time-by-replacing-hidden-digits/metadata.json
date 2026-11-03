@@ -637,6 +637,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumTime",
-        "typescript": "Solution().maximumTime"
+        "typescript": "Solution().maximumTime",
+        "valkyrie": "maximumTime"
     }
 }

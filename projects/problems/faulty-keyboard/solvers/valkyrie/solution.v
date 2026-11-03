@@ -1,5 +1,41 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 遇 i 反转已拼结果串。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：逐位拼/反转，时间 O(n²) 空间 O(n)。
+namespace leetcode.faulty_keyboard;
+
+[export(case: "camelCase")]
+micro final_string(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut out: ArrayList<char> = ArrayList::new(n)
+    let mut i: usize = 0
+    while i < n {
+        let c: char = s⁅i⁆
+        if c as u32 == 105 {
+            let mut left: usize = 0
+            let mut right: usize = out.length()
+            if right > 0 {
+                right = right - 1
+            }
+            while left < right {
+                let tmp: char = out⁅left⁆.unwrap()
+                out⁅left⁆ = out⁅right⁆.unwrap()
+                out⁅right⁆ = tmp
+                left = left + 1
+                right = right - 1
+            }
+        } else {
+            out.push(c)
+        }
+        i = i + 1
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    i = 0
+    while i < out.length() {
+        builder.append(out⁅i⁆.unwrap())
+        i = i + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro finalString(self, s: utf8): utf8 {
+        return final_string(s)
+    }
+}

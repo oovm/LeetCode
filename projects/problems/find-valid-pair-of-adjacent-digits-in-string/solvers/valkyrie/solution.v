@@ -1,5 +1,46 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 频次计数后扫相邻互异且各位频次等于位值（计数表另需定长数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：频次校验加相邻扫描，时间 O(n) 空间 O(10)。
+namespace leetcode.find_valid_pair_of_adjacent_digits_in_string;
+
+# 位数频次需等于位值，再找首个相邻互异且双方均合格的位对。
+[export(case: "camelCase")]
+micro find_valid_pair(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut counts: ArrayList<i64> = ArrayList::new(10)
+    let mut k: usize = 0
+    while k < 10 {
+        counts.push(0)
+        k = k + 1
+    }
+    let mut i: usize = 0
+    while i < n {
+        let digit: usize = (s⁅i⁆ as u32 - 48) as usize
+        counts⁅digit⁆ = counts⁅digit⁆.unwrap() + 1
+        i = i + 1
+    }
+    k = 1
+    while k < 10 {
+        if counts⁅k⁆.unwrap() != k as i64 {
+            counts⁅k⁆ = -1
+        }
+        k = k + 1
+    }
+    i = 0
+    while i + 1 < n {
+        let first: i64 = s⁅i⁆ as u32 as i64 - 48
+        let second: i64 = s⁅i + 1⁆ as u32 as i64 - 48
+        if first != second && counts⁅first as usize⁆.unwrap() == first && counts⁅second as usize⁆.unwrap() == second {
+            let mut builder: Utf8Builder = Utf8Builder::new(2)
+            builder.append(s⁅i⁆)
+            builder.append(s⁅i + 1⁆)
+            return builder.build()
+        }
+        i = i + 1
+    }
+    let empty: utf8 = Utf8Text::from_bytes([])
+    return empty
+}
+
+class Solution {
+    micro findValidPair(self, s: utf8): utf8 {
+        return find_valid_pair(s)
+    }
+}

@@ -685,6 +685,7 @@
     ],
     "invoke": {
         "python": "Solution().clearDigits",
-        "typescript": "Solution().clearDigits"
+        "typescript": "Solution().clearDigits",
+        "valkyrie": "clearDigits"
     }
 }

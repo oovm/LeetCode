@@ -1,5 +1,39 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 与 `s⁅n-1-i⁆` 对位取较小字符写回。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：对位取小，时间 O(n) 空间 O(n)。
+namespace leetcode.lexicographically_smallest_palindrome;
+
+[export(case: "camelCase")]
+micro make_smallest_palindrome(s: utf8) -> utf8 {
+    let n: usize = s.length()
+    let mut chars: ArrayList<char> = ArrayList::new(n)
+    let mut i: usize = 0
+    while i < n {
+        chars.push(s⁅i⁆)
+        i = i + 1
+    }
+    let half: usize = n / 2
+    i = 0
+    while i < half {
+        let j: usize = n - 1 - i
+        let a: u32 = chars⁅i⁆.unwrap() as u32
+        let b: u32 = chars⁅j⁆.unwrap() as u32
+        let mut m: u32 = a
+        if b < a {
+            m = b
+        }
+        chars⁅i⁆ = char::from(m)
+        chars⁅j⁆ = char::from(m)
+        i = i + 1
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(n)
+    i = 0
+    while i < n {
+        builder.append(chars⁅i⁆.unwrap())
+        i = i + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro makeSmallestPalindrome(self, s: utf8): utf8 {
+        return make_smallest_palindrome(s)
+    }
+}

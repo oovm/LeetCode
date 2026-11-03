@@ -679,6 +679,7 @@
     ],
     "invoke": {
         "python": "Solution().minimizedStringLength",
-        "typescript": "Solution().minimizedStringLength"
+        "typescript": "Solution().minimizedStringLength",
+        "valkyrie": "minimizedStringLength"
     }
 }

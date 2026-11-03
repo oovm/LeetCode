@@ -1303,6 +1303,7 @@
     ],
     "invoke": {
         "python": "Solution().makeSmallestPalindrome",
-        "typescript": "Solution().makeSmallestPalindrome"
+        "typescript": "Solution().makeSmallestPalindrome",
+        "valkyrie": "makeSmallestPalindrome"
     }
 }

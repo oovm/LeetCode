@@ -751,6 +751,7 @@
     ],
     "invoke": {
         "python": "Solution().numDifferentIntegers",
-        "typescript": "Solution().numDifferentIntegers"
+        "typescript": "Solution().numDifferentIntegers",
+        "valkyrie": "numDifferentIntegers"
     }
 }

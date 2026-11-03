@@ -910,6 +910,7 @@
     ],
     "invoke": {
         "python": "Solution().rearrangeCharacters",
-        "typescript": "Solution().rearrangeCharacters"
+        "typescript": "Solution().rearrangeCharacters",
+        "valkyrie": "rearrangeCharacters"
     }
 }

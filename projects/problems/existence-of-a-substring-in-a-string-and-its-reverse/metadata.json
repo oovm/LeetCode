@@ -739,6 +739,7 @@
     ],
     "invoke": {
         "python": "Solution().isSubstringPresent",
-        "typescript": "Solution().isSubstringPresent"
+        "typescript": "Solution().isSubstringPresent",
+        "valkyrie": "isSubstringPresent"
     }
 }

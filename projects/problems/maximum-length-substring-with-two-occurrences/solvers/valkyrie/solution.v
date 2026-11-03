@@ -1,5 +1,37 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 滑窗内字符频次 ≤2（计数表另需定长数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：滑窗限频取最长，时间 O(n) 空间 O(字符集)。
+namespace leetcode.maximum_length_substring_with_two_occurrences;
+
+# 滑窗保证窗内任一字符出现不超过两次。
+[export(case: "camelCase")]
+micro maximum_length_substring(s: utf8) -> i64 {
+    let n: usize = s.length()
+    let mut counts: ArrayList<i64> = ArrayList::new(26)
+    let mut k: usize = 0
+    while k < 26 {
+        counts.push(0)
+        k = k + 1
+    }
+    let mut left: usize = 0
+    let mut right: usize = 0
+    let mut best: i64 = 0
+    while right < n {
+        let slot: usize = (s⁅right⁆ as u32 - 97) as usize
+        counts⁅slot⁆ = counts⁅slot⁆.unwrap() + 1
+        while counts⁅slot⁆.unwrap() > 2 {
+            let drop: usize = (s⁅left⁆ as u32 - 97) as usize
+            counts⁅drop⁆ = counts⁅drop⁆.unwrap() - 1
+            left = left + 1
+        }
+        let width: i64 = (right - left + 1) as i64
+        if width > best {
+            best = width
+        }
+        right = right + 1
+    }
+    return best
+}
+
+class Solution {
+    micro maximumLengthSubstring(self, s: utf8): i64 {
+        return maximum_length_substring(s)
+    }
+}

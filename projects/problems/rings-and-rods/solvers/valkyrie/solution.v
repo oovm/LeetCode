@@ -1,5 +1,41 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`rings⁅i⁆` 颜色/杆位成对读入杆位掩码（杆表另需定长数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：杆位掩码满三色计数，时间 O(n) 空间 O(杆数)。
+namespace leetcode.rings_and_rods;
+
+[export(case: "camelCase")]
+micro count_points(rings: utf8) -> i64 {
+    let mut rods: ArrayList<i64> = ArrayList::new(10)
+    let mut i: usize = 0
+    while i < 10 {
+        rods.push(0)
+        i = i + 1
+    }
+    let n: usize = rings.length()
+    let mut p: usize = 0
+    while p + 1 < n {
+        let color: u32 = rings⁅p⁆ as u32
+        let mut bit: i64 = 4
+        if color == 82 {
+            bit = 1
+        } else if color == 71 {
+            bit = 2
+        }
+        let digit: i64 = rings⁅p + 1⁆ as u32 as i64 - 48
+        let slot: usize = digit as usize
+        rods⁅slot⁆ = rods⁅slot⁆.unwrap() | bit
+        p = p + 2
+    }
+    let mut total: i64 = 0
+    let mut j: usize = 0
+    while j < 10 {
+        if rods⁅j⁆.unwrap() == 7 {
+            total = total + 1
+        }
+        j = j + 1
+    }
+    return total
+}
+
+class Solution {
+    micro countPoints(self, rings: utf8): i64 {
+        return count_points(rings)
+    }
+}

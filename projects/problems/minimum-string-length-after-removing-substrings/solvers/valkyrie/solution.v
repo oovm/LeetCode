@@ -1,5 +1,32 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：字符栈：`s⁅i⁆` 与栈顶组成 AB/CD 则弹栈。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：栈式消除后余长，时间 O(n) 空间 O(n)。
+namespace leetcode.minimum_string_length_after_removing_substrings;
+
+[export(case: "camelCase")]
+micro min_length(s: utf8) -> i64 {
+    let n: usize = s.length()
+    let mut stack: ArrayList<char> = ArrayList::new(n)
+    let mut i: usize = 0
+    while i < n {
+        let c: char = s⁅i⁆
+        let code: u32 = c as u32
+        let mut removed: bool = false
+        let len: usize = stack.length()
+        if len > 0 {
+            let top: u32 = stack⁅len - 1⁆.unwrap() as u32
+            if (top == 65 && code == 66) || (top == 67 && code == 68) {
+                stack.pop()
+                removed = true
+            }
+        }
+        if !removed {
+            stack.push(c)
+        }
+        i = i + 1
+    }
+    return stack.length() as i64
+}
+
+class Solution {
+    micro minLength(self, s: utf8): i64 {
+        return min_length(s)
+    }
+}
