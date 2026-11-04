@@ -49,6 +49,7 @@ $n
   表中 496 仍是扫描起点口径，未构建按起点口径记为 233（见该批次小节）。
 - 后续增量（2026-11-04，滚动批次 R3–R6 各 8 题写完未构建后）：canonical 实测 **569**
   （R6 前 561；本批 8 题已计入 `invoke.valkyrie`，但仍属未验证，不代表构建通过）。
+- 后续增量（2026-11-04，滚动批次 R7 后）：canonical 实测 **577**（R7 前 569）。
 
 ## 未恢复
 
@@ -413,6 +414,9 @@ imply Utf8Text: Comparable { ... }
 - 判定：**std 模型缺口**（非编译器）。
 - 与 G13 的关系：G13 是本条的下游表现。
 - 修复初判：**建 trait**（新增 `Comparable` 合同 + 逐 primitive impl + 收窄 BTree 系约束）。
+- 影响题（2，均已写）：`find-smallest-letter-greater-than-target`（744，批次 R5，
+  `letters⁅mid⁆ <= target`）、`group-anagrams`（49，批次 R7，`sorted_by(ArrayList<char>)` 的比较器
+  裸调 `<` / `>` 排序字符）。
 - 与 G17 的交叉引用：`char` 同时缺 `Hash`。**这两条不是孤立缺 impl，而是同一个 primitive 的
   类型能力面没设计完**——`Ordinal` 视图 / `Comparable` / `Hash` 三条腿一条都没在 `char` 上落地，
   只剩 `==` / `!=`，于是它既进不了有序容器也进不了哈希容器。
@@ -467,10 +471,12 @@ imply char: Hash {
 }
 ```
 
-- 影响题（5）：`custom-sort-string`（791，`HashMap<char, i64>` 优先级表）、
+- 影响题（7）：`custom-sort-string`（791，`HashMap<char, i64>` 优先级表）、
   `satisfiability-of-equality-equations`（990，`DisjointSet<char>` 变量连通性）、
   `word-subsets`（916，字符频次上界）、`permutation-in-string`（567，定窗字符计数）、
-  `find-words-that-can-be-formed-by-characters`（1160，字符可用量）。
+  `find-words-that-can-be-formed-by-characters`（1160，字符可用量）、
+  `find-resultant-array-after-removing-anagrams`（2273，批次 R7，`MultiSet<char>` 规范形）、
+  `shortest-completing-word`（748，批次 R7，`HashMap<char, i64>` 牌照频次）。
 - 不对称点：`utf8`、`i8`–`u64`、`f32` / `f64` 都有 `Hash`；`char` 有 `Ordinal`（可转 `u32`）
   却没有派生 `Hash`，因此「码位可排序」与「码位可哈希」只实现了一半。
 - 判定：**std 缺口**。
@@ -631,6 +637,38 @@ micro lcm(a: i64, b: i64) -> i64
 - 与 G20 的关系：同一「标量数值能力面只做算子、不做归约」的根部，但对象是整除关系而非大小归约，
   故单列；`gcd` 若做成泛型还需 G15 的 `Comparable`（`%` 只对整型成立，目前只能定 `i64` 重载）。
 
+### G24 `MultiSet` 没有等价判定与规范序（不能作键、不能比较）
+
+- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/collection/MultiSet.v` 全文件）
+- 定性：**该有但没有**。`MultiSet<T>` 只声明了 `new` / `with_capacity` / `insert` / `remove` /
+  `remove_all` / `count` / `contains` / `length` / `distinct_length` / `is_empty` / `clear` /
+  `distinct_elements` / `to_list` / `iter` / `iterator` / `from_list`；**没有 `equals`，也没有
+  `Hash`**，`imply MultiSet<T>` 之外只有方法体，没有 `imply MultiSet<T>: Equal`。
+- 后果：两个多重集实例无法判「元素与重数完全一致」；也无法作为 `HashMap` / `HashSet` 的键。
+  `to_list()` 的顺序取决于内部哈希遍历，不是规范序，因此「排序后比较」这条路在 `T` 无
+  `Comparable` 时同样不可走（`char` 正是这种 `T`，见 G15）。
+- 期望签名：
+
+```v
+# std/source/collection/MultiSet.v
+imply MultiSet<T>: Equal where T: Equal {
+    micro equals(self, other: MultiSet<T>) -> bool
+}
+# 规范序：按元素排序输出，前提是 G15 的 Comparable 落地
+micro to_sorted_list(self) -> ArrayList<T> where T: Comparable
+```
+
+- 影响题（1）：`find-resultant-array-after-removing-anagrams`（2273，批次 R7，异位词规范形
+  需要两份 `MultiSet<char>` 判等价）。
+- 不对称点：`HashMap` / `HashSet` 都有 `Equal` 语义（靠 `get` / `contains`），`MultiSet` 作为
+  「带重数的集合」反而没有等价判定；`BitSet` 有 `union` / `intersect` 等结构运算，`MultiSet`
+  连结构相等都没有。
+- 判定：**std 缺口**（不阻断：可用字符排序 / 频次向量等价表达）。
+- 修复初判：**加 API**（`equals` 只需 `distinct_length` 一致 + 逐元素 `count` 相等；
+  注意不得依赖内部遍历序）。
+- 表达力档位：**不属于表达力缺口**——有近似物（排序键或频次向量）。
+- 与 G17 的关系：`MultiSet<char>` 同时缺 `char: Hash`（底层就是 `HashMap`），两条一起才可写作。
+
 ### 未命中面（第 3 批探测，2026-11-04，无强制影响题，故不编号）
 
 - **迭代器适配器族不是缺口**：`filter_map` / `skip_while` / `take_while` 都在
@@ -715,6 +753,27 @@ micro lcm(a: i64, b: i64) -> i64
   但无强制题，**不编号**，仅记「链表面被 ABI 抹平」这一事实。
 - **表达力缺口档仍只有 G8**：本批新编号 G23 属「有近似物（题内 Euclid）」，G11 / G12 / G16 的
   新实例都是既有缺口的规模扩张；「没有任何近似物」依旧只有无向图建模一条。
+
+### 未命中面（第 7 批探测，2026-11-04，仅 G24 一条新编号）
+
+- **`utf8` 子串 / 切片面全部够用**：`string-matching-in-an-array`（1408）与
+  `number-of-strings-that-appear-as-substrings-in-word`（1967）只用 `contains`（`index_of` 的
+  bool 化封装）；`perform-string-shifts`（1427）只用 `slice(start, count)` + `concat`；
+  `count-prefixes-of-a-given-string`（2255）只用 `starts_with`。四题均无新增缺口。
+- **`slice` 语义记一条易错点（不编号）**：`Utf8Text.slice` 的第二个参数是**段长 `count`**，
+  不是终点下标（`Utf8Text.v` L262），与 TS `slice(start, end)` 形似而语义不同；写移位类题时
+  必须先 `(n - amount)` 算段长，不能照搬终点的写法。
+- **`MultiSet` 能力面首次被压出问题**：`find-resultant-array-after-removing-anagrams`（2273）
+  需要两份多重集判等价，实测 `MultiSet` 无 `equals` / 无 `Hash` / 无可依赖的规范序 → **G24**；
+  同时其底层 `HashMap` 要求键 `Hash`，`char` 缺席 → G17 叠加。两条是「容器缺 `Equal`」与
+  「primitive 缺 `Hash`」的合流，不是同一条。
+- **`char` 的 `==` 面够用**：`check-if-a-string-is-an-acronym-of-words`（2828）用 `utf8` 的
+  Cardinal 视图直接取 `char` 比较首字母，未触发 G15 / G17 —— 说明 `char` 的「可比较」只差序与哈希，
+  等值比较本身没有问题。
+- **`HashMap<char, i64>` 频次表第 2 实例**：`shortest-completing-word`（748）只压 G17，
+  未触发 G12（容量已知时 `HashMap::new(count)` 正常）。
+- **表达力缺口档仍只有 G8**：G24 有近似物（排序键 / 频次向量），G15 / G17 新实例是既有缺口的
+  规模扩张；本轮仍无「没有任何近似物」的新面。
 
 ### 建模提示（G8 的根部，比缺 API 严重）
 

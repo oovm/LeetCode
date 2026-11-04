@@ -7,6 +7,34 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R7-2026-11-04（理想解滚动批次 7，8 题，写完未构建）
+
+- 范围：此前 `solution.v` 为阻塞标记（`# blocked: std.collection 数组参数读取`）的 8 题；
+  只补理想解，不改算法绕 std 缺口。选题偏置压「`utf8` 子串 / 切片族 + 多重集等价判定」：
+  `contains` / `index_of`、`starts_with`、`slice(start, count)` + `concat`、`to_lower`、
+  `MultiSet<char>` 规范形、`sorted_by(ArrayList<char>)`、`utf8` Cardinal 视图取 `char`。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
+- 预期阻断：`string-matching-in-an-array` / `find-resultant-array-after-removing-anagrams`
+  返回 `ArrayList<utf8>`、`group-anagrams` 返回 `ArrayList<ArrayList<utf8>>`，按 G3 在 wasm JS glue
+  处阻断；`group-anagrams` 的 `sorted_by(ArrayList<char>)` 比较器裸调 `<` / `>` 按 G15 阻断；
+  `find-resultant-array-after-removing-anagrams` 的 `MultiSet<char>` 按 G17（键无 `Hash`）与
+  G24（无 `equals`）双阻断；`shortest-completing-word` 的 `HashMap<char, i64>` 按 G17 阻断；
+  其余 3 题（`numOfStrings` / `stringShift` / `isAcronym`）预计无缺口阻断，仅受 G3 同族 glue 影响。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致（`words` / `patterns`+`word` /
+  `s`+`shift` / `words`+`s` / `words` / `strs` / `words`+`s` / `licensePlate`+`words`）。
+- TS 参考解：8/8 复用既有非空实现，本轮未新写。
+
+| slug | 导出入口 | 返回类型 | 缺口 / 覆盖方向 |
+| --- | --- | --- | --- |
+| `string-matching-in-an-array` | `stringMatching` | `ArrayList<utf8>` | `utf8.contains`（`index_of` 的 bool 化）+ G3 |
+| `number-of-strings-that-appear-as-substrings-in-word` | `numOfStrings` | `i64` | `utf8.contains` 二次确认，无新增缺口 |
+| `perform-string-shifts` | `stringShift` | `utf8` | `utf8.slice(start, count)` + `concat`（段长语义坑）；非缺口 |
+| `count-prefixes-of-a-given-string` | `countPrefixes` | `i64` | `utf8.starts_with`，无新增缺口 |
+| `find-resultant-array-after-removing-anagrams` | `removeAnagrams` | `ArrayList<utf8>` | **G24 首例**（`MultiSet` 无 `equals`）+ G17 叠加；G3 |
+| `group-anagrams` | `groupAnagrams` | `ArrayList<ArrayList<utf8>>` | **G15 新实例**（`sorted_by(ArrayList<char>)`）+ G3 |
+| `check-if-a-string-is-an-acronym-of-words` | `isAcronym` | `bool` | `utf8` Cardinal 取 `char` 等值比较（不进哈希 / 有序） |
+| `shortest-completing-word` | `shortestCompletingWord` | `utf8` | **G17 新实例**（`HashMap<char, i64>` 牌照频次 + `to_lower`） |
+
 ## 批次 R6-2026-11-04（理想解滚动批次 6，8 题，写完未构建）
 
 - 范围：此前 `solution.v` 为阻塞标记（`# blocked: std.collection 数组参数读取`）或空文件的 8 题；
