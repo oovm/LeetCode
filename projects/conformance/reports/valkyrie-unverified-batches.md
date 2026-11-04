@@ -7,6 +7,51 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R16-2026-11-04（理想解滚动批次 16，8 题，写完未构建）
+
+- 范围：按观察 11 的结论，**避开已撞穿的 G26 / G27 面**（不写自定义记录排序），优先
+  字符串、树、图、DP 中不依赖自定义序的方向；同时把 G25 `clone` / `count` 以外的集合缺口
+  压到真实题解里（G10 并查集、G12 `HashSet` 容量、G18 `split_whitespace`、G23 `gcd`）。
+- 构建 / 判题状态：**未验证**，全部 `authored-unverified`，本轮按口径**不编译、不跑**。
+- 新缺口：**0 条**。本批只把已登记缺口落到解法坐标，不新增编号。
+  canonical 641 → **649**。
+- 命中面：
+  - G23（无 `gcd`）：149 手写 `greatest_common` 做斜率归一化，`HashMap<i64, i64>` 计数。
+  - G12（`HashSet::new()` 无容量）：127 建词典与访问集，按真实签名写 `HashSet::new()`，
+    容量只能摊还增长。
+  - G10（`DisjointSet` 规模 / 成员）：305 以「元素为键」建森林，
+    `new` / `add` / `contains` / `union` / `group_count` 全部为现有入口，无提案 API。
+  - G18（无 `split_whitespace`）：1324 用 `split(" ")` 等价展开（题面保证单词间单个空格）。
+- 比较器数量：**0**；本批没有任何题传 `micro(T, T) -> i32`。
+- 纸面 API：**0**。8 题全部只调用已存在入口（`ArrayList` / `HashMap` / `HashSet` /
+  `Deque` / `DisjointSet` / `Utf8Builder` / `utf8.split` / `character_at` / `byte_at`）。
+- 预期阻断：`generate-parentheses`、`text-justification`、`print-words-vertically`
+  返回 `ArrayList<utf8>`，`number-of-islands-ii` 返回 `ArrayList<i64>`，按 G3 在 wasm JS glue
+  处阻断；其余 4 题返回 `i64`。
+
+| 题号 | slug | 入口 | 返回 | 考点 / 命中面 |
+| --- | --- | --- | --- | --- |
+| 42 | `trapping-rain-water` | `trap` | `i64` | 双指针 + 前后缀最大；纯数组 |
+| 22 | `generate-parentheses` | `generateParenthesis` | `ArrayList<utf8>` | 递归 + `utf8` 拼接 |
+| 68 | `text-justification` | `fullJustify` | `ArrayList<utf8>` | 贪心排版 + `Utf8Builder` |
+| 149 | `max-points-on-a-line` | `maxPoints` | `i64` | 斜率归一化；**G23 手写 gcd** |
+| 127 | `word-ladder` | `ladderLength` | `i64` | BFS + `HashSet` / `Deque`；**G12** |
+| 305 | `number-of-islands-ii` | `numIslands2` | `ArrayList<i64>` | 并查集；**G10** |
+| 312 | `burst-balloons` | `maxCoins` | `i64` | 区间 DP，二维表 |
+| 1324 | `print-words-vertically` | `printVertically` | `ArrayList<utf8>` | 逐列拼接；**G18** |
+
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致
+  （`height` / `n` / `words`+`maxWidth` / `points` / `beginWord`+`endWord`+`wordList` /
+  `m`+`n`+`positions` / `nums` / `s`）。
+- TS 参考解：8 题此前均为空文件，本批全部新写；按本轮口径**未实跑**。
+- 数据清洗（生成器产出的非法用例，随本批一并删除）：
+  - `text-justification`（68）：删 6 条。原 test 73 的 `words` 含空串（题面保证每个单词
+    长度 > 0）；原 test 12 / 48 / 93 / 100 / 101 存在单词长度 > `maxWidth`
+    （题面保证单词长度不超过 `maxWidth`），其 `expected` 直接给出超宽行，无合法答案。
+  - `print-words-vertically`（1324）：删 9 条。`s` 含连续空格或首尾空格
+    （题面保证单词间仅一个空格、无首尾空格），`expected` 按空白折叠计算，与题面模型不符。
+  - 其余 6 题无 `Error:` / `Execution timed out` 期望，未删用例。
+
 ## 批次 R15-2026-11-04（理想解滚动批次 15，8 题，写完未构建）
 
 - 范围：第二次压**已登记但未被解法验证**的缺口，优先撞 G25（`BitSet` 缺 `count` / `length` /
@@ -14,14 +59,15 @@
   `BTreeSet::insert` 约束未捕获 `<`）。不写纸面 API 当既成事实，不写内联比较器。
 - 构建 / 判题状态：**未验证**，全部 `authored-unverified`，本轮按口径**不编译、不跑**。
 - 新缺口：**1 条**，G27 = 排序稳定性不是可声明的属性（`sort.v` 的 `quick_sort` / `merge_sort`
-  签名相同，`Comparable` 不承载稳定性；单参入口若落到不稳定实现，并列键静默错序）。
+  签名相同，稳定性只由实现决定；定稿契约为 `sort` 默认稳定、`sort_unstable` 显式不稳定，
+  `quick_sort` / `merge_sort` 降为 `private`）。
   canonical 633 → 641。新增观察 11（G25 / G26 第二次撞面后仍无等价物）。
 - 命中面：`BitSet` ×2（1239 直接调用 `clone` ×2 + `count` ×1；847 作 `n * 2^n` 访问表，仅
   `get` / `set`）、自定义记录 `Comparable` ×5（1366 / 2191 / 1691 / 2251 / 1751）、
   `i64` 直接单参排序 ×1（1561）。
 - 传给排序的比较器数量：**0**（本批硬口径）。
 - 纸面 API 标注：1239 的 `BitSet::clone` / `count` 逐处标 `[待补 API]` 并指向 G25 提案签名；
-  其余 7 题只用现有入口 + G26 提案的单参排序（`order_items` 内 `merge_sort(items)`）。
+  其余 7 题只用现有入口 + G26 提案的单参排序（`order_items` 内 `sort(items)`，按 G27 默认稳定）。
 - 预期阻断：`sort-the-jumbled-numbers`、`number-of-flowers-in-full-bloom` 返回
   `ArrayList<i64>`，按 G3 在 wasm JS glue 处阻断；其余 6 题返回 `i64` / `utf8`。
 - 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致
@@ -33,8 +79,15 @@
     `expected` 为 `Execution timed out` 的用例（题面数据规模不应超时）。
   - `shortest-path-visiting-all-nodes`（847）：删 8 条非法用例（6 条
     `Error: list index out of range` + 2 条 `Execution timed out`；前者图规模超出 n <= 12 上界）。
-  - `rank-teams-by-votes`（1366）：删 6 条 `Error: list index out of range` 的用例
-    （队名不是单个大写字母，违反题面）。
+  - `rank-teams-by-votes`（1366）：删 6 条 `Error: list index out of range` 的用例。
+    逐条回查结论：**全部是平台非法用例，不是解法缺陷**——6 条都违反题面
+    「`votes[i].length == votes[j].length`」与「`1 <= votes[i].length <= 26`」，
+    其中 4 条还含重复字符（违反「All characters of votes[i] are unique」）。
+    逐条长度分布：5×4 + 51×10（`EARTHTONES` 内 `E` / `T` 重复）；23×4 + 1×6（`METE` 内 `E` 重复）；
+    3×26 + 1×27（27 字符含重复 `R`，且超过 26 个字母上限）；5×6 + 2×7 + 3×8；
+    3×12 + 3×13（`LJKJIHGFEDCBA` 重复 `J`）；1×25 + 9×26 + 2×27（27 字符含重复 `I`）。
+    解法按 `votes[0]` 取队名集，恰是题面「`votes[0]` 的字符在每票中都出现」的直接推论，
+    合法输入上不会越界，故不改解法，只删用例。
   - 删除后 87 / 63 / 73 条用例，剩余 `expected` 均为合法答案类型。
 
 | slug | 导出入口 | 返回类型 | 缺口 / 覆盖方向 |

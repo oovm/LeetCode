@@ -68,8 +68,11 @@ $n
   G26 = 自定义类型序关系无可用合同（`Comparable` 缺失 + 排序入口不按合同 + `BTreeSet` 约束不捕获
   `<`）；首次压「序关系属于类型」这面，见观察 10）。
 - 后续增量（2026-11-04，滚动批次 R15 后）：canonical 实测 **641**（R15 前 633；本批新编号 1 条，
-  G27 = 排序稳定性不是可声明的属性（无 `stable_sort` 入口，`Comparable` 合同不区分稳定/不稳定）；
+  G27 = 排序稳定性不是可声明的属性（`sort` / `sort_unstable` 入口缺失，`quick_sort` / `merge_sort`
+  同签名且稳定性只由实现决定）；
   本批继续撞 G25 / G26，见观察 11）。
+- 后续增量（2026-11-04，滚动批次 R16 后）：canonical 实测 **649**（R16 前 641；本批新编号 0 条，
+  按观察 11 避开 G26 / G27，只把 G10 / G12 / G18 / G23 压进真实题解）。
 
 ## 系统性问题（观察，非编号）
 
@@ -991,7 +994,7 @@ imply Interval: std::operator::Comparable {   # 提案：trait 不存在
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable              # 提案：约束不存在
 {
-    merge_sort(items)                         # 提案：单参入口不存在，现有入口要求 cmp
+    sort(items)                               # 提案：单参入口不存在，现有入口要求 cmp
 }
 ```
 
@@ -1016,32 +1019,41 @@ micro order_items<T>(items: ArrayList<T>): unit
   传比较器数量 **0**：
   - 自定义记录 ×5：1366（26 维名次向量 + 字母兜底）、2191（映射值）、1691（三维归一化字典序）、
     2251（花期按起点）、1751（事件按开始日）；
-  - `i64` 直接单参排序 ×1：1561（`order_items(piles)` 后 `merge_sort(items)`），是第 ② 条
+  - `i64` 直接单参排序 ×1：1561（`order_items(piles)` 后单参 `sort(items)`），是第 ② 条
     「无 `where T: Comparable` 单参入口」的最短复现。
   - 新证据：2191 依赖并列映射值保持原序，暴露出单参入口若落到 `quick_sort` 会静默错序，
     已另编 **G27**（稳定性不是可声明属性）。
   - 结论：G26 的三处（合同缺失 / 单参入口缺失 / `BTreeSet` 约束过宽）在本批仍全部成立；
     R14 的 694 之外，本批没有新的「自定义类型作有序容器键」调用点。
 
-### G27 排序稳定性不是可声明的属性（无 `stable_sort` 入口 / `Comparable` 不区分稳定与不稳定）
+### G27 排序稳定性不是可声明的属性（`sort` 默认稳定 / `sort_unstable` 显式不稳定）
 
-- 状态：未提供（**std 缺口**；2026-11-04 第 15 批静态核对 `sort.v` + 题 2191）
+- 状态：未提供（**std 缺口**；2026-11-04 第 15 批静态核对 `sort.v` + 题 2191，同日契约定稿）
 - 现象：`sort.v` 同时暴露 `quick_sort`（不稳定）与 `merge_sort`（稳定），两者签名相同，
-  都只接受调用方 `cmp`。`Comparable` 只描述偏序，不承载「并列键的相对次序必须保持」。
-  按 G26 提案落地的单参入口若不区分，调用方无法从签名层声明「我要稳定排序」。
-- 后果：`sort-the-jumbled-numbers`（2191）的并列映射值必须保持原下标次序；单参入口若实现为
-  `quick_sort`，结果是**静默错序**而非编译错误。题解只能赌「实现恰好是 `merge_sort`」，
-  这不是合同，是实现细节。
-- 期望签名（[提案]，源码尚不存在）：
+  都只接受调用方 `cmp`。稳定性没有写进入口名，调用方无法从签名判断，只能赌实现恰好选了哪个。
+  `Comparable` 只描述偏序，不承载「并列键的相对次序必须保持」。
+- 契约（定稿，走 Rust 方向，不采纳 C++ 方向）：
+  1. **`sort` 默认稳定**。稳定不是可选项，它就是 `sort` 的定义本身。
+  2. **`sort_unstable` 是唯一的显式不稳定入口**。调用方写它，等于声明「我知道并列键无所谓」。
+  3. **`quick_sort` / `merge_sort` 退成 `private` 实现细节**，不再作为公开契约。
+  4. **稳定性是入口属性，不是 `Comparable` 的属性**。`Comparable` 只管序，不管实现怎么排。
+  5. 不采纳 C++ 方向（`std::sort` 不稳定 + `stable_sort` 显式稳定）：错序是静默的，
+     安全的那一个必须是默认值，不能指望调用方记得传参。
+- 期望签名（[提案]，源码尚不存在；完整签名与 `where` 约束见
+  `valkyrie-sort-ordering-proposal.md`）：
 
 ```v
-micro stable_sort<T>(items: ArrayList<T>): unit where T: Equal & Comparable
-micro sort_unstable<T>(items: ArrayList<T>): unit where T: Equal & Comparable
+micro sort<T>(items: ArrayList<T>): unit where T: Equal & Comparable          # 默认稳定
+micro sort_unstable<T>(items: ArrayList<T>): unit where T: Equal & Comparable # 显式承担并列风险
 ```
 
-- 判定：**std 缺口**；修复应与 G26 同一笔完成——单参入口显式区分稳定 / 不稳定语义，
-  把稳定性写进入口名与文档，而不是留给实现。
+- 后果：`sort-the-jumbled-numbers`（2191）的并列映射值必须保持原下标次序。若单参入口落到
+  `quick_sort`，结果是**静默错序**而非编译错误；若调用方改用 `sort_unstable`，错序属于
+  调用方显式承担的风险。R14 / R15 题解里的 `order_items` 垫片已从 `merge_sort(items)`
+  改指向 `sort(items)`（2026-11-04 随本条契约统一改写），不再赌某个实现恰好稳定。
 - 影响题（1，批次 R15）：2191（并列映射值依赖稳定性）。
+- 判定：**std 缺口**；与 G26 同一笔修复——单参入口按 `sort` / `sort_unstable` 命名承载
+  稳定性语义，`quick_sort` / `merge_sort` 降为 `private`。
 - 与 G26 的关系：G26 解决「序属于类型」；本条解决「并列时谁先谁后属于入口语义」。
   只补 G26 不定本条，2191 仍有静默错序风险。
 
