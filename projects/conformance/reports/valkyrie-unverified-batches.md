@@ -1604,6 +1604,9 @@ V 侧复跑：在 `projects/conformance` 下执行 `node --import tsx scripts/ru
 | `number-of-zero-filled-subarrays` | 整数 / `ArrayList` 单遍扫描 | build=0 | **99/99 通过** |
 | `maximum-sum-score-of-array` | 前缀和 / 后缀和同步推进 | build=0 | **93/93 通过** |
 | `bag-of-tokens` | 双指针 + `sorted_by(i64)` | build=0 | **103/103 通过** |
+| `partition-array-for-maximum-sum` | 一维 DP（`ArrayList<i64>`） | build=0 | **104/104 通过** |
+| `uncrossed-lines` | 二维 DP（`ArrayList<ArrayList<i64>>` 嵌套下标读写） | build=0 | **106/106 通过** |
+| `pairs-of-songs-with-total-durations-divisible-by-60` | `HashMap<i32, i64>`（i32 键 + i32 相等/哈希） | build=0 | **89/89 通过** |
 
 - 编译器缺陷（新，归口 `nyar-vm.rs`）：`loop value in nums { total = total + value }` 对导出形参
   `ArrayList<i64>` 迭代了 5 次（同循环体改写 `HashMap.insert` 实测 5 个键，`seen.length()=5`），

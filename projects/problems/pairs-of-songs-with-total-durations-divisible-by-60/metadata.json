@@ -592,6 +592,7 @@
     ],
     "invoke": {
         "python": "Solution().numPairsDivisibleBy60",
-        "typescript": "Solution().numPairsDivisibleBy60"
+        "typescript": "Solution().numPairsDivisibleBy60",
+        "valkyrie": "numPairsDivisibleBy60"
     }
 }

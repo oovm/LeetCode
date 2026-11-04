@@ -762,6 +762,7 @@
     ],
     "invoke": {
         "python": "Solution().maxSumAfterPartitioning",
-        "typescript": "Solution().maxSumAfterPartitioning"
+        "typescript": "Solution().maxSumAfterPartitioning",
+        "valkyrie": "maxSumAfterPartitioning"
     }
 }
