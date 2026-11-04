@@ -806,6 +806,7 @@
     ],
     "invoke": {
         "python": "Solution().countWords",
-        "typescript": "Solution().countWords"
+        "typescript": "Solution().countWords",
+        "valkyrie": "countWords"
     }
 }

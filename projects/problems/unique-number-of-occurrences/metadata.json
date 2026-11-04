@@ -662,6 +662,7 @@
     ],
     "invoke": {
         "python": "Solution().uniqueOccurrences",
-        "typescript": "Solution().uniqueOccurrences"
+        "typescript": "Solution().uniqueOccurrences",
+        "valkyrie": "uniqueOccurrences"
     }
 }

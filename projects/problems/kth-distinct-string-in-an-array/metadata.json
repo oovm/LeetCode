@@ -1181,6 +1181,7 @@
     ],
     "invoke": {
         "python": "Solution().kthDistinct",
-        "typescript": "Solution().kthDistinct"
+        "typescript": "Solution().kthDistinct",
+        "valkyrie": "kthDistinct"
     }
 }
