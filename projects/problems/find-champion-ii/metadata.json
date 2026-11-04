@@ -588,6 +588,7 @@
     ],
     "invoke": {
         "python": "Solution().findChampion",
-        "typescript": "Solution().findChampion"
+        "typescript": "Solution().findChampion",
+        "valkyrie": "findChampion"
     }
 }

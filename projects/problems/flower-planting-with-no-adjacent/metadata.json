@@ -1384,6 +1384,7 @@
     ],
     "invoke": {
         "python": "Solution().gardenNoAdj",
-        "typescript": "Solution().gardenNoAdj"
+        "typescript": "Solution().gardenNoAdj",
+        "valkyrie": "gardenNoAdj"
     }
 }

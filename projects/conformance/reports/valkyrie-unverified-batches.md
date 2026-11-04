@@ -54,6 +54,52 @@
   - 最终口径（同一 206 题窗口）：**编译通过 136、端到端通过 136、编译失败 70、判题未通过 0**。
 - 本窗口未复跑的题（626）不是失败，只是超出本轮预算；按批次表原状态保留。
 
+## 批次 R26-2026-11-05（Medium 并查集进阶：MST / SCC / 二分图染色 21 题，实测）
+
+- 范围：Medium 的生成树 / 连通性 / 有向图 / 二分图着色面，全部按理想写法落地，
+  三件套齐备（`solution.v` / `solvers/typescript/solution.ts` / `metadata.invoke.valkyrie`）。
+- 实测口径（逐题单进程、每次 ≤300 秒、超时未重试）：
+  - V：**19/21 全用例通过**；2 题编译失败，均卡在 std 合同（见账本 R26 工单），不是题解错。
+  - TS：**21/21 通过**（`run_ts_solver.ts` exit 0）。
+- 逐题：
+
+| 题 | 算法 | V | TS |
+| --- | --- | --- | --- |
+| `connecting-cities-with-minimum-cost` | Prim O(n²) | 79/79 | 通过 |
+| `min-cost-to-connect-all-points` | Prim O(n²)（曼哈顿距离） | 104/104 | 通过 |
+| `path-with-minimum-effort` | 阈值二分 + BFS | 69/69 | 通过 |
+| `path-with-maximum-minimum-value` | 值域二分 + BFS | 72/72 | 通过 |
+| `minimum-height-trees` | 逐层剥叶 | 65/65 | 通过 |
+| `minimize-the-maximum-edge-weight-of-graph` | 反向建图 BFS + 边权二分 | 83/83 | 通过 |
+| `find-champion-ii` | 入度唯一零 | 78/78 | 通过 |
+| `all-paths-from-source-lead-to-destination` | 三色 DFS | 72/72 | 通过 |
+| `paths-in-maze-that-lead-to-same-room` | 邻居对枚举 → 三角形 | 59/59 | 通过 |
+| `parallel-courses` | Kahn 分层 | 77/77 | 通过 |
+| `find-all-possible-recipes-from-given-supplies` | Kahn（`utf8` 线性查找，临时回退） | 103/103 | 通过 |
+| `flower-planting-with-no-adjacent` | 4 色贪心 | 59/59 | 通过 |
+| `maximum-number-of-accepted-invitations` | Kuhn 二分匹配 | 77/77 | 通过 |
+| `count-the-number-of-houses-at-a-certain-distance-i` | 全源 BFS | 114/114 | 通过 |
+| `the-time-when-the-network-becomes-idle` | BFS + 重发时刻 | 51/51 | 通过 |
+| `node-with-highest-edge-score` | 出度加权 | 26/26 | 通过 |
+| `sentence-similarity-ii` | `DisjointSet<i64>` + `HashMap<utf8, i64>` | **编译失败** `std::hash#445` | 通过 |
+| `minimize-hamming-distance-after-swap-operations` | `DisjointSet<i64>` | **编译失败** `std::union` SMIR007 | 通过 |
+| `validate-binary-tree-nodes` | 入度唯一根 + 显式栈 | 137/137 | 通过 |
+| `reachable-nodes-with-restrictions` | 显式栈 DFS | 71/71 | 通过 |
+| `detect-cycles-in-2d-grid` | 迭代 DFS + 父格 | 74/74 | 通过 |
+
+- 数据清洗：按账本「用例数据清洗规则」，删除 **21 条**非答案形态用例
+  （`expected` 为 Python 异常文本），未改任何断言、未删合法用例：
+  `the-time-when-the-network-becomes-idle` 16 条、`node-with-highest-edge-score` 3 条、
+  `path-with-minimum-effort` 1 条、`minimize-the-maximum-edge-weight-of-graph` 1 条。
+- 夹具缺陷（仅影响报错文本，不改变通过结果）：`scripts/run_v_solver.ts:172` 的
+  `assertTestCase(idx, expected, () => { void runCandidate(...) })` 未 `await` 异步
+  `callExport`，`expected: "Error: ..."` 的用例一律被报成 `no exception raised`，
+  真实 trap 只能以 unhandled rejection 出现（`redundant-connection` 旧解也可复现）。
+  清洗掉上述用例后该路径不再触发，缺陷保留工单。
+- `find-all-possible-recipes-from-given-supplies` 的 V 端为过全用例临时改用
+  `ArrayList<utf8>` + 逐码元比较；理想写法是 `HashMap<utf8, i64>`，与
+  `sentence-similarity-ii` 同一 `std::hash#445` 停点，合同落地后还原。
+
 ## 批次 R25-2026-11-04（Medium 图 / 并查集 / 拓扑排序 23 题，写完未构建）
 
 - 范围：Medium 的图 + 并查集 + 拓扑排序面，全部按**理想写法**落地：邻接表

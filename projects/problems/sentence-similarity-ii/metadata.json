@@ -1141,6 +1141,7 @@
     ],
     "invoke": {
         "python": "Solution().areSentencesSimilarTwo",
-        "typescript": "Solution().areSentencesSimilarTwo"
+        "typescript": "Solution().areSentencesSimilarTwo",
+        "valkyrie": "areSentencesSimilarTwo"
     }
 }

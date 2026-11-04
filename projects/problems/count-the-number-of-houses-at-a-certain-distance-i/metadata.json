@@ -1169,6 +1169,7 @@
     ],
     "invoke": {
         "python": "Solution().countOfPairs",
-        "typescript": "Solution().countOfPairs"
+        "typescript": "Solution().countOfPairs",
+        "valkyrie": "countOfPairs"
     }
 }

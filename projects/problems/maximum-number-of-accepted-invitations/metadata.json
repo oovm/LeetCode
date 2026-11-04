@@ -692,6 +692,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumInvitations",
-        "typescript": "Solution().maximumInvitations"
+        "typescript": "Solution().maximumInvitations",
+        "valkyrie": "maximumInvitations"
     }
 }

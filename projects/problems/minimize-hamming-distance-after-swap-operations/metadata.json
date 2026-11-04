@@ -770,6 +770,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumHammingDistance",
-        "typescript": "Solution().minimumHammingDistance"
+        "typescript": "Solution().minimumHammingDistance",
+        "valkyrie": "minimumHammingDistance"
     }
 }

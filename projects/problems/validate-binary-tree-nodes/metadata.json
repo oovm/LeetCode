@@ -1103,6 +1103,7 @@
     ],
     "invoke": {
         "python": "Solution().validateBinaryTreeNodes",
-        "typescript": "Solution().validateBinaryTreeNodes"
+        "typescript": "Solution().validateBinaryTreeNodes",
+        "valkyrie": "validateBinaryTreeNodes"
     }
 }

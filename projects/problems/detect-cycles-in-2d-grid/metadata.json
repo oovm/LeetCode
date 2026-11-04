@@ -752,6 +752,7 @@
     ],
     "invoke": {
         "python": "Solution().containsCycle",
-        "typescript": "Solution().containsCycle"
+        "typescript": "Solution().containsCycle",
+        "valkyrie": "containsCycle"
     }
 }

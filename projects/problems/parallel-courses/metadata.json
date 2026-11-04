@@ -905,6 +905,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumSemesters",
-        "typescript": "Solution().minimumSemesters"
+        "typescript": "Solution().minimumSemesters",
+        "valkyrie": "minimumSemesters"
     }
 }

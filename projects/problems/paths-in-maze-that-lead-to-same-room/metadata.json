@@ -1751,6 +1751,7 @@
     ],
     "invoke": {
         "python": "Solution().numberOfPaths",
-        "typescript": "Solution().numberOfPaths"
+        "typescript": "Solution().numberOfPaths",
+        "valkyrie": "numberOfPaths"
     }
 }

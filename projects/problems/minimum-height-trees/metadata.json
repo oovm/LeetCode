@@ -734,6 +734,7 @@
     ],
     "invoke": {
         "python": "Solution().findMinHeightTrees",
-        "typescript": "Solution().findMinHeightTrees"
+        "typescript": "Solution().findMinHeightTrees",
+        "valkyrie": "findMinHeightTrees"
     }
 }

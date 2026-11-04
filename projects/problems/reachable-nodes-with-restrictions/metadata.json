@@ -1289,6 +1289,7 @@
     ],
     "invoke": {
         "python": "Solution().reachableNodes",
-        "typescript": "Solution().reachableNodes"
+        "typescript": "Solution().reachableNodes",
+        "valkyrie": "reachableNodes"
     }
 }

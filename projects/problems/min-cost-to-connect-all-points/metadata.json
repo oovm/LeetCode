@@ -1146,6 +1146,7 @@
     ],
     "invoke": {
         "python": "Solution().minCostConnectPoints",
-        "typescript": "Solution().minCostConnectPoints"
+        "typescript": "Solution().minCostConnectPoints",
+        "valkyrie": "minCostConnectPoints"
     }
 }

@@ -668,6 +668,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumMinimumPath",
-        "typescript": "Solution().maximumMinimumPath"
+        "typescript": "Solution().maximumMinimumPath",
+        "valkyrie": "maximumMinimumPath"
     }
 }

@@ -349,6 +349,31 @@ $n
 | `ArrayList::length` | `micro length(self): usize` | 有 | 全部 23 题 |
 | 浮点返回值 | `micro maxProbability(n: i64, edges: ArrayList<ArrayList<i64>>, succProb: ArrayList<f64>, start_node: i64, end_node: i64) -> f64` | 签名已写，合同归 G2 | 1514 |
 
+### 工单（R26 压面结果：`DisjointSet` 的 `union` 与 `utf8` 哈希，2026-11-05 实测）
+
+本批 21 题实测暴露两个**编译期硬停点**：std 里签名和实现都在，但当前工具链拒绝生成代码。
+两者都不改变 206 题窗口的旧口径（136/136/70/0），只影响本批新题。
+
+| 停点 | 影响 | 首错原文（节选） | 判定 |
+| --- | --- | --- | --- |
+| `DisjointSet<T>::union` 跳转类型不符 | 所有并查集题 | `(SMIR007): function=std::union#210, location=block 8 terminator, actual=Nominal{ItemId(48),[Integer32{unsigned}]}, expected=Nominal{ItemId(48),[Integer64{signed}]}` | 编译器 MIR 缺陷：`std::union` 内部把 `u32` 下标喂给 `i64` 块参数。签名完整、`i64: Comparable` 不相关 |
+| `HashMap<utf8, V>` 键 | 所有字符串哈希题 | `调用实例 ItemInstanceId(4) 没有定义或显式导入合同；callers=["std::hash#445"]` | `utf8: Hash` 合同缺失；`HashMap<utf8, i64>` 的 `==` 另会落到 `std::infix ==#449`（缺 `__u8_eq`） |
+
+- 交叉验证（不是本批写法问题）：此前已通过的 `redundant-connection`、
+  `most-stones-removed-with-same-row-or-column`、`number-of-operations-to-make-network-connected`
+  现在同样停在 `std::union`；`is-graph-bipartite` 的 `DirectedGraph::nodes()` 另停在
+  `HashSet::from_list` 的 `list.iter` 未解析。三项均属工具链刷新后的回归，建议并入
+  `InstanceNotClosed` 那条线的证据。
+- `sentence-similarity-ii`：`DisjointSet<i64>` + `HashMap<utf8, i64>`，先被 `std::hash#445`
+  拦住，未到达 `std::union`。
+- `find-all-possible-recipes-from-given-supplies`：为过全用例临时回退到
+  `ArrayList<utf8>` + 逐码元比较（非理想写法），待 `utf8: Hash` / `__u8_eq` 落地后还原
+  `HashMap<utf8, i64>`。
+- 夹具缺陷（报错文本层）：`scripts/run_v_solver.ts:172` 用
+  `assertTestCase(idx, expected, () => { void runCandidate(...) })`，未 `await` 异步
+  `callExport`，`expected: "Error: ..."` 的用例恒报 `no exception raised`，真实 trap 以
+  unhandled rejection 逸出。结果判定不受影响，属可修夹具 bug（本批未动）。
+
 ### 依赖未实现特性的调用点（R24）
 
 - `BinaryHeap<T>::new_by(compare)`（**提案，std 无此入口**）：`BinaryHeap` 只有 `new()`

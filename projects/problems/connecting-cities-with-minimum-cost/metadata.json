@@ -1074,6 +1074,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumCost",
-        "typescript": "Solution().minimumCost"
+        "typescript": "Solution().minimumCost",
+        "valkyrie": "minimumCost"
     }
 }

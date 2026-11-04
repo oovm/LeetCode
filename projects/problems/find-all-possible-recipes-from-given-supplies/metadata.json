@@ -857,6 +857,7 @@
     ],
     "invoke": {
         "python": "Solution().findAllRecipes",
-        "typescript": "Solution().findAllRecipes"
+        "typescript": "Solution().findAllRecipes",
+        "valkyrie": "findAllRecipes"
     }
 }
