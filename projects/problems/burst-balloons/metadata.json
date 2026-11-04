@@ -624,6 +624,7 @@
     ],
     "invoke": {
         "python": "Solution().maxCoins",
-        "typescript": "Solution().maxCoins"
+        "typescript": "Solution().maxCoins",
+        "valkyrie": "maxCoins"
     }
 }

@@ -373,6 +373,7 @@
     ],
     "invoke": {
         "python": "Solution().ladderLength",
-        "typescript": "Solution().ladderLength"
+        "typescript": "Solution().ladderLength",
+        "valkyrie": "ladderLength"
     }
 }

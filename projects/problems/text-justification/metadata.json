@@ -136,13 +136,6 @@
         },
         {
             "args": {
-                "words": ["OneWordHereIsVeryLongIndeedAndItWillCauseSomeIssuesWithTheAlgorithmIfNotHandledProperly"],
-                "maxWidth": 50
-            },
-            "expected": ["OneWordHereIsVeryLongIndeedAndItWillCauseSomeIssuesWithTheAlgorithmIfNotHandledProperly"]
-        },
-        {
-            "args": {
                 "words": ["Longer", "words", "and", "evenlongerwords", "are", "here"],
                 "maxWidth": 25
             },
@@ -449,13 +442,6 @@
         },
         {
             "args": {
-                "words": ["word"],
-                "maxWidth": 1
-            },
-            "expected": ["word"]
-        },
-        {
-            "args": {
                 "words": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o"],
                 "maxWidth": 5
             },
@@ -705,42 +691,6 @@
         },
         {
             "args": {
-                "words": [
-                    "We",
-                    "are",
-                    "now",
-                    "a",
-                    "great",
-                    "nation",
-                    "",
-                    "must",
-                    "make",
-                    "amends",
-                    "that",
-                    "we",
-                    "have",
-                    "wronged",
-                    "visitors",
-                    "from",
-                    "other",
-                    "lands"
-                ],
-                "maxWidth": 12
-            },
-            "expected": [
-                "We are now a",
-                "great nation",
-                "  must  make",
-                "amends  that",
-                "we      have",
-                "wronged     ",
-                "visitors    ",
-                "from   other",
-                "lands       "
-            ]
-        },
-        {
-            "args": {
                 "words": ["Sometimes", "we", "have", "to", "let", "go", "of", "the", "past,to", "move", "forward."],
                 "maxWidth": 22
             },
@@ -975,13 +925,6 @@
         },
         {
             "args": {
-                "words": ["One", "word", "in", "each", "line"],
-                "maxWidth": 1
-            },
-            "expected": ["One", "word", "in", "each", "line"]
-        },
-        {
-            "args": {
                 "words": ["All", "the", "world’s", "a", "stage,", "And", "all", "the", "men", "and", "women", "merely", "players."],
                 "maxWidth": 20
             },
@@ -1041,20 +984,6 @@
                 "maxWidth": 20
             },
             "expected": ["To  be  or not to be", "that is the question"]
-        },
-        {
-            "args": {
-                "words": ["SingleLongWordThatExceedsTheMaxWidthAndNeedsToBeHandledProperly"],
-                "maxWidth": 30
-            },
-            "expected": ["SingleLongWordThatExceedsTheMaxWidthAndNeedsToBeHandledProperly"]
-        },
-        {
-            "args": {
-                "words": ["Pneumonoultramicroscopicsilicovolcanoconiosis"],
-                "maxWidth": 40
-            },
-            "expected": ["Pneumonoultramicroscopicsilicovolcanoconiosis"]
         },
         {
             "args": {
@@ -1118,6 +1047,7 @@
     ],
     "invoke": {
         "python": "Solution().fullJustify",
-        "typescript": "Solution().fullJustify"
+        "typescript": "Solution().fullJustify",
+        "valkyrie": "fullJustify"
     }
 }

@@ -777,6 +777,7 @@
         "python": "Solution().trap",
         "typescript": "Solution().trap",
         "wolframSxo": "trap",
-        "matlabSxo": "trap"
+        "matlabSxo": "trap",
+        "valkyrie": "trap"
     }
 }

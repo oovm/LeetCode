@@ -2109,6 +2109,7 @@
         "python": "Solution().generateParenthesis",
         "typescript": "Solution().generateParenthesis",
         "wolframSxo": "generateParenthesis",
-        "matlabSxo": "generateParenthesis"
+        "matlabSxo": "generateParenthesis",
+        "valkyrie": "generateParenthesis"
     }
 }

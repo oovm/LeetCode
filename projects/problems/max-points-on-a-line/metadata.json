@@ -1064,6 +1064,7 @@
     ],
     "invoke": {
         "python": "Solution().maxPoints",
-        "typescript": "Solution().maxPoints"
+        "typescript": "Solution().maxPoints",
+        "valkyrie": "maxPoints"
     }
 }
