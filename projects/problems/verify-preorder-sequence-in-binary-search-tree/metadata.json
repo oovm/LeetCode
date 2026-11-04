@@ -617,6 +617,7 @@
     ],
     "invoke": {
         "python": "Solution().verifyPreorder",
-        "typescript": "Solution().verifyPreorder"
+        "typescript": "Solution().verifyPreorder",
+        "valkyrie": "verifyPreorder"
     }
 }

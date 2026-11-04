@@ -1965,6 +1965,7 @@
     ],
     "invoke": {
         "python": "Solution().reconstructQueue",
-        "typescript": "Solution().reconstructQueue"
+        "typescript": "Solution().reconstructQueue",
+        "valkyrie": "reconstructQueue"
     }
 }
