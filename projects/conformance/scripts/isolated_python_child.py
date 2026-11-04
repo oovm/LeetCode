@@ -7,6 +7,7 @@ Python `int` 任意精度天然保真；判题/断言全部在父进程完成，
 """
 from __future__ import annotations
 
+import copy
 import json
 import sys
 import time
@@ -14,6 +15,8 @@ from pathlib import Path
 from typing import Any, Callable
 
 sys.set_int_max_str_digits(200000)
+
+from python_design_sequence import invoke_case  # noqa: E402
 
 _MAX_SAFE = 9007199254740991
 
@@ -75,24 +78,30 @@ def _run(candidate: Callable[..., Any], message: dict[str, Any]) -> dict[str, An
     warmup = int(message["warmup"])
     iterations = int(message["iterations"])
 
-    def loop_all() -> None:
-        for entry in decoded:
-            candidate(**entry["args"])
+    # 题解可能原地修改实参（排序/去重/旋转），每轮与收集都必须用独立深拷贝，
+    # 否则计时轮污染收集轮输入，会把正确解法误判成答案错。克隆在计时窗口外完成。
+    def fresh_round() -> list[dict[str, Any]]:
+        return [copy.deepcopy(entry["args"]) for entry in decoded]
+
+    def loop_all(inputs: list[dict[str, Any]]) -> None:
+        for args in inputs:
+            invoke_case(candidate, args)
 
     for _ in range(warmup):
-        loop_all()
+        loop_all(fresh_round())
 
     samples: list[float] = []
     for _ in range(iterations):
+        inputs = fresh_round()
         start = time.perf_counter()
-        loop_all()
+        loop_all(inputs)
         samples.append((time.perf_counter() - start) * 1000.0)
 
     collect_start = time.perf_counter()
     results: list[dict[str, Any]] = []
     for entry in decoded:
         try:
-            value = candidate(**entry["args"])
+            value = invoke_case(candidate, copy.deepcopy(entry["args"]))
             results.append({"index": entry["index"], "ok": True, "value": _encode_value(value)})
         except Exception as exc:  # noqa: BLE001
             results.append({"index": entry["index"], "ok": False, "error": str(exc)})

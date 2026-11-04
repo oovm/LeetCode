@@ -33,19 +33,23 @@ function compareWithBigint(actual: unknown, expected: unknown): boolean {
     return JSON.stringify(actual) === JSON.stringify(expected);
 }
 
-/** metadata 中 `expected: "Error: ..."` 表示应抛出异常且消息匹配。 */
-export function assertTestCase(index: number, expected: unknown, run: () => unknown): void {
+/**
+ * metadata 中 `expected: "Error: ..."` 表示应抛出异常且消息匹配。
+ * `label` 覆盖报错前缀：操作序列的每步用 `tests[i].step[j] (op)`，便于定位到步。
+ */
+export function assertTestCase(index: number, expected: unknown, run: () => unknown, label?: string): void {
+    const prefix = label ?? `tests[${index}]`;
     if (typeof expected === 'string' && expected.startsWith('Error:')) {
         try {
             run();
         } catch (err) {
             const actual = err instanceof Error ? `Error: ${err.message}` : `Error: ${String(err)}`;
             if (actual !== expected) {
-                throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+                throw new Error(`${prefix}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
             }
             return;
         }
-        throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, no exception raised`);
+        throw new Error(`${prefix}: expected ${JSON.stringify(expected)}, no exception raised`);
     }
     const actual = normalizeTsTestResult(run());
     const normalized = normalizeTsTestResult(expected);
@@ -58,7 +62,7 @@ export function assertTestCase(index: number, expected: unknown, run: () => unkn
             return;
         }
         if (cmp === false) {
-            throw new Error(`tests[${index}]: expected ${JSON.stringify(normalized)}, got ${String(actual)}`);
+            throw new Error(`${prefix}: expected ${JSON.stringify(normalized)}, got ${String(actual)}`);
         }
     }
     // `bigint` 实际值（大整数解经 `BigInt` 通道返回）按精确十进制文本深比较，
@@ -67,10 +71,10 @@ export function assertTestCase(index: number, expected: unknown, run: () => unkn
         if (compareWithBigint(actual, normalized)) {
             return;
         }
-        throw new Error(`tests[${index}]: expected ${JSON.stringify(normalized)}, got ${String(actual)}`);
+        throw new Error(`${prefix}: expected ${JSON.stringify(normalized)}, got ${String(actual)}`);
     }
     if (JSON.stringify(actual) !== JSON.stringify(normalized)) {
-        throw new Error(`tests[${index}]: expected ${JSON.stringify(normalized)}, got ${JSON.stringify(actual)}`);
+        throw new Error(`${prefix}: expected ${JSON.stringify(normalized)}, got ${JSON.stringify(actual)}`);
     }
 }
 

@@ -4,10 +4,9 @@
  */
 import { pathToFileURL } from 'node:url';
 
-import { assertTestCase } from '../../domain/assert.ts';
-import { coerceIntegerArgs, inferIntegerArgKeys } from '../../domain/integer-args.ts';
+import { inferIntegerArgKeys } from '../../domain/integer-args.ts';
 import { loadProblemMetadata, requireInvoke } from '../../domain/metadata.ts';
-import { makeTsCandidate, tsSolverPath } from '../typescript-node/ref.ts';
+import { assertTsCase, makeTsCandidate, tsSolverPath } from '../typescript-node/ref.ts';
 
 function median(values: number[]): number {
     if (!values.length) {
@@ -33,7 +32,7 @@ export async function runBunSolverOnce(problemRoot: string): Promise<void> {
     const { tests, candidate } = await loadTsCandidate(problemRoot);
     const integerKeys = inferIntegerArgKeys(tests);
     for (const [index, case_] of tests.entries()) {
-        assertTestCase(index, case_.expected, () => candidate(coerceIntegerArgs(case_.args, integerKeys)));
+        assertTsCase(index, case_, candidate, integerKeys);
     }
 }
 
@@ -43,7 +42,7 @@ export async function benchBunSolverInProcess(problemRoot: string, iterations: n
 
     const runAll = () => {
         for (const [index, case_] of tests.entries()) {
-            assertTestCase(index, case_.expected, () => candidate(coerceIntegerArgs(case_.args, integerKeys)));
+            assertTsCase(index, case_, candidate, integerKeys);
         }
     };
 

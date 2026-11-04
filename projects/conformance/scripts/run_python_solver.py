@@ -2,12 +2,15 @@
 """加载 solvers/python/solution.py 并执行 metadata.tests。"""
 from __future__ import annotations
 
+import copy
 import json
 import re
 import sys
 import time
 from pathlib import Path
 from typing import Any, Callable
+
+from python_design_sequence import invoke_case, is_operation_sequence_args, operation_step_path
 
 # 十进制字符串还原走原生 int（任意精度）：放开默认 4300 位上限，
 # 覆盖大整数答案（如 4500 位数字串）的精确解析。
@@ -124,6 +127,21 @@ def resolve_candidate(entry_point: str, namespace: dict[str, Any]) -> Callable[.
     return namespace[expr]
 
 
+def _assert_operation_sequence(index: int, operations: list[str], expected: Any, actual: Any) -> None:
+    path = operation_step_path(index, 0, operations[0])
+    if not isinstance(expected, list) or len(expected) != len(operations):
+        raise ValueError(f"{path}: expected 必须与 operations 等长（{len(operations)}）")
+    if not isinstance(actual, list):
+        raise AssertionError(f"{path}: 解法未返回操作序列结果（收到 {type(actual).__name__}）")
+    if len(actual) != len(expected):
+        raise AssertionError(f"{path}: 期望 {len(expected)} 个返回值，实际 {len(actual)} 个")
+    for step, operation in enumerate(operations):
+        if not _compare(actual[step], expected[step]):
+            raise AssertionError(
+                f"{operation_step_path(index, step, operation)}: expected {expected[step]!r}, got {actual[step]!r}",
+            )
+
+
 def run_check(candidate: Callable[..., Any], tests: list[dict[str, Any]]) -> None:
     int_keys = _infer_int_keys(tests)
     for index, case in enumerate(tests):
@@ -131,11 +149,13 @@ def run_check(candidate: Callable[..., Any], tests: list[dict[str, Any]]) -> Non
         if not isinstance(args, dict):
             raise ValueError(f"tests[{index}].args 必须是 object")
         expected = case["expected"]
+        # 题解可能原地修改实参；每轮执行都从原始用例的深拷贝开始，避免 bench 重复轮污染。
+        args = copy.deepcopy(args)
         coerced_args = {
             key: _coerce_int_args(value) if key in int_keys else value for key, value in args.items()
         }
         try:
-            actual = candidate(**coerced_args)
+            actual = invoke_case(candidate, coerced_args)
         except Exception as exc:  # noqa: BLE001
             if isinstance(expected, str) and expected.startswith("Error:"):
                 actual_err = f"Error: {exc}"
@@ -144,12 +164,16 @@ def run_check(candidate: Callable[..., Any], tests: list[dict[str, Any]]) -> Non
                 raise AssertionError(
                     f"tests[{index}]: expected {expected!r}, got {actual_err!r}, args={args!r}",
                 ) from exc
+            if is_operation_sequence_args(coerced_args):
+                raise AssertionError(f"tests[{index}]: 解法抛错 {exc}") from exc
             raise
         if isinstance(expected, str) and expected.startswith("Error:"):
             raise AssertionError(
                 f"tests[{index}]: expected {expected!r}, no exception raised, args={args!r}",
             )
-        if not _compare(actual, expected):
+        if is_operation_sequence_args(coerced_args):
+            _assert_operation_sequence(index, coerced_args["operations"], expected, actual)
+        elif not _compare(actual, expected):
             raise AssertionError(f"tests[{index}]: expected {expected!r}, got {actual!r}, args={args!r}")
 
 

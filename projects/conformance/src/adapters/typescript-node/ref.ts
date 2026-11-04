@@ -9,6 +9,13 @@ import { problemDir } from '../../catalog/index.ts';
 import { assertTestCase, normalizeTsTestResult } from '../../domain/assert.ts';
 import { coerceIntegerArgs as coerceTsArgs, inferIntegerArgKeys } from '../../domain/integer-args.ts';
 import { loadProblemMetadata, requireInvoke } from '../../domain/metadata.ts';
+import {
+    assertOperationSequence,
+    isOperationSequenceArgs,
+    isOperationSequenceCase,
+    runOperationSequence,
+} from '../../domain/operation-sequence.ts';
+import type { TestCase } from '../../domain/problem.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 
 export { assertTestCase, coerceTsArgs, inferIntegerArgKeys, normalizeTsTestResult };
@@ -65,9 +72,25 @@ export function makeTsCandidate(entryPoint: string, mod: Record<string, unknown>
     }
     const exported = mod[expr];
     if (typeof exported === 'function') {
-        return (args) => exported(...Object.values(args));
+        return (args) => {
+            if (isOperationSequenceArgs(args)) {
+                return runOperationSequence(expr, exported as new (...values: unknown[]) => Record<string, unknown>, args);
+            }
+            return exported(...Object.values(args));
+        };
     }
     throw new Error(`??????? typescript entry: ${expr}`);
+}
+
+/** 单调用用例外层直接断言；设计类用例按构造 + 逐操作逐步断言。 */
+export function assertTsCase(index: number, case_: TestCase, candidate: (args: Record<string, unknown>) => unknown, integerKeys: ReadonlySet<string>): void {
+    if (isOperationSequenceCase(case_)) {
+        const args = case_.args as unknown as Record<string, unknown>;
+        const actual = candidate(coerceTsArgs(args, integerKeys));
+        assertOperationSequence(index, case_.args, case_.expected, actual);
+        return;
+    }
+    assertTestCase(index, case_.expected, () => candidate(coerceTsArgs(case_.args, integerKeys)));
 }
 
 async function loadTsCandidate(problemRoot: string) {
@@ -83,7 +106,7 @@ export async function runTsSolverOnce(problemRoot: string, _problemId?: string):
     const { tests, candidate } = await loadTsCandidate(problemRoot);
     const integerKeys = inferIntegerArgKeys(tests);
     for (const [index, case_] of tests.entries()) {
-        assertTestCase(index, case_.expected, () => candidate(coerceTsArgs(case_.args, integerKeys)));
+        assertTsCase(index, case_, candidate, integerKeys);
     }
 }
 
@@ -96,7 +119,7 @@ export async function benchTsSolverInProcess(problemRoot: string, iterations: nu
 
     const runAll = () => {
         for (const [index, case_] of tests.entries()) {
-            assertTestCase(index, case_.expected, () => candidate(coerceTsArgs(case_.args, integerKeys)));
+            assertTsCase(index, case_, candidate, integerKeys);
         }
     };
 

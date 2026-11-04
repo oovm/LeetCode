@@ -3,8 +3,11 @@
  *
  * 与 `adapters/typescript-node/ref.ts` 的 `makeTsCandidate` 同语义：
  * `Solution().twoSum` 形态实例化 `export class Solution` 并取方法；裸名形态取导出函数。
+ * 设计类题目的裸名是 `export class`（如 `LRUCache`）：识别到操作序列实参时按
+ * "构造一次 + 逐操作调用"执行，绝不把类当函数调用。
  * 单独成模块是为了让子进程脚本不依赖 `@nyar/valkyrie` 等重依赖（Bun 进程同样直载本文件）。
  */
+import { isOperationSequenceArgs, runOperationSequence } from '../domain/operation-sequence.ts';
 
 export type Candidate = (args: Record<string, unknown>) => unknown;
 
@@ -29,7 +32,12 @@ export function makeCandidate(entryPoint: string, mod: Record<string, unknown>):
     }
     const exported = mod[expr];
     if (typeof exported === 'function') {
-        return (args) => exported(...Object.values(args));
+        return (args) => {
+            if (isOperationSequenceArgs(args)) {
+                return runOperationSequence(expr, exported as new (...values: unknown[]) => Record<string, unknown>, args);
+            }
+            return exported(...Object.values(args));
+        };
     }
     throw new Error(`不支持的 typescript entry: ${expr}`);
 }

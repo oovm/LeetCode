@@ -15,6 +15,12 @@ import { bunExecutable } from '../adapters/typescript-bun/bridge.ts';
 import { assertTestCase, normalizeTsTestResult } from '../domain/assert.ts';
 import { coerceIntegerArgs, inferIntegerArgKeys } from '../domain/integer-args.ts';
 import { compareIntegerResult } from '../domain/integer-literal.ts';
+import {
+    assertOperationSequence,
+    isOperationSequenceCase,
+    operationSequenceUnsupportedReason,
+    type OperationSequenceCase,
+} from '../domain/operation-sequence.ts';
 import { CONFORMANCE_ROOT } from '../domain/paths.ts';
 import { partitionCases, validateCasesModule, type ProblemCase } from './cases.ts';
 import {
@@ -361,7 +367,13 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
             const entry = partitioned.executable[outcome.index]!;
             const expectedRaw = normalizeTsTestResult(entry.expected);
             try {
-                if (options.lane === 'valkyrie-wasm') {
+                const operationCase = isOperationSequenceCase(entry) ? (entry as OperationSequenceCase) : null;
+                if (operationCase !== null) {
+                    if (options.lane.startsWith('valkyrie')) {
+                        throw new Error(operationSequenceUnsupportedReason(options.lane));
+                    }
+                    assertScriptOperationOutcome(outcome, operationCase);
+                } else if (options.lane === 'valkyrie-wasm') {
                     assertValkyrieOutcome(outcome, expectedRaw, returnsAbi);
                 } else if (options.lane.startsWith('valkyrie')) {
                     assertNumericTextOutcome(outcome, expectedRaw);
@@ -435,6 +447,15 @@ function assertScriptOutcome(outcome: CaseOutcome, expected: unknown): void {
     }
     const value = decodeValue(outcome.value, `tests[${outcome.index}].result`);
     assertTestCase(outcome.index, expected, () => value);
+}
+
+/** TS/Python lane 的设计类用例：实例已由子进程构造并按操作序列逐步调用，这里逐步断言。 */
+function assertScriptOperationOutcome(outcome: CaseOutcome, operationCase: OperationSequenceCase): void {
+    if (!outcome.ok) {
+        throw new Error(`tests[${outcome.index}]: 解法抛错 ${outcome.error}`);
+    }
+    const value = decodeValue(outcome.value, `tests[${outcome.index}].result`);
+    assertOperationSequence(outcome.index, operationCase.args, operationCase.expected, value);
 }
 
 /** valkyrie lane（wasm）：按 ABI 返回类型把期望值同样规整为十进制文本后结构比较（对齐 `run_v_solver.ts`）。 */

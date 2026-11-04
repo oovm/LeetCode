@@ -1,0 +1,23 @@
+{
+    "id": "design-counter",
+    "questionId": 0,
+    "difficulty": "easy",
+    "tags": ["fixture"],
+    "tests": [
+        {
+            "args": {
+                "operations": ["Counter", "inc", "add", "get"],
+                "arguments": [[], [], [2], []]
+            },
+            "expected": [null, null, null, 3]
+        },
+        {
+            "args": {
+                "operations": ["Counter", "add", "get", "reset", "get"],
+                "arguments": [[5], [2], [], [], []]
+            },
+            "expected": [null, null, 7, null, 0]
+        }
+    ],
+    "invoke": { "typescript": "Counter", "python": "Counter" }
+}

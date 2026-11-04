@@ -14,6 +14,7 @@ import {
     type SolverCaseStats,
 } from '../src/adapters/shared/solver-case-stats.ts';
 import {
+    matchWasmExportSymbol,
     type AbiExport,
     type LibraryInvokeSchema,
     loadLibraryInvokeSchema,
@@ -30,6 +31,7 @@ import {
 } from '../src/adapters/valkyrie-node/ref.ts';
 import { valkyrieProjectDir } from '../src/catalog/index.ts';
 import { assertRejectsTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
+import { isOperationSequenceCase, operationSequenceUnsupportedReason } from '../src/domain/operation-sequence.ts';
 import { normalizeResultByAbiType, preserveI64Precision } from '../src/isolated/v-shared.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
 
@@ -52,16 +54,17 @@ type AbiLookup = {
  * entry 形如 `Solution().twoSum`，先剥出 export symbol 再查 schema.exports。
  */
 function lookupAbiExport(schema: LibraryInvokeSchema, entry: string): AbiLookup {
-    const exportSymbol = resolveWasmExportSymbol(entry);
-    const exportSchema = schema.exports[exportSymbol];
-    if (!exportSchema) {
-        const available = Object.keys(schema.exports);
+    const expected = resolveWasmExportSymbol(entry);
+    const available = Object.keys(schema.exports);
+    const match = matchWasmExportSymbol(expected, available);
+    const exportSchema = match ? schema.exports[match.symbol] : undefined;
+    if (!match || !exportSchema) {
         throw new Error(
-            `ABI schema 里找不到 export "${exportSymbol}"（来自 entry "${entry}"）。` +
+            `ABI schema 里找不到 export "${expected}"（来自 entry "${entry}"）。` +
                 `schema 里已注册的 export: ${available.join(', ') || '(none)'}`,
         );
     }
-    return { exportSymbol, exportSchema };
+    return { exportSymbol: match.symbol, exportSchema };
 }
 
 /**
@@ -146,6 +149,23 @@ async function main(): Promise<number> {
     }
 
     const { tests, invoke } = loadMetadata(problemDir);
+    // 设计类题目的操作序列需要类实例句柄；wasm 单入口 ABI 还不能表达，
+    // 明确报结构化 blocked，绝不把导出类当函数调用。
+    if (tests.some((test) => isOperationSequenceCase(test))) {
+        const message = operationSequenceUnsupportedReason('valkyrie-wasm');
+        emitStats({
+            ok: false,
+            testCaseTotal: tests.length,
+            executed_pass: 0,
+            executed_fail: 0,
+            blocked: tests.length,
+            not_run: 0,
+            firstFailureIndex: 0,
+            firstFailure: message,
+        });
+        console.error(message);
+        return 1;
+    }
     const entry = requireValkyrieInvokeEntry(invoke);
     const blocked = wasmInvokeBlockedReason(artifacts.entry.legionWasm, entry);
     if (blocked) {
