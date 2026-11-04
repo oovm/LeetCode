@@ -936,6 +936,7 @@
     ],
     "invoke": {
         "python": "Solution().findRightInterval",
-        "typescript": "Solution().findRightInterval"
+        "typescript": "Solution().findRightInterval",
+        "valkyrie": "findRightInterval"
     }
 }

@@ -697,6 +697,7 @@
     ],
     "invoke": {
         "python": "Solution().largestPerimeter",
-        "typescript": "Solution().largestPerimeter"
+        "typescript": "Solution().largestPerimeter",
+        "valkyrie": "largestPerimeter"
     }
 }
