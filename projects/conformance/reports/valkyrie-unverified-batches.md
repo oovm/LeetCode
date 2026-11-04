@@ -7,6 +7,38 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R9-2026-11-04（理想解滚动批次 9，8 题，写完未构建）
+
+- 范围：此前 `solution.v` 为阻塞标记的 8 题；只补理想解，不改算法绕 std 缺口。选题偏置压
+  「哈希 / 有序容器 / 零拷贝写侧」：`HashMap` 计数与 `keys()`、`BTreeSet` 去重 + `to_list()`
+  按秩访问、`ArrayList.view()` 写穿（首次）、嵌套 `ArrayList` 返回、`merge_sort` 就地排序。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
+- 新缺口：**0 条**（G1–G24 不变）。G12 影响题扩为 7、G16 影响题扩为 4（含 `nth` / `range` 核对）。
+- 更正：本轮静态核对发现 R4–R8 的 10 个解法使用了不存在的提案 API（`sorted_by` ×9、
+  `BTreeSet.floor`/`ceiling`、`utf8.compare`、`HashSet::new(capacity)`），已写入账本观察 4，
+  更正计划在验证窗口前完成；本批 8 题**不含** phantom 调用。
+- 预期阻断：`top-k-frequent-elements` / `relative-sort-array` / `find-first-and-last-position…` /
+  `sort-array-by-parity-ii` 返回 `ArrayList<i64>`，`merge-two-2d-arrays…` / `find-the-difference…`
+  返回 `ArrayList<ArrayList<i64>>`，按 G3 在 wasm JS glue 处阻断；`remove-duplicates-from-sorted-array-ii`
+  依赖 `ArrayView` 写穿，若 glue 不实现 `[i64]` 写回则按 G3 同族阻断。
+- 类型推断风险（非缺口）：`top-k-frequent-elements` 的 `ArrayList<ArrayList<i64>>` 桶需在
+  `buckets⁅f⁆` 上取引用后 `push`；`relative-sort-array` 把具名函数 `compare_i64` 作为
+  `merge_sort` 的比较器传入。两处都属「能写但未验证」的形态，失败时按编译诊断归类，不改算法。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致（`nums`+`k` / `nums`+`k` /
+  `nums1`+`nums2` / `arr1`+`arr2` / `nums` / `nums`+`target` / `nums` / `nums1`+`nums2`）。
+- TS 参考解：8/8 复用既有非空实现，本轮未新写。
+
+| slug | 导出入口 | 返回类型 | 缺口 / 覆盖方向 |
+| --- | --- | --- | --- |
+| `top-k-frequent-elements` | `topKFrequent` | `ArrayList<i64>` | HashMap 频次 + 频次桶（O(n)）+ 首次出现保序；G12 / G3 |
+| `k-diff-pairs-in-an-array` | `findPairs` | `i64` | `BTreeSet` 去重 + `to_list()` 按秩访问 + 双指针；G12 / G16 |
+| `merge-two-2d-arrays-by-summing-values` | `mergeArrays` | `ArrayList<ArrayList<i64>>` | 嵌套 `ArrayList` 双指针归并；G3 |
+| `relative-sort-array` | `relativeSortArray` | `ArrayList<i64>` | HashMap 频次 + 剩余值副本 `merge_sort`；G11 / G12 |
+| `remove-duplicates-from-sorted-array-ii` | `removeDuplicates` | `i64` | **`ArrayList.view()` 零拷贝写穿（首次）** |
+| `find-first-and-last-position-of-element-in-sorted-array` | `searchRange` | `ArrayList<i64>` | 双下界二分 + 二元组返回；G3 |
+| `sort-array-by-parity-ii` | `sortArrayByParityII` | `ArrayList<i64>` | 偶 / 奇两列交错回填；G3 |
+| `find-the-difference-of-two-arrays` | `findDifference` | `ArrayList<ArrayList<i64>>` | `HashSet` 差集 + 首次出现保序；G12 / G3 |
+
 ## 批次 R8-2026-11-04（理想解滚动批次 8，8 题，写完未构建）
 
 - 范围：此前 `solution.v` 为阻塞标记（`# blocked: std.collection 数组参数读取`）的 8 题；

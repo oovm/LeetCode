@@ -51,6 +51,8 @@ $n
   （R6 前 561；本批 8 题已计入 `invoke.valkyrie`，但仍属未验证，不代表构建通过）。
 - 后续增量（2026-11-04，滚动批次 R7 后）：canonical 实测 **577**（R7 前 569）。
 - 后续增量（2026-11-04，滚动批次 R8 后）：canonical 实测 **585**（R8 前 577；本批新编号 0 条）。
+- 后续增量（2026-11-04，滚动批次 R9 后）：canonical 实测 **593**（R9 前 585；本批新编号 0 条，
+  但新增观察 4：R4–R8 的若干解法调用了尚不存在的提案 API，需在验证窗口前更正）。
 
 ## 系统性问题（观察，非编号）
 
@@ -75,12 +77,21 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
 `utf8.slice(start, length)` 的第二个参数是**段长**（`Utf8Text.v` L262），不是终点下标；
 从 TS 的 `slice(start, end)` 照搬会**静默错位**——不报错、结果整体偏移，比「方法不存在」更难发现。
 同类风险入口（需 std 侧逐条核对参数语义并标注差异）：
-- `utf8.slice(start, count)` / `try_slice(start, count)` —— 段长，非终点
-- `ArrayList.insert(index, value)` / `remove(index)` —— 需定死是「先位置后元素」还是「先元素后位置」
-- G16 提案的 `range(low, high)` —— 需定死是闭区间、半开区间还是两端点
-- `utf8.replace(old, new)` —— 是全部替换还是仅首个替换
-结论：std 需要一个「参数语义与主流惯例不同」的清单，逐条标差异，不要等解题时一个个踩；
-本轮实际踩到的就是 `slice`（批次 R7），已写入第 7 批「未命中面」。
+- `utf8.slice(start, count)` / `try_slice(start, count)` —— **段长，非终点**（已核对，与主流 `slice(start, end)` 不同向）
+- `ArrayList.insert(ordinal, value)` / `remove(ordinal)` —— **1 基序数、先位置后元素**（已核对
+  `ArrayList.v` L67 / L90，与 `[ ]` / `get` 同基；与 0 基的 `⁅ ⁆` / `get_cardinal` / `set_cardinal`
+  是同一容器的两套索引基，命名上可区分）。`insert` 与 TS `splice(k, 0, x)` 同向；`remove` 返回
+  `Option<T>`，与 TS `splice(k, 1)` 返回数组不同形。
+- `utf8.replace(old, new)` —— **无法核对**：`Utf8Text.v` L199 是 `[host_contract]` 空壳，函数体只有
+  `return self`，全量替换还是首个替换由 adaptor 决定，std 源里没有语义。
+- `utf8.trim()` —— **无法核对**：`Utf8Text.v` L186 同为 `[host_contract]` 空壳（`return self`），
+  去哪些字符（ASCII 空白 / Unicode 空白 / 其它）在 std 层不可判定。`to_lower` / `to_upper` 同形。
+- G16 提案的 `range(low, high)` —— **不是同名不同义，是根本不存在**：`BTreeSet` / `BTreeMap` 均无
+  `range`，区间开闭问题目前无从发生；风险在于「以为它存在」而照提案签名写代码（见观察 4）。
+结论：std 需要一个「参数语义与主流惯例不同」的清单，逐条标差异，不要等解题时一个个踩。
+已核对：`slice` 段长（批次 R7）、`insert` / `remove` 1 基（批次 R8 / R9）。
+无法在 std 层核对的：`trim` / `replace` / `to_lower` / `to_upper`（全部 `[host_contract]` 空壳）。
+不存在而非语义不同：`range`（G16）。
 
 ### 观察 3：表达力缺口至今只有 G8 一条
 
@@ -91,6 +102,26 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
 3) 最后处理 G8 的建模塌陷。
 理由：1、2 是加法，风险局部；3 要动模型与既有容器约束，放在最后可避免把缺口修复和模型迁移
 混进同一笔改动。
+
+### 观察 4：未验证语料里混入了「按提案签名写的 phantom API」（R9 静态核对发现）
+
+缺口账本里 G11 / G16 / G13 / G12 的「期望签名」是提案，不是现有 API。R4–R8 的解法中有 10 个文件
+直接按提案签名写，源码层并不存在这些入口。逐条坐标：
+
+| 调用 | 实际 std | 文件 |
+| --- | --- | --- |
+| `sorted_by(list, cmp)` ×9 | 只有 `quick_sort` / `merge_sort`（就地，`sort.v`） | `accounts-merge`、`custom-sort-string`、`group-anagrams`、`height-checker`、`largest-perimeter-triangle`、`meeting-rooms`、`queue-reconstruction-by-height`、`smallest-string-with-swaps`、`top-k-frequent-words` |
+| `BTreeSet.floor` / `ceiling` | 不存在（G16 提案） | `contains-duplicate-iii` |
+| `utf8.compare` | 不存在（G13 提案；`Utf8Text` 只有 `equals`） | `accounts-merge`（`compare_text`） |
+| `HashSet::new(capacity)` | 只有 `new()`（G12） | `accounts-merge` |
+
+- 定性：**这是语料错误，不是新缺口**。等价近似物都已存在（副本 + `merge_sort`、`to_list` 后手写
+  二分、逐字节比较、`new()` 后逐个 `insert`），故不新增编号。
+- 修复口径（验证窗口前完成）：`sorted_by(x, cmp)` → 自建副本后 `merge_sort(copy, cmp)`；
+  `floor` / `ceiling` → `to_list()` 后二分；`utf8.compare` → `byte_length` / `byte_at` 逐字节比较；
+  `HashSet::new(n)` → `HashSet::new()`。
+- 本批（R9）不新增 phantom 调用：8 题只使用已核对存在的入口。
+- 教训：提案签名必须与「已存在 API」分开存放，写解法时以源码为准，不以账本愿望为准。
 
 ## 未恢复
 
@@ -363,9 +394,12 @@ micro new(capacity: usize): Self
 micro with_capacity(capacity: usize): Self
 ```
 
-- 影响题（3）：`groups-of-special-equivalent-strings`（893）、`longest-consecutive-sequence`（128，
+- 影响题（7）：`groups-of-special-equivalent-strings`（893）、`longest-consecutive-sequence`（128，
   元素数最大 1e5 的整表插入）、`unique-number-of-occurrences`（1207，批次 R6，频次去重集合
-  规模 = 键数）。
+  规模 = 键数）、`top-k-frequent-elements`（347，批次 R9，去重保序集合）、
+  `k-diff-pairs-in-an-array`（532，批次 R9，`BTreeSet::new()` 同样无容量）、
+  `relative-sort-array`（1122，批次 R9，已出现值集合）、
+  `find-the-difference-of-two-arrays`（2215，批次 R9，两个存在性集合）。
 - 不对称点：`HashSet::new()` 固定 `SwissSet::new(16)`；`HashMap::new(capacity: usize)` 直传容量。
 - 判定：**std 缺口**。
 - 修复初判：**加 API**（一行转发 `SwissSet::new(capacity)`）。
@@ -484,10 +518,13 @@ micro ceiling_key(self, value: K) -> Option<K>   # BTreeMap，最小 >= value �
 micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value 的键（上界查询）
 ```
 
-- 影响题（3）：`contains-duplicate-iii`（220，窗口内前驱/后继判定）、
+- 影响题（4）：`contains-duplicate-iii`（220，窗口内前驱/后继判定）、
   `sliding-window-median`（480，有序计数表按秩取中位；缺 `nth_key` 只能 `keys()` 全量物化，
   每步退化为 O(k)）、`find-right-interval`（436，批次 R6，按终点求「最小 >= 终点的起点」，
-  即 `ceiling_key`；缺它只能 `keys()` 全量物化后手写二分）。
+  即 `ceiling_key`；缺它只能 `keys()` 全量物化后手写二分）、`k-diff-pairs-in-an-array`（532，
+  批次 R9，去重后有序扫描只能 `to_list()` 后下标遍历，缺 `nth` / `range`）。
+- 核对补充（批次 R9）：`BTreeSet` / `BTreeMap` **都没有** `range`，观察 2 里「区间开闭待定」的
+  条目当前不存在实现，无从核对；`nth` / `rank` 同样只在提案里。
 - 不对称点：`HashMap` 有 `keys` / `values`，`BTreeSet` 有 `to_list`，但有序容器只能被全量物化后
   线性扫描；`floor` / `ceiling` / `first` / `last` / `range` / `nth` 全部缺失，「有序」只剩存储形态。
 - 判定：**std 缺口**。
@@ -833,11 +870,35 @@ micro to_sorted_list(self) -> ArrayList<T> where T: Comparable
   仍属摩擦而非阻断。
 - **`ArrayList.insert(ordinal, value)` 语义与 TS `splice` 同向**：`queue-reconstruction-by-height`
   （406）按 `k` 插入，确认参数序是「先位置、后元素」；观察 2 清单第 2 条可在 std 侧直接标「与主流同向」。
-- **`sorted_by(ArrayList<ArrayList<i64>>)` 可用**：406 的多字段比较器（身高降序 + k 升序）
-  在容器层面可表达，只缺 `Array<T>` 侧入口（G11 的边界更清楚了：缺口在「定长数组」不在「排序本身」）。
+- **~~`sorted_by(ArrayList<ArrayList<i64>>)` 可用~~（R9 更正：不成立）**：`sorted_by` 在
+  `std/source/collection/sort.v` 中不存在，406 的调用是 phantom（见观察 4）。同等能力只能是
+  「自建副本 + `merge_sort(copy, cmp)`」；G11 的边界是「没有返回新序列的入口」，不是「排序本身」。
 - **`ends_with` 存在**：`count-prefix-and-suffix-pairs-i`（3042）与 `starts_with` 对称，
   无需切片比较。
 - **表达力缺口档仍只有 G8**：本批 0 条新编号，23 条既有缺口均有等价近似物，结论不变。
+
+### 未命中面（第 9 批探测，2026-11-04，新编号 0 条）
+
+- **`ArrayList.view()` 是零拷贝写侧的正式入口**（首次压到）：`remove-duplicates-from-sorted-array-ii`
+  （80）用 `nums.view()` 拿到 `ArrayView<i64>`，`view⁅write⁆ = value` 写穿回源列表。此前批次用自由函数
+  `array_view(s)` 只能作用于 `[T]`，对 `ArrayList` 参数不可达；`view()` 补上了这一面，属**已存在 API**，
+  不是缺口。
+- **`ArrayList.remove(ordinal)` 本批无自然调用点**：它返回 `Option<T>`，可恢复形态完整，但 8 题里
+  没有一题需要「按下标删除」，尾部移除归 `pop()`、顺序扫描归下标游标、队列归 `Deque`。按「等价近似物」
+  口径记观察，不编号。它的返回值面仍未在真实题解里被压住。
+- **`ArrayList.to_array()` 本批无自然调用点**：`HashMap.keys()` / `BTreeSet.to_list()` 已经直接给
+  `ArrayList`，而所有需要 `[T]` 的位置都是 `array_view` 入参，本批无 `to_array()` 消费点。全仓
+  `solvers/valkyrie/**` 至今 **0 次** `to_array()` 调用（`ArrayList.v` 内部 `split` 除外），返回值面同样未压住。
+- **`HashMap.iterator(f: micro(K, V) -> unit)` 形态不可用于累加**：回调没有捕获，只能做纯观察；
+  任何「遍历时写入外部容器」的第二遍都表达不了。等价近似物是 `keys()` / `values()` 物化后遍历，
+  本批全部走这条路，故不编号。与观察 4 无关，这是回调形态本身的限制。
+- **`BTreeSet` 按秩（G16 `nth`）仍缺**：`k-diff-pairs-in-an-array`（532）只需有序遍历，
+  `to_list()` 后下标访问即可；真正要「第 k 小」时仍得全量物化，已在 G16 补记。
+- **`utf8.trim` / `replace` 语义不可核对**：两者在 `Utf8Text.v` 都是 `[host_contract]` 空壳
+  （L186 / L199 直接 `return self`），std 源里没有「去哪些字符 / 全量还是首个替换」的实现。
+  本批 8 题不含纯文本题，未实际调用；结论写入观察 2。
+- **`Array<T>` 无排序入口仍成立**：本批没有再出现 `Array<T>` 排序需求，残留风险是 R4/R6 的
+  `height-checker` / `largest-perimeter-triangle`（见观察 4）。
 
 ### 建模提示（G8 的根部，比缺 API 严重）
 
