@@ -922,6 +922,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumRows",
-        "typescript": "Solution().maximumRows"
+        "typescript": "Solution().maximumRows",
+        "valkyrie": "maximumRows"
     }
 }

@@ -547,6 +547,7 @@
     ],
     "invoke": {
         "python": "Solution().findThePrefixCommonArray",
-        "typescript": "Solution().findThePrefixCommonArray"
+        "typescript": "Solution().findThePrefixCommonArray",
+        "valkyrie": "findThePrefixCommonArray"
     }
 }

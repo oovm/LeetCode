@@ -627,6 +627,7 @@
     ],
     "invoke": {
         "python": "Solution().countDistinctIntegers",
-        "typescript": "Solution().countDistinctIntegers"
+        "typescript": "Solution().countDistinctIntegers",
+        "valkyrie": "countDistinctIntegers"
     }
 }

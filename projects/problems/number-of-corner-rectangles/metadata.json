@@ -643,6 +643,7 @@
     ],
     "invoke": {
         "python": "Solution().countCornerRectangles",
-        "typescript": "Solution().countCornerRectangles"
+        "typescript": "Solution().countCornerRectangles",
+        "valkyrie": "countCornerRectangles"
     }
 }

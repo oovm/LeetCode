@@ -1281,6 +1281,7 @@
     ],
     "invoke": {
         "python": "Solution().findRepeatedDnaSequences",
-        "typescript": "Solution().findRepeatedDnaSequences"
+        "typescript": "Solution().findRepeatedDnaSequences",
+        "valkyrie": "findRepeatedDnaSequences"
     }
 }

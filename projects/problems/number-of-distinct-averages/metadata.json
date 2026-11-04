@@ -690,6 +690,7 @@
     ],
     "invoke": {
         "python": "Solution().distinctAverages",
-        "typescript": "Solution().distinctAverages"
+        "typescript": "Solution().distinctAverages",
+        "valkyrie": "distinctAverages"
     }
 }
