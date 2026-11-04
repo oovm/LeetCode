@@ -786,6 +786,7 @@
     ],
     "invoke": {
         "python": "Solution().kidsWithCandies",
-        "typescript": "Solution().kidsWithCandies"
+        "typescript": "Solution().kidsWithCandies",
+        "valkyrie": "kidsWithCandies"
     }
 }

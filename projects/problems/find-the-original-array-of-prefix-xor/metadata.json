@@ -638,6 +638,7 @@
     ],
     "invoke": {
         "python": "Solution().findArray",
-        "typescript": "Solution().findArray"
+        "typescript": "Solution().findArray",
+        "valkyrie": "findArray"
     }
 }
