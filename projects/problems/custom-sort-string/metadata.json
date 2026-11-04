@@ -826,6 +826,7 @@
     ],
     "invoke": {
         "python": "Solution().customSortString",
-        "typescript": "Solution().customSortString"
+        "typescript": "Solution().customSortString",
+        "valkyrie": "customSortString"
     }
 }

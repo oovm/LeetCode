@@ -271,6 +271,7 @@
     ],
     "invoke": {
         "python": "Solution().reverseWords",
-        "typescript": "Solution().reverseWords"
+        "typescript": "Solution().reverseWords",
+        "valkyrie": "reverseWords"
     }
 }

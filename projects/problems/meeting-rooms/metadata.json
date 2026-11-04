@@ -624,6 +624,7 @@
     ],
     "invoke": {
         "python": "Solution().canAttendMeetings",
-        "typescript": "Solution().canAttendMeetings"
+        "typescript": "Solution().canAttendMeetings",
+        "valkyrie": "canAttendMeetings"
     }
 }
