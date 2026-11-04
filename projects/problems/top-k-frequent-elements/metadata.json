@@ -300,6 +300,7 @@
     ],
     "invoke": {
         "python": "Solution().topKFrequent",
-        "typescript": "Solution().topKFrequent"
+        "typescript": "Solution().topKFrequent",
+        "valkyrie": "topKFrequent"
     }
 }

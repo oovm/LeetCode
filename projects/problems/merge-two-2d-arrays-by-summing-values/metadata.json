@@ -693,6 +693,7 @@
     ],
     "invoke": {
         "python": "Solution().mergeArrays",
-        "typescript": "Solution().mergeArrays"
+        "typescript": "Solution().mergeArrays",
+        "valkyrie": "mergeArrays"
     }
 }

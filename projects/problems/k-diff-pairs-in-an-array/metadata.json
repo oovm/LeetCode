@@ -895,6 +895,7 @@
     ],
     "invoke": {
         "python": "Solution().findPairs",
-        "typescript": "Solution().findPairs"
+        "typescript": "Solution().findPairs",
+        "valkyrie": "findPairs"
     }
 }

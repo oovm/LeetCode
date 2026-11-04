@@ -936,6 +936,7 @@
     ],
     "invoke": {
         "python": "Solution().relativeSortArray",
-        "typescript": "Solution().relativeSortArray"
+        "typescript": "Solution().relativeSortArray",
+        "valkyrie": "relativeSortArray"
     }
 }
