@@ -405,6 +405,75 @@ imply Utf8Text: Comparable { ... }
 - 与 G13 的关系：G13 是本条的下游表现。
 - 修复初判：**建 trait**（新增 `Comparable` 合同 + 逐 primitive impl + 收窄 BTree 系约束）。
 
+### G16 `BTreeSet` / `BTreeMap` 缺序关系查询
+
+- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/collection/sorted/BTreeSet.v`、
+  `BTreeMap.v`）
+- 定性：**该有但没有**。容器按序存放，却只暴露「插入 / 存在性 / 删除 / 全量物化」，
+  没有任何按值定位的界查询，调用方拿不到「最近的较小/较大元素」。
+- 期望签名：
+
+```v
+# std/source/collection/sorted/BTreeSet.v、BTreeMap.v
+# 约束随 G15 收敛为 T: Equal & Comparable
+micro floor(self, value: T) -> Option<T>
+micro ceiling(self, value: T) -> Option<T>
+micro first(self) -> Option<T>
+micro last(self) -> Option<T>
+micro range(self, low: T, high: T) -> ArrayList<T>
+```
+
+- 影响题（1）：`contains-duplicate-iii`（220，窗口内前驱/后继判定）。
+- 不对称点：`HashMap` 有 `keys` / `values`，`BTreeSet` 有 `to_list`，但有序容器只能被全量物化后
+  线性扫描；`floor` / `ceiling` / `first` / `last` / `range` 全部缺失，「有序」只剩存储形态。
+- 判定：**std 缺口**。
+- 修复初判：**加 API**（底层节点已按序，查询不需新模型）；必须与 G15 同批，否则新查询仍建立在
+  未表达的序约束上。
+
+### G17 `char` 缺 `Hash` impl
+
+- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/text/char.v` 与
+  `std/source/collection/hashed/hash.v`）
+- 定性：**该有但没有**。`char` 只定义了 `==` / `!=`，没有 `Hash`，于是不能作
+  `HashMap` / `HashSet` / `DisjointSet` 的键；同样表示一个小写字母，用 `utf8` 可以入表，
+  用 `char` 不行。
+- 期望签名：
+
+```v
+# std/source/text/char.v
+imply char: Hash {
+    micro hash(self) -> usize {
+        return (self as u32) as usize
+    }
+}
+```
+
+- 影响题（2）：`custom-sort-string`（791，`HashMap<char, i64>` 优先级表）、
+  `satisfiability-of-equality-equations`（990，`DisjointSet<char>` 变量连通性）。
+- 不对称点：`utf8`、`i8`–`u64`、`f32` / `f64` 都有 `Hash`；`char` 有 `Ordinal`（可转 `u32`）
+  却没有派生 `Hash`，因此「码位可排序」与「码位可哈希」只实现了一半。
+- 判定：**std 缺口**。
+- 修复初判：**加 API**（补一个 impl，语义与 `Ordinal` 一致）。
+
+### G18 `utf8` 缺 `split_whitespace`
+
+- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/text/Utf8Text.v` 的
+  `split` / `slice` / `try_slice` / `index_of`）
+- 定性：**该有但没有**。`split` 只接受精确分隔符，既不按空白类切分，也不丢弃空段；
+  「按词切分」这类文本题只能自己逐字符扫描并手写状态机。
+- 期望签名：
+
+```v
+# std/source/text/Utf8Text.v
+micro split_whitespace(self) -> [utf8]
+```
+
+- 影响题（1）：`reverse-words-in-a-string`（151，多次空格与前导/尾随空格的切词）。
+- 不对称点：`split` / `slice` / `try_slice` / `index_of` 都有，`split` 却只覆盖「固定分隔符 +
+  保留空段」一种语义；空白类与空段折叠没有入口。
+- 判定：**std 缺口**。
+- 修复初判：**加 API**（内部复用 `split` 后过滤空段即可，不引入新类型）。
+
 ### 建模提示（G8 的根部，比缺 API 严重）
 
 - 现象：无向性不是图模型的一等属性。`DirectedGraph` 只以「有向」为轴；`GraphMatrix`、`WeightedGraph`
