@@ -336,7 +336,8 @@ micro with_capacity(capacity: usize): Self
 micro compare(self, other: utf8) -> i32   # <0 / 0 / >0，按码位（与 UTF-8 字节序一致）
 ```
 
-- 影响题（1）：`reorder-data-in-log-files`（937，题内 `compare_text`）。
+- 影响题（2）：`reorder-data-in-log-files`（937，题内 `compare_text`）、
+  `find-smallest-letter-greater-than-target`（744，上界二分对 `utf8` 直接写 `<=`）。
 - 不对称点：`char` 只有 `as u32` 转换运算符、**无 `<`**、也不是 `Ordinal` 载体（`char.v` 仅实现
   `==` / `!=`）；`utf8` 连可比较的码位视图都没有。（此前记作「`char` 可经 `Ordinal` 转 `u32`」，
   该论断错误，已更正。）
@@ -640,6 +641,27 @@ micro trailing_zeros(self): u32
 - **表达力缺口档仍只有 G8**：本批新增 G21（反向无入口）、G22（位元查询缺席）都属「有等价
   写法、只是没有一等入口」，G11 的 `sorted_by` 也属「容器形态不匹配」；「没有任何近似物」
   仍只有无向图建模一条。
+
+### 未命中面（第 5 批探测，2026-11-04，无强制影响题，故不编号）
+
+- **`MultiSet` / `BitSet` 面可直接支撑理想解**：`count-elements-with-maximum-frequency`（3005）
+  以 `MultiSet::distinct_elements` + `count` 完成频次归并，`check-if-all-the-integers-in-a-range-
+  are-covered`（1893）以 `BitSet::with_capacity` / `set` / `get` 完成区间覆盖判定。两题都不需要
+  「手写计数表」，也没有遇到容量或位宽建模问题。
+- **`Deque` 面第二次确认**：`shortest-subarray-with-sum-at-least-k`（862）以 `Deque<i64>` 作
+  单调递增队列（`push_back` / `pop_back` / `peek_back` / `peek_front` / `pop_front` 全用到），
+  与 `sliding-window-maximum`（239）同一组 API，无新增缺口。
+- **`utf8` 数组形参与 `[utf8]` 返回仍是待验证面**：`find-smallest-letter-greater-than-target`
+  （744）以 `[utf8]` 作形参、`utf8` 作返回值；这一组合在本批只写未构建，未得到运行证据，
+  不据此新增或撤销缺口。
+- **G18（`split_whitespace`）本批无强制题**：选题偏置里的空白切词面在剩余阻塞 stub 中
+  对应的题（`truncate-sentence`、`number-of-valid-words-in-a-sentence`）已有实现，
+  `number-of-segments-in-a-string`、`maximum-number-of-words-found-in-sentences` 也已写过；
+  本批不扩实例。
+- **`ArrayView` 区间窗口仍无强制题**：`spiral-matrix` / `duplicate-zeros` / `sort-array-by-parity`
+  都只需「边界下标收缩」或「读写指针相对移动」，索引循环即可表达。G19 维持单实例（189）。
+- **表达力缺口档仍只有 G8**：本批新增触发面（G13 第二实例、G18 空转）都有等价写法；
+  `MultiSet` / `BitSet` / `Deque` 三条容器面全部落在 std 已有 API 上，未出现「没有任何近似物」。
 
 ### 建模提示（G8 的根部，比缺 API 严重）
 

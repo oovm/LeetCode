@@ -7,6 +7,33 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R5-2026-11-04（理想解滚动批次 5，8 题，写完未构建）
+
+- 范围：此前 `solution.v` 为阻塞标记（`# blocked: std.collection 数组参数读取`）或空文件的 8 题；
+  只补理想解，不改算法绕 std 缺口。选题偏置压「未被压过的面」：矩阵读写、原地写侧、
+  `MultiSet` / `BitSet`、单调 `Deque`、`HashMap` 首末位置、`utf8` 字典序比较（G13）。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
+- 预期阻断：`spiral-matrix` / `sort-array-by-parity` 返回 `ArrayList<i64>` 按 G3 在 wasm JS glue
+  处阻断；`check-if-all-the-integers-in-a-range-are-covered` 的嵌套数组入参按 G3 marshal 同族；
+  `find-smallest-letter-greater-than-target` 对 `utf8` 写 `<=` 按 G13（G15 下游）在类型检查处阻断；
+  `duplicate-zeros` 的 `mut` 入参若 glue 未实现写回，按 G3 同族阻断。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致（`matrix` / `nums` / `arr` /
+  `ranges`+`left`+`right` / `nums`+`k` / `letters`+`target`）；V 侧按 snake_case 书写，
+  `invoke.valkyrie` 逐题登记为类方法 camelCase 名。
+- TS 参考解：7/7 复用既有非空实现；`shortest-subarray-with-sum-at-least-k` 原为空文件，
+  本轮补写（与前缀和 + 单调队列同构）。
+
+| slug | 导出入口 | 返回类型 | 缺口 / 覆盖方向 |
+| --- | --- | --- | --- |
+| `spiral-matrix` | `spiralOrder` | `ArrayList<i64>` | 矩阵只读遍历（四条边界收缩）；G3 预计阻断 |
+| `sort-array-by-parity` | `sortArrayByParity` | `ArrayList<i64>` | 定长载体写侧（双指针交换）；G3 |
+| `duplicate-zeros` | `duplicateZeros` | `unit` | 定长载体写侧（逆序复写，越界丢弃） |
+| `count-elements-with-maximum-frequency` | `maxFrequencyElements` | `i64` | `MultiSet` 频次归并（未压面） |
+| `check-if-all-the-integers-in-a-range-are-covered` | `isCovered` | `bool` | `BitSet` 位图 + 嵌套数组入参 |
+| `shortest-subarray-with-sum-at-least-k` | `shortestSubarray` | `i64` | 单调 `Deque`（前缀和 + 队首收缩） |
+| `degree-of-an-array` | `findShortestSubArray` | `i64` | `HashMap` 首末位置 + 频次（三表一次建） |
+| `find-smallest-letter-greater-than-target` | `nextGreatestLetter` | `utf8` | **G13 第二实例**（`utf8` 字典序，G15 下游） |
+
 ## 批次 R4-2026-11-04（理想解滚动批次 4，8 题，写完未构建）
 
 - 范围：此前 `solution.v` 为阻塞标记（`# blocked: std.collection 数组参数读取`）的 8 题；
