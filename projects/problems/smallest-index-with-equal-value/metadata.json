@@ -613,6 +613,7 @@
     ],
     "invoke": {
         "python": "Solution().smallestEqual",
-        "typescript": "Solution().smallestEqual"
+        "typescript": "Solution().smallestEqual",
+        "valkyrie": "smallestEqual"
     }
 }

@@ -7,6 +7,77 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R20-2026-11-04（Easy 标量池 25 题，写完未构建）
+
+- 范围：Easy 标量池剩余题，纯整数 / 纯算术签名，不涉及 `std.text`，也没有新增集合面；
+  canonical 673 → **698**。
+- 构建 / 判题状态：**未验证（authored-unverified），构建通过 0 题**。
+  本轮实测撞到 std 闭包在 HEAD 的前端解析回归，**所有**含 std 的构建（含此前已构建通过的
+  `4-keys-keyboard` 复跑）都中止在同一点，本批因此无法进入编译阶段：
+
+  ```text
+  std/source/operator/comparable.v:169:26   trait Comparable 的 infix `<` 成员
+  引入提交：valkyrie.v d48011b ✨ implement Comparable and Ordering（2026-11-04 18:40）
+  现象：legionBuildProject(..., 'wasm', ...) 在 projects/std 前置解析阶段失败，未进入题解源码
+  ```
+
+  该停点属于并行 std 线的在途状态，不归本题库，也不新增能力缺口编号；
+  std 线修复后按本表 slug 复跑 `legionBuildProject` + 隔离判题即可产出真实覆盖数。
+- TS 参考解：25 题**全部实跑**
+  （`run_isolated_judge.ts --lang typescript --iterations 1 --warmup 0`），25/25 `ok=true`；
+  逐题通过数见下表末列。TS 侧修正 2 题：
+  - `minimum-operations-to-make-the-array-increasing`（1827）：原解原地改写入参，判题器多轮复用
+    同一个 `args` 对象，第二轮起读到已被抬升的数组而返回 0；改为不改写入参。
+  - `missing-number-in-arithmetic-progression`（1228）：原二分实现在非严格等差语料上返回 5.5；
+    改为闭式 `(首 + 末) * (n + 1) // 2 - 和`（负分子按向下取整），与全部 `expected` 一致。
+- 数据清洗：**未删用例、未改断言**。两题因语料与题面矛盾而**移出本批**（文件原样保留，未改动）：
+  - `maximize-sum-of-array-after-k-negations`（1005）：15 条用例的 `nums` 低于 -100（越出题面约束），
+    其 `expected` 等于「一次也不翻转」的原和。例：`nums=[-100,-200,-300,-400,-500], k=2`
+    期望 -1500，而按「最大化」最优为 300。
+  - `element-appearing-more-than-25-in-sorted-array`（1287）：114 条中 113 条 `expected` 为
+    `Error: list index out of range`，不是合法答案形态。
+- 入口签名：25/25 导出形参与 `metadata.tests.args` 键**逐字同序**：
+  `timeSeries`+`duration` / `nums` / `nums`+`k` / `arr` / `bills` / `position` / `mat` /
+  `cost` / `startTime`+`endTime`+`queryTime` / `nums`+`target`+`start`。
+- 写出形态：25/25 采用**构建通过批次的已验证形状**——算法放在顶层
+  `[export(case: "camelCase")] micro`，再用 `class Solution { micro <同名>(self, ...): T }`
+  向上委托；未使用未验证的「类方法持有算法 + 顶层 `Solution().method`」写法。
+- **算法等价移植核对（非编译验证）**：把 25 份 `solution.v` 的分支结构逐条移植成 JS，
+  在同一批 metadata 用例上跑，25/25 全用例一致（0 失败）。这只说明算法分支正确，
+  不替代 `legionBuildProject` 的编译与 wasm 真跑。
+- 纸面 API：**0 个**。只用 `ArrayList::new(capacity)` / `push` / `length` / `⁅ ⁆` 下标读写；
+  排序面一律用值域有界的计数表，不调用 `merge_sort` 与 G27 的排序提案。
+- marshal 面（**待验证**）：`matrix-diagonal-sum`（1572）入参 `mat` 为
+  `ArrayList<ArrayList<i64>>`；嵌套入参是否与 G3 的返回侧走同一条 ABI，不预先判定，留待真评。
+
+| 题号 | slug | 入口 | 返回 | TS 实跑 |
+| --- | --- | --- | --- | --- |
+| 495 | `teemo-attacking` | `findPoisonedDuration` | `i64` | 120/120 |
+| 561 | `array-partition` | `arrayPairSum` | `i64` | 112/112 |
+| 628 | `maximum-product-of-three-numbers` | `maximumProduct` | `i64` | 111/111 |
+| 724 | `find-pivot-index` | `pivotIndex` | `i64` | 95/95 |
+| 860 | `lemonade-change` | `lemonadeChange` | `bool` | 106/106 |
+| 908 | `smallest-range-i` | `smallestRangeI` | `i64` | 126/126 |
+| 941 | `valid-mountain-array` | `validMountainArray` | `bool` | 141/141 |
+| 1013 | `partition-array-into-three-parts-with-equal-sum` | `canThreePartsEqualSum` | `bool` | 77/77 |
+| 1085 | `sum-of-digits-in-the-minimum-number` | `sumOfDigits` | `i64` | 121/121 |
+| 1217 | `minimum-cost-to-move-chips-to-the-same-position` | `minCostToMoveChips` | `i64` | 105/105 |
+| 1228 | `missing-number-in-arithmetic-progression` | `missingNumber` | `i64` | 147/147 |
+| 1437 | `check-if-all-1s-are-at-least-length-k-places-away` | `kLengthApart` | `bool` | 104/104 |
+| 1450 | `number-of-students-doing-homework-at-a-given-time` | `busyStudent` | `i64` | 95/95 |
+| 1464 | `maximum-product-of-two-elements-in-an-array` | `maxProduct` | `i64` | 96/96 |
+| 1550 | `three-consecutive-odds` | `threeConsecutiveOdds` | `bool` | 131/131 |
+| 1572 | `matrix-diagonal-sum` | `diagonalSum` | `i64` | 54/54 |
+| 1800 | `maximum-ascending-subarray-sum` | `maxAscendingSum` | `i64` | 128/128 |
+| 1827 | `minimum-operations-to-make-the-array-increasing` | `minOperations` | `i64` | 118/118 |
+| 1848 | `minimum-distance-to-the-target-element` | `getMinDistance` | `i64` | 117/117 |
+| 1991 | `find-the-middle-index-in-array` | `findMiddleIndex` | `i64` | 94/94 |
+| 2057 | `smallest-index-with-equal-value` | `smallestEqual` | `i64` | 98/98 |
+| 2144 | `minimum-cost-of-buying-candies-with-discount` | `minimumCost` | `i64` | 96/96 |
+| 2455 | `average-value-of-even-numbers-that-are-divisible-by-three` | `averageValue` | `i64` | 124/124 |
+| 2529 | `maximum-count-of-positive-integer-and-negative-integer` | `maximumCount` | `i64` | 96/96 |
+| 2535 | `difference-between-element-sum-and-digit-sum-of-an-array` | `differenceOfSum` | `i64` | 99/99 |
+
 ## 批次 R19-2026-11-04（理想解滚动批次 19，8 题，写完未构建）
 
 - 范围：继续避开 11 条真缺口，纸面 API 保持 **0**。选题面主动放 1 题撞 graph 二色面

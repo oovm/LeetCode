@@ -830,6 +830,7 @@
     ],
     "invoke": {
         "python": "Solution().averageValue",
-        "typescript": "Solution().averageValue"
+        "typescript": "Solution().averageValue",
+        "valkyrie": "averageValue"
     }
 }

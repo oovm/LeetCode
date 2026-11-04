@@ -1,5 +1,26 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: kLengthApart 需要 读取 nums 检查相邻 1 间距
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.check_if_all_1s_are_at_least_length_k_places_away
+
+# 记录上一个 1 的位置，相邻两个 1 之间的 0 个数必须不少于 k。
+[export(case: "camelCase")]
+micro kLengthApart(nums: ArrayList<i64>, k: i64) -> bool {
+    let count: usize = nums.length()
+    let mut previous: i64 = 0 - k - 1
+    let mut i: usize = 0
+    while i < count {
+        if nums⁅i⁆ == 1 {
+            let gaps: i64 = i as i64 - previous - 1
+            if gaps < k {
+                return false
+            }
+            previous = i as i64
+        }
+        i = i + 1
+    }
+    return true
+}
+
+class Solution {
+    micro kLengthApart(self, nums: ArrayList<i64>, k: i64): bool {
+        return kLengthApart(nums, k)
+    }
+}

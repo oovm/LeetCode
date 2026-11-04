@@ -630,6 +630,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumCount",
-        "typescript": "Solution().maximumCount"
+        "typescript": "Solution().maximumCount",
+        "valkyrie": "maximumCount"
     }
 }

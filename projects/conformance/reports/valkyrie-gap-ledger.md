@@ -158,6 +158,14 @@ $n
 **R19 的反向验证意义**：第 19 批是第二组对照组。它主动撞已有编号而不产生新编号，
 如果也全干净，就说明「观察档」连续两批可用，可以把真缺口修复排进 std 线。
 
+- 后续增量（2026-11-04，Easy 标量池批次 R20 后）：canonical 实测 **698**（R20 前 673；本批 25 题，
+  新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`。
+- **当前构建停点（R20 实测，2026-11-04）**：std 闭包在 HEAD 的前端解析回归，
+  `std/source/operator/comparable.v:169:26`（`trait Comparable` 的 `infix \`<\`` 成员），
+  引入提交为 `valkyrie.v` `d48011b`。任何含 std 的 `legionBuildProject`（包括此前已构建通过的题）
+  都中止在该点，属于并行 std 线的在途状态，不是本题库缺口，也未被计入任何 `G` 编号。
+  std 线修复后，R20 的 25 题按 `valkyrie-unverified-batches.md` 的 slug 复跑即可产出覆盖数。
+
 ## 系统性问题（观察，非编号）
 
 > 本节只记观察，不占 `G` 编号；缺口本身仍按 G1–G27 计。

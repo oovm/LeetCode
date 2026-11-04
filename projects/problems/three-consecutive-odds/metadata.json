@@ -836,6 +836,7 @@
     ],
     "invoke": {
         "python": "Solution().threeConsecutiveOdds",
-        "typescript": "Solution().threeConsecutiveOdds"
+        "typescript": "Solution().threeConsecutiveOdds",
+        "valkyrie": "threeConsecutiveOdds"
     }
 }

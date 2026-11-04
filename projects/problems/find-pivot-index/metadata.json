@@ -589,6 +589,7 @@
     ],
     "invoke": {
         "python": "Solution().pivotIndex",
-        "typescript": "Solution().pivotIndex"
+        "typescript": "Solution().pivotIndex",
+        "valkyrie": "pivotIndex"
     }
 }

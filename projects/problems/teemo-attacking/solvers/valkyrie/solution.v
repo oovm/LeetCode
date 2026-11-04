@@ -1,5 +1,29 @@
-# 阻塞：std.collection 数组参数读取
-# 题内触发点：`timeSeries⁅i⁆` 相邻间隔截断求和。
-# 期望语义：读取宿主传入数组的长度与下标元素。实际：`⁅ ⁆` 下标链路在 std 容器内部报 unresolved call `<computed>`，四 lane 同阻。
-# 最小复现：引用 merge-two-sorted-lists 的本能力首记复现。
-# 理想算法：间隔截断求和，时间 O(n) 空间 O(1)。
+namespace leetcode.teemo_attacking;
+
+# 相邻两次攻击的间隔若小于持续时长，只有间隔那段被真正生效：
+# 逐段取 min(下次攻击时间 - 本次攻击时间, duration)，最后一段取完整 duration。
+[export(case: "camelCase")]
+micro findPoisonedDuration(timeSeries: ArrayList<i64>, duration: i64) -> i64 {
+    let count: usize = timeSeries.length()
+    let mut total: i64 = 0
+    let mut index: usize = 0
+    while index < count {
+        let mut chunk: i64 = duration
+        let next: usize = index + 1
+        if next < count {
+            let gap: i64 = timeSeries⁅next⁆ - timeSeries⁅index⁆
+            if gap < duration {
+                chunk = gap
+            }
+        }
+        total = total + chunk
+        index = index + 1
+    }
+    return total
+}
+
+class Solution {
+    micro findPoisonedDuration(self, timeSeries: ArrayList<i64>, duration: i64): i64 {
+        return findPoisonedDuration(timeSeries, duration)
+    }
+}

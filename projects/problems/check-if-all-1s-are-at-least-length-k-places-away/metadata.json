@@ -819,6 +819,7 @@
     ],
     "invoke": {
         "python": "Solution().kLengthApart",
-        "typescript": "Solution().kLengthApart"
+        "typescript": "Solution().kLengthApart",
+        "valkyrie": "kLengthApart"
     }
 }

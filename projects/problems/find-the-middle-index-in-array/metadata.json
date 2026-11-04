@@ -592,6 +592,7 @@
     ],
     "invoke": {
         "python": "Solution().findMiddleIndex",
-        "typescript": "Solution().findMiddleIndex"
+        "typescript": "Solution().findMiddleIndex",
+        "valkyrie": "findMiddleIndex"
     }
 }

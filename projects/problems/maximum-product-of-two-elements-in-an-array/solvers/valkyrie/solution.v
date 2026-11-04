@@ -1,5 +1,32 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: maxProduct 需要 读取 nums 找两最大值减一乘积
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.maximum_product_of_two_elements_in_an_array
+
+# 最大 (a - 1) * (b - 1) 来自最大的两个元素，单次扫描维护前两名。
+[export(case: "camelCase")]
+micro maxProduct(nums: ArrayList<i64>) -> i64 {
+    let count: usize = nums.length()
+    let mut first: i64 = 0
+    let mut second: i64 = 0
+    let mut i: usize = 0
+    while i < count {
+        let value: i64 = nums⁅i⁆
+        let mut placed: bool = false
+        if value > first {
+            second = first
+            first = value
+            placed = true
+        }
+        if placed == false {
+            if value > second {
+                second = value
+            }
+        }
+        i = i + 1
+    }
+    return (first - 1) * (second - 1)
+}
+
+class Solution {
+    micro maxProduct(self, nums: ArrayList<i64>): i64 {
+        return maxProduct(nums)
+    }
+}

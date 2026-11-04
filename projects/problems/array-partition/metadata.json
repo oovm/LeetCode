@@ -685,6 +685,7 @@
     ],
     "invoke": {
         "python": "Solution().arrayPairSum",
-        "typescript": "Solution().arrayPairSum"
+        "typescript": "Solution().arrayPairSum",
+        "valkyrie": "arrayPairSum"
     }
 }

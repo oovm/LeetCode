@@ -892,6 +892,7 @@
     ],
     "invoke": {
         "python": "Solution().smallestRangeI",
-        "typescript": "Solution().smallestRangeI"
+        "typescript": "Solution().smallestRangeI",
+        "valkyrie": "smallestRangeI"
     }
 }

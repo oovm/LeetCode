@@ -667,6 +667,7 @@
     ],
     "invoke": {
         "python": "Solution().minCostToMoveChips",
-        "typescript": "Solution().minCostToMoveChips"
+        "typescript": "Solution().minCostToMoveChips",
+        "valkyrie": "minCostToMoveChips"
     }
 }

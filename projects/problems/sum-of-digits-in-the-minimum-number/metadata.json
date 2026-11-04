@@ -733,6 +733,7 @@
     ],
     "invoke": {
         "python": "Solution().sumOfDigits",
-        "typescript": "Solution().sumOfDigits"
+        "typescript": "Solution().sumOfDigits",
+        "valkyrie": "sumOfDigits"
     }
 }

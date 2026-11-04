@@ -1,5 +1,31 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: pivotIndex 需要 读取 nums 前缀和找枢轴
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.find_pivot_index
+
+# 先求总和，再从左累加，判断左侧和等于右侧和（总和减左和减当前元素）。
+[export(case: "camelCase")]
+micro pivotIndex(nums: ArrayList<i64>) -> i64 {
+    let count: usize = nums.length()
+    let mut total: i64 = 0
+    let mut i: usize = 0
+    while i < count {
+        total = total + nums⁅i⁆
+        i = i + 1
+    }
+
+    let mut left: i64 = 0
+    let mut index: usize = 0
+    while index < count {
+        let current: i64 = nums⁅index⁆
+        if left == total - left - current {
+            return index as i64
+        }
+        left = left + current
+        index = index + 1
+    }
+    return -1
+}
+
+class Solution {
+    micro pivotIndex(self, nums: ArrayList<i64>): i64 {
+        return pivotIndex(nums)
+    }
+}

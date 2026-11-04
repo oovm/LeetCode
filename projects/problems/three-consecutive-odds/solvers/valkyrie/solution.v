@@ -1,5 +1,26 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: threeConsecutiveOdds 需要 读取 arr 检查三连奇数
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.three_consecutive_odds
+
+# 线性扫描窗口长度为 3 的连续奇数列。
+[export(case: "camelCase")]
+micro threeConsecutiveOdds(arr: ArrayList<i64>) -> bool {
+    let count: usize = arr.length()
+    let mut i: usize = 0
+    while i + 2 < count {
+        let a: i64 = arr⁅i⁆
+        let next: usize = i + 1
+        let b: i64 = arr⁅next⁆
+        let third: usize = i + 2
+        let c: i64 = arr⁅third⁆
+        if a % 2 == 1 && b % 2 == 1 && c % 2 == 1 {
+            return true
+        }
+        i = i + 1
+    }
+    return false
+}
+
+class Solution {
+    micro threeConsecutiveOdds(self, arr: ArrayList<i64>): bool {
+        return threeConsecutiveOdds(arr)
+    }
+}

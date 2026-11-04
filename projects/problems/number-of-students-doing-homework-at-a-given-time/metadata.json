@@ -767,6 +767,7 @@
     ],
     "invoke": {
         "python": "Solution().busyStudent",
-        "typescript": "Solution().busyStudent"
+        "typescript": "Solution().busyStudent",
+        "valkyrie": "busyStudent"
     }
 }

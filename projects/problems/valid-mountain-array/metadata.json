@@ -877,6 +877,7 @@
     ],
     "invoke": {
         "python": "Solution().validMountainArray",
-        "typescript": "Solution().validMountainArray"
+        "typescript": "Solution().validMountainArray",
+        "valkyrie": "validMountainArray"
     }
 }

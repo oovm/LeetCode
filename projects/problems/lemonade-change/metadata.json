@@ -724,6 +724,7 @@
     ],
     "invoke": {
         "python": "Solution().lemonadeChange",
-        "typescript": "Solution().lemonadeChange"
+        "typescript": "Solution().lemonadeChange",
+        "valkyrie": "lemonadeChange"
     }
 }

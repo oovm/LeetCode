@@ -585,6 +585,7 @@
     ],
     "invoke": {
         "python": "Solution().maxProduct",
-        "typescript": "Solution().maxProduct"
+        "typescript": "Solution().maxProduct",
+        "valkyrie": "maxProduct"
     }
 }

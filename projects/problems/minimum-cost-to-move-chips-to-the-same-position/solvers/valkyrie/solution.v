@@ -1,5 +1,29 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: minCostToMoveChips 需要 读取 position 统计奇偶位
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.minimum_cost_to_move_chips_to_the_same_position
+
+# 同奇偶之间移动代价为 0，跨奇偶每步代价 1，因此把全部筹码移到奇位或偶位的代价是较小那一类计数。
+[export(case: "camelCase")]
+micro minCostToMoveChips(position: ArrayList<i64>) -> i64 {
+    let count: usize = position.length()
+    let mut even: i64 = 0
+    let mut odd: i64 = 0
+    let mut i: usize = 0
+    while i < count {
+        if position⁅i⁆ % 2 == 0 {
+            even = even + 1
+        }
+        if position⁅i⁆ % 2 != 0 {
+            odd = odd + 1
+        }
+        i = i + 1
+    }
+    if even < odd {
+        return even
+    }
+    return odd
+}
+
+class Solution {
+    micro minCostToMoveChips(self, position: ArrayList<i64>): i64 {
+        return minCostToMoveChips(position)
+    }
+}

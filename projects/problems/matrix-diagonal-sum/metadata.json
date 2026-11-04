@@ -564,6 +564,7 @@
     ],
     "invoke": {
         "python": "Solution().diagonalSum",
-        "typescript": "Solution().diagonalSum"
+        "typescript": "Solution().diagonalSum",
+        "valkyrie": "diagonalSum"
     }
 }

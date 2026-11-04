@@ -1,5 +1,33 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: validMountainArray 需要 读取 arr 判定先升后降
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.valid_mountain_array
+
+# 先严格上升到峰顶，再严格下降到末尾；峰顶必须同时存在左右两段。
+[export(case: "camelCase")]
+micro validMountainArray(arr: ArrayList<i64>) -> bool {
+    let count: usize = arr.length()
+    if count < 3 {
+        return false
+    }
+    let last: usize = count - 1
+    let mut index: usize = 0
+    let mut next: usize = 1
+    while next < count && arr⁅index⁆ < arr⁅next⁆ {
+        index = index + 1
+        next = index + 1
+    }
+    if index == 0 || index == last {
+        return false
+    }
+    let mut current: usize = index
+    let mut ahead: usize = current + 1
+    while ahead < count && arr⁅current⁆ > arr⁅ahead⁆ {
+        current = current + 1
+        ahead = current + 1
+    }
+    return current == last
+}
+
+class Solution {
+    micro validMountainArray(self, arr: ArrayList<i64>): bool {
+        return validMountainArray(arr)
+    }
+}

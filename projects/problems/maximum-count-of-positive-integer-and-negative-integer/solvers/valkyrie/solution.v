@@ -1,5 +1,30 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: maximumCount 需要 读取 nums 计数正负取大
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.maximum_count_of_positive_integer_and_negative_integer
+
+# 分别统计正数与非负数中的零以外的负数个数，返回较大者。
+[export(case: "camelCase")]
+micro maximumCount(nums: ArrayList<i64>) -> i64 {
+    let count: usize = nums.length()
+    let mut positive: i64 = 0
+    let mut negative: i64 = 0
+    let mut i: usize = 0
+    while i < count {
+        let value: i64 = nums⁅i⁆
+        if value > 0 {
+            positive = positive + 1
+        }
+        if value < 0 {
+            negative = negative + 1
+        }
+        i = i + 1
+    }
+    if positive > negative {
+        return positive
+    }
+    return negative
+}
+
+class Solution {
+    micro maximumCount(self, nums: ArrayList<i64>): i64 {
+        return maximumCount(nums)
+    }
+}

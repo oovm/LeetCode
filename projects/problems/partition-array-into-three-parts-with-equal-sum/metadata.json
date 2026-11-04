@@ -492,6 +492,7 @@
     ],
     "invoke": {
         "python": "Solution().canThreePartsEqualSum",
-        "typescript": "Solution().canThreePartsEqualSum"
+        "typescript": "Solution().canThreePartsEqualSum",
+        "valkyrie": "canThreePartsEqualSum"
     }
 }

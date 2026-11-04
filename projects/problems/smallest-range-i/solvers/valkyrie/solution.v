@@ -1,5 +1,32 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: smallestRangeI 需要 读取 nums 求 max-min-2k 下限
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.smallest_range_i
+
+# 只有最大值能被压低、最小值能被抬高，各最多变化 k，剩余差取 0 下限。
+[export(case: "camelCase")]
+micro smallestRangeI(nums: ArrayList<i64>, k: i64) -> i64 {
+    let count: usize = nums.length()
+    let zero: usize = 0
+    let mut low: i64 = nums⁅zero⁆
+    let mut high: i64 = nums⁅zero⁆
+    let mut i: usize = 1
+    while i < count {
+        let value: i64 = nums⁅i⁆
+        if value < low {
+            low = value
+        }
+        if value > high {
+            high = value
+        }
+        i = i + 1
+    }
+    let gap: i64 = high - low - 2 * k
+    if gap < 0 {
+        return 0
+    }
+    return gap
+}
+
+class Solution {
+    micro smallestRangeI(self, nums: ArrayList<i64>, k: i64): i64 {
+        return smallestRangeI(nums, k)
+    }
+}

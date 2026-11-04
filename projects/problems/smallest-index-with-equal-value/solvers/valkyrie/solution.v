@@ -1,5 +1,22 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: smallestEqual 需要 读取 nums 找 i mod 10 == nums[i]
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.smallest_index_with_equal_value
+
+# 从前往后找第一个满足 i mod 10 == nums[i] 的下标。
+[export(case: "camelCase")]
+micro smallestEqual(nums: ArrayList<i64>) -> i64 {
+    let count: usize = nums.length()
+    let mut i: usize = 0
+    while i < count {
+        let digit: i64 = (i % 10) as i64
+        if digit == nums⁅i⁆ {
+            return i as i64
+        }
+        i = i + 1
+    }
+    return -1
+}
+
+class Solution {
+    micro smallestEqual(self, nums: ArrayList<i64>): i64 {
+        return smallestEqual(nums)
+    }
+}

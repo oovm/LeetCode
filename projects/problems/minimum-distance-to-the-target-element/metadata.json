@@ -950,6 +950,7 @@
     ],
     "invoke": {
         "python": "Solution().getMinDistance",
-        "typescript": "Solution().getMinDistance"
+        "typescript": "Solution().getMinDistance",
+        "valkyrie": "getMinDistance"
     }
 }
