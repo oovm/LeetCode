@@ -223,6 +223,150 @@ micro probe(m: HashMap<i64, i64>, flag: bool, flag2: bool, a: i64, b: i64) -> bo
 - 影响题（1）：`isomorphic-strings`（`is_isomorphic`，`forward.insert` 位于 `else`、
   `if forward.get(a).unwrap() != b { return false }` 位于 then，诊断 `location=block 12 terminator`）。
 
+### G8 `DirectedGraph<N>` 缺无向边写入
+
+- 状态：未提供（std API 缺口，**不阻断构建**；2026-11-04 静态核对 `std/source/collection/graph/DirectedGraph.v`）
+- 定性：**该有但没有**。无向关系没有一等写入入口，`add_edge` 只表达单向，无向边只能由调用方
+  双写两条反向边；`has_edge(a, b)` 也不保证 `has_edge(b, a)`，无向性完全靠调用约定维持。
+- 期望签名：
+
+```v
+# std/source/collection/graph/DirectedGraph.v（与 add_edge 同形）
+micro add_undirected_edge(mut self, from: N, to: N): bool
+```
+
+- 影响题（4，调用点均为「同一关系双写 add_edge」）：`is-graph-bipartite`（785）、
+  `maximal-network-rank`（1615）、`possible-bipartition`（886）、`find-center-of-star-graph`（1791）。
+- 不对称点：同命名空间 `MatrixGraph.add_undirected_edge`、`WeightedGraph.add_undirected_edge` 均存在；
+  `DirectedGraph` 只有 `add_edge` / `add_node`。
+- 判定：**std 缺口**（非编译器）。
+- 修复初判：**加 API**（一行转发两次 `add_edge`）。更根本的是建模问题，见本节末尾「建模提示」。
+
+### G9 `std.math.graph_theory` 缺二分图判定（二色着色）
+
+- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `unweighted.v`）
+- 定性：**该有但没有**。模块自述「只补连通分量与无权最短路，BFS/DFS 归 `DirectedGraph`」，
+  但二分性（二色着色）是图上最基础的可判定性质，目前无入口。
+- 期望签名：
+
+```v
+# std/source/math/graph_theory/unweighted.v（与 weak_components 同形）
+micro bipartition<N>(graph: std.collection.DirectedGraph<N>) -> Option<HashMap<N, i64>>
+    where N: Equal & Hash
+```
+
+  `Some(coloring)`（每点 0/1 着色）表示二分；`None` 表示存在冲突边。
+- 影响题（2）：`is-graph-bipartite`（785）、`possible-bipartition`（886），两题都在题内手写 BFS 着色。
+- 不对称点：`weak_components`、`strong_components`、`unweighted_shortest_paths` 均已提供，
+  同级的二分性判定缺席。
+- 判定：**std 缺口**。
+- 修复初判：**加 API**（直接复用 `DirectedGraph` 的 BFS）。
+
+### G10 `DisjointSet<T>` 缺分量规模 / 成员聚合
+
+- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `std/source/collection/DisjointSet.v`）
+- 定性：**该有但没有**。并查集把「合并」做成 API，却没把「这个分量有多大 / 有哪些成员」暴露出来；
+  调用方只能逐个 `find_root` 再自建 `HashMap` 归并，等于重写 DSU 的内部职责。
+- 期望签名：
+
+```v
+# std/source/collection/DisjointSet.v
+micro group_sizes(mut self): HashMap<T, usize>
+micro group_members(mut self, root: T): ArrayList<T>
+```
+
+- 影响题（3）：`count-unreachable-pairs-of-nodes-in-an-undirected-graph`（2316）、
+  `count-the-number-of-complete-components`（2685）、`largest-component-size-by-common-factor`（952）。
+  三题都出现「`find_root` + `HashMap<i64, i64>` 累加」的同一段手写聚合。
+- 不对称点：`group_count()` 已提供、`length()` 是元素总数，二者都拿不到单个分量的规模。
+- 判定：**std 缺口**。
+- 修复初判：**加 API**（`group_sizes` 一次遍历即可，且与路径压缩共用）。
+
+### G11 `std.collection.sort` 只有就地排序，缺返回新序列的 `sorted_by`
+
+- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `std/source/collection/sort.v`）
+- 定性：**该有但没有**。`quick_sort` / `merge_sort` 形参是 `list: ArrayList<T>`（非 mut），语义为
+  「就地改容器」，调用方要排序必须先自建副本；`Array<T>` 没有任何排序入口。
+- 期望签名：
+
+```v
+# std/source/collection/sort.v
+micro sorted_by<T>(list: ArrayList<T>, cmp: micro(T, T) -> i32): ArrayList<T>
+micro sorted_by<T>(list: Array<T>, cmp: micro(T, T) -> i32): ArrayList<T>
+```
+
+- 影响题（2）：`groups-of-special-equivalent-strings`（893，even/odd 两个副本）、
+  `reorder-data-in-log-files`（937，整表副本）。
+- 不对称点：`ArrayList` 有 6 个排序函数（`quick_sort` / `quick_sort_range` / `partition` / `swap` /
+  `merge_sort` / `merge_sort_range`），`Array` 为 0；没有任何一个返回新序列。
+- 判定：**std 缺口**。
+- 修复初判：**加 API**（在副本上调 `merge_sort` 的薄封装）。
+
+### G12 `HashSet::new()` 无容量参数
+
+- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `std/source/collection/hashed/HashSet.v`）
+- 定性：**该有但没有**。同族容器 `HashMap::new(capacity)` 支持预分配，`HashSet` 把容量写死为 16。
+- 期望签名：
+
+```v
+# std/source/collection/hashed/HashSet.v
+micro new(capacity: usize): Self
+micro with_capacity(capacity: usize): Self
+```
+
+- 影响题（2）：`groups-of-special-equivalent-strings`（893）、`longest-consecutive-sequence`（128，
+  元素数最大 1e5 的整表插入）。
+- 不对称点：`HashSet::new()` 固定 `SwissSet::new(16)`；`HashMap::new(capacity: usize)` 直传容量。
+- 判定：**std 缺口**。
+- 修复初判：**加 API**（一行转发 `SwissSet::new(capacity)`）。
+
+### G13 `utf8` 缺字典序比较
+
+- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 `reorder-data-in-log-files` 静态确认）
+- 定性：**该有但没有**。`utf8` 只实现 `equals` / `not_equals`，没有大小比较；任何按字典序排序的题
+  都要在题内逐字符手写比较函数。
+- 期望签名：
+
+```v
+# std/source/text/Utf8Text.v
+micro compare(self, other: utf8) -> i32   # <0 / 0 / >0，按码位（与 UTF-8 字节序一致）
+```
+
+- 影响题（1）：`reorder-data-in-log-files`（937，题内 `compare_text`）。
+- 不对称点：`char` 至少能经 `Ordinal` 转 `u32` 再比较；`utf8` 连可比较的码位视图都没有。
+- 判定：**std 缺口**。
+- 修复初判：**加 API**（按字节序比较，与 UTF-8 编码自洽）。
+
+### G14 `utf8` 缺 `split_once`
+
+- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 `reorder-data-in-log-files` 静态确认）
+- 定性：**该有但没有**。`split(separator) -> [utf8]` 只能整段切分；需要「首个分隔符左/右两段」时，
+  只能组合 `index_of` + `slice` 三次，且「无分隔符 / 分隔符在末尾」等分支都要调用方自处理。
+- 期望签名：
+
+```v
+# std/source/text/Utf8Text.v（成对承载需要新增记录类型）
+class SplitParts { head: utf8; tail: utf8 }
+micro split_once(self, separator: utf8) -> Option<SplitParts>
+```
+
+- 影响题（1）：`reorder-data-in-log-files`（937，`separator_of` + 两次 `slice`）。
+- 不对称点：`split` / `slice` / `try_slice` / `index_of` 都有，唯独缺单次切分。
+- 判定：**std 缺口**。
+- 修复初判：**加 API**（`index_of` + 两段 `slice` 即可，代价是要引入承载两段的记录类型）。
+
+### 建模提示（G8 的根部，比缺 API 严重）
+
+- 现象：无向性不是图模型的一等属性。`DirectedGraph` 只以「有向」为轴；`MatrixGraph`、`WeightedGraph`
+  各自补一个 `add_undirected_edge`，同一语义在三种图上三种入口，且**没有无向图类型**
+  ——无向关系只能以「双向有向图 + 调用方自律」表达，`has_edge` / `out_degree` 的语义也随之变成
+  「出边」而非「邻接」。
+- 若只补 `add_undirected_edge`：G8 的 4 道题能写短，但 `has_edge(b, a) == false` 这类反直觉状态仍可
+  构造，边方向性仍然泄漏给每道题。
+- 优先级判断：**改建模 > 加 API**。合理形态是让方向性成为图类型的构造属性（或提供
+  `UndirectedGraph<N>` 视图），`add_undirected_edge` 只是它上面的便捷入口。该判断属设计建议，
+  不构成本轮实现任务。
+
 ## 批次状态：canonical 未构建 214 题（2026-11-04 实测）
 
 - 范围：口径定为 496 后，扫描起点未构建的 **214 题**（分两个 107 题子块、单进程顺序构建）。
