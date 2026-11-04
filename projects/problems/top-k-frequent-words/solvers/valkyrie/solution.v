@@ -2,22 +2,21 @@ namespace leetcode.top_k_frequent_words;
 
 using std.collection;
 
-# 字典序比较：std 的 utf8 没有 compare，Comparable 尚未落地（G13/G15），
-# 按 UTF-8 字节逐字节比较（等长前缀后短者小）。
+# `utf8` 的字典序比较器（std 的 `utf8` 虽有 `Comparable`，但跨闭包消费点尚未验证）。
 micro compare_text(left: utf8, right: utf8) -> i32 {
-    let left_length: usize = left.byte_length()
-    let right_length: usize = right.byte_length()
-    let mut offset: usize = 0
-    while offset < left_length && offset < right_length {
-        let left_byte: u32 = left.byte_at(offset) as u32
-        let right_byte: u32 = right.byte_at(offset) as u32
-        if left_byte < right_byte {
+    let left_length: usize = left.length()
+    let right_length: usize = right.length()
+    let mut index: usize = 0
+    while index < left_length && index < right_length {
+        let left_code: u32 = left⁅index⁆ as u32
+        let right_code: u32 = right⁅index⁆ as u32
+        if left_code < right_code {
             return -1
         }
-        if left_byte > right_byte {
+        if left_code > right_code {
             return 1
         }
-        offset = offset + 1
+        index = index + 1
     }
     if left_length < right_length {
         return -1
@@ -28,61 +27,78 @@ micro compare_text(left: utf8, right: utf8) -> i32 {
     return 0
 }
 
-# 频次降序、同频字典序升序；不改动原输入。
-# 频次桶（`freq` → 该频次的词）先从高到低出桶，桶内用命名比较器 `compare_text` 就地
-# `merge_sort`，避免排序闭包捕获 `counts`（没有返回新序列的 `sorted_by`，G11）。
+micro equal_text(left: utf8, right: utf8) -> bool {
+    if left.length() != right.length() {
+        return false
+    }
+    let mut index: usize = 0
+    while index < left.length() {
+        if (left⁅index⁆ as u32) != (right⁅index⁆ as u32) {
+            return false
+        }
+        index = index + 1
+    }
+    return true
+}
+
+# 关键字排序：频次降序为第一维（按桶从高到低取），同频次内字典序升序（`sorted_by`）。
+# `HashMap<utf8, i64>` 在本批 addon 上仍不可编译（`std::hash` 合同实例未进依赖导入），
+# 因此词频用「词表 + 计数表」线性查找；真写法是 `HashMap<utf8, i64>`。
 [export(case: "camelCase")]
 micro top_k_frequent(words: ArrayList<utf8>, k: i64) -> ArrayList<utf8> {
-    let mut counts: HashMap<utf8, i64> = HashMap::new(words.length())
-    let mut distinct: ArrayList<utf8> = ArrayList::new(words.length())
-    loop word in words {
-        if counts.contains_key(word) {
-            let current: i64 = counts.get(word).unwrap()
-            counts.insert(word, current + 1)
-        } else {
-            counts.insert(word, 1)
+    let total: usize = words.length()
+    let mut distinct: ArrayList<utf8> = ArrayList::new(total)
+    let mut counts: ArrayList<i64> = ArrayList::new(total)
+
+    let mut index: usize = 0
+    while index < total {
+        let word: utf8 = words⁅index⁆
+        let mut slot: usize = 0
+        let mut found: bool = false
+        while slot < distinct.length() {
+            if equal_text(distinct⁅slot⁆, word) {
+                counts⁅slot⁆ = counts⁅slot⁆ + 1
+                found = true
+            }
+            slot = slot + 1
+        }
+        if !found {
             distinct.push(word)
+            counts.push(1)
         }
+        index = index + 1
     }
 
-    let mut highest: i64 = 0
-    loop word in distinct {
-        let current: i64 = counts.get(word).unwrap()
-        if current > highest {
-            highest = current
-        }
-    }
-
-    let mut buckets: ArrayList<ArrayList<utf8>> = ArrayList::new(highest as usize + 1)
-    let mut slot: usize = 0
-    while slot <= highest as usize {
+    let mut buckets: ArrayList<ArrayList<utf8>> = ArrayList::new(total + 1)
+    let mut bucket_index: usize = 0
+    while bucket_index <= total {
         buckets.push(ArrayList::new(0))
-        slot = slot + 1
-    }
-    loop word in distinct {
-        let at: usize = counts.get(word).unwrap() as usize
-        let mut bucket: ArrayList<utf8> = buckets⁅at⁆
-        bucket.push(word)
-        buckets.set(at, bucket)
+        bucket_index = bucket_index + 1
     }
 
-    slot = 0
-    while slot < buckets.length() {
-        merge_sort(buckets⁅slot⁆, compare_text)
-        slot = slot + 1
+    let mut cursor: usize = 0
+    while cursor < distinct.length() {
+        let frequency: i64 = counts⁅cursor⁆
+        let mut bucket: ArrayList<utf8> = buckets⁅frequency as usize⁆
+        bucket.push(distinct⁅cursor⁆)
+        buckets.set((frequency as usize + 1) as isize, bucket)
+        cursor = cursor + 1
     }
 
     let take: usize = k as usize
     let mut result: ArrayList<utf8> = ArrayList::new(take)
-    let mut level: i64 = highest
-    while level >= 1 && result.length() < take {
-        let bucket: ArrayList<utf8> = buckets⁅level as usize⁆
-        let mut i: usize = 0
-        while i < bucket.length() && result.length() < take {
-            result.push(bucket⁅i⁆)
-            i = i + 1
+    let mut frequency: usize = total
+    while frequency > 0 && result.length() < take {
+        let mut bucket: ArrayList<utf8> = buckets⁅frequency⁆
+        if bucket.length() > 0 {
+            bucket = sorted_by(bucket, compare_text)
+            let mut slot: usize = 0
+            while slot < bucket.length() && result.length() < take {
+                result.push(bucket⁅slot⁆)
+                slot = slot + 1
+            }
         }
-        level = level - 1
+        frequency = frequency - 1
     }
     return result
 }

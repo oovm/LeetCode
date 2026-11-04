@@ -1320,6 +1320,7 @@
     ],
     "invoke": {
         "python": "Solution().longestWord",
-        "typescript": "Solution().longestWord"
+        "typescript": "Solution().longestWord",
+        "valkyrie": "longestWord"
     }
 }

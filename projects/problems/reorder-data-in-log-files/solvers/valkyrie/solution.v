@@ -25,11 +25,15 @@ micro compare_text(left: utf8, right: utf8) -> i32 {
     return 0
 }
 
-# std 的 split 只能整段切分，取「首个空格前 / 后」需要 index_of + slice 三次组合。
+# `index_of(utf8)` 内部走 u8 相等合同（本批 addon 未绑定 `__u8_eq` host provider），
+# 这里按码位手动扫描；真写法是 `log.index_of(" ")`。
 micro separator_of(log: utf8) -> usize {
-    let found: Option<usize> = log.index_of(" ")
-    if found.is_some() {
-        return found.unwrap()
+    let mut i: usize = 0
+    while i < log.length() {
+        if (log⁅i⁆ as u32) == 32 {
+            return i
+        }
+        i = i + 1
     }
     return 0
 }
@@ -76,12 +80,7 @@ micro compare_logs(left: utf8, right: utf8) -> i32 {
 # 字母日志按内容、再按标识符排序；数字日志保持原始相对顺序（merge_sort 稳定）。
 [export(case: "camelCase")]
 micro reorder_log_files(logs: ArrayList<utf8>) -> ArrayList<utf8> {
-    let mut ordered: ArrayList<utf8> = ArrayList::new(logs.length())
-    loop log in logs {
-        ordered.push(log)
-    }
-    merge_sort(ordered, compare_logs)
-    return ordered
+    return sorted_by(logs, compare_logs)
 }
 
 class Solution {

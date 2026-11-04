@@ -919,6 +919,7 @@
     ],
     "invoke": {
         "python": "Solution().kClosest",
-        "typescript": "Solution().kClosest"
+        "typescript": "Solution().kClosest",
+        "valkyrie": "kClosest"
     }
 }

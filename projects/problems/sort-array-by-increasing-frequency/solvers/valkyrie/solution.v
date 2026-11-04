@@ -37,12 +37,12 @@ micro frequency_sort(nums: ArrayList<i64>) -> ArrayList<i64> {
         let weight: i64 = 200 - (value + 100)
         encoded.push(times * 201 + weight)
     }
-    merge_sort(encoded, compare_asc)
+    let ordered: ArrayList<i64> = sorted_by(encoded, compare_asc)
 
     let mut result: ArrayList<i64> = ArrayList::new(count)
     let mut index: usize = 0
-    while index < encoded.length() {
-        let key: i64 = encoded⁅index⁆
+    while index < ordered.length() {
+        let key: i64 = ordered⁅index⁆
         let times: i64 = key / 201
         let value: i64 = (200 - (key % 201)) - 100
         let mut copy: i64 = 0

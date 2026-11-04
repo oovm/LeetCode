@@ -1891,6 +1891,7 @@
     ],
     "invoke": {
         "python": "Solution().reorderLogFiles",
-        "typescript": "Solution().reorderLogFiles"
+        "typescript": "Solution().reorderLogFiles",
+        "valkyrie": "reorderLogFiles"
     }
 }

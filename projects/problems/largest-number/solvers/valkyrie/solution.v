@@ -1,11 +1,35 @@
-namespace leetcode.solution
+namespace leetcode.largest_number;
 
-using std.collection
-using std.text
+using std.collection;
 
-# 题内触发点: 具名比较逻辑 + 内联 `micro` 闭包作为 `merge_sort` 的比较器。
+# UTF-8 字典序比较：std 的 `utf8` 虽已有 `Comparable`，但在本批 addon 上
+# 直接 `compare` 的消费点尚未验证，这里以字节/码位逐位比较兜住语义。
+micro compare_text(left: utf8, right: utf8) -> i32 {
+    let left_length: i64 = left.length() as i64
+    let right_length: i64 = right.length() as i64
+    let mut index: i64 = 0
+    while index < left_length && index < right_length {
+        let left_code: u32 = left⁅index as usize⁆ as u32
+        let right_code: u32 = right⁅index as usize⁆ as u32
+        if left_code < right_code {
+            return -1
+        }
+        if left_code > right_code {
+            return 1
+        }
+        index = index + 1
+    }
+    if left_length < right_length {
+        return -1
+    }
+    if left_length > right_length {
+        return 1
+    }
+    return 0
+}
+
 micro concat_text(left: utf8, right: utf8) -> utf8 {
-    let mut builder: Utf8Builder = Utf8Builder::new(left.byte_length() + right.byte_length())
+    let mut builder: Utf8Builder = Utf8Builder::new(left.length() + right.length())
     builder.append(left)
     builder.append(right)
     return builder.build()
@@ -17,68 +41,49 @@ micro text_of_number(value: i64) -> utf8 {
     return builder.build()
 }
 
-micro compare_text(left: utf8, right: utf8) -> i32 {
-    let length_left: i64 = left.byte_length() as i64
-    let length_right: i64 = right.byte_length() as i64
-    let mut index: i64 = 0
-    while index < length_left && index < length_right {
-        let code_left: u8 = left.byte_at(index as usize)
-        let code_right: u8 = right.byte_at(index as usize)
-        if code_left < code_right {
-            return 0 - 1
-        }
-        if code_left > code_right {
-            return 1
-        }
-        index = index + 1
+# 拼接序：`ab` 大于 `ba` 时 `a` 应排在 `b` 前面。
+micro compare_joined(left: i64, right: i64) -> i32 {
+    let text_left: utf8 = text_of_number(left)
+    let text_right: utf8 = text_of_number(right)
+    let joined_order: i32 = compare_text(concat_text(text_left, text_right), concat_text(text_right, text_left))
+    if joined_order > 0 {
+        return -1
     }
-    if length_left < length_right {
-        return 0 - 1
-    }
-    if length_left > length_right {
+    if joined_order < 0 {
         return 1
     }
     return 0
 }
 
-# 拼接序：`ab` 大于 `ba` 时 `a` 应排在 `b` 前面。
-micro joined_order(left: i64, right: i64) -> i32 {
-    let text_left: utf8 = text_of_number(left)
-    let text_right: utf8 = text_of_number(right)
-    return compare_text(concat_text(text_left, text_right), concat_text(text_right, text_left))
+[export(case: "camelCase")]
+micro largestNumber(nums: ArrayList<i64>) -> utf8 {
+    let values: ArrayList<i64> = sorted_by(nums, compare_joined)
+    let mut builder: Utf8Builder = Utf8Builder::new(values.length() * 4)
+    loop value in values {
+        builder.append_i64(value)
+    }
+    let joined: utf8 = builder.build()
+    if joined.length() == 0 {
+        return "0"
+    }
+    if joined⁅0⁆ as u32 == 48 {
+        let mut only_zero: bool = true
+        let mut index: usize = 0
+        while index < joined.length() {
+            if joined⁅index⁆ as u32 != 48 {
+                only_zero = false
+            }
+            index = index + 1
+        }
+        if only_zero {
+            return "0"
+        }
+    }
+    return joined
 }
 
 class Solution {
-    [export(case: "largestNumber")]
-    micro largestNumber(nums: ArrayList<i64>) -> utf8 {
-        let values: ArrayList<i64> = ArrayList::new(nums.length())
-        loop value in nums {
-            values.push(value)
-        }
-        merge_sort(values, micro(a: i64, b: i64) -> i32 {
-            return 0 - joined_order(a, b)
-        })
-        let mut builder: Utf8Builder = Utf8Builder::new(values.length() * 4)
-        loop value in values {
-            builder.append_i64(value)
-        }
-        let joined: utf8 = builder.build()
-        if joined.byte_length() == 0 {
-            return "0"
-        }
-        if joined.byte_at(0) == 48 {
-            let mut only_zero: bool = true
-            let mut index: i64 = 0
-            while index < (joined.byte_length() as i64) {
-                if joined.byte_at(index as usize) != 48 {
-                    only_zero = false
-                }
-                index = index + 1
-            }
-            if only_zero {
-                return "0"
-            }
-        }
-        return joined
+    micro largestNumber(self, nums: ArrayList<i64>): utf8 {
+        return largestNumber(nums)
     }
 }
