@@ -81,6 +81,12 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | --- | --- | --- | --- |
 | F1 设计类操作序列无法判题 | `TestCase` 只有 `args` / `expected`，没有「多操作序列 + 每步返回」；TS 候选只认单入口单调用，导出类被当成函数直接调用 | `TypeError: Class constructor LRUCache cannot be invoked without 'new'`（6/6 题同一形态） | `src/domain/problem.ts:2-5`；`src/adapters/typescript-node/ref.ts:48-71`（`makeTsCandidate` 的 `const exported = mod[expr]` 分支）；同文件 `:82-88`（`runTsSolverOnce` 每用例单次调用）；`scripts/run_v_solver.ts:55`（取单一 wasm export 符号）与 `:168`（逐用例单次调用） |
 | F2 设计类实例无 wasm 导出 / 实例句柄 ABI | 类方法不能 `[export]`，装配层要求单一入口，设计类没有「构造 + 逐方法调用」形态 | `source group closure failed: entry source group 'leetcode-min-stack' declares no [export], [main] or [test] entry`（6/6 题同一形态） | 题侧 `solvers/valkyrie/solution.v`（`class` 体只放字段，方法全在 `imply`）；装配侧入口闭包在 `nyar-vm.rs` |
+| F3 库导出 `Utf8` 返回值缺宿主句柄物化 | schema 声明 `returns: Utf8`（宿主 i32 句柄），wasm 物理签名却返回 `anyref` managed struct；emitter 只为形参合成句柄物化 wrapper，返回值原样透传 | `TypeError: Cannot convert object to primitive value`（26 题，全部为字符串返回题） | 26/26 题 schema `returns.kind=Utf8` 且实测导出签名 `(result anyref)`（如 `convert-a-number-to-hexadecimal` 的 `toHex`）；`nyar-emitter/src/lowering/backends/wasm/mir/entry.rs:191-227`（形参物化）与 `:515-580`（仅 param wrapper，返回透传） |
+| F4 导出名缩写大小写漂移 | camelCase 转换压平连续大写缩写（`preimage_size_fzf` → `preimageSizeFzf`），题面是 `preimageSizeFZF` | `wasm 里找不到 metadata.invoke 对应的 export "preimageSizeFZF"（已有: preimageSizeFzf ...）`（4 题） | 题侧 `solution.v` 导出声明 + 题库 `metadata.invoke`；harness 单点归一在 `src/adapters/valkyrie-node/abi.ts` 的 `matchWasmExportSymbol` |
+| F5 schema 形参名与 metadata 键不一致 | schema 的 `params[].name` 取自 V 源码形参标识符，`orderArgsBySchema` 双向严格按名匹配 | `AbiSchemaError: args.s: metadata.tests.args 缺少参数 "s"`（2 题；另 1 题报 `prime_factors`） | `src/adapters/valkyrie-node/abi.ts:422-437`；`excel-sheet-column-number`（`s` vs `columnTitle`）、`ransom-note`（`ransom_note` vs `ransomNote`）、`maximize-number-of-nice-divisors`（`prime_factors` vs `primeFactors`） |
+| F6 `expected` 存宿主异常文本 | metadata 期望值是 Python 参考实现的宿主异常文本，但判题驱动不设递归上限，V / TS 也不产生该文本 | `expected "Error: maximum recursion depth exceeded", no exception raised`（5 题） | 5 题见下；`scripts/isolated_python_child.py` 无 `setrecursionlimit`，TS / Bun / V lane 同样无递归上限 |
+| F7 数值答案错 22 条未分类 | 用户口径 21 条，实测严格 numeric-vs-numeric 22 条，混有题解错、语料错与 ABI 缺陷 | 逐题见分桶小节 | `.cache/judge-failures.json`；定位脚本 `.cache/probe-numeric.ts`、`probe-fixtures.py`、`probe-minadd.py` |
+| F8 计时轮污染实参 | 子进程多轮复用同一 args 对象，题解原地改写（排序 / 去重 / 填充）污染收集轮 | `tests[0]: expected "1", got "0"`（`remove-duplicates-from-sorted-array`、`remove-element` 的 TS lane） | `src/isolated/child-loops.ts`、`scripts/isolated_python_child.py`；已修：`structuredClone` / `copy.deepcopy`，克隆在计时窗口外 |
 
 - F1 不是「题面写法问题」：操作序列（`["LRUCache", "put", "get", ...]` 加每步返回）是题面本身，
   压成单函数调用等于改题。R29 的 `metadata.tests` 保持 `operations` / `arguments` / 每步
@@ -91,6 +97,75 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
   未定义类方法导出。
 - 两者独立：修 F1 只让 TS 侧可跑序列；修 F2 只让 V 侧有可调用入口。任一未落地，设计题都只能
   记「写完未验证」。
+- F3 与 F1 同属「对象 / 实例被当标量」，但层不同：F1 是 `TestCase` 缺操作序列，修在 harness；
+  F3 是 wasm 返回值物理载体与 ABI 声明不符，修在 emitter。两族分开落地，没有共用一处改动。
+
+### F1 修复落地（2026-11-05，判题侧）
+
+`TestCase` 已引入显式操作序列形态，不把类压成单函数：
+
+- 领域模型：`src/domain/problem.ts` 的 `TestCase = CallTestCase | OperationSequenceCase`；
+  `OperationSequenceCase.args = { operations, arguments }`，`expected` 与 `operations` 等长。
+  识别只认 `metadata.tests` 原形（恰好这两个键、`operations[0]` 是类名、`arguments` 等长数组），
+  见 `src/domain/operation-sequence.ts`。
+- 执行：TS（`src/isolated/ts-entry.ts`、`src/adapters/typescript-node/ref.ts`、
+  `src/adapters/typescript-bun/runtime.ts`）与 Python（`scripts/python_design_sequence.py`、
+  `scripts/isolated_python_child.py`、`scripts/run_python_solver.py`）统一「`new` 构造一次 + 逐操作调用」。
+  构造参数只喂 `arguments[0]`，不混入首个操作；void 返回归一为 `null`，与 Python `None`、
+  metadata `null` 对齐。
+- 断言：逐步比较，失败定位到 `tests[i].step[j] (op)` 并给出期望 vs 实际，不再只报用例整体失败。
+- 验证：6 题 × 2 用例，**TS 12/12、Python 12/12**（`scripts/run_ts_solver.ts` /
+  `scripts/run_python_solver.py`）；定向 `npx vitest run tests/operation-sequence.test.ts
+  tests/wasm-export-name.test.ts tests/isolated-judge.test.ts` = **21 passed**。
+- V 侧仍是 0/6：`scripts/run_v_solver.ts` 检测到操作序列直接发结构化 blocked
+  （`operationSequenceUnsupportedReason`），不再把导出类当函数调用；停点仍是 F2，与 F1 独立。
+
+### F3 / F4 / F6 / F8 实测与处理
+
+- **F3（26 条，编译器侧，移交）**：26 题 26/26 的 ABI schema 都声明 `returns.kind=Utf8`
+  （全部为字符串返回题，如 `integer-to-roman`、`decode-the-message`、`capitalize-the-title`），
+  但 `wasm-tools print` 实测导出物理签名是 `(param i64) (result anyref)`，返回的是 prototype 为 null
+  的 wasm GC struct。glue 的 `demarshalLibraryReturn` 在 Utf8 分支对 raw 调 `describeValue(raw)`，
+  半路 `String(value)` 抛出 `Cannot convert object to primitive value`，把本应报的
+  「expected a valid host string handle」掩盖掉。emitter 已有形参侧
+  `host_handle_to_managed_utf8` wrapper，却没有返回值侧的 managed → i32 句柄物化；
+  **修点在 `nyar-vm.rs`，不是 harness 的 marshal 递归**（`preserveI64Precision` /
+  `normalizeResultByAbiType` 对 Utf8 均按原值透传，且它们不调 `String`）。
+- **F4（4 条，已在 harness 修）**：归一化放在 `matchWasmExportSymbol`：精确命中优先；仅当精确失败
+  且候选里恰有一个大小写变体时接受，多候选或无候选都失败闭合。**不改题库、不改 `solution.v`**
+  ——题面命名是唯一权威，若反过来要求编译器 / 题库接受 `Fzf` / `Iii` 这类压平名，会把
+  `snake_case_to_camel_case` 的缩写歧义扩散到 800+ 题的公开导出面。验证：`preimage-size-of-factorial-zeroes-function`
+  104/104、`spiral-matrix-iii` 78/78、`confusing-number-ii` 60/60 通过；
+  `sort-array-by-parity-ii` 过了导出门后在 `tests[7]` 暴露 `RuntimeError: unreachable`（G3
+  `ArrayList` 返回 bridge，归编译器，另行移交）。
+- **F6（5 题，语料缺陷，待题库侧删用例）**：`closest-fair-integer`、`handshakes-that-dont-cross`、
+  `number-of-strings-which-can-be-rearranged-to-contain-substring`、
+  `number-of-ways-to-reach-a-position-after-exactly-k-steps`、`student-attendance-record-ii`。
+  判题驱动任何 lane 都没有递归上限，Python 参考的 `maximum recursion depth exceeded` 是宿主实现事实，
+  不是题目答案；按本账本「用例数据清洗规则」应删该用例，不逼实现复刻宿主异常文本。
+  同类宿主异常文本还有 `list assignment index out of range`（`merge-sorted-array`、
+  `can-make-arithmetic-progression-from-sequence`）、`pow expected 2 arguments, got 3`（
+  `count-the-number-of-arrays-with-k-matching-adjacent-elements`）、`negative shift count`（
+  `find-kth-bit-in-nth-binary-string`）、`Execution timed out`（`prime-palindrome`），同规则处理。
+- **F8（harness 已修）**：`executeRun` 每轮 / 收集都从 `structuredClone(entry.args)` 开始，
+  克隆在计时窗口外；Python 侧对应 `copy.deepcopy`。验证：TS lane `remove-duplicates-from-sorted-array`
+  **127/127**、`remove-element` **112/112** 全通过；新增 `inplace-dedup` fixture 与
+  `iterations:3 warmup:1` 的回归用例。
+
+### F7 数值答案错 22 条分桶（只分类，未改题解）
+
+| 桶 | 条数 | 代表题 |
+| --- | --- | --- |
+| 确属题解算法错（移交题解线） | 15 | `best-time-to-buy-and-sell-stock`、`domino-and-tromino-tiling`、`find-minimum-in-rotated-sorted-array`、`find-the-minimum-possible-sum-of-a-beautiful-array`、`k-th-symbol-in-grammar`、`kth-smallest-element-in-a-sorted-matrix`、`majority-element`、`maximum-number-that-sum-of-the-prices-is-less-than-or-equal-to-k`、`minimum-factorization`、`minimum-number-of-pushes-to-type-word-i`、`non-negative-integers-without-consecutive-ones`、`single-number`、`ugly-number-iii`、`minimum-cost-to-set-cooking-time`、`smallest-number-with-given-digit-product` |
+| 编译器 / ABI（移交 `nyar-vm.rs`） | 2 | `remove-duplicates-from-sorted-array`、`remove-element` —— V lane 仍报 `expected 1 / 9, got 0`，guest 收到的是默认空 `ArrayList`（容器本身构造正确，原始导出仍返回 `0n`） |
+| 语料 args / expected 缺陷（待题库侧清洗） | 5 | `maximum-swap`（expected 尾数 `...900`，真值 `...100`）、`maximum-number-that-makes-result-of-bitwise-and-zero`（args / expected 均被 double 抹平）、`numbers-with-repeated-digits`（args `1234567890123456800` 已失真）、`minimum-array-end`（真值 `...999999999`，expected `...000`）、`minimum-addition-to-make-integer-beautiful`（expected `787`，暴力真值 `788`） |
+| 精度 / 序列化（harness 侧） | 0 | 大整数用例上 V 输出与 Python 参考逐位一致，i64 判题链本身没有精度损失 |
+
+- `minimum-array-end` 未被 `valkyrie-corpus-precision-defects.json` 捕获：`107374182400000000`
+  = `2^38 × 5^8`，可被 double 精确表示（class D），扫描器只找「不可精确表示」，抓不到「精确但语义错」。
+- `minimum-addition` 在该 JSON 里只记了 class A 的 `args.n`，`tests[20].expected` 的语义错没有对应条目。
+- 建议后续把上述 5 题补进 `valkyrie-corpus-precision-defects.json` / `valkyrie-quarantine.json`，
+  本轮未改题库数据。
 
 ## 用例数据清洗规则（通用）
 
