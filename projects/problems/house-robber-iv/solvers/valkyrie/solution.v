@@ -22,13 +22,16 @@ micro enough(nums: ArrayList<i64>, cap: i64, k: i64) -> bool {
 micro minCapability(nums: ArrayList<i64>, k: i64) -> i64 {
     let mut low: i64 = nums⁅0⁆
     let mut high: i64 = nums⁅0⁆
-    loop value in nums {
-        if value < low {
-            low = value
-        }
-        if value > high {
-            high = value
-        }
+    let mut loop_index_25: usize = 0
+    while loop_index_25 < nums.length() {
+        let value: i64 = nums⁅loop_index_25⁆
+            if value < low {
+                low = value
+            }
+            if value > high {
+                high = value
+            }
+        loop_index_25 = loop_index_25 + 1
     }
     while low < high {
         let mid: i64 = low + (high - low) / 2

@@ -11,21 +11,24 @@ micro subarraysDivByK(nums: ArrayList<i64>, k: i64) -> i64 {
 
     let mut prefix: i64 = 0
     let mut total: i64 = 0
-    loop value in nums {
-        prefix = prefix + value
-        let mut remainder: i64 = prefix % k
-        if remainder < 0 {
-            remainder = remainder + k
-        }
+    let mut loop_index_14: usize = 0
+    while loop_index_14 < nums.length() {
+        let value: i64 = nums⁅loop_index_14⁆
+            prefix = prefix + value
+            let mut remainder: i64 = prefix % k
+            if remainder < 0 {
+                remainder = remainder + k
+            }
 
-        if counts.contains_key(remainder) {
-            total = total + counts.get(remainder).unwrap()
-        }
-        let mut next: i64 = 1
-        if counts.contains_key(remainder) {
-            next = counts.get(remainder).unwrap() + 1
-        }
-        counts.insert(remainder, next)
+            if counts.contains_key(remainder) {
+                total = total + counts.get(remainder).unwrap()
+            }
+            let mut next: i64 = 1
+            if counts.contains_key(remainder) {
+                next = counts.get(remainder).unwrap() + 1
+            }
+            counts.insert(remainder, next)
+        loop_index_14 = loop_index_14 + 1
     }
     return total
 }

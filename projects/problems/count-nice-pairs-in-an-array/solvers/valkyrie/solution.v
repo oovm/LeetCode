@@ -18,16 +18,19 @@ micro reverse_number(value: i64) -> i64 {
 micro countNicePairs(nums: ArrayList<i64>) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new(nums.length())
     let mut total: i64 = 0
-    loop value in nums {
-        let key: i64 = value - reverse_number(value)
-        if counts.contains_key(key) {
-            total = total + counts.get(key).unwrap()
-        }
-        let mut next: i64 = 1
-        if counts.contains_key(key) {
-            next = counts.get(key).unwrap() + 1
-        }
-        counts.insert(key, next)
+    let mut loop_index_21: usize = 0
+    while loop_index_21 < nums.length() {
+        let value: i64 = nums⁅loop_index_21⁆
+            let key: i64 = value - reverse_number(value)
+            if counts.contains_key(key) {
+                total = total + counts.get(key).unwrap()
+            }
+            let mut next: i64 = 1
+            if counts.contains_key(key) {
+                next = counts.get(key).unwrap() + 1
+            }
+            counts.insert(key, next)
+        loop_index_21 = loop_index_21 + 1
     }
     return total % 1000000007
 }

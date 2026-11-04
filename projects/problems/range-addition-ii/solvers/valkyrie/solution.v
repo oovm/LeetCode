@@ -8,15 +8,18 @@ micro maxCount(m: i64, n: i64, ops: ArrayList<ArrayList<i64>>) -> i64 {
     }
     let mut min_row: i64 = m
     let mut min_col: i64 = n
-    loop op in ops {
-        let row_bound: i64 = op⁅0⁆
-        let col_bound: i64 = op⁅1⁆
-        if row_bound < min_row {
-            min_row = row_bound
-        }
-        if col_bound < min_col {
-            min_col = col_bound
-        }
+    let mut loop_index_11: usize = 0
+    while loop_index_11 < ops.length() {
+        let op: ArrayList<i64> = ops⁅loop_index_11⁆
+            let row_bound: i64 = op⁅0⁆
+            let col_bound: i64 = op⁅1⁆
+            if row_bound < min_row {
+                min_row = row_bound
+            }
+            if col_bound < min_col {
+                min_col = col_bound
+            }
+        loop_index_11 = loop_index_11 + 1
     }
     return min_row * min_col
 }

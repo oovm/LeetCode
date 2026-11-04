@@ -7,15 +7,21 @@ micro single_number(nums: ArrayList<i64>) -> i64 {
     let mut bit: i64 = 0
     while bit < 32 {
         let mut ones: i64 = 0
-        loop x in nums {
-            if ((x >> bit) & 1) == 1 {
-                ones = ones + 1
-            }
+        let mut loop_index_10: usize = 0
+        while loop_index_10 < nums.length() {
+            let x: i64 = nums⁅loop_index_10⁆
+                if ((x >> bit) & 1) == 1 {
+                    ones = ones + 1
+                }
+            loop_index_10 = loop_index_10 + 1
         }
         if ones % 3 == 1 {
             result = result | (1 << bit)
         }
         bit = bit + 1
+    }
+    if result >= 2147483648 {
+        result = result - 4294967296
     }
     return result
 }

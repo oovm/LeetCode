@@ -6,16 +6,19 @@ using std.collection;
 micro bouquets(bloom_day: ArrayList<i64>, day: i64, k: i64) -> i64 {
     let mut total: i64 = 0
     let mut run: i64 = 0
-    loop value in bloom_day {
-        if value <= day {
-            run = run + 1
-            if run == k {
-                total = total + 1
+    let mut loop_index_9: usize = 0
+    while loop_index_9 < bloom_day.length() {
+        let value: i64 = bloom_day⁅loop_index_9⁆
+            if value <= day {
+                run = run + 1
+                if run == k {
+                    total = total + 1
+                    run = 0
+                }
+            } else {
                 run = 0
             }
-        } else {
-            run = 0
-        }
+        loop_index_9 = loop_index_9 + 1
     }
     return total
 }
@@ -27,10 +30,13 @@ micro minDays(bloomDay: ArrayList<i64>, m: i64, k: i64) -> i64 {
     }
     let mut low: i64 = 0
     let mut high: i64 = 0
-    loop value in bloomDay {
-        if value > high {
-            high = value
-        }
+    let mut loop_index_30: usize = 0
+    while loop_index_30 < bloomDay.length() {
+        let value: i64 = bloomDay⁅loop_index_30⁆
+            if value > high {
+                high = value
+            }
+        loop_index_30 = loop_index_30 + 1
     }
     while low < high {
         let mid: i64 = low + (high - low) / 2

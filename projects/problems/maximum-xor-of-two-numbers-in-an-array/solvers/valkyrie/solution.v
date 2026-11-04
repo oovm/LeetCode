@@ -8,17 +8,22 @@ micro find_maximum_x_o_r(nums: ArrayList<i64>) -> i64 {
     let mut bit: i64 = 30
     while bit >= 0 {
         mask = mask | (1 << bit)
-        let mut prefixes: HashMap<i64, i64> = HashMap::new(0)
-        loop x in nums {
-            prefixes.insert(x & mask, 1)
+        let mut prefixes: HashMap<i64, i64> = HashMap::new(nums.length())
+        let mut loop_index_12: usize = 0
+        while loop_index_12 < nums.length() {
+            let x: i64 = nums⁅loop_index_12⁆
+                prefixes.insert(x & mask, 1)
+            loop_index_12 = loop_index_12 + 1
         }
         let candidate: i64 = best | (1 << bit)
-        loop x in nums {
-            let prefix: i64 = x & mask
-            if prefixes.contains_key(candidate ^ prefix) {
-                best = candidate
-                bit = -1
-            }
+        let mut loop_index_16: usize = 0
+        while loop_index_16 < nums.length() {
+            let x: i64 = nums⁅loop_index_16⁆
+                let prefix: i64 = x & mask
+                if prefixes.contains_key(candidate ^ prefix) {
+                    best = candidate
+                }
+            loop_index_16 = loop_index_16 + 1
         }
         bit = bit - 1
     }

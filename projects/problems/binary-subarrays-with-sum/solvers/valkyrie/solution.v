@@ -10,19 +10,22 @@ micro numSubarraysWithSum(nums: ArrayList<i64>, goal: i64) -> i64 {
 
     let mut prefix: i64 = 0
     let mut total: i64 = 0
-    loop value in nums {
-        prefix = prefix + value
+    let mut loop_index_13: usize = 0
+    while loop_index_13 < nums.length() {
+        let value: i64 = nums⁅loop_index_13⁆
+            prefix = prefix + value
 
-        let target: i64 = prefix - goal
-        if counts.contains_key(target) {
-            total = total + counts.get(target).unwrap()
-        }
+            let target: i64 = prefix - goal
+            if counts.contains_key(target) {
+                total = total + counts.get(target).unwrap()
+            }
 
-        let mut next: i64 = 1
-        if counts.contains_key(prefix) {
-            next = counts.get(prefix).unwrap() + 1
-        }
-        counts.insert(prefix, next)
+            let mut next: i64 = 1
+            if counts.contains_key(prefix) {
+                next = counts.get(prefix).unwrap() + 1
+            }
+            counts.insert(prefix, next)
+        loop_index_13 = loop_index_13 + 1
     }
     return total
 }

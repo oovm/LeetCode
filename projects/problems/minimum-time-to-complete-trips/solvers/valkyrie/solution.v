@@ -6,8 +6,11 @@ using std.collection;
 # 给定时间 `t` 时，每辆车能跑 `t / time` 趟。
 micro trips_in(time: ArrayList<i64>, total: i64) -> i64 {
     let mut trips: i64 = 0
-    loop cost in time {
-        trips = trips + total / cost
+    let mut loop_index_9: usize = 0
+    while loop_index_9 < time.length() {
+        let cost: i64 = time⁅loop_index_9⁆
+            trips = trips + total / cost
+        loop_index_9 = loop_index_9 + 1
     }
     return trips
 }
@@ -15,10 +18,13 @@ micro trips_in(time: ArrayList<i64>, total: i64) -> i64 {
 [export(case: "camelCase")]
 micro minimumTime(time: ArrayList<i64>, totalTrips: i64) -> i64 {
     let mut fastest: i64 = time⁅0⁆
-    loop cost in time {
-        if cost < fastest {
-            fastest = cost
-        }
+    let mut loop_index_18: usize = 0
+    while loop_index_18 < time.length() {
+        let cost: i64 = time⁅loop_index_18⁆
+            if cost < fastest {
+                fastest = cost
+            }
+        loop_index_18 = loop_index_18 + 1
     }
     let mut low: i64 = 1
     let mut high: i64 = fastest * totalTrips

@@ -4,8 +4,11 @@ namespace leetcode.find_xor_beauty_of_array;
 [export(case: "camelCase")]
 micro xor_beauty(nums: ArrayList<i64>) -> i64 {
     let mut result: i64 = 0
-    loop x in nums {
-        result = result ^ x
+    let mut loop_index_7: usize = 0
+    while loop_index_7 < nums.length() {
+        let x: i64 = nums⁅loop_index_7⁆
+            result = result ^ x
+        loop_index_7 = loop_index_7 + 1
     }
     return result
 }

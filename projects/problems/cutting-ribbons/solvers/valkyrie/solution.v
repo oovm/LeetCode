@@ -6,8 +6,11 @@ using std.collection;
 # 给定长度 `size` 时，每条丝带能切出 `ribbons / size` 段。
 micro pieces(ribbons: ArrayList<i64>, size: i64) -> i64 {
     let mut total: i64 = 0
-    loop length in ribbons {
-        total = total + length / size
+    let mut loop_index_9: usize = 0
+    while loop_index_9 < ribbons.length() {
+        let length: i64 = ribbons⁅loop_index_9⁆
+            total = total + length / size
+        loop_index_9 = loop_index_9 + 1
     }
     return total
 }
@@ -16,11 +19,14 @@ micro pieces(ribbons: ArrayList<i64>, size: i64) -> i64 {
 micro maxLength(ribbons: ArrayList<i64>, k: i64) -> i64 {
     let mut total: i64 = 0
     let mut high: i64 = 0
-    loop length in ribbons {
-        total = total + length
-        if length > high {
-            high = length
-        }
+    let mut loop_index_19: usize = 0
+    while loop_index_19 < ribbons.length() {
+        let length: i64 = ribbons⁅loop_index_19⁆
+            total = total + length
+            if length > high {
+                high = length
+            }
+        loop_index_19 = loop_index_19 + 1
     }
     if total < k {
         return 0

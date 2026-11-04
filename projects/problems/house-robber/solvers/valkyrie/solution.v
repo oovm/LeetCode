@@ -5,7 +5,9 @@ namespace leetcode.house_robber;
 micro rob(nums: ArrayList<i64>) -> i64 {
     let mut take: i64 = 0
     let mut skip: i64 = 0
-    loop x in nums {
+    let mut index: usize = 0
+    while index < nums.length() {
+        let x: i64 = nums⁅index⁆
         let next_take: i64 = skip + x
         let mut next_skip: i64 = skip
         if take > skip {
@@ -13,6 +15,7 @@ micro rob(nums: ArrayList<i64>) -> i64 {
         }
         take = next_take
         skip = next_skip
+        index = index + 1
     }
     if take > skip {
         return take

@@ -4,8 +4,11 @@ namespace leetcode.last_stone_weight_ii;
 [export(name: "lastStoneWeightII")]
 micro last_stone_weight_i_i(stones: ArrayList<i64>) -> i64 {
     let mut total: i64 = 0
-    loop stone in stones {
-        total = total + stone
+    let mut loop_index_7: usize = 0
+    while loop_index_7 < stones.length() {
+        let stone: i64 = stones⁅loop_index_7⁆
+            total = total + stone
+        loop_index_7 = loop_index_7 + 1
     }
     let target: i64 = total / 2
     let mut reachable: ArrayList<bool> = ArrayList::new((target + 1) as usize)
@@ -15,14 +18,17 @@ micro last_stone_weight_i_i(stones: ArrayList<i64>) -> i64 {
         t = t + 1
     }
     reachable⁅0⁆ = true
-    loop stone in stones {
-        let mut w: i64 = target
-        while w >= stone {
-            if reachable⁅(w - stone) as usize⁆ {
-                reachable⁅w as usize⁆ = true
+    let mut loop_index_18: usize = 0
+    while loop_index_18 < stones.length() {
+        let stone: i64 = stones⁅loop_index_18⁆
+            let mut w: i64 = target
+            while w >= stone {
+                if reachable⁅(w - stone) as usize⁆ {
+                    reachable⁅w as usize⁆ = true
+                }
+                w = w - 1
             }
-            w = w - 1
-        }
+        loop_index_18 = loop_index_18 + 1
     }
     let mut best: i64 = target
     while best > 0 {

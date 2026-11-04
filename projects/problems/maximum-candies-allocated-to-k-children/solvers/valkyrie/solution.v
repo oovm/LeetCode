@@ -6,8 +6,11 @@ using std.collection;
 # 给定份数 `size` 时，每堆能分出 `candies / size` 份。
 micro portions(candies: ArrayList<i64>, size: i64) -> i64 {
     let mut total: i64 = 0
-    loop count in candies {
-        total = total + count / size
+    let mut loop_index_9: usize = 0
+    while loop_index_9 < candies.length() {
+        let count: i64 = candies⁅loop_index_9⁆
+            total = total + count / size
+        loop_index_9 = loop_index_9 + 1
     }
     return total
 }
@@ -16,11 +19,14 @@ micro portions(candies: ArrayList<i64>, size: i64) -> i64 {
 micro maximumCandies(candies: ArrayList<i64>, k: i64) -> i64 {
     let mut total: i64 = 0
     let mut high: i64 = 0
-    loop count in candies {
-        total = total + count
-        if count > high {
-            high = count
-        }
+    let mut loop_index_19: usize = 0
+    while loop_index_19 < candies.length() {
+        let count: i64 = candies⁅loop_index_19⁆
+            total = total + count
+            if count > high {
+                high = count
+            }
+        loop_index_19 = loop_index_19 + 1
     }
     if total < k {
         return 0

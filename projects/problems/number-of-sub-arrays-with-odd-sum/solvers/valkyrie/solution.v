@@ -10,17 +10,20 @@ micro numOfSubarrays(arr: ArrayList<i64>) -> i64 {
     let mut odd_prefixes: i64 = 0
     let mut parity: i64 = 0
     let mut total: i64 = 0
-    loop value in arr {
-        if value % 2 != 0 {
-            parity = 1 - parity
-        }
-        if parity == 1 {
-            total = total + even_prefixes
-            odd_prefixes = odd_prefixes + 1
-        } else {
-            total = total + odd_prefixes
-            even_prefixes = even_prefixes + 1
-        }
+    let mut loop_index_13: usize = 0
+    while loop_index_13 < arr.length() {
+        let value: i64 = arr⁅loop_index_13⁆
+            if value % 2 != 0 {
+                parity = 1 - parity
+            }
+            if parity == 1 {
+                total = total + even_prefixes
+                odd_prefixes = odd_prefixes + 1
+            } else {
+                total = total + odd_prefixes
+                even_prefixes = even_prefixes + 1
+            }
+        loop_index_13 = loop_index_13 + 1
     }
     return total % 1000000007
 }

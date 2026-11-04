@@ -5,8 +5,11 @@ namespace leetcode.maximum_xor_for_each_query;
 micro get_maximum_xor(nums: ArrayList<i64>, maximumBit: i64) -> ArrayList<i64> {
     let mask: i64 = (1 << maximumBit) - 1
     let mut total: i64 = 0
-    loop x in nums {
-        total = total ^ x
+    let mut loop_index_8: usize = 0
+    while loop_index_8 < nums.length() {
+        let x: i64 = nums⁅loop_index_8⁆
+            total = total ^ x
+        loop_index_8 = loop_index_8 + 1
     }
     let mut answer: ArrayList<i64> = ArrayList::new(nums.length())
     let mut i: usize = nums.length()

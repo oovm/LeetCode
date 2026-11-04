@@ -40,9 +40,18 @@
   嵌套 `ArrayList::new(0)` 推断 6、`infix -` 歧义 5、`<fn value>` 不在作用域 4、`sorted_by` 缺失 3、
   SMIR007 合同 3、`char` 面运算 2、`u8` 覆盖 `char` 2、`String` 1、`__u8_add` 1、`list.iter` 1、
   `mut` 形参类型位 1（`advantage-shuffle`、`the-k-strongest-values-in-an-array` 跨两族，已去重）。
-- 编译通过但判题未通过（31）：29 条首例即结果不符（多为 `expected "X", got "0"`，属题解实现缺陷，
-  下一批逐题复核）；1 条语料缺陷（`closest-binary-search-tree-value` 的 `target = 2.235714`）；
-  1 条运行期 `RuntimeError: unreachable`（`delete-and-earn`）。
+- 编译通过但判题未通过（31，均为 2026-11-04 首轮测量）：29 条首例即结果不符（多为
+  `expected "X", got "0"`）+ `closest-binary-search-tree-value`（浮点 `target`）+ `delete-and-earn`
+  运期 `unreachable`。
+- **2026-11-05 销账（口径已更新）**：
+  - **30/31 已修并通过全用例**。共同根因是 **`loop <var> in <ArrayList>` 静默零迭代**（编译不报错、
+    运行时一次也不进循环），全部改为显式 `while index < list.length()` + `list⁅index⁆`。
+    另修 `single-number-ii` 的符号扩展与 `maximum-xor-of-two-numbers-in-an-array` 的外层位循环
+    提前跳出。`delete-and-earn` 的 `unreachable` 同因（`max_val` 停在 0 → 0 长数组取下标）。
+    loop 静默零迭代属语言侧证据，建议并入迭代协议缺口。
+  - `closest-binary-search-tree-value` 不是语料缺陷：`target` 本是浮点，题解按理想签名 `f64` 写，
+    但 wasm 后端 `i64 as f64` / `f64 as i64` 两个方向都缺精确转换 opcode，转为编译失败。
+  - 最终口径（同一 206 题窗口）：**编译通过 136、端到端通过 136、编译失败 70、判题未通过 0**。
 - 本窗口未复跑的题（626）不是失败，只是超出本轮预算；按批次表原状态保留。
 
 ## 批次 R25-2026-11-04（Medium 图 / 并查集 / 拓扑排序 23 题，写完未构建）

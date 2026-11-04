@@ -4,12 +4,18 @@ namespace leetcode.bitwise_xor_of_all_pairings;
 [export(case: "camelCase")]
 micro xor_all_nums(nums1: ArrayList<i64>, nums2: ArrayList<i64>) -> i64 {
     let mut xor1: i64 = 0
-    loop x in nums1 {
-        xor1 = xor1 ^ x
+    let mut loop_index_7: usize = 0
+    while loop_index_7 < nums1.length() {
+        let x: i64 = nums1⁅loop_index_7⁆
+            xor1 = xor1 ^ x
+        loop_index_7 = loop_index_7 + 1
     }
     let mut xor2: i64 = 0
-    loop y in nums2 {
-        xor2 = xor2 ^ y
+    let mut loop_index_11: usize = 0
+    while loop_index_11 < nums2.length() {
+        let y: i64 = nums2⁅loop_index_11⁆
+            xor2 = xor2 ^ y
+        loop_index_11 = loop_index_11 + 1
     }
     let mut result: i64 = 0
     if nums2.length() % 2 == 1 {

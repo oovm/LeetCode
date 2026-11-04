@@ -7,8 +7,11 @@ using std.collection;
 [export(case: "camelCase")]
 micro getSumAbsoluteDifferences(nums: ArrayList<i64>) -> ArrayList<i64> {
     let mut total: i64 = 0
-    loop value in nums {
-        total = total + value
+    let mut loop_index_10: usize = 0
+    while loop_index_10 < nums.length() {
+        let value: i64 = nums⁅loop_index_10⁆
+            total = total + value
+        loop_index_10 = loop_index_10 + 1
     }
 
     let length: i64 = nums.length() as i64

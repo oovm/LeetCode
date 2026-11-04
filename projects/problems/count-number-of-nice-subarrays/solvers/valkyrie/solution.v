@@ -11,19 +11,22 @@ micro numberOfSubarrays(nums: ArrayList<i64>, k: i64) -> i64 {
 
     let mut odd: i64 = 0
     let mut total: i64 = 0
-    loop value in nums {
-        if value % 2 != 0 {
-            odd = odd + 1
-        }
-        let target: i64 = odd - k
-        if counts.contains_key(target) {
-            total = total + counts.get(target).unwrap()
-        }
-        let mut next: i64 = 1
-        if counts.contains_key(odd) {
-            next = counts.get(odd).unwrap() + 1
-        }
-        counts.insert(odd, next)
+    let mut loop_index_14: usize = 0
+    while loop_index_14 < nums.length() {
+        let value: i64 = nums⁅loop_index_14⁆
+            if value % 2 != 0 {
+                odd = odd + 1
+            }
+            let target: i64 = odd - k
+            if counts.contains_key(target) {
+                total = total + counts.get(target).unwrap()
+            }
+            let mut next: i64 = 1
+            if counts.contains_key(odd) {
+                next = counts.get(odd).unwrap() + 1
+            }
+            counts.insert(odd, next)
+        loop_index_14 = loop_index_14 + 1
     }
     return total
 }

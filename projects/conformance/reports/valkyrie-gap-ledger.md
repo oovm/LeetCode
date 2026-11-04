@@ -210,16 +210,16 @@ $n
   - 复验（全用例真跑）：`two-sum` 80/80、`teemo-attacking` 120/120、`array-partition` 112/112。
 - 本次窗口覆盖 **206 题**（R20 25 + R22 26 + R23 28 + R24 28 + R25 23 + R21 29 + R19 9 +
   M-2026-11-03 37 + 基线 `two-sum` 1），单进程顺序跑，约 190 s，超时即报不重试。
-  - **编译通过 137 / 编译失败 69**；
-  - **端到端通过 106 / 编译通过但判题未通过 31**。
-- 覆盖口径改写（替换此前的「累计已构建通过 18」）：
-  - 累计端到端通过 **106 / 832**（canonical 832）；
-  - 累计编译通过 **137 / 832**；
+  首轮测量（修复前）：**编译通过 137 / 编译失败 69**，**端到端通过 106 / 判题未通过 31**；
+  30 条题解缺陷于 2026-11-05 销账后的口径见本节末尾「判题缺口销账」。
+- 覆盖口径改写（替换此前的「累计已构建通过 18」，下列为**销账后**口径）：
+  - 累计端到端通过 **136 / 832**（canonical 832）；
+  - 累计编译通过 **136 / 832**；
   - 未编译（未验证）**626**。
   R21 / R22 / R23 / R24 / R25 表格里的 `authored-unverified` 现在只表示「未在本轮预算内复跑」，
   不代表失败；已复跑的题以本节与批次报告为准。
-- 编译失败归族（69 题，按诊断首行归并；`advantage-shuffle`、`the-k-strongest-values-in-an-array`
-  同时命中两族，去重后 69）：
+- 编译失败归族（70 题，按诊断首行归并；`advantage-shuffle`、`the-k-strongest-values-in-an-array`
+  同时命中两族，去重后 70；末行为 2026-11-05 销账时新增）：
 
 | 归族 | 题数 | 最小诊断 |
 | --- | --- | --- |
@@ -237,12 +237,22 @@ $n
 | host contract 缺 `__u8_add` | 1 | `has a resolved call but no host provider is bound` |
 | std `from_list` 内 `list.iter` | 1 | `unresolved call \`list.iter\`` |
 | `mut` 出现在形参类型位 | 1 | `micro order_monsters(items: mut ArrayList<Monster>)` |
+| 浮点 ↔ 整数精确转换 opcode 缺失 | 1 | `i64 as f64`：`wasm 后端缺少 i64 → f64 的精确表示转换编码` |
 
-- 判题未通过 31（编译通过但结果不符）：
-  - 29 条首例即结果不符，绝大多数形如 `expected "X", got "0"`（R23 14、R22 2、R21 1、
-    M-2026-11-03 12），归**题解实现缺陷**，需下一批逐题复核，不按缺口记账。
-  - 1 条语料缺陷：`closest-binary-search-tree-value` 的 `args.target = 2.235714` 不是整数。
-  - 1 条运行期异常：`delete-and-earn` `RuntimeError: unreachable`。
+- 判题缺口销账（2026-11-05 复核）：31 条里 **30 条已修并通过全用例**，1 条转为编译阻断。
+  - 30 条的共同根因是 **`loop <var> in <ArrayList>` 静默零迭代**：编译不报未解析，运行时一次也不进循环，
+    于是成批出现 `expected "X", got "0"`；`delete-and-earn` 的 `RuntimeError: unreachable` 同因
+    （`max_val` 停在 0，随后构造 0 长数组再取下标）。修法：全部改为显式
+    `while index < list.length()` + `list⁅index⁆`。逐题销账时另修两处算法错：
+    `single-number-ii` 的 32 位无符号重构需补符号扩展，`maximum-xor-of-two-numbers-in-an-array`
+    的 `bit = -1` 会把外层位循环一并打断。**loop 静默零迭代是语言侧证据，建议并入迭代协议缺口，
+    不计为本批失败。**
+  - `closest-binary-search-tree-value`（270）：题面 `target` 本就是浮点（17 条语料里 12 条是小数），
+    不是语料缺陷。题解按理想签名 `target: f64` 写，但 wasm 后端**两个方向都缺精确转换 opcode**：
+    `i64 as f64` 报「缺少 i64 → f64 的精确表示转换编码」，`f64 as i64` 报「缺少 f64 → i64 …」。
+    该题计入编译失败，新增缺口候选（浮点 ↔ 整数精确转换）；不删用例、不改断言。
+- 口径重算（同一窗口 206 题）：编译通过 **136**、端到端通过 **136**、编译失败 **70**、判题未通过 **0**；
+  累计端到端 **136 / 832**、累计编译 **136 / 832**、未编译 **626**。
 
 ### 依赖未实现特性的调用点（R25）
 
@@ -440,7 +450,7 @@ $n
 
 ### 汇聚组（签名落地后一次性复跑）
 
-**复跑结果（2026-11-04 23:50 addon 重建后）：仍阻塞，`sort(ArrayList<i64>)` 无法解析**（13 题，R22 + R24 产出）
+**阻塞于 `ArrayList<T>` 泛型实例化不闭合（签名已在，不是签名缺失）**（13 题，R22 + R24 产出）
 
 | 题号 | slug | 入口 | 复跑状态 |
 | --- | --- | --- | --- |
@@ -458,14 +468,14 @@ $n
 | 945 | `minimum-increment-to-make-array-unique` | `minIncrementForUnique` | 编译失败（`sort` 无候选） |
 | 1921 | `eliminate-maximum-number-of-monsters` | `eliminateMaximum` | 编译失败（`mut` 出现在形参类型位） |
 
-同组判据：均直接调用单参 `sort(list)`、不传比较器。`sort.v:82` 确有
-`micro sort<T>(mut list: ArrayList<T>): unit where T: std::operator::Comparable`（稳定归并），
-`imply i64: Comparable` 也在 `comparable_primitives.v:68`，但**工具链刷新后复跑仍然失败**：
-`hir.unresolved_call：unresolved call "sort"：1 candidate(s) share the name, but none matches the
-argument types`。本组 12 题与 R23 的 8 题（共 20 题）全部命中，说明 `ArrayList<i64>` 对
-`mut list: ArrayList<T>` 的实例化没有闭合，不是题解写法问题。
-结论：`sort(list)` 的「已落地」只在源码层面成立，**本基线不可用**；待语言侧复核后按本组复跑。
-`sorted_by(list, cmp)` 仍是缺口（870、954、1471）。
+同组判据：均直接调用单参 `sort(list)`、不传比较器，**题解一处不改**（不改写成内联排序）。
+`sort.v:82` 已有 `micro sort<T>(mut list: ArrayList<T>): unit where T: std::operator::Comparable`
+（稳定归并），`imply i64: Comparable` 也已在 `comparable_primitives.v:68`，缺的不是签名，
+也不是 `i64` 的序关系，而是 **`ArrayList<T>` 的泛型实例化没有闭合**：实参为 `ArrayList<i64>`
+时仍然 `unresolved call "sort"：1 candidate(s) share the name, but none matches the argument types`。
+本组 12 题与 R23 的 8 题（共 20 题）全部命中，形态一致。
+证据已转交 `InstanceNotClosed` 那条线，本组保持理想写法，等实例化修复后按清单复跑。
+`sorted_by(list, cmp)` 仍是独立缺口（870、954、1471）。
 
 **复跑结果（2026-11-04 23:50 addon 重建后）：`char: Hash` 成立，失败点已不在 `Hash`**（3 题，R22 + R24 产出）
 

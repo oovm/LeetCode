@@ -8,10 +8,13 @@ micro total_hamming_distance(nums: ArrayList<i64>) -> i64 {
     let mut bit: i64 = 0
     while bit < 32 {
         let mut ones: i64 = 0
-        loop x in nums {
-            if ((x >> bit) & 1) == 1 {
-                ones = ones + 1
-            }
+        let mut loop_index_11: usize = 0
+        while loop_index_11 < nums.length() {
+            let x: i64 = nums⁅loop_index_11⁆
+                if ((x >> bit) & 1) == 1 {
+                    ones = ones + 1
+                }
+            loop_index_11 = loop_index_11 + 1
         }
         total = total + ones * (n - ones)
         bit = bit + 1

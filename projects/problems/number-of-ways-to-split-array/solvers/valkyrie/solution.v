@@ -6,8 +6,11 @@ using std.collection;
 [export(case: "camelCase")]
 micro waysToSplitArray(nums: ArrayList<i64>) -> i64 {
     let mut total: i64 = 0
-    loop value in nums {
-        total = total + value
+    let mut loop_index_9: usize = 0
+    while loop_index_9 < nums.length() {
+        let value: i64 = nums⁅loop_index_9⁆
+            total = total + value
+        loop_index_9 = loop_index_9 + 1
     }
 
     let mut prefix: i64 = 0

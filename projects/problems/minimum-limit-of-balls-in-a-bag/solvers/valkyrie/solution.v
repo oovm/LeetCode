@@ -6,8 +6,11 @@ using std.collection;
 # 一个袋子拆到每袋不超过 `size` 需要 `(count - 1) / size` 次操作。
 micro operations(nums: ArrayList<i64>, size: i64) -> i64 {
     let mut total: i64 = 0
-    loop count in nums {
-        total = total + (count - 1) / size
+    let mut loop_index_9: usize = 0
+    while loop_index_9 < nums.length() {
+        let count: i64 = nums⁅loop_index_9⁆
+            total = total + (count - 1) / size
+        loop_index_9 = loop_index_9 + 1
     }
     return total
 }
@@ -16,10 +19,13 @@ micro operations(nums: ArrayList<i64>, size: i64) -> i64 {
 micro minimumSize(nums: ArrayList<i64>, maxOperations: i64) -> i64 {
     let mut low: i64 = 1
     let mut high: i64 = 0
-    loop count in nums {
-        if count > high {
-            high = count
-        }
+    let mut loop_index_19: usize = 0
+    while loop_index_19 < nums.length() {
+        let count: i64 = nums⁅loop_index_19⁆
+            if count > high {
+                high = count
+            }
+        loop_index_19 = loop_index_19 + 1
     }
     while low < high {
         let mid: i64 = low + (high - low) / 2

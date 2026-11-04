@@ -7,13 +7,16 @@ using std.collection;
 micro days_needed(weights: ArrayList<i64>, capacity: i64) -> i64 {
     let mut days: i64 = 1
     let mut current: i64 = 0
-    loop weight in weights {
-        if current + weight > capacity {
-            days = days + 1
-            current = weight
-        } else {
-            current = current + weight
-        }
+    let mut loop_index_10: usize = 0
+    while loop_index_10 < weights.length() {
+        let weight: i64 = weights⁅loop_index_10⁆
+            if current + weight > capacity {
+                days = days + 1
+                current = weight
+            } else {
+                current = current + weight
+            }
+        loop_index_10 = loop_index_10 + 1
     }
     return days
 }
@@ -22,11 +25,14 @@ micro days_needed(weights: ArrayList<i64>, capacity: i64) -> i64 {
 micro shipWithinDays(weights: ArrayList<i64>, days: i64) -> i64 {
     let mut low: i64 = 0
     let mut high: i64 = 0
-    loop weight in weights {
-        if weight > low {
-            low = weight
-        }
-        high = high + weight
+    let mut loop_index_25: usize = 0
+    while loop_index_25 < weights.length() {
+        let weight: i64 = weights⁅loop_index_25⁆
+            if weight > low {
+                low = weight
+            }
+            high = high + weight
+        loop_index_25 = loop_index_25 + 1
     }
     while low < high {
         let mid: i64 = low + (high - low) / 2

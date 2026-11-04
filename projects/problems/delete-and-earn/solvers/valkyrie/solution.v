@@ -4,10 +4,13 @@ namespace leetcode.delete_and_earn;
 [export(case: "camelCase")]
 micro delete_and_earn(nums: ArrayList<i64>) -> i64 {
     let mut maximum: i64 = 0
-    loop x in nums {
-        if x > maximum {
-            maximum = x
-        }
+    let mut loop_index_7: usize = 0
+    while loop_index_7 < nums.length() {
+        let x: i64 = nums⁅loop_index_7⁆
+            if x > maximum {
+                maximum = x
+            }
+        loop_index_7 = loop_index_7 + 1
     }
     let mut counts: ArrayList<i64> = ArrayList::new((maximum + 1) as usize)
     let mut v: i64 = 0
@@ -15,8 +18,11 @@ micro delete_and_earn(nums: ArrayList<i64>) -> i64 {
         counts.push(0)
         v = v + 1
     }
-    loop x in nums {
-        counts⁅x as usize⁆ = counts⁅x as usize⁆ + 1
+    let mut loop_index_18: usize = 0
+    while loop_index_18 < nums.length() {
+        let x: i64 = nums⁅loop_index_18⁆
+            counts⁅x as usize⁆ = counts⁅x as usize⁆ + 1
+        loop_index_18 = loop_index_18 + 1
     }
     let mut take: i64 = 0
     let mut skip: i64 = 0
