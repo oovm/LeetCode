@@ -15,6 +15,7 @@ import {
 
 
 
+import { matchWasmExportSymbol } from './abi.ts';
 import type { ProblemDefinition } from '../../catalog/index.ts';
 
 import { problemDir, valkyrieProjectDir } from '../../catalog/index.ts';
@@ -338,7 +339,7 @@ export function wasmInvokeBlockedReason(wasmPath: string, invokeEntry?: string):
 
         const expected = resolveWasmExportSymbol(invokeEntry);
 
-        if (!exports.includes(expected)) {
+        if (!matchWasmExportSymbol(expected, exports)) {
 
             return `wasm 里找不到 metadata.invoke 对应的 export "${expected}"（已有: ${exports.join(', ') || '(none)'}）。`;
 

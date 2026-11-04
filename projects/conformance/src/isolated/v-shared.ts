@@ -4,7 +4,7 @@
  * 都从这里取，禁止在任一侧复制第二套 marshal 规则。
  */
 import { coerceIntegerArgument, I64_MAX, I64_MIN, integerResultText } from '../domain/integer-literal.ts';
-import type { AbiExport, LibraryInvokeSchema, WasmAbiType } from '../adapters/valkyrie-node/abi.ts';
+import { matchWasmExportSymbol, type AbiExport, type LibraryInvokeSchema, type WasmAbiType } from '../adapters/valkyrie-node/abi.ts';
 
 export type AbiLookup = {
     exportSymbol: string;
@@ -13,15 +13,16 @@ export type AbiLookup = {
 
 /** 从 ABI schema 中找到 invoke 入口对应的 export 声明；找不到即结构化失败。 */
 export function lookupAbiExport(schema: LibraryInvokeSchema, entry: string, exportSymbol: string): AbiLookup {
-    const exportSchema = schema.exports[exportSymbol];
-    if (!exportSchema) {
-        const available = Object.keys(schema.exports);
+    const available = Object.keys(schema.exports);
+    const match = matchWasmExportSymbol(exportSymbol, available);
+    const exportSchema = match ? schema.exports[match.symbol] : undefined;
+    if (!match || !exportSchema) {
         throw new Error(
             `ABI schema 里找不到 export "${exportSymbol}"（来自 entry "${entry}"）。` +
                 `schema 里已注册的 export: ${available.join(', ') || '(none)'}`,
         );
     }
-    return { exportSymbol, exportSchema };
+    return { exportSymbol: match.symbol, exportSchema };
 }
 
 /**

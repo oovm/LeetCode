@@ -383,6 +383,31 @@ function validateType(path: string, raw: unknown): WasmAbiType {
 }
 
 
+// ── 导出名归一化 ──────────────────────────────────────────────────────────────
+
+/**
+ * 把 invoke 入口推导出的导出名对齐到实际导出名。
+ *
+ * 上游 emitter 的 `snake_case_to_camel_case` 会把连续大写缩写压成首字母大写
+ * （`preimage_size_fzf` → `preimageSizeFzf`），而题面方法名是 `preimageSizeFZF`。
+ * 判题侧不该为此改写题库或特判题名，因此只在**精确匹配失败**时接受唯一的
+ * 大小写变体；存在多个候选即视为歧义，返回 null 交给调用方结构化失败。
+ */
+export function matchWasmExportSymbol(
+    expected: string,
+    available: readonly string[],
+): { symbol: string; caseInsensitive: boolean } | null {
+    if (available.includes(expected)) {
+        return { symbol: expected, caseInsensitive: false };
+    }
+    const folded = expected.toLowerCase();
+    const variants = available.filter((name) => name.toLowerCase() === folded);
+    if (variants.length === 1) {
+        return { symbol: variants[0]!, caseInsensitive: true };
+    }
+    return null;
+}
+
 // ── 参数位置展开 ──────────────────────────────────────────────────────────────
 
 /**
