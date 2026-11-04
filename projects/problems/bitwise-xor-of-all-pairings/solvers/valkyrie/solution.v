@@ -1,6 +1,6 @@
 namespace leetcode.bitwise_xor_of_all_pairings;
 
-# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
+# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
 # 每对 (i, j) 的异或：nums1[i] 参与 nums2.length 次，nums2[j] 参与 nums1.length 次。
 [export(case: "camelCase")]
 micro xor_all_nums(nums1: ArrayList<i64>, nums2: ArrayList<i64>) -> i64 {

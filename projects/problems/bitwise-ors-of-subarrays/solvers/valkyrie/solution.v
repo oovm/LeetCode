@@ -1,6 +1,6 @@
 namespace leetcode.bitwise_ors_of_subarrays;
 
-# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
+# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
 # 维护「以当前元素结尾的所有子数组 OR」去重集合，并累计全局去重集合。
 [export(case: "camelCase")]
 micro subarray_bitwise_o_rs(arr: ArrayList<i64>) -> i64 {

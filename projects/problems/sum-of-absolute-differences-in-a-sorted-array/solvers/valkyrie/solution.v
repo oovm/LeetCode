@@ -2,7 +2,7 @@ namespace leetcode.sum_of_absolute_differences_in_a_sorted_array;
 
 using std.collection;
 
-# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
+# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
 # 前缀和：对排序数组的第 `i` 项，
 # 左侧差值和是 `nums[i] * i - prefix`，右侧差值和是 `right_sum - nums[i] * (n - i - 1)`。
 [export(case: "camelCase")]

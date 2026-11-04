@@ -484,16 +484,23 @@ $n
   `peek_front` / `peek_back` / `pop_front` / `is_empty`、`char as u32` / `as i64` / `as usize`。
   这些面**未经编译验证**（全局停点在前），不算缺口。
 
-### 待还原组：`loop in ArrayList` 静默零迭代（30 题，R26 产出）
+### 待还原组：`loop in ArrayList` 后端 `Cast` 未 lowering（30 题，R26 产出）
 
-现象：`loop <var> in <ArrayList>` **编译不报错，运行期循环体一次也不执行**（`ForInProtocolUnsatisfied`
-守卫在当前树里还没有生效）。29 条 `expected "X", got "0"` 与 `delete-and-earn` 的
-`RuntimeError: unreachable`（零迭代后构造 0 长数组再取下标）都同源于此。
+现象：`loop <var> in <ArrayList>` 的失败点不在 for-in 协议，而在 OVM 后端。`IntoIterator for
+ArrayList` 已实现（`std/source/collection/ArrayList.v:291` 的
+`imply ArrayList<T>: std::iterator::IntoIterator`、`:319` 的 `ArrayListIterator: Iterator`），
+HIR 层证据是通的。真机制是 OVM 后端把 `Cast` 静默跳过（`_ => {}`）：`std::next` 里的
+`(self._index + 1) as isize` 拿不到值，索引算术落在空槽，循环一次不进。该静默已改为 fail-closed
+（`f4c42372`），所以现在同一形态**编译期在后端失败**，历史上则表现为**运行期零迭代**（`Cast`
+被静默跳过时）。29 条 `expected "X", got "0"` 与 `delete-and-earn` 的 `RuntimeError: unreachable`
+（零迭代后构造 0 长数组再取下标）都同源于此。坐标：`std/source/collection/ArrayList.v:331`。
+
+当前实跑失败文本：`OVM 后端未实现指令 Cast { ... ty: Integer64 { signed: true } }（symbol=\`std::next\`）`。
 
 处置：为不阻塞判题，本轮把循环改成显式索引 `while`。这是**临时绕过，不是题解的正确形态**；
 每份 `solution.v` 顶部已加一行 `# 临时绕过：…` 注释，与
-`find-all-possible-recipes-from-given-supplies` 的标注同一格式。`IntoIterator` / `loop in`
-合同恢复后，下列 30 题一次性还原为 `loop <var> in <list>`，其余逻辑不动。
+`find-all-possible-recipes-from-given-supplies` 的标注同一格式。**OVM 后端 `Cast` lowering
+落地后**，下列 30 题一次性还原为 `loop <var> in <list>`，其余逻辑不动。
 
 | slug | 题目录 |
 | --- | --- |

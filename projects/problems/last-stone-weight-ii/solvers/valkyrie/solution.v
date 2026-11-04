@@ -1,6 +1,6 @@
 namespace leetcode.last_stone_weight_ii;
 
-# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
+# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
 # 0/1 背包：尽量把石头分成和最接近的两堆，答案即总和的差值。
 [export(name: "lastStoneWeightII")]
 micro last_stone_weight_i_i(stones: ArrayList<i64>) -> i64 {

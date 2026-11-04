@@ -1,6 +1,6 @@
 namespace leetcode.maximum_xor_of_two_numbers_in_an_array;
 
-# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
+# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
 # 从高位开始逐位确定答案：前缀哈希判定该位能否取 1。
 [export(name: "findMaximumXOR")]
 micro find_maximum_x_o_r(nums: ArrayList<i64>) -> i64 {
