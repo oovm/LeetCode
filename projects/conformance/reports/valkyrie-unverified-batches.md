@@ -7,6 +7,32 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R3-2026-11-04（理想解滚动批次 3，8 题，写完未构建）
+
+- 范围：此前 `solution.v` 为空或仅阻塞标记的 8 题；只补理想解，不改算法绕 std 缺口。
+  批次 2（`median-sliding-window` / `top-k-frequent-words` / `word-subsets` /
+  `permutation-in-string` / `maximum-gap` / `minimum-number-of-moves-to-seat-everyone` /
+  `maximum-number-of-words-found-in-sentences` /
+  `find-words-that-can-be-formed-by-characters`）尚未在本表登记，待补。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
+- 预期阻断：`ArrayList` 返回按 G3 预计在 wasm JS glue 处阻断；`rotate-array` 的
+  `array_view(..., offset, length)` 按 G19、`BinaryHeap::max()` 按 G15 第二实例、
+  `std.math` 整数 `max` 按 G20 预计在类型检查处阻断。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序对应；V 侧按 snake_case 书写
+  （`extra_candies` ↔ `extraCandies`，其余键本身即单词）。`invoke.valkyrie` 已逐题登记为
+  类方法 camelCase 名。
+
+| slug | 导出入口 | 返回类型 | 缺口 / 覆盖方向 |
+| --- | --- | --- | --- |
+| `kids-with-the-greatest-number-of-candies` | `kidsWithCandies` | `ArrayList<bool>` | G20；迭代器 `fold` / `map` / `collect_array_list` |
+| `rotate-array` | `rotate` | `unit` | G19；`ArrayView` 写穿 |
+| `sliding-window-maximum` | `maxSlidingWindow` | `ArrayList<i64>` | `Deque` 单调队列（未压面） |
+| `last-stone-weight` | `lastStoneWeight` | `i64` | G15 第二实例（`BinaryHeap` 只有最小序） |
+| `kth-largest-element-in-an-array` | `findKthLargest` | `i64` | 定长载体就地分区（快速选择） |
+| `multiply-strings` | `multiply` | `utf8` | 大整数 limbs（未命中面：无强制缺口） |
+| `find-the-original-array-of-prefix-xor` | `findArray` | `ArrayList<i64>` | 位异或；`zip` 缺失（未命中面） |
+| `first-missing-positive` | `firstMissingPositive` | `i64` | 定长载体写侧（原地置换） |
+
 ## 批次 C-2026-11-04（canonical 未构建 214 题）
 
 - 范围与口径：`solution.v` 与非空 `metadata.invoke.valkyrie` 的 canonical 集合（496 题）中，

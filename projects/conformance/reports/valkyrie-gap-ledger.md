@@ -397,6 +397,10 @@ imply Utf8Text: Comparable { ... }
   让约束与实际操作一致；`sort.v` 保持闭包形态（排序需要调用方自定义序，不是全序约束能覆盖的）。
 - 影响范围：所有依赖裸 `<` 的泛型容器（`BTreeSet` / `BTreeMap`，以及 `SortedSet` / `SortedMap`
   包装层）都要换约束；`char` 与 `utf8` 的比较能力随之落地，G13 自动消解。
+- 影响范围（第二实例）：`BinaryHeap` / `PriorityQueue`（`BinaryHeap.v` L58 / L68-L76）同样在
+  无约束的 `T` 上裸调 `>=` / `<`，且只实现最小序——没有比较器参数、没有最大序构造，
+  泛型元素无法表达「最重优先」。这与 `BTreeSet<T: Equal>` 是同一个病，不是另起一条
+  「缺一个 max-heap」的人体工学缺口。
 - 不对称点：`Equal` / `Identical` / `Cardinal` / `Ordinal` 都有显式合同，唯独序关系没有；
   `BTreeSet` 用裸 `<` 而 `Utf8Text` / `char` 连 `<` 都没有 —— 同一语言里「有序」有两种互不兼容的表示。
 - 先例：`std.math.graph_theory.Weight`（`weighted.v` L6-L10）已把 `add` + `less` 做成合同，证明该形态
@@ -486,6 +490,73 @@ micro split_whitespace(self) -> [utf8]
   保留空段」一种语义；空白类与空段折叠没有入口。
 - 判定：**std 缺口**。
 - 修复初判：**加 API**（内部复用 `split` 后过滤空段即可，不引入新类型）。
+
+### G19 `ArrayView` 缺区间窗口构造
+
+- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/collection/array_view.v`）
+- 定性：**模型已描述、入口未提供**。`ArrayView<T>` 的结构注释写明「视图覆盖创建时刻源数组的
+  `[offset, offset + length)` 区间」，结构也持有 `_offset` / `_length`，但唯一构造入口是
+  `array_view(source)` 全窗，`_offset` 永远是 0。于是「持有子区间」这件事，类型本身表达不了
+  它自己文档化的语义。
+- 期望签名：
+
+```v
+# std/source/collection/array_view.v
+micro array_view<T>(source: [T], offset: usize, length: usize) -> ArrayView<T>
+```
+
+- 影响题（1）：`rotate-array`（189，三次反转各自需要 `[0, shift)` / `[shift, n)` 子窗口并写穿）。
+- 不对称点：读侧 `length` / `is_empty` / `Cardinal` 都在，写侧 `⁅ ⁆=` 也在，唯独
+  「窗口从哪开始、多长」没有入口。
+- 判定：**std 缺口**（加 API，不加模型）。
+- 修复初判：**加 API**。模型不是缺的：`ArrayView` 已经就是这个模型，缺的是把非零 `offset`
+  造出来的构造器，因此**不归入表达力缺口档**。
+
+### G20 数值归约只有手写 fold（整数域缺席）
+
+- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/math/basic.v`、
+  `std/source/iterator/iterator_terminal.v`）
+- 定性：**该有但没有，且在两处同时缺**。`std.math` 的 `abs` / `max` / `min` / `clamp`
+  只接受 `f64`，没有整数重载；`Iterator` 终端有 `fold` / `reduce` / `any` / `all` /
+  `find` / `position` / `count`，但没有 `max` / `min` / `sum` / `product`。于是
+  「数组最大值」这种最基础归约只能手写 fold，或手写比较循环。
+- 期望签名：
+
+```v
+# std/source/math/basic.v
+micro abs(value: i64): i64
+micro max(a: i64, b: i64): i64
+micro min(a: i64, b: i64): i64
+
+# std/source/iterator/iterator_terminal.v
+micro max<I, T>(self: I): Option<T> where I: Iterator<Item = T>, T: Comparable
+micro min<I, T>(self: I): Option<T> where I: Iterator<Item = T>, T: Comparable
+micro sum<I, T>(self: I, initial: T): T where I: Iterator<Item = T>
+```
+
+- 影响题（1）：`kids-with-the-greatest-number-of-candies`（1431，糖果最大值）。
+- 不对称点：`f64` 有 `abs` / `max` / `min`，整数没有；迭代器有能表达一切的 `fold`，
+  却没有最常用的 `max`。前者是重载缺失，后者是终端缺失，根因同一：数值归约没有按
+  「整数 / 浮点」分行。
+- 判定：**std 缺口**。
+- 修复初判：**加 API**。`max` / `min` 的泛型约束依赖 G15 的 `Comparable`；在此之前只能
+  先定 `i64` 重载。
+
+### 未命中面（第 3 批探测，2026-11-04，无强制影响题，故不编号）
+
+- **迭代器适配器族不是缺口**：`filter_map` / `skip_while` / `take_while` 都在
+  （`FilterMapIterator.v` / `SkipWhileIterator.v` / `TakeWhileIterator.v` 加 `Iterator.v`
+  的方法入口），终端 `position` 也在（`iterator_terminal.v`）。它们只在 `arch = clr` 下被
+  `<% match arch %>` 关掉，wasm 目标可用。账本此前把它们记成「无匹配候选」是旧观测，已失效。
+- **组合子仍有边界，但不构成强制缺口**：`Iterator` 没有 `zip` / `chain` / `scan` /
+  `step_by` / `rev`。相邻成对本该是 `zip` 加 `skip`，但没有成对承载类型，索引循环是等价
+  表达（`find-the-original-array-of-prefix-xor` 即以此写）。
+- **大整数没有强制题**：std 没有任意精度类型（`primitive/` 只到 `i128` / `u128`），也没有
+  「按寄存器宽度切 limb」的抽象。`multiply-strings`（43）是典型大数题，但它的标准算法本来
+  就是手写 limbs（本批以 10 为基数逐位承载并自行进位），不需要 bigint 类型即可表达。结论：
+  **未提供，但不是缺口**——理想写法不依赖它。
+- **表达力缺口档仍只有 G8**：本批新增的 G19 是「模型已有、构造器缺失」，G20 是「重载与终端
+  缺失」，两者都有等价写法（手动偏移、手写 fold），不属于「没有近似物」。
 
 ### 建模提示（G8 的根部，比缺 API 严重）
 
