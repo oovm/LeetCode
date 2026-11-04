@@ -15,9 +15,9 @@
   `maximum-number-of-words-found-in-sentences` /
   `find-words-that-can-be-formed-by-characters`）尚未在本表登记，待补。
 - 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
-- 预期阻断：`ArrayList` 返回按 G3 预计在 wasm JS glue 处阻断；`rotate-array` 的
-  `array_view(..., offset, length)` 按 G19、`BinaryHeap::max()` 按 G15 第二实例、
-  `std.math` 整数 `max` 按 G20 预计在类型检查处阻断。
+- 预期阻断：`ArrayList` / `ArrayList<bool>` 返回按 G3 预计在 wasm JS glue 处阻断；
+  `rotate-array` 的 `array_view(..., offset, length)` 按 G19、`BinaryHeap::max()` 按 G15
+  第二实例预计在类型检查处阻断。G20 只记能力面（以手写 `fold` 表达最大值），不阻断。
 - 签名：8/8 导出形参与 `metadata.tests.args` 键同序对应；V 侧按 snake_case 书写
   （`extra_candies` ↔ `extraCandies`，其余键本身即单词）。`invoke.valkyrie` 已逐题登记为
   类方法 camelCase 名。
