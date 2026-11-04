@@ -1081,6 +1081,7 @@
     ],
     "invoke": {
         "python": "Solution().removeStones",
-        "typescript": "Solution().removeStones"
+        "typescript": "Solution().removeStones",
+        "valkyrie": "removeStones"
     }
 }

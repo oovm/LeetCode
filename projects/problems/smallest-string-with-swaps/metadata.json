@@ -887,6 +887,7 @@
     ],
     "invoke": {
         "python": "Solution().smallestStringWithSwaps",
-        "typescript": "Solution().smallestStringWithSwaps"
+        "typescript": "Solution().smallestStringWithSwaps",
+        "valkyrie": "smallestStringWithSwaps"
     }
 }

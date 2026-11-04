@@ -2158,6 +2158,7 @@
     ],
     "invoke": {
         "python": "Solution().accountsMerge",
-        "typescript": "Solution().accountsMerge"
+        "typescript": "Solution().accountsMerge",
+        "valkyrie": "accountsMerge"
     }
 }
