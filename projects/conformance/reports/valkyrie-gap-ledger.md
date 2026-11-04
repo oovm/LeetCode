@@ -47,7 +47,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G3 wasm JS glue 的 `ArrayList` ABI | c | ABI 边界由题面固定，题解改不了结构（36 题） |
 | G9 二分图判定 | 模块内空洞 | std graph 模块已有 `cycle` / `topological_sort` / 连通分量等**同类**图算法，独缺二分图判定；摊派面 2 处 |
 | G10 `DisjointSet` 分量聚合 | b | 3 处 × 重写 DSU 内部聚合 |
-| G11 `sorted_by` | b | 18 处 × 副本 + `merge_sort` |
+| G11 `sorted_by` | b | 21 处 × 副本 + `merge_sort`（R28 后 +3） |
 | G13 `utf8` 字典序比较 | b | 4 处 × 约 10 行比较脚手架 |
 | G16 `BTreeSet` / `BTreeMap` 界查询 | b | 5 处 × O(k) 物化 + 手写二分 |
 | G17 `char` 缺 `Hash` | b | 7 处 × 每次调用点换键型 |
@@ -190,6 +190,10 @@ $n
 - 后续增量（2026-11-04，Medium 图 / 并查集 / 拓扑排序批次 R25 后）：canonical 实测 **832**
   （R25 前 809；本批 23 题，新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；
   构建停点与 R20–R24 相同（同一 addon 基线过期，非 std 回归）。
+- 后续增量（2026-11-05，数据结构 / 堆 / 闭包 / 字符串构造批次 R28 后）：canonical 实测 **881**
+  （R28 前 853；本批 28 题，**新编号 0 条**）。addon 重建窗口内不跑 V：
+  **编译通过 0 题、端到端通过 0 题、写完未验证 28 题**；TS 参考解 **28/28** 通过。
+  本批压到的新面与既有编号指向见 `valkyrie-unverified-batches.md` 的 R28 小节。
 
 ### 验证窗口实测（2026-11-04 23:50 addon 重建后：编译关破碎 + marshal 夹具修复）
 
@@ -538,6 +542,16 @@ HIR 层证据是通的。真机制是 OVM 后端把 `Cast` 静默跳过（`_ => 
 判据：这 30 题改前都有 `<var> in <list>` 形式的循环，改后不含 `loop … in …`；文件顶部注释是
 还原锚点。还原后需按原批次逐题复跑，不重新分配题号。
 
+### 待还原组：`phone-number-prefix` 的 utf8 序面（1 题，R28 产出）
+
+`solution.v` 顶部已加 `# 临时绕过：...`。理想写法是把号码按字典序排序后逐对检查
+「前一个是否为后一个的真前缀」；当前 `sort` 只接受 `T: Comparable`，`utf8` 未实现该合同，
+也没有接收比较器的公共排序入口（`merge_sort` 是 `private` 三参实现），因此临时改用
+`HashSet<utf8>` 枚举每个号码的全部真前缀再查表。结论等价，但这是绕开排序入口的写法。
+还原判据：`sorted_by(list, cmp)` 落地或 `utf8: Comparable` 落地后，改回排序 + 相邻前缀检查。
+坐标：`projects/problems/phone-number-prefix/solvers/valkyrie/solution.v:3`（注释）与
+`:12`（`HashSet<utf8>` 建集）。
+
 ### 汇聚组（签名落地后一次性复跑）
 
 **`sort` 组：拆成两条独立记录（题解侧形态 vs 编译器侧名义类型）**
@@ -639,7 +653,7 @@ HIR 层证据是通的。真机制是 OVM 后端把 `Cast` 静默跳过（`_ => 
 当前 HEAD 源码二进制真跑 `1 <=> 2 = -1` / `2 <=> 1 = 1` / `7 <=> 7 = 0`），不再计入语言缺口。
 本组与 `sort(list)` 组分开记账：前者缺的是「类型侧能给出三态序」，后者只是入口形态。本组仍停在 Q10。
 
-**阻塞于 `sorted_by(list, cmp)`（G11 提案）**（4 题，R22 + R24 产出）
+**阻塞于 `sorted_by(list, cmp)`（G11 提案）**（7 题，R22 + R24 + R28 产出）
 
 | 题号 | slug | 入口 | 状态 |
 | --- | --- | --- | --- |
@@ -647,9 +661,17 @@ HIR 层证据是通的。真机制是 OVM 后端把 `Cast` 静默跳过（`_ => 
 | 870 | `advantage-shuffle` | `advantageCount` | `authored-unverified`（同时依赖 `sort(list)`） |
 | 2542 | `maximum-subsequence-score` | `maxScore` | `authored-unverified`（比较器捕获 `nums2`） |
 | 1353 | `maximum-number-of-events-that-can-be-attended` | `maxEvents` | `authored-unverified` |
+| 1337 | `the-k-weakest-rows-in-a-matrix` | `kWeakestRows` | `authored-unverified`（比较器捕获 `strength`） |
+| 2099 | `find-subsequence-of-length-k-with-the-largest-sum` | `maxSubsequence` | `authored-unverified`（比较器捕获 `nums`） |
+| 1086 | `high-five` | `highFive` | `authored-unverified`（分组内降序比较器） |
 
 同组判据：`sorted_by(list, cmp)` 源码无此入口（G11 提案）。`sort(list)` 已落地但不能接受
-比较器，因此需要自定义序的排序仍走本组。入口落地后按本组 slug 一次性复跑。
+比较器，因此需要自定义序的排序仍走本组。R28 三题的调用点是
+`the-k-weakest-rows-in-a-matrix/solution.v`（`order = sorted_by(order, ...)`）、
+`find-subsequence-of-length-k-with-the-largest-sum/solution.v`（同形态）、
+`high-five/solution.v`（分组 `bucket = sorted_by(bucket, ...)`）。此外 `sort.v` 的
+`merge_sort` 当前是 `private` 三参实现，不能作为公共比较器排序入口。入口落地后按本组
+slug 一次性复跑。
 
 **阻塞于 G2 浮点返回值合同**（1 题，R25 产出）
 

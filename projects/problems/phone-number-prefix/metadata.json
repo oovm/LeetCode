@@ -1030,6 +1030,7 @@
     ],
     "invoke": {
         "python": "Solution().phonePrefix",
-        "typescript": "Solution().phonePrefix"
+        "typescript": "Solution().phonePrefix",
+        "valkyrie": "phonePrefix"
     }
 }

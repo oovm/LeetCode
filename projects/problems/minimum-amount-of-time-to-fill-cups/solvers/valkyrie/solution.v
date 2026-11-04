@@ -1,5 +1,29 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: fillCups 需要 读取 amount 贪心注水计时
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.minimum_amount_of_time_to_fill_cups;
+
+using std.collection;
+
+# 排序后贪心：每分钟尽量填两杯不同的杯子。
+# 最少两杯之和不超过最多一杯时，答案等于最多一杯；
+# 否则总耗时是总数的一半向上取整。
+[export(case: "camelCase")]
+micro fillCups(amount: [i64]) -> i64 {
+    let mut cups: ArrayList<i64> = ArrayList::new(amount.length())
+    loop cup in amount {
+        cups.push(cup)
+    }
+    sort(cups)
+
+    let first: i64 = cups⁅0⁆
+    let second: i64 = cups⁅1⁆
+    let third: i64 = cups⁅2⁆
+    if first + second <= third {
+        return third
+    }
+    return (first + second + third + 1) / 2
+}
+
+class Solution {
+    micro fillCups(self, amount: [i64]): i64 {
+        return fillCups(amount)
+    }
+}

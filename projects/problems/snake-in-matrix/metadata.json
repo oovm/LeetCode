@@ -1620,6 +1620,7 @@
     ],
     "invoke": {
         "python": "Solution().finalPositionOfSnake",
-        "typescript": "Solution().finalPositionOfSnake"
+        "typescript": "Solution().finalPositionOfSnake",
+        "valkyrie": "finalPositionOfSnake"
     }
 }

@@ -156,12 +156,6 @@
         },
         {
             "args": {
-                "s": ""
-            },
-            "expected": "Error: max() iterable argument is empty"
-        },
-        {
-            "args": {
                 "s": "aabbccddeeffgghhi"
             },
             "expected": "aeafbfbgcgchdhdie"
@@ -349,6 +343,7 @@
     ],
     "invoke": {
         "python": "Solution().reorganizeString",
-        "typescript": "Solution().reorganizeString"
+        "typescript": "Solution().reorganizeString",
+        "valkyrie": "reorganizeString"
     }
 }

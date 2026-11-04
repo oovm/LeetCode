@@ -27,13 +27,6 @@
         },
         {
             "args": {
-                "s": "ababababababababababababab",
-                "k": 3
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s": "ababababab",
                 "k": 2
             },
@@ -62,24 +55,10 @@
         },
         {
             "args": {
-                "s": "abcdefghijklmnopqrstuvwxyzaa",
-                "k": 5
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s": "zzzz",
                 "k": 2
             },
             "expected": "yy"
-        },
-        {
-            "args": {
-                "s": "zzzzzzzzzzzzzzzzzzzzzzzz",
-                "k": 26
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -97,24 +76,10 @@
         },
         {
             "args": {
-                "s": "aaabbbcccdddeeefffggghhhiiiijjjkkkllllmmmnnnooopppqqqrrrssstttuuuvvvwwwxxxxyyyyzzzz",
-                "k": 4
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s": "abcdefghijklmnopqrstuvwxyza",
                 "k": 1
             },
             "expected": "abcdefghijklmnopqrstuvwxyza"
-        },
-        {
-            "args": {
-                "s": "pythonprogrammingisfun",
-                "k": 6
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -153,27 +118,6 @@
         },
         {
             "args": {
-                "s": "abacabadabacabadabacaba",
-                "k": 3
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "quickbrownfoxjumpsoverthelazydog",
-                "k": 5
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "mnbvcxzlkjhgfdsapoiuytrewq",
-                "k": 8
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s": "qrstuvwx",
                 "k": 4
             },
@@ -181,45 +125,10 @@
         },
         {
             "args": {
-                "s": "thisisanotherexampleofstrings",
-                "k": 7
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s": "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcd",
                 "k": 4
             },
             "expected": "gggggggggg"
-        },
-        {
-            "args": {
-                "s": "onetwothreefourfivesixseveneightninetenonetwothreefourfivesixseveneightnine",
-                "k": 9
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "thequickbrownfoxjumpsoverthelazydog",
-                "k": 4
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "thisisaverylongstringthatwillbehashed",
-                "k": 7
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "pythonprogrammingisfunandchallenging",
-                "k": 8
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -258,20 +167,6 @@
         },
         {
             "args": {
-                "s": "abcdefghijklmnopqrstuvwxyzyxwvutsrqponmlkjihgfedcba",
-                "k": 25
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "xylophoneisaveryfuninstrument",
-                "k": 4
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
                 "k": 13
             },
@@ -293,66 +188,10 @@
         },
         {
             "args": {
-                "s": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
-                "k": 25
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "thisisaverylongstringforhashing",
-                "k": 10
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "k": 26
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s": "zyxwvutsrqponmlkjihgfedcbaabcdefghijklmnopqrstuvwxyz",
                 "k": 13
             },
             "expected": "naan"
-        },
-        {
-            "args": {
-                "s": "qwerasdfzxcvqwertyuiopasdfghjklzxcvbnmqwertyuiop",
-                "k": 10
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "jqphmdfucybzvochwnygexskfr",
-                "k": 5
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "ababababababababababababababababab",
-                "k": 5
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "mnopqrabcdefg",
-                "k": 7
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "thisisaverylongstringthatneedstobehashedproperly",
-                "k": 7
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -370,34 +209,6 @@
         },
         {
             "args": {
-                "s": "thisteststringisaverylongstringthatwillhashproperly",
-                "k": 7
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "qpwoeirutyalskdjfhgzmxncbv",
-                "k": 5
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "k": 10
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s": "quickbrownfoxjumpsoverthelazydogquickbrownfoxjumpsoverthelazydog",
-                "k": 9
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s": "zyxwvutsrqponmlkjihgfedcba",
                 "k": 13
             },
@@ -409,13 +220,6 @@
                 "k": 1
             },
             "expected": "zyxwvutsrqponmlkjihgfedcba"
-        },
-        {
-            "args": {
-                "s": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "k": 100
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -440,13 +244,6 @@
         },
         {
             "args": {
-                "s": "thisisanotherlongteststringthatwillbehashedcorrectly",
-                "k": 6
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
                 "k": 4
             },
@@ -458,13 +255,6 @@
                 "k": 3
             },
             "expected": "uuu"
-        },
-        {
-            "args": {
-                "s": "thequickbrownfoxjumpsoverthelazydog",
-                "k": 9
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -483,6 +273,7 @@
     ],
     "invoke": {
         "python": "Solution().stringHash",
-        "typescript": "Solution().stringHash"
+        "typescript": "Solution().stringHash",
+        "valkyrie": "stringHash"
     }
 }

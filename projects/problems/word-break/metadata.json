@@ -895,6 +895,7 @@
     ],
     "invoke": {
         "python": "Solution().wordBreak",
-        "typescript": "Solution().wordBreak"
+        "typescript": "Solution().wordBreak",
+        "valkyrie": "wordBreak"
     }
 }

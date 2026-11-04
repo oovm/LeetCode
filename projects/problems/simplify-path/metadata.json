@@ -1195,6 +1195,7 @@
     ],
     "invoke": {
         "python": "Solution().simplifyPath",
-        "typescript": "Solution().simplifyPath"
+        "typescript": "Solution().simplifyPath",
+        "valkyrie": "simplifyPath"
     }
 }

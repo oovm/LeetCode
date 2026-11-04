@@ -1007,6 +1007,7 @@
     ],
     "invoke": {
         "python": "Solution().kWeakestRows",
-        "typescript": "Solution().kWeakestRows"
+        "typescript": "Solution().kWeakestRows",
+        "valkyrie": "kWeakestRows"
     }
 }

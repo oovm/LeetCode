@@ -1,5 +1,47 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 字符栈后缀匹配 part 弹出（栈另需数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：栈式后缀消除，时间 O(n·m) 空间 O(n)。
+namespace leetcode.remove_all_occurrences_of_a_substring;
+
+using std.collection;
+using std.text;
+
+# 字符栈：每压入一个字符就检查栈尾是否等于 `part`，命中则整段弹出。
+[export(case: "camelCase")]
+micro remove_occurrences(s: utf8, part: utf8) -> utf8 {
+    let length_part: usize = part.length()
+    let mut stack: ArrayList<char> = ArrayList::new(s.length())
+    let mut index: usize = 0
+    while index < s.length() {
+        stack.push(s⁅index⁆)
+        if stack.length() >= length_part {
+            let mut matched: bool = true
+            let mut offset: usize = 0
+            while offset < length_part && matched {
+                if stack⁅stack.length() - length_part + offset⁆ as u32 != part⁅offset⁆ as u32 {
+                    matched = false
+                }
+                offset = offset + 1
+            }
+            if matched {
+                let mut drop: usize = 0
+                while drop < length_part {
+                    stack.pop()
+                    drop = drop + 1
+                }
+            }
+        }
+        index = index + 1
+    }
+
+    let mut builder: Utf8Builder = Utf8Builder::new(stack.length())
+    let mut cursor: usize = 0
+    while cursor < stack.length() {
+        builder.append(stack⁅cursor⁆)
+        cursor = cursor + 1
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro removeOccurrences(self, s: utf8, part: utf8): utf8 {
+        return remove_occurrences(s, part)
+    }
+}

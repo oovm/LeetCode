@@ -639,7 +639,7 @@
                 "s": "12345678901234567890",
                 "part": "345"
             },
-            "expected": 12678901267890
+            "expected": "12678901267890"
         },
         {
             "args": {
@@ -917,6 +917,7 @@
     ],
     "invoke": {
         "python": "Solution().removeOccurrences",
-        "typescript": "Solution().removeOccurrences"
+        "typescript": "Solution().removeOccurrences",
+        "valkyrie": "removeOccurrences"
     }
 }

@@ -511,6 +511,7 @@
     ],
     "invoke": {
         "python": "Solution().countDistinct",
-        "typescript": "Solution().countDistinct"
+        "typescript": "Solution().countDistinct",
+        "valkyrie": "countDistinct"
     }
 }

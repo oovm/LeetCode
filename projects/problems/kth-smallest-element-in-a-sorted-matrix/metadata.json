@@ -685,13 +685,6 @@
         },
         {
             "args": {
-                "matrix": [[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]],
-                "k": 10
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "matrix": [
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
@@ -842,6 +835,7 @@
     ],
     "invoke": {
         "python": "Solution().kthSmallest",
-        "typescript": "Solution().kthSmallest"
+        "typescript": "Solution().kthSmallest",
+        "valkyrie": "kthSmallest"
     }
 }

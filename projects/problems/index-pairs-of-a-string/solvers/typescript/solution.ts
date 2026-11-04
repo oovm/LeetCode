@@ -1,7 +1,7 @@
 export class Solution {
     indexPairs(text: string, words: string[]): number[][] {
         const out: number[][] = [];
-        for (const word of words) {
+        for (const word of new Set(words)) {
             let start = text.indexOf(word);
             while (start !== -1) {
                 out.push([start, start + word.length - 1]);

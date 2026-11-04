@@ -100,6 +100,47 @@
   `ArrayList<utf8>` + 逐码元比较；理想写法是 `HashMap<utf8, i64>`，与
   `sentence-similarity-ii` 同一 `std::hash#445` 停点，合同落地后还原。
 
+## 批次 R28-2026-11-05（数据结构 / 堆 / 闭包 / 字符串构造 28 题，写完未验证）
+
+- 范围与题数（28）：堆 / 优先队列 7（`reorganize-string`、`longest-happy-string`、
+  `rearrange-string-k-distance-apart`、`take-gifts-from-the-richest-pile`、
+  `construct-string-with-repeat-limit`、`find-k-pairs-with-smallest-sums`、
+  `minimum-amount-of-time-to-fill-cups`）；矩阵 / 区间邻近面 2
+  （`kth-smallest-element-in-a-sorted-matrix`、`meeting-rooms-ii`）；
+  文本键 / 前缀面 5（`distinct-echo-substrings`、`number-of-distinct-substrings-in-a-string`、
+  `index-pairs-of-a-string`、`phone-number-prefix`、`word-break`）；队列 / 栈 / 状态模拟 5
+  （`dota2-senate`、`time-needed-to-buy-tickets`、`snake-in-matrix`、`simplify-path`、
+  `basic-calculator-ii`）；字符串构造 6（`count-and-say`、
+  `fraction-addition-and-subtraction`、`complex-number-multiplication`、
+  `remove-all-occurrences-of-a-substring`、`hash-divided-string`、`bulls-and-cows`）；
+  比较器 / 闭包 3（`the-k-weakest-rows-in-a-matrix`、
+  `find-subsequence-of-length-k-with-the-largest-sum`、`high-five`）。
+- 三件套：**28/28**（`solution.v` + `solvers/typescript/solution.ts` + `metadata.invoke.valkyrie`）。
+- 口径（三者分开）：
+  - **编译通过 0 题**（addon 重建窗口，未跑 V）。
+  - **端到端通过 0 题**（同上）。
+  - **写完未验证 28 题**。
+  - TS 参考解 **28/28 通过**（`run_ts_solver.ts` exit 0）。
+- 形参名与 `tests[].args` 键：28/28 逐字同序（脚本静态核对）。
+- 数据清洗（逐条按账本规则，删除的全是 `expected` 为 Python 异常文本的非答案用例，共 **121 条**）：
+  `complex-number-multiplication` 86、`hash-divided-string` 30、
+  `reorganize-string` 1、`kth-smallest-element-in-a-sorted-matrix` 1、
+  `longest-happy-string` 1、`time-needed-to-buy-tickets` 1、
+  `fraction-addition-and-subtraction` 1。
+  另 `remove-all-occurrences-of-a-substring` 的 `tests[90]` 是语料类型错误
+  （纯数字串被生成器写成 number），按题面返回 `String` 修正为字符串，未删用例。
+- TS 参考解修复（8 题）：`reorganize-string` 并列序、`longest-happy-string` 构造序、
+  `rearrange-string-k-distance-apart` 冷却队列、`find-k-pairs-with-smallest-sums`
+  `(sum,i,j)` 字典序、`index-pairs-of-a-string` 去重、`fraction-addition-and-subtraction`
+  通分约分、`the-k-weakest-rows-in-a-matrix` 与 `find-subsequence-of-length-k-with-the-largest-sum`
+  复刻 Python 参考解的并列取舍。
+- 本批 V 侧压到的 std 面（静态命中，未编译）：`BinaryHeap<i64>` 3 题
+  （`find-k-pairs-with-smallest-sums`、`take-gifts-from-the-richest-pile`、
+  `rearrange-string-k-distance-apart`）；`sorted_by` 3 题（G11，见账本）；
+  `HashSet` / `HashMap` 6 题；`Utf8Builder` 15 题；`Deque` 1 题（`dota2-senate`）。
+- 待还原组新增：`phone-number-prefix`（见账本同名小节）。
+- 新编号：**0 条**。
+
 ## 批次 R25-2026-11-04（Medium 图 / 并查集 / 拓扑排序 23 题，写完未构建）
 
 - 范围：Medium 的图 + 并查集 + 拓扑排序面，全部按**理想写法**落地：邻接表

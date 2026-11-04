@@ -595,6 +595,7 @@
     ],
     "invoke": {
         "python": "Solution().distinctEchoSubstrings",
-        "typescript": "Solution().distinctEchoSubstrings"
+        "typescript": "Solution().distinctEchoSubstrings",
+        "valkyrie": "distinctEchoSubstrings"
     }
 }

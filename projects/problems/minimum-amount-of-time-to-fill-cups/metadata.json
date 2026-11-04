@@ -1075,6 +1075,7 @@
     ],
     "invoke": {
         "python": "Solution().fillCups",
-        "typescript": "Solution().fillCups"
+        "typescript": "Solution().fillCups",
+        "valkyrie": "fillCups"
     }
 }

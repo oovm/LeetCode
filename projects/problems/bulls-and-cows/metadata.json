@@ -812,6 +812,7 @@
     ],
     "invoke": {
         "python": "Solution().getHint",
-        "typescript": "Solution().getHint"
+        "typescript": "Solution().getHint",
+        "valkyrie": "getHint"
     }
 }

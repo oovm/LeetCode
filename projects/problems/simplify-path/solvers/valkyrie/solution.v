@@ -1,5 +1,49 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：按 / 切分并以栈处理 . 与 .. 再拼接（栈属数组缺口）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：路径栈归一化，时间 O(n) 空间 O(n)。
+namespace leetcode.simplify_path;
+
+using std.collection;
+using std.text;
+
+# 路径栈：split 后丢弃空段与 "."，".." 弹栈，其余压栈；最后以 "/" 连接。
+# 时间 O(n) 空间 O(n)。
+[export(case: "camelCase")]
+micro simplify_path(path: utf8) -> utf8 {
+    let parts: [utf8] = path.split("/")
+    let mut stack: ArrayList<utf8> = ArrayList::new(parts.length())
+    let mut i: usize = 0
+    while i < parts.length() {
+        let part: utf8 = parts⁅i⁆
+        if part.length() > 0 {
+            if part == ".." {
+                if stack.length() > 0 {
+                    stack.pop()
+                }
+            } else if part != "." {
+                stack.push(part)
+            }
+        }
+        i = i + 1
+    }
+
+    let mut builder: Utf8Builder = Utf8Builder::new(path.length())
+    let mut j: usize = 0
+    while j < stack.length() {
+        builder.append(char::from(47))
+        let component: utf8 = stack⁅j⁆
+        let mut c: usize = 0
+        while c < component.length() {
+            builder.append(component⁅c⁆)
+            c = c + 1
+        }
+        j = j + 1
+    }
+    if stack.length() == 0 {
+        builder.append(char::from(47))
+    }
+    return builder.build()
+}
+
+class Solution {
+    micro simplifyPath(self, path: utf8): utf8 {
+        return simplify_path(path)
+    }
+}

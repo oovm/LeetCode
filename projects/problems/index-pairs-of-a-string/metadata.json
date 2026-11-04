@@ -1227,6 +1227,7 @@
     ],
     "invoke": {
         "python": "Solution().indexPairs",
-        "typescript": "Solution().indexPairs"
+        "typescript": "Solution().indexPairs",
+        "valkyrie": "indexPairs"
     }
 }

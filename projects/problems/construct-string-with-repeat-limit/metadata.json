@@ -469,6 +469,7 @@
     ],
     "invoke": {
         "python": "Solution().repeatLimitedString",
-        "typescript": "Solution().repeatLimitedString"
+        "typescript": "Solution().repeatLimitedString",
+        "valkyrie": "repeatLimitedString"
     }
 }

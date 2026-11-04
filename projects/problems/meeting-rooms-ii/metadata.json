@@ -1001,6 +1001,7 @@
     ],
     "invoke": {
         "python": "Solution().minMeetingRooms",
-        "typescript": "Solution().minMeetingRooms"
+        "typescript": "Solution().minMeetingRooms",
+        "valkyrie": "minMeetingRooms"
     }
 }

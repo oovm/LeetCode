@@ -176,6 +176,7 @@
     "invoke": {
         "python": "Solution().countAndSay",
         "typescript": "Solution().countAndSay",
+        "valkyrie": "countAndSay",
         "wolframSxo": "countAndSay",
         "matlabSxo": "countAndSay"
     }

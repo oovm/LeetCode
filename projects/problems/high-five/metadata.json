@@ -2058,6 +2058,7 @@
     ],
     "invoke": {
         "python": "Solution().highFive",
-        "typescript": "Solution().highFive"
+        "typescript": "Solution().highFive",
+        "valkyrie": "highFive"
     }
 }

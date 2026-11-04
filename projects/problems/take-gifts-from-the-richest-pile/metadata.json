@@ -774,6 +774,7 @@
     ],
     "invoke": {
         "python": "Solution().pickGifts",
-        "typescript": "Solution().pickGifts"
+        "typescript": "Solution().pickGifts",
+        "valkyrie": "pickGifts"
     }
 }

@@ -7,7 +7,7 @@ export class Solution {
             [c, 'c'],
         ];
         for (;;) {
-            pool.sort((x, y) => y[0] - x[0]);
+            pool.sort((x, y) => y[0] - x[0] || (x[1] < y[1] ? -1 : 1));
             const n = out.length;
             const idx = n >= 2 && out[n - 1] === pool[0][1] && out[n - 2] === pool[0][1] ? 1 : 0;
             if (pool[idx][0] === 0) {

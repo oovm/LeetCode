@@ -1,5 +1,33 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: timeRequiredToBuy 需要 读取 tickets 模拟购票计时
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.time_needed_to_buy_tickets;
+
+using std.collection;
+
+# 直接计数：第 k 人买到 target 张时，左侧（含 k）每人最多贡献 target 张，右侧最多 target-1 张。
+# 时间 O(n) 空间 O(1)。
+[export(case: "camelCase")]
+micro time_required_to_buy(tickets: ArrayList<i64>, k: i64) -> i64 {
+    let pos: usize = k as usize
+    let target: i64 = tickets⁅pos⁆
+    let mut time: i64 = 0
+    let mut i: usize = 0
+    while i < tickets.length() {
+        let mut cap: i64 = target - 1
+        if i as i64 <= k {
+            cap = target
+        }
+        let available: i64 = tickets⁅i⁆
+        if available < cap {
+            time = time + available
+        } else {
+            time = time + cap
+        }
+        i = i + 1
+    }
+    return time
+}
+
+class Solution {
+    micro timeRequiredToBuy(self, tickets: ArrayList<i64>, k: i64): i64 {
+        return time_required_to_buy(tickets, k)
+    }
+}

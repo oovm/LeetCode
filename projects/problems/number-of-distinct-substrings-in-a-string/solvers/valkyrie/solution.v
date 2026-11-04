@@ -1,5 +1,38 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 枚举全部子串入集合去重（集合另需哈希表）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：子串去重计数，时间 O(n²) 空间 O(n²)。
+namespace leetcode.number_of_distinct_substrings_in_a_string;
+
+using std.collection;
+using std.text;
+
+# `Utf8Builder::build` 会消耗构造器，因此每个终点都用新构造器按字符拼出子串。
+micro slice_text(text: utf8, start: usize, count: usize) -> utf8 {
+    let mut builder: Utf8Builder = Utf8Builder::new(count)
+    let mut offset: usize = 0
+    while offset < count {
+        builder.append(char::from(text⁅start + offset⁆ as u32))
+        offset = offset + 1
+    }
+    return builder.build()
+}
+
+# 枚举全部子串放进 `HashSet<utf8>` 去重，集合大小即答案。
+[export(case: "camelCase")]
+micro countDistinct(s: utf8) -> i64 {
+    let length: usize = s.length()
+    let mut seen: HashSet<utf8> = HashSet::new()
+    let mut start: usize = 0
+    while start < length {
+        let mut finish: usize = start
+        while finish < length {
+            seen.insert(slice_text(s, start, finish - start + 1))
+            finish = finish + 1
+        }
+        start = start + 1
+    }
+    return seen.length() as i64
+}
+
+class Solution {
+    micro countDistinct(self, s: utf8): i64 {
+        return countDistinct(s)
+    }
+}

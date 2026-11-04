@@ -6,20 +6,6 @@
     "tests": [
         {
             "args": {
-                "num1": "-50-50i",
-                "num2": "-50+50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-50-50'"
-        },
-        {
-            "args": {
-                "num1": "75+25i",
-                "num2": "25-75i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '25-75'"
-        },
-        {
-            "args": {
                 "num1": "100+0i",
                 "num2": "0+100i"
             },
@@ -34,24 +20,10 @@
         },
         {
             "args": {
-                "num1": "-1+2i",
-                "num2": "-3-4i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-3-4'"
-        },
-        {
-            "args": {
                 "num1": "-50+-50i",
                 "num2": "50+50i"
             },
             "expected": "0+-5000i"
-        },
-        {
-            "args": {
-                "num1": "-100+100i",
-                "num2": "100-100i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '100-100'"
         },
         {
             "args": {
@@ -66,34 +38,6 @@
                 "num2": "1+1i"
             },
             "expected": "0+2i"
-        },
-        {
-            "args": {
-                "num1": "50-50i",
-                "num2": "50+50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '50-50'"
-        },
-        {
-            "args": {
-                "num1": "-50-50i",
-                "num2": "50+50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-50-50'"
-        },
-        {
-            "args": {
-                "num1": "-1+1i",
-                "num2": "1-1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '1-1'"
-        },
-        {
-            "args": {
-                "num1": "-99+99i",
-                "num2": "99-99i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '99-99'"
         },
         {
             "args": {
@@ -139,13 +83,6 @@
         },
         {
             "args": {
-                "num1": "100+100i",
-                "num2": "-100-100i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-100-100'"
-        },
-        {
-            "args": {
                 "num1": "3+4i",
                 "num2": "-4+3i"
             },
@@ -157,13 +94,6 @@
                 "num2": "3+-4i"
             },
             "expected": "5+10i"
-        },
-        {
-            "args": {
-                "num1": "99+99i",
-                "num2": "-99-99i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-99-99'"
         },
         {
             "args": {
@@ -195,31 +125,10 @@
         },
         {
             "args": {
-                "num1": "-50+50i",
-                "num2": "50-50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '50-50'"
-        },
-        {
-            "args": {
-                "num1": "-12+34i",
-                "num2": "56-78i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '56-78'"
-        },
-        {
-            "args": {
                 "num1": "-1+-1i",
                 "num2": "-1+-1i"
             },
             "expected": "0+2i"
-        },
-        {
-            "args": {
-                "num1": "-123+456i",
-                "num2": "789-1011i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '789-1011'"
         },
         {
             "args": {
@@ -237,48 +146,6 @@
         },
         {
             "args": {
-                "num1": "99+99i",
-                "num2": "1-1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '1-1'"
-        },
-        {
-            "args": {
-                "num1": "23+77i",
-                "num2": "-45-67i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-45-67'"
-        },
-        {
-            "args": {
-                "num1": "-66-88i",
-                "num2": "88+66i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-66-88'"
-        },
-        {
-            "args": {
-                "num1": "0+50i",
-                "num2": "0-50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-50'"
-        },
-        {
-            "args": {
-                "num1": "-45+35i",
-                "num2": "35-45i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '35-45'"
-        },
-        {
-            "args": {
-                "num1": "-50+25i",
-                "num2": "50-25i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '50-25'"
-        },
-        {
-            "args": {
                 "num1": "-50+50i",
                 "num2": "50+50i"
             },
@@ -286,52 +153,10 @@
         },
         {
             "args": {
-                "num1": "50+50i",
-                "num2": "50-50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '50-50'"
-        },
-        {
-            "args": {
-                "num1": "50-50i",
-                "num2": "-50+50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '50-50'"
-        },
-        {
-            "args": {
-                "num1": "-42+0i",
-                "num2": "0-42i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-42'"
-        },
-        {
-            "args": {
-                "num1": "99-99i",
-                "num2": "99+99i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '99-99'"
-        },
-        {
-            "args": {
                 "num1": "1+0i",
                 "num2": "1+0i"
             },
             "expected": "1+0i"
-        },
-        {
-            "args": {
-                "num1": "-30+-40i",
-                "num2": "20-50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '20-50'"
-        },
-        {
-            "args": {
-                "num1": "-100+0i",
-                "num2": "0-100i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-100'"
         },
         {
             "args": {
@@ -363,31 +188,10 @@
         },
         {
             "args": {
-                "num1": "100-100i",
-                "num2": "100+100i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '100-100'"
-        },
-        {
-            "args": {
                 "num1": "0+1i",
                 "num2": "1+0i"
             },
             "expected": "0+1i"
-        },
-        {
-            "args": {
-                "num1": "1011+789i",
-                "num2": "-456-123i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-456-123'"
-        },
-        {
-            "args": {
-                "num1": "0-1i",
-                "num2": "0+1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-1'"
         },
         {
             "args": {
@@ -412,122 +216,10 @@
         },
         {
             "args": {
-                "num1": "-66+88i",
-                "num2": "-88-66i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-88-66'"
-        },
-        {
-            "args": {
-                "num1": "-1-1i",
-                "num2": "1+1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-1-1'"
-        },
-        {
-            "args": {
-                "num1": "-88-55i",
-                "num2": "88+55i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-88-55'"
-        },
-        {
-            "args": {
-                "num1": "-50-50i",
-                "num2": "-50-50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-50-50'"
-        },
-        {
-            "args": {
-                "num1": "30-40i",
-                "num2": "-60+80i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '30-40'"
-        },
-        {
-            "args": {
-                "num1": "-23-56i",
-                "num2": "78+90i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-23-56'"
-        },
-        {
-            "args": {
-                "num1": "25-75i",
-                "num2": "75+25i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '25-75'"
-        },
-        {
-            "args": {
-                "num1": "-1011-789i",
-                "num2": "456-123i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-1011-789'"
-        },
-        {
-            "args": {
-                "num1": "-66-33i",
-                "num2": "66+33i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-66-33'"
-        },
-        {
-            "args": {
-                "num1": "0+1i",
-                "num2": "0-1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-1'"
-        },
-        {
-            "args": {
-                "num1": "-78+90i",
-                "num2": "34-56i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '34-56'"
-        },
-        {
-            "args": {
-                "num1": "-99-99i",
-                "num2": "-99-99i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-99-99'"
-        },
-        {
-            "args": {
-                "num1": "0+100i",
-                "num2": "0-100i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-100'"
-        },
-        {
-            "args": {
-                "num1": "0+0i",
-                "num2": "50-50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '50-50'"
-        },
-        {
-            "args": {
                 "num1": "88+11i",
                 "num2": "-44+22i"
             },
             "expected": "-4114+1452i"
-        },
-        {
-            "args": {
-                "num1": "0+0i",
-                "num2": "-100-100i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-100-100'"
-        },
-        {
-            "args": {
-                "num1": "-99-99i",
-                "num2": "99+99i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-99-99'"
         },
         {
             "args": {
@@ -559,59 +251,10 @@
         },
         {
             "args": {
-                "num1": "23-17i",
-                "num2": "-23+17i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '23-17'"
-        },
-        {
-            "args": {
-                "num1": "0-100i",
-                "num2": "0-100i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-100'"
-        },
-        {
-            "args": {
-                "num1": "-75+25i",
-                "num2": "25-75i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '25-75'"
-        },
-        {
-            "args": {
-                "num1": "-75-25i",
-                "num2": "-25+75i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-75-25'"
-        },
-        {
-            "args": {
                 "num1": "-1011+789i",
                 "num2": "456+123i"
             },
             "expected": "-558063+235431i"
-        },
-        {
-            "args": {
-                "num1": "-1+1i",
-                "num2": "-100-100i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-100-100'"
-        },
-        {
-            "args": {
-                "num1": "-1+0i",
-                "num2": "0-1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-1'"
-        },
-        {
-            "args": {
-                "num1": "-99-99i",
-                "num2": "99-99i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-99-99'"
         },
         {
             "args": {
@@ -643,31 +286,10 @@
         },
         {
             "args": {
-                "num1": "12-34i",
-                "num2": "-56+78i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '12-34'"
-        },
-        {
-            "args": {
                 "num1": "50+0i",
                 "num2": "0+50i"
             },
             "expected": "0+2500i"
-        },
-        {
-            "args": {
-                "num1": "-75+-25i",
-                "num2": "75-25i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '75-25'"
-        },
-        {
-            "args": {
-                "num1": "1+1i",
-                "num2": "-1-1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-1-1'"
         },
         {
             "args": {
@@ -678,55 +300,6 @@
         },
         {
             "args": {
-                "num1": "77+44i",
-                "num2": "-44-77i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-44-77'"
-        },
-        {
-            "args": {
-                "num1": "60+80i",
-                "num2": "-90-120i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-90-120'"
-        },
-        {
-            "args": {
-                "num1": "99-99i",
-                "num2": "-99+99i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '99-99'"
-        },
-        {
-            "args": {
-                "num1": "-88+33i",
-                "num2": "11-44i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '11-44'"
-        },
-        {
-            "args": {
-                "num1": "63-22i",
-                "num2": "-31+44i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '63-22'"
-        },
-        {
-            "args": {
-                "num1": "-123+456i",
-                "num2": "789-101i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '789-101'"
-        },
-        {
-            "args": {
-                "num1": "0-100i",
-                "num2": "-100+0i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-100'"
-        },
-        {
-            "args": {
                 "num1": "0+-50i",
                 "num2": "-50+0i"
             },
@@ -734,59 +307,10 @@
         },
         {
             "args": {
-                "num1": "-34-56i",
-                "num2": "-78-90i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-34-56'"
-        },
-        {
-            "args": {
-                "num1": "-5+3i",
-                "num2": "3-5i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '3-5'"
-        },
-        {
-            "args": {
-                "num1": "-34-56i",
-                "num2": "78-90i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-34-56'"
-        },
-        {
-            "args": {
-                "num1": "10+20i",
-                "num2": "30-40i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '30-40'"
-        },
-        {
-            "args": {
                 "num1": "-100+0i",
                 "num2": "0+100i"
             },
             "expected": "0+-10000i"
-        },
-        {
-            "args": {
-                "num1": "100+100i",
-                "num2": "1-1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '1-1'"
-        },
-        {
-            "args": {
-                "num1": "56-78i",
-                "num2": "23+45i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '56-78'"
-        },
-        {
-            "args": {
-                "num1": "123-456i",
-                "num2": "-789+101i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '123-456'"
         },
         {
             "args": {
@@ -804,13 +328,6 @@
         },
         {
             "args": {
-                "num1": "-88-88i",
-                "num2": "-11-11i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-88-88'"
-        },
-        {
-            "args": {
                 "num1": "-1+1i",
                 "num2": "-1+1i"
             },
@@ -825,31 +342,10 @@
         },
         {
             "args": {
-                "num1": "100+0i",
-                "num2": "0-100i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-100'"
-        },
-        {
-            "args": {
-                "num1": "50+50i",
-                "num2": "-50-50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-50-50'"
-        },
-        {
-            "args": {
                 "num1": "-100+0i",
                 "num2": "0+-100i"
             },
             "expected": "0+10000i"
-        },
-        {
-            "args": {
-                "num1": "32-45i",
-                "num2": "-67+89i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '32-45'"
         },
         {
             "args": {
@@ -867,34 +363,6 @@
         },
         {
             "args": {
-                "num1": "0-1i",
-                "num2": "-1+0i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-1'"
-        },
-        {
-            "args": {
-                "num1": "-1+99i",
-                "num2": "99-1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '99-1'"
-        },
-        {
-            "args": {
-                "num1": "-50+0i",
-                "num2": "0-50i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '0-50'"
-        },
-        {
-            "args": {
-                "num1": "-25+75i",
-                "num2": "25-75i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '25-75'"
-        },
-        {
-            "args": {
                 "num1": "99+99i",
                 "num2": "-99+99i"
             },
@@ -906,20 +374,6 @@
                 "num2": "0+100i"
             },
             "expected": "-10000+0i"
-        },
-        {
-            "args": {
-                "num1": "100-100i",
-                "num2": "-1+1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '100-100'"
-        },
-        {
-            "args": {
-                "num1": "-66-88i",
-                "num2": "66-88i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-66-88'"
         },
         {
             "args": {
@@ -937,13 +391,6 @@
         },
         {
             "args": {
-                "num1": "-99-99i",
-                "num2": "-1-1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-99-99'"
-        },
-        {
-            "args": {
                 "num1": "100+0i",
                 "num2": "100+0i"
             },
@@ -951,45 +398,10 @@
         },
         {
             "args": {
-                "num1": "10-20i",
-                "num2": "20+30i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '10-20'"
-        },
-        {
-            "args": {
                 "num1": "-20+-30i",
                 "num2": "20+30i"
             },
             "expected": "500+-1200i"
-        },
-        {
-            "args": {
-                "num1": "-100-100i",
-                "num2": "100+100i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-100-100'"
-        },
-        {
-            "args": {
-                "num1": "20+30i",
-                "num2": "-20-30i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-20-30'"
-        },
-        {
-            "args": {
-                "num1": "-30+40i",
-                "num2": "50-60i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '50-60'"
-        },
-        {
-            "args": {
-                "num1": "1011-789i",
-                "num2": "-456+123i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '1011-789'"
         },
         {
             "args": {
@@ -1021,28 +433,15 @@
         },
         {
             "args": {
-                "num1": "100-100i",
-                "num2": "-100+100i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '100-100'"
-        },
-        {
-            "args": {
                 "num1": "1+-1i",
                 "num2": "-100+100i"
             },
             "expected": "0+200i"
-        },
-        {
-            "args": {
-                "num1": "-99-99i",
-                "num2": "-1+1i"
-            },
-            "expected": "Error: invalid literal for int() with base 10: '-99-99'"
         }
     ],
     "invoke": {
         "python": "Solution().complexNumberMultiply",
-        "typescript": "Solution().complexNumberMultiply"
+        "typescript": "Solution().complexNumberMultiply",
+        "valkyrie": "complexNumberMultiply"
     }
 }

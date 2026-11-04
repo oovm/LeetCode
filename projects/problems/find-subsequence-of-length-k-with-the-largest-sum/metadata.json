@@ -703,6 +703,7 @@
     ],
     "invoke": {
         "python": "Solution().maxSubsequence",
-        "typescript": "Solution().maxSubsequence"
+        "typescript": "Solution().maxSubsequence",
+        "valkyrie": "maxSubsequence"
     }
 }
