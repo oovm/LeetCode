@@ -630,6 +630,7 @@
     ],
     "invoke": {
         "python": "Solution().stringShift",
-        "typescript": "Solution().stringShift"
+        "typescript": "Solution().stringShift",
+        "valkyrie": "stringShift"
     }
 }

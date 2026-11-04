@@ -1029,6 +1029,7 @@
     ],
     "invoke": {
         "python": "Solution().countPrefixes",
-        "typescript": "Solution().countPrefixes"
+        "typescript": "Solution().countPrefixes",
+        "valkyrie": "countPrefixes"
     }
 }

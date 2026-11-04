@@ -937,6 +937,7 @@
     ],
     "invoke": {
         "python": "Solution().numOfStrings",
-        "typescript": "Solution().numOfStrings"
+        "typescript": "Solution().numOfStrings",
+        "valkyrie": "numOfStrings"
     }
 }
