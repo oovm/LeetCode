@@ -1,5 +1,34 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: sortArrayByParityII 需要 读取 nums 按奇偶交错重排
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.sort_array_by_parity_ii;
+
+using std.collection;
+
+# 偶值、奇值各收一列，再按「偶、奇」交错回填；两次线性扫描，无原地交换。
+# 题内触发点: G3 —— 返回 `ArrayList<i64>` 依赖聚合返回值 bridge。
+[export(case: "camelCase")]
+micro sort_array_by_parity_ii(nums: ArrayList<i64>) -> ArrayList<i64> {
+    let count: usize = nums.length()
+    let mut evens: ArrayList<i64> = ArrayList::new(count)
+    let mut odds: ArrayList<i64> = ArrayList::new(count)
+    loop value in nums {
+        if value % 2 == 0 {
+            evens.push(value)
+        } else {
+            odds.push(value)
+        }
+    }
+
+    let mut result: ArrayList<i64> = ArrayList::new(count)
+    let mut index: usize = 0
+    while index < evens.length() {
+        result.push(evens⁅index⁆)
+        result.push(odds⁅index⁆)
+        index = index + 1
+    }
+    return result
+}
+
+class Solution {
+    micro sortArrayByParityII(self, nums: ArrayList<i64>): ArrayList<i64> {
+        return sort_array_by_parity_ii(nums)
+    }
+}
