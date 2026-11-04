@@ -404,6 +404,9 @@ imply Utf8Text: Comparable { ... }
 - 判定：**std 模型缺口**（非编译器）。
 - 与 G13 的关系：G13 是本条的下游表现。
 - 修复初判：**建 trait**（新增 `Comparable` 合同 + 逐 primitive impl + 收窄 BTree 系约束）。
+- 与 G17 的交叉引用：`char` 同时缺 `Hash`。**这两条不是孤立缺 impl，而是同一个 primitive 的
+  类型能力面没设计完**——`Ordinal` 视图 / `Comparable` / `Hash` 三条腿一条都没在 `char` 上落地，
+  只剩 `==` / `!=`，于是它既进不了有序容器也进不了哈希容器。
 
 ### G16 `BTreeSet` / `BTreeMap` 缺序关系查询
 
@@ -421,14 +424,18 @@ micro ceiling(self, value: T) -> Option<T>
 micro first(self) -> Option<T>
 micro last(self) -> Option<T>
 micro range(self, low: T, high: T) -> ArrayList<T>
+micro nth(self, rank: usize) -> Option<T>        # BTreeSet，按秩取元素
+micro nth_key(self, rank: usize) -> Option<K>    # BTreeMap，按秩取键
 ```
 
-- 影响题（1）：`contains-duplicate-iii`（220，窗口内前驱/后继判定）。
+- 影响题（2）：`contains-duplicate-iii`（220，窗口内前驱/后继判定）、
+  `sliding-window-median`（480，有序计数表按秩取中位；缺 `nth_key` 只能 `keys()` 全量物化，
+  每步退化为 O(k)）。
 - 不对称点：`HashMap` 有 `keys` / `values`，`BTreeSet` 有 `to_list`，但有序容器只能被全量物化后
-  线性扫描；`floor` / `ceiling` / `first` / `last` / `range` 全部缺失，「有序」只剩存储形态。
+  线性扫描；`floor` / `ceiling` / `first` / `last` / `range` / `nth` 全部缺失，「有序」只剩存储形态。
 - 判定：**std 缺口**。
-- 修复初判：**加 API**（底层节点已按序，查询不需新模型）；必须与 G15 同批，否则新查询仍建立在
-  未表达的序约束上。
+- 修复初判：**加 API**（底层节点已按序，查询不需新模型）。**实现前提是 G15 的 `Comparable`
+  先落地，否则等于在无约束类型上裸调 `<`，和 `BTreeSet<T: Equal>` 那个不健全容器是同一个病。**
 
 ### G17 `char` 缺 `Hash` impl
 
@@ -448,12 +455,17 @@ imply char: Hash {
 }
 ```
 
-- 影响题（2）：`custom-sort-string`（791，`HashMap<char, i64>` 优先级表）、
-  `satisfiability-of-equality-equations`（990，`DisjointSet<char>` 变量连通性）。
+- 影响题（5）：`custom-sort-string`（791，`HashMap<char, i64>` 优先级表）、
+  `satisfiability-of-equality-equations`（990，`DisjointSet<char>` 变量连通性）、
+  `word-subsets`（916，字符频次上界）、`permutation-in-string`（567，定窗字符计数）、
+  `find-words-that-can-be-formed-by-characters`（1160，字符可用量）。
 - 不对称点：`utf8`、`i8`–`u64`、`f32` / `f64` 都有 `Hash`；`char` 有 `Ordinal`（可转 `u32`）
   却没有派生 `Hash`，因此「码位可排序」与「码位可哈希」只实现了一半。
 - 判定：**std 缺口**。
 - 修复初判：**加 API**（补一个 impl，语义与 `Ordinal` 一致）。
+- 与 G15 的交叉引用：`char` 同时缺 `Comparable`。**这两条不是孤立缺 impl，而是同一个 primitive 的
+  类型能力面没设计完**——`Ordinal` 视图 / `Comparable` / `Hash` 三条腿一条都没在 `char` 上落地，
+  只剩 `==` / `!=`，于是它既进不了有序容器也进不了哈希容器。
 
 ### G18 `utf8` 缺 `split_whitespace`
 
@@ -468,7 +480,8 @@ imply char: Hash {
 micro split_whitespace(self) -> [utf8]
 ```
 
-- 影响题（1）：`reverse-words-in-a-string`（151，多次空格与前导/尾随空格的切词）。
+- 影响题（2）：`reverse-words-in-a-string`（151，多次空格与前导/尾随空格的切词）、
+  `maximum-number-of-words-found-in-sentences`（2114，逐句求词数）。
 - 不对称点：`split` / `slice` / `try_slice` / `index_of` 都有，`split` 却只覆盖「固定分隔符 +
   保留空段」一种语义；空白类与空段折叠没有入口。
 - 判定：**std 缺口**。
