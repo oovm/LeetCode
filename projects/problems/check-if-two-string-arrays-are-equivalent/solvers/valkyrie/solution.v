@@ -1,5 +1,27 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: arrayStringsAreEqual 需要 读取 word1/word2 拼接比较
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.check_if_two_string_arrays_are_equivalent;
+
+using std.collection;
+
+# 两段拼接后整体比较；`concat` 是 `utf8` 既有的二元拼接，折叠累加即可，无需 builder。
+micro join_all(words: ArrayList<utf8>) -> utf8 {
+    let mut text: utf8 = ""
+    let mut i: usize = 0
+    while i < words.length() {
+        text = text.concat(words⁅i⁆)
+        i = i + 1
+    }
+    return text
+}
+
+[export(case: "camelCase")]
+micro array_strings_are_equal(word1: ArrayList<utf8>, word2: ArrayList<utf8>) -> bool {
+    let left: utf8 = join_all(word1)
+    let right: utf8 = join_all(word2)
+    return left == right
+}
+
+class Solution {
+    micro arrayStringsAreEqual(self, word1: ArrayList<utf8>, word2: ArrayList<utf8>): bool {
+        return array_strings_are_equal(word1, word2)
+    }
+}

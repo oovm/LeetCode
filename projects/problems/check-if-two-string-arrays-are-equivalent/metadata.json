@@ -742,6 +742,7 @@
     ],
     "invoke": {
         "python": "Solution().arrayStringsAreEqual",
-        "typescript": "Solution().arrayStringsAreEqual"
+        "typescript": "Solution().arrayStringsAreEqual",
+        "valkyrie": "arrayStringsAreEqual"
     }
 }

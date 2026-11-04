@@ -1340,6 +1340,7 @@
     ],
     "invoke": {
         "python": "Solution().firstPalindrome",
-        "typescript": "Solution().firstPalindrome"
+        "typescript": "Solution().firstPalindrome",
+        "valkyrie": "firstPalindrome"
     }
 }

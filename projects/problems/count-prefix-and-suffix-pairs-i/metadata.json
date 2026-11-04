@@ -803,6 +803,7 @@
     ],
     "invoke": {
         "python": "Solution().countPrefixSuffixPairs",
-        "typescript": "Solution().countPrefixSuffixPairs"
+        "typescript": "Solution().countPrefixSuffixPairs",
+        "valkyrie": "countPrefixSuffixPairs"
     }
 }
