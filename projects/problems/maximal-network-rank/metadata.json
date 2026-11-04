@@ -793,6 +793,7 @@
     ],
     "invoke": {
         "python": "Solution().maximalNetworkRank",
-        "typescript": "Solution().maximalNetworkRank"
+        "typescript": "Solution().maximalNetworkRank",
+        "valkyrie": "maximalNetworkRank"
     }
 }

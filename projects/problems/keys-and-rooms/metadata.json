@@ -1061,6 +1061,7 @@
     ],
     "invoke": {
         "python": "Solution().canVisitAllRooms",
-        "typescript": "Solution().canVisitAllRooms"
+        "typescript": "Solution().canVisitAllRooms",
+        "valkyrie": "canVisitAllRooms"
     }
 }

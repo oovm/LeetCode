@@ -1098,6 +1098,7 @@
     ],
     "invoke": {
         "python": "Solution().findSmallestSetOfVertices",
-        "typescript": "Solution().findSmallestSetOfVertices"
+        "typescript": "Solution().findSmallestSetOfVertices",
+        "valkyrie": "findSmallestSetOfVertices"
     }
 }
