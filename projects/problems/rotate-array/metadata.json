@@ -857,6 +857,7 @@
     ],
     "invoke": {
         "python": "Solution().rotate",
-        "typescript": "Solution().rotate"
+        "typescript": "Solution().rotate",
+        "valkyrie": "rotate"
     }
 }

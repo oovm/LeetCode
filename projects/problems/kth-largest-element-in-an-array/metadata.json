@@ -587,6 +587,7 @@
     ],
     "invoke": {
         "python": "Solution().findKthLargest",
-        "typescript": "Solution().findKthLargest"
+        "typescript": "Solution().findKthLargest",
+        "valkyrie": "findKthLargest"
     }
 }
