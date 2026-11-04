@@ -507,6 +507,7 @@
     ],
     "invoke": {
         "python": "Solution().spiralOrder",
-        "typescript": "Solution().spiralOrder"
+        "typescript": "Solution().spiralOrder",
+        "valkyrie": "spiralOrder"
     }
 }

@@ -680,6 +680,7 @@
     ],
     "invoke": {
         "python": "Solution().sortArrayByParity",
-        "typescript": "Solution().sortArrayByParity"
+        "typescript": "Solution().sortArrayByParity",
+        "valkyrie": "sortArrayByParity"
     }
 }

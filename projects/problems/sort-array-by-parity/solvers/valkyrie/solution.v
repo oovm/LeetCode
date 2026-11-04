@@ -1,5 +1,35 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: sortArrayByParity 需要 读取 nums 按奇偶重排
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.sort_array_by_parity;
+
+# 双指针：左指针停在奇数、右指针停在偶数，交换后两侧各自推进。
+# 定长载体写侧：每次交换都经 `⁅ ⁆=` 落回原容器，O(n) 时间 / O(1) 额外空间。
+[export(case: "camelCase")]
+micro sort_array_by_parity(mut nums: ArrayList<i64>) -> ArrayList<i64> {
+    let count: usize = nums.length()
+    if count == 0 {
+        return nums
+    }
+    let mut left: usize = 0
+    let mut right: usize = count - 1
+    while left < right {
+        if nums⁅left⁆ % 2 == 0 {
+            left = left + 1
+        } else {
+            if nums⁅right⁆ % 2 != 0 {
+                right = right - 1
+            } else {
+                let tmp: i64 = nums⁅left⁆
+                nums⁅left⁆ = nums⁅right⁆
+                nums⁅right⁆ = tmp
+                left = left + 1
+                right = right - 1
+            }
+        }
+    }
+    return nums
+}
+
+class Solution {
+    micro sortArrayByParity(mut self, nums: ArrayList<i64>): ArrayList<i64> {
+        return sort_array_by_parity(nums)
+    }
+}
