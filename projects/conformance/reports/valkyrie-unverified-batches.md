@@ -1569,3 +1569,27 @@ node --import tsx projects/conformance/scripts/run_ts_solver.ts projects/problem
 V 侧复跑：在 `projects/conformance` 下执行 `node --import tsx scripts/run_v_solver.ts ../problems/<slug>`，
 内部先 `resolveCompileTargetPlan` 再 `ensureVBuild`（`legion build`）并跑全量 `metadata.tests`。
 批量编译口径：`resolveCompileTargetPlan(solverDir)` → `legionBuildProject(solverDir, plan.canonicalTarget, outDir)`。
+
+## 特性定向批次（2026-11-05）
+
+共享 addon `07b625aa`，不重建。TS/Python 参考 13/13 通过；V 侧实测：
+
+| slug | 特性 | 构建 | 判题 |
+|---|---|---|---|
+| `sort-integers-by-the-number-of-1-bits` | `sorted_by` + multi-key | `build=0` | **96/96 通过** |
+| `sort-array-by-increasing-frequency` | `sorted_by` + packed-key | `build=0` | **117/117 通过** |
+| `k-closest-points-to-origin` | `sorted_by` + nested-array cmp | `build=0` | **98/98 通过** |
+| `sort-characters-by-frequency` | `sorted_by` + frequency | `build=0` | 0/54，`TypeError`（F3 utf8 返回） |
+| `largest-number` | `sorted_by` + utf8 concat | 阻断（`__u8_add` host provider） | 未执行 |
+| `reorder-data-in-log-files` | `sorted_by` + multi-key utf8 | 编译器 panic（`host_slice` 槽冲突） | 未执行 |
+| `top-k-frequent-words` | `sorted_by` + utf8 ordering | 阻断（`is_less_or_equal` ABI carrier mismatch） | 未执行 |
+| `group-anagrams` | `sorted_by` + utf8 canonical key | 阻断（`std::hash` 合同实例缺失） | 未执行 |
+| `longest-word-in-dictionary` | `sorted_by` + utf8 ordering | 阻断（`HashSet<utf8>` 同一 hash 缺口） | 未执行 |
+| `most-common-word` | utf8 扫描 + multi-key | 阻断（`Utf8Builder` 合同实例缺失） | 未执行 |
+| `last-stone-weight` | `BinaryHeap` + `Comparable` | 阻断（`push/pop` 义务未消解） | 未执行 |
+| `furthest-building-you-can-reach` | `BinaryHeap` + `Comparable` | 阻断（同上） | 未执行 |
+| `minimum-operations-to-halve-array-sum` | `BinaryHeap<f64>` | 阻断（`new_by` 缺失，`f64` 无 `Comparable`） | 未执行 |
+
+结论：本批 3 题通过（211 条用例），其余 10 题被 utf8 字节合同、`utf8` 泛型序实例化、
+`std::hash` 合同实例与 `BinaryHeap` 义务传播四条线挡住；`reorder-data-in-log-files`
+另触发 emitter panic，需在 `nyar-vm.rs` 侧修，不在本仓改。

@@ -2983,5 +2983,134 @@
       ]
     },
     "note": "manifest is read by projects/conformance/src/reporting/corpus-quarantine.ts. Removing the file disables the exclusion as a whole. metadata.json and expected values were repaired in place where a case carries a `recomputed` value, and coordinates point at the repaired files."
+  },
+  "referenceAudit": {
+    "date": "2026-11-05",
+    "scope": "solvers/python/solution.py wildcard imports and float-degeneration shapes",
+    "wildcardImportCensus": {
+      "files": 2828,
+      "statements": 25452,
+      "modules": ["typing", "functools", "collections", "itertools", "heapq", "bisect", "string", "operator", "math"],
+      "bindingOrder": "math is imported last, so math.pow wins over operator.pow",
+      "shadowedBuiltins": [
+        { "name": "pow", "shadowedBy": "math.pow", "effect": "two-argument only, returns float" },
+        { "name": "abs", "shadowedBy": "operator.abs", "effect": "semantics identical to builtin, harmless" }
+      ],
+      "absentWildcards": ["random", "os", "numpy"],
+      "barePowCallSites": 0,
+      "verdict": "only pow is a real shadowing risk; all call sites already use builtins.pow"
+    },
+    "floatDegeneration": {
+      "mathFunctionSites": 4,
+      "truedivisionFiles": 54,
+      "allIntExpectedSlugs": 19,
+      "confirmedPotentialRisks": 9,
+      "falsePositives": 6,
+      "misses": 0,
+      "policy": "confirmed risks are registered only; reference solutions are not changed because current corpus outputs are bit-identical"
+    },
+    "fixedLastRound": {
+      "files": 7,
+      "callSites": 10,
+      "fix": "builtins.pow",
+      "slugs": [
+        "count-the-number-of-square-free-subsets",
+        "number-of-distinct-binary-strings-after-applying-operations",
+        "the-number-of-good-subsets",
+        "count-k-subsequences-of-a-string-with-maximum-beauty",
+        "final-array-state-after-k-multiplication-operations-ii",
+        "maximize-number-of-nice-divisors",
+        "count-the-number-of-arrays-with-k-matching-adjacent-elements"
+      ],
+      "verification": "recomputed expected values are bit-identical (difference 0)"
+    },
+    "potentialRiskCoordinates": [
+      {
+        "slug": "car-fleet",
+        "file": "projects/problems/car-fleet/solvers/python/solution.py",
+        "lines": [83],
+        "shape": "float-division-used-as-arrival-time-compare",
+        "status": "potential precision defect (diff 0 on current corpus, distorts when magnitudes grow)"
+      },
+      {
+        "slug": "successful-pairs-of-spells-and-potions",
+        "file": "projects/problems/successful-pairs-of-spells-and-potions/solvers/python/solution.py",
+        "lines": [84],
+        "shape": "float quotient used as bisect threshold",
+        "status": "potential precision defect (diff 0 on current corpus, distorts when magnitudes grow)"
+      },
+      {
+        "slug": "minimum-number-of-seconds-to-make-mountain-height-zero",
+        "file": "projects/problems/minimum-number-of-seconds-to-make-mountain-height-zero/solvers/python/solution.py",
+        "lines": [83],
+        "shape": "sqrt rounded down to int inside predicate",
+        "status": "potential precision defect (diff 0 on current corpus, distorts when magnitudes grow)"
+      },
+      {
+        "slug": "minimum-operations-to-make-numbers-non-positive",
+        "file": "projects/problems/minimum-operations-to-make-numbers-non-positive/solvers/python/solution.py",
+        "lines": [84],
+        "shape": "ceil of float quotient",
+        "status": "potential precision defect (diff 0 on current corpus, distorts when magnitudes grow)"
+      },
+      {
+        "slug": "minimum-skips-to-arrive-at-meeting-on-time",
+        "file": "projects/problems/minimum-skips-to-arrive-at-meeting-on-time/solvers/python/solution.py",
+        "lines": [87, 89],
+        "shape": "ceil of float time with epsilon",
+        "status": "potential precision defect (diff 0 on current corpus, distorts when magnitudes grow)"
+      },
+      {
+        "slug": "minimum-speed-to-arrive-on-time",
+        "file": "projects/problems/minimum-speed-to-arrive-on-time/solvers/python/solution.py",
+        "lines": [83],
+        "shape": "float division accumulated then compared with integer hour",
+        "status": "potential precision defect (diff 0 on current corpus, distorts when magnitudes grow)"
+      },
+      {
+        "slug": "minimum-amount-of-damage-dealt-to-bob",
+        "file": "projects/problems/minimum-amount-of-damage-dealt-to-bob/solvers/python/solution.py",
+        "lines": [102],
+        "shape": "float ratio used as sort key",
+        "status": "potential precision defect (diff 0 on current corpus, distorts when magnitudes grow)"
+      },
+      {
+        "slug": "equal-rational-numbers",
+        "file": "projects/problems/equal-rational-numbers/solvers/python/solution.py",
+        "lines": [80],
+        "shape": "float constants 1/9, 1/99, ... compared for equality",
+        "status": "potential precision defect (diff 0 on current corpus, distorts when magnitudes grow)"
+      },
+      {
+        "slug": "count-the-number-of-substrings-with-dominant-ones",
+        "file": "projects/problems/count-the-number-of-substrings-with-dominant-ones/solvers/python/solution.py",
+        "lines": [84],
+        "shape": "sqrt//2 produces a float loop bound",
+        "status": "potential precision defect (diff 0 on current corpus, distorts when magnitudes grow)"
+      }
+    ],
+    "spotChecks": [
+      { "slug": "count-the-number-of-square-free-subsets", "verdict": "fixed", "basis": "builtins.pow, expected recomputed bit-identical" },
+      { "slug": "number-of-distinct-binary-strings-after-applying-operations", "verdict": "fixed", "basis": "builtins.pow, expected recomputed bit-identical" },
+      { "slug": "the-number-of-good-subsets", "verdict": "fixed", "basis": "builtins.pow, expected recomputed bit-identical" },
+      { "slug": "count-k-subsequences-of-a-string-with-maximum-beauty", "verdict": "exact", "basis": "three-argument modular builtins.pow is integer arithmetic" },
+      { "slug": "final-array-state-after-k-multiplication-operations-ii", "verdict": "exact", "basis": "three-argument modular builtins.pow is integer arithmetic" },
+      { "slug": "basic-calculator-ii", "verdict": "false-positive", "basis": "int(a / v) with operands bounded by 2^31, exact in double" },
+      { "slug": "clumsy-factorial", "verdict": "false-positive", "basis": "same bounded int(a / v) shape" },
+      { "slug": "coordinate-with-maximum-network-quality", "verdict": "false-positive", "basis": "q <= 1e9 and integer divisor, correctly rounded floor is stable" },
+      { "slug": "repeated-string-match", "verdict": "false-positive", "basis": "n, m <= 1000, integer quotient is correctly rounded" },
+      { "slug": "k-th-smallest-prime-fraction", "verdict": "false-positive", "basis": "values <= 1e6, adjacent fraction gap far above double epsilon" },
+      { "slug": "minimum-operations-to-halve-array-sum", "verdict": "false-positive", "basis": "sum <= 1e9 below 2^53, halving and comparison exact" },
+      { "slug": "car-fleet", "verdict": "confirmed", "basis": "equal arrival times can flip through rounding" },
+      { "slug": "successful-pairs-of-spells-and-potions", "verdict": "confirmed", "basis": "float threshold at bisect boundary can differ by one" },
+      { "slug": "minimum-number-of-seconds-to-make-mountain-height-zero", "verdict": "confirmed", "basis": "sqrt rounding can be off by one" },
+      { "slug": "minimum-operations-to-make-numbers-non-positive", "verdict": "confirmed", "basis": "ceil of large float quotient can differ by one" },
+      { "slug": "minimum-skips-to-arrive-at-meeting-on-time", "verdict": "confirmed", "basis": "epsilon cannot absorb large-value rounding" },
+      { "slug": "minimum-speed-to-arrive-on-time", "verdict": "confirmed", "basis": "float time sum flips against integer hour at boundary" },
+      { "slug": "minimum-amount-of-damage-dealt-to-bob", "verdict": "confirmed", "basis": "float ratio sort key does not preserve order on equal ratios" },
+      { "slug": "equal-rational-numbers", "verdict": "confirmed", "basis": "repeating-decimal equality relies on float exactness" },
+      { "slug": "count-the-number-of-substrings-with-dominant-ones", "verdict": "confirmed", "basis": "float loop bound distorts as magnitudes grow" }
+    ],
+    "missDetection": "bare pow rescan with (^|[^A-Za-z0-9_])pow\\( returned 0; math function enumeration covered all 4 sites; no second wildcard module family found"
   }
 }

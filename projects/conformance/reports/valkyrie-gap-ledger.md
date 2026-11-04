@@ -3030,3 +3030,102 @@ micro probe(nums: ArrayList<i64>) -> i64 {
   （`Option.v:49`）组合成立，故 B 形态无需任何改写。
 - 说明：`HashMap<K,V>` 作为递归参数时未见缓存生效（`can-i-win` 曾 240s 超时）；
   改用 `ArrayList<i64>` 三态记忆表后 75/75 通过。该条按待验证项保留，不单列缺口。
+
+## 特性定向批次（2026-11-05）：`sorted_by` / `BinaryHeap` / `utf8` 序
+
+选题口径：先查 canonical。13 题中 12 题已存在（`k-closest-points-to-origin`、
+`longest-word-in-dictionary` 是 1 字节空 stub），仅 `most-common-word` 缺失，已补齐三件套
+（`readme.md` + `metadata.json` 20 条用例 + TS/Python 参考 + `solvers/valkyrie/solution.v`）。
+全部 V 解改走 std 公共入口 `sorted_by`；手写排序与 `merge_sort`（std 已私有化）均已移除。
+Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` RC=0）。
+
+| 题目 | 特性标签 | 实测结论（共享 addon `07b625aa`，全量判题） |
+|---|---|---|
+| `sort-integers-by-the-number-of-1-bits` | `sorted_by` + multi-key | **96/96 通过** |
+| `sort-array-by-increasing-frequency` | `sorted_by` + packed-key | **117/117 通过** |
+| `k-closest-points-to-origin` | `sorted_by` + nested-array cmp | **98/98 通过**（空 stub 已补） |
+| `sort-characters-by-frequency` | `sorted_by` + frequency | build=0；判题 0/54，`TypeError: Cannot convert object to primitive value`（F3） |
+| `largest-number` | `sorted_by` + utf8 拼接/序 | build 阻断：`std::primitive::__u8_add` 无 host provider |
+| `reorder-data-in-log-files` | `sorted_by` + multi-key utf8 | 编译器 panic：`nyar-emitter` `wasm/mir/calls.rs:245`（`std::adaptor::wasm::text::host_slice` 槽冲突） |
+| `top-k-frequent-words` | `sorted_by` + utf8 ordering | build 阻断：`WASM ABI carrier mismatch in std::collection::is_less_or_equal`（slot=i32 actual=anyref operand=`utf8`） |
+| `group-anagrams` | `sorted_by` + utf8 canonical key | build 阻断：`std::hash#` 合同实例未进 consumer_imports（`HashMap<utf8,_>`） |
+| `longest-word-in-dictionary` | `sorted_by` + utf8 ordering | build 阻断：同上（`HashSet<utf8>`，空 stub 已补） |
+| `most-common-word`（新增） | utf8 扫描 + multi-key | build 阻断：`std::new#287` / `std::grow_to#300` 合同实例缺失（`Utf8Builder`） |
+| `last-stone-weight` | `BinaryHeap` + `Comparable` | build 阻断：`heap.push/pop` unresolved（`T: Comparable` 义务未在调用点消解） |
+| `furthest-building-you-can-reach` | `BinaryHeap` + `Comparable` | build 阻断：同上 |
+| `minimum-operations-to-halve-array-sum` | `BinaryHeap<f64>` | build 阻断：`BinaryHeap::new_by` 无定义，且 `f64` 无 `Comparable` |
+
+### 本批实测新增/复测缺口
+
+- **G-utf8-byte**：`std::primitive::__u8_add` / `__u8_eq` host provider 未绑定。证据：
+  `largest-number` 的 `Utf8Builder.append` 命中 `__u8_add`；`top-k-frequent-words` 未加
+  `as u32` 的 `equal_text` 命中 `__u8_eq`。任何逐字节比较/拼接在 build 期失败。
+- **G-sorted-by-generic-utf8**：`sorted_by` 以 `utf8` 实例化时，`is_less_or_equal<T>` 的
+  WASM 槽按 i32 预规划，实际参数是 anyref → `carrier mismatch`。对照：`i64` 与
+  `ArrayList<ArrayList<i64>>` 实例化均通过（`sort-integers`、`k-closest`）。
+- **G-utf8-slice-panic**：`utf8.slice`（`host_slice`）触发 emitter 断言 panic
+  （`nyar-emitter ... wasm/mir/calls.rs:245`），不是可读诊断；`reorder-data-in-log-files` 命中。
+- **G-hash-utf8**（复测，仍阻断）：`std::hash#` 合同实例未进 consumer_imports；
+  `HashMap<utf8,_>`、`HashSet<utf8>` 均不可编译（`group-anagrams`、`longest-word-in-dictionary`）。
+- **G-binaryheap**（复测，仍阻断）：`BinaryHeap<i64>.push/pop` 在调用点无法用
+  `i64: Comparable` 消解义务；`BinaryHeap::new_by` / `max()` 不存在；`f64` 无 `Comparable`。
+- **F3**（已知，仍阻断）：utf8 返回值在判题期 `TypeError: Cannot convert object to primitive value`，
+  需重建 addon（本批不重建）。
+
+### 待还原组（绕缺口写法，已在各 `solution.v` 顶部标注）
+
+- `group-anagrams`、`top-k-frequent-words`、`most-common-word`、`sort-characters-by-frequency`：
+  以「词表/码位表 + 计数表」线性查找替代 `HashMap<utf8,_>` / `HashMap<char,i64>`。
+  真写法是哈希容器；还原判据：`std::hash#` 合同实例进入 consumer_imports。
+- `last-stone-weight`、`furthest-building-you-can-reach`：以「取负入最小堆」表达最大堆。
+  真写法是 `BinaryHeap::new_by(max comparator)` 或 `BinaryHeap::max()`；还原判据：该 API 落地。
+
+## 参考实现精度审计（2026-11-05）
+
+### 通配导入普查
+
+- 语料 2841 题；`solvers/python/solution.py` 中 **2828 个文件**带同一 9 行通配导入头
+  （共 25452 条导入语句）：`typing`、`functools`、`collections`、`itertools`、`heapq`、
+  `bisect`、`string`、`operator`、`math`，其中 `math` 最后导入。
+- 可能遮蔽的内建名只有 2 个：`pow`（被 `math.pow` 遮蔽 → 2 参、返回 float）与
+  `abs`（被 `operator.abs` 遮蔽，语义与内建一致）。其余 7 个模块的导出名与内建名无交集。
+- 本语料**没有** `from random import *` / `from os import *` / `numpy` 通配导入。
+- 裸 `pow(` 调用点 **0 处**：上轮 7 文件 10 处已统一为 `builtins.pow`；含 3 参取模幂的
+  `count-k-subsequences-of-a-string-with-maximum-beauty`、`final-array-state-after-k-multiplication-operations-ii`、
+  `maximize-number-of-nice-divisors`、`count-the-number-of-arrays-with-k-matching-adjacent-elements`、
+  `count-the-number-of-square-free-subsets`、`number-of-distinct-binary-strings-after-applying-operations`、
+  `the-number-of-good-subsets` 均逐位差 0。
+
+### 浮点退化形态统计
+
+- `math.sqrt`：4 处（`arranging-coins` 取整后安全；`count-the-number-of-substrings-with-dominant-ones`
+  参与 `//` 后循环上界为 float；`erect-the-fence-ii` 返回值本就是 float）。
+- 真除 `/`：54 个文件；其中 expected 全整数的 19 题逐题判定如下。
+- **确认风险（尚未污染，当前逐位差 0，指数变大即失真）：9 题**；假阳性 6 处；漏报 0。
+  仅登记，不修参考实现（当前用例逐位一致，改动会破坏已验收的 expected）。
+
+| # | 坐标 | 形态 | 判定 | 依据 |
+|---|---|---|---|---|
+| 1 | `count-the-number-of-square-free-subsets` | `builtins.pow(2, cnt[1])` | 已修 | 改后 expected 重算逐位差 0 |
+| 2 | `number-of-distinct-binary-strings-after-applying-operations` | 同上 | 已修 | 同上 |
+| 3 | `the-number-of-good-subsets` | 同上 | 已修 | 同上 |
+| 4 | `count-k-subsequences-of-a-string-with-maximum-beauty` | 3 参模幂 | 精确 | `builtins.pow(a,b,m)` 全整数 |
+| 5 | `final-array-state-after-k-multiplication-operations-ii` | 3 参模幂 | 精确 | 同上 |
+| 6 | `basic-calculator-ii:95` `int(stk.pop() / v)` | 真除后截断 | 假阳性 | 操作数 \|a\|≤2^31、\|v\|≤2^31，double 精确 |
+| 7 | `clumsy-factorial:86` 同形态 | 真除后截断 | 假阳性 | 同上 |
+| 8 | `coordinate-with-maximum-network-quality:88` `floor(q/(1+d))` | 真除取整 | 假阳性 | q≤1e9、除数整数，正确舍入后 floor 稳定 |
+| 9 | `repeated-string-match:81` `ceil(n/m)` | 真除取整 | 假阳性 | n,m≤1000，整数商正确舍入 |
+| 10 | `k-th-smallest-prime-fraction:80,85` float 堆键 | 浮点排序键 | 假阳性 | 值域≤1e6，相邻分数间隙 ≫ double epsilon |
+| 11 | `minimum-operations-to-halve-array-sum:80` `sum/2` | 真除 | 假阳性 | 和≤1e9 < 2^53，减半精确，比较不翻转 |
+| 12 | `car-fleet:83` `(target-position)/speed` | 浮点时间比较 | **确认** | 相同到达时间可能因舍入翻转 |
+| 13 | `successful-pairs-of-spells-and-potions:84` `success / v` | 浮点作 bisect 阈值 | **确认** | 阈值边界可能差 1 |
+| 14 | `minimum-number-of-seconds-to-make-mountain-height-zero:83` | `sqrt(...)` 取整 | **确认** | 平方根舍入可 off-by-one |
+| 15 | `minimum-operations-to-make-numbers-non-positive:84` | `ceil(浮点商)` | **确认** | 大商值下 ceil 可能偏 1 |
+| 16 | `minimum-skips-to-arrive-at-meeting-on-time:87,89` | `ceil(浮点 - eps)` | **确认** | eps 掩盖不了大值舍入 |
+| 17 | `minimum-speed-to-arrive-on-time:83` | 浮点时间和 | **确认** | 与整数小时比较在边界翻转 |
+| 18 | `minimum-amount-of-damage-dealt-to-bob:102` | float 排序键 | **确认** | 比值相等时排序不保证原序 |
+| 19 | `equal-rational-numbers:80` `1/9, 1/99, ...` | float 常量等值比较 | **确认** | 循环小数等值判断依赖 float 精确性 |
+| 20 | `count-the-number-of-substrings-with-dominant-ones:84` `sqrt(...)//2` | float 循环上界 | **确认** | 上界为 float，乘方变大即失真 |
+
+漏报判定：以 `(^|[^A-Za-z0-9_])pow\(` 全库复扫为 0，`math\.(sqrt|pow|log|exp|hypot|fabs|ceil|floor)\(`
+全量枚举 4 处均已入表；未发现第二类通配导入。误报 6 处均给出操作数上界或同源比较依据。
