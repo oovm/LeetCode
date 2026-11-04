@@ -703,6 +703,7 @@
     ],
     "invoke": {
         "python": "Solution().isPossibleDivide",
-        "typescript": "Solution().isPossibleDivide"
+        "typescript": "Solution().isPossibleDivide",
+        "valkyrie": "isPossibleDivide"
     }
 }

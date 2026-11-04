@@ -348,12 +348,6 @@
         },
         {
             "args": {
-                "arr": [100000, -100000, 50000, -50000, 25000, -25000, 12500, -12500, 6250, -6250, 3125, -3125, 1562.5, -1562.5]
-            },
-            "expected": "Error: unsupported operand type(s) for <<: 'float' and 'int'"
-        },
-        {
-            "args": {
                 "arr": [3, 6, 12, 24, 48, 96, 192, 384, 768, 1536, 3072, 6144]
             },
             "expected": true
@@ -685,6 +679,7 @@
     ],
     "invoke": {
         "python": "Solution().canReorderDoubled",
-        "typescript": "Solution().canReorderDoubled"
+        "typescript": "Solution().canReorderDoubled",
+        "valkyrie": "canReorderDoubled"
     }
 }

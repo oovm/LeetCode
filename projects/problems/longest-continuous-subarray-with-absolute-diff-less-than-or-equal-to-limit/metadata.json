@@ -1298,6 +1298,7 @@
     ],
     "invoke": {
         "python": "Solution().longestSubarray",
-        "typescript": "Solution().longestSubarray"
+        "typescript": "Solution().longestSubarray",
+        "valkyrie": "longestSubarray"
     }
 }

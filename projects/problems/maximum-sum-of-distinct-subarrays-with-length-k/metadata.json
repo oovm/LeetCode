@@ -729,6 +729,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumSubarraySum",
-        "typescript": "Solution().maximumSubarraySum"
+        "typescript": "Solution().maximumSubarraySum",
+        "valkyrie": "maximumSubarraySum"
     }
 }

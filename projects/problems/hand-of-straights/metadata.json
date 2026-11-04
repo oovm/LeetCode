@@ -636,6 +636,7 @@
     ],
     "invoke": {
         "python": "Solution().isNStraightHand",
-        "typescript": "Solution().isNStraightHand"
+        "typescript": "Solution().isNStraightHand",
+        "valkyrie": "isNStraightHand"
     }
 }

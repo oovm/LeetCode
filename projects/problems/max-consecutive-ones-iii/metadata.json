@@ -582,6 +582,7 @@
     ],
     "invoke": {
         "python": "Solution().longestOnes",
-        "typescript": "Solution().longestOnes"
+        "typescript": "Solution().longestOnes",
+        "valkyrie": "longestOnes"
     }
 }

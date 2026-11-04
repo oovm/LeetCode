@@ -531,6 +531,7 @@
     ],
     "invoke": {
         "python": "Solution().numSubarraysWithSum",
-        "typescript": "Solution().numSubarraysWithSum"
+        "typescript": "Solution().numSubarraysWithSum",
+        "valkyrie": "numSubarraysWithSum"
     }
 }

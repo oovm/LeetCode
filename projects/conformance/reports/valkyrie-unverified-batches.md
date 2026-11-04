@@ -7,6 +7,67 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R22-2026-11-04（Medium 哈希 / 排序 / 滑动窗口 26 题，写完未构建）
+
+- 范围：Medium 的哈希 + 排序 + 滑动窗口面，全部按**理想写法**落地：
+  `HashMap` / `ArrayList` / `Deque` / `sort(list)` / `sorted_by(list, cmp)` / 内联闭包 / 滑窗。
+  按「题解资产与编译脱钩」执行：不因当前编译器未实现就退化成绕路写法。
+- 构建 / 判题状态：**未验证（authored-unverified），构建通过 0 题**。全局停点是
+  **addon 二进制基线过期**（首个触发者 `valkyrie.v d48011b`），待 addon 重建后关闭；
+  不是 std 前端回归。
+- 覆盖口径：本块 **26 题**全部计入「仅写完未验证」；累计已构建通过数保持 **18**。
+- 新缺口编号：**0 条**。新增依赖未实现特性的调用点：
+  - `sorted_by(list, cmp)`（G11 提案）：954 / 870，共 2 处；870 的比较器捕获外层 `nums2`。
+  - `sort(list)` 单参入口（G26 的 C4 定稿签名，待落地）：870 / 881 / 2126 / 1679 / 1481 /
+    846 / 1296 / 2740 / 2592 / 1838，共 10 处。`i64` 的 `Comparable` 实现已在
+    `std/source/operator/comparable_primitives.v`。
+  - `HashMap<char, i64>`（G17，`char` 无 `Hash`）：424 / 340，共 2 处。
+- TS 参考解：26 题**全部实跑**
+  （`run_isolated_judge.ts --lang typescript --iterations 1 --warmup 0`），26/26 `ok=true`；
+  复用已有 TS 4 份（424 / 1456 / 1208 / 340），新写 22 份。
+- 数据清洗：仅删除**非答案形态或自相矛盾**的用例，未改断言、未删合法用例：
+  - `get-equal-substrings-within-budget`（1208）：12 条 `expected: "Error: ..."` 宿主异常文本。
+  - `grumpy-bookstore-owner`（1052）：1 条 `expected: "Error: ..."`。
+  - `array-of-doubled-pairs`（954）：1 条含浮点 `1562.5`、`expected: "Error: ..."`。
+  - `check-if-array-pairs-are-divisible-by-k`（1497）：1 条 47 个 `5`、`k = 10`，奇数个余数 5
+    无法两两配对，`expected: true` 与题面合同矛盾。
+  - `advantage-shuffle`（870）：1 条 `nums1` 22 个、`nums2` 25 个，长度不一致且 `expected`
+    含补零，不构成合法排列。
+  - 共删除 16 条用例；单题用例数见下表。
+- 入口签名：26/26 导出形参与 `metadata.tests[].args` 键**逐字同序**（脚本比对，`bad=0`）；
+  入口名与 `metadata.invoke.valkyrie` 一致（2958 用 `maxSubarrayLength`、2461 用
+  `maximumSubarraySum`，与既有 `invoke.typescript` 对齐）。
+- 写出形态：26/26 顶层 `[export(case: "camelCase")] micro` + `class Solution` 委托。
+
+| 题号 | slug | 入口 | 返回 | 命中面 | 用例数 |
+| --- | --- | --- | --- | --- | --- |
+| 424 | `longest-repeating-character-replacement` | `characterReplacement` | `i64` | `HashMap<char, i64>` + 滑窗 | 105 |
+| 1456 | `maximum-number-of-vowels-in-a-substring-of-given-length` | `maxVowels` | `i64` | 定长滑窗 + 元音码位 | 80 |
+| 1208 | `get-equal-substrings-within-budget` | `equalSubstring` | `i64` | 滑窗 + 字符代价 | 95 |
+| 340 | `longest-substring-with-at-most-k-distinct-characters` | `lengthOfLongestSubstringKDistinct` | `i64` | `HashMap<char, i64>` + 滑窗 | 118 |
+| 904 | `fruit-into-baskets` | `totalFruit` | `i64` | `HashMap<i64, i64>` + 滑窗 | 98 |
+| 1004 | `max-consecutive-ones-iii` | `longestOnes` | `i64` | 0 计数滑窗 | 77 |
+| 1052 | `grumpy-bookstore-owner` | `maxSatisfied` | `i64` | 基数 + 定长滑窗 | 89 |
+| 2958 | `length-of-longest-subarray-with-at-most-k-frequency` | `maxSubarrayLength` | `i64` | `HashMap<i64, i64>` + 滑窗 | 107 |
+| 1493 | `longest-subarray-of-1s-after-deleting-one-element` | `longestSubarray` | `i64` | 至多一个 0 滑窗 | 92 |
+| 1438 | `longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit` | `longestSubarray` | `i64` | 双单调 `Deque`（存下标） | 184 |
+| 2461 | `maximum-sum-of-distinct-subarrays-with-length-k` | `maximumSubarraySum` | `i64` | `HashMap<i64, i64>` + 定长窗 | 102 |
+| 930 | `binary-subarrays-with-sum` | `numSubarraysWithSum` | `i64` | 前缀和 + `HashMap` | 72 |
+| 1497 | `check-if-array-pairs-are-divisible-by-k` | `canArrange` | `bool` | 余数 `HashMap` + 配对 | 102 |
+| 1814 | `count-nice-pairs-in-an-array` | `countNicePairs` | `i64` | 差值 `HashMap` + 数位反转 | 107 |
+| 954 | `array-of-doubled-pairs` | `canReorderDoubled` | `bool` | `sorted_by` + `HashMap` | 112 |
+| 846 | `hand-of-straights` | `isNStraightHand` | `bool` | `sort` + `HashMap` 贪心 | 81 |
+| 1296 | `divide-array-in-sets-of-k-consecutive-numbers` | `isPossibleDivide` | `bool` | `sort` + `HashMap` 贪心 | 90 |
+| 1481 | `least-number-of-unique-integers-after-k-removals` | `findLeastNumOfUniqueInts` | `i64` | `HashMap::keys` + `sort` 频次 | 69 |
+| 2740 | `find-the-value-of-the-partition` | `findValueOfPartition` | `i64` | `sort` + 相邻差 | 106 |
+| 870 | `advantage-shuffle` | `advantageCount` | `ArrayList<i64>` | `sort` + `sorted_by` + 双指针贪心 | 99 |
+| 881 | `boats-to-save-people` | `numRescueBoats` | `i64` | `sort` + 双指针 | 89 |
+| 2126 | `destroying-asteroids` | `asteroidsDestroyed` | `bool` | `sort` + 质量累加 | 88 |
+| 1679 | `max-number-of-k-sum-pairs` | `maxOperations` | `i64` | `sort` + 双指针 | 68 |
+| 2342 | `max-sum-of-a-pair-with-equal-sum-of-digits` | `maximumSum` | `i64` | 数位和 `HashMap` | 121 |
+| 2592 | `maximize-greatness-of-an-array` | `maximizeGreatness` | `i64` | `sort` + 双指针 | 86 |
+| 1838 | `frequency-of-the-most-frequent-element` | `maxFrequency` | `i64` | `sort` + 滑窗代价 | 99 |
+
 ## 批次 R21-2026-11-04（文本 / 哈希 / 树 29 题，写完未构建）
 
 - 范围：Easy 标量池之外的剩余 Easy 题，全部按**理想写法**落地：`utf8` / `ArrayList<utf8>` /

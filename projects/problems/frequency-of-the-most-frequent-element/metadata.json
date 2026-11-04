@@ -705,6 +705,7 @@
     ],
     "invoke": {
         "python": "Solution().maxFrequency",
-        "typescript": "Solution().maxFrequency"
+        "typescript": "Solution().maxFrequency",
+        "valkyrie": "maxFrequency"
     }
 }

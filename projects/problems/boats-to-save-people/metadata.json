@@ -663,6 +663,7 @@
     ],
     "invoke": {
         "python": "Solution().numRescueBoats",
-        "typescript": "Solution().numRescueBoats"
+        "typescript": "Solution().numRescueBoats",
+        "valkyrie": "numRescueBoats"
     }
 }

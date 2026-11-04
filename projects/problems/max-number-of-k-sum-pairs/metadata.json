@@ -505,6 +505,7 @@
     ],
     "invoke": {
         "python": "Solution().maxOperations",
-        "typescript": "Solution().maxOperations"
+        "typescript": "Solution().maxOperations",
+        "valkyrie": "maxOperations"
     }
 }

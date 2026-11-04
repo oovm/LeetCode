@@ -742,6 +742,7 @@
     ],
     "invoke": {
         "python": "Solution().characterReplacement",
-        "typescript": "Solution().characterReplacement"
+        "typescript": "Solution().characterReplacement",
+        "valkyrie": "characterReplacement"
     }
 }

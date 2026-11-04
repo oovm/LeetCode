@@ -175,6 +175,29 @@ $n
 - 后续增量（2026-11-04，文本 / 哈希 / 树批次 R21 后）：canonical 实测 **727**（R21 前 698；本批 29 题，
   新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；构建停点与 R20 相同
   （同一 addon 基线过期，非 std 回归）。
+- 后续增量（2026-11-04，Medium 哈希 / 排序 / 滑动窗口批次 R22 后）：canonical 实测 **753**
+  （R22 前 727；本批 26 题，新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；
+  构建停点与 R20 / R21 相同（同一 addon 基线过期，非 std 回归）。
+
+### 依赖未实现特性的调用点（R22）
+
+- `sorted_by(list, cmp)`（G11 提案，源码无此入口）：`array-of-doubled-pairs`（954，按绝对值排序）、
+  `advantage-shuffle`（870，按 `nums2` 的值排序索引）；870 的比较器还捕获外层 `nums2`
+  （闭包捕获，待验证，见观察 8）。
+- `sort(list)` 单参入口（G26 的 C4 定稿签名，待落地）：以下 10 题直接依赖
+  `sort<T, C>(list: mut C) where ... T: Comparable`、不再传比较器：
+  `advantage-shuffle`（870）、`boats-to-save-people`（881）、`destroying-asteroids`（2126）、
+  `max-number-of-k-sum-pairs`（1679）、`least-number-of-unique-integers-after-k-removals`（1481）、
+  `hand-of-straights`（846）、`divide-array-in-sets-of-k-consecutive-numbers`（1296）、
+  `find-the-value-of-the-partition`（2740）、`maximize-greatness-of-an-array`（2592）、
+  `frequency-of-the-most-frequent-element`（1838）。`i64` 的 `Comparable` 实现已在
+  `std/source/operator/comparable_primitives.v`，缺的是单参入口本身。
+- `HashMap<char, i64>`（G17，`char` 无 `Hash`）：`longest-repeating-character-replacement`（424）、
+  `longest-substring-with-at-most-k-distinct-characters`（340）。
+- 其余面只用源码已有签名：`HashMap::new` / `contains_key` / `get` / `insert` / `keys` / `remove`、
+  `ArrayList::new` / `push` / `length` / `set`、`Deque::new` / `push_back` / `pop_back` /
+  `peek_front` / `peek_back` / `pop_front` / `is_empty`、`char as u32` / `as i64` / `as usize`。
+  这些面**未经编译验证**（全局停点在前），不算缺口。
 
 ### 依赖未实现特性的调用点（R21）
 
@@ -685,6 +708,8 @@ micro sorted_by<T>(list: Array<T>, cmp: micro(T, T) -> i32): ArrayList<T>
   `remove-covered-intervals`（1288）、`sort-even-and-odd-indices-independently`（2164）、
   `sort-array-by-increasing-frequency`（1636）、`relative-ranks`（506）、`sort-the-people`（2418）、
   `merge-similar-items`（2363）、`minimum-moves-to-equal-array-elements-ii`（462）。
+  R22 追加 2 处：`array-of-doubled-pairs`（954，`sorted_by(arr, cmp_abs)`）、
+  `advantage-shuffle`（870，`sorted_by(order, 比较 nums2 的内联比较器)`）。
 - 不对称点：`ArrayList` 有 **7 个**排序函数（`quick_sort` / `quick_sort_range` / `partition` / `swap` /
   `merge_sort` / `merge_sort_range` / `merge`；此前记为 6 个，漏了 `merge`），`Array<T>` 为 **0 个**
   排序入口；没有任何一个返回新序列。另：std 测试目录下无 `quick_sort` / `merge_sort` 用例，
@@ -892,6 +917,8 @@ imply char: Hash {
   `find-words-that-can-be-formed-by-characters`（1160，字符可用量）、
   `find-resultant-array-after-removing-anagrams`（2273，批次 R7，`MultiSet<char>` 规范形）、
   `shortest-completing-word`（748，批次 R7，`HashMap<char, i64>` 牌照频次）。
+  R22 追加 2 处：`longest-repeating-character-replacement`（424）、
+  `longest-substring-with-at-most-k-distinct-characters`（340），均为 `HashMap<char, i64>`。
 - 不对称点：`utf8`、`i8`–`u64`、`f32` / `f64` 都有 `Hash`；`char` 有 `Ordinal`（可转 `u32`）
   却没有派生 `Hash`，因此「码位可排序」与「码位可哈希」只实现了一半。
 - 判定：**真缺口**（判据 b：7 处 × 每次调用点换键型 `utf8` / `as u32`）。
@@ -1227,6 +1254,9 @@ micro order_items<T>(items: ArrayList<T>): unit
     `sort(items)` 能匹配该签名，**写法本身不需要改**。
   - 13 个 `solution.v` 的 `order_items` 垫片已在注释中逐处标注「依赖 std C4（待落地 API）」，
     不因 `authored-unverified` 不编译就隐掉这层依赖。
+  - R22 追加 10 处 `sort(list)` 单参调用点（见「依赖未实现特性的调用点（R22）」），
+    写法与 C4 定稿签名对齐，同样依赖该入口落地；`i64` 的 `Comparable` 实现已在
+    `std/source/operator/comparable_primitives.v`。
 
 ### G27 排序稳定性不是可声明的属性（`sort` 默认稳定 / `sort_unstable` 显式不稳定）
 

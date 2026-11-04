@@ -539,6 +539,7 @@
     ],
     "invoke": {
         "python": "Solution().maximizeGreatness",
-        "typescript": "Solution().maximizeGreatness"
+        "typescript": "Solution().maximizeGreatness",
+        "valkyrie": "maximizeGreatness"
     }
 }

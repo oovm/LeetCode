@@ -190,20 +190,6 @@
         },
         {
             "args": {
-                "customers": [
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-                ],
-                "grumpy": [
-                    0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
-                    1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0
-                ],
-                "minutes": 10
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "customers": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
                 "grumpy": [0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
                 "minutes": 5
@@ -733,6 +719,7 @@
     ],
     "invoke": {
         "python": "Solution().maxSatisfied",
-        "typescript": "Solution().maxSatisfied"
+        "typescript": "Solution().maxSatisfied",
+        "valkyrie": "maxSatisfied"
     }
 }

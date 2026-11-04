@@ -1,5 +1,38 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆`/`t⁅i⁆` 差值滑窗 ≤maxCost。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：滑窗取最长，时间 O(n) 空间 O(1)。
+namespace leetcode.get_equal_substrings_within_budget;
+
+# 滑窗维护当前花费：右端计入代价，超出预算时左端退出，取最长窗。
+# 代价是两字符码位差的绝对值。
+micro char_cost(a: char, b: char) -> i64 {
+    let mut diff: i64 = a as i64 - b as i64
+    if diff < 0 {
+        diff = 0 - diff
+    }
+    return diff
+}
+
+[export(case: "camelCase")]
+micro equalSubstring(s: utf8, t: utf8, maxCost: i64) -> i64 {
+    let mut cost: i64 = 0
+    let mut left: usize = 0
+    let mut best: i64 = 0
+    let mut right: usize = 0
+    while right < s.length() {
+        cost = cost + char_cost(s⁅right⁆, t⁅right⁆)
+        while cost > maxCost {
+            cost = cost - char_cost(s⁅left⁆, t⁅left⁆)
+            left = left + 1
+        }
+        let window: i64 = right as i64 - left as i64 + 1
+        if window > best {
+            best = window
+        }
+        right = right + 1
+    }
+    return best
+}
+
+class Solution {
+    micro equalSubstring(self, s: utf8, t: utf8, maxCost: i64): i64 {
+        return equalSubstring(s, t, maxCost)
+    }
+}

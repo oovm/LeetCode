@@ -1,5 +1,49 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 滑窗内异字符数 ≤k（计数表另需定长数组）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：滑窗 k 类取最长，时间 O(n) 空间 O(字符集)。
+namespace leetcode.longest_substring_with_at_most_k_distinct_characters;
+
+using std.collection;
+
+# 滑窗内不同字符数 ≤ k：先扩张，再按最左字符收缩，计数归零时删键。
+# 不同字符数直接取频次表的键数。
+[export(case: "camelCase")]
+micro lengthOfLongestSubstringKDistinct(s: utf8, k: i64) -> i64 {
+    if k == 0 {
+        return 0
+    }
+    let mut counts: HashMap<char, i64> = HashMap::new(s.length())
+    let mut left: usize = 0
+    let mut best: i64 = 0
+    let mut right: usize = 0
+    while right < s.length() {
+        let current: char = s⁅right⁆
+        let mut next: i64 = 1
+        if counts.contains_key(current) {
+            next = counts.get(current).unwrap() + 1
+        }
+        counts.insert(current, next)
+
+        while counts.length() > k as usize {
+            let oldest: char = s⁅left⁆
+            let rest: i64 = counts.get(oldest).unwrap() - 1
+            if rest == 0 {
+                counts.remove(oldest)
+            }
+            else {
+                counts.insert(oldest, rest)
+            }
+            left = left + 1
+        }
+
+        let window: i64 = right as i64 - left as i64 + 1
+        if window > best {
+            best = window
+        }
+        right = right + 1
+    }
+    return best
+}
+
+class Solution {
+    micro lengthOfLongestSubstringKDistinct(self, s: utf8, k: i64): i64 {
+        return lengthOfLongestSubstringKDistinct(s, k)
+    }
+}

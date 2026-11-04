@@ -808,6 +808,7 @@
     ],
     "invoke": {
         "python": "Solution().maxSubarrayLength",
-        "typescript": "Solution().maxSubarrayLength"
+        "typescript": "Solution().maxSubarrayLength",
+        "valkyrie": "maxSubarrayLength"
     }
 }

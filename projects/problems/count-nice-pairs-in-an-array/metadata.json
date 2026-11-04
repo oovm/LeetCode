@@ -677,6 +677,7 @@
     ],
     "invoke": {
         "python": "Solution().countNicePairs",
-        "typescript": "Solution().countNicePairs"
+        "typescript": "Solution().countNicePairs",
+        "valkyrie": "countNicePairs"
     }
 }

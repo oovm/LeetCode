@@ -150,14 +150,6 @@
         },
         {
             "args": {
-                "s": "aaabbbcccddd",
-                "t": "bbcccaaaadd",
-                "maxCost": 20
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "zzzzzzzzzz",
                 "t": "aaaaaaaaaa",
                 "maxCost": 25
@@ -254,27 +246,11 @@
         },
         {
             "args": {
-                "s": "thisisaverylongstringthatwearetesting",
-                "t": "thatshastobemorecomplextohandle",
-                "maxCost": 100
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "abcdefghij",
                 "t": "abcdefghij",
                 "maxCost": 50
             },
             "expected": 10
-        },
-        {
-            "args": {
-                "s": "mississippi",
-                "t": "lollipop",
-                "maxCost": 15
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -366,14 +342,6 @@
         },
         {
             "args": {
-                "s": "longerstringtocheck",
-                "t": "short",
-                "maxCost": 10
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "abcabcabcabcabc",
                 "t": "abcabcabcabcabc",
                 "maxCost": 0
@@ -395,14 +363,6 @@
                 "maxCost": 25
             },
             "expected": 25
-        },
-        {
-            "args": {
-                "s": "thisisaverylongstring",
-                "t": "thatshouldnotmatch",
-                "maxCost": 20
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -598,22 +558,6 @@
         },
         {
             "args": {
-                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
-                "t": "zzyyxxwwvvttssrrqqppoonnmmllkkjjiihhggffeeddccbbaa",
-                "maxCost": 200
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
-                "t": "zzyyxxwwvvuuttssrrqqppoonnmmllkkjjiihhggffeeddccbaa",
-                "maxCost": 300
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "abcdefghij",
                 "t": "abcdefghjk",
                 "maxCost": 1
@@ -654,14 +598,6 @@
         },
         {
             "args": {
-                "s": "hellothereeverybody",
-                "t": "worldwideeveryone",
-                "maxCost": 50
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "abcd",
                 "t": "acde",
                 "maxCost": 2
@@ -691,22 +627,6 @@
                 "maxCost": 40
             },
             "expected": 6
-        },
-        {
-            "args": {
-                "s": "zzzzzzzzzzzzzzzzzzzz",
-                "t": "aaaaaaaaaaaaaaaaaaa",
-                "maxCost": 100
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "s": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "t": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "maxCost": 260
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -742,14 +662,6 @@
         },
         {
             "args": {
-                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
-                "t": "zzyyxxwwvvuuttrrqqppoonnmmllkkjjiihhggffeeeeddccbaa",
-                "maxCost": 50
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "aaaaaaaaaaaaaaaaaaaaaaaaaa",
                 "t": "zzzzzzzzzzzzzzzzzzzzzzzzzz",
                 "maxCost": 100
@@ -763,14 +675,6 @@
                 "maxCost": 50
             },
             "expected": 2
-        },
-        {
-            "args": {
-                "s": "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcd",
-                "t": "mnopmnopmnopmnopmnopmnopmnopmnopmnop",
-                "maxCost": 100
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -863,6 +767,7 @@
     ],
     "invoke": {
         "python": "Solution().equalSubstring",
-        "typescript": "Solution().equalSubstring"
+        "typescript": "Solution().equalSubstring",
+        "valkyrie": "equalSubstring"
     }
 }

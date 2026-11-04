@@ -561,6 +561,7 @@
     ],
     "invoke": {
         "python": "Solution().findLeastNumOfUniqueInts",
-        "typescript": "Solution().findLeastNumOfUniqueInts"
+        "typescript": "Solution().findLeastNumOfUniqueInts",
+        "valkyrie": "findLeastNumOfUniqueInts"
     }
 }

@@ -634,6 +634,7 @@
     ],
     "invoke": {
         "python": "Solution().asteroidsDestroyed",
-        "typescript": "Solution().asteroidsDestroyed"
+        "typescript": "Solution().asteroidsDestroyed",
+        "valkyrie": "asteroidsDestroyed"
     }
 }

@@ -1,5 +1,46 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 定窗 k 元音计数取最大。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：定窗计数，时间 O(n) 空间 O(1)。
+namespace leetcode.maximum_number_of_vowels_in_a_substring_of_given_length;
+
+# 定长滑窗：先数满首窗的元音数，再逐位进出窗口，取历史最大。
+# 元音判定只看 ASCII 码位，不依赖 `to_lower` 这类宿主合同。
+micro is_vowel(letter: char) -> bool {
+    let code: u32 = letter as u32
+    if code == 97 || code == 101 || code == 105 || code == 111 || code == 117 {
+        return true
+    }
+    return false
+}
+
+[export(case: "camelCase")]
+micro maxVowels(s: utf8, k: i64) -> i64 {
+    let width: usize = k as usize
+    let mut count: i64 = 0
+    let mut i: usize = 0
+    while i < width {
+        if is_vowel(s⁅i⁆) {
+            count = count + 1
+        }
+        i = i + 1
+    }
+
+    let mut best: i64 = count
+    let mut right: usize = width
+    while right < s.length() {
+        if is_vowel(s⁅right⁆) {
+            count = count + 1
+        }
+        if is_vowel(s⁅right - width⁆) {
+            count = count - 1
+        }
+        if count > best {
+            best = count
+        }
+        right = right + 1
+    }
+    return best
+}
+
+class Solution {
+    micro maxVowels(self, s: utf8, k: i64): i64 {
+        return maxVowels(s, k)
+    }
+}

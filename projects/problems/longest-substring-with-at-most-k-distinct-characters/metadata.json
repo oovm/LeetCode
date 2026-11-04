@@ -833,6 +833,7 @@
     ],
     "invoke": {
         "python": "Solution().lengthOfLongestSubstringKDistinct",
-        "typescript": "Solution().lengthOfLongestSubstringKDistinct"
+        "typescript": "Solution().lengthOfLongestSubstringKDistinct",
+        "valkyrie": "lengthOfLongestSubstringKDistinct"
     }
 }

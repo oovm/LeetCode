@@ -604,6 +604,7 @@
     ],
     "invoke": {
         "python": "Solution().totalFruit",
-        "typescript": "Solution().totalFruit"
+        "typescript": "Solution().totalFruit",
+        "valkyrie": "totalFruit"
     }
 }
