@@ -64,10 +64,13 @@ $n
   改压语言构造面：`unite` / `enums` / 闭包 / 递归，见观察 8）。
 - 后续增量（2026-11-04，滚动批次 R13 后）：canonical 实测 **625**（R13 前 617；本批新编号 1 条，
   G25 = `BitSet` 缺基数 / 规模 / 迭代 / 复制入口；首次压位集合与位掩码面，见观察 9）。
+- 后续增量（2026-11-04，滚动批次 R14 后）：canonical 实测 **633**（R14 前 625；本批新编号 1 条，
+  G26 = 自定义类型序关系无可用合同（`Comparable` 缺失 + 排序入口不按合同 + `BTreeSet` 约束不捕获
+  `<`）；首次压「序关系属于类型」这面，见观察 10）。
 
 ## 系统性问题（观察，非编号）
 
-> 本节只记观察，不占 `G` 编号；缺口本身仍按 G1–G25 计。
+> 本节只记观察，不占 `G` 编号；缺口本身仍按 G1–G26 计。
 
 ### 观察 1：trait 实现面按需堆，没有「类型 × 核心 trait」矩阵
 
@@ -230,6 +233,20 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
   `maximum-product-of-word-lengths`（318，每词 26 位）、`shortest-path-to-get-all-keys`
   （864，`rows * cols * 64` 访问表）。五题都只在「全集已知 + `set` / `get`」范围内使用，
   没有一题依赖缺失入口；`intersect` / `union` / `xor` 仍无真实调用点。
+
+### 观察 10：「内联比较器是绕路写法」——能跑不等于设计合理
+
+- 前 13 批里凡出现 `merge_sort(x, 比较器)` 的题解，全部属于绕路形态：排序函数收一个闭包，
+  比较逻辑写在题解内部，类型系统对「`T` 有没有序」一无所知。内联 `micro(a, b) -> i32`
+  （R12 `largest-number`）是这形态的典型；R10 一批传入具名函数，本质相同。
+- 这不是算法错，而是**能力面错位**：`sort.v` 的入口把序关系当成调用方参数，所以题解能跑；
+  一旦换成 `BTreeSet` / `BTreeMap` 作键（容器内部自己比较），就没有地方塞闭包，类型系统
+  补不上序关系，直接失败。前 13 批从未暴露，是因为没有一批题把自定义类型当键。
+- 口径：今后遇到「自定义类型排序」，先按 `Comparable` 合同写；**不得把内联比较器当成
+  已解决序关系的证据**。能跑只证明「排序函数收闭包」，不证明「语言支持序关系」。
+- 本批（R14）是第一次「正着写」：8 题全部声明结构体 + `imply ...: std::operator::Comparable`
+  （提案）+ `where T: Equal & Comparable`（提案），不传任何比较器；它们红着是预期结果，
+  对应 G26。
 
 ## 未恢复
 
@@ -915,6 +932,57 @@ imply BitSet: Equal
   均不改变存储形态。
 - 与观察 1 的关系：`BitSet` 同样游离在「类型 × {Equal, Hash}」矩阵之外；本条只记 `Equal`，
   `Hash` 对位集意义有限，不单列。
+
+### G26 自定义类型的序关系没有可用合同（`Comparable` 缺失 + 排序入口不按合同取序）
+
+- 状态：未提供（**std / 语言缺口**；2026-11-04 第 14 批静态核对 `std/source/collection/sort.v`、
+  `std/source/collection/sorted/BTreeSet.v`、`std/source/operator/`）
+- 缺口三件套：
+  1. **没有顺序 trait**：`std.operator` 只有 `Equal` / `Identical` / `Ordinal` / `Cardinal`，
+     没有 `Comparable`（G15 已记根因；本条记「自定义类型无法声明自己的序」这一后果）。
+  2. **排序入口不按合同取序**：`sort.v` 7 个入口全部是 `ArrayList<T>` 专用 + 显式
+     `cmp: micro(T, T) -> i32`，没有 `where T: Comparable` 的单参入口。题解只能把比较逻辑
+     写进调用点，序关系落在题内而不是类型上。
+  3. **容器约束没有捕获实际操作**：`BTreeSet::insert` 声明 `where T: Equal`，但实现体
+     `insert_non_full` 内部裸调 `<`（`std/source/collection/sorted/BTreeSet.v` L170 附近）。
+     签名没写序关系，类型系统不报错；自定义类型作键时编译器不会提示「缺序关系」，
+     只会在 `<` 求值处失败。约束与实际操作脱节，正是最难自查的一类缺口。
+- 最小复现（第 14 批写法口径，理想形态）：
+
+```v
+structure Interval {
+    start: i64
+    end: i64
+}
+
+imply Interval: std::operator::Comparable {   # 提案：trait 不存在
+    infix `<`(self, other: Interval): bool {
+        return self.start < other.start
+    }
+}
+
+micro order_items<T>(items: ArrayList<T>): unit
+    where T: Equal & Comparable              # 提案：约束不存在
+{
+    merge_sort(items)                         # 提案：单参入口不存在，现有入口要求 cmp
+}
+```
+
+- 期望：类型系统按 `Comparable` 捕获 `<`，排序与有序容器都从合同取序；自定义记录类型
+  不需要在题解内部传 `micro(a, b) -> i32` 或具名比较函数。
+- 实际：`Comparable` 名字无法解析；`merge_sort` 实参个数不符；`BTreeSet<Interval>` 的
+  `insert` 签名过宽（只要求 `Equal`）但体内 `<` 无法对结构体求值。
+- 影响题（8，批次 R14，全部 `authored-unverified` 且依赖本条）：
+  56 / 435 / 1235 / 452 / 1710 / 1029 / 1626（自定义记录排序）、
+  694（自定义类型作 `BTreeSet` 键，同时依赖自定义 `Equal` impl）。
+- 判定：**std 缺口**。只补 G15 的 `Comparable` 骨架不够，还必须同时改三处：
+  加 `Comparable` 合同；给排序加 `where T: Comparable` 的单参入口；把 `BTreeSet` 的约束
+  从 `T: Equal` 收紧为 `T: Equal & Comparable`（或改 `Ord`），并让实现对结构体字段逐级比较。
+- 与 G15 / G11 的关系：G15 是根因（无合同），G11 的 `merge_sort` 只解决「能排序」；
+  本条要解决「序属于类型，而不是题解闭包」，并让有序容器能在签名层要求它。
+- 附带观察：仓内**没有任何用户自定义类型实现过 `Equal`**（只有 std 内部的 `i64` / `Utf8Text`
+  等），所以 694 的 `imply IslandShape: std::operator::Equal` 也是首次进入题解路径，需与 G26
+  一起验证。
 
 ### 未命中面（第 3 批探测，2026-11-04，无强制影响题，故不编号）
 

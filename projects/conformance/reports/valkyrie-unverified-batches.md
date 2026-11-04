@@ -7,6 +7,47 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R14-2026-11-04（理想解滚动批次 14，8 题，写完未构建）
+
+- 范围：首次压**自定义类型的序关系**。前 13 批的排序题解全部把比较逻辑写进调用点
+  （`merge_sort(x, micro(a, b) -> i32 { ... })` 或具名比较函数），那是绕路写法；本批按理想形态
+  直接写 `structure` + `imply ...: std::operator::Comparable`（提案）与
+  `where T: Equal & Comparable`（提案），**不传任何比较器**。它们红着是预期结果。
+- 构建 / 判题状态：**未验证**，全部 `authored-unverified` 且依赖 **G26**。本轮按口径不跑构建与判题。
+- 新缺口：**1 条**，G26 = 自定义类型序关系无可用合同：`Comparable` 缺失、`sort.v` 无按合同取序的
+  单参入口、`BTreeSet::insert` 只要求 `T: Equal` 却在体内裸调 `<`。canonical 625 → 633。
+  新增观察 10（「内联比较器是绕路写法」）。
+- 命中面：自定义记录排序 ×7（56 / 435 / 1235 / 452 / 1710 / 1029 / 1626）、
+  自定义类型作 `BTreeSet` 键 ×1（694）。
+- 传给排序的比较器数量：**0**（本批唯一硬口径）。
+- 预期阻断：`merge-intervals` 返回 `ArrayList<ArrayList<i64>>`，按 G3 在 wasm JS glue 处阻断；
+  其余 7 题返回 `i64`，若 G26 修复则可直接判题。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致
+  （`intervals` / `intervals` / `startTime`+`endTime`+`profit` / `points` / `boxTypes`+`truckSize` /
+  `costs` / `scores`+`ages` / `grid`）。
+- TS 参考解：`merge-intervals` / `non-overlapping-intervals` / `minimum-number-of-arrows-to-burst-balloons` /
+  `maximum-units-on-a-truck` 复用既有；`maximum-profit-in-job-scheduling` / `two-city-scheduling` /
+  `best-team-with-no-conflicts` / `number-of-distinct-islands` 4 题新写。8/8 实跑通过。
+- 数据清洗（随本批一并处理，均属生成器产出的非法用例）：
+  - `parsing-a-boolean-expression`（1106）：删除 5 条 `expected` 为
+    `Error: list index out of range` 的用例（表达式本身非法：`&` / `|` 单操作数、`!` 多操作数、
+    括号错配）。此前 R12 小节误记为 3 条。
+  - `maximum-profit-of-job-scheduling`（1235）：删除 3 条 `startTime` / `endTime` / `profit`
+    长度不一致的用例（Python 参考解在这 3 条上越界，expected 被记成 Error 字符串）。
+  - `two-city-scheduling`（1029）：删除 1 条人数为奇数（21）的用例，题面要求 `2n` 偶数。
+  - 清洗后 8 题 TS 参考解与 Python 参考解均实跑通过。
+
+| slug | 导出入口 | 返回类型 | 自定义类型 / 序关系用法 |
+| --- | --- | --- | --- |
+| `merge-intervals` | `merge` | `ArrayList<ArrayList<i64>>` | `Interval{start,end}`，按起点升序合并 |
+| `non-overlapping-intervals` | `eraseOverlapIntervals` | `i64` | `Interval{start,end}`，按终点升序贪心 |
+| `maximum-profit-in-job-scheduling` | `jobScheduling` | `i64` | `Job{start,end,profit}`，按终点升序 + 二分前驱 |
+| `minimum-number-of-arrows-to-burst-balloons` | `findMinArrowShots` | `i64` | `Balloon{start,end}`，按终点升序贪心 |
+| `maximum-units-on-a-truck` | `maximumUnits` | `i64` | `BoxType{boxes,units}`，按单位价值升序后反向装载 |
+| `two-city-scheduling` | `twoCitySchedCost` | `i64` | `CostRow{city_a,city_b}`，按差价升序、依赖稳定性 |
+| `best-team-with-no-conflicts` | `bestTeamScore` | `i64` | `Player{score,age}`，双字段序 + O(n²) DP |
+| `number-of-distinct-islands` | `numDistinctIslands` | `i64` | `IslandShape{cells}` 直接作 `BTreeSet` 键（`Equal` + 序关系） |
+
 ## 批次 R13-2026-11-04（理想解滚动批次 13，8 题，写完未构建）
 
 - 范围：首次压位运算与专门类型 `BitSet`。前 12 批 `BitSet` 使用次数为 0，本批专挑理想解天然需要
@@ -60,8 +101,8 @@
 - TS 参考解：`parsing-a-boolean-expression` / `crawler-log-folder` / `largest-number` 复用既有实现；
   `decode-string` / `different-ways-to-add-parentheses` / `combination-sum` / `brace-expansion` /
   `partition-array-according-to-given-pivot` 5 题新写。
-- 题材记账：1106 的 `metadata.json` 含 3 条 `expected` 为 `Error: list index out of range` 的用例，
-  与题面不符；本批未改数据，验证窗口前需单独修正。
+- 题材记账：1106 的 `metadata.json` 原有 5 条 `expected` 为 `Error: list index out of range` 的用例，
+  与题面不符（表达式本身非法）；R12 小节最初误记为 3 条。已于批次 R14 一并删除，见 R14 数据清洗小节。
 
 | slug | 导出入口 | 返回类型 | 语言构造 / 覆盖方向 |
 | --- | --- | --- | --- |
