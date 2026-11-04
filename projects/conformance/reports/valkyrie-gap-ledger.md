@@ -784,6 +784,19 @@ foreach ($slug in $slugs) {
   （编译器 where 证据闭合问题，归编译器线，不在 std 线处理）。
 - 复跑口径：与 addon 重建同窗口、按 `valkyrie-unverified-batches.md` 的 R28 组一次性复跑；
   源码线不单独跑 V。
+- 源码线定向验证（2026-11-05）：`HashSet<i32>::from_list(ArrayList<i32>)` 最小用例已越过 HIR
+  （`list.iter` 不再 `unresolved`），但在 SMIR 报
+  `SMIR003: function reference identity is absent from the Compiler identity table`，
+  触发点是 `from_list` 传入 `iter` 的捕获 lambda
+  （`micro(value: T) -> unit { result.insert(value) }`）。故 22 题在补 `iter` 后还需编译器侧补齐
+  捕获 lambda 的函数引用身份；std 线不再为此复制遍历实现。
+- 同时观察到的编译器侧阻塞（均非 std 回退范围，归编译器线）：
+  - `where T: std::operator::Comparable` 在**具体实参**调用点仍报 `no-viable-overload`；
+    HEAD 的 `sort` / `sort_unstable` 同样复现，与 `BTreeSet::insert_non_full` 的
+    `instance-not-closed` 同属 where 证据闭合问题。
+  - `HashSet<utf8>` 仍不可编译：`std::hash#466`（`hash_utf8`）引用的宿主合同实例未进依赖导入
+    清单（`ItemInstanceId(4)`），与 `utf8: Comparable` 无关；
+    `phone-number-prefix` 的还原继续挂起。
 
 ## 系统性问题（观察，非编号）
 
