@@ -667,6 +667,7 @@
     ],
     "invoke": {
         "python": "Solution().findNumbers",
-        "typescript": "Solution().findNumbers"
+        "typescript": "Solution().findNumbers",
+        "valkyrie": "findNumbers"
     }
 }
