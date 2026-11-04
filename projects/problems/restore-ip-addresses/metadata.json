@@ -953,6 +953,7 @@
     ],
     "invoke": {
         "python": "Solution().restoreIpAddresses",
-        "typescript": "Solution().restoreIpAddresses"
+        "typescript": "Solution().restoreIpAddresses",
+        "valkyrie": "restoreIpAddresses"
     }
 }

@@ -629,6 +629,7 @@
     ],
     "invoke": {
         "python": "Solution().countStudents",
-        "typescript": "Solution().countStudents"
+        "typescript": "Solution().countStudents",
+        "valkyrie": "countStudents"
     }
 }

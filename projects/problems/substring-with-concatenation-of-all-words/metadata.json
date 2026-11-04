@@ -811,6 +811,7 @@
     "invoke": {
         "python": "Solution().findSubstring",
         "typescript": "Solution().findSubstring",
+        "valkyrie": "findSubstring",
         "wolframSxo": "findSubstring",
         "matlabSxo": "findSubstring"
     }

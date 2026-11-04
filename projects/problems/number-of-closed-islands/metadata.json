@@ -945,6 +945,7 @@
     ],
     "invoke": {
         "python": "Solution().closedIsland",
-        "typescript": "Solution().closedIsland"
+        "typescript": "Solution().closedIsland",
+        "valkyrie": "closedIsland"
     }
 }

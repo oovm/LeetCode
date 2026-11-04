@@ -752,6 +752,7 @@
     ],
     "invoke": {
         "python": "Solution().findDiagonalOrder",
-        "typescript": "Solution().findDiagonalOrder"
+        "typescript": "Solution().findDiagonalOrder",
+        "valkyrie": "findDiagonalOrder"
     }
 }

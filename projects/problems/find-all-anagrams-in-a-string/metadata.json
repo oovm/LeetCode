@@ -759,6 +759,7 @@
     ],
     "invoke": {
         "python": "Solution().findAnagrams",
-        "typescript": "Solution().findAnagrams"
+        "typescript": "Solution().findAnagrams",
+        "valkyrie": "findAnagrams"
     }
 }

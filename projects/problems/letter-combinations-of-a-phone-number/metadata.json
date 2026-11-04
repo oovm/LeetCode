@@ -3867,6 +3867,7 @@
     "invoke": {
         "python": "Solution().letterCombinations",
         "typescript": "Solution().letterCombinations",
+        "valkyrie": "letterCombinations",
         "wolframSxo": "letterCombinations",
         "matlabSxo": "letterCombinations"
     }
