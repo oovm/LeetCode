@@ -7,6 +7,47 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R15-2026-11-04（理想解滚动批次 15，8 题，写完未构建）
+
+- 范围：第二次压**已登记但未被解法验证**的缺口，优先撞 G25（`BitSet` 缺 `count` / `length` /
+  迭代 / `clone` / 互转 / `Equal`）与 G26（无 `Comparable` 合同、`sort.v` 无单参入口、
+  `BTreeSet::insert` 约束未捕获 `<`）。不写纸面 API 当既成事实，不写内联比较器。
+- 构建 / 判题状态：**未验证**，全部 `authored-unverified`，本轮按口径**不编译、不跑**。
+- 新缺口：**1 条**，G27 = 排序稳定性不是可声明的属性（`sort.v` 的 `quick_sort` / `merge_sort`
+  签名相同，`Comparable` 不承载稳定性；单参入口若落到不稳定实现，并列键静默错序）。
+  canonical 633 → 641。新增观察 11（G25 / G26 第二次撞面后仍无等价物）。
+- 命中面：`BitSet` ×2（1239 直接调用 `clone` ×2 + `count` ×1；847 作 `n * 2^n` 访问表，仅
+  `get` / `set`）、自定义记录 `Comparable` ×5（1366 / 2191 / 1691 / 2251 / 1751）、
+  `i64` 直接单参排序 ×1（1561）。
+- 传给排序的比较器数量：**0**（本批硬口径）。
+- 纸面 API 标注：1239 的 `BitSet::clone` / `count` 逐处标 `[待补 API]` 并指向 G25 提案签名；
+  其余 7 题只用现有入口 + G26 提案的单参排序（`order_items` 内 `merge_sort(items)`）。
+- 预期阻断：`sort-the-jumbled-numbers`、`number-of-flowers-in-full-bloom` 返回
+  `ArrayList<i64>`，按 G3 在 wasm JS glue 处阻断；其余 6 题返回 `i64` / `utf8`。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致
+  （`arr` / `graph` / `votes` / `mapping`+`nums` / `cuboids` / `flowers`+`people` /
+  `events`+`k` / `piles`）。
+- TS 参考解：8 题此前均为空文件，本批全部新写；按本轮口径**未实跑**。
+- 数据清洗（生成器产出的非法用例，随本批一并删除）：
+  - `maximum-length-of-a-concatenated-string-with-unique-characters`（1239）：删 6 条
+    `expected` 为 `Execution timed out` 的用例（题面数据规模不应超时）。
+  - `shortest-path-visiting-all-nodes`（847）：删 8 条非法用例（6 条
+    `Error: list index out of range` + 2 条 `Execution timed out`；前者图规模超出 n <= 12 上界）。
+  - `rank-teams-by-votes`（1366）：删 6 条 `Error: list index out of range` 的用例
+    （队名不是单个大写字母，违反题面）。
+  - 删除后 87 / 63 / 73 条用例，剩余 `expected` 均为合法答案类型。
+
+| slug | 导出入口 | 返回类型 | 缺口 / 覆盖方向 |
+| --- | --- | --- | --- |
+| `maximum-length-of-a-concatenated-string-with-unique-characters` | `maxLength` | `i64` | `BitSet(26)` 每词字母集；分支 `clone` + `union` + `count` 判重叠（G25） |
+| `shortest-path-visiting-all-nodes` | `shortestPathLength` | `i64` | 多源 BFS；`BitSet(n * 2^n)` 访问表，容量外知（G25 使用面） |
+| `rank-teams-by-votes` | `rankTeams` | `utf8` | `Team{letter, ranks}` 自定义记录；26 维名次 + 字母兜底序（G26） |
+| `sort-the-jumbled-numbers` | `sortJumbled` | `ArrayList<i64>` | `Jumbled{mapped, index}`；映射值序 + 稳定性（G26 / G27） |
+| `maximum-height-by-stacking-cuboids` | `maxHeight` | `i64` | `Cuboid{a,b,c}` 归一化 + 字典序；最长上升栈 DP（G26） |
+| `number-of-flowers-in-full-bloom` | `fullBloomFlowers` | `ArrayList<i64>` | `Flower{start,end}` 按起点排序 + 结束日单参排序；二分计数（G26） |
+| `maximum-number-of-events-that-can-be-attended-ii` | `maxValue` | `i64` | `Event{start,end,value}` 按开始日排序；DP + 二分后继（G26） |
+| `maximum-number-of-coins-you-can-get` | `maxCoins` | `i64` | `ArrayList<i64>` 直接单参排序，验证「无单参入口」（G26 ②） |
+
 ## 批次 R14-2026-11-04（理想解滚动批次 14，8 题，写完未构建）
 
 - 范围：首次压**自定义类型的序关系**。前 13 批的排序题解全部把比较逻辑写进调用点
@@ -183,7 +224,7 @@
 - 新缺口：**0 条**（G1–G24 不变）。G12 影响题扩为 7、G16 影响题扩为 4（含 `nth` / `range` 核对）。
 - 更正：本轮静态核对发现 R4–R8 的 10 个解法使用了不存在的提案 API（`sorted_by` ×9、
   `BTreeSet.floor`/`ceiling`、`utf8.compare`、`HashSet::new(capacity)`），已写入账本观察 4，
-  更正计划在验证窗口前完成；本批 8 题**不含** phantom 调用。
+  更正计划在验证窗口前完成；本批 8 题**不含**纸面 API 调用。
 - 预期阻断：`top-k-frequent-elements` / `relative-sort-array` / `find-first-and-last-position…` /
   `sort-array-by-parity-ii` 返回 `ArrayList<i64>`，`merge-two-2d-arrays…` / `find-the-difference…`
   返回 `ArrayList<ArrayList<i64>>`，按 G3 在 wasm JS glue 处阻断；`remove-duplicates-from-sorted-array-ii`

@@ -67,10 +67,13 @@ $n
 - 后续增量（2026-11-04，滚动批次 R14 后）：canonical 实测 **633**（R14 前 625；本批新编号 1 条，
   G26 = 自定义类型序关系无可用合同（`Comparable` 缺失 + 排序入口不按合同 + `BTreeSet` 约束不捕获
   `<`）；首次压「序关系属于类型」这面，见观察 10）。
+- 后续增量（2026-11-04，滚动批次 R15 后）：canonical 实测 **641**（R15 前 633；本批新编号 1 条，
+  G27 = 排序稳定性不是可声明的属性（无 `stable_sort` 入口，`Comparable` 合同不区分稳定/不稳定）；
+  本批继续撞 G25 / G26，见观察 11）。
 
 ## 系统性问题（观察，非编号）
 
-> 本节只记观察，不占 `G` 编号；缺口本身仍按 G1–G26 计。
+> 本节只记观察，不占 `G` 编号；缺口本身仍按 G1–G27 计。
 
 ### 观察 1：trait 实现面按需堆，没有「类型 × 核心 trait」矩阵
 
@@ -117,7 +120,7 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
 理由：1、2 是加法，风险局部；3 要动模型与既有容器约束，放在最后可避免把缺口修复和模型迁移
 混进同一笔改动。
 
-### 观察 4：未验证语料里混入了「按提案签名写的 phantom API」（R9 静态核对发现，已清）
+### 观察 4：未验证语料里混入了「按提案签名写的纸面 API」（R9 静态核对发现，已清）
 
 缺口账本里 G11 / G16 / G13 / G12 的「期望签名」是提案，不是现有 API。R4–R8 的解法中有 10 个文件
 直接按提案签名写，源码层并不存在这些入口。逐条坐标：
@@ -131,10 +134,14 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
 
 - 定性：**这是语料错误，不是新缺口**。等价近似物都已存在（副本 + `merge_sort`、`to_list` 后手写
   二分、逐字节比较、`new()` 后逐个 `insert`），故不新增编号。
+- 术语口径（2026-11-04，R15 更正）：本表统一用**纸面 API**（paper API），指「解法里按提案签名调用、
+  源码中并不存在的接口」；不再使用 `phantom` 一词，以免与语言标准里的 `Phantom<T>` 撞名。
+  `Phantom<T>` 是真实存在的语言类型（编译器开洞实现、零大小、不占布局），但它在算法题里一般用不上；
+  **「某个入口源码不存在」不能拿 `Phantom<T>` 当理由**，两者不是一回事。
 - 修复口径（验证窗口前完成）：`sorted_by(x, cmp)` → 自建副本后 `merge_sort(copy, cmp)`；
   `floor` / `ceiling` → `to_list()` 后二分；`utf8.compare` → `byte_length` / `byte_at` 逐字节比较；
   `HashSet::new(n)` → `HashSet::new()`。
-- 本批（R9）不新增 phantom 调用：8 题只使用已核对存在的入口。
+- 本批（R9）不新增纸面 API 调用：8 题只使用已核对存在的入口。
 - **已清（2026-11-04 更正提交）**：上表 10 个文件全部改成等价真实 API 写法 ——
   `sorted_by` ×9 → 自建副本 + `merge_sort`（`custom-sort-string` 改用「rank · 1000000 + 原下标」
   编码进 `ArrayList<i64>`，避免排序闭包捕获 `priority`；`top-k-frequent-words` 改频次桶 +
@@ -247,6 +254,17 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
 - 本批（R14）是第一次「正着写」：8 题全部声明结构体 + `imply ...: std::operator::Comparable`
   （提案）+ `where T: Equal & Comparable`（提案），不传任何比较器；它们红着是预期结果，
   对应 G26。
+
+### 观察 11：G25 / G26 第二次撞面后仍无等价物——不是选题偏差，是能力面长期缺失
+
+- R15 再次把 8 题压到 G25 / G26：1239 直接调用 `BitSet::clone` ×2 + `count` ×1；
+  847 用 `BitSet(n * 2^n)` 作 BFS 访问表；1366 / 2191 / 1691 / 2251 / 1751 用自定义记录
+  `Comparable` + 单参排序；1561 对 `i64` 直接单参排序。**传比较器数量仍为 0**。
+- 结论：两批共 16 题撞同一面，说明缺口不是「这批题选得偏」，而是「排序与有序容器」
+  这条主线长期没有合同。继续堆同类题不会产生新信息，下一轮应直接进修复窗口：
+  先落 G26 的 `Comparable` + 单参入口，同时按 G27 区分稳定 / 不稳定，再复跑 R14 / R15。
+- `BitSet` 侧同理：1239 证明 `clone` / `count` 不是「锦上添花」，而是分支式集合代数的
+  前置条件；在补齐前，凡涉及「复制后做结构运算」的题都只能退回逐位 `get`。
 
 ## 未恢复
 
@@ -927,7 +945,16 @@ imply BitSet: Equal
 - 判定：**std 缺口**，且 `count` 没有等价近似物（不知道规模就无法安全遍历），按口径编号。
   `length` / `clone` 同样无近似物；迭代器可用「外部记录全集大小 + 逐位 `get`」近似，但调用方必须
   自己维护全集，不算容器自足。
-- 影响题：1461、318、442、36、864（批次 R13）；此前 12 批 0 题使用 `BitSet`，属长期盲点。
+- 影响题：1461、318、442、36、864（批次 R13）；1239（批次 R15，首次在解法里直接调用
+  `clone` ×2 + `count` ×1）。847（R15）只用容量外知的 `get` / `set`，不计入本条影响题。
+- 本批验证情况（R15，`authored-unverified`）：
+  - `maximum-length-of-a-concatenated-string-with-unique-characters`（1239）按理想形态写
+    「`current.clone()` 分支 → `merged.union(word.clone())` → `merged.count()` 判重叠」，
+    三处缺失入口全部落在搜索主路径；其余 R15 题不含 `BitSet`。
+  - `shortest-path-visiting-all-nodes`（847）以 `BitSet(n * 2^n)` 作 BFS 访问表，容量外部给定，
+    只依赖现有 `get` / `set`；它证明 `BitSet` 能承担大规模访问表，但不构成缺失入口的调用点。
+  - 结论：`clone` / `count` 的「无等价近似物」判断在解法级复核后仍成立（1239 若不 `clone`
+    就只能退回逐位 `get` 的绕路写法）。
 - 修复初判：**加 API**；`count` 可对 `words` 逐字 popcount 求和，`clone` 复制 `words` 数组即可，
   均不改变存储形态。
 - 与观察 1 的关系：`BitSet` 同样游离在「类型 × {Equal, Hash}」矩阵之外；本条只记 `Equal`，
@@ -972,9 +999,11 @@ micro order_items<T>(items: ArrayList<T>): unit
   不需要在题解内部传 `micro(a, b) -> i32` 或具名比较函数。
 - 实际：`Comparable` 名字无法解析；`merge_sort` 实参个数不符；`BTreeSet<Interval>` 的
   `insert` 签名过宽（只要求 `Equal`）但体内 `<` 无法对结构体求值。
-- 影响题（8，批次 R14，全部 `authored-unverified` 且依赖本条）：
-  56 / 435 / 1235 / 452 / 1710 / 1029 / 1626（自定义记录排序）、
-  694（自定义类型作 `BTreeSet` 键，同时依赖自定义 `Equal` impl）。
+- 影响题（14，批次 R14 / R15，全部 `authored-unverified` 且依赖本条）：
+  R14：56 / 435 / 1235 / 452 / 1710 / 1029 / 1626（自定义记录排序）、
+  694（自定义类型作 `BTreeSet` 键，同时依赖自定义 `Equal` impl）；
+  R15：1366 / 2191 / 1691 / 2251 / 1751（自定义记录 `Comparable`）、
+  1561（`i64` 直接依赖 `where T: Comparable` 单参入口）。
 - 判定：**std 缺口**。只补 G15 的 `Comparable` 骨架不够，还必须同时改三处：
   加 `Comparable` 合同；给排序加 `where T: Comparable` 的单参入口；把 `BTreeSet` 的约束
   从 `T: Equal` 收紧为 `T: Equal & Comparable`（或改 `Ord`），并让实现对结构体字段逐级比较。
@@ -983,6 +1012,38 @@ micro order_items<T>(items: ArrayList<T>): unit
 - 附带观察：仓内**没有任何用户自定义类型实现过 `Equal`**（只有 std 内部的 `i64` / `Utf8Text`
   等），所以 694 的 `imply IslandShape: std::operator::Equal` 也是首次进入题解路径，需与 G26
   一起验证。
+- 本批验证情况（R15，`authored-unverified`）：6 题按「结构体 + `Comparable` + 单参排序」写，
+  传比较器数量 **0**：
+  - 自定义记录 ×5：1366（26 维名次向量 + 字母兜底）、2191（映射值）、1691（三维归一化字典序）、
+    2251（花期按起点）、1751（事件按开始日）；
+  - `i64` 直接单参排序 ×1：1561（`order_items(piles)` 后 `merge_sort(items)`），是第 ② 条
+    「无 `where T: Comparable` 单参入口」的最短复现。
+  - 新证据：2191 依赖并列映射值保持原序，暴露出单参入口若落到 `quick_sort` 会静默错序，
+    已另编 **G27**（稳定性不是可声明属性）。
+  - 结论：G26 的三处（合同缺失 / 单参入口缺失 / `BTreeSet` 约束过宽）在本批仍全部成立；
+    R14 的 694 之外，本批没有新的「自定义类型作有序容器键」调用点。
+
+### G27 排序稳定性不是可声明的属性（无 `stable_sort` 入口 / `Comparable` 不区分稳定与不稳定）
+
+- 状态：未提供（**std 缺口**；2026-11-04 第 15 批静态核对 `sort.v` + 题 2191）
+- 现象：`sort.v` 同时暴露 `quick_sort`（不稳定）与 `merge_sort`（稳定），两者签名相同，
+  都只接受调用方 `cmp`。`Comparable` 只描述偏序，不承载「并列键的相对次序必须保持」。
+  按 G26 提案落地的单参入口若不区分，调用方无法从签名层声明「我要稳定排序」。
+- 后果：`sort-the-jumbled-numbers`（2191）的并列映射值必须保持原下标次序；单参入口若实现为
+  `quick_sort`，结果是**静默错序**而非编译错误。题解只能赌「实现恰好是 `merge_sort`」，
+  这不是合同，是实现细节。
+- 期望签名（[提案]，源码尚不存在）：
+
+```v
+micro stable_sort<T>(items: ArrayList<T>): unit where T: Equal & Comparable
+micro sort_unstable<T>(items: ArrayList<T>): unit where T: Equal & Comparable
+```
+
+- 判定：**std 缺口**；修复应与 G26 同一笔完成——单参入口显式区分稳定 / 不稳定语义，
+  把稳定性写进入口名与文档，而不是留给实现。
+- 影响题（1，批次 R15）：2191（并列映射值依赖稳定性）。
+- 与 G26 的关系：G26 解决「序属于类型」；本条解决「并列时谁先谁后属于入口语义」。
+  只补 G26 不定本条，2191 仍有静默错序风险。
 
 ### 未命中面（第 3 批探测，2026-11-04，无强制影响题，故不编号）
 
@@ -1108,7 +1169,7 @@ micro order_items<T>(items: ArrayList<T>): unit
 - **`ArrayList.insert(ordinal, value)` 语义与 TS `splice` 同向**：`queue-reconstruction-by-height`
   （406）按 `k` 插入，确认参数序是「先位置、后元素」；观察 2 清单第 2 条可在 std 侧直接标「与主流同向」。
 - **~~`sorted_by(ArrayList<ArrayList<i64>>)` 可用~~（R9 更正：不成立）**：`sorted_by` 在
-  `std/source/collection/sort.v` 中不存在，406 的调用是 phantom（见观察 4）。同等能力只能是
+  `std/source/collection/sort.v` 中不存在，406 的调用是纸面 API（见观察 4）。同等能力只能是
   「自建副本 + `merge_sort(copy, cmp)`」；G11 的边界是「没有返回新序列的入口」，不是「排序本身」。
 - **`ends_with` 存在**：`count-prefix-and-suffix-pairs-i`（3042）与 `starts_with` 对称，
   无需切片比较。
