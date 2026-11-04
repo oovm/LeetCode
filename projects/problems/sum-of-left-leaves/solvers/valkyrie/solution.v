@@ -1,5 +1,29 @@
-# 阻塞：std.collection 数组参数读取
-# 题内触发点：`root⁅i⁆` 层序数组左叶求和。
-# 期望语义：读取宿主传入数组的长度与下标元素。实际：`⁅ ⁆` 下标链路在 std 容器内部报 unresolved call `<computed>`，四 lane 同阻。
-# 最小复现：引用 merge-two-sorted-lists 的本能力首记复现。
-# 理想算法：遍历求和，时间 O(n) 空间 O(h)。
+namespace leetcode.sum_of_left_leaves;
+
+# 递归携带「当前节点是否是左孩子」：两侧都没有子节点且来自左侧，就是左叶子。
+micro left_sum(root: ArrayList<i64>, index: usize, is_left: bool) -> i64 {
+    if index >= root.length() {
+        return 0
+    }
+    let left: usize = 2 * index + 1
+    let right: usize = 2 * index + 2
+    if is_left {
+        if left >= root.length() {
+            if right >= root.length() {
+                return root⁅index⁆
+            }
+        }
+    }
+    return left_sum(root, left, true) + left_sum(root, right, false)
+}
+
+[export(case: "camelCase")]
+micro sumOfLeftLeaves(root: ArrayList<i64>) -> i64 {
+    return left_sum(root, 0, false)
+}
+
+class Solution {
+    micro sumOfLeftLeaves(self, root: ArrayList<i64>): i64 {
+        return sumOfLeftLeaves(root)
+    }
+}

@@ -822,6 +822,7 @@
     ],
     "invoke": {
         "python": "Solution().deleteDuplicates",
-        "typescript": "Solution().deleteDuplicates"
+        "typescript": "Solution().deleteDuplicates",
+        "valkyrie": "deleteDuplicates"
     }
 }

@@ -1,5 +1,33 @@
-# 阻塞：std.collection 数组参数读取
-# 题内触发点：`words⁅i⁆` 读字符串数组行列对称校验（文本索引另属 std.text 缺口）。
-# 期望语义：读取宿主传入数组的长度与下标元素。实际：`⁅ ⁆` 下标链路在 std 容器内部报 unresolved call `<computed>`，四 lane 同阻。
-# 最小复现：引用 merge-two-sorted-lists 的本能力首记复现。
-# 理想算法：行列对称校验，时间 O(n·m) 空间 O(1)。
+namespace leetcode.valid_word_square;
+
+# 逐字符核对 `words[i][j] == words[j][i]`：任一侧越界即不是词方阵。
+[export(case: "camelCase")]
+micro validWordSquare(words: ArrayList<utf8>) -> bool {
+    let count: usize = words.length()
+    let mut i: usize = 0
+    while i < count {
+        let row: utf8 = words⁅i⁆
+        let mut j: usize = 0
+        while j < row.length() {
+            if j >= count {
+                return false
+            }
+            let other: utf8 = words⁅j⁆
+            if i >= other.length() {
+                return false
+            }
+            if row⁅j⁆ as u32 != other⁅i⁆ as u32 {
+                return false
+            }
+            j = j + 1
+        }
+        i = i + 1
+    }
+    return true
+}
+
+class Solution {
+    micro validWordSquare(self, words: ArrayList<utf8>): bool {
+        return validWordSquare(words)
+    }
+}

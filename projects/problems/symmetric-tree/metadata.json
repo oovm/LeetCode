@@ -109,6 +109,7 @@
     ],
     "invoke": {
         "python": "Solution().isSymmetric",
-        "typescript": "Solution().isSymmetric"
+        "typescript": "Solution().isSymmetric",
+        "valkyrie": "isSymmetric"
     }
 }

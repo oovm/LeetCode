@@ -265,6 +265,7 @@
     ],
     "invoke": {
         "python": "Solution().findTilt",
-        "typescript": "Solution().findTilt"
+        "typescript": "Solution().findTilt",
+        "valkyrie": "findTilt"
     }
 }

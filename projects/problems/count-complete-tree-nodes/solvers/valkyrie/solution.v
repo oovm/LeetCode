@@ -1,5 +1,13 @@
-# 阻塞：std.collection 数组参数读取
-# 题内触发点：`root⁅i⁆` 层序数组完全树计数。
-# 期望语义：读取宿主传入数组的长度与下标元素。实际：`⁅ ⁆` 下标链路在 std 容器内部报 unresolved call `<computed>`，四 lane 同阻。
-# 最小复现：引用 merge-two-sorted-lists 的本能力首记复现。
-# 理想算法：完全树二分计数，时间 O(log² n) 空间 O(1)。
+namespace leetcode.count_complete_tree_nodes;
+
+# 层序数组按堆式下标排布，没有空位占位符时数组长度就是节点数。
+[export(case: "camelCase")]
+micro countNodes(root: ArrayList<i64>) -> i64 {
+    return root.length() as i64
+}
+
+class Solution {
+    micro countNodes(self, root: ArrayList<i64>): i64 {
+        return countNodes(root)
+    }
+}

@@ -7,6 +7,66 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R21-2026-11-04（文本 / 哈希 / 树 29 题，写完未构建）
+
+- 范围：Easy 标量池之外的剩余 Easy 题，全部按**理想写法**落地：`utf8` / `ArrayList<utf8>` /
+  `HashMap` / `HashSet` / `Utf8Builder` / `Option` / 递归 / 迭代器 `loop`。
+  按「题解资产与编译脱钩」执行：不因当前 std 停点退化成绕路写法。
+- 构建 / 判题状态：**未验证（authored-unverified），构建通过 0 题**。全局停点仍是
+  `std/source/operator/comparable.v:169:26`（`valkyrie.v d48011b`），未进入题解编译阶段。
+- 覆盖口径：本块 **29 题**全部计入「仅写完未验证」；累计已构建通过数保持上一块的 **18**。
+- 新缺口编号：**0 条**。依赖未实现特性的调用点：`Option<ArrayList<i64>>` 导出返回（4 题），
+  归入 G3 返回值方向扩展，标「依赖未实现的特性」而不是题目 blocked。
+- TS 参考解：29 题**全部实跑**
+  （`run_isolated_judge.ts --lang typescript --iterations 1 --warmup 0`），29/29 `ok=true`；
+  本批新写 6 份 TS（599 / 575 / 594 / 566 / 598 / 563）。
+- 数据清洗：**未删用例、未改断言**。
+  - `linked-list-cycle`（141）与 `intersection-of-two-linked-lists`（160）：`expected` 全为
+    `Error: ...` 宿主异常文本，不是合法答案形态，**移出本批**（文件未改动）。
+  - `reverse-string`（344）：`expected` 全为 `null`（原地修改、无返回值断言），V 侧没有已核对的
+    void 导出形态，**移出本批**；不计 blocked。
+  - `keyboard-row`（500）：用例含 `"C++"` 等非字母词，`expected: []`。按「每个字符必须属于键盘行」
+    的语义，非字母字符不属于任何一行，解法对非字母返回 `-1` 以保证与 `expected` 一致（未改用例）。
+  - 4 道链表题：空链表对应 `expected: null`，TS 与 V 都以空结果映射为 `null` / `Option::None`。
+- 入口签名：29/29 导出形参与 `metadata.tests[].args` 键**逐字同序**（脚本比对，`bad=0`）。
+- 写出形态：29/29 顶层 `[export(case: "camelCase")] micro` + `class Solution` 委托；
+  树题按堆式下标 `2i+1` / `2i+2` 递归，与 TS 参考解使用同一表示。
+- 依赖未实现的特性：`Option<ArrayList<i64>>` 导出返回（21 / 83 / 203 / 206）。
+- 其余 API 面（`ArrayList` / `HashMap` / `HashSet` / `Utf8Builder` / `utf8`）均为源码已有签名，
+  但**未经编译验证**。
+
+| 题号 | slug | 入口 | 返回 | 命中面 | TS 实跑 |
+| --- | --- | --- | --- | --- | --- |
+| 500 | `keyboard-row` | `findWords` | `ArrayList<utf8>` | 字符行归属 + 大小写归一 | 81 |
+| 599 | `minimum-index-sum-of-two-lists` | `findRestaurant` | `ArrayList<utf8>` | `HashMap<utf8, i64>` | 93 |
+| 243 | `shortest-word-distance` | `shortestDistance` | `i64` | `utf8.equals` + 双指针位置 | 108 |
+| 422 | `valid-word-square` | `validWordSquare` | `bool` | 字符方阵对称 | 111 |
+| 163 | `missing-ranges` | `findMissingRanges` | `ArrayList<ArrayList<i64>>` | 哨兵 + 嵌套集合返回 | 127 |
+| 575 | `distribute-candies` | `distributeCandies` | `i64` | `HashSet<i64>` 去重 | 106 |
+| 594 | `longest-harmonious-subsequence` | `findLHS` | `i64` | `HashMap::keys` 遍历 | 116 |
+| 566 | `reshape-the-matrix` | `matrixReshape` | `ArrayList<ArrayList<i64>>` | 线性下标映射 | 97 |
+| 598 | `range-addition-ii` | `maxCount` | `i64` | 行列上界最小值 | 112 |
+| 21 | `merge-two-sorted-lists` | `mergeTwoLists` | `Option<ArrayList<i64>>` | 双指针归并 + 空链表 `None` | 111 |
+| 83 | `remove-duplicates-from-sorted-list` | `deleteDuplicates` | `Option<ArrayList<i64>>` | 相邻去重 + `None` | 111 |
+| 203 | `remove-linked-list-elements` | `removeElements` | `Option<ArrayList<i64>>` | 过滤后可能为空 | 116 |
+| 206 | `reverse-linked-list` | `reverseList` | `Option<ArrayList<i64>>` | 逆序读取 + `None` | 99 |
+| 234 | `palindrome-linked-list` | `isPalindrome` | `bool` | 首尾双指针 | 91 |
+| 94 | `binary-tree-inorder-traversal` | `inorderTraversal` | `ArrayList<i64>` | 堆式下标中序递归 | 24 |
+| 144 | `binary-tree-preorder-traversal` | `preorderTraversal` | `ArrayList<i64>` | 前序递归 | 12 |
+| 145 | `binary-tree-postorder-traversal` | `postorderTraversal` | `ArrayList<i64>` | 后序递归 | 20 |
+| 110 | `balanced-binary-tree` | `isBalanced` | `bool` | 自底向上高度哨兵 | 15 |
+| 100 | `same-tree` | `isSameTree` | `bool` | 双树同步递归 | 17 |
+| 101 | `symmetric-tree` | `isSymmetric` | `bool` | 镜像双指针递归 | 17 |
+| 111 | `minimum-depth-of-binary-tree` | `minDepth` | `i64` | 大哨兵 + 叶判定 | 12 |
+| 222 | `count-complete-tree-nodes` | `countNodes` | `i64` | 完全树长度即节点数 | 46 |
+| 404 | `sum-of-left-leaves` | `sumOfLeftLeaves` | `i64` | 递归携带 `is_left` | 15 |
+| 530 | `minimum-absolute-difference-in-bst` | `getMinimumDifference` | `i64` | 中序 + 三格状态累加器 | 57 |
+| 543 | `diameter-of-binary-tree` | `diameterOfBinaryTree` | `i64` | 后序 + 单格累加器 | 11 |
+| 563 | `binary-tree-tilt` | `findTilt` | `i64` | 子树和 + 累加器 | 41 |
+| 257 | `binary-tree-paths` | `binaryTreePaths` | `ArrayList<utf8>` | `Utf8Builder.append_i64` 拼路径 | 14 |
+| 270 | `closest-binary-search-tree-value` | `closestValue` | `i64` | BST 单路径下行 + 等距取小 | 17 |
+| 501 | `find-mode-in-binary-search-tree` | `findMode` | `ArrayList<i64>` | 中序 + 游程统计 | 52 |
+
 ## 批次 R20-2026-11-04（Easy 标量池 25 题，写完未构建）
 
 - 范围：Easy 标量池剩余题，纯整数 / 纯算术签名，不涉及 `std.text`，也没有新增集合面；

@@ -1,5 +1,23 @@
-# 阻塞：std.collection 数组参数读取
-# 题内触发点：`root⁅i⁆` 层序数组前序遍历。
-# 期望语义：读取宿主传入数组的长度与下标元素。实际：`⁅ ⁆` 下标链路在 std 容器内部报 unresolved call `<computed>`，四 lane 同阻。
-# 最小复现：引用 merge-two-sorted-lists 的本能力首记复现。
-# 理想算法：前序遍历，时间 O(n) 空间 O(n)。
+namespace leetcode.binary_tree_preorder_traversal;
+
+# 层序数组按堆式下标访问，前序递归（根 → 左 → 右）收集。
+micro walk(root: ArrayList<i64>, index: usize, out: ArrayList<i64>) -> unit {
+    if index < root.length() {
+        out.push(root⁅index⁆)
+        walk(root, 2 * index + 1, out)
+        walk(root, 2 * index + 2, out)
+    }
+}
+
+[export(case: "camelCase")]
+micro preorderTraversal(root: ArrayList<i64>) -> ArrayList<i64> {
+    let mut out: ArrayList<i64> = ArrayList::new(root.length())
+    walk(root, 0, out)
+    return out
+}
+
+class Solution {
+    micro preorderTraversal(self, root: ArrayList<i64>): ArrayList<i64> {
+        return preorderTraversal(root)
+    }
+}

@@ -126,6 +126,7 @@
     ],
     "invoke": {
         "python": "Solution().isSameTree",
-        "typescript": "Solution().isSameTree"
+        "typescript": "Solution().isSameTree",
+        "valkyrie": "isSameTree"
     }
 }

@@ -1104,6 +1104,7 @@
     ],
     "invoke": {
         "python": "Solution().findMissingRanges",
-        "typescript": "Solution().findMissingRanges"
+        "typescript": "Solution().findMissingRanges",
+        "valkyrie": "findMissingRanges"
     }
 }

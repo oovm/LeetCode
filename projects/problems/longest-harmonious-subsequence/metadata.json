@@ -744,6 +744,7 @@
     ],
     "invoke": {
         "python": "Solution().findLHS",
-        "typescript": "Solution().findLHS"
+        "typescript": "Solution().findLHS",
+        "valkyrie": "findLHS"
     }
 }

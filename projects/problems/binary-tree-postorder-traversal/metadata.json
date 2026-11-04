@@ -148,6 +148,7 @@
     ],
     "invoke": {
         "python": "Solution().postorderTraversal",
-        "typescript": "Solution().postorderTraversal"
+        "typescript": "Solution().postorderTraversal",
+        "valkyrie": "postorderTraversal"
     }
 }

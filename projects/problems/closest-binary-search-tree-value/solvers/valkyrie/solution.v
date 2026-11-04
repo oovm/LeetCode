@@ -1,5 +1,45 @@
-# 阻塞：std.collection 数组参数读取
-# 题内触发点：`root⁅i⁆` 层序数组 BST 二分查找最近值。
-# 期望语义：读取宿主传入数组的长度与下标元素。实际：`⁅ ⁆` 下标链路在 std 容器内部报 unresolved call `<computed>`，四 lane 同阻。
-# 最小复现：引用 merge-two-sorted-lists 的本能力首记复现。
-# 理想算法：BST 二分查找，时间 O(h) 空间 O(1)。
+namespace leetcode.closest_binary_search_tree_value;
+
+# BST 决定唯一搜索路径：按 target 大小关系下行，途中保留距离最近的值，等距取较小值。
+[export(case: "camelCase")]
+micro closestValue(root: ArrayList<i64>, target: i64) -> i64 {
+    if root.length() == 0 {
+        return 0
+    }
+    let mut best: i64 = root⁅0⁆
+    let mut index: usize = 0
+    while index < root.length() {
+        let value: i64 = root⁅index⁆
+        let mut distance: i64 = value - target
+        if distance < 0 {
+            distance = 0 - distance
+        }
+        let mut best_distance: i64 = best - target
+        if best_distance < 0 {
+            best_distance = 0 - best_distance
+        }
+        if distance < best_distance {
+            best = value
+        }
+        else {
+            if distance == best_distance {
+                if value < best {
+                    best = value
+                }
+            }
+        }
+        if target < value {
+            index = 2 * index + 1
+        }
+        else {
+            index = 2 * index + 2
+        }
+    }
+    return best
+}
+
+class Solution {
+    micro closestValue(self, root: ArrayList<i64>, target: i64): i64 {
+        return closestValue(root, target)
+    }
+}

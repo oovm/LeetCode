@@ -903,6 +903,7 @@
     ],
     "invoke": {
         "python": "Solution().maxCount",
-        "typescript": "Solution().maxCount"
+        "typescript": "Solution().maxCount",
+        "valkyrie": "maxCount"
     }
 }

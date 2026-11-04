@@ -1,5 +1,28 @@
-# 阻塞：std.collection 数组参数读取
-# 题内触发点：`ops⁅i⁆` 二维读取行列最小值。
-# 期望语义：读取宿主传入数组的长度与下标元素。实际：`⁅ ⁆` 下标链路在 std 容器内部报 unresolved call `<computed>`，四 lane 同阻。
-# 最小复现：引用 merge-two-sorted-lists 的本能力首记复现。
-# 理想算法：行列 min 乘积，时间 O(k) 空间 O(1)。
+namespace leetcode.range_addition_ii;
+
+# 每次操作都从 (0, 0) 起覆盖，重叠次数最多的格子由「所有操作行列上界的最小值」唯一确定。
+[export(case: "camelCase")]
+micro maxCount(m: i64, n: i64, ops: ArrayList<ArrayList<i64>>) -> i64 {
+    if ops.length() == 0 {
+        return m * n
+    }
+    let mut min_row: i64 = m
+    let mut min_col: i64 = n
+    loop op in ops {
+        let row_bound: i64 = op⁅0⁆
+        let col_bound: i64 = op⁅1⁆
+        if row_bound < min_row {
+            min_row = row_bound
+        }
+        if col_bound < min_col {
+            min_col = col_bound
+        }
+    }
+    return min_row * min_col
+}
+
+class Solution {
+    micro maxCount(self, m: i64, n: i64, ops: ArrayList<ArrayList<i64>>): i64 {
+        return maxCount(m, n, ops)
+    }
+}

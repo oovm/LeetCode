@@ -357,6 +357,7 @@
     ],
     "invoke": {
         "python": "Solution().findMode",
-        "typescript": "Solution().findMode"
+        "typescript": "Solution().findMode",
+        "valkyrie": "findMode"
     }
 }

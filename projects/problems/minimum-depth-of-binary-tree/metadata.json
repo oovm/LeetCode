@@ -79,6 +79,7 @@
     ],
     "invoke": {
         "python": "Solution().minDepth",
-        "typescript": "Solution().minDepth"
+        "typescript": "Solution().minDepth",
+        "valkyrie": "minDepth"
     }
 }

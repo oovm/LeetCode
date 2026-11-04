@@ -826,6 +826,7 @@
     ],
     "invoke": {
         "python": "Solution().findRestaurant",
-        "typescript": "Solution().findRestaurant"
+        "typescript": "Solution().findRestaurant",
+        "valkyrie": "findRestaurant"
     }
 }

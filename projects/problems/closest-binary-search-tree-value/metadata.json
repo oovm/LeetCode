@@ -126,6 +126,7 @@
     ],
     "invoke": {
         "python": "Solution().closestValue",
-        "typescript": "Solution().closestValue"
+        "typescript": "Solution().closestValue",
+        "valkyrie": "closestValue"
     }
 }

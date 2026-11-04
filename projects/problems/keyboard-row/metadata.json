@@ -1341,6 +1341,7 @@
     ],
     "invoke": {
         "python": "Solution().findWords",
-        "typescript": "Solution().findWords"
+        "typescript": "Solution().findWords",
+        "valkyrie": "findWords"
     }
 }

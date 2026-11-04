@@ -607,6 +607,7 @@
     ],
     "invoke": {
         "python": "Solution().reverseList",
-        "typescript": "Solution().reverseList"
+        "typescript": "Solution().reverseList",
+        "valkyrie": "reverseList"
     }
 }

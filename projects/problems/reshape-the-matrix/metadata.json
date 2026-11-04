@@ -783,6 +783,7 @@
     ],
     "invoke": {
         "python": "Solution().matrixReshape",
-        "typescript": "Solution().matrixReshape"
+        "typescript": "Solution().matrixReshape",
+        "valkyrie": "matrixReshape"
     }
 }

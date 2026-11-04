@@ -1,5 +1,6 @@
 export class Solution {
-    mergeTwoLists(list1: number[], list2: number[]): number[] {
+    mergeTwoLists(list1: number[], list2: number[]): number[] | null {
+        if (list1.length === 0 && list2.length === 0) return null;
         const out: number[] = [];
         let i = 0;
         let j = 0;

@@ -79,6 +79,7 @@
     ],
     "invoke": {
         "python": "Solution().preorderTraversal",
-        "typescript": "Solution().preorderTraversal"
+        "typescript": "Solution().preorderTraversal",
+        "valkyrie": "preorderTraversal"
     }
 }

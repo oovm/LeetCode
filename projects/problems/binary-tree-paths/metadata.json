@@ -190,6 +190,7 @@
     ],
     "invoke": {
         "python": "Solution().binaryTreePaths",
-        "typescript": "Solution().binaryTreePaths"
+        "typescript": "Solution().binaryTreePaths",
+        "valkyrie": "binaryTreePaths"
     }
 }

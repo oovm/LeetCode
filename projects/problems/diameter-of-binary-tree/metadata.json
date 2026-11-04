@@ -73,6 +73,7 @@
     ],
     "invoke": {
         "python": "Solution().diameterOfBinaryTree",
-        "typescript": "Solution().diameterOfBinaryTree"
+        "typescript": "Solution().diameterOfBinaryTree",
+        "valkyrie": "diameterOfBinaryTree"
     }
 }

@@ -1,5 +1,31 @@
-# 阻塞：std.collection 数组参数读取
-# 题内触发点：`p⁅i⁆` 与 `q⁅i⁆` 层序数组同步比对。
-# 期望语义：读取宿主传入数组的长度与下标元素。实际：`⁅ ⁆` 下标链路在 std 容器内部报 unresolved call `<computed>`，四 lane 同阻。
-# 最小复现：引用 merge-two-sorted-lists 的本能力首记复现。
-# 理想算法：同步比对，时间 O(n) 空间 O(1)。
+namespace leetcode.same_tree;
+
+# 两棵层序数组同步递归：任一侧缺节点就要求另一侧同样缺，都存在时再比值和子树。
+micro same(p: ArrayList<i64>, q: ArrayList<i64>, index: usize) -> bool {
+    let in_p: bool = index < p.length()
+    let in_q: bool = index < q.length()
+    if in_p == false {
+        return in_q == false
+    }
+    if in_q == false {
+        return false
+    }
+    if p⁅index⁆ != q⁅index⁆ {
+        return false
+    }
+    if same(p, q, 2 * index + 1) == false {
+        return false
+    }
+    return same(p, q, 2 * index + 2)
+}
+
+[export(case: "camelCase")]
+micro isSameTree(p: ArrayList<i64>, q: ArrayList<i64>) -> bool {
+    return same(p, q, 0)
+}
+
+class Solution {
+    micro isSameTree(self, p: ArrayList<i64>, q: ArrayList<i64>): bool {
+        return isSameTree(p, q)
+    }
+}

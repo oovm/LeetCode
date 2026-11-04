@@ -323,6 +323,7 @@
     ],
     "invoke": {
         "python": "Solution().countNodes",
-        "typescript": "Solution().countNodes"
+        "typescript": "Solution().countNodes",
+        "valkyrie": "countNodes"
     }
 }

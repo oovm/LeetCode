@@ -823,6 +823,7 @@
     ],
     "invoke": {
         "python": "Solution().removeElements",
-        "typescript": "Solution().removeElements"
+        "typescript": "Solution().removeElements",
+        "valkyrie": "removeElements"
     }
 }

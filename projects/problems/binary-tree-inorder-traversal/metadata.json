@@ -170,6 +170,7 @@
     ],
     "invoke": {
         "python": "Solution().inorderTraversal",
-        "typescript": "Solution().inorderTraversal"
+        "typescript": "Solution().inorderTraversal",
+        "valkyrie": "inorderTraversal"
     }
 }

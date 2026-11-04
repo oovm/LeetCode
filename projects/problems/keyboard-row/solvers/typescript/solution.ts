@@ -3,7 +3,8 @@ export class Solution {
         const row = (c: string): number => {
             if ("qwertyuiop".includes(c)) return 0;
             if ("asdfghjkl".includes(c)) return 1;
-            return 2;
+            if ("zxcvbnm".includes(c)) return 2;
+            return -1;
         };
         return words.filter((w) => {
             const r = row(w[0].toLowerCase());

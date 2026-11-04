@@ -792,6 +792,7 @@
         "python": "Solution().mergeTwoLists",
         "typescript": "Solution().mergeTwoLists",
         "wolframSxo": "mergeTwoLists",
-        "matlabSxo": "mergeTwoLists"
+        "matlabSxo": "mergeTwoLists",
+        "valkyrie": "mergeTwoLists"
     }
 }

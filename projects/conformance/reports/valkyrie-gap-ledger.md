@@ -165,6 +165,40 @@ $n
   引入提交为 `valkyrie.v` `d48011b`。任何含 std 的 `legionBuildProject`（包括此前已构建通过的题）
   都中止在该点，属于并行 std 线的在途状态，不是本题库缺口，也未被计入任何 `G` 编号。
   std 线修复后，R20 的 25 题按 `valkyrie-unverified-batches.md` 的 slug 复跑即可产出覆盖数。
+- 后续增量（2026-11-04，文本 / 哈希 / 树批次 R21 后）：canonical 实测 **727**（R21 前 698；本批 29 题，
+  新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；构建停点与 R20 相同
+  （`std/source/operator/comparable.v:169:26`）。
+
+### 依赖未实现特性的调用点（R21）
+
+- `Option<ArrayList<i64>>` 作为导出返回类型（空链表对应 `metadata.expected: null`）：
+  `merge-two-sorted-lists`（21）、`remove-duplicates-from-sorted-list`（83）、
+  `remove-linked-list-elements`（203）、`reverse-linked-list`（206）。
+  这是 G3 返回值方向的扩展：除 `ArrayList` 本体外，还要求 ABI 能 marshal `Option` 的 `None`。
+  标「依赖未实现的特性」，不标题目 blocked；文件照常计入 authored-unverified 产出。
+- 其余调用点只用源码已有签名：`ArrayList` 构造 / `push` / `clear` / `length`、`HashMap::new` /
+  `contains_key` / `get` / `insert` / `keys`、`HashSet::new` / `insert` / `length`、
+  `Utf8Builder::new` / `append` / `append_i64` / `build`、`utf8.concat` / `equals` / `length`、
+  `char as u32`。这些面**未经编译验证**（全局停点在前），不算缺口，也不再新增纸面 API。
+
+### 批量编译入口（备用，树绿后复跑）
+
+- R20 / R21 的逐题「编译 + 隔离判题」入口（在 `leetcode.v` 根目录，slug 取自
+  `valkyrie-unverified-batches.md` 的对应表格）：
+
+```powershell
+$slugs = @('teemo-attacking', 'array-partition')   # 其余 slug 按表补齐
+foreach ($slug in $slugs) {
+    node --import tsx projects/conformance/scripts/run_isolated_judge.ts `
+        "projects/problems/$slug" --lang valkyrie-wasm `
+        --iterations 1 --warmup 0 `
+        --artifact-dir ".cache/$slug-bench-node"
+}
+```
+
+- 全树矩阵入口（`projects/conformance` 下）：`pnpm matrix:valkyrie`，等价于
+  `node --import tsx src/cli/valkyrie-matrix.ts`；单题用 `--id <questionId>`，批量上限用
+  `$env:LEETCODE_MATRIX_LIMIT`，报告默认写 `reports/valkyrie-dual-matrix.json`。
 
 ## 系统性问题（观察，非编号）
 
@@ -423,6 +457,10 @@ micro sequential_digits(low: i64, high: i64) -> ArrayList<i64>
   schema 已生成，缺的是 glue 侧聚合类型的字段访问合同；编译期全部 `build=0`，与题目解法无关。
 - 影响：本批 36 题判题 0 通过（25 marshal + 11 demarshal）。该项恢复前，任何返回或接收
   `ArrayList` 的题都不能计入构建通过数。
+- R21 扩展面（`Option<ArrayList<i64>>` 返回，空链表 → `null`）：`merge-two-sorted-lists`、
+  `remove-duplicates-from-sorted-list`、`remove-linked-list-elements`、`reverse-linked-list`。
+  与上面的返回值方向同属 G3 边界，额外要求 glue 能表达 `Option` 的 `None`；同样**待验证**，
+  不另开编号。
 - 判定：**真缺口**（判据 c：入参 / 返回值由题面固定为 `ArrayList`，题解内改不了结构，ABI 边界也跨不过去）。
 
 ### G4 std `Utf8Builder.append(char)` 在 std 模块自编译时无法实例化（疑似失效，待复验）

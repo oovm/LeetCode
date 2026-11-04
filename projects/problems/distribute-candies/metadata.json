@@ -773,6 +773,7 @@
     ],
     "invoke": {
         "python": "Solution().distributeCandies",
-        "typescript": "Solution().distributeCandies"
+        "typescript": "Solution().distributeCandies",
+        "valkyrie": "distributeCandies"
     }
 }

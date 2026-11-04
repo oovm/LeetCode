@@ -1,5 +1,38 @@
-# 阻塞：std.collection 数组参数读取
-# 题内触发点：`root⁅i⁆` 层序数组自底向上高度校验。
-# 期望语义：读取宿主传入数组的长度与下标元素。实际：`⁅ ⁆` 下标链路在 std 容器内部报 unresolved call `<computed>`，四 lane 同阻。
-# 最小复现：引用 merge-two-sorted-lists 的本能力首记复现。
-# 理想算法：高度校验，时间 O(n) 空间 O(n)。
+namespace leetcode.balanced_binary_tree;
+
+# 自底向上高度校验：返回 -1 表示子树已不平衡，正数表示该子树高度，单次遍历 O(n)。
+micro height(root: ArrayList<i64>, index: usize) -> i64 {
+    if index >= root.length() {
+        return 0
+    }
+    let left: i64 = height(root, 2 * index + 1)
+    let right: i64 = height(root, 2 * index + 2)
+    if left < 0 {
+        return 0 - 1
+    }
+    if right < 0 {
+        return 0 - 1
+    }
+    let mut diff: i64 = left - right
+    if diff < 0 {
+        diff = 0 - diff
+    }
+    if diff > 1 {
+        return 0 - 1
+    }
+    if left > right {
+        return left + 1
+    }
+    return right + 1
+}
+
+[export(case: "camelCase")]
+micro isBalanced(root: ArrayList<i64>) -> bool {
+    return height(root, 0) >= 0
+}
+
+class Solution {
+    micro isBalanced(self, root: ArrayList<i64>): bool {
+        return isBalanced(root)
+    }
+}

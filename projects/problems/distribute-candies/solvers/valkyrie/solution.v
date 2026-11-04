@@ -1,5 +1,25 @@
-# 阻塞：std.collection 数组参数读取
-# 题内触发点：`candyType⁅i⁆` 异类计数与 n/2 取小（计数另需定长数组）。
-# 期望语义：读取宿主传入数组的长度与下标元素。实际：`⁅ ⁆` 下标链路在 std 容器内部报 unresolved call `<computed>`，四 lane 同阻。
-# 最小复现：引用 merge-two-sorted-lists 的本能力首记复现。
-# 理想算法：异类数取小，时间 O(n) 空间 O(n)。
+namespace leetcode.distribute_candies;
+
+using std.collection;
+
+# 种类数决定上限，最多只能分到「种类数」种；另一半上限是 n/2，两者取小。
+# 去重直接交给 `HashSet<i64>`，不手写排序。
+[export(case: "camelCase")]
+micro distributeCandies(candyType: ArrayList<i64>) -> i64 {
+    let mut kinds: HashSet<i64> = HashSet::new()
+    loop candy in candyType {
+        kinds.insert(candy)
+    }
+    let half: i64 = (candyType.length() / 2) as i64
+    let total: i64 = kinds.length() as i64
+    if total < half {
+        return total
+    }
+    return half
+}
+
+class Solution {
+    micro distributeCandies(self, candyType: ArrayList<i64>): i64 {
+        return distributeCandies(candyType)
+    }
+}
