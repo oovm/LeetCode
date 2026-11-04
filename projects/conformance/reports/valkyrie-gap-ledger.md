@@ -542,6 +542,64 @@ micro sum<I, T>(self: I, initial: T): T where I: Iterator<Item = T>
 - 修复初判：**加 API**。`max` / `min` 的泛型约束依赖 G15 的 `Comparable`；在此之前只能
   先定 `i64` 重载。
 
+### G21 序列反向没有一等入口
+
+- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/collection/ArrayList.v`、
+  `std/source/iterator/Iterator.v`、`std/source/text/Utf8Builder.v`）
+- 定性：**该有但没有，且三处同时缺**。`ArrayList` 有 `push` / `pop` / `first` / `last` 与
+  `insert` / `remove`，但没有 `reverse`；`Iterator` 有 `map` / `filter` / `skip` / `take` /
+  `enumerate`，但没有 `rev`；`Utf8Builder` 只有正向 `append`，没有 `prepend`。于是「低位先
+  追加、最后整段翻面」这种最常见的构造顺序，只能每次都手写双指针交换。
+- 期望签名：
+
+```v
+# std/source/collection/ArrayList.v
+micro reverse(mut self): unit
+
+# std/source/iterator/Iterator.v
+micro rev(self) -> RevIterator<Item, Self>
+
+# std/source/text/Utf8Builder.v
+micro prepend(mut self, value: char): unit
+```
+
+- 影响题（4）：`add-to-array-form-of-integer`（989，进位从个位起、结果需高位在前）、
+  `squares-of-a-sorted-array`（977，双端归并后整段翻面）、`add-binary`（67，builder 逐位追加
+  后再整串反转）、`multiply-strings`（43，同上以 builder 逆序承载）。
+- 不对称点：`LinkedList` 有 `iter_reverse`（回调式反向遍历），`ArrayList` 却连原地反转都没有；
+  `sort.v` 已有 `swap<T>(list, a, b)` 私有工具，说明双指针交换是 std 内部常识，只是没暴露成
+  `reverse`。`Utf8Builder` 的逆序构造在 2 题里靠「先拼再整串反转」绕过，等于多做一次全量拷贝。
+- 判定：**std 缺口**（不阻断：手写交换是等价表达）。
+- 修复初判：**加 API**。`reverse` 在 `swap` 之上十行即可；`RevIterator` 需要 `Iterator` 有
+  双端访问，若不做适配器，至少先补 `ArrayList::reverse`。
+- 表达力档位：**不属于表达力缺口**——有近似物（双指针交换 / 倒序下标循环）。
+
+### G22 整数位元查询缺席
+
+- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/primitive/` 的 `i64` 位运算面、
+  `std/source/math/basic.v`）
+- 定性：**该有但没有**。`i64` 有完整的 `&` / `|` / `^` / `<<` / `>>` / `bit_not`，却没有
+  任何一个位元查询：`count_ones` / `leading_zeros` / `trailing_zeros`。位图类题只能把整数打回
+  成 `while value > 0 { value % 2; value / 2 }` 的十进制循环，或自己写 Brian Kernighan 循环。
+- 期望签名：
+
+```v
+# std/source/primitive/i64.v（以及 u8–u64 / i8–i32 同族逐类型）
+micro count_ones(self): u32
+micro leading_zeros(self): u32
+micro trailing_zeros(self): u32
+```
+
+- 影响题（5，均已写、均以手写循环表达）：`number-of-1-bits`（191，模 2 循环计 1）、
+  `hamming-distance`（461，异或后逐位计数）、`minimum-bit-flips-to-convert-number`（2220，
+  异或后计 1）、`reverse-bits`（190，逐位搬运）、`binary-gap`（868，扫描连续 0 段）。
+- 不对称点：位运算算子齐全但位元查询为零；`BitSet` 在容器层有 `get` / `set`，标量层却没有
+  等价的「数 1 的个数」。这与 G20 同族（标量数值能力面只做了算子、没做归约），但作用对象是
+  位而不是数值大小，故单列。
+- 判定：**std 缺口**（不阻断：手写循环等价）。
+- 修复初判：**加 API**（逐 primitive 一个 host contract 或纯循环实现）。
+- 表达力档位：**不属于表达力缺口**——有近似物（手写循环）。
+
 ### 未命中面（第 3 批探测，2026-11-04，无强制影响题，故不编号）
 
 - **迭代器适配器族不是缺口**：`filter_map` / `skip_while` / `take_while` 都在
@@ -557,6 +615,31 @@ micro sum<I, T>(self: I, initial: T): T where I: Iterator<Item = T>
   **未提供，但不是缺口**——理想写法不依赖它。
 - **表达力缺口档仍只有 G8**：本批新增的 G19 是「模型已有、构造器缺失」，G20 是「重载与终端
   缺失」，两者都有等价写法（手动偏移、手写 fold），不属于「没有近似物」。
+
+### 未命中面（第 4 批探测，2026-11-04，无强制影响题，故不编号）
+
+- **`Array<T>` 定长写侧够用**：`⁅ ⁆` / `⁅ ⁆=` 两个合同覆盖定长载体就地读写，
+  `sort-colors`（75）、`rotate-image`（48）、`set-matrix-zeroes`（73）三题全程写穿原容器，
+  没有遇到「定长容器不能写」的问题；`[i64]` 作为宿主数组形参可直接使用（`find-numbers-...`、
+  `count-...-strings`、`find-minimum-...`），不需要中转 `ArrayList`。
+- **`ArrayView` 区间窗口仍无强制题**：本批 4 题都只需「下标在区间内单调收缩」
+  （`find-minimum-in-rotated-sorted-array` 的二分、`rotate-image` 的行内双指针、
+  `sort-colors` 的三路划分），索引循环即可表达，硬套 `array_view` 反而多一层间接。
+  G19 维持「已记、单实例（189）、非阻断」，**不因本批扩成第二实例**。
+- **迭代器适配器第二次确认存在**：`find-numbers-with-even-number-of-digits`（1295）以
+  `into_iterator().filter(...).count()` 直接跑通，`filter` / `count` 均为既有 API；
+  第 3 批「无匹配候选」的旧观测进一步作废。
+- **大整数 limb 面两次确认不需要类型**：`add-to-array-form-of-integer`（989）以十进制逐位
+  承载 + 自行进位，`multiply-strings`（43）同法；两题都不需要 `bigint`。**「按寄存器宽度切
+  limb」的形态在题库里仍无强制题**——需要它的题（`add-binary`、`multiply-strings`、`989`）
+  都以十进制 / 二进制逐位承载即可表达，缺的是「反向」而不是「limb」。
+- **`char` 能力面第三次确认**：`count-the-number-of-consistent-strings`（1684）本可写成
+  `HashSet<char>`（会命中 G17）或 `BTreeSet<char>`（会命中 G15），因 ASCII 域内 26 位掩码
+  本就是更优解，理想写法绕过了两者。**绕开不等于缺口消失**：G15 / G17 的 `char` 交叉引用
+  不因本题扩实例。
+- **表达力缺口档仍只有 G8**：本批新增 G21（反向无入口）、G22（位元查询缺席）都属「有等价
+  写法、只是没有一等入口」，G11 的 `sorted_by` 也属「容器形态不匹配」；「没有任何近似物」
+  仍只有无向图建模一条。
 
 ### 建模提示（G8 的根部，比缺 API 严重）
 

@@ -7,6 +7,32 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R4-2026-11-04（理想解滚动批次 4，8 题，写完未构建）
+
+- 范围：此前 `solution.v` 为阻塞标记（`# blocked: std.collection 数组参数读取`）的 8 题；
+  只补理想解，不改算法绕 std 缺口。选题偏置压「未被压过的面」：定长载体读写、区间二分、
+  迭代器适配器、十进制 limb、位掩码。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
+- 预期阻断：`height-checker` 的 `sorted_by(Array<T>, cmp)` 按 G11 在类型检查处阻断；
+  `add-to-array-form-of-integer` 返回值 `ArrayList<i64>` 按 G3 在 wasm JS glue 处阻断；
+  `sort-colors` / `rotate-image` / `set-matrix-zeroes` 的 `mut` 入参若 glue 未实现写回，
+  按 G3 同族阻断；其余只记能力面（G21 / G22），不阻断。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致（`matrix` / `num` / `k` /
+  `allowed` / `words` / `heights` / `nums`）；V 侧按 snake_case 书写，`invoke.valkyrie`
+  逐题登记为类方法 camelCase 名。
+- TS 参考解：8/8 复用既有非空实现，本轮未新写。
+
+| slug | 导出入口 | 返回类型 | 缺口 / 覆盖方向 |
+| --- | --- | --- | --- |
+| `sort-colors` | `sortColors` | `unit` | 定长载体写侧（三路划分，`⁅ ⁆=` 写穿） |
+| `height-checker` | `heightChecker` | `i64` | **G11**（`Array<T>` 无排序入口，需 `sorted_by(Array<T>)`） |
+| `find-minimum-in-rotated-sorted-array` | `findMin` | `i64` | `[i64]` 定长读侧 + 区间二分（ArrayView 非必需） |
+| `rotate-image` | `rotate` | `unit` | 嵌套载体写侧；G21（行内反转手写交换） |
+| `add-to-array-form-of-integer` | `addToArrayForm` | `ArrayList<i64>` | 十进制 limb 进位；G21（结果需反向）；G3 预计阻断 |
+| `count-the-number-of-consistent-strings` | `countConsistentStrings` | `i64` | u32 位掩码（`char` G15/G17 以掩码绕开）；G22 面 |
+| `find-numbers-with-even-number-of-digits` | `findNumbers` | `i64` | 迭代器 `filter` + `count`（适配器存在确认）；G20 面无整数 `log10` |
+| `set-matrix-zeroes` | `setZeroes` | `unit` | 嵌套载体写侧（首行首列当标记位，O(1) 额外空间） |
+
 ## 批次 R3-2026-11-04（理想解滚动批次 3，8 题，写完未构建）
 
 - 范围：此前 `solution.v` 为空或仅阻塞标记的 8 题；只补理想解，不改算法绕 std 缺口。
