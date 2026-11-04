@@ -202,6 +202,26 @@
   不是生成器造非法输入；`handshakes-that-dont-cross` 误删 2 条已恢复，39/39。
 - 新编号：**0 条**。
 
+## 批次 R30-2026-11-05（`pow` 遮蔽普查 + 剩余宿主文本处置，实测）
+
+- 范围：全库 2847 个 `solvers/python/solution.py` 的 `math` 通配导入 / 裸 `pow` 普查；R29 剩余 74 条
+  宿主文本逐题处置。
+- `pow` 普查：裸 `pow` 共 7 处（3 处上一提交已修，4 处本轮）。3 个静默点返回 `float`，但当前值与精确
+  整数逐位差 0（最大正确值 949480669 < 2^53），已统一改 `import builtins` + `builtins.pow`。
+- 两个报错点补重算：`count-k-subsequences-of-a-string-with-maximum-beauty` 44 条、
+  `final-array-state-after-k-multiplication-operations-ii` 107 条（真实运行产出；两题 `solution.v` 为空，
+  无 V lane）。
+- 剩余 74 条：救回 13 条（`number-of-strings-which-can-be-rearranged-to-contain-substring` 10 条迭代 DP、
+  `closest-fair-integer` 3 条迭代循环，等价性 `1..400` / `1..5000` mismatch=0）；维持删除 61 条，
+  全部是 `args` 违反题面约束（`decode-the-message` 的 key/message、`prime-palindrome` `n>1e8`、
+  `cells-in-a-range-on-an-excel-sheet` 多字母列、`merge-sorted-array` 缓冲不足、
+  `sort-array-by-parity-ii` 偶奇不等、`can-make-arithmetic-progression-from-sequence` 单元素、
+  `find-kth-bit-in-nth-binary-string` `k` 越界、`minimum-cost-to-set-cooking-time` `targetSeconds>6039`
+  得 `inf`）。
+- 覆盖下限复核：受影响题全部 `>= max(10, ceil(历史中位数 × 0.5))`；最紧
+  `cells-in-a-range-on-an-excel-sheet` 93 vs 92，最低 `prime-palindrome` 52 vs 31。
+- 新编号：**0 条**。
+
 ## 批次 R25-2026-11-04（Medium 图 / 并查集 / 拓扑排序 23 题，写完未构建）
 
 - 范围：Medium 的图 + 并查集 + 拓扑排序面，全部按**理想写法**落地：邻接表

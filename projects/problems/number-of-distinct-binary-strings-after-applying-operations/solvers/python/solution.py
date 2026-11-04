@@ -14,6 +14,7 @@ from bisect import *
 from string import *
 from operator import *
 from math import *
+import builtins
 
 inf = float('inf')
 
@@ -77,4 +78,4 @@ def is_same_tree(p, q):
 
 class Solution:
     def countDistinctStrings(self, s: str, k: int) -> int:
-        return pow(2, len(s) - k + 1) % (10**9 + 7)
+        return builtins.pow(2, len(s) - k + 1) % (10**9 + 7)

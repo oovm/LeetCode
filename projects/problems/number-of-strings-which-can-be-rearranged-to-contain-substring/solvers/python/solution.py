@@ -77,15 +77,21 @@ def is_same_tree(p, q):
 
 class Solution:
     def stringCount(self, n: int) -> int:
-        @cache
-        def dfs(i: int, l: int, e: int, t: int) -> int:
-            if i == 0:
-                return int(l == 1 and e == 2 and t == 1)
-            a = dfs(i - 1, l, e, t) * 23 % mod
-            b = dfs(i - 1, min(1, l + 1), e, t)
-            c = dfs(i - 1, l, min(2, e + 1), t)
-            d = dfs(i - 1, l, e, min(1, t + 1))
-            return (a + b + c + d) % mod
-
+        # 迭代 DP：状态 (l, e, t) 三个特殊字符的已出现计数，避免 n 大时递归超限。
         mod = 10**9 + 7
-        return dfs(n, 0, 0, 0)
+        dp = [[[0] * 2 for _ in range(3)] for _ in range(2)]
+        dp[0][0][0] = 1
+        for _ in range(n):
+            nxt = [[[0] * 2 for _ in range(3)] for _ in range(2)]
+            for l in range(2):
+                for e in range(3):
+                    for t in range(2):
+                        ways = dp[l][e][t]
+                        if not ways:
+                            continue
+                        nxt[l][e][t] = (nxt[l][e][t] + ways * 23) % mod
+                        nxt[1][e][t] = (nxt[1][e][t] + ways) % mod
+                        nxt[l][min(2, e + 1)][t] = (nxt[l][min(2, e + 1)][t] + ways) % mod
+                        nxt[l][e][1] = (nxt[l][e][1] + ways) % mod
+            dp = nxt
+        return dp[1][2][1]

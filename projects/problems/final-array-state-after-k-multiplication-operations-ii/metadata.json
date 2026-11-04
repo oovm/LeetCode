@@ -10,7 +10,7 @@
                 "k": 9,
                 "multiplier": 10
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [90, 80, 70, 60, 50, 40, 30, 20, 10]
         },
         {
             "args": {
@@ -18,7 +18,7 @@
                 "k": 3,
                 "multiplier": 4
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [9, 8, 28, 24, 20]
         },
         {
             "args": {
@@ -26,7 +26,7 @@
                 "k": 2,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [999999307, 999999993]
         },
         {
             "args": {
@@ -34,7 +34,7 @@
                 "k": 9,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [9, 8, 7, 12, 10, 8, 6, 8, 8]
         },
         {
             "args": {
@@ -42,7 +42,7 @@
                 "k": 4,
                 "multiplier": 4
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [9, 32, 28, 24, 20]
         },
         {
             "args": {
@@ -50,7 +50,7 @@
                 "k": 1,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [3, 2, 3, 4, 5]
         },
         {
             "args": {
@@ -58,7 +58,7 @@
                 "k": 4,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [3, 3, 3, 3]
         },
         {
             "args": {
@@ -66,7 +66,7 @@
                 "k": 3,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [9, 6, 3, 4, 5]
         },
         {
             "args": {
@@ -74,7 +74,7 @@
                 "k": 1,
                 "multiplier": 1000000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [49]
         },
         {
             "args": {
@@ -82,7 +82,7 @@
                 "k": 1,
                 "multiplier": 10
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [9, 8, 7, 6, 50]
         },
         {
             "args": {
@@ -90,7 +90,7 @@
                 "k": 3,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [5, 4, 15, 10, 5]
         },
         {
             "args": {
@@ -98,7 +98,7 @@
                 "k": 5,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [8, 4, 6, 5, 6]
         },
         {
             "args": {
@@ -106,7 +106,7 @@
                 "k": 10,
                 "multiplier": 10
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [999999657]
         },
         {
             "args": {
@@ -114,7 +114,7 @@
                 "k": 10,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [457005768]
         },
         {
             "args": {
@@ -122,7 +122,7 @@
                 "k": 2,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [10, 10, 5, 5, 5]
         },
         {
             "args": {
@@ -130,7 +130,7 @@
                 "k": 5,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [992000007, 991000007, 990000007, 989000007, 988000007]
         },
         {
             "args": {
@@ -138,7 +138,7 @@
                 "k": 15,
                 "multiplier": 100000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [100000, 300000, 500000, 700000, 900000, 1100000, 1300000, 1500000, 1700000, 1900000, 2100000, 2300000, 2500000, 2700000, 2900000]
         },
         {
             "args": {
@@ -146,7 +146,7 @@
                 "k": 5,
                 "multiplier": 999999999
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [64, 64, 64, 64, 64]
         },
         {
             "args": {
@@ -154,7 +154,7 @@
                 "k": 10,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [999993007, 999930007, 100000000, 1000000000, 999999937, 999999307, 999993007, 999930007, 100000000, 1000000000]
         },
         {
             "args": {
@@ -162,7 +162,7 @@
                 "k": 100,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [5120, 5120, 5120, 5120, 5120, 5120, 5120, 5120, 5120, 5120]
         },
         {
             "args": {
@@ -170,7 +170,7 @@
                 "k": 7,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [9, 9, 6, 9, 5, 3, 4]
         },
         {
             "args": {
@@ -178,7 +178,7 @@
                 "k": 100,
                 "multiplier": 999999
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [828904136, 345484381, 657808265, 966267868, 486712394, 587051348, 315616523, 207834828, 144520652, 828618315]
         },
         {
             "args": {
@@ -186,7 +186,7 @@
                 "k": 1000000000,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [315285300]
         },
         {
             "args": {
@@ -194,7 +194,7 @@
                 "k": 15,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [250, 500, 750, 200, 250, 250, 500, 150, 200, 250]
         },
         {
             "args": {
@@ -210,7 +210,7 @@
                 "k": 5,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [999999447, 999999975]
         },
         {
             "args": {
@@ -218,7 +218,7 @@
                 "k": 15,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [1250, 500, 750, 1000, 250, 300, 350, 400, 450, 500]
         },
         {
             "args": {
@@ -226,7 +226,7 @@
                 "k": 10,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [56000, 63000, 70000, 77000, 84000]
         },
         {
             "args": {
@@ -234,7 +234,7 @@
                 "k": 10,
                 "multiplier": 7
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [21, 7, 28, 7, 35, 9, 14, 42, 35, 21, 35]
         },
         {
             "args": {
@@ -242,7 +242,7 @@
                 "k": 1000000,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [35811231, 517905619, 276858425, 517905619, 397382022]
         },
         {
             "args": {
@@ -253,7 +253,7 @@
                 "k": 50,
                 "multiplier": 49
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [2401, 98, 147, 196, 245, 294, 343, 392, 441, 490, 539, 588, 637, 686, 735, 784, 833, 882, 931, 980, 1029, 1078, 1127, 1176, 1225, 1274, 1323, 1372, 1421, 1470, 1519, 1568, 1617, 1666, 1715, 1764, 1813, 1862, 1911, 1960, 2009, 2058, 2107, 2156, 2205, 2254, 2303, 2352, 2401, 50]
         },
         {
             "args": {
@@ -261,7 +261,7 @@
                 "k": 25,
                 "multiplier": 987654
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [573957987, 899642941, 235808168, 192459818, 184075507, 494720187]
         },
         {
             "args": {
@@ -269,7 +269,7 @@
                 "k": 10,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [1000000, 2000000, 3000000, 4000000, 5000000, 6000000, 7000000, 8000000, 9000000, 10000000]
         },
         {
             "args": {
@@ -277,7 +277,7 @@
                 "k": 100,
                 "multiplier": 10
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [1000000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000, 1400000, 1500000, 1600000, 1700000, 1800000, 1900000, 200000]
         },
         {
             "args": {
@@ -285,7 +285,7 @@
                 "k": 50,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [156250, 62500, 93750, 125000, 156250, 187500, 218750, 250000, 281250, 62500]
         },
         {
             "args": {
@@ -293,7 +293,7 @@
                 "k": 20,
                 "multiplier": 19
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [361, 38, 57, 76, 95, 114, 133, 152, 171, 190, 209, 228, 247, 266, 285, 304, 323, 342, 361, 20]
         },
         {
             "args": {
@@ -301,7 +301,7 @@
                 "k": 25,
                 "multiplier": 4
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [16, 16, 32, 32, 48, 12, 16, 16, 20, 20, 24, 24, 28, 28, 32, 32, 36, 36, 40, 40]
         },
         {
             "args": {
@@ -309,7 +309,7 @@
                 "k": 5000,
                 "multiplier": 100
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [587199608, 174399209, 761598817, 348798418, 935998026, 523197627, 110397228, 697596836, 284796437, 871996045, 459195646, 46395247, 633594855, 220794456, 807994064, 395193665, 982393273, 569592874, 156792475, 743992083]
         },
         {
             "args": {
@@ -317,7 +317,7 @@
                 "k": 10,
                 "multiplier": 10
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [10000, 10000, 10000, 10000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000]
         },
         {
             "args": {
@@ -325,7 +325,7 @@
                 "k": 10,
                 "multiplier": 11
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [11, 22, 33, 44, 55, 66, 77, 88, 99, 110]
         },
         {
             "args": {
@@ -333,7 +333,7 @@
                 "k": 10,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [15, 27, 24, 27, 27, 9, 21]
         },
         {
             "args": {
@@ -341,7 +341,7 @@
                 "k": 20,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [3125, 3125, 3125, 3125, 3125]
         },
         {
             "args": {
@@ -349,7 +349,7 @@
                 "k": 1000000000,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [477717621]
         },
         {
             "args": {
@@ -357,7 +357,7 @@
                 "k": 10,
                 "multiplier": 1000000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [999999664, 999999615, 555555211, 111110807, 666666410]
         },
         {
             "args": {
@@ -365,7 +365,7 @@
                 "k": 14,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [16, 8, 8, 12, 12, 8, 8]
         },
         {
             "args": {
@@ -373,7 +373,7 @@
                 "k": 20,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000, 7000000]
         },
         {
             "args": {
@@ -381,7 +381,7 @@
                 "k": 10000,
                 "multiplier": 10
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [782260089, 756452022, 134678026, 512904037, 891130048, 269356052, 647582063, 25808067, 404034078, 378226011, 116048610, 853871216, 591693815, 329516414, 67339013]
         },
         {
             "args": {
@@ -389,7 +389,7 @@
                 "k": 500000,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [249847790, 99939116, 199878232, 399756464, 359902587, 719805174]
         },
         {
             "args": {
@@ -397,7 +397,7 @@
                 "k": 50,
                 "multiplier": 100
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [1000000, 2000000, 3000000, 4000000, 5000000, 6000000, 7000000, 8000000, 9000000, 10000000, 110000, 120000, 130000, 140000, 150000, 160000, 170000, 180000, 190000, 200000]
         },
         {
             "args": {
@@ -405,7 +405,7 @@
                 "k": 25,
                 "multiplier": 100000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [965000007, 930000007, 895000007, 860000007, 825000007, 999997907, 999997557, 999997207, 999996857, 999996507]
         },
         {
             "args": {
@@ -413,7 +413,7 @@
                 "k": 7,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [21, 21, 24, 24, 27, 27, 30]
         },
         {
             "args": {
@@ -421,7 +421,7 @@
                 "k": 5,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [2, 2, 2, 2, 2]
         },
         {
             "args": {
@@ -429,7 +429,7 @@
                 "k": 500000,
                 "multiplier": 100000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [914828726, 829657445, 744486164, 659314883, 574143602, 488972321, 403801040, 318629759, 233458478, 148287197]
         },
         {
             "args": {
@@ -437,7 +437,7 @@
                 "k": 3,
                 "multiplier": 4
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [20, 12, 8, 12, 9]
         },
         {
             "args": {
@@ -445,7 +445,7 @@
                 "k": 10,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [992000007, 49, 991000007, 999986007, 990000007, 999979007]
         },
         {
             "args": {
@@ -453,7 +453,7 @@
                 "k": 15,
                 "multiplier": 7
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [490, 980, 210, 280, 350, 420, 490, 560, 630, 700, 770, 840, 910, 140, 150]
         },
         {
             "args": {
@@ -461,7 +461,7 @@
                 "k": 1000000000,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [571428574, 714285719]
         },
         {
             "args": {
@@ -469,7 +469,7 @@
                 "k": 100,
                 "multiplier": 7
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [605066070, 641731975, 68032902, 19437972, 29156958]
         },
         {
             "args": {
@@ -477,7 +477,7 @@
                 "k": 30,
                 "multiplier": 500000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [413665898, 336889663, 413665898, 336889663, 413665898, 174382675, 413665898, 174382675]
         },
         {
             "args": {
@@ -485,7 +485,7 @@
                 "k": 1000000,
                 "multiplier": 999999999
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [568336761]
         },
         {
             "args": {
@@ -493,7 +493,7 @@
                 "k": 30,
                 "multiplier": 10
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [999300007, 998600007, 997900007, 997200007, 996500007]
         },
         {
             "args": {
@@ -501,7 +501,7 @@
                 "k": 15,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [15, 25, 20, 25, 25, 45, 50, 30, 25, 15, 25, 45]
         },
         {
             "args": {
@@ -509,7 +509,7 @@
                 "k": 10,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [15, 36, 27, 18, 27]
         },
         {
             "args": {
@@ -517,7 +517,7 @@
                 "k": 10,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [25, 25, 25, 25, 25]
         },
         {
             "args": {
@@ -525,7 +525,7 @@
                 "k": 20,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000]
         },
         {
             "args": {
@@ -533,7 +533,7 @@
                 "k": 10,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [9, 18, 18, 9, 12, 15, 15, 6]
         },
         {
             "args": {
@@ -541,7 +541,7 @@
                 "k": 10,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [128, 80, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000]
         },
         {
             "args": {
@@ -549,7 +549,7 @@
                 "k": 1,
                 "multiplier": 10
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [9, 8, 7, 6, 5, 4, 3, 2, 10]
         },
         {
             "args": {
@@ -557,7 +557,7 @@
                 "k": 10000,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [688423210, 688423210, 688423210, 688423210, 688423210, 688423210, 688423210, 688423210, 688423210, 688423210]
         },
         {
             "args": {
@@ -565,7 +565,7 @@
                 "k": 10,
                 "multiplier": 11
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [110, 99, 88, 77, 66, 55, 44, 33, 22, 11]
         },
         {
             "args": {
@@ -573,7 +573,7 @@
                 "k": 9,
                 "multiplier": 9
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [81, 72, 63, 54, 45, 36, 27, 18, 9]
         },
         {
             "args": {
@@ -586,7 +586,7 @@
                 "k": 100,
                 "multiplier": 99
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [9801, 198, 297, 396, 495, 594, 693, 792, 891, 990, 1089, 1188, 1287, 1386, 1485, 1584, 1683, 1782, 1881, 1980, 2079, 2178, 2277, 2376, 2475, 2574, 2673, 2772, 2871, 2970, 3069, 3168, 3267, 3366, 3465, 3564, 3663, 3762, 3861, 3960, 4059, 4158, 4257, 4356, 4455, 4554, 4653, 4752, 4851, 4950, 5049, 5148, 5247, 5346, 5445, 5544, 5643, 5742, 5841, 5940, 6039, 6138, 6237, 6336, 6435, 6534, 6633, 6732, 6831, 6930, 7029, 7128, 7227, 7326, 7425, 7524, 7623, 7722, 7821, 7920, 8019, 8118, 8217, 8316, 8415, 8514, 8613, 8712, 8811, 8910, 9009, 9108, 9207, 9306, 9405, 9504, 9603, 9702, 9801, 100]
         },
         {
             "args": {
@@ -594,7 +594,7 @@
                 "k": 10,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [50, 20, 30, 40, 50, 60, 70, 80, 90, 20]
         },
         {
             "args": {
@@ -602,7 +602,7 @@
                 "k": 1000000000,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [860291332, 860291332, 860291332, 860291332, 860291332]
         },
         {
             "args": {
@@ -610,7 +610,7 @@
                 "k": 20,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [7000000, 11000000, 13000000, 17000000, 19000000, 23000000, 29000000, 31000000, 37000000, 41000000, 43000000, 47000000, 53000000, 59000000, 61000000, 67000000, 71000000, 73000000, 79000000, 83000000]
         },
         {
             "args": {
@@ -618,7 +618,7 @@
                 "k": 3,
                 "multiplier": 1000000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [49, 49, 49]
         },
         {
             "args": {
@@ -626,7 +626,7 @@
                 "k": 10,
                 "multiplier": 1000000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [999999664, 999999664, 999999664, 999999664, 999999664]
         },
         {
             "args": {
@@ -634,7 +634,7 @@
                 "k": 10,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [20, 20, 20, 20, 20]
         },
         {
             "args": {
@@ -642,7 +642,7 @@
                 "k": 30,
                 "multiplier": 17
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [289, 34, 51, 68, 85, 102, 119, 136, 153, 170, 187, 204, 221, 238, 255, 272, 289, 306, 323, 340, 357, 374, 391, 408, 425, 442, 459, 476, 493, 30]
         },
         {
             "args": {
@@ -650,7 +650,7 @@
                 "k": 5,
                 "multiplier": 999999999
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [64, 72, 80, 88, 96]
         },
         {
             "args": {
@@ -658,7 +658,7 @@
                 "k": 20,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [1250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 500]
         },
         {
             "args": {
@@ -666,7 +666,7 @@
                 "k": 7,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [15, 9, 8, 9, 6, 15, 9, 9]
         },
         {
             "args": {
@@ -674,7 +674,7 @@
                 "k": 100000000,
                 "multiplier": 1000000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [99452834, 99452834, 99452834, 99452834, 99452834]
         },
         {
             "args": {
@@ -682,7 +682,7 @@
                 "k": 2,
                 "multiplier": 1000000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [49, 49, 1000000000, 1000000000]
         },
         {
             "args": {
@@ -690,7 +690,7 @@
                 "k": 6,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [81, 90, 100, 1000, 10000, 100000]
         },
         {
             "args": {
@@ -698,7 +698,7 @@
                 "k": 10,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [9, 9, 12, 9, 15, 9, 6, 6, 15, 9, 5]
         },
         {
             "args": {
@@ -706,7 +706,7 @@
                 "k": 10,
                 "multiplier": 3
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [21, 18, 18, 24, 27, 12]
         },
         {
             "args": {
@@ -714,7 +714,7 @@
                 "k": 50,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [160, 144, 128, 112, 192, 160, 128, 192, 128, 128]
         },
         {
             "args": {
@@ -722,7 +722,7 @@
                 "k": 1000000,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [214743964, 214743964, 214743964, 214743964, 214743964, 214743964, 214743964, 214743964, 214743964, 214743964]
         },
         {
             "args": {
@@ -730,7 +730,7 @@
                 "k": 5,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [993000007, 992000007, 991000007, 70000]
         },
         {
             "args": {
@@ -738,7 +738,7 @@
                 "k": 1000000,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [475429954, 237714977, 237714977, 237714977, 237714977, 237714977, 237714977]
         },
         {
             "args": {
@@ -746,7 +746,7 @@
                 "k": 10,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [35, 35, 35, 35, 35, 35, 35, 35, 35, 35]
         },
         {
             "args": {
@@ -754,7 +754,7 @@
                 "k": 5,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [5, 8, 6, 4, 4]
         },
         {
             "args": {
@@ -762,7 +762,7 @@
                 "k": 15,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [250, 250, 250, 250, 250, 250, 250, 50]
         },
         {
             "args": {
@@ -778,7 +778,7 @@
                 "k": 20,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [32, 48, 40, 28, 44, 52, 34, 38, 46, 29]
         },
         {
             "args": {
@@ -786,7 +786,7 @@
                 "k": 15,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [1250, 500, 750, 1000, 250, 300, 350, 400, 450, 500]
         },
         {
             "args": {
@@ -794,7 +794,7 @@
                 "k": 100,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
         },
         {
             "args": {
@@ -802,7 +802,7 @@
                 "k": 1000000,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [162850775, 162850775, 162850775, 162850775, 162850775]
         },
         {
             "args": {
@@ -810,7 +810,7 @@
                 "k": 1000000,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858, 849079858]
         },
         {
             "args": {
@@ -818,7 +818,7 @@
                 "k": 500,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [797922655, 797922655, 797922655, 797922655, 797922655, 797922655, 797922655, 797922655, 797922655, 797922655]
         },
         {
             "args": {
@@ -826,7 +826,7 @@
                 "k": 30,
                 "multiplier": 1000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [49, 147, 245, 343, 441, 539, 637, 735, 833, 931]
         },
         {
             "args": {
@@ -834,7 +834,7 @@
                 "k": 5,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [250, 100, 150, 200, 50, 60, 70, 80, 90, 100]
         },
         {
             "args": {
@@ -842,7 +842,7 @@
                 "k": 7,
                 "multiplier": 13
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [2197, 1690, 1300, 13000, 10000, 100000, 1000000]
         },
         {
             "args": {
@@ -850,7 +850,7 @@
                 "k": 20,
                 "multiplier": 1000000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [49, 98, 147, 196, 245, 294, 343, 392, 441, 490]
         },
         {
             "args": {
@@ -858,7 +858,7 @@
                 "k": 500000000,
                 "multiplier": 2
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [269250196, 269250196, 269250196, 269250196, 269250196]
         },
         {
             "args": {
@@ -866,7 +866,7 @@
                 "k": 20,
                 "multiplier": 10
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [1000, 900, 800, 700, 600, 500, 400, 300, 200, 100]
         },
         {
             "args": {
@@ -874,7 +874,7 @@
                 "k": 20,
                 "multiplier": 1000000000
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [1000000000, 999999993, 999999986, 999999979, 999999972, 999999965, 999999958, 999999951, 999999944, 999999937, 999999930, 999999923, 999999916, 999999909, 999999902, 999999895, 999999888, 999999881, 999999874, 999999867]
         },
         {
             "args": {
@@ -882,7 +882,7 @@
                 "k": 25,
                 "multiplier": 5
             },
-            "expected": "Error: pow expected 2 arguments, got 3"
+            "expected": [625, 250, 375, 500, 125, 150, 175, 200, 225, 250]
         }
     ],
     "invoke": {

@@ -77,19 +77,19 @@ def is_same_tree(p, q):
 
 class Solution:
     def closestFair(self, n: int) -> int:
-        a = b = k = 0
-        t = n
-        while t:
-            if (t % 10) & 1:
-                a += 1
-            else:
-                b += 1
-            t //= 10
-            k += 1
-        if k & 1:
-            x = 10**k
-            y = int('1' * (k >> 1) or '0')
-            return x + y
-        if a == b:
-            return n
-        return self.closestFair(n + 1)
+        # 迭代版：原递归每步 n+1，大 n 时深度超限；逻辑保持不变。
+        while True:
+            a = b = k = 0
+            t = n
+            while t:
+                if (t % 10) & 1:
+                    a += 1
+                else:
+                    b += 1
+                t //= 10
+                k += 1
+            if k & 1:
+                return 10**k + int('1' * (k >> 1) or '0')
+            if a == b:
+                return n
+            n += 1

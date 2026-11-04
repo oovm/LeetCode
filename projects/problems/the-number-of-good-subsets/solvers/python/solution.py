@@ -14,6 +14,7 @@ from bisect import *
 from string import *
 from operator import *
 from math import *
+import builtins
 
 inf = float('inf')
 
@@ -82,7 +83,7 @@ class Solution:
         mod = 10**9 + 7
         n = len(primes)
         f = [0] * (1 << n)
-        f[0] = pow(2, cnt[1])
+        f[0] = builtins.pow(2, cnt[1])
         for x in range(2, 31):
             if cnt[x] == 0 or x % 4 == 0 or x % 9 == 0 or x % 25 == 0:
                 continue

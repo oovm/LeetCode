@@ -14,6 +14,7 @@ from bisect import *
 from string import *
 from operator import *
 from math import *
+import builtins
 
 inf = float('inf')
 
@@ -90,5 +91,5 @@ class Solution:
         mod = 10**9 + 7
         pq.sort()
         for i, (x, j) in enumerate(pq):
-            nums[j] = x * pow(multiplier, k // n + int(i < k % n), mod) % mod
+            nums[j] = x * builtins.pow(multiplier, k // n + int(i < k % n), mod) % mod
         return nums
