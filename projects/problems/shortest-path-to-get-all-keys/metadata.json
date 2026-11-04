@@ -113,28 +113,8 @@
             "expected": 4
         },
         {
-            "args": {
-                "grid": [
-                    "@abcdef",
-                    "ghijklm",
-                    "nopqrst",
-                    "uvwxyz.",
-                    "A.....B",
-                    "C.....D",
-                    "E.....F",
-                    "G.....H",
-                    "I.....J",
-                    "K.....L",
-                    "M.....N",
-                    "O.....P",
-                    "Q.....R",
-                    "S.....T",
-                    "U.....V",
-                    "W.....X",
-                    "Y.....Z"
-                ]
-            },
-            "expected": "Execution timed out"
+            "args": {"grid": ["@abcdef", "###..gh", "ijkl..m", "nopqr.."]},
+            "expected": 21
         },
         {
             "args": {
@@ -519,6 +499,7 @@
     ],
     "invoke": {
         "python": "Solution().shortestPathAllKeys",
-        "typescript": "Solution().shortestPathAllKeys"
+        "typescript": "Solution().shortestPathAllKeys",
+        "valkyrie": "shortestPathAllKeys"
     }
 }

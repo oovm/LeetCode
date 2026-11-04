@@ -668,6 +668,7 @@
     ],
     "invoke": {
         "python": "Solution().findDuplicates",
-        "typescript": "Solution().findDuplicates"
+        "typescript": "Solution().findDuplicates",
+        "valkyrie": "findDuplicates"
     }
 }

@@ -1,5 +1,21 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: findDuplicates 需要 读取 nums 原地标记找重复
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.solution
+
+using std.collection
+
+# 题内触发点: `BitSet(n + 1)` 作为出现标记；`get` 判定第二次出现，`set` 记账。
+class Solution {
+    [export(case: "findDuplicates")]
+    micro findDuplicates(nums: ArrayList<i64>) -> ArrayList<i64> {
+        let seen: BitSet = BitSet::with_capacity(nums.length() + 1)
+        let out: ArrayList<i64> = ArrayList::new(nums.length())
+        loop value in nums {
+            let index: usize = value as usize
+            if seen.get(index) {
+                out.push(value)
+            } else {
+                seen.set(index)
+            }
+        }
+        return out
+    }
+}

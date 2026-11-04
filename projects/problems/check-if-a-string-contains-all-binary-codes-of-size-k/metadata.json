@@ -721,6 +721,7 @@
     ],
     "invoke": {
         "python": "Solution().hasAllCodes",
-        "typescript": "Solution().hasAllCodes"
+        "typescript": "Solution().hasAllCodes",
+        "valkyrie": "hasAllCodes"
     }
 }

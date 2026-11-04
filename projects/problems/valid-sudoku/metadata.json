@@ -337,6 +337,7 @@
     "invoke": {
         "python": "Solution().isValidSudoku",
         "typescript": "Solution().isValidSudoku",
+        "valkyrie": "isValidSudoku",
         "wolframSxo": "isValidSudoku",
         "matlabSxo": "isValidSudoku"
     }

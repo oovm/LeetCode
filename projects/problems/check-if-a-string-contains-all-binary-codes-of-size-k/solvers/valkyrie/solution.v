@@ -1,5 +1,42 @@
-# 阻塞：std.text 文本索引/构造
-# 题内触发点：`s⁅i⁆` 滑窗 k 位子串入集合查覆盖（集合另需哈希表）。
-# 期望语义：文本按下标读字符、切分/拼接/比较/构造。实际：std.text 这些能力在 intrinsic 清退后未就绪（工具链冻结，无法实跑验证），不开降级绿灯。
-# 最小复现：引用 find-the-index-of-the-first-occurrence-in-a-string 的本能力首记复现。
-# 理想算法：滑窗集合覆盖 2^k，时间 O(n) 空间 O(2^k)。
+namespace leetcode.solution
+
+using std.collection
+
+# 题内触发点: `BitSet(2^k)` 记录所有长度为 k 的子串码值；置位数只能外部累计（G25 无 `count`）。
+class Solution {
+    [export(case: "hasAllCodes")]
+    micro hasAllCodes(s: utf8, k: i64) -> bool {
+        let width: usize = k as usize
+        let mut universe: usize = 1
+        let mut step: usize = 0
+        while step < width {
+            universe = universe * 2
+            step = step + 1
+        }
+        let codes: BitSet = BitSet::with_capacity(universe)
+        let length: usize = s.byte_length()
+        if length < width {
+            return false
+        }
+        let mut found: usize = 0
+        let mut start: usize = 0
+        while start + width <= length {
+            let mut value: usize = 0
+            let mut offset: usize = 0
+            while offset < width {
+                let code: u8 = s.byte_at(start + offset)
+                value = value * 2 + ((code - 48) as usize)
+                offset = offset + 1
+            }
+            if !codes.get(value) {
+                codes.set(value)
+                found = found + 1
+            }
+            start = start + 1
+        }
+        if found == universe {
+            return true
+        }
+        return false
+    }
+}
