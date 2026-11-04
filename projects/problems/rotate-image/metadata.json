@@ -310,6 +310,7 @@
         "python": "Solution().rotate",
         "typescript": "Solution().rotate",
         "wolframSxo": "rotate",
-        "matlabSxo": "rotate"
+        "matlabSxo": "rotate",
+        "valkyrie": "rotate"
     }
 }

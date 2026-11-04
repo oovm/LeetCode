@@ -532,6 +532,7 @@
     ],
     "invoke": {
         "python": "Solution().addToArrayForm",
-        "typescript": "Solution().addToArrayForm"
+        "typescript": "Solution().addToArrayForm",
+        "valkyrie": "addToArrayForm"
     }
 }
