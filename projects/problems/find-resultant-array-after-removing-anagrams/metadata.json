@@ -1633,6 +1633,7 @@
     ],
     "invoke": {
         "python": "Solution().removeAnagrams",
-        "typescript": "Solution().removeAnagrams"
+        "typescript": "Solution().removeAnagrams",
+        "valkyrie": "removeAnagrams"
     }
 }

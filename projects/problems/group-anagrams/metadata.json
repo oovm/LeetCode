@@ -1362,6 +1362,7 @@
     "invoke": {
         "python": "Solution().groupAnagrams",
         "typescript": "Solution().groupAnagrams",
+        "valkyrie": "groupAnagrams",
         "wolframSxo": "groupAnagrams",
         "matlabSxo": "groupAnagrams"
     }
