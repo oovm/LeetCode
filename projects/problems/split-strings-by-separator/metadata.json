@@ -1077,6 +1077,7 @@
     ],
     "invoke": {
         "python": "Solution().splitWordsBySeparator",
-        "typescript": "Solution().splitWordsBySeparator"
+        "typescript": "Solution().splitWordsBySeparator",
+        "valkyrie": "splitWordsBySeparator"
     }
 }
