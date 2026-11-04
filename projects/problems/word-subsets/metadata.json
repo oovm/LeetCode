@@ -1102,6 +1102,7 @@
     ],
     "invoke": {
         "python": "Solution().wordSubsets",
-        "typescript": "Solution().wordSubsets"
+        "typescript": "Solution().wordSubsets",
+        "valkyrie": "wordSubsets"
     }
 }

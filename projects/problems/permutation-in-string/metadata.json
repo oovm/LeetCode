@@ -672,6 +672,7 @@
     ],
     "invoke": {
         "python": "Solution().checkInclusion",
-        "typescript": "Solution().checkInclusion"
+        "typescript": "Solution().checkInclusion",
+        "valkyrie": "checkInclusion"
     }
 }
