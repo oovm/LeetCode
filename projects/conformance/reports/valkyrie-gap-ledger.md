@@ -160,14 +160,21 @@ $n
 
 - 后续增量（2026-11-04，Easy 标量池批次 R20 后）：canonical 实测 **698**（R20 前 673；本批 25 题，
   新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`。
-- **当前构建停点（R20 实测，2026-11-04）**：std 闭包在 HEAD 的前端解析回归，
+- **当前构建停点（R20 实测，2026-11-04）**：**addon 二进制基线过期**，不是语言 / 标准库回归。
+  `legion` / `legionBuildProject` 实际加载的是
+  `nyar-vm.rs/projects/nyar.ts/platforms/valkyrie-win32-x64/lib/valkyrie.win32-x64-msvc.node`
+  （构建时间 2026-11-03 19:14，内嵌 oak ≤ `1e601f51`）；而 `trait` 成员带默认体、带 `infix`
+  修饰的语法要到 oak `5c39f0f4`（2026-11-04 14:36）才支持，`nyar-vm.rs` 在 14:45 才提 pin。
+  实测同一旧 addon 下 ovm 与 wasm 两个 target 都是 131/131 命中
   `std/source/operator/comparable.v:169:26`（`trait Comparable` 的 `infix \`<\`` 成员），
-  引入提交为 `valkyrie.v` `d48011b`。任何含 std 的 `legionBuildProject`（包括此前已构建通过的题）
-  都中止在该点，属于并行 std 线的在途状态，不是本题库缺口，也未被计入任何 `G` 编号。
-  std 线修复后，R20 的 25 题按 `valkyrie-unverified-batches.md` 的 slug 复跑即可产出覆盖数。
+  错误码 `valkyrie.frontend.parse.syntax`，失败在语法阶段。`valkyrie.v` `d48011b` 只是
+  **首个触发者**，不是引入回归的提交。
+  `comparable.v` 不为旧 grammar 降级改写，它在 oak `555798a8` 下合法。
+  该停点不归本题库，也未被计入任何 `G` 编号；**待 addon 重建到含 oak `5c39f0f4` 的基线后关闭**，
+  之后 R20 的 25 题按 `valkyrie-unverified-batches.md` 的 slug 复跑即可产出覆盖数。
 - 后续增量（2026-11-04，文本 / 哈希 / 树批次 R21 后）：canonical 实测 **727**（R21 前 698；本批 29 题，
   新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；构建停点与 R20 相同
-  （`std/source/operator/comparable.v:169:26`）。
+  （同一 addon 基线过期，非 std 回归）。
 
 ### 依赖未实现特性的调用点（R21）
 
@@ -199,6 +206,20 @@ foreach ($slug in $slugs) {
 - 全树矩阵入口（`projects/conformance` 下）：`pnpm matrix:valkyrie`，等价于
   `node --import tsx src/cli/valkyrie-matrix.ts`；单题用 `--id <questionId>`，批量上限用
   `$env:LEETCODE_MATRIX_LIMIT`，报告默认写 `reports/valkyrie-dual-matrix.json`。
+
+### 工具链新鲜度守卫（建议，先不实现）
+
+- 现象：addon 的构建时间 / 内嵌 oak rev 早于 `Cargo.lock` 里 pin 的 oak rev 时，
+  `legionBuildProject` 会在语法阶段报 `valkyrie.frontend.parse.syntax`，位置落在 std 源码里，
+  极易被误记成「std 前端回归」。R20 / R21 的停点就是这种情况。
+- 建议在构建入口（`legion` / `legionBuildProject` 包装层）增加前置自检：
+  1) 读取实际加载的 addon 路径与文件构建时间；
+  2) 从 addon 元数据 / 构建清单取内嵌 oak commit（取不到时用 addon 文件 mtime 作代理）；
+  3) 与仓库 `Cargo.lock` 里的 oak `rev` 比对。
+- 不一致时**结构化失败**：错误码 `valkyrie.toolchain.stale`，消息同时给出
+  「addon 构建时间 / 内嵌 commit / 期望 rev / 重建命令」，不再继续解析 std 源码。
+- 目的：把工具链问题稳定归因为工具链，避免再被记成语言 / 标准库缺口。
+  本条只作建议，实现落点在工具链侧，不在 `leetcode.v`。
 
 ## 系统性问题（观察，非编号）
 
