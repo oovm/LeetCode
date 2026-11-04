@@ -726,6 +726,7 @@
     ],
     "invoke": {
         "python": "Solution().maxAreaOfIsland",
-        "typescript": "Solution().maxAreaOfIsland"
+        "typescript": "Solution().maxAreaOfIsland",
+        "valkyrie": "maxAreaOfIsland"
     }
 }

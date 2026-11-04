@@ -7,6 +7,56 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R18-2026-11-04（理想解滚动批次 18，8 题，写完未构建）
+
+- 范围：**第一批全部避开真缺口**（G2 / G3 / G9 / G10 / G11 / G13 / G16 / G17 / G22 / G25 / G26），
+  只落在观察档与既有设计内：哈希计数、原地标记、网格 DFS、滑动窗口、后缀扫描、二分答案。
+- 构建 / 判题状态：**未验证**，全部 `authored-unverified`，本轮按口径**不编译、不跑**。
+- 新缺口：**0 条**。canonical 657 → **665**。
+- 反向验证意义：本批是账本判据的对照组（见 `valkyrie-gap-ledger.md` 同句）——若真评后有题撞到
+  新缺口，说明判据仍有漏；若全部干净通过，说明「观察档」可用。
+- 纸面 API：**0 个**。全部调用点只使用源码已有签名（`HashMap::new(capacity)` / `contains_key` /
+  `get` / `insert`、`ArrayList::new(capacity)` / `push` / `length`、`⁅ ⁆` 下标读写）。
+- 比较器数量：**0**；本批没有题传 `micro(T, T) -> i32`，也没有自定义记录排序。
+- 入口签名：8/8 导出形参与 `metadata.tests.args` 键同序
+  （`nums`+`k` / `nums` / `grid` / `nums`+`k` / `nums` / `nums`+`left`+`right` / `grid` / `piles`+`h`）。
+
+| 题号 | slug | 入口 | 返回 | 考点 / 命中面 |
+| --- | --- | --- | --- | --- |
+| 560 | `subarray-sum-equals-k` | `subarraySum` | `i64` | 前缀和 + `HashMap<i64,i64>` 频次；分支尾不写 `insert`（避开 G7 形态） |
+| 565 | `array-nesting` | `arrayNesting` | `i64` | 原地把已访问位置改 `-1`，按环长取最大 |
+| 695 | `max-area-of-island` | `maxAreaOfIsland` | `i64` | 网格 DFS，递归 `sink` 把陆地改 0；行列长度分别取 |
+| 713 | `subarray-product-less-than-k` | `numSubarrayProductLessThanK` | `i64` | 滑动窗口，乘积超界时左移并整除回退 |
+| 775 | `global-and-local-inversions` | `isIdealPermutation` | `bool` | 后缀最小值扫描；**不假设输入是排列** |
+| 795 | `number-of-subarrays-with-bounded-maximum` | `numSubarrayBoundedMax` | `i64` | 两次「上界不超过」的连续段计数差分 |
+| 807 | `max-increase-to-keep-city-skyline` | `maxIncreaseKeepingSkyline` | `i64` | 行 / 列最大值分别取，逐格取较小者；入参嵌套 `ArrayList` |
+| 875 | `koko-eating-bananas` | `minEatingSpeed` | `i64` | 二分答案；不可行分支按生成器约定返回 `max+1` |
+
+- marshal 面（**待验证**）：695 / 807 入参为 `ArrayList<ArrayList<i64>>`。G3 是真缺口，但 G3 记的是
+  返回侧 JS glue 的 `ArrayList` ABI；入参嵌套数组是否走同一条 ABI **不预先判定**，留待真评。
+- TS 参考解：8 题新写，算法与 V 解同阶同语义；按本轮口径**未实跑**。
+- 数据清洗（先核对「是不是解法假设错了」，再决定删 / 留）：
+  - `array-nesting`（565）：**删 3 条**（原 test 6 / 27 / 90）。`nums` 长度为 10 却含值 `10`，
+    违反题面「`nums` 是 `[0, n-1]` 的排列」，Python 侧以 `list assignment index out of range`
+    兜底；V 侧越界 panic 的消息形态不同，无法作为 `expected` 比对，属平台非法用例。
+    删后 100 条 → 97 条。
+  - `subarray-product-less-than-k`（713）：**删 1 条**（原 test 98）。`nums` 含 `0.1` / `0.01`
+    浮点值，`ArrayList<i64>` 无法承载，属类型非法的生成器用例。删后 128 条 → 127 条。
+  - `subarray-sum-equals-k`（560）：**不删**。多条 `nums` 取值超出题面 `-1000..1000`，但前缀和
+    在 i64 内良定义，`expected` 自洽。
+  - `number-of-subarrays-with-bounded-maximum`（795）：**不删**。`right` 有多条超出 `1e9`，
+    i64 内计数仍自洽。
+  - `global-and-local-inversions`（775）：**不删，也不改题面假设**。生成器含非排列输入，
+    题面「排列」不成立；但「全局逆序数 == 局部逆序数」在任意序列上仍良定义。
+    原按 `abs(nums[i] - i) <= 1` 的写法会误判 test 41（`[1,2,4,3,6,5,8,7,10,9]`，
+    4 个全局逆序 / 4 个局部逆序，`expected = true`），故改写成后缀最小值扫描。
+  - `max-increase-to-keep-city-skyline`（807）：**不删**。1 条 4×3 非方阵违反题面 `n×n`，
+    但行 / 列各自取最大值后答案自洽；解法按行列独立长度处理，不假设方阵，已在源码注释标注。
+  - `koko-eating-bananas`（875）：**不删**。22 条 `h < piles.length` 违反题面 `h >= piles.length`，
+    其 `expected` 统一为 `max(piles)+1`；解法在该情形返回 `max+1`，源码注释已标为按生成器约定的
+    有意扩展，不是对题面上界的假设。
+  - `max-area-of-island`（695）：无非法用例。
+
 ## 批次 R17-2026-11-04（理想解滚动批次 17，8 题，写完未构建）
 
 - 范围：继续避开 G26 / G27，优先把 **G25**（`BitSet` 缺 `count` / `length` / 迭代 / `clone` /

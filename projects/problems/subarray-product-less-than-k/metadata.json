@@ -692,13 +692,6 @@
         },
         {
             "args": {
-                "nums": [100, 10, 1, 0.1, 0.01],
-                "k": 1000
-            },
-            "expected": 11
-        },
-        {
-            "args": {
                 "nums": [999, 998, 997, 996, 995],
                 "k": 900000
             },
@@ -903,6 +896,7 @@
     ],
     "invoke": {
         "python": "Solution().numSubarrayProductLessThanK",
-        "typescript": "Solution().numSubarrayProductLessThanK"
+        "typescript": "Solution().numSubarrayProductLessThanK",
+        "valkyrie": "numSubarrayProductLessThanK"
     }
 }

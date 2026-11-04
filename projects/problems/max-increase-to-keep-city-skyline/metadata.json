@@ -511,6 +511,7 @@
     ],
     "invoke": {
         "python": "Solution().maxIncreaseKeepingSkyline",
-        "typescript": "Solution().maxIncreaseKeepingSkyline"
+        "typescript": "Solution().maxIncreaseKeepingSkyline",
+        "valkyrie": "maxIncreaseKeepingSkyline"
     }
 }

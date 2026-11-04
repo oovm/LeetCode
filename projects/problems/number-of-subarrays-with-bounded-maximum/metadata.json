@@ -818,6 +818,7 @@
     ],
     "invoke": {
         "python": "Solution().numSubarrayBoundedMax",
-        "typescript": "Solution().numSubarrayBoundedMax"
+        "typescript": "Solution().numSubarrayBoundedMax",
+        "valkyrie": "numSubarrayBoundedMax"
     }
 }

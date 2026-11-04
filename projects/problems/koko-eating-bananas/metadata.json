@@ -875,6 +875,7 @@
     ],
     "invoke": {
         "python": "Solution().minEatingSpeed",
-        "typescript": "Solution().minEatingSpeed"
+        "typescript": "Solution().minEatingSpeed",
+        "valkyrie": "minEatingSpeed"
     }
 }

@@ -661,6 +661,7 @@
     ],
     "invoke": {
         "python": "Solution().isIdealPermutation",
-        "typescript": "Solution().isIdealPermutation"
+        "typescript": "Solution().isIdealPermutation",
+        "valkyrie": "isIdealPermutation"
     }
 }
