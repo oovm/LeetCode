@@ -1,5 +1,29 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: findCenter 需要 读取 edges 求公共端点
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.find_center_of_star_graph;
+
+# 星形图的中心出现在每条边上，度数 ≥ 2；其余点度数恒为 1。
+[export(case: "camelCase")]
+micro find_center(edges: ArrayList<ArrayList<i64>>) -> i64 {
+    let mut network: DirectedGraph<i64> = DirectedGraph::new()
+    loop edge in edges {
+        network.add_edge(edge⁅0⁆, edge⁅1⁆)
+        network.add_edge(edge⁅1⁆, edge⁅0⁆)
+    }
+
+    let threshold: usize = 2
+    let nodes: ArrayList<i64> = network.nodes()
+    let mut i: usize = 0
+    while i < nodes.length() {
+        let node: i64 = nodes⁅i⁆
+        if network.out_degree(node) >= threshold {
+            return node
+        }
+        i = i + 1
+    }
+    return -1
+}
+
+class Solution {
+    micro findCenter(self, edges: ArrayList<ArrayList<i64>>): i64 {
+        return find_center(edges)
+    }
+}
