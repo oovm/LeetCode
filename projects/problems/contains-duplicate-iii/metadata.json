@@ -1918,6 +1918,7 @@
     ],
     "invoke": {
         "python": "Solution().containsNearbyAlmostDuplicate",
-        "typescript": "Solution().containsNearbyAlmostDuplicate"
+        "typescript": "Solution().containsNearbyAlmostDuplicate",
+        "valkyrie": "containsNearbyAlmostDuplicate"
     }
 }

@@ -1523,6 +1523,7 @@
     ],
     "invoke": {
         "python": "Solution().equationsPossible",
-        "typescript": "Solution().equationsPossible"
+        "typescript": "Solution().equationsPossible",
+        "valkyrie": "equationsPossible"
     }
 }
