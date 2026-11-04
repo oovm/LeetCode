@@ -58,6 +58,8 @@ $n
   但新增观察 4：R4–R8 的若干解法调用了尚不存在的提案 API，需在验证窗口前更正）。
 - 后续增量（2026-11-04，滚动批次 R10 后）：canonical 实测 **601**（R10 前 593；本批新编号 0 条，
   四个点名 API 面仍无自然调用点，见「未命中面（第 10 批探测）」）。
+- 后续增量（2026-11-04，滚动批次 R11 后）：canonical 实测 **609**（R11 前 601；本批新编号 0 条，
+  `remove` / `to_array` / `iterator` / `nth` 四个面按新口径跳过，改压写侧与容器构造面，见观察 6）。
 
 ## 系统性问题（观察，非编号）
 
@@ -145,6 +147,21 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
   `to_lower` / `to_upper` 的 locale 与码位范围，全部由 adaptor 侧决定；在 std 层**不可核对**。
 - 约束：任何依赖这四个函数的题解必须显式标注「语义未定，待 adaptor 侧确认」，不得写成既成事实，
   也不得据此断言与主流同向；验证窗口若按宿主实测有偏差，以宿主行为为准并回填本观察。
+
+### 观察 6：`ArrayList.to_array()` 与 `HashMap.iterator` 判为「可疑冗余」（只记账，暂不动）
+
+2026-11-04 第 11 批选题复核后立条，为 std 裁剪攒第二手证据。
+
+- `ArrayList.to_array()`：全仓 `solvers/valkyrie/**` **0 次调用**；唯一使用者是 std 内部的
+  `Utf8Builder.build()`（`self.bytes.to_array()`）。返回数组一律走 `ArrayList`（全库无 `-> [i64]`
+  先例），宿主入参本身已是 `[T]` 或 `ArrayList<T>`，题内没有「必须降成定长数组再交回」的形态。
+  R9–R11 三批共 24 题逐题核对，仍无自然调用点。
+- `HashMap.iterator(f: micro(K, V) -> unit)`：回调**无捕获**，无法在遍历时写入外部容器、累加计数器
+  或提前中断。凡需要「遍历 + 写入」的题（1636 频次编码、2363 键物化、第 11 批 438/30 的滑窗计数）
+  都只能 `keys()` 物化后在外层循环处理。回调形态本身承载不了任何有副作用的遍历。
+- 结论：两者都**不是缺口**（有等价写法），但属于「有入口、零有效用法」的可疑冗余。
+- **口径：验证窗口打开前不动，只记账**。待宿主 / adaptor 实测确认后再决定是否裁剪，避免在未验证
+  语料上先删接口、后补回。
 
 ## 未恢复
 
@@ -454,6 +471,10 @@ micro compare(self, other: utf8) -> i32   # <0 / 0 / >0，按码位（与 UTF-8 
   `byte_length` / `byte_at` 逐字节比较。
 - 附注：`Utf8Text` 的 `trim` / `replace` / `to_lower` / `to_upper` 是 `[host_contract]` 空壳，
   语义不可核对，见观察 5；依赖它们的题解必须标「语义未定」。
+- 附注（第 11 批）：`find-all-anagrams-in-a-string`（438）、`substring-with-concatenation-of-all-words`
+  （30）、`restore-ip-addresses`（93）、`letter-combinations-of-a-phone-number`（17）都需要逐字符
+  处理 ASCII 文本，因无码点视图只能 `byte_at` 逐字节走；这些题**不**涉及字典序比较，故不并入上面的
+  「影响题」计数，只记在「不对称点」。
 - 不对称点：`char` 只有 `as u32` 转换运算符、**无 `<`**、也不是 `Ordinal` 载体（`char.v` 仅实现
   `==` / `!=`）；`utf8` 连可比较的码位视图都没有。（此前记作「`char` 可经 `Ordinal` 转 `u32`」，
   该论断错误，已更正。）
@@ -958,6 +979,32 @@ micro to_sorted_list(self) -> ArrayList<T> where T: Comparable
   但 `nth` 本身仍只在提案里。
 - **`utf8` 四个 `[host_contract]` 空壳未被本批使用**：8 题没有一题依赖 `trim` / `replace` /
   `to_lower` / `to_upper`，因此本批无需「语义未定，待 adaptor 侧确认」标注；约束见观察 5。
+
+### 未命中面（第 11 批探测，2026-11-04，新编号 0 条）
+
+按新口径**不再重复探测** `remove(ordinal)` / `to_array()` / `HashMap.iterator` / `BTreeSet.nth`
+四个面（R9–R10 已确认无自然调用点），本批改压写侧与容器构造面。
+
+- **`ArrayList` 容量 / 预分配（命中）**：`restore-ip-addresses`（93，结果 `new(4)`、码点缓冲
+  `new(total + 3)`）、`diagonal-traverse-ii`（1424，桶表 `rows + cols`、每桶 `new(0)`）、
+  `spiral-matrix-iii`（885，`new(rows * cols)` + 每个坐标行 `new(2)`）、
+  `letter-combinations-of-a-phone-number`（17，每层 `new(combos.length() * letters)`）、
+  `find-all-anagrams-in-a-string`（438，窗口表 `new(window_size)`）。容量均为题内已知上界，无缺口。
+- **嵌套容器构造（命中）**：`diagonal-traverse-ii`（1424）桶式两层；`spiral-matrix-iii`（885）
+  坐标行两层；`letter-combinations-of-a-phone-number`（17）`ArrayList<ArrayList<i64>>` 逐层笛卡尔积。
+  两层形态没有新增缺口，只是把 2363 的用法扩展到「逐层重建」。
+- **`HashMap` 删除 / 清空（命中）**：`find-all-anagrams-in-a-string`（438）计数归零时 `remove(k)`，
+  显式承接 `Option<i64>`；`substring-with-concatenation-of-all-words`（30）`clear()` 与 `remove(k)`
+  成对出现。两者都有等价写法（重建窗口表 / 保留零计数键），故不编号。
+- **`Deque` 队首面（命中）**：`number-of-closed-islands`（1254）BFS `peek_front` / `pop_front`；
+  `number-of-students-unable-to-eat-lunch`（1700）队列 `peek_front` / `pop_front` / `push_back`。
+  队首侧与 back 侧一样只是 `[host_contract]` 转发，**未发现新缺口**。
+- **`Utf8Builder` 多次 append（命中）**：`restore-ip-addresses`（93）每串 11 次 `append(char)` 后
+  `build()`；`letter-combinations-of-a-phone-number`（17）每串 1–4 次。与 R9 的「多次 append + 一次
+  build」一致，除 G4（std 自编译）外未暴露新问题。
+- **`ArrayList` ↔ 定长 `Array<T>` 仍未命中**：8 题里没有一题需要把 `ArrayList` 降成 `[T]` 再交回 ——
+  宿主入参已是 `[T]` / `ArrayList<T>`，返回一律 `ArrayList`，885 也特意全程只用行容器。仍记
+  「无自然调用点」，不硬造。
 
 ### 建模提示（G8 的根部，比缺 API 严重）
 

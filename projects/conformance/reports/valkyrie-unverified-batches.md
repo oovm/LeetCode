@@ -7,6 +7,36 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R11-2026-11-04（理想解滚动批次 11，8 题，写完未构建）
+
+- 范围：此前 `solution.v` 为阻塞标记的 8 题。按新口径**跳过**已确认无自然调用点的四个面
+  （`ArrayList.remove(ordinal)` / `to_array()` / `HashMap.iterator` / `BTreeSet.nth`），
+  改压写侧与容器构造：`ArrayList` 预分配、嵌套容器、`HashMap` 删除/清空、`Deque` 队首、`Utf8Builder`。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
+- 新缺口：**0 条**（G1–G24 不变）。新增观察 6：`to_array()` 与 `HashMap.iterator` 判为「可疑冗余」，
+  只记账、暂不裁剪。canonical 601 → 609。
+- 命中面：`ArrayList` 容量/预分配 ×5、嵌套容器 ×3、`HashMap.remove` / `clear` ×2、`Deque` 队首 ×2、
+  `Utf8Builder` 多次 append ×2（详见账本「未命中面（第 11 批探测）」）。
+- 未命中：`ArrayList` ↔ 定长 `Array<T>` 仍无自然调用点（宿主入参已是 `[T]`，返回一律 `ArrayList`）。
+- 预期阻断：`find-all-anagrams-in-a-string` / `restore-ip-addresses` / `letter-combinations-of-a-phone-number`
+  返回 `ArrayList`；`diagonal-traverse-ii` / `spiral-matrix-iii` 返回 `ArrayList<ArrayList<i64>>`；
+  `substring-with-concatenation-of-all-words` 以 `ArrayList<utf8>` 入参；按 G3 在 wasm JS glue 处阻断。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致（`grid` / `students`+`sandwiches` /
+  `s`+`p` / `s`+`words` / `s` / `digits` / `nums` / `rows`+`cols`+`rStart`+`cStart`）。
+- TS 参考解：`letter-combinations-of-a-phone-number` 与 `number-of-students-unable-to-eat-lunch`
+  复用既有实现；其余 6 题 TS 文件此前为空，本批新写。
+
+| slug | 导出入口 | 返回类型 | 缺口 / 覆盖方向 |
+| --- | --- | --- | --- |
+| `number-of-closed-islands` | `closedIsland` | `i64` | BFS + `Deque` 队首 `peek_front` / `pop_front`；嵌套网格原地标记 |
+| `number-of-students-unable-to-eat-lunch` | `countStudents` | `i64` | 队列模拟 + 队首 `peek_front` / `pop_front` / `push_back` |
+| `find-all-anagrams-in-a-string` | `findAnagrams` | `ArrayList<i64>` | 定长滑窗 + `HashMap.remove` 归零删键；`byte_at` 逐字节（G13 附注） |
+| `substring-with-concatenation-of-all-words` | `findSubstring` | `ArrayList<i64>` | 分偏移滑窗 + `HashMap.clear` / `remove`；`slice` 切词 |
+| `restore-ip-addresses` | `restoreIpAddresses` | `ArrayList<utf8>` | 四段枚举；`Utf8Builder` 11 次 `append(char)`；`ArrayList::new` 预分配 |
+| `letter-combinations-of-a-phone-number` | `letterCombinations` | `ArrayList<utf8>` | 逐层 `ArrayList<ArrayList<i64>>` 笛卡尔积 + `Utf8Builder` |
+| `diagonal-traverse-ii` | `findDiagonalOrder` | `ArrayList<ArrayList<i64>>` | `r + c` 分桶，桶表与桶双层预分配 |
+| `spiral-matrix-iii` | `spiralMatrixIII` | `ArrayList<ArrayList<i64>>` | 步长绕行；结果 `rows * cols` 预分配 + 行容器 `new(2)` |
+
 ## 批次 R10-2026-11-04（理想解滚动批次 10，8 题，写完未构建）
 
 - 范围：此前 `solution.v` 为阻塞标记的 8 题；只补理想解，不改算法绕 std 缺口。选题压「排序副本 /
