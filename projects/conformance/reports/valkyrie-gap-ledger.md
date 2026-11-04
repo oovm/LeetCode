@@ -349,7 +349,7 @@ C 清洗后结果：
 
 扫描全部 2847 个 `solvers/python/solution.py`：通配导入只有标准库（`typing` / `functools` / `collections` /
 `itertools` / `heapq` / `bisect` / `string` / `operator` / `math`），没有 `from random/os/numpy import *`；
-与内置名冲突的只有 `math` 的 `pow`。裸 `pow(` 共 7 处：
+与内置名冲突的只有 `math` 的 `pow`。裸 `pow(` 共 7 个文件、10 处调用：
 
 | 题 | 调用 | 原行为 | 实测 | 处置 |
 | --- | --- | --- | --- | --- |

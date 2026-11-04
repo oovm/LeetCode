@@ -206,8 +206,9 @@
 
 - 范围：全库 2847 个 `solvers/python/solution.py` 的 `math` 通配导入 / 裸 `pow` 普查；R29 剩余 74 条
   宿主文本逐题处置。
-- `pow` 普查：裸 `pow` 共 7 处（3 处上一提交已修，4 处本轮）。3 个静默点返回 `float`，但当前值与精确
-  整数逐位差 0（最大正确值 949480669 < 2^53），已统一改 `import builtins` + `builtins.pow`。
+- `pow` 普查：裸 `pow` 共 7 个文件、10 处调用（3 个文件 6 处在上一提交修，4 个文件 4 处本轮）。3 个静默点
+  返回 `float`，但当前值与精确整数逐位差 0（最大正确值 949480669 < 2^53），已统一改 `import builtins` +
+  `builtins.pow`。
 - 两个报错点补重算：`count-k-subsequences-of-a-string-with-maximum-beauty` 44 条、
   `final-array-state-after-k-multiplication-operations-ii` 107 条（真实运行产出；两题 `solution.v` 为空，
   无 V lane）。
