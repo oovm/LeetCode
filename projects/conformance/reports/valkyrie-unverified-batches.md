@@ -141,6 +141,30 @@
 - 待还原组新增：`phone-number-prefix`（见账本同名小节）。
 - 新编号：**0 条**。
 
+## 批次 R29-2026-11-05（设计类：多方法 + 内部状态 6 题，实测，夹具阻断）
+
+- 范围与题数（6）：`lru-cache`（146）、`lfu-cache`（460）、
+  `implement-trie-prefix-tree`（208）、`design-hashset`（705）、
+  `design-hashmap`（706）、`min-stack`（155）。选题目的：补齐题库里整块空白的
+  「同一类型上多方法共存 + 方法间共享可变状态 + 构造 / 私有字段」面，不是重复已有题型。
+- 三件套：**6/6**（`solution.v` + `solvers/typescript/solution.ts` +
+  `metadata.invoke.valkyrie`；另含 `solvers/python/solution.py` 参考 oracle）。
+- 题面形态：`metadata.tests` 保持 LeetCode 操作序列原形（`args.operations` +
+  `args.arguments`，`expected` 为每步返回），**未压成单函数调用**。
+- 口径（三者分开）：
+  - **编译通过 0 题**：`legion build` 在入口闭包被拒（F2）。
+  - **端到端通过 0 题**：判题夹具无操作序列执行路径（F1）。
+  - **写完未验证 6 题**。
+- 实测原文：
+  - V：`source group closure failed: entry source group 'leetcode-<slug>' declares no [export], [main] or [test] entry`（6/6）。
+  - TS 官方夹具：`TypeError: Class constructor <Class> cannot be invoked without 'new'`（6/6）。
+- 非官方证据（只作实现核对，不计入端到端）：同一 `metadata.tests` 用临时序列驱动
+  （`new` 构造 + 逐操作 `instance[op](...)`）实跑 TS **12/12 用例**、Python **12/12 用例**。
+- V 侧形态：每题的类体只放字段，方法全部写在 `imply` 块（`new` / 各操作）；未触发
+  `valkyrie.hir.class_body_method_declared`，停点在更前面的入口闭包。
+- 新编号：**1 条**（G28 `BinaryHeap` 的 `Comparable` 义务传播）；
+  另新增 F1 / F2 两条夹具与导出 ABI 缺口（见账本）。
+
 ## 批次 R25-2026-11-04（Medium 图 / 并查集 / 拓扑排序 23 题，写完未构建）
 
 - 范围：Medium 的图 + 并查集 + 拓扑排序面，全部按**理想写法**落地：邻接表

@@ -1,0 +1,59 @@
+{
+    "id": "implement-trie-prefix-tree",
+    "questionId": 208,
+    "difficulty": "Medium",
+    "tags": ["Hash Table", "String", "Design", "Trie"],
+    "tests": [
+        {
+            "args": {
+                "operations": [
+                    "Trie",
+                    "insert",
+                    "search",
+                    "search",
+                    "startsWith",
+                    "insert",
+                    "search"
+                ],
+                "arguments": [
+                    [],
+                    ["apple"],
+                    ["apple"],
+                    ["app"],
+                    ["app"],
+                    ["app"],
+                    ["app"]
+                ]
+            },
+            "expected": [null, null, true, false, true, null, true]
+        },
+        {
+            "args": {
+                "operations": [
+                    "Trie",
+                    "insert",
+                    "search",
+                    "startsWith",
+                    "insert",
+                    "search",
+                    "search"
+                ],
+                "arguments": [
+                    [],
+                    ["app"],
+                    ["app"],
+                    ["ap"],
+                    ["apple"],
+                    ["appl"],
+                    ["apple"]
+                ]
+            },
+            "expected": [null, null, true, true, null, false, true]
+        }
+    ],
+    "invoke": {
+        "python": "Trie",
+        "typescript": "Trie",
+        "valkyrie": "Trie"
+    }
+}

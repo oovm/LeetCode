@@ -39,7 +39,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 
 ## 缺口与观察分级（2026-11-04 重判）
 
-真缺口（11）：G2 / G3 / G9 / G10 / G11 / G13 / G16 / G17 / G22 / G25 / G26。
+真缺口（12）：G2 / G3 / G9 / G10 / G11 / G13 / G16 / G17 / G22 / G25 / G26 / G28。
 
 | 编号 | 判据 | 摊派面 |
 | --- | --- | --- |
@@ -48,12 +48,13 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G9 二分图判定 | 模块内空洞 | std graph 模块已有 `cycle` / `topological_sort` / 连通分量等**同类**图算法，独缺二分图判定；摊派面 2 处 |
 | G10 `DisjointSet` 分量聚合 | b | 3 处 × 重写 DSU 内部聚合 |
 | G11 `sorted_by` | b | 21 处 × 副本 + `merge_sort`（R28 后 +3） |
-| G13 `utf8` 字典序比较 | b | 4 处 × 约 10 行比较脚手架 |
+| G13 `utf8` 字典序比较 | b | 5 处 × 约 10 行比较脚手架 |
 | G16 `BTreeSet` / `BTreeMap` 界查询 | b | 5 处 × O(k) 物化 + 手写二分 |
 | G17 `char` 缺 `Hash` | b | 7 处 × 每次调用点换键型 |
 | G22 整数位元查询 | b | 5 处 × 重复位运算 |
 | G25 `BitSet` 基数 / 复制 | b | 4 处 × 手写 O(bits) 计数，丢掉位并行 |
 | G26 序关系无可用合同 | b | 14 处 × 同一套序逻辑 |
+| G28 `BinaryHeap` 的 `Comparable` 义务传播 | c | 13 处调用点（5 处裸 `i64`、1 处自定义元素、7 处按提案入口写） |
 
 观察（13）：G1 / G4 / G8 / G12 / G14 / G15 / G18 / G19 / G20 / G21 / G23 / G24 / G27。
 均为判据 a（换等价 API，零重复），或尚无已证实调用点。
@@ -70,6 +71,26 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 
 - 三条都属实，但修复位置在 `nyar-vm.rs`，不占 std 缺口名额，也不进第 18 批选题面。
 - 本节只作指向，详细证据留在各自 G 条内。
+
+## 判题夹具与导出 ABI 缺口（不归 std 线，F 编号）
+
+2026-11-05 R29 首次压设计类题（多方法 + 内部状态 + 操作序列式样例）时暴露，两处都在
+判题 / 装配侧，不在 std。
+
+| 编号 | 缺口 | 实测原文 | 坐标 |
+| --- | --- | --- | --- |
+| F1 设计类操作序列无法判题 | `TestCase` 只有 `args` / `expected`，没有「多操作序列 + 每步返回」；TS 候选只认单入口单调用，导出类被当成函数直接调用 | `TypeError: Class constructor LRUCache cannot be invoked without 'new'`（6/6 题同一形态） | `src/domain/problem.ts:2-5`；`src/adapters/typescript-node/ref.ts:48-71`（`makeTsCandidate` 的 `const exported = mod[expr]` 分支）；同文件 `:82-88`（`runTsSolverOnce` 每用例单次调用）；`scripts/run_v_solver.ts:55`（取单一 wasm export 符号）与 `:168`（逐用例单次调用） |
+| F2 设计类实例无 wasm 导出 / 实例句柄 ABI | 类方法不能 `[export]`，装配层要求单一入口，设计类没有「构造 + 逐方法调用」形态 | `source group closure failed: entry source group 'leetcode-min-stack' declares no [export], [main] or [test] entry`（6/6 题同一形态） | 题侧 `solvers/valkyrie/solution.v`（`class` 体只放字段，方法全在 `imply`）；装配侧入口闭包在 `nyar-vm.rs` |
+
+- F1 不是「题面写法问题」：操作序列（`["LRUCache", "put", "get", ...]` 加每步返回）是题面本身，
+  压成单函数调用等于改题。R29 的 `metadata.tests` 保持 `operations` / `arguments` / 每步
+  `expected` 原形，判题夹具缺执行路径，因此 6 题**端到端 0**。
+- F2 不是 `ClassBodyMethodDeclared`：R29 按架构结论把方法全部写在 `imply` 块，没有触发该诊断；
+  停点在更前面的**入口闭包**——设计类没有可导出的逐方法入口，也没有实例句柄。
+  `[export]` 文档只覆盖函数 / 模块符号（`documentation/pages/zh-hans/language/attributes.md:257` 起），
+  未定义类方法导出。
+- 两者独立：修 F1 只让 TS 侧可跑序列；修 F2 只让 V 侧有可调用入口。任一未落地，设计题都只能
+  记「写完未验证」。
 
 ## 用例数据清洗规则（通用）
 
@@ -194,6 +215,11 @@ $n
   （R28 前 853；本批 28 题，**新编号 0 条**）。addon 重建窗口内不跑 V：
   **编译通过 0 题、端到端通过 0 题、写完未验证 28 题**；TS 参考解 **28/28** 通过。
   本批压到的新面与既有编号指向见 `valkyrie-unverified-batches.md` 的 R28 小节。
+- 后续增量（2026-11-05，设计类批次 R29 后）：canonical 实测 **887**（R29 前 881；本批 6 题，
+  **新编号 1 条**：G28；另新增 F1 / F2 两条夹具与导出 ABI 缺口，不占 G 名额）。
+  **编译通过 0 题、端到端通过 0 题、写完未验证 6 题**；TS 官方夹具 0/6（F1），
+  同一 `metadata.tests` 用临时序列驱动实跑 TS **6/6**、Python **6/6**（非官方夹具，只作实现证据）。
+  F1 / F2 见「判题夹具与导出 ABI 缺口」。
 
 ### 验证窗口实测（2026-11-04 23:50 addon 重建后：编译关破碎 + marshal 夹具修复）
 
@@ -738,6 +764,27 @@ foreach ($slug in $slugs) {
 - 目的：把工具链问题稳定归因为工具链，避免再被记成语言 / 标准库缺口。
   本条只作建议，实现落点在工具链侧，不在 `leetcode.v`。
 
+## 依赖未实现特性的调用点（R28 后：`ArrayList::iter`）
+
+- `ArrayList<T>` 缺回调式遍历成员（**源码不存在，调用点已假设存在**）：
+  `ArrayList.v` 的 `imply ArrayList<T>` 没有 `iter`；全库 21 处 `micro iter` 无一落在
+  `ArrayList.v` / `Array.v`。四个真实调用点（均为集合族的 `from_list`）：
+  - `valkyrie.v/projects/std/source/collection/hashed/HashSet.v:61`
+  - `valkyrie.v/projects/std/source/collection/sorted/BTreeSet.v:141`
+  - `valkyrie.v/projects/std/source/collection/sorted/SortedSet.v:59`
+  - `valkyrie.v/projects/std/source/collection/ordered/OrderedSet.v:64`
+
+  构建报 `no-viable-overload`（`unresolved call "iter"`），属调用点假设了不存在的
+  API，不是编译器缺陷；fail-closed 是正确行为。
+- 落地判据：`std.collection::ArrayList::iter(self, f: micro(T) -> unit) -> unit`
+  在同一 `imply ArrayList<T>` 内以 `loop item in self` 复用现有
+  `IntoIterator` / for-in 协议，不另造遍历协议。
+- 回收判据：补 `iter` 后，R28 的 **22 题**「`from_list` → `ArrayList.iter`」族可回收编译；
+  其中 `BTreeSet` 的 **3 题**仍阻塞在 `insert_non_full` 的 `instance-not-closed`
+  （编译器 where 证据闭合问题，归编译器线，不在 std 线处理）。
+- 复跑口径：与 addon 重建同窗口、按 `valkyrie-unverified-batches.md` 的 R28 组一次性复跑；
+  源码线不单独跑 V。
+
 ## 系统性问题（观察，非编号）
 
 > 本节只记观察，不占 `G` 编号；缺口本身仍按 G1–G27 计。
@@ -1208,6 +1255,10 @@ micro sorted_by<T>(list: Array<T>, cmp: micro(T, T) -> i32): ArrayList<T>
   `merge-similar-items`（2363）、`minimum-moves-to-equal-array-elements-ii`（462）。
   R22 追加 2 处：`array-of-doubled-pairs`（954，`sorted_by(arr, cmp_abs)`）、
   `advantage-shuffle`（870，`sorted_by(order, 比较 nums2 的内联比较器)`）。
+- 现状入口（2026-11-05 复核）：`sort.v:82` 的 `sort<T>(mut list: ArrayList<T>)` 只有一个参数，
+  不接受比较器；`:94` 的 `merge_sort<T>(mut list, left: usize, right: usize)` 是 `private`
+  三参实现，只能从模块内调用，不能作公共比较器入口。因此 `sorted_by(list, cmp)` 仍是提案，
+  调用点只能「先自建副本 + 再调 `sort`」或退回题内手写排序。
 - 不对称点：`ArrayList` 有 **7 个**排序函数（`quick_sort` / `quick_sort_range` / `partition` / `swap` /
   `merge_sort` / `merge_sort_range` / `merge`；此前记为 6 个，漏了 `merge`），`Array<T>` 为 **0 个**
   排序入口；没有任何一个返回新序列。另：std 测试目录下无 `quick_sort` / `merge_sort` 用例，
@@ -1263,11 +1314,13 @@ micro with_capacity(capacity: usize): Self
 micro compare(self, other: utf8) -> i32   # <0 / 0 / >0，按码位（与 UTF-8 字节序一致）
 ```
 
-- 影响题（4）：`reorder-data-in-log-files`（937，题内 `compare_text`）、
+- 影响题（5）：`reorder-data-in-log-files`（937，题内 `compare_text`）、
   `find-smallest-letter-greater-than-target`（744，上界二分对 `utf8` 直接写 `<=`）、
-  `accounts-merge`（721，题内 `compare_text`）、`top-k-frequent-words`（692，题内 `compare_text`）。
-  后两题 R4–R8 曾按 `[提案]` 写 `left.compare(right)`，2026-11-04 更正为
-  `byte_length` / `byte_at` 逐字节比较。
+  `accounts-merge`（721，题内 `compare_text`）、`top-k-frequent-words`（692，题内 `compare_text`）、
+  `phone-number-prefix`（3491，R29：以 `HashSet<utf8>` 枚举每个号码的真前缀绕开排序与比较，
+  见「待还原组：`phone-number-prefix` 的 utf8 序面」）。
+  `accounts-merge` 与 `top-k-frequent-words` 两题 R4–R8 曾按 `[提案]` 写 `left.compare(right)`，
+  2026-11-04 更正为 `byte_length` / `byte_at` 逐字节比较。
 - 附注：`Utf8Text` 的 `trim` / `replace` / `to_lower` / `to_upper` 是 `[host_contract]` 空壳，
   语义不可核对，见观察 5；依赖它们的题解必须标「语义未定」。
 - 附注（第 11 批）：`find-all-anagrams-in-a-string`（438）、`substring-with-concatenation-of-all-words`
@@ -1792,6 +1845,41 @@ micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countabl
 - 判定：**观察**（判据 a：改用显式 `merge_sort`，1 处，代码不膨胀）。
 - 与 G26 的关系：G26 解决「序属于类型」；本条解决「并列时谁先谁后属于入口语义」。
   只补 G26 不定本条，2191 仍有静默错序风险。
+
+### G28 `BinaryHeap` 的 `where T: Comparable` 义务传播到每个调用点
+
+- 状态：未提供（std API 缺口，不阻断构建；2026-11-05 静态核对 `BinaryHeap.v` 与 13 处调用点）
+- 定性：**该有但没有**。`BinaryHeap` 只写 `push` / `pop` 把
+  `where T: std::operator::Comparable` 挂在方法上（`BinaryHeap.v:14-15`、`:21-22`），
+  `sift_up` / `sift_down` 继续传播同一义务（`:56-57`、`:74-75`）；`peek` / `length` /
+  `is_empty` / `clear` 不带约束。结果是：用堆的题必须在**类型侧**提供一个全局 `Comparable`，
+  「这口堆按什么序」绑不进构造，只能绑到元素类型上；想按另一个序再开一口堆，只能再造一个
+  包装类型或把比较键编码进 `i64`。
+- 期望签名（[提案]，源码尚不存在）：
+  - `micro new_by(cmp: micro(T, T) -> i32): Self`（比较器随实例走，义务不落到 `T`）
+  - `micro max(): Self`（最大序实例，与 `new()` 的默认最小序对称）
+- 真实调用点（13 处，2026-11-05 扫描 `projects/problems/**/solution.v`）：
+  - 裸 `i64`、义务由 `i64: Comparable` 消解，但仍无法逐实例换序（5 处）：
+    `find-k-pairs-with-smallest-sums/solution.v:37`、
+    `make-the-prefix-sum-non-negative/solution.v:8`、
+    `minimum-operations-to-exceed-threshold-value-ii/solution.v:8`、
+    `rearrange-string-k-distance-apart/solution.v:28`、
+    `take-gifts-from-the-richest-pile/solution.v:23`。
+  - 自定义元素、义务必须由题内 `imply Fruit: Comparable` 补齐（1 处）：
+    `maximum-number-of-eaten-apples/solution.v:20`（`BinaryHeap<Fruit>`）。
+  - 已按提案入口写、源码不存在（7 处，静态纸面调用，需与观察 4 同口径复核）：
+    `furthest-building-you-can-reach/solution.v:10`、
+    `maximal-score-after-applying-k-operations/solution.v:8`、
+    `minimum-operations-to-halve-array-sum/solution.v:9`、
+    `remove-stones-to-minimize-the-total/solution.v:10`、
+    `total-cost-to-hire-k-workers/solution.v:10`、
+    `task-scheduler/solution.v:18`（以上 `new_by`）、
+    `last-stone-weight/solution.v:9`（`max`）。
+- 判定：**真缺口**（判据 c：绕路改变堆的语义归属——要么给元素类型挂全局序，要么把比较键
+  编码进 `i64`，两种都改变题解的数据结构）。
+- 与 G26 的关系：G26 解决「类型给不出三态序」，本条解决「堆入口不接受逐实例序」。
+  只补 G26 不定本条：`i64` 已有 `Comparable`，但 `BinaryHeap<i64>` 仍无法指定最大序。
+- 修复初判：**加 API**（`new_by` 保存比较器，`push` / `pop` 的义务改挂到构造参数）。
 
 ### 未命中面（第 3 批探测，2026-11-04，无强制影响题，故不编号）
 
