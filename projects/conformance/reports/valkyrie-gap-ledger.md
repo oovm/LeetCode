@@ -237,8 +237,10 @@ micro add_undirected_edge(mut self, from: N, to: N): bool
 
 - 影响题（4，调用点均为「同一关系双写 add_edge」）：`is-graph-bipartite`（785）、
   `maximal-network-rank`（1615）、`possible-bipartition`（886）、`find-center-of-star-graph`（1791）。
-- 不对称点：同命名空间 `MatrixGraph.add_undirected_edge`、`WeightedGraph.add_undirected_edge` 均存在；
-  `DirectedGraph` 只有 `add_edge` / `add_node`。
+- 不对称点：`std.math.graph_theory.GraphMatrix.add_undirected_edge`（`matrix.v` L49-L52）、
+  `WeightedGraph.add_undirected_edge`（`weighted.v` L124-L129）均存在（类型名是 `GraphMatrix`，
+  此前记为 `MatrixGraph` 属笔误）；`DirectedGraph` 只有 `add_edge` / `add_node`。
+  两处「无向边」实现均只是两次 `add_edge` 转发，只命名了约定，不建立合同。
 - 判定：**std 缺口**（非编译器）。
 - 修复初判：**加 API**（一行转发两次 `add_edge`）。更根本的是建模问题，见本节末尾「建模提示」。
 
@@ -297,8 +299,10 @@ micro sorted_by<T>(list: Array<T>, cmp: micro(T, T) -> i32): ArrayList<T>
 
 - 影响题（2）：`groups-of-special-equivalent-strings`（893，even/odd 两个副本）、
   `reorder-data-in-log-files`（937，整表副本）。
-- 不对称点：`ArrayList` 有 6 个排序函数（`quick_sort` / `quick_sort_range` / `partition` / `swap` /
-  `merge_sort` / `merge_sort_range`），`Array` 为 0；没有任何一个返回新序列。
+- 不对称点：`ArrayList` 有 **7 个**排序函数（`quick_sort` / `quick_sort_range` / `partition` / `swap` /
+  `merge_sort` / `merge_sort_range` / `merge`；此前记为 6 个，漏了 `merge`），`Array<T>` 为 **0 个**
+  排序入口；没有任何一个返回新序列。另：std 测试目录下无 `quick_sort` / `merge_sort` 用例，
+  「就地改容器」目前只有源码证据（`class` 是引用类型，`swap` 经 `list.set` 写穿）。
 - 判定：**std 缺口**。
 - 修复初判：**加 API**（在副本上调 `merge_sort` 的薄封装）。
 
@@ -333,9 +337,13 @@ micro compare(self, other: utf8) -> i32   # <0 / 0 / >0，按码位（与 UTF-8 
 ```
 
 - 影响题（1）：`reorder-data-in-log-files`（937，题内 `compare_text`）。
-- 不对称点：`char` 至少能经 `Ordinal` 转 `u32` 再比较；`utf8` 连可比较的码位视图都没有。
+- 不对称点：`char` 只有 `as u32` 转换运算符、**无 `<`**、也不是 `Ordinal` 载体（`char.v` 仅实现
+  `==` / `!=`）；`utf8` 连可比较的码位视图都没有。（此前记作「`char` 可经 `Ordinal` 转 `u32`」，
+  该论断错误，已更正。）
 - 判定：**std 缺口**。
 - 修复初判：**加 API**（按字节序比较，与 UTF-8 编码自洽）。
+- 根因交叉引用：本缺口是 **G15**（顺序关系没有 trait 抽象）的下游表现 —— `utf8` 既无 `<` 可裸调，
+  也无 `Comparable` 合同可挂，两者都是 G15 的同一空缺。
 
 ### G14 `utf8` 缺 `split_once`
 
@@ -355,17 +363,74 @@ micro split_once(self, separator: utf8) -> Option<SplitParts>
 - 判定：**std 缺口**。
 - 修复初判：**加 API**（`index_of` + 两段 `slice` 即可，代价是要引入承载两段的记录类型）。
 
+### G15 顺序关系没有 trait 抽象（约束与操作不一致）
+
+- 状态：未提供（**std 模型缺口**，不阻断构建；2026-11-04 静态核对 `std/source/operator/`、
+  `std/source/primitive/`、`std/source/collection/sorted/BTreeSet.v`）
+- 定性：**该建 trait 没建**。这不是「缺一个 `sorted_by`」（那是 G11 的人体工学缺口），而是
+  **泛型约束没有捕获它实际使用的操作**：`operator/` 只有 `Equal` / `Identical` / `Cardinal` /
+  `Ordinal` 四个合同，**没有任何顺序或偏序 trait**；`<` / `<=` / `>` 在 `primitive/` 里逐类型手写
+  （`i8` / `i16` / `i32` / `i64` / `u8` / `u16` / `u32` / `u64` / `f32` / `f64` 各一份）；
+  `BTreeSet` 声明 `T: Equal`（`BTreeSet.v` L23-L24）却在 L170 与 L239 裸调 `<` ——
+  类型检查通过，但语义前提没有任何约束表达，属**不健全的泛型容器**。
+- 期望签名：
+
+```v
+# std/source/operator/comparable.v（与既有 operator 合同同构，
+# `trait A: B` 超 trait 语法见 `std/source/text/text_span.v` 的 `trait TextView: Text`）
+trait Comparable: Equal {
+    micro compare(self, other: Self) -> i32
+}
+
+# std/source/primitive/{i8,i16,i32,i64,u8,u16,u32,u64,f32,f64}.v：逐类型补齐
+imply i64: Comparable {
+    micro compare(self, other: Self) -> i32
+}
+
+# std/source/text/char.v、std/source/text/Utf8Text.v：G13 的字典序比较落到此处
+imply char: Comparable { ... }
+imply Utf8Text: Comparable { ... }
+```
+
+  `compare` 返回 `<0 / 0 / >0`，与 `sort.v` 现有 `cmp: micro(T, T) -> i32` 的既有约定同形，可直接复用。
+- 消费方：`BTreeSet` / `BTreeMap` 及其节点拆分类的比较路径改为 `where T: Equal & Comparable`，
+  让约束与实际操作一致；`sort.v` 保持闭包形态（排序需要调用方自定义序，不是全序约束能覆盖的）。
+- 影响范围：所有依赖裸 `<` 的泛型容器（`BTreeSet` / `BTreeMap`，以及 `SortedSet` / `SortedMap`
+  包装层）都要换约束；`char` 与 `utf8` 的比较能力随之落地，G13 自动消解。
+- 不对称点：`Equal` / `Identical` / `Cardinal` / `Ordinal` 都有显式合同，唯独序关系没有；
+  `BTreeSet` 用裸 `<` 而 `Utf8Text` / `char` 连 `<` 都没有 —— 同一语言里「有序」有两种互不兼容的表示。
+- 先例：`std.math.graph_theory.Weight`（`weighted.v` L6-L10）已把 `add` + `less` 做成合同，证明该形态
+  可行；但它局限在图权重域内，不是通用序合同，且同样与 `operator/` 的四个合同平行、互不引用。
+- 判定：**std 模型缺口**（非编译器）。
+- 与 G13 的关系：G13 是本条的下游表现。
+- 修复初判：**建 trait**（新增 `Comparable` 合同 + 逐 primitive impl + 收窄 BTree 系约束）。
+
 ### 建模提示（G8 的根部，比缺 API 严重）
 
-- 现象：无向性不是图模型的一等属性。`DirectedGraph` 只以「有向」为轴；`MatrixGraph`、`WeightedGraph`
+- 现象：无向性不是图模型的一等属性。`DirectedGraph` 只以「有向」为轴；`GraphMatrix`、`WeightedGraph`
   各自补一个 `add_undirected_edge`，同一语义在三种图上三种入口，且**没有无向图类型**
   ——无向关系只能以「双向有向图 + 调用方自律」表达，`has_edge` / `out_degree` 的语义也随之变成
-  「出边」而非「邻接」。
+  「出边」而非「邻接」。三者的 `has_edge` / 度数面也不对称：`DirectedGraph` 有单向 `has_edge` 与
+  `out_degree` / `in_degree` 但无 `degree`，`GraphMatrix` 只有单向 `has_edge` 与 `neighbors`，
+  `WeightedGraph` **完全没有** `has_edge` / 度数入口。
+- 硬事实一：`weak_components`（`unweighted.v` L53-L107）必须**自己同时扫 `successors` 与
+  `predecessors`**，才能把有向边当无向用 ⇒ 无向性是**算法现场伪造的前提**，不是类型提供的前提。
+- 硬事实二：std 测试只断言「镜像单元写进去了」（`test/math/test_graph_theory.v` L210-L222），
+  **没有任何测试能断言「后续写入后对称仍成立」，因为没有这条合同可断言**。
+- 硬事实三：`WeightedGraph.add_undirected_edge` 是两次 `push`（`weighted.v` L124-L129），重复调用
+  会产生平行边、`edge_count` 双重计，读侧无去重、也没有去重入口。
 - 若只补 `add_undirected_edge`：G8 的 4 道题能写短，但 `has_edge(b, a) == false` 这类反直觉状态仍可
-  构造，边方向性仍然泄漏给每道题。
-- 优先级判断：**改建模 > 加 API**。合理形态是让方向性成为图类型的构造属性（或提供
-  `UndirectedGraph<N>` 视图），`add_undirected_edge` 只是它上面的便捷入口。该判断属设计建议，
-  不构成本轮实现任务。
+  构造，边方向性仍然泄漏给每道题。它只把双写约定命名化，不建立任何合同。
+
+三方案对比（**只做分析，不选型、不排期**）：
+
+| 方案 | 能挡住什么 | 挡不住什么 | 对现有签名与题解的影响面 |
+|---|---|---|---|
+| **A** 独立 `UndirectedGraph<N>` 类型 | 编译期没有单向写入口；`has_edge` 由构造即对称；度数唯一（无 in/out 分裂）；要求无向语义的算法可在签名上写该类型，把前提变成类型 | 自环 `u==v` 的计数口径仍需显式规则；加权变体的多重边语义仍需单独决策；从既有有向图迁移时「丢单向边还是补成对边」是运行时决策；不阻止调用方在类型外自建边表；`strong_components` / `topological_sort` 对该类型不适用 | 新增第 4 个图类型。`unweighted.v` 中 `weak_components` / `strong_components` / `unweighted_shortest_paths` / 私有 DFS 的签名全部钉死 `std.collection.DirectedGraph<N>`（L53 / L110 / L160 / L196），需引入图源 trait 或按类型复制一套；`possible-bipartition`、`find-center-of-star-graph`、`maximal-network-rank` 等题解需换类型 |
+| **B** 方向作构造参数（`new(Direction::Undirected)`，或 `add_edge(from, to, Symmetry)`） | 运行期可按 mode 归一化 `has_edge` / 度数 / 分量的读取；每次写入可校验 mixed mode 并结构化失败 | 类型层面挡不住：无向与有向实例同型，误用的图照样通过类型检查；合同从编译期退化为运行期约定；签名仍无法表达「只接受无向图」；`DirectedGraph` 每条读路径都要加分支 | 零签名破坏，现有题解全部继续编译，但用运行期正确性换零迁移成本 |
+| **C** 有向图上的只读视图 `UndirectedView<N>`（构造时校验对称闭包） | 读侧：构造成功即代表「当时状态对称」，`neighbors` / 度数归一化，视图内不再可能误用单向语义；无新增存储 | 底层是可变共享引用（`class` 是引用类型），视图只是创建时刻窗口（与 `ArrayView` 同语义，`array_view.v` L8-L10），原图后续 `add_edge` 会让对称失效；写侧仍走原图 `add_edge`；校验失败需新增 panic / `Option` 决策；`WeightedGraph` 平行边使「对称」无法用集合比较判定 | 改动面最小：只加一个视图类型 + 校验入口，`DirectedGraph` API 零改动；题解只改读侧，但保证力最弱（仅保证创建时刻） |
+
+- 优先级判断：**改建模 > 加 API**。该判断属设计分析，不构成本轮实现任务，也不代表已选型。
 
 ## 批次状态：canonical 未构建 214 题（2026-11-04 实测）
 
