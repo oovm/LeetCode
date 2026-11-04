@@ -73,6 +73,9 @@ $n
   本批继续撞 G25 / G26，见观察 11）。
 - 后续增量（2026-11-04，滚动批次 R16 后）：canonical 实测 **649**（R16 前 641；本批新编号 0 条，
   按观察 11 避开 G26 / G27，只把 G10 / G12 / G18 / G23 压进真实题解）。
+- 后续增量（2026-11-04，滚动批次 R17 后）：canonical 实测 **657**（R17 前 649；本批新编号 0 条，
+  继续避开 G26 / G27，把 G25（`BitSet` 基数 / 复制）与 G12（`HashSet` 无容量）的调用点
+  收敛成最小必要 API 集，见 G25 / G12 的「本批验证情况（R17）」）。
 
 ## 系统性问题（观察，非编号）
 
@@ -555,6 +558,18 @@ micro with_capacity(capacity: usize): Self
   `accounts-merge`（721，R4–R8 曾按 `[提案]` 写 `new(count)`，2026-11-04 更正为 `new()`）、
   `rank-transform-of-an-array`（1331，批次 R10，`BTreeSet::new()` 同样无容量）。
 - 不对称点：`HashSet::new()` 固定 `SwissSet::new(16)`；`HashMap::new(capacity: usize)` 直传容量。
+- 口径（2026-11-04 更正）：`HashSet::new()` 是**真实签名**（`HashSet.v` L13 `micro new(): Self`，
+  无容量参数），解法里写 `new()` 属于依赖本条现状的合法调用，**不是纸面 API**。
+  纸面 API 专指「源码里根本不存在的入口」；本条缺的只是 `new(capacity)` / `with_capacity`。
+- 本批验证情况（R16 / R17，`authored-unverified`）：
+  - R16 `word-ladder`（127）按真实签名写 `HashSet::new()` 建词典与访问集，容量只能摊还增长；
+    这是 G12 现状调用点，不计入纸面 API 数。
+  - R17 `count-number-of-distinct-integers-after-reverse-operations`（2442）、
+    `repeated-dna-sequences`（187）、`number-of-distinct-averages`（2465）三题同法；
+    其中 187 以 `utf8` 作键、2442 / 2465 以 `i64` 作键，两种键型都不受容量预分配支持。
+  - 最小必要 API 集（R17 收敛结果）：**只有一条签名** `new(capacity: usize)`（或同形的
+    `with_capacity`），不需要桶视图 / 保留策略等其余入口；四个调用点（127 / 2442 / 187 / 2465）
+    都只缺「一次性给足上界」。
 - 判定：**std 缺口**。
 - 修复初判：**加 API**（一行转发 `SwissSet::new(capacity)`）。
 
@@ -958,6 +973,33 @@ imply BitSet: Equal
     只依赖现有 `get` / `set`；它证明 `BitSet` 能承担大规模访问表，但不构成缺失入口的调用点。
   - 结论：`clone` / `count` 的「无等价近似物」判断在解法级复核后仍成立（1239 若不 `clone`
     就只能退回逐位 `get` 的绕路写法）。
+- 本批验证情况（R17，`authored-unverified`）：
+  - `find-the-prefix-common-array-of-two-arrays`（2657）两个前缀集合长期存活，求交必须
+    `seen_a.clone()` 后 `intersect` 再 `count()`；`clone` 与 `count` 同时落在主路径。
+  - `number-of-corner-rectangles`（750）列数最多 200，超出 i64 掩码，每行一个 `BitSet`；
+    每对行重建左操作数后 `intersect` + `count`。本解不 `clone`（重建比复制更直接）。
+  - `maximum-rows-covered-by-columns`（2397）列集合作为选中子集，逐行判定「选中列是否都被该行 1
+    覆盖」= `chosen.clone()` 后 `difference(row)`，再 `is_empty()`；首次给 `difference` 真实调用点。
+  - `n-queens`（51）列 / 下沉对角线 / 上升对角线各一个 `BitSet`，回溯 `set` / `clear_bit`，
+    只用现有入口。
+  - `partition-to-k-equal-sum-subsets`（698）为控制组：元素 <= 16，i64 掩码 + 占用数组即可，
+    只用到 `get` / `set` / `clear_bit`，证明「全集 <= 64 且只判占用」不需要本条缺失项。
+  - 最小必要 API 集（R17 收敛结果）：
+
+| 缺失入口 | 是否被本批真实调用点需要 | 依据 |
+| --- | --- | --- |
+| `count(self) -> usize` | **需要**（2657、750） | 交集结果的置位数无等价近似物：外部计数器只能算「新增」不能算「齐交」 |
+| `clone(self) -> BitSet` | **需要**（2657、2397） | `intersect` / `difference` 改写左操作数，集合需长期存活时必须先复制 |
+| `length(self) -> usize` | **不需要** | 三题的容量都由题面上界或 `with_capacity` 实参已知，扫描范围可外部保持 |
+| 迭代器（枚举置位下标） | **不需要**（可延后） | 51 由列栈渲染、2657 / 750 只需基数；无题需要「不知道全集大小还要枚举」 |
+| 与 `[bool]` / `[u64]` 互转 | **不需要**（可延后） | 全库无 `to_bool_array` 消费方；`ArrayList` 下标已能承载同等信息 |
+| `Equal`（及 `Hash`） | **不需要**（可延后） | 本批没有「两个位集当值比较 / 作键」的调用点；2657 比的是基数而非集合本身 |
+
+  - 结论：本条真正的最小必要面是 **`count` + `clone`**，`length` / 迭代 / 互转 / `Equal`
+    本批全部无自然调用点，维持「已记、可延后」。
+  - 口径说明：表中「需要」指**理想写法**所需的入口。按观察 3，本条同样有绕路近似物——
+    `count` 可退回逐位 / 逐列手写计数（750 的 TS 对照解即如此），`clone` 可由源头重建集合
+    （750 的 V 解即如此）。绕路能跑通但放弃了位集合的表达，故仍记为缺口，不作为「已可用」。
 - 修复初判：**加 API**；`count` 可对 `words` 逐字 popcount 求和，`clone` 复制 `words` 数组即可，
   均不改变存储形态。
 - 与观察 1 的关系：`BitSet` 同样游离在「类型 × {Equal, Hash}」矩阵之外；本条只记 `Equal`，
@@ -1025,6 +1067,15 @@ micro order_items<T>(items: ArrayList<T>): unit
     已另编 **G27**（稳定性不是可声明属性）。
   - 结论：G26 的三处（合同缺失 / 单参入口缺失 / `BTreeSet` 约束过宽）在本批仍全部成立；
     R14 的 694 之外，本批没有新的「自定义类型作有序容器键」调用点。
+- 依赖状态（2026-11-04 更正，R14 + R15 共 14 处 `sort(items)` 调用点）：
+  - 这些调用点**依赖 std C4**（`sort` / `sorted` 落地），状态是「**待落地 API**」，
+    **不是「已可用」**。与「纸面 API」的区别：纸面 API 指源码里根本不存在的入口（如
+    `BitSet::clone` / `BitSet::count`）；C4 指入口尚未由 std 合同落地，但签名已定稿。
+  - 定稿签名（`valkyrie-sort-ordering-proposal.md`）：
+    `micro sort<T, C>(list: mut C) where C: Cardinal<Element = T> & Countable, T: Comparable`。
+    `sort(items)` 能匹配该签名，**写法本身不需要改**。
+  - 13 个 `solution.v` 的 `order_items` 垫片已在注释中逐处标注「依赖 std C4（待落地 API）」，
+    不因 `authored-unverified` 不编译就隐掉这层依赖。
 
 ### G27 排序稳定性不是可声明的属性（`sort` 默认稳定 / `sort_unstable` 显式不稳定）
 
@@ -1043,8 +1094,9 @@ micro order_items<T>(items: ArrayList<T>): unit
   `valkyrie-sort-ordering-proposal.md`）：
 
 ```v
-micro sort<T>(items: ArrayList<T>): unit where T: Equal & Comparable          # 默认稳定
-micro sort_unstable<T>(items: ArrayList<T>): unit where T: Equal & Comparable # 显式承担并列风险
+# 最终定稿签名（依赖 std C4；入口未落地，状态「待落地 API」，不是「已可用」）
+micro sort<T, C>(list: mut C) where C: Cardinal<Element = T> & Countable, T: Comparable      # 默认稳定
+micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countable, T: Comparable # 显式承担并列风险
 ```
 
 - 后果：`sort-the-jumbled-numbers`（2191）的并列映射值必须保持原下标次序。若单参入口落到

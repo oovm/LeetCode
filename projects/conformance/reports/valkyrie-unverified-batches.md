@@ -7,6 +7,53 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R17-2026-11-04（理想解滚动批次 17，8 题，写完未构建）
+
+- 范围：继续避开 G26 / G27，优先把 **G25**（`BitSet` 缺 `count` / `length` / 迭代 / `clone` /
+  互转 / `Equal`）与 **G12**（`HashSet` 无容量构造）压到真实题解，并把两处调用点收敛成
+  「到底需要哪几个签名」的最小集表（见 `valkyrie-gap-ledger.md` 的 G25 / G12
+  「本批验证情况（R17）」）。不写 C4 排序（本批无排序题），不写内联比较器。
+- 构建 / 判题状态：**未验证**，全部 `authored-unverified`，本轮按口径**不编译、不跑**。
+- 新缺口：**0 条**。canonical 649 → **657**。
+- 命中面：G25 ×4（2657 / 750 / 2397 / 51）、G12 ×3（2442 / 187 / 2465）、
+  控制组 ×1（698，证明「全集 <= 64 且只判占用」不需要 G25 缺失项）。
+- 纸面 API：**2 个入口**（`BitSet::clone`、`BitSet::count`），逐处标 `[待补 API]` 并指向 G25 提案签名。
+  `HashSet::new()` 是真实签名（G12 现状），按口径**不计入纸面 API**。
+- 比较器数量：**0**；本批没有题传 `micro(T, T) -> i32`。
+- 预期阻断：`n-queens`（51）返回 `ArrayList<ArrayList<utf8>>`、`repeated-dna-sequences`（187）
+  返回 `ArrayList<utf8>`、`find-the-prefix-common-array-of-two-arrays`（2657）返回
+  `ArrayList<i64>`，按 G3 在 wasm JS glue 处阻断；其余 5 题返回 `i64` / `bool`。
+
+| 题号 | slug | 入口 | 返回 | 考点 / 命中面 |
+| --- | --- | --- | --- | --- |
+| 2657 | `find-the-prefix-common-array-of-two-arrays` | `findThePrefixCommonArray` | `ArrayList<i64>` | 两个前缀 `BitSet`；`clone` + `intersect` + `count`（**G25**） |
+| 750 | `number-of-corner-rectangles` | `countCornerRectangles` | `i64` | 列数 <= 200 超出 i64 掩码；逐对行 `intersect` + `count`（**G25**） |
+| 2397 | `maximum-rows-covered-by-columns` | `maximumRows` | `i64` | 选中列子集逐行判定；`clone` + `difference` + `is_empty`（**G25**） |
+| 51 | `n-queens` | `solveNQueens` | `ArrayList<ArrayList<utf8>>` | 列 / 双对角线三个 `BitSet`，回溯 `set` / `clear_bit` |
+| 2442 | `count-number-of-distinct-integers-after-reverse-operations` | `countDistinctIntegers` | `i64` | `HashSet<i64>` 去重；`new()` 无容量（**G12**） |
+| 187 | `repeated-dna-sequences` | `findRepeatedDnaSequences` | `ArrayList<utf8>` | `HashSet<utf8>` 双集合；`new()` 无容量（**G12**） |
+| 2465 | `number-of-distinct-averages` | `distinctAverages` | `i64` | 二元组和去重；`HashSet<i64>` 无容量（**G12**） |
+| 698 | `partition-to-k-equal-sum-subsets` | `canPartitionKSubsets` | `bool` | 控制组：i64 掩码 + 占用数组，**不需要** `BitSet` 缺失项 |
+
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致
+  （`A`+`B` / `grid` / `matrix`+`numSelect` / `n` / `nums` / `s` / `nums` / `nums`+`k`）。
+- TS 参考解：8 题此前均为空文件，本批全部新写；按本轮口径**未实跑**。
+- 数据清洗（先核对「是不是解法假设错了」，再决定删 / 留）：
+  - `n-queens`（51）：删 1 条（原 test 9，`n = 10`）。题面约束 `1 <= n <= 9`，且该用例
+    `expected` 含 724 个棋盘、按生成器顺序排列；超界 + 顺序敏感，属平台非法用例。删后 9 条。
+  - `partition-to-k-equal-sum-subsets`（698）：删 1 条（原 test 52，`nums.length = 32`）。
+    题面约束 `1 <= nums.length <= 16`，属平台非法用例。删后 86 条。
+  - `find-the-prefix-common-array-of-two-arrays`（2657）：**不删**，改解法假设。2 条用例的取值
+    超出 `1..n`（如 41..50 配 n=10），但 `expected` 与「按值求交」的语义自洽；解法原按 n 定容
+    会越界，故改为按实际最大值定容。这是解法假设问题，不是用例非法。
+  - `number-of-corner-rectangles`（750）：**不删**。1 条全 0 网格违反「至少一个 1」，但答案
+    自然是 0，不影响语义。
+  - `count-number-of-distinct-integers-after-reverse-operations`（2442）：**不删**。6 条取值
+    超过 `1e6` 上界，但反转与去重在 i64 域内仍良定义，`expected` 自洽。
+  - `number-of-distinct-averages`（2465）：**不删**。6 条长度为奇数（题面要求偶数），但
+    「两两和的种数」与奇偶无关，定义仍成立。
+  - `repeated-dna-sequences`（187）、`maximum-rows-covered-by-columns`（2397）：无非法用例。
+
 ## 批次 R16-2026-11-04（理想解滚动批次 16，8 题，写完未构建）
 
 - 范围：按观察 11 的结论，**避开已撞穿的 G26 / G27 面**（不写自定义记录排序），优先
