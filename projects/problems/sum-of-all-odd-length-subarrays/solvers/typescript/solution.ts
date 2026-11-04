@@ -1,11 +1,12 @@
 export class Solution {
     sumOddLengthSubarrays(arr: number[]): number {
+        const count = arr.length;
         let total = 0;
-        for (let i = 0; i < arr.length; i++) {
-            let sum = 0;
-            for (let j = i; j < arr.length; j++) {
-                sum += arr[j];
-                if ((j - i + 1) % 2 === 1) total += sum;
+        for (let start = 0; start < count; start++) {
+            let window = 0;
+            for (let index = start; index < count; index += 2) {
+                window += arr[index];
+                total += window;
             }
         }
         return total;

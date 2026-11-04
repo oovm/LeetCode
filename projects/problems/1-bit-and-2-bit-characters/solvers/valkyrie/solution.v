@@ -1,5 +1,23 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: isOneBitCharacter 需要 读取 bits 逐位跳转判定末位字符
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.solution
+
+using std.collection
+
+# 从前往后按编码宽度跳：0 占 1 位，1 占 2 位；最后一步若正好落在末位，末位就是单比特字符。
+class Solution {
+    [export(case: "isOneBitCharacter")]
+    micro isOneBitCharacter(bits: ArrayList<i64>) -> bool {
+        let count: usize = bits.length()
+        let mut index: usize = 0
+        while index + 1 < count {
+            if bits⁅index⁆ == 1 {
+                index = index + 2
+            } else {
+                index = index + 1
+            }
+        }
+        if index == count - 1 {
+            return true
+        }
+        return false
+    }
+}

@@ -793,6 +793,7 @@
     ],
     "invoke": {
         "python": "Solution().numberOfAlternatingGroups",
-        "typescript": "Solution().numberOfAlternatingGroups"
+        "typescript": "Solution().numberOfAlternatingGroups",
+        "valkyrie": "numberOfAlternatingGroups"
     }
 }

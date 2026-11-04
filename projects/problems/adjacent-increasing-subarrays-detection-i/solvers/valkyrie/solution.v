@@ -1,5 +1,33 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: hasIncreasingSubarrays 需要 读取 nums 判定相邻两 k 递增段
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.solution
+
+using std.collection
+
+# 先量出从每个起点开始能连续严格递增多长，再看相邻两段长度是否都 >= k。
+micro strict_run(nums: ArrayList<i64>, start: usize, limit: usize) -> i64 {
+    let mut length: i64 = 1
+    let mut index: usize = start
+    while index + 1 < limit && nums⁅index⁆ < nums⁅index + 1⁆ {
+        length = length + 1
+        index = index + 1
+    }
+    return length
+}
+
+class Solution {
+    [export(case: "hasIncreasingSubarrays")]
+    micro hasIncreasingSubarrays(nums: ArrayList<i64>, k: i64) -> bool {
+        let count: usize = nums.length()
+        let need: usize = k as usize
+        if need == 0 || need * 2 > count {
+            return false
+        }
+        let mut start: usize = 0
+        while start + need * 2 <= count {
+            if strict_run(nums, start, count) >= k && strict_run(nums, start + need, count) >= k {
+                return true
+            }
+            start = start + 1
+        }
+        return false
+    }
+}

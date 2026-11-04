@@ -871,6 +871,7 @@
     ],
     "invoke": {
         "python": "Solution().hasIncreasingSubarrays",
-        "typescript": "Solution().hasIncreasingSubarrays"
+        "typescript": "Solution().hasIncreasingSubarrays",
+        "valkyrie": "hasIncreasingSubarrays"
     }
 }

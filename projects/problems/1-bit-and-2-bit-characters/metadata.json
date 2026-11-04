@@ -577,6 +577,7 @@
     ],
     "invoke": {
         "python": "Solution().isOneBitCharacter",
-        "typescript": "Solution().isOneBitCharacter"
+        "typescript": "Solution().isOneBitCharacter",
+        "valkyrie": "isOneBitCharacter"
     }
 }

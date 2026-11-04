@@ -1,9 +1,9 @@
 export class Solution {
     isOneBitCharacter(bits: number[]): boolean {
-        let i = 0;
-        while (i < bits.length - 1) {
-            i += bits[i] === 1 ? 2 : 1;
+        let index = 0;
+        while (index + 1 < bits.length) {
+            index += bits[index] === 1 ? 2 : 1;
         }
-        return i === bits.length - 1;
+        return index === bits.length - 1;
     }
 }

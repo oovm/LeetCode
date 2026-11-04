@@ -874,6 +874,7 @@
     ],
     "invoke": {
         "python": "Solution().find132pattern",
-        "typescript": "Solution().find132pattern"
+        "typescript": "Solution().find132pattern",
+        "valkyrie": "find132pattern"
     }
 }

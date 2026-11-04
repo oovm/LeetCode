@@ -1,10 +1,12 @@
 export class Solution {
     returnToBoundaryCount(nums: number[]): number {
-        let pos = 0;
+        let position = 0;
         let count = 0;
-        for (const x of nums) {
-            pos += x;
-            if (pos === 0) count++;
+        for (const step of nums) {
+            position += step;
+            if (position === 0) {
+                count++;
+            }
         }
         return count;
     }

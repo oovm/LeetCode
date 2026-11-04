@@ -1,13 +1,16 @@
 export class Solution {
     find132pattern(nums: number[]): boolean {
         const stack: number[] = [];
-        let third = -Infinity;
-        for (let i = nums.length - 1; i >= 0; i--) {
-            if (nums[i] < third) return true;
-            while (stack.length > 0 && nums[i] > stack[stack.length - 1]) {
-                third = stack.pop()!;
+        let third: number | null = null;
+        for (let index = nums.length - 1; index >= 0; index--) {
+            const value = nums[index];
+            if (third !== null && value < third) {
+                return true;
             }
-            stack.push(nums[i]);
+            while (stack.length > 0 && stack[stack.length - 1] < value) {
+                third = stack.pop() as number;
+            }
+            stack.push(value);
         }
         return false;
     }

@@ -1097,6 +1097,7 @@
     ],
     "invoke": {
         "python": "Solution().possibleBipartition",
-        "typescript": "Solution().possibleBipartition"
+        "typescript": "Solution().possibleBipartition",
+        "valkyrie": "possibleBipartition"
     }
 }

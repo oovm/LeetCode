@@ -1,5 +1,19 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: returnToBoundaryCount 需要 读取 nums 前缀和归零计数
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.solution
+
+using std.collection
+
+# 前缀位移：每走一步累加，位置回到 0 就记一次（起点不算）。
+class Solution {
+    [export(case: "returnToBoundaryCount")]
+    micro returnToBoundaryCount(nums: ArrayList<i64>) -> i64 {
+        let mut position: i64 = 0
+        let mut count: i64 = 0
+        loop step in nums {
+            position = position + step
+            if position == 0 {
+                count = count + 1
+            }
+        }
+        return count
+    }
+}

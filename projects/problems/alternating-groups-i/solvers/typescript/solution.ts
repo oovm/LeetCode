@@ -1,11 +1,18 @@
 export class Solution {
     numberOfAlternatingGroups(colors: number[]): number {
-        const n = colors.length;
-        let count = 0;
-        for (let i = 0; i < n; i++) {
-            const mid = colors[(i + 1) % n];
-            if (colors[i] !== mid && mid !== colors[(i + 2) % n]) count++;
+        const count = colors.length;
+        if (count < 3) {
+            return 0;
         }
-        return count;
+        let groups = 0;
+        for (let index = 0; index < count; index++) {
+            const first = colors[index];
+            const second = colors[(index + 1) % count];
+            const third = colors[(index + 2) % count];
+            if (first !== second && second !== third) {
+                groups++;
+            }
+        }
+        return groups;
     }
 }

@@ -7,6 +7,44 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R19-2026-11-04（理想解滚动批次 19，8 题，写完未构建）
+
+- 范围：继续避开 11 条真缺口，纸面 API 保持 **0**。选题面主动放 1 题撞 graph 二色面
+  （`possible-bipartition`，886），它命中 **G9**（已在缺口段），不产生新编号，用来验证
+  「账本已记录」这条路径是否走得通；其余 7 题只落在观察档（纯数组 / 栈 / 前缀和）。
+- 构建 / 判题状态：**未验证**，全部 `authored-unverified`，本轮按口径**不编译、不跑**。
+- 新缺口：**0 条**。canonical 665 → **673**。
+- 反向验证：本批是第二组对照组。若 8 题全干净，说明观察档连续两批可用（见
+  `valkyrie-gap-ledger.md` 的 R19 意义句）。
+- 纸面 API：**0 个**。全部调用点只用源码已有签名：`DirectedGraph::new` / `add_node` / `add_edge` /
+  `successors`（graph 模块）、`HashMap::new(capacity)` / `contains_key` / `get` / `insert` / `unwrap`、
+  `ArrayList::new(capacity)` / `push` / `pop` / `length`、`⁅ ⁆` 下标读写。环形下标改成显式回绕，
+  不依赖尚未核对的取模运算符。
+- 比较器数量：**0**；本批没有自定义类型，也没有排序。
+- 入口签名：8/8 导出形参与 `metadata.tests.args` 键同序
+  （`n`+`dislikes` / `bits` / `nums`+`k` / `nums` / `colors` / `nums` / `rungs`+`dist` / `arr`）。
+
+| 题号 | slug | 入口 | 返回 | 考点 / 命中面 |
+| --- | --- | --- | --- | --- |
+| 886 | `possible-bipartition` | `possibleBipartition` | `bool` | `DirectedGraph` + `successors` + 双色 BFS；**G9 模块内空洞**验证点 |
+| 717 | `1-bit-and-2-bit-characters` | `isOneBitCharacter` | `bool` | 按编码宽度前进，末位是否落在 1 位 |
+| 3349 | `adjacent-increasing-subarrays-detection-i` | `hasIncreasingSubarrays` | `bool` | 量连续严格递增段长，相邻两段都 >= `k` |
+| 3028 | `ant-on-the-boundary` | `returnToBoundaryCount` | `i64` | 前缀位移计数，回到 0 记一次 |
+| 3206 | `alternating-groups-i` | `numberOfAlternatingGroups` | `i64` | 环形取三连点，严格交替计数 |
+| 456 | `132-pattern` | `find132pattern` | `bool` | 逆序扫描 + 单调栈，记录最大「第三位」 |
+| 1936 | `add-minimum-number-of-rungs` | `addRungs` | `i64` | 相邻阶空隙按 `dist` 求需补阶数 |
+| 1588 | `sum-of-all-odd-length-subarrays` | `sumOddLengthSubarrays` | `i64` | 按起点枚举奇数长度窗口并累加 |
+
+- marshal 面（**待验证**）：886 入参 `dislikes` 为 `ArrayList<ArrayList<i64>>`，与 G3 的返回侧
+  `ArrayList` ABI 是否同一条路径**不预先判定**，留待真评。
+- TS 参考解：7 题新写（717 / 3349 / 3028 / 3206 / 456 / 1936 / 1588），886 复用已有 TS 解；
+  算法与 V 解同阶同语义；按本轮口径**未实跑**。
+- 数据清洗（按 `valkyrie-gap-ledger.md` 的「用例数据清洗规则（通用）」核对）：
+  - 8 题全部逐条以独立实现复核，`expected` 均为合法答案形态且与复核值**零不一致**，
+    因此**无删除、无改写**。
+  - `alternating-groups-i`（3206）的判据是**严格交替**（相邻两对都不同），不是「三段不全相等」；
+    复核时按前者才全部一致，实现按前者写。
+
 ## 批次 R18-2026-11-04（理想解滚动批次 18，8 题，写完未构建）
 
 - 范围：**第一批全部避开真缺口**（G2 / G3 / G9 / G10 / G11 / G13 / G16 / G17 / G22 / G25 / G26），
@@ -35,7 +73,7 @@
 - marshal 面（**待验证**）：695 / 807 入参为 `ArrayList<ArrayList<i64>>`。G3 是真缺口，但 G3 记的是
   返回侧 JS glue 的 `ArrayList` ABI；入参嵌套数组是否走同一条 ABI **不预先判定**，留待真评。
 - TS 参考解：8 题新写，算法与 V 解同阶同语义；按本轮口径**未实跑**。
-- 数据清洗（先核对「是不是解法假设错了」，再决定删 / 留）：
+- 数据清洗（按 `valkyrie-gap-ledger.md` 的「用例数据清洗规则（通用）」：先看 `expected` 是不是合法答案，再决定删 / 改）：
   - `array-nesting`（565）：**删 3 条**（原 test 6 / 27 / 90）。`nums` 长度为 10 却含值 `10`，
     违反题面「`nums` 是 `[0, n-1]` 的排列」，Python 侧以 `list assignment index out of range`
     兜底；V 侧越界 panic 的消息形态不同，无法作为 `expected` 比对，属平台非法用例。
