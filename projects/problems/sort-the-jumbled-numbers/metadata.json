@@ -785,6 +785,7 @@
     ],
     "invoke": {
         "python": "Solution().sortJumbled",
-        "typescript": "Solution().sortJumbled"
+        "typescript": "Solution().sortJumbled",
+        "valkyrie": "sortJumbled"
     }
 }

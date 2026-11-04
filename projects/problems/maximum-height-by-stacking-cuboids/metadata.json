@@ -746,6 +746,7 @@
     ],
     "invoke": {
         "python": "Solution().maxHeight",
-        "typescript": "Solution().maxHeight"
+        "typescript": "Solution().maxHeight",
+        "valkyrie": "maxHeight"
     }
 }

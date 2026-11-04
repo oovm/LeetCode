@@ -229,69 +229,6 @@
         },
         {
             "args": {
-                "votes": [
-                    "LION",
-                    "LION",
-                    "LION",
-                    "LION",
-                    "LION",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES",
-                    "EARTHTONES"
-                ]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "votes": ["ABCD", "BCDA", "CDAB", "DABC", "ACBD"]
             },
             "expected": "ACBD"
@@ -345,37 +282,6 @@
                 ]
             },
             "expected": "CBA"
-        },
-        {
-            "args": {
-                "votes": [
-                    "TEAM",
-                    "MEAT",
-                    "TEAM",
-                    "EMAT",
-                    "AMTE",
-                    "MATE",
-                    "ATEM",
-                    "TAME",
-                    "EMTA",
-                    "ETAM",
-                    "METE",
-                    "MATE",
-                    "TEMA",
-                    "TEAM",
-                    "MATETE",
-                    "AMTE",
-                    "ETAM",
-                    "TAME",
-                    "EMTA",
-                    "ETAM",
-                    "METE",
-                    "MATE",
-                    "TEMA",
-                    "TEAM"
-                ]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -485,23 +391,6 @@
                 ]
             },
             "expected": "XYZ"
-        },
-        {
-            "args": {
-                "votes": [
-                    "QWERTYUIOPASDFGHJKLZXCVBNM",
-                    "MNBVCXZLKJHGFDSAPORIUYTREWQ",
-                    "WQERTYUIOPASDFGHJKLZXCVBNM",
-                    "ZXCVBNMLKJHGFDSAPOIUYTREWQ"
-                ]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "votes": ["ABCDEF", "BCDEFA", "CDEFAB", "DEFABC", "EFGABC", "FGABCDE", "GABCDEF", "HABCDEFG", "IABCDEFG", "JABCDEFG"]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -826,12 +715,6 @@
         },
         {
             "args": {
-                "votes": ["ABCDEFGHIJKL", "LJKJIHGFEDCBA", "ABCDEFGHIJKL", "LJKJIHGFEDCBA", "ABCDEFGHIJKL", "LJKJIHGFEDCBA"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "votes": ["XYZ", "YXZ", "YZX", "ZXY", "ZYX", "XZY", "YZX", "ZYX", "XYZ", "YXZ", "XZY", "XYZ"]
             },
             "expected": "XYZ"
@@ -841,25 +724,6 @@
                 "votes": ["FGHIJK", "GHIJKF", "HIJKFG", "IJKFGH", "JKFGHI", "KFGHIJ", "FGHIJK", "GHIJKF", "HIJKFG", "IJKFGH"]
             },
             "expected": "IHGFJK"
-        },
-        {
-            "args": {
-                "votes": [
-                    "QWERTYUIOPASDFGHJKLZXCVBNM",
-                    "ASDFGHJKLZXCVBNMQWERTYUIOP",
-                    "ZXCVBNMQWERTYUIOPASDFGHJKL",
-                    "WERTYUIOPASDFGHJKLZXCVBNM",
-                    "QWERTYUIOPZXCVBNMLKJIHGFDSA",
-                    "ASDFGHJKLZXCVBNMPOIUYTREWQ",
-                    "ZXCVBNMPOIUYTREWQASDFGHJKL",
-                    "WERTYUIOPZXCVBNMLKJIHGFDSA",
-                    "QWERTYUIOPZXCVBNMLKJIHGFDSA",
-                    "ASDFGHJKLZXCVBNMPOIUYTREWQ",
-                    "ZXCVBNMPOIUYTREWQASDFGHJKL",
-                    "WERTYUIOPZXCVBNMLKJIHGFDSA"
-                ]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -1062,6 +926,7 @@
     ],
     "invoke": {
         "python": "Solution().rankTeams",
-        "typescript": "Solution().rankTeams"
+        "typescript": "Solution().rankTeams",
+        "valkyrie": "rankTeams"
     }
 }

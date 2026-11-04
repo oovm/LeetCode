@@ -476,46 +476,6 @@
         },
         {
             "args": {
-                "arr": [
-                    "abcd",
-                    "efgh",
-                    "ijkl",
-                    "mnop",
-                    "qrst",
-                    "uvw",
-                    "xyz",
-                    "a",
-                    "b",
-                    "c",
-                    "d",
-                    "e",
-                    "f",
-                    "g",
-                    "h",
-                    "i",
-                    "j",
-                    "k",
-                    "l",
-                    "m",
-                    "n",
-                    "o",
-                    "p",
-                    "q",
-                    "r",
-                    "s",
-                    "t",
-                    "u",
-                    "v",
-                    "w",
-                    "x",
-                    "y",
-                    "z"
-                ]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "arr": ["aaaaa", "bbbbb", "ccccc", "ddddd", "eeeee", "fffff"]
             },
             "expected": 0
@@ -693,52 +653,6 @@
                 "arr": ["abcd", "ab", "cd", "ef", "gh", "ij", "kl", "mn", "op", "qr", "st", "uv", "wx", "yz"]
             },
             "expected": 26
-        },
-        {
-            "args": {
-                "arr": [
-                    "ab",
-                    "cd",
-                    "ef",
-                    "gh",
-                    "ij",
-                    "kl",
-                    "mn",
-                    "op",
-                    "qr",
-                    "st",
-                    "uv",
-                    "wx",
-                    "yz",
-                    "a",
-                    "b",
-                    "c",
-                    "d",
-                    "e",
-                    "f",
-                    "g",
-                    "h",
-                    "i",
-                    "j",
-                    "k",
-                    "l",
-                    "m",
-                    "n",
-                    "o",
-                    "p",
-                    "q",
-                    "r",
-                    "s",
-                    "t",
-                    "u",
-                    "v",
-                    "w",
-                    "x",
-                    "y",
-                    "z"
-                ]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -994,98 +908,9 @@
         },
         {
             "args": {
-                "arr": [
-                    "abcdefgh",
-                    "ijklmnop",
-                    "qrstuvwx",
-                    "yzabcd",
-                    "efghij",
-                    "klmnop",
-                    "qrstuv",
-                    "wxyz",
-                    "abc",
-                    "def",
-                    "ghi",
-                    "jkl",
-                    "mno",
-                    "pqr",
-                    "stu",
-                    "vwxy",
-                    "z",
-                    "a",
-                    "b",
-                    "c",
-                    "d",
-                    "e",
-                    "f",
-                    "g",
-                    "h",
-                    "i",
-                    "j",
-                    "k",
-                    "l",
-                    "m",
-                    "n",
-                    "o",
-                    "p",
-                    "q",
-                    "r",
-                    "s",
-                    "t",
-                    "u",
-                    "v",
-                    "w",
-                    "x",
-                    "y"
-                ]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "arr": ["abcd", "efgh", "ijkl", "mnop", "qrst", "uvwx", "yzab"]
             },
             "expected": 24
-        },
-        {
-            "args": {
-                "arr": [
-                    "abcd",
-                    "efgh",
-                    "ijkl",
-                    "mnop",
-                    "qrst",
-                    "uvwx",
-                    "yz",
-                    "a",
-                    "b",
-                    "c",
-                    "d",
-                    "e",
-                    "f",
-                    "g",
-                    "h",
-                    "i",
-                    "j",
-                    "k",
-                    "l",
-                    "m",
-                    "n",
-                    "o",
-                    "p",
-                    "q",
-                    "r",
-                    "s",
-                    "t",
-                    "u",
-                    "v",
-                    "w",
-                    "x",
-                    "y",
-                    "z"
-                ]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -1110,52 +935,6 @@
                 ]
             },
             "expected": 26
-        },
-        {
-            "args": {
-                "arr": [
-                    "ab",
-                    "cd",
-                    "ef",
-                    "gh",
-                    "ij",
-                    "kl",
-                    "mn",
-                    "op",
-                    "qr",
-                    "st",
-                    "uv",
-                    "wx",
-                    "yz",
-                    "a",
-                    "b",
-                    "c",
-                    "d",
-                    "e",
-                    "f",
-                    "g",
-                    "h",
-                    "i",
-                    "j",
-                    "k",
-                    "l",
-                    "m",
-                    "n",
-                    "o",
-                    "p",
-                    "q",
-                    "r",
-                    "s",
-                    "t",
-                    "u",
-                    "v",
-                    "w",
-                    "x",
-                    "y",
-                    "z"
-                ]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -1253,54 +1032,11 @@
                 "arr": ["unique", "chars", "only", "here", "are", "some", "strings", "with", "various", "lengths"]
             },
             "expected": 11
-        },
-        {
-            "args": {
-                "arr": [
-                    "abcdefghij",
-                    "klmnopqr",
-                    "stuvwxyz",
-                    "abc",
-                    "def",
-                    "ghi",
-                    "jkl",
-                    "mno",
-                    "pqr",
-                    "stu",
-                    "vwxyz",
-                    "a",
-                    "b",
-                    "c",
-                    "d",
-                    "e",
-                    "f",
-                    "g",
-                    "h",
-                    "i",
-                    "j",
-                    "k",
-                    "l",
-                    "m",
-                    "n",
-                    "o",
-                    "p",
-                    "q",
-                    "r",
-                    "s",
-                    "t",
-                    "u",
-                    "v",
-                    "w",
-                    "x",
-                    "y",
-                    "z"
-                ]
-            },
-            "expected": "Execution timed out"
         }
     ],
     "invoke": {
         "python": "Solution().maxLength",
-        "typescript": "Solution().maxLength"
+        "typescript": "Solution().maxLength",
+        "valkyrie": "maxLength"
     }
 }

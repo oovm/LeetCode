@@ -817,6 +817,7 @@
     ],
     "invoke": {
         "python": "Solution().fullBloomFlowers",
-        "typescript": "Solution().fullBloomFlowers"
+        "typescript": "Solution().fullBloomFlowers",
+        "valkyrie": "fullBloomFlowers"
     }
 }
