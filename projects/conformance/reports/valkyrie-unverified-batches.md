@@ -7,6 +7,35 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R8-2026-11-04（理想解滚动批次 8，8 题，写完未构建）
+
+- 范围：此前 `solution.v` 为阻塞标记（`# blocked: std.collection 数组参数读取`）的 8 题；
+  只补理想解，不改算法绕 std 缺口。选题偏置压「文本构建 + 单端队列 + 插入语义」：
+  `Utf8Builder::append_i64`（首次落地）、`slice(k, 1)` 造单字符、`concat` 折叠、
+  `Deque` 单调栈（第二面）、`ArrayList.insert(ordinal, value)`、`sorted_by` 多字段比较器、
+  `starts_with` / `ends_with` 组合。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
+- 新缺口：**0 条**（G1–G24 不变）。
+- 预期阻断：`number-of-lines-to-write-string` 返回 `ArrayList<i64>`、`queue-reconstruction-by-height`
+  返回 `ArrayList<ArrayList<i64>>`，按 G3 在 wasm JS glue 处阻断；`string-compression` 的
+  `mut chars: [utf8]` 若 glue 未实现写回，按 G3 同族阻断；`queue-reconstruction-by-height` 的
+  `sorted_by(ArrayList<ArrayList<i64>>)` 若类型检查只接受一维元素，会在排序入口处报错（G11 边界）；
+  其余 5 题预计无缺口阻断，仅受 G3 同族 glue 影响。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致（`chars` / `widths`+`s` /
+  `words` / `words` / `word1`+`word2` / `people` / `preorder` / `words`）。
+- TS 参考解：8/8 复用既有非空实现，本轮未新写。
+
+| slug | 导出入口 | 返回类型 | 缺口 / 覆盖方向 |
+| --- | --- | --- | --- |
+| `string-compression` | `compress` | `i64` | `Utf8Builder::append_i64`（首次）+ `slice(k, 1)` 造单字符 + `[utf8]` 写侧 |
+| `number-of-lines-to-write-string` | `numberOfLines` | `ArrayList<i64>` | `utf8` Cardinal + `as u32` 码位减；固定二元组走 G3 |
+| `unique-morse-code-words` | `uniqueMorseRepresentations` | `i64` | 26 项 `[utf8]` 表 + `concat` 折叠 + `HashSet<utf8>` |
+| `find-first-palindromic-string-in-the-array` | `firstPalindrome` | `utf8` | `char` 等值双指针（不进哈希 / 有序） |
+| `check-if-two-string-arrays-are-equivalent` | `arrayStringsAreEqual` | `bool` | `utf8.concat` 折叠 + `==` |
+| `queue-reconstruction-by-height` | `reconstructQueue` | `ArrayList<ArrayList<i64>>` | **`ArrayList.insert(ordinal, value)` 语义** + `sorted_by` 多字段比较器；G3 |
+| `verify-preorder-sequence-in-binary-search-tree` | `verifyPreorder` | `bool` | **`Deque` 第二面**（`push_back` / `peek_back` / `pop_back` 单调栈） |
+| `count-prefix-and-suffix-pairs-i` | `countPrefixSuffixPairs` | `i64` | `starts_with` + `ends_with` 组合，无缺口 |
+
 ## 批次 R7-2026-11-04（理想解滚动批次 7，8 题，写完未构建）
 
 - 范围：此前 `solution.v` 为阻塞标记（`# blocked: std.collection 数组参数读取`）的 8 题；

@@ -50,6 +50,47 @@ $n
 - 后续增量（2026-11-04，滚动批次 R3–R6 各 8 题写完未构建后）：canonical 实测 **569**
   （R6 前 561；本批 8 题已计入 `invoke.valkyrie`，但仍属未验证，不代表构建通过）。
 - 后续增量（2026-11-04，滚动批次 R7 后）：canonical 实测 **577**（R7 前 569）。
+- 后续增量（2026-11-04，滚动批次 R8 后）：canonical 实测 **585**（R8 前 577；本批新编号 0 条）。
+
+## 系统性问题（观察，非编号）
+
+> 本节只记观察，不占 `G` 编号；缺口本身仍按 G1–G24 计。
+
+### 观察 1：trait 实现面按需堆，没有「类型 × 核心 trait」矩阵
+
+G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 `Hash`）、G24（`MultiSet`
+无 `Equal`）四条合起来指向同一件事：每个类型只零散实现了 `{Equal, Comparable, Hash}` 的任意
+子集，没有任何机制声明「这个类型实现了哪些核心 trait」。现状：
+- `i64`：`Equal` + `Hash` + 裸 `<`（无 `Comparable` 合同）
+- `utf8`：`Equal` + `Hash`（无 `<`，无 `Comparable`）
+- `char`：`Equal`（无 `Hash`，无 `<`）
+- `MultiSet<T>`：无 `Equal`、无 `Hash`
+后果：判断「这个类型能不能作键 / 能不能排序」只能靠试错（写一遍、看编译器报错），而不是查一份
+矩阵。std 侧应补一张 `类型 × {Equal, Hash, Comparable, Ordinal, Cardinal}` 的落表，缺项要么补、
+要么显式标「不实现」。
+- 修复顺序含义：先建矩阵（G15 的 `Comparable` 是矩阵骨架），再按缺项补 impl（G13 / G17 / G24）。
+
+### 观察 2：同名不同义比缺 API 更危险
+
+`utf8.slice(start, length)` 的第二个参数是**段长**（`Utf8Text.v` L262），不是终点下标；
+从 TS 的 `slice(start, end)` 照搬会**静默错位**——不报错、结果整体偏移，比「方法不存在」更难发现。
+同类风险入口（需 std 侧逐条核对参数语义并标注差异）：
+- `utf8.slice(start, count)` / `try_slice(start, count)` —— 段长，非终点
+- `ArrayList.insert(index, value)` / `remove(index)` —— 需定死是「先位置后元素」还是「先元素后位置」
+- G16 提案的 `range(low, high)` —— 需定死是闭区间、半开区间还是两端点
+- `utf8.replace(old, new)` —— 是全部替换还是仅首个替换
+结论：std 需要一个「参数语义与主流惯例不同」的清单，逐条标差异，不要等解题时一个个踩；
+本轮实际踩到的就是 `slice`（批次 R7），已写入第 7 批「未命中面」。
+
+### 观察 3：表达力缺口至今只有 G8 一条
+
+24 条缺口里，只有 G8（无向图建模）属于「没有任何近似物」的表达力缺口；其余 23 条都有等价
+近似物（题内手写循环、数组下标保序、排序键、频次向量等）。这条决定下一轮 std 的修复顺序：
+1) 先补 trait 矩阵（G15 骨架 + G13 / G17 / G24 的 impl 缺项）；
+2) 再补 API（G11 / G12 / G14 / G16 / G18–G23 等）；
+3) 最后处理 G8 的建模塌陷。
+理由：1、2 是加法，风险局部；3 要动模型与既有容器约束，放在最后可避免把缺口修复和模型迁移
+混进同一笔改动。
 
 ## 未恢复
 
@@ -774,6 +815,29 @@ micro to_sorted_list(self) -> ArrayList<T> where T: Comparable
   未触发 G12（容量已知时 `HashMap::new(count)` 正常）。
 - **表达力缺口档仍只有 G8**：G24 有近似物（排序键 / 频次向量），G15 / G17 新实例是既有缺口的
   规模扩张；本轮仍无「没有任何近似物」的新面。
+
+### 未命中面（第 8 批探测，2026-11-04，新编号 0 条）
+
+- **`Utf8Builder::append_i64` 首次被压住**：`string-compression`（443）用
+  `append_i64(run)` + `build()` + `slice(k, 1)` 把段长逐位写回 `[utf8]`，无需手写除十循环。
+  这条 API 此前从未被任何题解使用，属纯增量发现，**不是缺口**。
+- **`[utf8]` 的元素是「单字符串」而不是 `char`（类型缝，不编号）**：写侧 `window⁅i⁆ = ...` 的右值
+  必须是 `utf8`，直接从 `char` 赋值不成立；本题用 `text.slice(k, 1)` 造单字符。
+  `Utf8Builder` 的 `append` 只收 `char` 或 `&Utf8Text`，也没有 `char → utf8` 的一步转换入口。
+  有近似物（`slice` / `concat`），故记观察、不编号；对「写数组」类题是高频摩擦点。
+- **`slice(start, 1)` 复用问题得到验证**：同一批里 `slice` 既被当作「取一段文本」也被当作
+  「造单字符」，第二个参数恒为段长；观察 2 的结论在多题上复用成立。
+- **`Deque` 第二面成立**：`verify-preorder-sequence-in-binary-search-tree`（255）只用
+  `push_back` / `peek_back` / `pop_back` 做单调栈，`pop_back` 的 `Option` 用局部变量承接
+  （不触发 G5 的分支 arity 面）。`Deque::new()` 无容量参数与 G12 同族，但本题规模已知，
+  仍属摩擦而非阻断。
+- **`ArrayList.insert(ordinal, value)` 语义与 TS `splice` 同向**：`queue-reconstruction-by-height`
+  （406）按 `k` 插入，确认参数序是「先位置、后元素」；观察 2 清单第 2 条可在 std 侧直接标「与主流同向」。
+- **`sorted_by(ArrayList<ArrayList<i64>>)` 可用**：406 的多字段比较器（身高降序 + k 升序）
+  在容器层面可表达，只缺 `Array<T>` 侧入口（G11 的边界更清楚了：缺口在「定长数组」不在「排序本身」）。
+- **`ends_with` 存在**：`count-prefix-and-suffix-pairs-i`（3042）与 `starts_with` 对称，
+  无需切片比较。
+- **表达力缺口档仍只有 G8**：本批 0 条新编号，23 条既有缺口均有等价近似物，结论不变。
 
 ### 建模提示（G8 的根部，比缺 API 严重）
 
