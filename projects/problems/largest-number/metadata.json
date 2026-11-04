@@ -909,6 +909,7 @@
     ],
     "invoke": {
         "python": "Solution().largestNumber",
-        "typescript": "Solution().largestNumber"
+        "typescript": "Solution().largestNumber",
+        "valkyrie": "largestNumber"
     }
 }

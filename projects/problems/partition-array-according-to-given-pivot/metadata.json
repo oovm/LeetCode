@@ -748,6 +748,7 @@
     ],
     "invoke": {
         "python": "Solution().pivotArray",
-        "typescript": "Solution().pivotArray"
+        "typescript": "Solution().pivotArray",
+        "valkyrie": "pivotArray"
     }
 }

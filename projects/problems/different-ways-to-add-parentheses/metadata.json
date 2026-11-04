@@ -5061,6 +5061,7 @@
     ],
     "invoke": {
         "python": "Solution().diffWaysToCompute",
-        "typescript": "Solution().diffWaysToCompute"
+        "typescript": "Solution().diffWaysToCompute",
+        "valkyrie": "diffWaysToCompute"
     }
 }

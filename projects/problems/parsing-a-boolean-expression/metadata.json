@@ -817,6 +817,7 @@
     ],
     "invoke": {
         "python": "Solution().parseBoolExpr",
-        "typescript": "Solution().parseBoolExpr"
+        "typescript": "Solution().parseBoolExpr",
+        "valkyrie": "parseBoolExpr"
     }
 }
