@@ -512,6 +512,7 @@
     "invoke": {
         "python": "Solution().multiply",
         "typescript": "Solution().multiply",
+        "valkyrie": "multiply",
         "wolframSxo": "multiply",
         "matlabSxo": "multiply"
     }

@@ -792,6 +792,7 @@
     "invoke": {
         "python": "Solution().firstMissingPositive",
         "typescript": "Solution().firstMissingPositive",
+        "valkyrie": "firstMissingPositive",
         "wolframSxo": "firstMissingPositive",
         "matlabSxo": "firstMissingPositive"
     }
