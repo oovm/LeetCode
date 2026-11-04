@@ -47,6 +47,8 @@ $n
   不是此前误报的 2580。
 - 后续增量（2026-11-04）：新增「Easy 数组返回值补缺」19 题后，canonical 实测 **515**；
   表中 496 仍是扫描起点口径，未构建按起点口径记为 233（见该批次小节）。
+- 后续增量（2026-11-04，滚动批次 R3–R6 各 8 题写完未构建后）：canonical 实测 **569**
+  （R6 前 561；本批 8 题已计入 `invoke.valkyrie`，但仍属未验证，不代表构建通过）。
 
 ## 未恢复
 
@@ -297,8 +299,9 @@ micro sorted_by<T>(list: ArrayList<T>, cmp: micro(T, T) -> i32): ArrayList<T>
 micro sorted_by<T>(list: Array<T>, cmp: micro(T, T) -> i32): ArrayList<T>
 ```
 
-- 影响题（2）：`groups-of-special-equivalent-strings`（893，even/odd 两个副本）、
-  `reorder-data-in-log-files`（937，整表副本）。
+- 影响题（4）：`groups-of-special-equivalent-strings`（893，even/odd 两个副本）、
+  `reorder-data-in-log-files`（937，整表副本）、`height-checker`（1051，排序副本，批次 R4 首例
+  以 `sorted_by(Array<T>)` 写）、`largest-perimeter-triangle`（976，降序副本，批次 R6 写）。
 - 不对称点：`ArrayList` 有 **7 个**排序函数（`quick_sort` / `quick_sort_range` / `partition` / `swap` /
   `merge_sort` / `merge_sort_range` / `merge`；此前记为 6 个，漏了 `merge`），`Array<T>` 为 **0 个**
   排序入口；没有任何一个返回新序列。另：std 测试目录下无 `quick_sort` / `merge_sort` 用例，
@@ -318,8 +321,9 @@ micro new(capacity: usize): Self
 micro with_capacity(capacity: usize): Self
 ```
 
-- 影响题（2）：`groups-of-special-equivalent-strings`（893）、`longest-consecutive-sequence`（128，
-  元素数最大 1e5 的整表插入）。
+- 影响题（3）：`groups-of-special-equivalent-strings`（893）、`longest-consecutive-sequence`（128，
+  元素数最大 1e5 的整表插入）、`unique-number-of-occurrences`（1207，批次 R6，频次去重集合
+  规模 = 键数）。
 - 不对称点：`HashSet::new()` 固定 `SwissSet::new(16)`；`HashMap::new(capacity: usize)` 直传容量。
 - 判定：**std 缺口**。
 - 修复初判：**加 API**（一行转发 `SwissSet::new(capacity)`）。
@@ -431,11 +435,14 @@ micro last(self) -> Option<T>
 micro range(self, low: T, high: T) -> ArrayList<T>
 micro nth(self, rank: usize) -> Option<T>        # BTreeSet，按秩取元素
 micro nth_key(self, rank: usize) -> Option<K>    # BTreeMap，按秩取键
+micro ceiling_key(self, value: K) -> Option<K>   # BTreeMap，最小 >= value 的键（下界查询）
+micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value 的键（上界查询）
 ```
 
-- 影响题（2）：`contains-duplicate-iii`（220，窗口内前驱/后继判定）、
+- 影响题（3）：`contains-duplicate-iii`（220，窗口内前驱/后继判定）、
   `sliding-window-median`（480，有序计数表按秩取中位；缺 `nth_key` 只能 `keys()` 全量物化，
-  每步退化为 O(k)）。
+  每步退化为 O(k)）、`find-right-interval`（436，批次 R6，按终点求「最小 >= 终点的起点」，
+  即 `ceiling_key`；缺它只能 `keys()` 全量物化后手写二分）。
 - 不对称点：`HashMap` 有 `keys` / `values`，`BTreeSet` 有 `to_list`，但有序容器只能被全量物化后
   线性扫描；`floor` / `ceiling` / `first` / `last` / `range` / `nth` 全部缺失，「有序」只剩存储形态。
 - 判定：**std 缺口**。
@@ -601,6 +608,29 @@ micro trailing_zeros(self): u32
 - 修复初判：**加 API**（逐 primitive 一个 host contract 或纯循环实现）。
 - 表达力档位：**不属于表达力缺口**——有近似物（手写循环）。
 
+### G23 `std.math` 缺整数 gcd / lcm（数论面整体缺席）
+
+- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/math/` 全目录）
+- 定性：**该有但没有**。`std.math` 只有 `basic`（`abs` / `max` / `min` / `clamp`，且只收 `f64`）、
+  `constants`、`splitmix64`、`distribution/*`、`graph_theory/*`；**没有数论模块**，
+  `gcd` / `lcm` / `is_prime` / `factorize` 一个都没有。
+- 期望签名：
+
+```v
+# std/source/math/number_theory.v（新模块）
+micro gcd(a: i64, b: i64) -> i64
+micro lcm(a: i64, b: i64) -> i64
+```
+
+- 影响题（1）：`x-of-a-kind-in-a-deck-of-cards`（914，批次 R6，全体频次的 gcd > 1）。
+- 不对称点：`f64` 有 `abs` / `max` / `min`，整数连 `gcd` 都没有；`BitSet` 在容器层有 `intersect` /
+  `union` / `difference`，数值层却没有任何整除关系归约。
+- 判定：**std 缺口**（不阻断：题内 Euclid 循环是等价表达）。
+- 修复初判：**加 API**（十行 Euclid；`lcm` 需先定零值与溢出策略）。
+- 表达力档位：**不属于表达力缺口**——有近似物（题内 Euclid 循环）。
+- 与 G20 的关系：同一「标量数值能力面只做算子、不做归约」的根部，但对象是整除关系而非大小归约，
+  故单列；`gcd` 若做成泛型还需 G15 的 `Comparable`（`%` 只对整型成立，目前只能定 `i64` 重载）。
+
 ### 未命中面（第 3 批探测，2026-11-04，无强制影响题，故不编号）
 
 - **迭代器适配器族不是缺口**：`filter_map` / `skip_while` / `take_while` 都在
@@ -662,6 +692,29 @@ micro trailing_zeros(self): u32
   都只需「边界下标收缩」或「读写指针相对移动」，索引循环即可表达。G19 维持单实例（189）。
 - **表达力缺口档仍只有 G8**：本批新增触发面（G13 第二实例、G18 空转）都有等价写法；
   `MultiSet` / `BitSet` / `Deque` 三条容器面全部落在 std 已有 API 上，未出现「没有任何近似物」。
+
+### 未命中面（第 6 批探测，2026-11-04，仅 G23 一条新编号）
+
+- **`utf8.split` 首次被压住**：`split-strings-by-separator`（2788）直接 `word.split(separator)`
+  再显式丢弃空段，全程只用到既有 `split` + `length`。**没有触发 G14**（`split_once` 仍是单实例
+  937），也没有触发 G18（本题语义是固定分隔符，不是空白类）。
+- **`ArrayView` 写侧第二次确认（仍是全窗）**：`reverse-words-in-a-string-ii`（186）只用
+  `array_view(s)` 全窗视图就把整段与每个词就地反转，`⁅ ⁆=` 写穿源数组；G19（区间窗口构造）
+  仍无强制题，维持单实例（189）。结论：**写侧不缺，缺的只是非零 `offset` 的构造入口**。
+- **`HashMap` 计数面（计数 / `keys()` / `values()`）全部够用**：`unique-number-of-occurrences`
+  （1207）、`count-common-words-with-one-occurrence`（2085）、`kth-distinct-string-in-an-array`
+  （2053）三题都只用 `new(capacity)` / `contains_key` / `get` / `insert` / `keys` / `values`，
+  未遇到任何新缺口。
+- **哈希表遍历序不保证插入序，但不构成缺口**：`kth-distinct-string-in-an-array`（2053）需要
+  「按出现顺序取第 k 个唯一串」，本批以入参数组本身保序（扫两遍 `arr`），没有依赖 `keys()` 的顺序。
+  有序哈希容器（插入序 / 访问序）在 std 里不存在，但题库可用数组下标等价表达，**不编号**。
+- **linked-list 形参面在 ABI 层被抹平**：题库 40+ 道链表题的 `head` 一律 marshal 成数值数组
+  （`metadata.tests.args.head` 为 `[1,1,2,1,2,3]` 这类），`std.collection.LinkedList` 的能力面
+  根本进不了题解入口。顺带核到 `LinkedList` 没有 `to_array` / `into_iterator` / `get(i)`，
+  只有 `iter` / `iter_reverse` 两个回调式遍历 + 首尾增删；**token 无法从容器取出，只能回调里消费**。
+  但无强制题，**不编号**，仅记「链表面被 ABI 抹平」这一事实。
+- **表达力缺口档仍只有 G8**：本批新编号 G23 属「有近似物（题内 Euclid）」，G11 / G12 / G16 的
+  新实例都是既有缺口的规模扩张；「没有任何近似物」依旧只有无向图建模一条。
 
 ### 建模提示（G8 的根部，比缺 API 严重）
 

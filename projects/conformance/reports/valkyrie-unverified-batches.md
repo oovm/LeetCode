@@ -7,6 +7,34 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R6-2026-11-04（理想解滚动批次 6，8 题，写完未构建）
+
+- 范围：此前 `solution.v` 为阻塞标记（`# blocked: std.collection 数组参数读取`）或空文件的 8 题；
+  只补理想解，不改算法绕 std 缺口。选题偏置压「前五批未压过的面」：`HashMap` 计数三连
+  （频次 / `keys()` / `values()`）、`utf8.split` 首次落地、`ArrayView` 写侧（全窗视图）、
+  `BTreeMap` 下界查询（G16 新实例）、`Array<T>` 排序入口（G11 第二实例）、整数 gcd（新编号 G23）。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
+- 预期阻断：`split-strings-by-separator` / `find-right-interval` 返回 `ArrayList<utf8>` /
+  `ArrayList<i64>` 按 G3 在 wasm JS glue 处阻断；`reverse-words-in-a-string-ii` 的 `mut s: [utf8]`
+  若 glue 未实现写回，按 G3 同族阻断；`largest-perimeter-triangle` 的 `sorted_by(Array<T>)`
+  按 G11 在类型检查处阻断；`find-right-interval` 的 `BTreeMap.ceiling_key` 按 G16、
+  `x-of-a-kind-in-a-deck-of-cards` 的 `gcd` 按 G23 在名字解析处阻断；其余只记能力面（G12）。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致（`arr` / `words1`+`words2` /
+  `arr`+`k` / `words`+`separator` / `s` / `intervals` / `nums` / `deck`）；V 侧按 snake_case 书写，
+  `invoke.valkyrie` 逐题登记为类方法 camelCase 名。
+- TS 参考解：8/8 复用既有非空实现，本轮未新写。
+
+| slug | 导出入口 | 返回类型 | 缺口 / 覆盖方向 |
+| --- | --- | --- | --- |
+| `unique-number-of-occurrences` | `uniqueOccurrences` | `bool` | `HashMap` 计数 + `HashSet` 去重（G12 第 3 实例） |
+| `count-common-words-with-one-occurrence` | `countWords` | `i64` | 双 `HashMap<utf8, i64>` + `keys()` 遍历（`[utf8]` 形参面） |
+| `kth-distinct-string-in-an-array` | `kthDistinct` | `utf8` | 计数 + 入参数组保序（不依赖哈希表遍历序） |
+| `split-strings-by-separator` | `splitWordsBySeparator` | `ArrayList<utf8>` | `utf8.split` 首次落地 + 空段显式过滤；G3 预计阻断 |
+| `reverse-words-in-a-string-ii` | `reverseWords` | `unit` | `ArrayView` 写侧（全窗 `array_view(s)` 写穿）+ `mut [utf8]` |
+| `find-right-interval` | `findRightInterval` | `ArrayList<i64>` | **G16 第 3 实例**（`BTreeMap.ceiling_key`）+ 嵌套入参；G3 |
+| `largest-perimeter-triangle` | `largestPerimeter` | `i64` | **G11 第 2 实例**（`sorted_by(Array<T>, cmp)` 降序副本） |
+| `x-of-a-kind-in-a-deck-of-cards` | `hasGroupsSizeX` | `bool` | **G23 首例**（`std.math` 无整数 `gcd`） |
+
 ## 批次 R5-2026-11-04（理想解滚动批次 5，8 题，写完未构建）
 
 - 范围：此前 `solution.v` 为阻塞标记（`# blocked: std.collection 数组参数读取`）或空文件的 8 题；
