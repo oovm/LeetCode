@@ -48,9 +48,10 @@ serveChild(
         }
         const returns = lookup.exportSchema.returns;
         candidate = async (args) => {
-            const ordered = orderArgsBySchema(lookup.exportSchema, args).map((value, index) =>
-                preserveI64Precision(lookup.exportSchema.params[index]!, value),
-            );
+            const ordered = orderArgsBySchema(lookup.exportSchema, args).map((value, index) => {
+                const param = lookup.exportSchema.params[index];
+                return param ? preserveI64Precision(param.type, value, `args.${param.name}`) : value;
+            });
             const raw = host.callExport!(lookup.exportSymbol, ...ordered);
             const value = raw instanceof Promise ? await raw : raw;
             return returns ? normalizeResultByAbiType(value, returns as WasmAbiType) : value;

@@ -7,6 +7,44 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 复跑窗口 2026-11-04 23:50（addon 重建后：marshal 夹具修复 + 真实通过口径）
+
+- 触发：addon 重建 `2026-11-04 23:50:58`（13,341,184 B，oak pin `555798a8`），`comparable.v:169`
+  解析停点消失；但 10/12 题在 `arg0[0]` 被 `Cannot marshal I64 from number N` 拦住。
+- **边界与修法（夹具缺陷，非语言缺口）**：`preserveI64Precision` 原本只转换顶层 `I64` 形参，
+  `ArrayList<i64>` 在 schema 上是 `Array<I64>`，元素仍是 JS `Number`。现改为按
+  `Array` / `FixedArray` / `Option` / `Tuple` 递归、只在 `I64` 叶节点规整；返回值侧
+  `normalizeResultByAbiType` 补 `Option` / `Tuple`。两份实现收敛到
+  `projects/conformance/src/isolated/v-shared.ts`，`scripts/run_v_solver.ts` 删除本地副本。
+- 复验（全用例真跑）：`two-sum` 80/80、`teemo-attacking` 120/120、`array-partition` 112/112。
+- 口径：**编译通过** = `status=0`；**端到端通过** = `status=0` 且判题 `ok=true`。下表分开列，
+  单进程顺序跑，约 190 s，超时即报不重试。
+
+| 批次 | 复跑题数 | 编译通过 | 端到端通过 | 编译失败 | 编译通过但判题未通过 |
+| --- | --- | --- | --- | --- | --- |
+| R20 Easy 标量池 | 25 | 25 | 25 | 0 | 0 |
+| R21 Easy 文本 / 哈希 / 树 | 29 | 19 | 17 | 10 | 2 |
+| R22 哈希 / 排序 / 滑窗 | 26 | 9 | 7 | 17 | 2 |
+| R23 双指针 / 前缀和 / 二分答案 | 28 | 20 | 6 | 8 | 14 |
+| R24 单调栈 / 堆 / 贪心 | 28 | 12 | 12 | 16 | 0 |
+| R25 图 / 并查集 / 拓扑排序 | 23 | 14 | 14 | 9 | 0 |
+| R19 位运算 | 9 | 0 | 0 | 9 | 0 |
+| M-2026-11-03 | 37 | 37 | 24 | 0 | 13 |
+| 基线 `two-sum` | 1 | 1 | 1 | 0 | 0 |
+| **合计** | **206** | **137** | **106** | **69** | **31** |
+
+- 累计口径（替换此前「累计已构建通过 18」）：端到端通过 **106 / 832**，编译通过 **137 / 832**，
+  未编译（未验证）**626**。
+- 编译失败题（69）按族归并见账本「验证窗口实测」节：
+  `sort(ArrayList<i64>)` 无候选 20、`BinaryHeap` `where` 证据 13、`[export]` 写在类方法上 9、
+  嵌套 `ArrayList::new(0)` 推断 6、`infix -` 歧义 5、`<fn value>` 不在作用域 4、`sorted_by` 缺失 3、
+  SMIR007 合同 3、`char` 面运算 2、`u8` 覆盖 `char` 2、`String` 1、`__u8_add` 1、`list.iter` 1、
+  `mut` 形参类型位 1（`advantage-shuffle`、`the-k-strongest-values-in-an-array` 跨两族，已去重）。
+- 编译通过但判题未通过（31）：29 条首例即结果不符（多为 `expected "X", got "0"`，属题解实现缺陷，
+  下一批逐题复核）；1 条语料缺陷（`closest-binary-search-tree-value` 的 `target = 2.235714`）；
+  1 条运行期 `RuntimeError: unreachable`（`delete-and-earn`）。
+- 本窗口未复跑的题（626）不是失败，只是超出本轮预算；按批次表原状态保留。
+
 ## 批次 R25-2026-11-04（Medium 图 / 并查集 / 拓扑排序 23 题，写完未构建）
 
 - 范围：Medium 的图 + 并查集 + 拓扑排序面，全部按**理想写法**落地：邻接表

@@ -8,6 +8,9 @@
 - 仅写完未编译的题不计入覆盖数，也不标 `blocked`；按能力分组登记在
   `valkyrie-unverified-batches.md`，等对应能力复跑。
 - 每题有且只有两个状态：已构建通过 / 未验证。未验证不等于通过。
+- 「已构建通过」必须拆成两个数字记账：**编译通过数**（`legionBuildProject` `status=0`）与
+  **端到端通过数**（`status=0` 且隔离判题 `ok=true`）。只报一个合数时必须注明是哪一个，
+  并注明实测窗口；编译通过不等于通过。
 - 验证窗口额外记录三态证据（编译通过 / 编译失败 + 诊断坐标 / 因缺口无法判题），
   逐题结果写在 `valkyrie-unverified-batches.md` 的实测列。
 - 每条缺口只保留一个最小复现；题内触发点写在对应 `solution.v` 的 `# 题内触发点:`。
@@ -187,6 +190,59 @@ $n
 - 后续增量（2026-11-04，Medium 图 / 并查集 / 拓扑排序批次 R25 后）：canonical 实测 **832**
   （R25 前 809；本批 23 题，新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；
   构建停点与 R20–R24 相同（同一 addon 基线过期，非 std 回归）。
+
+### 验证窗口实测（2026-11-04 23:50 addon 重建后：编译关破碎 + marshal 夹具修复）
+
+本节数字**取代** R20–R25 各增量行里「构建通过 0 题」的表述；那几句是旧 addon 停点下的历史测量。
+
+- 时点：addon 重建 `2026-11-04 23:50:58`（13,341,184 B，oak pin `555798a8`）；`comparable.v:169`
+  的解析停点消失，编译关破碎。
+- **marshal 夹具缺陷（已修；不是语言缺口，不新增 G 编号）**：
+  - 边界坐标：`projects/conformance/scripts/run_v_solver.ts` 与
+    `projects/conformance/src/isolated/v-shared.ts` 的 `preserveI64Precision` 只转换**顶层**
+    `I64` 形参；`ArrayList<i64>` 在 ABI schema 里是 `Array<I64>`，元素仍是 JS `Number`，
+    glue 在 `arg0[0]` 处报 `Cannot marshal I64 from number N. I64 requires a BigInt or a
+    decimal string`。产物 glue 本身接受 `BigInt` 或十进制字符串，两个方向都没问题。
+  - 修法：`preserveI64Precision(type, value, path)` 按 `Array` / `FixedArray` / `Option` / `Tuple`
+    递归，只在 `I64` 叶节点规整为十进制字符串；返回值侧 `normalizeResultByAbiType` 补
+    `Option` / `Tuple`（`Option<Array<I64>>` 的元素是 `BigInt`，不规整会让 `JSON.stringify` 抛错）。
+    两份实现收敛到 `v-shared.ts`，判题脚本删掉本地副本，不再维护第二套 marshal 规则。
+  - 复验（全用例真跑）：`two-sum` 80/80、`teemo-attacking` 120/120、`array-partition` 112/112。
+- 本次窗口覆盖 **206 题**（R20 25 + R22 26 + R23 28 + R24 28 + R25 23 + R21 29 + R19 9 +
+  M-2026-11-03 37 + 基线 `two-sum` 1），单进程顺序跑，约 190 s，超时即报不重试。
+  - **编译通过 137 / 编译失败 69**；
+  - **端到端通过 106 / 编译通过但判题未通过 31**。
+- 覆盖口径改写（替换此前的「累计已构建通过 18」）：
+  - 累计端到端通过 **106 / 832**（canonical 832）；
+  - 累计编译通过 **137 / 832**；
+  - 未编译（未验证）**626**。
+  R21 / R22 / R23 / R24 / R25 表格里的 `authored-unverified` 现在只表示「未在本轮预算内复跑」，
+  不代表失败；已复跑的题以本节与批次报告为准。
+- 编译失败归族（69 题，按诊断首行归并；`advantage-shuffle`、`the-k-strongest-values-in-an-array`
+  同时命中两族，去重后 69）：
+
+| 归族 | 题数 | 最小诊断 |
+| --- | --- | --- |
+| `sort(ArrayList<T>)` 无法解析 | 20 | `unresolved call \`sort\` ... none matches the argument types` |
+| `BinaryHeap` 的 `where` 证据被拒 | 13 | `self.sift_up` / `sift_down`：`where evidence rejected the concrete substitution` |
+| `[export]` 写在类方法上 | 9 | `valkyrie.frontend.parse.syntax: 此处需要表达式` |
+| 嵌套 `ArrayList::new(0)` 推断失败 | 6 | `unresolved call \`adjacency.push\` / \`insert\` ... none matches` |
+| `infix -` 候选歧义 | 5 | `0 - 1`、`u8` 减法多候选同优先级 |
+| `<fn value>` 不在作用域 | 4 | 链表节点字段读取 `no callable with this name is in scope` |
+| `sorted_by` 不存在 | 3 | 同上 |
+| SMIR007 语义 MIR 合同失败 | 3 | `union` i32/i64 跳转实参不一致、`jump arity differs` |
+| `char` 面运算 / `is_vowel` 候选不匹配 | 2 | `infix +` / `infix -` / `char_cost` 无匹配候选 |
+| `let` 初始化为 `u8`，声明为 `char` | 2 | `initializer type \`u8\` is incompatible with declared type \`char\`` |
+| `String` 类型名不存在 | 1 | `unknown type name \`String\`` |
+| host contract 缺 `__u8_add` | 1 | `has a resolved call but no host provider is bound` |
+| std `from_list` 内 `list.iter` | 1 | `unresolved call \`list.iter\`` |
+| `mut` 出现在形参类型位 | 1 | `micro order_monsters(items: mut ArrayList<Monster>)` |
+
+- 判题未通过 31（编译通过但结果不符）：
+  - 29 条首例即结果不符，绝大多数形如 `expected "X", got "0"`（R23 14、R22 2、R21 1、
+    M-2026-11-03 12），归**题解实现缺陷**，需下一批逐题复核，不按缺口记账。
+  - 1 条语料缺陷：`closest-binary-search-tree-value` 的 `args.target = 2.235714` 不是整数。
+  - 1 条运行期异常：`delete-and-earn` `RuntimeError: unreachable`。
 
 ### 依赖未实现特性的调用点（R25）
 
@@ -384,40 +440,45 @@ $n
 
 ### 汇聚组（签名落地后一次性复跑）
 
-**阻塞解除：`sort(list)` 已落地（`ArrayList` 形态），待工具链刷新后批量复跑验证**（13 题，R22 + R24 产出）
+**复跑结果（2026-11-04 23:50 addon 重建后）：仍阻塞，`sort(ArrayList<i64>)` 无法解析**（13 题，R22 + R24 产出）
 
-| 题号 | slug | 入口 | 状态 |
+| 题号 | slug | 入口 | 复跑状态 |
 | --- | --- | --- | --- |
-| 870 | `advantage-shuffle` | `advantageCount` | `authored-unverified` |
-| 881 | `boats-to-save-people` | `numRescueBoats` | `authored-unverified` |
-| 2126 | `destroying-asteroids` | `asteroidsDestroyed` | `authored-unverified` |
-| 1679 | `max-number-of-k-sum-pairs` | `maxOperations` | `authored-unverified` |
-| 1481 | `least-number-of-unique-integers-after-k-removals` | `findLeastNumOfUniqueInts` | `authored-unverified` |
-| 846 | `hand-of-straights` | `isNStraightHand` | `authored-unverified` |
-| 1296 | `divide-array-in-sets-of-k-consecutive-numbers` | `isPossibleDivide` | `authored-unverified` |
-| 2740 | `find-the-value-of-the-partition` | `findValueOfPartition` | `authored-unverified` |
-| 2592 | `maximize-greatness-of-an-array` | `maximizeGreatness` | `authored-unverified` |
-| 1838 | `frequency-of-the-most-frequent-element` | `maxFrequency` | `authored-unverified` |
-| 950 | `reveal-cards-in-increasing-order` | `deckRevealedIncreasing` | `authored-unverified` |
-| 945 | `minimum-increment-to-make-array-unique` | `minIncrementForUnique` | `authored-unverified` |
-| 1921 | `eliminate-maximum-number-of-monsters` | `eliminateMaximum` | `authored-unverified`（另见 `Comparable` 派生组） |
+| 870 | `advantage-shuffle` | `advantageCount` | 编译失败（`sort` 无候选 + `sorted_by` 不存在） |
+| 881 | `boats-to-save-people` | `numRescueBoats` | 编译失败（`sort` 无候选） |
+| 2126 | `destroying-asteroids` | `asteroidsDestroyed` | 编译失败（`sort` 无候选） |
+| 1679 | `max-number-of-k-sum-pairs` | `maxOperations` | 编译失败（`sort` 无候选） |
+| 1481 | `least-number-of-unique-integers-after-k-removals` | `findLeastNumOfUniqueInts` | 编译失败（`sort` 无候选） |
+| 846 | `hand-of-straights` | `isNStraightHand` | 编译失败（`sort` 无候选） |
+| 1296 | `divide-array-in-sets-of-k-consecutive-numbers` | `isPossibleDivide` | 编译失败（`sort` 无候选） |
+| 2740 | `find-the-value-of-the-partition` | `findValueOfPartition` | 编译失败（`sort` 无候选） |
+| 2592 | `maximize-greatness-of-an-array` | `maximizeGreatness` | 编译失败（`sort` 无候选） |
+| 1838 | `frequency-of-the-most-frequent-element` | `maxFrequency` | 编译失败（`sort` 无候选） |
+| 950 | `reveal-cards-in-increasing-order` | `deckRevealedIncreasing` | 编译失败（`sort` 无候选） |
+| 945 | `minimum-increment-to-make-array-unique` | `minIncrementForUnique` | 编译失败（`sort` 无候选） |
+| 1921 | `eliminate-maximum-number-of-monsters` | `eliminateMaximum` | 编译失败（`mut` 出现在形参类型位） |
 
-同组判据：均直接调用单参 `sort(list)`、不传比较器。`sort.v` 已提供
-`micro sort<T>(mut list: ArrayList<T>) where T: std::operator::Comparable`（稳定归并），
-`i64: Comparable` 已实现，阻塞前提已不成立。保留本组清单仅用于工具链刷新后批量复跑，
-不必逐题重判。`sort(list)` 不再计入未实现特性依赖；`sorted_by(list, cmp)` 仍是缺口。
+同组判据：均直接调用单参 `sort(list)`、不传比较器。`sort.v:82` 确有
+`micro sort<T>(mut list: ArrayList<T>): unit where T: std::operator::Comparable`（稳定归并），
+`imply i64: Comparable` 也在 `comparable_primitives.v:68`，但**工具链刷新后复跑仍然失败**：
+`hir.unresolved_call：unresolved call "sort"：1 candidate(s) share the name, but none matches the
+argument types`。本组 12 题与 R23 的 8 题（共 20 题）全部命中，说明 `ArrayList<i64>` 对
+`mut list: ArrayList<T>` 的实例化没有闭合，不是题解写法问题。
+结论：`sort(list)` 的「已落地」只在源码层面成立，**本基线不可用**；待语言侧复核后按本组复跑。
+`sorted_by(list, cmp)` 仍是缺口（870、954、1471）。
 
-**阻塞解除：`char: Hash` 已落地（`HashPrimitives.v:53`），待工具链刷新后批量复跑验证**（3 题，R22 + R24 产出）
+**复跑结果（2026-11-04 23:50 addon 重建后）：`char: Hash` 成立，失败点已不在 `Hash`**（3 题，R22 + R24 产出）
 
-| 题号 | slug | 入口 | 状态 |
+| 题号 | slug | 入口 | 复跑状态 |
 | --- | --- | --- | --- |
-| 424 | `longest-repeating-character-replacement` | `characterReplacement` | `authored-unverified` |
-| 340 | `longest-substring-with-at-most-k-distinct-characters` | `lengthOfLongestSubstringKDistinct` | `authored-unverified` |
-| 621 | `task-scheduler` | `leastInterval` | `authored-unverified`（另见 `BinaryHeap::new_by` 组） |
+| 424 | `longest-repeating-character-replacement` | `characterReplacement` | 编译失败（`s⁅i⁆` 出来是 `u8`，声明为 `char`） |
+| 340 | `longest-substring-with-at-most-k-distinct-characters` | `lengthOfLongestSubstringKDistinct` | 编译失败（同上） |
+| 621 | `task-scheduler` | `leastInterval` | 编译失败（`BinaryHeap` 的 `where` 证据被拒） |
 
-同组判据：`HashMap<char, i64>` / `HashSet<char>` 需要 `char: Hash`。R25 复核发现
-`std/source/collection/hashed/HashPrimitives.v:53` 已有 `imply char: Hash`，阻塞前提已不成立；
-本组保留清单仅用于工具链刷新后批量复跑，`char: Hash` 不再计入未实现特性依赖。
+同组判据：`HashMap<char, i64>` / `HashSet<char>` 需要 `char: Hash`。`HashPrimitives.v:53` 的
+`imply char: Hash` 成立；复跑显示失败点已不在 `Hash`：424 / 340 报
+`initializer type u8 is incompatible with the declared type char`（`s⁅i⁆` 按 `u8` 出来），
+621 卡在 `BinaryHeap`。`char: Hash` 不再计入未实现特性依赖。
 
 **阻塞于同一签名：`BinaryHeap<T>::new_by(compare)` 缺比较器构造**（6 题，R24 产出）
 
@@ -769,7 +830,8 @@ micro half() -> f64 {
 
 ### G3 wasm JS glue 的 `ArrayList` ABI bridge 缺失（入参 marshal / 返回值 demarshal）
 
-- 状态：未恢复（2026-11-03 实测，Medium 37 题复跑暴露）
+- 状态：**已恢复**（2026-11-04 23:50 addon 重建后实测；glue 已按 `Array` schema 编组）。入参方向残留在
+  harness 侧的 `Array<I64>` 元素未规整缺陷已修，见「验证窗口实测」节；不再算语言缺口。
 - 最小复现（入参方向，25 题）：
 
 ```v
@@ -791,13 +853,16 @@ micro sequential_digits(low: i64, high: i64) -> ArrayList<i64>
   `ArrayList<utf8>`（`generate-binary-strings-without-adjacent-zeros`）均命中同一 bridge 缺口。
 - 定位：产物自带的 wasm JS glue（ABI marshal/demarshal 层），`std::collection::ArrayList` 的
   schema 已生成，缺的是 glue 侧聚合类型的字段访问合同；编译期全部 `build=0`，与题目解法无关。
-- 影响：本批 36 题判题 0 通过（25 marshal + 11 demarshal）。该项恢复前，任何返回或接收
-  `ArrayList` 的题都不能计入构建通过数。
+- 影响（历史）：本批 36 题判题 0 通过（25 marshal + 11 demarshal）。**2026-11-04 23:50 addon
+  重建后该 bridge 已具备**：payload 直接是 `Array` / `Array<I64>`，M-2026-11-03 的 37 题里 24 题
+  端到端通过（`spiral-matrix-ii` 20/20、`sequential-digits` 88/88、
+  `moving-stones-until-consecutive` 130/130），R20 25 题全通过。
 - R21 扩展面（`Option<ArrayList<i64>>` 返回，空链表 → `null`）：`merge-two-sorted-lists`、
   `remove-duplicates-from-sorted-list`、`remove-linked-list-elements`、`reverse-linked-list`。
-  与上面的返回值方向同属 G3 边界，额外要求 glue 能表达 `Option` 的 `None`；同样**待验证**，
-  不另开编号。
-- 判定：**真缺口**（判据 c：入参 / 返回值由题面固定为 `ArrayList`，题解内改不了结构，ABI 边界也跨不过去）。
+  复跑结果：这 4 题**未走到返回值边界**，先卡在 `<fn value>` 不在作用域（链表节点字段读取），
+  归「编译失败」而非 G3；`Option` 负载的 `null` 语义待这 4 题编译通过后再验证，不另开编号。
+- 判定：**已恢复**（2026-11-04 23:50 addon 重建时由 glue 侧补齐 `Array` 编组 / 解组）。
+  原判定为真缺口（判据 c），恢复后本案只留档，不再作为失败归族依据。
 
 ### G4 std `Utf8Builder.append(char)` 在 std 模块自编译时无法实例化（疑似失效，待复验）
 
