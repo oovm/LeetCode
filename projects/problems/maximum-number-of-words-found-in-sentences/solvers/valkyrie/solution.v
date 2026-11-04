@@ -1,5 +1,23 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: mostWordsFound 需要 读取 sentences 求最大词数
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.maximum_number_of_words_found_in_sentences;
+
+using std.collection;
+
+# 按空白类切词；std 的 utf8 缺 split_whitespace（G18）。
+[export(case: "camelCase")]
+micro most_words_found(sentences: ArrayList<utf8>) -> i64 {
+    let mut best: i64 = 0
+    loop sentence in sentences {
+        let words: [utf8] = sentence.split_whitespace()
+        let count: i64 = words.length() as i64
+        if count > best {
+            best = count
+        }
+    }
+    return best
+}
+
+class Solution {
+    micro mostWordsFound(self, sentences: ArrayList<utf8>): i64 {
+        return most_words_found(sentences)
+    }
+}

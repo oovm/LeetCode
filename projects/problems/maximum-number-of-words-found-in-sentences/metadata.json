@@ -608,6 +608,7 @@
     ],
     "invoke": {
         "python": "Solution().mostWordsFound",
-        "typescript": "Solution().mostWordsFound"
+        "typescript": "Solution().mostWordsFound",
+        "valkyrie": "mostWordsFound"
     }
 }
