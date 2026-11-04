@@ -1590,6 +1590,6 @@ V 侧复跑：在 `projects/conformance` 下执行 `node --import tsx scripts/ru
 | `furthest-building-you-can-reach` | `BinaryHeap` + `Comparable` | 阻断（同上） | 未执行 |
 | `minimum-operations-to-halve-array-sum` | `BinaryHeap<f64>` | 阻断（`new_by` 缺失，`f64` 无 `Comparable`） | 未执行 |
 
-结论：本批 3 题通过（211 条用例），其余 10 题被 utf8 字节合同、`utf8` 泛型序实例化、
+结论：本批 3 题通过（311 条用例），其余 10 题被 utf8 字节合同、`utf8` 泛型序实例化、
 `std::hash` 合同实例与 `BinaryHeap` 义务传播四条线挡住；`reorder-data-in-log-files`
 另触发 emitter panic，需在 `nyar-vm.rs` 侧修，不在本仓改。
