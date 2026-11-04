@@ -855,6 +855,7 @@
     ],
     "invoke": {
         "python": "Solution().isCovered",
-        "typescript": "Solution().isCovered"
+        "typescript": "Solution().isCovered",
+        "valkyrie": "isCovered"
     }
 }

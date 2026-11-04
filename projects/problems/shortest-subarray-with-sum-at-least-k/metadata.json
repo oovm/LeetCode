@@ -896,6 +896,7 @@
     ],
     "invoke": {
         "python": "Solution().shortestSubarray",
-        "typescript": "Solution().shortestSubarray"
+        "typescript": "Solution().shortestSubarray",
+        "valkyrie": "shortestSubarray"
     }
 }

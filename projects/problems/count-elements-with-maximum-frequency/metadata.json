@@ -711,6 +711,7 @@
     ],
     "invoke": {
         "python": "Solution().maxFrequencyElements",
-        "typescript": "Solution().maxFrequencyElements"
+        "typescript": "Solution().maxFrequencyElements",
+        "valkyrie": "maxFrequencyElements"
     }
 }

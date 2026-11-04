@@ -1,5 +1,37 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: maxFrequencyElements 需要 读取 nums 词频求最高频总数
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.count_elements_with_maximum_frequency;
+
+using std.collection;
+
+# MultiSet 直接承载频次：`distinct_elements` 给出键集，`count` 取每键频次；
+# 最大频次对应元素的总贡献 = 最大频次 × 达到该频次的键数。
+[export(case: "camelCase")]
+micro max_frequency_elements(nums: ArrayList<i64>) -> i64 {
+    let mut counts: MultiSet<i64> = MultiSet::new()
+    let mut inserted: usize = 0
+    loop value in nums {
+        inserted = counts.insert(value)
+    }
+
+    let distinct: ArrayList<i64> = counts.distinct_elements()
+    let mut best: usize = 0
+    loop value in distinct {
+        let frequency: usize = counts.count(value)
+        if frequency > best {
+            best = frequency
+        }
+    }
+
+    let mut total: i64 = 0
+    loop value in distinct {
+        if counts.count(value) == best {
+            total = total + best as i64
+        }
+    }
+    return total
+}
+
+class Solution {
+    micro maxFrequencyElements(self, nums: ArrayList<i64>): i64 {
+        return max_frequency_elements(nums)
+    }
+}
