@@ -847,6 +847,7 @@
     ],
     "invoke": {
         "python": "Solution().sortPeople",
-        "typescript": "Solution().sortPeople"
+        "typescript": "Solution().sortPeople",
+        "valkyrie": "sortPeople"
     }
 }

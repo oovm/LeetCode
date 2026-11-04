@@ -673,6 +673,7 @@
     ],
     "invoke": {
         "python": "Solution().removeCoveredIntervals",
-        "typescript": "Solution().removeCoveredIntervals"
+        "typescript": "Solution().removeCoveredIntervals",
+        "valkyrie": "removeCoveredIntervals"
     }
 }

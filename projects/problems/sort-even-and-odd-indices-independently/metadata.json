@@ -667,6 +667,7 @@
     ],
     "invoke": {
         "python": "Solution().sortEvenOdd",
-        "typescript": "Solution().sortEvenOdd"
+        "typescript": "Solution().sortEvenOdd",
+        "valkyrie": "sortEvenOdd"
     }
 }

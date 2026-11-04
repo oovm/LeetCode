@@ -785,6 +785,7 @@
     ],
     "invoke": {
         "python": "Solution().mergeSimilarItems",
-        "typescript": "Solution().mergeSimilarItems"
+        "typescript": "Solution().mergeSimilarItems",
+        "valkyrie": "mergeSimilarItems"
     }
 }

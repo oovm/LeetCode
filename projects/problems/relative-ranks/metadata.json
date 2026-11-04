@@ -1282,6 +1282,7 @@
     ],
     "invoke": {
         "python": "Solution().findRelativeRanks",
-        "typescript": "Solution().findRelativeRanks"
+        "typescript": "Solution().findRelativeRanks",
+        "valkyrie": "findRelativeRanks"
     }
 }

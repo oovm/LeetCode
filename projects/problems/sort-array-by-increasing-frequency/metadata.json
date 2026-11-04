@@ -788,6 +788,7 @@
     ],
     "invoke": {
         "python": "Solution().frequencySort",
-        "typescript": "Solution().frequencySort"
+        "typescript": "Solution().frequencySort",
+        "valkyrie": "frequencySort"
     }
 }

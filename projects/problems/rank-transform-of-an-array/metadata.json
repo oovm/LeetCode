@@ -719,6 +719,7 @@
     ],
     "invoke": {
         "python": "Solution().arrayRankTransform",
-        "typescript": "Solution().arrayRankTransform"
+        "typescript": "Solution().arrayRankTransform",
+        "valkyrie": "arrayRankTransform"
     }
 }
