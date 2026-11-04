@@ -26,20 +26,27 @@ export async function executeRun(candidate: Candidate, plan: RunPlan): Promise<R
         args: decodeValue(entry.args, `cases[${entry.index}].args`) as Record<string, unknown>,
     }));
 
-    const loopAll = async (): Promise<void> => {
-        for (const entry of decoded) {
-            await candidate(entry.args);
+    // 题解可能原地修改实参（如 remove-duplicates / sort colors）；每轮、每次收集都必须用
+    // 独立深拷贝，否则计时轮会污染收集轮的输入，把正确解法误判成答案错。
+    // `structuredClone` 支持 BigInt 与嵌套数组/对象，克隆在计时窗口外完成。
+    const freshArgs = (entry: (typeof decoded)[number]): Record<string, unknown> =>
+        structuredClone(entry.args) as Record<string, unknown>;
+
+    const runWith = async (inputs: ReadonlyArray<Record<string, unknown>>): Promise<void> => {
+        for (const args of inputs) {
+            await candidate(args);
         }
     };
 
     for (let round = 0; round < plan.warmup; round++) {
-        await loopAll();
+        await runWith(decoded.map(freshArgs));
     }
 
     const samples: number[] = [];
     for (let round = 0; round < plan.iterations; round++) {
+        const inputs = decoded.map(freshArgs);
         const start = performance.now();
-        await loopAll();
+        await runWith(inputs);
         samples.push(performance.now() - start);
     }
 
@@ -47,7 +54,7 @@ export async function executeRun(candidate: Candidate, plan: RunPlan): Promise<R
     const results: CaseOutcome[] = [];
     for (const entry of decoded) {
         try {
-            const value = await candidate(entry.args);
+            const value = await candidate(freshArgs(entry));
             results.push({ index: entry.index, ok: true, value: encodeValue(value, `cases[${entry.index}].result`) });
         } catch (err) {
             results.push({ index: entry.index, ok: false, error: errorMessage(err) });

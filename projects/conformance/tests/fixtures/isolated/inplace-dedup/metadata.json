@@ -1,0 +1,13 @@
+{
+    "id": "inplace-dedup",
+    "questionId": 0,
+    "difficulty": "easy",
+    "tags": ["fixture"],
+    "tests": [
+        {
+            "args": { "nums": [1, 2, 2, 3, 3, 3, 4] },
+            "expected": 4
+        }
+    ],
+    "invoke": { "typescript": "Solution().dedup", "python": "Solution().dedup" }
+}
