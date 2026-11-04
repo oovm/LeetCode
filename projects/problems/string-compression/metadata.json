@@ -677,6 +677,7 @@
     ],
     "invoke": {
         "python": "Solution().compress",
-        "typescript": "Solution().compress"
+        "typescript": "Solution().compress",
+        "valkyrie": "compress"
     }
 }

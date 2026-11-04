@@ -329,6 +329,7 @@
     ],
     "invoke": {
         "python": "Solution().numberOfLines",
-        "typescript": "Solution().numberOfLines"
+        "typescript": "Solution().numberOfLines",
+        "valkyrie": "numberOfLines"
     }
 }

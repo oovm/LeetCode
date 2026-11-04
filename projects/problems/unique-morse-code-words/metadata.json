@@ -658,6 +658,7 @@
     ],
     "invoke": {
         "python": "Solution().uniqueMorseRepresentations",
-        "typescript": "Solution().uniqueMorseRepresentations"
+        "typescript": "Solution().uniqueMorseRepresentations",
+        "valkyrie": "uniqueMorseRepresentations"
     }
 }
