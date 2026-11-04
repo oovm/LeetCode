@@ -62,10 +62,12 @@ $n
   `remove` / `to_array` / `iterator` / `nth` 四个面按新口径跳过，改压写侧与容器构造面，见观察 6）。
 - 后续增量（2026-11-04，滚动批次 R12 后）：canonical 实测 **617**（R12 前 609；本批新编号 0 条，
   改压语言构造面：`unite` / `enums` / 闭包 / 递归，见观察 8）。
+- 后续增量（2026-11-04，滚动批次 R13 后）：canonical 实测 **625**（R13 前 617；本批新编号 1 条，
+  G25 = `BitSet` 缺基数 / 规模 / 迭代 / 复制入口；首次压位集合与位掩码面，见观察 9）。
 
 ## 系统性问题（观察，非编号）
 
-> 本节只记观察，不占 `G` 编号；缺口本身仍按 G1–G24 计。
+> 本节只记观察，不占 `G` 编号；缺口本身仍按 G1–G25 计。
 
 ### 观察 1：trait 实现面按需堆，没有「类型 × 核心 trait」矩阵
 
@@ -209,6 +211,25 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
   退化成纯迭代。
 - 未编号理由：以上都有等价近似物（扁平表示、具名函数、显式循环），按「无等价近似物才编号」的口径
   记观察，不新增 `G` 编号。
+
+### 观察 9：`BitSet` 的真实面只是「按已知下标读写 + 原地结构运算」
+
+- 2026-11-04 全量核对 `std/source/collection/bitset.v`：公开入口 12 个（清单见 G25），全部带
+  `[host_contract]`，但函数体是具体实现，不是 `trim` / `replace` 那种空壳，语义可在 std 层核对。
+- 能力面分四组：
+  1. 构造：`new` / `with_capacity`；
+  2. 读写：`set` / `clear_bit` / `get` / `toggle`；
+  3. **原地**结构运算：`intersect` / `union` / `difference` / `xor`，均 `mut self` 并吞掉右侧值；
+  4. 整体状态：`is_empty` / `clear_all`。
+- 反面：没有 `count` / `length` / 迭代 / `clone` / `[u64]` / `[bool]` 互转 / `Equal`。所以它目前是
+  「定长布尔位图」，不是可枚举、可复制的集合容器。
+- 口径：`BitSet` 与观察 7 的定长 `Array<T>` 同类，都是**边界 / 底层载体**，不是通用集合；要把它当
+  集合用，先补 G25 的 `count` + `length` + 迭代。
+- R13 首批覆盖：`valid-sudoku`（36，行 / 列 / 宫各 9 位）、`find-all-duplicates-in-an-array`
+  （442，出现标记）、`check-if-a-string-contains-all-binary-codes-of-size-k`（1461，`2^k` 码值全集）、
+  `maximum-product-of-word-lengths`（318，每词 26 位）、`shortest-path-to-get-all-keys`
+  （864，`rows * cols * 64` 访问表）。五题都只在「全集已知 + `set` / `get`」范围内使用，
+  没有一题依赖缺失入口；`intersect` / `union` / `xor` 仍无真实调用点。
 
 ## 未恢复
 
@@ -854,6 +875,46 @@ micro to_sorted_list(self) -> ArrayList<T> where T: Comparable
   注意不得依赖内部遍历序）。
 - 表达力档位：**不属于表达力缺口**——有近似物（排序键或频次向量）。
 - 与 G17 的关系：`MultiSet<char>` 同时缺 `char: Hash`（底层就是 `HashMap`），两条一起才可写作。
+
+### G25 `BitSet` 没有基数 / 规模 / 迭代 / 复制入口
+
+- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/collection/bitset.v` 全文件）
+- 真实入口（逐条核对，均带 `[host_contract]`，但函数体是具体实现，不是空壳）：
+  `new()` L10、`with_capacity(bits: usize)` L15、`set(mut self, index: usize)` L27、
+  `clear_bit(mut self, index: usize)` L36、`get(self, index: usize) -> bool` L47、
+  `toggle(mut self, index: usize)` L58、`intersect(mut self, other: BitSet)` L68、
+  `union(mut self, other: BitSet)` L84、`difference(mut self, other: BitSet)` L96、
+  `xor(mut self, other: BitSet)` L108、`is_empty(self) -> bool` L125、
+  `clear_all(mut self)` L137；私有 `ensure_capacity` L146。
+- **缺失**：`count()`（置位数）、`length()` / `capacity()`（位集规模）、迭代器（无法枚举置位下标）、
+  `clone()`（无法复制后做非破坏性结构运算）、与 `[u64]` / `[bool]` 的互转、`Equal` / `Hash`。
+- 后果：`BitSet` 只能「按已知下标 `get` / `set`」，**无法从自身得知有多少位被置、也无法枚举被置的位**。
+  这直接影响：
+  - `check-if-a-string-contains-all-binary-codes-of-size-k`（1461）：需要「已置位数」判断是否集齐，
+    只能在外层另设计数器；`BitSet` 本身没有 `count`。
+  - `maximum-product-of-word-lengths`（318）：两两字母集判不相交，因无 `clone` 不能
+    「复制 + `intersect` + `is_empty`」，只能对固定 26 位逐位 `get`。
+  - `find-all-duplicates-in-an-array`（442）、`valid-sudoku`（36）、
+    `shortest-path-to-get-all-keys`（864）：容量都由题面上界已知，可继续用，但规模必须外部维护。
+- 期望签名（[提案]，源码尚不存在）：
+
+```v
+# std/source/collection/bitset.v
+micro count(self) -> usize
+micro length(self) -> usize
+micro clone(self) -> BitSet
+micro to_bool_array(self) -> [bool]
+imply BitSet: Equal
+```
+
+- 判定：**std 缺口**，且 `count` 没有等价近似物（不知道规模就无法安全遍历），按口径编号。
+  `length` / `clone` 同样无近似物；迭代器可用「外部记录全集大小 + 逐位 `get`」近似，但调用方必须
+  自己维护全集，不算容器自足。
+- 影响题：1461、318、442、36、864（批次 R13）；此前 12 批 0 题使用 `BitSet`，属长期盲点。
+- 修复初判：**加 API**；`count` 可对 `words` 逐字 popcount 求和，`clone` 复制 `words` 数组即可，
+  均不改变存储形态。
+- 与观察 1 的关系：`BitSet` 同样游离在「类型 × {Equal, Hash}」矩阵之外；本条只记 `Equal`，
+  `Hash` 对位集意义有限，不单列。
 
 ### 未命中面（第 3 批探测，2026-11-04，无强制影响题，故不编号）
 

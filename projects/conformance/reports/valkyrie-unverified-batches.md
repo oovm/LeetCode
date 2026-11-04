@@ -7,6 +7,39 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R13-2026-11-04（理想解滚动批次 13，8 题，写完未构建）
+
+- 范围：首次压位运算与专门类型 `BitSet`。前 12 批 `BitSet` 使用次数为 0，本批专挑理想解天然需要
+  位集合或位掩码的题；同步顺带看 `ArrayList` 的 `reserve` / 容量增长是否被真实需要。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
+- 新缺口：**1 条**，G25 = `BitSet` 缺 `count` / `length` / 迭代 / `clone` / 互转 / `Equal`。
+  canonical 617 → 625。新增观察 9（`BitSet` 真实面只有「按已知下标读写 + 原地结构运算」）。
+- 命中面：`BitSet` ×4（36 / 442 / 1461 / 318）、访问表 ×1（864）、裸位掩码 ×3
+  （1178 / 2997 / 1310）。
+- 未命中：`BitSet.intersect` / `union` / `difference` / `xor` 仍无调用点（318 因无 `clone` 改为逐位
+  `get`）；`ArrayList.reserve` 仍无调用点。
+- 预期阻断：`find-all-duplicates-in-an-array`、`number-of-valid-words-for-each-puzzle`、
+  `xor-queries-of-a-subarray` 返回 `ArrayList<i64>`，按 G3 在 wasm JS glue 处阻断。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致（`board` / `nums` / `s`+`k` /
+  `words` / `words`+`puzzles` / `nums`+`k` / `arr`+`queries` / `grid`）。
+- TS 参考解：`valid-sudoku` / `find-all-duplicates-in-an-array` /
+  `check-if-a-string-contains-all-binary-codes-of-size-k` / `maximum-product-of-word-lengths` 复用既有；
+  `number-of-valid-words-for-each-puzzle` / `minimum-number-of-operations-to-make-array-xor-equal-to-k` /
+  `xor-queries-of-a-subarray` / `shortest-path-to-get-all-keys` 4 题新写。
+- 入口名对齐：1178 的仓库入口是 `findNumOfValidWords`（不是题面常见的 `numOfValidWords`），
+  V 导出与 TS 方法均已按 metadata 对齐。
+
+| slug | 导出入口 | 返回类型 | 位面 |
+| --- | --- | --- | --- |
+| `valid-sudoku` | `isValidSudoku` | `bool` | 行 / 列 / 宫各一个 `BitSet(9)`，`get` 查重 + `set` 置位 |
+| `find-all-duplicates-in-an-array` | `findDuplicates` | `ArrayList<i64>` | `BitSet(n+1)` 出现标记，`get` 判定重复 |
+| `check-if-a-string-contains-all-binary-codes-of-size-k` | `hasAllCodes` | `bool` | `BitSet(2^k)` 记录子串码值，置位数外部累计（G25 无 `count`） |
+| `maximum-product-of-word-lengths` | `maxProduct` | `i64` | 每词一个 `BitSet(26)`，逐位 `get` 判不相交（无 `clone`） |
+| `number-of-valid-words-for-each-puzzle` | `findNumOfValidWords` | `ArrayList<i64>` | 26 位 `i64` 掩码 + 首字母 / 子集判定 |
+| `minimum-number-of-operations-to-make-array-xor-equal-to-k` | `minOperations` | `i64` | 全域异或后再 popcount |
+| `xor-queries-of-a-subarray` | `xorQueries` | `ArrayList<i64>` | 前缀异或表，区间两次查表 |
+| `shortest-path-to-get-all-keys` | `shortestPathAllKeys` | `i64` | BFS 状态 = 格子 + 6 位钥匙掩码，`BitSet` 访问表 |
+
 ## 批次 R12-2026-11-04（理想解滚动批次 12，8 题，写完未构建）
 
 - 范围：容器 API 面已连续三批饱和，本批改压**语言构造面**：`unite` 和类型 / `enums` 标记类型、
