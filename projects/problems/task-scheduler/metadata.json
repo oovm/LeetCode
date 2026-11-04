@@ -2329,6 +2329,7 @@
     ],
     "invoke": {
         "python": "Solution().leastInterval",
-        "typescript": "Solution().leastInterval"
+        "typescript": "Solution().leastInterval",
+        "valkyrie": "leastInterval"
     }
 }

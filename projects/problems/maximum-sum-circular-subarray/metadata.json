@@ -709,6 +709,7 @@
     ],
     "invoke": {
         "python": "Solution().maxSubarraySumCircular",
-        "typescript": "Solution().maxSubarraySumCircular"
+        "typescript": "Solution().maxSubarraySumCircular",
+        "valkyrie": "maxSubarraySumCircular"
     }
 }

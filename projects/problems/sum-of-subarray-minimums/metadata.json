@@ -568,6 +568,7 @@
     ],
     "invoke": {
         "python": "Solution().sumSubarrayMins",
-        "typescript": "Solution().sumSubarrayMins"
+        "typescript": "Solution().sumSubarrayMins",
+        "valkyrie": "sumSubarrayMins"
     }
 }

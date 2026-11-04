@@ -714,6 +714,7 @@
     ],
     "invoke": {
         "python": "Solution().validateStackSequences",
-        "typescript": "Solution().validateStackSequences"
+        "typescript": "Solution().validateStackSequences",
+        "valkyrie": "validateStackSequences"
     }
 }

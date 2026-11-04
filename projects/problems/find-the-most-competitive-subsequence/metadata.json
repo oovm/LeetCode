@@ -749,6 +749,7 @@
     ],
     "invoke": {
         "python": "Solution().mostCompetitive",
-        "typescript": "Solution().mostCompetitive"
+        "typescript": "Solution().mostCompetitive",
+        "valkyrie": "mostCompetitive"
     }
 }

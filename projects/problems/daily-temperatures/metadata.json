@@ -838,6 +838,7 @@
     ],
     "invoke": {
         "python": "Solution().dailyTemperatures",
-        "typescript": "Solution().dailyTemperatures"
+        "typescript": "Solution().dailyTemperatures",
+        "valkyrie": "dailyTemperatures"
     }
 }

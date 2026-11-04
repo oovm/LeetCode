@@ -775,6 +775,7 @@
     ],
     "invoke": {
         "python": "Solution().findBuildings",
-        "typescript": "Solution().findBuildings"
+        "typescript": "Solution().findBuildings",
+        "valkyrie": "findBuildings"
     }
 }

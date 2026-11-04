@@ -896,6 +896,7 @@
     ],
     "invoke": {
         "python": "Solution().eliminateMaximum",
-        "typescript": "Solution().eliminateMaximum"
+        "typescript": "Solution().eliminateMaximum",
+        "valkyrie": "eliminateMaximum"
     }
 }

@@ -638,6 +638,7 @@
     ],
     "invoke": {
         "python": "Solution().maxKelements",
-        "typescript": "Solution().maxKelements"
+        "typescript": "Solution().maxKelements",
+        "valkyrie": "maxKelements"
     }
 }

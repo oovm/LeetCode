@@ -181,11 +181,86 @@ $n
 - 后续增量（2026-11-04，Medium 双指针 / 前缀和 / 二分答案批次 R23 后）：canonical 实测 **781**
   （R23 前 753；本批 28 题，新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；
   构建停点与 R20 / R21 / R22 相同（同一 addon 基线过期，非 std 回归）。
+- 后续增量（2026-11-04，Medium 单调栈 / 队列 / 堆 + 贪心批次 R24 后）：canonical 实测 **809**
+  （R24 前 781；本批 28 题，新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；
+  构建停点与 R20 / R21 / R22 / R23 相同（同一 addon 基线过期，非 std 回归）。
+
+### 依赖未实现特性的调用点（R24）
+
+- `BinaryHeap<T>::new_by(compare)`（**提案，std 无此入口**）：`BinaryHeap` 只有 `new()`
+  一个 `Comparable` 最小堆构造，没有比较器构造。本批 **6 题 6 处**：
+  `remove-stones-to-minimize-the-total`（1962）、`furthest-building-you-can-reach`（1642）、
+  `minimum-operations-to-halve-array-sum`（2208，`f64` 非 `Comparable`）、
+  `maximal-score-after-applying-k-operations`（2530）、`total-cost-to-hire-k-workers`
+  （2462，下标堆，比较器捕获 `costs`）、`task-scheduler`（621）。
+- `PriorityQueue<T>`（**名字有、宿主实现无**）：`PriorityQueue.v` 的 `new` / `push` / `pop` /
+  `peek` / `length` / `clear` 全是 `[host_contract]` 声明，`nyar-vm.rs` 无宿主实现。
+  本批 **4 题**：`maximum-product-after-k-increments`（2233）、`maximum-subsequence-score`
+  （2542）、`minimum-cost-to-connect-sticks`（1167）、`maximum-number-of-events-that-can-be-attended`
+  （1353）。按 i64 最小堆形态书写，未临时造替代结构。
+- `sorted_by(list, cmp)`（G11 提案，源码无此入口）：`maximum-subsequence-score`（2542，按 `nums2`
+  降序且比较器捕获 `nums2`）、`maximum-number-of-events-that-can-be-attended`（1353，按开始日升序），
+  **2 题 2 处**。
+- `Comparable` / `<=>` 派生（**阻塞**）：`maximum-number-of-eaten-apples`（1705，`Fruit` 按到期日）、
+  `eliminate-maximum-number-of-monsters`（1921，`Monster` 按 `dist / speed` 交叉相乘）。
+  `sort.v` 的执行路径是 `a.compare(b)` + `match Ordering`，而 `Ordering.Less` / `Greater` / `Equal`
+  当前不可达（Q10 撞名 / Q11 无 `<=>` token），故不写「只实现 `infix <`」的绕过形态。
+- `char: Hash`（G17）：`task-scheduler`（621）的 `HashMap<char, i64>` 任务频次表。
+- `sort(list)`（**已落地**，`ArrayList<T>` 形态）：`reveal-cards-in-increasing-order`（950）、
+  `minimum-increment-to-make-array-unique`（945）、`eliminate-maximum-number-of-monsters`（1921）
+  直接调用，不再计入未实现特性依赖。
+- 其余面只用**已有真实实现**的签名（不算缺口，但仍未经编译验证）：`BinaryHeap::new` / `push` /
+  `pop` / `peek` / `length` / `is_empty`；`Deque::new` / `push_back` / `push_front` / `pop_front` /
+  `pop_back` / `peek_front` / `peek_back` / `length` / `is_empty`；`ArrayList` 构造 / `push` /
+  `pop` / `last` / `get` / `set` / `length` / `is_empty`；`i64` / `f64` 算术与取模。
+
+### API 工单（R24 压面结果：std 落地依据）
+
+签名为「照着就能写实现」的形态。`T` 一律指堆 / 队列元素类型；比较器统一
+`micro(T, T) -> i32`，约定与 `sorted_by` 一致：返回负数表示 `a` 先出。
+
+| API | 理想签名 | 当前 std | 影响的题（本批） |
+| --- | --- | --- | --- |
+| `BinaryHeap::new` | `micro new(): Self`（`Comparable` 最小堆） | 有 | 3066 / 2599 / 2462（构造） |
+| `BinaryHeap::push` | `micro push(mut self, value: T): unit` | 有 | 1962 / 1642 / 2208 / 2530 / 3066 / 2599 / 2462 / 1705 |
+| `BinaryHeap::pop` | `micro pop(mut self): Option<T>` | 有 | 1962 / 1642 / 3066 / 2599 / 2462 / 1705 |
+| `BinaryHeap::peek` | `micro peek(self): Option<T>` | 有 | 3066 / 2599 / 1705 |
+| `BinaryHeap::length` | `micro length(self): usize` | 有 | 1642 / 3066 / 2599 / 621 |
+| `BinaryHeap::is_empty` | `micro is_empty(self): bool` | 有 | 621 / 1705 |
+| `BinaryHeap::new_by` | `micro new_by(compare: micro(T, T) -> i32): Self` | **无** | 1962 / 1642 / 2208 / 2530 / 2462 / 621 |
+| `PriorityQueue::new` | `micro new(): Self` | **名字有、宿主实现无**（`[host_contract]`） | 2233 / 2542 / 1167 / 1353 |
+| `PriorityQueue::push` | `micro push(mut self, value: T): unit` | **名字有、宿主实现无** | 2233 / 2542 / 1167 / 1353 |
+| `PriorityQueue::pop` | `micro pop(mut self): Option<T>` | **名字有、宿主实现无** | 2233 / 2542 / 1167 / 1353 |
+| `PriorityQueue::peek` | `micro peek(self): Option<T>` | **名字有、宿主实现无** | 2542 |
+| `PriorityQueue::length` | `micro length(self): usize` | **名字有、宿主实现无** | 2542 / 1167 / 1353 |
+| `Queue::is_empty` | `micro is_empty(self): bool` | **名字有、宿主实现无**（与 `PriorityQueue` 同批） | 2542 / 1167 / 1353 |
+| `Deque::new` | `micro new(): Self` | 有 | 950 / 1696 / 2944 / 3191 |
+| `Deque::push_front` | `micro push_front(mut self, value: T): unit` | 有（本批未使用，保留工单） | 无 |
+| `Deque::push_back` | `micro push_back(mut self, value: T): unit` | 有 | 950 / 1696 / 2944 / 3191 |
+| `Deque::pop_front` | `micro pop_front(mut self): Option<T>` | 有 | 950 / 1696 / 2944 / 3191 |
+| `Deque::pop_back` | `micro pop_back(mut self): Option<T>` | 有（本批未使用，保留工单） | 无 |
+| `Deque::peek_front` | `micro peek_front(self): Option<T>` | 有 | 1696 / 2944 / 3191 |
+| `Deque::peek_back` | `micro peek_back(self): Option<T>` | 有 | 1696 / 2944 |
+| `Deque::length` | `micro length(self): usize` | 有 | 950 / 3191（间接） |
+| `Deque::is_empty` | `micro is_empty(self): bool` | 有 | 950 / 1696 / 2944 / 3191 |
+| `ArrayList` 作栈：`push` | `micro push(mut self, value: T): unit` | 有 | 739 / 907 / 1856 / 2104 / 1673 / 2216 / 1762 / 946 |
+| `ArrayList` 作栈：`last` | `micro last(self): Option<T>` | 有 | 907 / 1856 / 2104 / 1673 / 2216 / 946 |
+| `ArrayList` 作栈：`pop` | `micro pop(mut self): Option<T>` | 有 | 907 / 1856 / 2104 / 1673 / 2216 / 1762 / 946 |
+| `ArrayList::length` | `micro length(self): usize` | 有 | 全部 28 题 |
+| `ArrayList::is_empty` | `micro is_empty(self): bool` | 有 | 739 / 907 / 1856 / 2104 / 1673 / 1762 / 946 |
+| `ArrayList::get` | `micro get(self, index: isize): Option<T>`（1-based ordinal） | 有 | 1-based 取值处 |
+| `ArrayList::set` | `micro set(mut self, index: isize, value: T): unit`（1-based ordinal） | 有 | 739 / 907 / 1856 / 950 / 945 |
+| `sort(list)` | `micro sort<T>(mut list: ArrayList<T>) where T: std::operator::Comparable` | 有（`sort.v` 已落地，稳定归并） | 950 / 945 / 1921 |
+| `sorted_by(list, cmp)` | `micro sorted_by<T>(list: mut ArrayList<T>, compare: micro(T, T) -> i32): unit` | **无**（G11 提案） | 2542 / 1353（另 R22 的 954 / 870） |
+| `Comparable` 派生 | `imply X: std::operator::Comparable { micro compare(self, other: X): std::operator::Ordering }` | **阻塞**（`Ordering` 三态变体不可达，Q10 / Q11） | 1705 / 1921 |
+| `char: Hash` | `imply char: std::hash::Hash`（`HashMap<char, V>` 可建） | **无**（G17） | 621（另 R22 的 424 / 340） |
 
 ### 依赖未实现特性的调用点（R23）
 
-- `sort(list)` 单参入口（G26 的 C4 定稿签名，待落地）：本批 **9 处调用点、8 题**。
-  `maximum-tastiness-of-candy-basket`（2517）、`magnetic-force-between-two-balls`（1552）、
+- `sort(list)` 单参入口（**已落地**：`valkyrie.v` `projects/std/source/collection/sort.v`，
+  `micro sort<T>(mut list: ArrayList<T>) where T: std::operator::Comparable`）：本批 **9 处调用点、8 题**，
+  只等 addon 重建后复跑验证。`maximum-tastiness-of-candy-basket`（2517）、
+  `magnetic-force-between-two-balls`（1552）、
   `minimize-the-maximum-difference-of-pairs`（2616）、`the-k-strongest-values-in-an-array`（1471）、
   `valid-triangle-number`（611）、`minimize-maximum-pair-sum-in-array`（1877）、
   `divide-players-into-teams-of-equal-skill`（2491）、`maximum-matching-of-players-with-trainers`
@@ -201,15 +276,17 @@ $n
 - `sorted_by(list, cmp)`（G11 提案，源码无此入口）：`array-of-doubled-pairs`（954，按绝对值排序）、
   `advantage-shuffle`（870，按 `nums2` 的值排序索引）；870 的比较器还捕获外层 `nums2`
   （闭包捕获，待验证，见观察 8）。
-- `sort(list)` 单参入口（G26 的 C4 定稿签名，待落地）：以下 10 题直接依赖
-  `sort<T, C>(list: mut C) where ... T: Comparable`、不再传比较器：
+- `sort(list)` 单参入口（**已落地**：`valkyrie.v` `projects/std/source/collection/sort.v`，
+  `micro sort<T>(mut list: ArrayList<T>) where T: std::operator::Comparable`）：以下 10 题直接依赖
+  单参 `sort(list)`、不传比较器：
   `advantage-shuffle`（870）、`boats-to-save-people`（881）、`destroying-asteroids`（2126）、
   `max-number-of-k-sum-pairs`（1679）、`least-number-of-unique-integers-after-k-removals`（1481）、
   `hand-of-straights`（846）、`divide-array-in-sets-of-k-consecutive-numbers`（1296）、
   `find-the-value-of-the-partition`（2740）、`maximize-greatness-of-an-array`（2592）、
   `frequency-of-the-most-frequent-element`（1838）。`i64` 的 `Comparable` 实现已在
-  `std/source/operator/comparable_primitives.v`，缺的是单参入口本身。
-  **归集见下方「汇聚组」**，签名落地后一次性复跑。
+  `std/source/operator/comparable_primitives.v`，入口与 `where` 约束均已齐备，
+  只等 addon 重建后复跑验证。
+  **归集见下方「汇聚组」**，工具链刷新后一次性复跑。
 - `HashMap<char, i64>`（G17，`char` 无 `Hash`）：`longest-repeating-character-replacement`（424）、
   `longest-substring-with-at-most-k-distinct-characters`（340）。
   **归集见下方「汇聚组」**，`char: Hash` 落地后一次性复跑。
@@ -220,7 +297,7 @@ $n
 
 ### 汇聚组（签名落地后一次性复跑）
 
-**阻塞于同一签名：`sort(list)` C4 定稿待落地**（10 题，R22 产出）
+**阻塞解除：`sort(list)` 已落地（`ArrayList` 形态），待工具链刷新后批量复跑验证**（13 题，R22 + R24 产出）
 
 | 题号 | slug | 入口 | 状态 |
 | --- | --- | --- | --- |
@@ -234,19 +311,77 @@ $n
 | 2740 | `find-the-value-of-the-partition` | `findValueOfPartition` | `authored-unverified` |
 | 2592 | `maximize-greatness-of-an-array` | `maximizeGreatness` | `authored-unverified` |
 | 1838 | `frequency-of-the-most-frequent-element` | `maxFrequency` | `authored-unverified` |
+| 950 | `reveal-cards-in-increasing-order` | `deckRevealedIncreasing` | `authored-unverified` |
+| 945 | `minimum-increment-to-make-array-unique` | `minIncrementForUnique` | `authored-unverified` |
+| 1921 | `eliminate-maximum-number-of-monsters` | `eliminateMaximum` | `authored-unverified`（另见 `Comparable` 派生组） |
 
-同组判据：均直接调用单参 `sort(list)`、不传比较器；`i64: Comparable` 已实现，缺的是 C4 单参入口本身。
-签名落地后按本组 slug 一次性复跑，不必逐题重判。
+同组判据：均直接调用单参 `sort(list)`、不传比较器。`sort.v` 已提供
+`micro sort<T>(mut list: ArrayList<T>) where T: std::operator::Comparable`（稳定归并），
+`i64: Comparable` 已实现，阻塞前提已不成立。保留本组清单仅用于工具链刷新后批量复跑，
+不必逐题重判。`sort(list)` 不再计入未实现特性依赖；`sorted_by(list, cmp)` 仍是缺口。
 
-**阻塞于同一签名：`char` 缺 `Hash`（G17）**（2 题，R22 产出）
+**阻塞于同一签名：`char` 缺 `Hash`（G17）**（3 题，R22 + R24 产出）
 
 | 题号 | slug | 入口 | 状态 |
 | --- | --- | --- | --- |
 | 424 | `longest-repeating-character-replacement` | `characterReplacement` | `authored-unverified` |
 | 340 | `longest-substring-with-at-most-k-distinct-characters` | `lengthOfLongestSubstringKDistinct` | `authored-unverified` |
+| 621 | `task-scheduler` | `leastInterval` | `authored-unverified`（另见 `BinaryHeap::new_by` 组） |
 
 同组判据：`HashMap<char, i64>` / `HashSet<char>` 需要 `char: Hash`，当前 `char` 未实现 `Hash`。
 `char: Hash` 落地后按本组 slug 一次性复跑。
+
+**阻塞于同一签名：`BinaryHeap<T>::new_by(compare)` 缺比较器构造**（6 题，R24 产出）
+
+| 题号 | slug | 入口 | 状态 |
+| --- | --- | --- | --- |
+| 1962 | `remove-stones-to-minimize-the-total` | `minStoneSum` | `authored-unverified` |
+| 1642 | `furthest-building-you-can-reach` | `furthestBuilding` | `authored-unverified` |
+| 2208 | `minimum-operations-to-halve-array-sum` | `halveArray` | `authored-unverified`（`f64` 元素） |
+| 2530 | `maximal-score-after-applying-k-operations` | `maxKelements` | `authored-unverified` |
+| 2462 | `total-cost-to-hire-k-workers` | `totalCost` | `authored-unverified`（下标堆，比较器捕获 `costs`） |
+| 621 | `task-scheduler` | `leastInterval` | `authored-unverified` |
+
+同组判据：均写 `BinaryHeap<T>::new_by(compare: micro(T, T) -> i32)`（比较器负数先出堆）。
+`BinaryHeap.v` 只有 `new()` 的无比较器最小堆构造，`sift_up` / `sift_down` 的 `where` 锁在
+`T: Comparable` 上。入口落地后按本组 slug 一次性复跑。
+
+**阻塞于同一实现：`PriorityQueue<T>` 无宿主实现**（4 题，R24 产出）
+
+| 题号 | slug | 入口 | 状态 |
+| --- | --- | --- | --- |
+| 2233 | `maximum-product-after-k-increments` | `maximumProduct` | `authored-unverified` |
+| 2542 | `maximum-subsequence-score` | `maxScore` | `authored-unverified`（另见 `sorted_by` 组） |
+| 1167 | `minimum-cost-to-connect-sticks` | `connectSticks` | `authored-unverified` |
+| 1353 | `maximum-number-of-events-that-can-be-attended` | `maxEvents` | `authored-unverified`（另见 `sorted_by` 组） |
+
+同组判据：`PriorityQueue.v` 只给 `[host_contract]` 声明，`nyar-vm.rs` 没有宿主实现。
+签名本身不缺口，缺的是运行时落地。宿主实现落地后按本组 slug 一次性复跑。
+
+**阻塞于 `Comparable` / `<=>` 派生（`Ordering` 三态不可达）**（2 题，R24 产出）
+
+| 题号 | slug | 入口 | 状态 |
+| --- | --- | --- | --- |
+| 1705 | `maximum-number-of-eaten-apples` | `eatenApples` | `authored-unverified` |
+| 1921 | `eliminate-maximum-number-of-monsters` | `eliminateMaximum` | `authored-unverified`（同时依赖 `sort(list)`） |
+
+同组判据：`structure` + `imply X: std::operator::Comparable { micro compare ... }`，返回
+`std::operator::Ordering`。`sort.v` 的 `is_less` / `is_less_or_equal` 走 `a.compare(b)` +
+`match Ordering`，而 `Ordering.Less` / `Greater` / `Equal` 当前不可达（Q10 撞名、Q11 无
+`<=>` token），与本组的「自定义序」需求直接冲突。本组与 `sort(list)` 组分开记账：
+前者缺的是「类型侧能给出三态序」，后者只是入口形态。Q10 / Q11 关闭后一次性复跑。
+
+**阻塞于 `sorted_by(list, cmp)`（G11 提案）**（4 题，R22 + R24 产出）
+
+| 题号 | slug | 入口 | 状态 |
+| --- | --- | --- | --- |
+| 954 | `array-of-doubled-pairs` | `canReorderDoubled` | `authored-unverified` |
+| 870 | `advantage-shuffle` | `advantageCount` | `authored-unverified`（同时依赖 `sort(list)`） |
+| 2542 | `maximum-subsequence-score` | `maxScore` | `authored-unverified`（比较器捕获 `nums2`） |
+| 1353 | `maximum-number-of-events-that-can-be-attended` | `maxEvents` | `authored-unverified` |
+
+同组判据：`sorted_by(list, cmp)` 源码无此入口（G11 提案）。`sort(list)` 已落地但不能接受
+比较器，因此需要自定义序的排序仍走本组。入口落地后按本组 slug 一次性复跑。
 
 ### 依赖未实现特性的调用点（R21）
 

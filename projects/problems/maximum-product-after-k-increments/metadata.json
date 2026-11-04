@@ -714,6 +714,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumProduct",
-        "typescript": "Solution().maximumProduct"
+        "typescript": "Solution().maximumProduct",
+        "valkyrie": "maximumProduct"
     }
 }

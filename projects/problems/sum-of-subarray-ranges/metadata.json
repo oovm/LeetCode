@@ -769,6 +769,7 @@
     ],
     "invoke": {
         "python": "Solution().subArrayRanges",
-        "typescript": "Solution().subArrayRanges"
+        "typescript": "Solution().subArrayRanges",
+        "valkyrie": "subArrayRanges"
     }
 }

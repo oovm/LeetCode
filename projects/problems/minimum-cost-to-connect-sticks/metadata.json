@@ -518,6 +518,7 @@
     ],
     "invoke": {
         "python": "Solution().connectSticks",
-        "typescript": "Solution().connectSticks"
+        "typescript": "Solution().connectSticks",
+        "valkyrie": "connectSticks"
     }
 }

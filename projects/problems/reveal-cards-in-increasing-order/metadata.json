@@ -589,6 +589,7 @@
     ],
     "invoke": {
         "python": "Solution().deckRevealedIncreasing",
-        "typescript": "Solution().deckRevealedIncreasing"
+        "typescript": "Solution().deckRevealedIncreasing",
+        "valkyrie": "deckRevealedIncreasing"
     }
 }

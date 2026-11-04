@@ -504,6 +504,7 @@
     ],
     "invoke": {
         "python": "Solution().halveArray",
-        "typescript": "Solution().halveArray"
+        "typescript": "Solution().halveArray",
+        "valkyrie": "halveArray"
     }
 }

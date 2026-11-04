@@ -529,6 +529,7 @@
     ],
     "invoke": {
         "python": "Solution().eatenApples",
-        "typescript": "Solution().eatenApples"
+        "typescript": "Solution().eatenApples",
+        "valkyrie": "eatenApples"
     }
 }

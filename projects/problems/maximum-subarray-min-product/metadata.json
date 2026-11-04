@@ -627,6 +627,7 @@
     ],
     "invoke": {
         "python": "Solution().maxSumMinProduct",
-        "typescript": "Solution().maxSumMinProduct"
+        "typescript": "Solution().maxSumMinProduct",
+        "valkyrie": "maxSumMinProduct"
     }
 }

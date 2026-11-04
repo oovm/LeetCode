@@ -960,6 +960,7 @@
     ],
     "invoke": {
         "python": "Solution().furthestBuilding",
-        "typescript": "Solution().furthestBuilding"
+        "typescript": "Solution().furthestBuilding",
+        "valkyrie": "furthestBuilding"
     }
 }

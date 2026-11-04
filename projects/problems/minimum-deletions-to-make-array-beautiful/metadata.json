@@ -766,6 +766,7 @@
     ],
     "invoke": {
         "python": "Solution().minDeletion",
-        "typescript": "Solution().minDeletion"
+        "typescript": "Solution().minDeletion",
+        "valkyrie": "minDeletion"
     }
 }

@@ -7,6 +7,74 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R24-2026-11-04（Medium 单调栈 / 队列 / 堆 + 贪心 28 题，写完未构建）
+
+- 范围：Medium 的单调栈 + 队列 / 双端队列 + 堆（优先队列）+ 贪心面，全部按**理想写法**落地。
+  本批重点是把 `BinaryHeap` / `PriorityQueue` / `Deque` 的 API 面压出来：构造、`push` / `pop` /
+  `peek`、自定义序（`new_by(compare)`）、`Deque` 两端操作、`ArrayList` 当栈，缺什么记什么。
+- 构建 / 判题状态：**未验证（authored-unverified），构建通过 0 题**。全局停点是
+  **addon 二进制基线过期**（首个触发者 `valkyrie.v d48011b`），待 addon 重建后关闭；
+  不是 std 前端回归。
+- 覆盖口径：本块 **28 题**全部计入「仅写完未验证」；累计已构建通过数保持 **18**，
+  累计未验证 **28（R24）+ 前批累计 = 见账本 canonical 809 − 已构建 18**。
+- 新缺口编号：**0 条**。新增依赖未实现特性的调用点：
+  - `BinaryHeap<T>::new_by(compare: micro(T, T) -> i32)`（**提案，std 无**）：1962 / 1642 / 2208 /
+    2530 / 2462 / 621，共 **6 处**。2208 的元素是 `f64`（非 `Comparable`），2462 是比较器捕获
+    `costs` 的下标堆。
+  - `PriorityQueue<T>`（**名字有、宿主实现无**）：2233 / 2542 / 1167 / 1353，共 **4 题**。
+  - `sorted_by(list, cmp)`（G11 提案）：2542（按 `nums2` 降序、捕获 `nums2`）、1353（按开始日升序），
+    共 **2 处**。
+  - `Comparable` / `<=>` 派生（**阻塞**）：1705（`Fruit` 按到期日）、1921（`Monster` 按
+    `dist / speed` 交叉相乘），归入独立的「阻塞于 `Comparable` 派生」组。
+  - `char: Hash`（G17）：621，归入现有 char Hash 组。
+  - `sort(list)` 已落地（`ArrayList` 形态），950 / 945 / 1921 直接调用；不计入未实现特性依赖，
+    并入「阻塞解除」复跑组。
+- TS 参考解：28 题**全部实跑**（`run_ts_solver.ts`），28/28 通过；全部新写，无复用。
+  每题文件自带所需堆（`MinHeap` / `MaxHeap` / `IndexHeap` / `FruitHeap`），与 V 侧结构同构。
+- 数据清洗：仅删除**非答案形态或自相矛盾**的用例，未改断言、未删合法用例：
+  - `total-cost-to-hire-k-workers`（2462）：1 条 `expected: "Error: index out of range"`
+    （非答案形态）。
+  - `maximum-number-of-events-that-can-be-attended`（1353）：5 条含 `endDay < startDay` 的
+    非法事件（`[12,10]` / `[13,9]` … `[21,1]`），`expected` 却按全部事件计 21 / 20。
+  - 共删除 6 条用例，删除后单题用例数见下表。
+- 实现形态修正（不改数据）：`furthest-building-you-can-reach`（1642）由「大顶堆取最大用砖」
+  改为「砖块承担最小的一跳」（大顶堆存负值）；`minimum-deletions-to-make-array-beautiful`
+  （2216）按用例语义确认为「相邻成对元素不相等」而非奇偶性。
+- 入口签名：28/28 导出形参与 `metadata.tests[].args` 键**逐字同序**（脚本比对；
+  `mut` 前缀不计入参数名）。入口名与 `metadata.invoke.valkyrie` 一致。
+- 写出形态：28/28 顶层 `[export(case: "camelCase")] micro` + `class Solution` 委托。
+
+| 题号 | slug | 入口 | 返回 | 命中面 | 用例数 |
+| --- | --- | --- | --- | --- | --- |
+| 1962 | `remove-stones-to-minimize-the-total` | `minStoneSum` | `i64` | `BinaryHeap::new_by`（大顶） | 83 |
+| 1642 | `furthest-building-you-can-reach` | `furthestBuilding` | `i64` | `BinaryHeap::new_by` + 贪心 | 118 |
+| 2208 | `minimum-operations-to-halve-array-sum` | `halveArray` | `i64` | `BinaryHeap<f64>::new_by` | 81 |
+| 2233 | `maximum-product-after-k-increments` | `maximumProduct` | `i64` | `PriorityQueue` 最小堆 | 101 |
+| 2530 | `maximal-score-after-applying-k-operations` | `maxKelements` | `i64` | `BinaryHeap::new_by`（大顶） | 89 |
+| 2542 | `maximum-subsequence-score` | `maxScore` | `i64` | `sorted_by` + `PriorityQueue` | 114 |
+| 1167 | `minimum-cost-to-connect-sticks` | `connectSticks` | `i64` | `PriorityQueue` 合并 | 84 |
+| 2462 | `total-cost-to-hire-k-workers` | `totalCost` | `i64` | `BinaryHeap::new_by`（下标堆） | 99 |
+| 1353 | `maximum-number-of-events-that-can-be-attended` | `maxEvents` | `i64` | `sorted_by` + `PriorityQueue` | 93 |
+| 1705 | `maximum-number-of-eaten-apples` | `eatenApples` | `i64` | `Comparable` 派生 + `BinaryHeap` | 72 |
+| 3066 | `minimum-operations-to-exceed-threshold-value-ii` | `minOperations` | `i64` | `BinaryHeap` 最小堆 | 103 |
+| 2599 | `make-the-prefix-sum-non-negative` | `makePrefSumNonNegative` | `i64` | `BinaryHeap` 最小堆 | 107 |
+| 621 | `task-scheduler` | `leastInterval` | `i64` | `char` Hash + `BinaryHeap::new_by` | 86 |
+| 739 | `daily-temperatures` | `dailyTemperatures` | `ArrayList<i64>` | 单调栈（`ArrayList` 当栈） | 107 |
+| 907 | `sum-of-subarray-minimums` | `sumSubarrayMins` | `i64` | 两次单调栈 + 取模 | 93 |
+| 1856 | `maximum-subarray-min-product` | `maxSumMinProduct` | `i64` | 单调栈 + 前缀和 | 101 |
+| 2104 | `sum-of-subarray-ranges` | `subArrayRanges` | `i64` | 单调栈（最大值和 − 最小值和） | 127 |
+| 1673 | `find-the-most-competitive-subsequence` | `mostCompetitive` | `ArrayList<i64>` | 单调递增栈 + 删 k 个 | 106 |
+| 2216 | `minimum-deletions-to-make-array-beautiful` | `minDeletion` | `i64` | `ArrayList` 当栈 + 贪心配对 | 125 |
+| 1762 | `buildings-with-an-ocean-view` | `findBuildings` | `ArrayList<i64>` | 反向扫描 + 栈翻转 | 128 |
+| 946 | `validate-stack-sequences` | `validateStackSequences` | `bool` | `ArrayList` 模拟栈 | 101 |
+| 950 | `reveal-cards-in-increasing-order` | `deckRevealedIncreasing` | `ArrayList<i64>` | `sort(list)` + `Deque` | 78 |
+| 1696 | `jump-game-vi` | `maxResult` | `i64` | 单调 `Deque` + DP | 92 |
+| 918 | `maximum-sum-circular-subarray` | `maxSubarraySumCircular` | `i64` | Kadane（最大 / 最小子段） | 117 |
+| 2944 | `minimum-number-of-coins-for-fruits` | `minimumCoins` | `i64` | 单调 `Deque` + DP | 122 |
+| 3191 | `minimum-operations-to-make-binary-array-elements-equal-to-one-i` | `minOperations` | `i64` | `Deque` 延迟翻转 | 109 |
+| 945 | `minimum-increment-to-make-array-unique` | `minIncrementForUnique` | `i64` | `sort(list)` + 贪心 | 104 |
+| 1921 | `eliminate-maximum-number-of-monsters` | `eliminateMaximum` | `i64` | `Comparable` 派生 + `sort(list)` + 贪心 | 127 |
+
 ## 批次 R23-2026-11-04（Medium 双指针 / 前缀和 / 二分答案 28 题，写完未构建）
 
 - 范围：Medium 的双指针 + 前缀和 + 二分答案面，全部按**理想写法**落地：
