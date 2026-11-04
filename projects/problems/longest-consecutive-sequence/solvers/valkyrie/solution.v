@@ -1,5 +1,32 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: longestConsecutive 需要 读取 nums 哈希求最长连续序列
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.longest_consecutive_sequence;
+
+# 集合 O(1) 判定；只从段首（前驱不在集合中）起算，整段只走一遍。
+[export(case: "camelCase")]
+micro longest_consecutive(nums: ArrayList<i64>) -> i64 {
+    let mut present: HashSet<i64> = HashSet::new()
+    loop value in nums {
+        present.insert(value)
+    }
+
+    let mut longest: i64 = 0
+    loop value in nums {
+        if present.contains(value) && !present.contains(value - 1) {
+            let mut current: i64 = value
+            let mut run: i64 = 0
+            while present.contains(current) {
+                run = run + 1
+                current = current + 1
+            }
+            if run > longest {
+                longest = run
+            }
+        }
+    }
+    return longest
+}
+
+class Solution {
+    micro longestConsecutive(self, nums: ArrayList<i64>): i64 {
+        return longest_consecutive(nums)
+    }
+}
