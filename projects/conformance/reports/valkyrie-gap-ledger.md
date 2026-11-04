@@ -208,6 +208,17 @@ $n
     `Option` / `Tuple`（`Option<Array<I64>>` 的元素是 `BigInt`，不规整会让 `JSON.stringify` 抛错）。
     两份实现收敛到 `v-shared.ts`，判题脚本删掉本地副本，不再维护第二套 marshal 规则。
   - 复验（全用例真跑）：`two-sum` 80/80、`teemo-attacking` 120/120、`array-partition` 112/112。
+- **Q11 复核（2026-11-05，判定：旧 addon 测量误判，不是语言缺口）**：
+  - oak pin 已是 `555798a8`（`projects/nyar.rs/Cargo.toml`）；该 rev 的 `oak-valkyrie` 词法产出
+    `LessEqGreater`（`<=>`），旧 rev `1e601f5` 无此 token。
+  - `nyar-vm.rs` 全仓 grep 无 `<=>` / `LessEqGreater` 第二套词法；解析/打印均委托
+    `oak_valkyrie`（`frontend::ast`、`utilities::text::valkyrie`）。
+  - `legion` 实际解析到 `nyar.ts/emulators/valkyrie/node_modules/@nyar/valkyrie-win32-x64`
+    （Junction → `platforms/valkyrie-win32-x64`），该 addon `2026-11-04 23:50:58`、含
+    `555798a8` 与 `LessEqGreater`；`projects/nyar.ts/node_modules/...` 的 11-02 0.0.0 副本
+    无此 token，但不在解析首选项。
+  - 当前 HEAD 源码编译的探针二进制真跑：`1 <=> 2 = -1`、`2 <=> 1 = 1`、`7 <=> 7 = 0`（ovm）。
+  - 判据：旧结论来自 `2026-11-03 19:14` 旧 addon 的测量窗口；`<=>` 不新增工作项。
 - 本次窗口覆盖 **206 题**（R20 25 + R22 26 + R23 28 + R24 28 + R25 23 + R21 29 + R19 9 +
   M-2026-11-03 37 + 基线 `two-sum` 1），单进程顺序跑，约 190 s，超时即报不重试。
   首轮测量（修复前）：**编译通过 137 / 编译失败 69**，**端到端通过 106 / 判题未通过 31**；
@@ -357,7 +368,7 @@ $n
 - `Comparable` / `<=>` 派生（**阻塞**）：`maximum-number-of-eaten-apples`（1705，`Fruit` 按到期日）、
   `eliminate-maximum-number-of-monsters`（1921，`Monster` 按 `dist / speed` 交叉相乘）。
   `sort.v` 的执行路径是 `a.compare(b)` + `match Ordering`，而 `Ordering.Less` / `Greater` / `Equal`
-  当前不可达（Q10 撞名 / Q11 无 `<=>` token），故不写「只实现 `infix <`」的绕过形态。
+  当前不可达（Q10 裸 `Equal` 撞名；Q11 已复核为旧 addon 测量误判，非语言缺口），故不写「只实现 `infix <`」的绕过形态。
 - `char: Hash`（G17）：`task-scheduler`（621）的 `HashMap<char, i64>` 任务频次表。
 - `sort(list)`（**已落地**，`ArrayList<T>` 形态）：`reveal-cards-in-increasing-order`（950）、
   `minimum-increment-to-make-array-unique`（945）、`eliminate-maximum-number-of-monsters`（1921）
@@ -405,7 +416,7 @@ $n
 | `ArrayList::set` | `micro set(mut self, index: isize, value: T): unit`（1-based ordinal） | 有 | 739 / 907 / 1856 / 950 / 945 |
 | `sort(list)` | `micro sort<T>(mut list: ArrayList<T>) where T: std::operator::Comparable` | 有（`sort.v` 已落地，稳定归并） | 950 / 945 / 1921 |
 | `sorted_by(list, cmp)` | `micro sorted_by<T>(list: mut ArrayList<T>, compare: micro(T, T) -> i32): unit` | **无**（G11 提案） | 2542 / 1353（另 R22 的 954 / 870） |
-| `Comparable` 派生 | `imply X: std::operator::Comparable { micro compare(self, other: X): std::operator::Ordering }` | **阻塞**（`Ordering` 三态变体不可达，Q10 / Q11） | 1705 / 1921 |
+| `Comparable` 派生 | `imply X: std::operator::Comparable { micro compare(self, other: X): std::operator::Ordering }` | **阻塞**（Q10 裸 `Equal` 撞名；Q11 已复核） | 1705 / 1921 |
 | `char: Hash` | `imply char: std::hash::Hash`（`HashMap<char, V>` 可建） | **无**（G17） | 621（另 R22 的 424 / 340） |
 
 ### 依赖未实现特性的调用点（R23）
@@ -526,9 +537,10 @@ $n
 
 同组判据：`structure` + `imply X: std::operator::Comparable { micro compare ... }`，返回
 `std::operator::Ordering`。`sort.v` 的 `is_less` / `is_less_or_equal` 走 `a.compare(b)` +
-`match Ordering`，而 `Ordering.Less` / `Greater` / `Equal` 当前不可达（Q10 撞名、Q11 无
-`<=>` token），与本组的「自定义序」需求直接冲突。本组与 `sort(list)` 组分开记账：
-前者缺的是「类型侧能给出三态序」，后者只是入口形态。Q10 / Q11 关闭后一次性复跑。
+`match Ordering`，而 `Ordering.Less` / `Greater` / `Equal` 的裸名撞名仍未关闭（Q10）；Q11 已复核为
+旧 addon 测量误判（oak pin `555798a8` 含 `LessEqGreater`，当前 addon `2026-11-04 23:50:58` 含该 rev，
+当前 HEAD 源码二进制真跑 `1 <=> 2 = -1` / `2 <=> 1 = 1` / `7 <=> 7 = 0`），不再计入语言缺口。
+本组与 `sort(list)` 组分开记账：前者缺的是「类型侧能给出三态序」，后者只是入口形态。本组仍停在 Q10。
 
 **阻塞于 `sorted_by(list, cmp)`（G11 提案）**（4 题，R22 + R24 产出）
 
