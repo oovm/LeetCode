@@ -2,9 +2,30 @@ namespace leetcode.accounts_merge;
 
 using std.collection;
 
-# 字典序比较：std 的 utf8 没有 compare，Comparable 也尚未落地（G13/G15）。
+# 字典序比较：std 的 utf8 没有 compare，Comparable 也尚未落地（G13/G15），
+# 按 UTF-8 字节逐字节比较（等长前缀后短者小）。
 micro compare_text(left: utf8, right: utf8) -> i32 {
-    return left.compare(right)
+    let left_length: usize = left.byte_length()
+    let right_length: usize = right.byte_length()
+    let mut offset: usize = 0
+    while offset < left_length && offset < right_length {
+        let left_byte: u32 = left.byte_at(offset) as u32
+        let right_byte: u32 = right.byte_at(offset) as u32
+        if left_byte < right_byte {
+            return -1
+        }
+        if left_byte > right_byte {
+            return 1
+        }
+        offset = offset + 1
+    }
+    if left_length < right_length {
+        return -1
+    }
+    if left_length > right_length {
+        return 1
+    }
+    return 0
 }
 
 # 同一邮箱把账户并成一组；组内邮箱去重排序，名字取组内首个账户。
@@ -38,7 +59,7 @@ micro accounts_merge(accounts: ArrayList<ArrayList<utf8>>) -> ArrayList<ArrayLis
 
     let mut merged: ArrayList<ArrayList<utf8>> = ArrayList::new(count)
     # HashSet 无容量构造（G12）。
-    let mut grouped: HashSet<i64> = HashSet::new(count)
+    let mut grouped: HashSet<i64> = HashSet::new()
     i = 0
     while i < count {
         let root: i64 = sets.find_root(i as i64)
@@ -48,7 +69,7 @@ micro accounts_merge(accounts: ArrayList<ArrayList<utf8>>) -> ArrayList<ArrayLis
             let members: ArrayList<i64> = sets.group_members(root)
             let mut emails: ArrayList<utf8> = ArrayList::new(members.length())
             # HashSet 无容量构造（G12）。
-            let mut seen: HashSet<utf8> = HashSet::new(members.length())
+            let mut seen: HashSet<utf8> = HashSet::new()
             loop member in members {
                 let at: usize = member as usize
                 let row: ArrayList<utf8> = accounts⁅at⁆
@@ -62,7 +83,9 @@ micro accounts_merge(accounts: ArrayList<ArrayList<utf8>>) -> ArrayList<ArrayLis
                     k = k + 1
                 }
             }
-            let ordered: ArrayList<utf8> = sorted_by(emails, compare_text)
+            # 没有返回新序列的 `sorted_by`（G11），组内邮箱副本就地 `merge_sort`。
+            merge_sort(emails, compare_text)
+            let ordered: ArrayList<utf8> = emails
             let first: ArrayList<utf8> = accounts⁅i⁆
             let mut entry: ArrayList<utf8> = ArrayList::new(ordered.length() + 1)
             entry.push(first⁅0⁆)

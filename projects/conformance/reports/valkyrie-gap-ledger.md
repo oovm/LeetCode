@@ -11,6 +11,9 @@
 - 验证窗口额外记录三态证据（编译通过 / 编译失败 + 诊断坐标 / 因缺口无法判题），
   逐题结果写在 `valkyrie-unverified-batches.md` 的实测列。
 - 每条缺口只保留一个最小复现；题内触发点写在对应 `solution.v` 的 `# 题内触发点:`。
+- 标注约定：源码里**不存在**的入口只能以 `[提案]` 形式出现，标题一律写
+  `期望签名（[提案]，源码尚不存在）`；真实 API 另按源码签名书写，两者不得混排。
+  写解法时以源码为准，不以本账本的愿望为准（见观察 4 / 观察 5）。
 
 ## 库内解法总量口径（2026-11-04 实测）
 
@@ -103,7 +106,7 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
 理由：1、2 是加法，风险局部；3 要动模型与既有容器约束，放在最后可避免把缺口修复和模型迁移
 混进同一笔改动。
 
-### 观察 4：未验证语料里混入了「按提案签名写的 phantom API」（R9 静态核对发现）
+### 观察 4：未验证语料里混入了「按提案签名写的 phantom API」（R9 静态核对发现，已清）
 
 缺口账本里 G11 / G16 / G13 / G12 的「期望签名」是提案，不是现有 API。R4–R8 的解法中有 10 个文件
 直接按提案签名写，源码层并不存在这些入口。逐条坐标：
@@ -121,7 +124,25 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
   `floor` / `ceiling` → `to_list()` 后二分；`utf8.compare` → `byte_length` / `byte_at` 逐字节比较；
   `HashSet::new(n)` → `HashSet::new()`。
 - 本批（R9）不新增 phantom 调用：8 题只使用已核对存在的入口。
+- **已清（2026-11-04 更正提交）**：上表 10 个文件全部改成等价真实 API 写法 ——
+  `sorted_by` ×9 → 自建副本 + `merge_sort`（`custom-sort-string` 改用「rank · 1000000 + 原下标」
+  编码进 `ArrayList<i64>`，避免排序闭包捕获 `priority`；`top-k-frequent-words` 改频次桶 +
+  桶内命名比较器，避免捕获 `counts`）；`BTreeSet.floor` / `ceiling` → `to_list()` 快照 +
+  手写 `lower_bound` 二分；`utf8.compare` ×2 → `byte_length` / `byte_at` 逐字节比较；
+  `HashSet::new(n)` ×3 → `HashSet::new()`。`group-anagrams` / `smallest-string-with-swaps` 的
+  `char` 比较一并改为 `as u32` 码位比较（G15 下游）。本笔只动这 10 处与账本标注，未掺新题。
 - 教训：提案签名必须与「已存在 API」分开存放，写解法时以源码为准，不以账本愿望为准。
+  本表此后统一用 `[提案]` 前缀标注源码不存在的入口（见维护口径）。
+
+### 观察 5：`utf8.trim` / `replace` / `to_lower` / `to_upper` 是 `[host_contract]` 空壳，语义不可核对
+
+2026-11-04 静态核对 `std/source/text/Utf8Text.v`：
+- `trim()`（L186）、`replace(old, new)`（L199）、`to_lower()`、`to_upper()` 四个入口都标
+  `[host_contract]`，函数体只有 `return self`（或等价空实现），std 源里**没有**任何实现语义。
+- 后果：`trim` 去哪些字符（ASCII 空白 / Unicode 空白 / 其它）、`replace` 是全量替换还是首个替换、
+  `to_lower` / `to_upper` 的 locale 与码位范围，全部由 adaptor 侧决定；在 std 层**不可核对**。
+- 约束：任何依赖这四个函数的题解必须显式标注「语义未定，待 adaptor 侧确认」，不得写成既成事实，
+  也不得据此断言与主流同向；验证窗口若按宿主实测有偏差，以宿主行为为准并回填本观察。
 
 ## 未恢复
 
@@ -303,7 +324,7 @@ micro probe(m: HashMap<i64, i64>, flag: bool, flag2: bool, a: i64, b: i64) -> bo
 - 状态：未提供（std API 缺口，**不阻断构建**；2026-11-04 静态核对 `std/source/collection/graph/DirectedGraph.v`）
 - 定性：**该有但没有**。无向关系没有一等写入入口，`add_edge` 只表达单向，无向边只能由调用方
   双写两条反向边；`has_edge(a, b)` 也不保证 `has_edge(b, a)`，无向性完全靠调用约定维持。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/collection/graph/DirectedGraph.v（与 add_edge 同形）
@@ -324,7 +345,7 @@ micro add_undirected_edge(mut self, from: N, to: N): bool
 - 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `unweighted.v`）
 - 定性：**该有但没有**。模块自述「只补连通分量与无权最短路，BFS/DFS 归 `DirectedGraph`」，
   但二分性（二色着色）是图上最基础的可判定性质，目前无入口。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/math/graph_theory/unweighted.v（与 weak_components 同形）
@@ -344,7 +365,7 @@ micro bipartition<N>(graph: std.collection.DirectedGraph<N>) -> Option<HashMap<N
 - 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `std/source/collection/DisjointSet.v`）
 - 定性：**该有但没有**。并查集把「合并」做成 API，却没把「这个分量有多大 / 有哪些成员」暴露出来；
   调用方只能逐个 `find_root` 再自建 `HashMap` 归并，等于重写 DSU 的内部职责。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/collection/DisjointSet.v
@@ -364,7 +385,7 @@ micro group_members(mut self, root: T): ArrayList<T>
 - 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `std/source/collection/sort.v`）
 - 定性：**该有但没有**。`quick_sort` / `merge_sort` 形参是 `list: ArrayList<T>`（非 mut），语义为
   「就地改容器」，调用方要排序必须先自建副本；`Array<T>` 没有任何排序入口。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/collection/sort.v
@@ -372,9 +393,12 @@ micro sorted_by<T>(list: ArrayList<T>, cmp: micro(T, T) -> i32): ArrayList<T>
 micro sorted_by<T>(list: Array<T>, cmp: micro(T, T) -> i32): ArrayList<T>
 ```
 
-- 影响题（4）：`groups-of-special-equivalent-strings`（893，even/odd 两个副本）、
-  `reorder-data-in-log-files`（937，整表副本）、`height-checker`（1051，排序副本，批次 R4 首例
-  以 `sorted_by(Array<T>)` 写）、`largest-perimeter-triangle`（976，降序副本，批次 R6 写）。
+- 影响题（4，均已在 2026-11-04 更正提交改为「副本 + `merge_sort`」）：`groups-of-special-equivalent-strings`
+  （893，even/odd 两个副本）、`reorder-data-in-log-files`（937，整表副本）、`height-checker`
+  （1051，批次 R4 曾直接按 `[提案]` 的 `sorted_by(Array<T>)` 写）、`largest-perimeter-triangle`
+  （976，批次 R6 同上）。另有 7 题（`accounts-merge` / `custom-sort-string` / `group-anagrams` /
+  `meeting-rooms` / `queue-reconstruction-by-height` / `smallest-string-with-swaps` /
+  `top-k-frequent-words` 中的 7 处调用）同批清理，见观察 4。
 - 不对称点：`ArrayList` 有 **7 个**排序函数（`quick_sort` / `quick_sort_range` / `partition` / `swap` /
   `merge_sort` / `merge_sort_range` / `merge`；此前记为 6 个，漏了 `merge`），`Array<T>` 为 **0 个**
   排序入口；没有任何一个返回新序列。另：std 测试目录下无 `quick_sort` / `merge_sort` 用例，
@@ -386,7 +410,7 @@ micro sorted_by<T>(list: Array<T>, cmp: micro(T, T) -> i32): ArrayList<T>
 
 - 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `std/source/collection/hashed/HashSet.v`）
 - 定性：**该有但没有**。同族容器 `HashMap::new(capacity)` 支持预分配，`HashSet` 把容量写死为 16。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/collection/hashed/HashSet.v
@@ -394,12 +418,13 @@ micro new(capacity: usize): Self
 micro with_capacity(capacity: usize): Self
 ```
 
-- 影响题（7）：`groups-of-special-equivalent-strings`（893）、`longest-consecutive-sequence`（128，
+- 影响题（8）：`groups-of-special-equivalent-strings`（893）、`longest-consecutive-sequence`（128，
   元素数最大 1e5 的整表插入）、`unique-number-of-occurrences`（1207，批次 R6，频次去重集合
   规模 = 键数）、`top-k-frequent-elements`（347，批次 R9，去重保序集合）、
   `k-diff-pairs-in-an-array`（532，批次 R9，`BTreeSet::new()` 同样无容量）、
   `relative-sort-array`（1122，批次 R9，已出现值集合）、
-  `find-the-difference-of-two-arrays`（2215，批次 R9，两个存在性集合）。
+  `find-the-difference-of-two-arrays`（2215，批次 R9，两个存在性集合）、
+  `accounts-merge`（721，R4–R8 曾按 `[提案]` 写 `new(count)`，2026-11-04 更正为 `new()`）。
 - 不对称点：`HashSet::new()` 固定 `SwissSet::new(16)`；`HashMap::new(capacity: usize)` 直传容量。
 - 判定：**std 缺口**。
 - 修复初判：**加 API**（一行转发 `SwissSet::new(capacity)`）。
@@ -409,15 +434,20 @@ micro with_capacity(capacity: usize): Self
 - 状态：未提供（std API 缺口，不阻断构建；2026-11-04 `reorder-data-in-log-files` 静态确认）
 - 定性：**该有但没有**。`utf8` 只实现 `equals` / `not_equals`，没有大小比较；任何按字典序排序的题
   都要在题内逐字符手写比较函数。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/text/Utf8Text.v
 micro compare(self, other: utf8) -> i32   # <0 / 0 / >0，按码位（与 UTF-8 字节序一致）
 ```
 
-- 影响题（2）：`reorder-data-in-log-files`（937，题内 `compare_text`）、
-  `find-smallest-letter-greater-than-target`（744，上界二分对 `utf8` 直接写 `<=`）。
+- 影响题（4）：`reorder-data-in-log-files`（937，题内 `compare_text`）、
+  `find-smallest-letter-greater-than-target`（744，上界二分对 `utf8` 直接写 `<=`）、
+  `accounts-merge`（721，题内 `compare_text`）、`top-k-frequent-words`（692，题内 `compare_text`）。
+  后两题 R4–R8 曾按 `[提案]` 写 `left.compare(right)`，2026-11-04 更正为
+  `byte_length` / `byte_at` 逐字节比较。
+- 附注：`Utf8Text` 的 `trim` / `replace` / `to_lower` / `to_upper` 是 `[host_contract]` 空壳，
+  语义不可核对，见观察 5；依赖它们的题解必须标「语义未定」。
 - 不对称点：`char` 只有 `as u32` 转换运算符、**无 `<`**、也不是 `Ordinal` 载体（`char.v` 仅实现
   `==` / `!=`）；`utf8` 连可比较的码位视图都没有。（此前记作「`char` 可经 `Ordinal` 转 `u32`」，
   该论断错误，已更正。）
@@ -431,7 +461,7 @@ micro compare(self, other: utf8) -> i32   # <0 / 0 / >0，按码位（与 UTF-8 
 - 状态：未提供（std API 缺口，不阻断构建；2026-11-04 `reorder-data-in-log-files` 静态确认）
 - 定性：**该有但没有**。`split(separator) -> [utf8]` 只能整段切分；需要「首个分隔符左/右两段」时，
   只能组合 `index_of` + `slice` 三次，且「无分隔符 / 分隔符在末尾」等分支都要调用方自处理。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/text/Utf8Text.v（成对承载需要新增记录类型）
@@ -454,7 +484,7 @@ micro split_once(self, separator: utf8) -> Option<SplitParts>
   （`i8` / `i16` / `i32` / `i64` / `u8` / `u16` / `u32` / `u64` / `f32` / `f64` 各一份）；
   `BTreeSet` 声明 `T: Equal`（`BTreeSet.v` L23-L24）却在 L170 与 L239 裸调 `<` ——
   类型检查通过，但语义前提没有任何约束表达，属**不健全的泛型容器**。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/operator/comparable.v（与既有 operator 合同同构，
@@ -491,7 +521,7 @@ imply Utf8Text: Comparable { ... }
 - 修复初判：**建 trait**（新增 `Comparable` 合同 + 逐 primitive impl + 收窄 BTree 系约束）。
 - 影响题（2，均已写）：`find-smallest-letter-greater-than-target`（744，批次 R5，
   `letters⁅mid⁆ <= target`）、`group-anagrams`（49，批次 R7，`sorted_by(ArrayList<char>)` 的比较器
-  裸调 `<` / `>` 排序字符）。
+  裸调 `<` / `>` 排序字符；2026-11-04 更正提交改为 `as u32` 码位比较 + 副本 `merge_sort`）。
 - 与 G17 的交叉引用：`char` 同时缺 `Hash`。**这两条不是孤立缺 impl，而是同一个 primitive 的
   类型能力面没设计完**——`Ordinal` 视图 / `Comparable` / `Hash` 三条腿一条都没在 `char` 上落地，
   只剩 `==` / `!=`，于是它既进不了有序容器也进不了哈希容器。
@@ -502,7 +532,7 @@ imply Utf8Text: Comparable { ... }
   `BTreeMap.v`）
 - 定性：**该有但没有**。容器按序存放，却只暴露「插入 / 存在性 / 删除 / 全量物化」，
   没有任何按值定位的界查询，调用方拿不到「最近的较小/较大元素」。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/collection/sorted/BTreeSet.v、BTreeMap.v
@@ -518,7 +548,8 @@ micro ceiling_key(self, value: K) -> Option<K>   # BTreeMap，最小 >= value �
 micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value 的键（上界查询）
 ```
 
-- 影响题（4）：`contains-duplicate-iii`（220，窗口内前驱/后继判定）、
+- 影响题（4）：`contains-duplicate-iii`（220，窗口内前驱/后继判定；R4–R8 曾直接按 `[提案]`
+  的 `floor` / `ceiling` 写，2026-11-04 更正提交已改为 `to_list()` 快照 + 手写 `lower_bound`）、
   `sliding-window-median`（480，有序计数表按秩取中位；缺 `nth_key` 只能 `keys()` 全量物化，
   每步退化为 O(k)）、`find-right-interval`（436，批次 R6，按终点求「最小 >= 终点的起点」，
   即 `ceiling_key`；缺它只能 `keys()` 全量物化后手写二分）、`k-diff-pairs-in-an-array`（532，
@@ -538,7 +569,7 @@ micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value �
 - 定性：**该有但没有**。`char` 只定义了 `==` / `!=`，没有 `Hash`，于是不能作
   `HashMap` / `HashSet` / `DisjointSet` 的键；同样表示一个小写字母，用 `utf8` 可以入表，
   用 `char` 不行。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/text/char.v
@@ -569,7 +600,7 @@ imply char: Hash {
   `split` / `slice` / `try_slice` / `index_of`）
 - 定性：**该有但没有**。`split` 只接受精确分隔符，既不按空白类切分，也不丢弃空段；
   「按词切分」这类文本题只能自己逐字符扫描并手写状态机。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/text/Utf8Text.v
@@ -590,7 +621,7 @@ micro split_whitespace(self) -> [utf8]
   `[offset, offset + length)` 区间」，结构也持有 `_offset` / `_length`，但唯一构造入口是
   `array_view(source)` 全窗，`_offset` 永远是 0。于是「持有子区间」这件事，类型本身表达不了
   它自己文档化的语义。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/collection/array_view.v
@@ -612,7 +643,7 @@ micro array_view<T>(source: [T], offset: usize, length: usize) -> ArrayView<T>
   只接受 `f64`，没有整数重载；`Iterator` 终端有 `fold` / `reduce` / `any` / `all` /
   `find` / `position` / `count`，但没有 `max` / `min` / `sum` / `product`。于是
   「数组最大值」这种最基础归约只能手写 fold，或手写比较循环。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/math/basic.v
@@ -642,7 +673,7 @@ micro sum<I, T>(self: I, initial: T): T where I: Iterator<Item = T>
   `insert` / `remove`，但没有 `reverse`；`Iterator` 有 `map` / `filter` / `skip` / `take` /
   `enumerate`，但没有 `rev`；`Utf8Builder` 只有正向 `append`，没有 `prepend`。于是「低位先
   追加、最后整段翻面」这种最常见的构造顺序，只能每次都手写双指针交换。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/collection/ArrayList.v
@@ -673,7 +704,7 @@ micro prepend(mut self, value: char): unit
 - 定性：**该有但没有**。`i64` 有完整的 `&` / `|` / `^` / `<<` / `>>` / `bit_not`，却没有
   任何一个位元查询：`count_ones` / `leading_zeros` / `trailing_zeros`。位图类题只能把整数打回
   成 `while value > 0 { value % 2; value / 2 }` 的十进制循环，或自己写 Brian Kernighan 循环。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/primitive/i64.v（以及 u8–u64 / i8–i32 同族逐类型）
@@ -698,7 +729,7 @@ micro trailing_zeros(self): u32
 - 定性：**该有但没有**。`std.math` 只有 `basic`（`abs` / `max` / `min` / `clamp`，且只收 `f64`）、
   `constants`、`splitmix64`、`distribution/*`、`graph_theory/*`；**没有数论模块**，
   `gcd` / `lcm` / `is_prime` / `factorize` 一个都没有。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/math/number_theory.v（新模块）
@@ -725,7 +756,7 @@ micro lcm(a: i64, b: i64) -> i64
 - 后果：两个多重集实例无法判「元素与重数完全一致」；也无法作为 `HashMap` / `HashSet` 的键。
   `to_list()` 的顺序取决于内部哈希遍历，不是规范序，因此「排序后比较」这条路在 `T` 无
   `Comparable` 时同样不可走（`char` 正是这种 `T`，见 G15）。
-- 期望签名：
+- 期望签名（[提案]，源码尚不存在）：
 
 ```v
 # std/source/collection/MultiSet.v

@@ -11,6 +11,16 @@ micro rank_of(priority: HashMap<char, i64>, character: char) -> i64 {
     return 0
 }
 
+micro compare_i64(a: i64, b: i64) -> i32 {
+    if a < b {
+        return -1
+    }
+    if a > b {
+        return 1
+    }
+    return 0
+}
+
 [export(case: "camelCase")]
 micro custom_sort_string(order: utf8, s: utf8) -> utf8 {
     # char 作映射键需要 Hash，std 尚未实现（G17）。
@@ -21,27 +31,22 @@ micro custom_sort_string(order: utf8, s: utf8) -> utf8 {
         position = position + 1
     }
 
-    let mut letters: ArrayList<char> = ArrayList::new(s.length())
+    # 没有返回新序列的 `sorted_by`（G11）：把「rank · 1000000 + 原下标」编码进 i64 副本，
+    # 用命名比较器的就地 `merge_sort` 做稳定排序，避免闭包捕获 `priority`。
+    let count: usize = s.length()
+    let mut keys: ArrayList<i64> = ArrayList::new(count)
+    let mut index: i64 = 0
     loop character in s {
-        letters.push(character)
+        let rank: i64 = rank_of(priority, character)
+        keys.push(rank * 1000000 + index)
+        index = index + 1
     }
+    merge_sort(keys, compare_i64)
 
-    # 返回新序列的稳定排序（G11）。
-    let ordered: ArrayList<char> = sorted_by(letters, micro(left: char, right: char) -> i32 {
-        let left_rank: i64 = rank_of(priority, left)
-        let right_rank: i64 = rank_of(priority, right)
-        if left_rank < right_rank {
-            return -1
-        }
-        if left_rank > right_rank {
-            return 1
-        }
-        return 0
-    })
-
-    let mut text: Utf8Builder = Utf8Builder::new(s.length())
-    loop character in ordered {
-        text.append(character)
+    let mut text: Utf8Builder = Utf8Builder::new(count)
+    loop key in keys {
+        let at: usize = (key % 1000000) as usize
+        text.append(s⁅at⁆)
     }
     return text.build()
 }

@@ -1,9 +1,21 @@
 namespace leetcode.group_anagrams;
 
 # 规范形 = 字符升序拼接；分组键是规范形字符串，映射到 `groups` 的下标以保留首次出现顺序。
-# 题内触发点: G15 —— `sorted_by` 的比较器需要 `char` 参与 `<` / `>`，而 `char` 只有 `==`/`!=`；
-# 本题是 G15 的又一实例（前有 `find-smallest-letter-greater-than-target` 的 `<=`、
-# `check-if-all-...` 的序关系）。
+# 题内触发点: G15 —— `char` 没有 `<` / `>`，也没有 `Comparable` 合同，排序键只能退到
+# `as u32` 的码位比较；本题是 G15 的又一实例（前有 `find-smallest-letter-greater-than-target`
+# 的 `<=`、`check-if-all-...` 的序关系）。
+micro compare_char(left: char, right: char) -> i32 {
+    let left_code: u32 = left as u32
+    let right_code: u32 = right as u32
+    if left_code < right_code {
+        return -1
+    }
+    if left_code > right_code {
+        return 1
+    }
+    return 0
+}
+
 micro sorted_key(word: utf8) -> utf8 {
     let count: usize = word.length()
     let mut chars: ArrayList<char> = ArrayList::new(count)
@@ -13,15 +25,9 @@ micro sorted_key(word: utf8) -> utf8 {
         i = i + 1
     }
 
-    let ordered: ArrayList<char> = sorted_by(chars, micro(a: char, b: char) -> i32 {
-        if a < b {
-            return -1
-        }
-        if a > b {
-            return 1
-        }
-        return 0
-    })
+    # 没有返回新序列的 `sorted_by`（G11），副本就地 `merge_sort`。
+    merge_sort(chars, compare_char)
+    let ordered: ArrayList<char> = chars
 
     let mut builder: Utf8Builder = Utf8Builder::new(count)
     i = 0
