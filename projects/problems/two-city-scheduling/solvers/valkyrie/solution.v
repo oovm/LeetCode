@@ -28,7 +28,7 @@ imply CostRow: std::operator::Comparable {
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {
-    merge_sort(items)
+    sort(items)
 }
 
 class Solution {

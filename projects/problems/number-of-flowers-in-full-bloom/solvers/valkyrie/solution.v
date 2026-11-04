@@ -23,7 +23,7 @@ imply Flower: std::operator::Comparable {
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {
-    merge_sort(items)
+    sort(items)
 }
 
 # 首个起点 > value 的下标，即起点 <= value 的花的数量。

@@ -27,7 +27,7 @@ imply Cuboid: std::operator::Comparable {
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {
-    merge_sort(items)
+    sort(items)
 }
 
 # 三边排序后最小的作宽、最大的作高，中间值作深。

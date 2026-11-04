@@ -27,7 +27,7 @@ imply Event: std::operator::Comparable {
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {
-    merge_sort(items)
+    sort(items)
 }
 
 # 首个开始日 > value 的下标；事件按开始日升序，故它就是「结束 value 之后能参加的第一场」。

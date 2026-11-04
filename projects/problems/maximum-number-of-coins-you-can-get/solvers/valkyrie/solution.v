@@ -4,11 +4,11 @@ using std.collection
 
 # 题内触发点: G26 —— 对 `ArrayList<i64>` 直接调用单参排序，依赖 `i64: Comparable`（提案）与
 # `where T: Comparable` 的排序入口；不传 `micro(a, b) -> i32`，也不编码排序键。
-# [待补 API] 单参 `merge_sort(items)` 源码尚不存在（现有 7 个入口均要求显式 `cmp`）。
+# [待补 API] 单参 `sort(items)` 源码尚不存在（现有 7 个入口均要求显式 `cmp`）。
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {
-    merge_sort(items)
+    sort(items)
 }
 
 class Solution {

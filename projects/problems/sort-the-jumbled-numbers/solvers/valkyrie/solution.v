@@ -20,7 +20,7 @@ imply Jumbled: std::operator::Comparable {
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {
-    merge_sort(items)
+    sort(items)
 }
 
 # 逐位过映射表后重新组装；`value` 为 0 时映射表首项即结果。
