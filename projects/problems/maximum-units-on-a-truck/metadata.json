@@ -735,6 +735,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumUnits",
-        "typescript": "Solution().maximumUnits"
+        "typescript": "Solution().maximumUnits",
+        "valkyrie": "maximumUnits"
     }
 }

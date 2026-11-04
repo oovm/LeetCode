@@ -966,6 +966,7 @@
     ],
     "invoke": {
         "python": "Solution().bestTeamScore",
-        "typescript": "Solution().bestTeamScore"
+        "typescript": "Solution().bestTeamScore",
+        "valkyrie": "bestTeamScore"
     }
 }

@@ -723,6 +723,7 @@
     ],
     "invoke": {
         "python": "Solution().eraseOverlapIntervals",
-        "typescript": "Solution().eraseOverlapIntervals"
+        "typescript": "Solution().eraseOverlapIntervals",
+        "valkyrie": "eraseOverlapIntervals"
     }
 }

@@ -282,12 +282,6 @@
         },
         {
             "args": {
-                "expression": "&(&(&(&(&(&(&(&(&(&(&(&(t),t),t),t),t),t),t),t),t),t),t),t),t)"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "|(|(|(|(|(|(|(|(t),f),t),f),f),f),&(t,t,t,t,t,t,t,t),|(t,f,f,t,f),&(f,f,t,t,t,t,f,t),f,t)"
             },
             "expected": false
@@ -384,12 +378,6 @@
         },
         {
             "args": {
-                "expression": "&(|(|(|(|(|(|(f,t),f),t),t),t),t),t),t),&(f,|(t,!(t),f),&(t,t,t,t,t,t)),!(|(t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t)))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "!(&(|(t,f),f),&(t,t,t))"
             },
             "expected": true
@@ -429,12 +417,6 @@
                 "expression": "!(&(|(|(f,t),f),&(f,t,f,t)),|(f,f,f,f,f,t,t),&(t,t,t,t,t,t,t,t))"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "expression": "!(&(|(f,f,f),t),&(|(|(|(|(|(|(f,t),f),t),t),t),t),t),t),&(f,|(t,!(t),f),&(t,t,t,t,t,t)),!(|(t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t)))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -537,12 +519,6 @@
                 "expression": "|(|(|(f),f),f)"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "expression": "&(|(|(|(|(|(|(|(|(|(|(|(|(f,t),f),t),t),t),t),t),t),t),t),t),t),t),&(f,|(t,!(t),f),&(t,t,t,t,t,t)),!(|(t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t)))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -687,12 +663,6 @@
                 "expression": "|(|(f,f,f),&(t,t,t),!(|(f,f)))"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "expression": "&(|(t,f),&(f,|(t,f)),!(t)),|(&(f,t),&(t,t)))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
