@@ -7,6 +7,35 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R10-2026-11-04（理想解滚动批次 10，8 题，写完未构建）
+
+- 范围：此前 `solution.v` 为阻塞标记的 8 题；只补理想解，不改算法绕 std 缺口。选题压「排序副本 /
+  有序容器按秩 / 哈希物化」，并再次探测点名的四个 API 面：`ArrayList.remove(ordinal)` 的
+  `Option<T>` 返回、`ArrayList.to_array()`、`HashMap.iterator` 无捕获回调、`BTreeSet.nth` / `rank`。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
+- 新缺口：**0 条**（G1–G24 不变）。G11 影响题扩为 18（本批 7 题「副本 + `merge_sort`」）、
+  G12 影响题扩为 9（`rank-transform-of-an-array` 的 `BTreeSet::new()`）、G16 影响题扩为 5
+  （`rank-transform-of-an-array`）。
+- 四个点名面：`remove(ordinal)` / `to_array()` / `HashMap.iterator` / `BTreeSet.nth` 在 8 题理想解里
+  **仍无自然调用点**，逐条理由记在账本「未命中面（第 10 批探测）」；未硬造调用，也未新增编号。
+- 预期阻断：`sort-even-and-odd-indices-independently` / `sort-array-by-increasing-frequency` /
+  `relative-ranks` / `rank-transform-of-an-array` / `sort-the-people` 返回 `ArrayList`，
+  `merge-similar-items` 返回 `ArrayList<ArrayList<i64>>`，按 G3 在 wasm JS glue 处阻断。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致（`intervals` / `nums` / `nums` /
+  `score` / `arr` / `names`+`heights` / `items1`+`items2` / `nums`）。
+- TS 参考解：7/7 复用既有非空实现；`remove-covered-intervals` 的 TS 文件此前为空，本批新写。
+
+| slug | 导出入口 | 返回类型 | 缺口 / 覆盖方向 |
+| --- | --- | --- | --- |
+| `remove-covered-intervals` | `removeCoveredIntervals` | `i64` | 起点升序 / 同起点终点降序后单次扫描；副本 + `merge_sort`；G11 |
+| `sort-even-and-odd-indices-independently` | `sortEvenOdd` | `ArrayList<i64>` | 偶升 / 奇降双列 + 交错回填；G11 / G3 |
+| `sort-array-by-increasing-frequency` | `frequencySort` | `ArrayList<i64>` | 频次编码进 `i64`（比较器不能捕获）+ `keys()` 物化；`HashMap.iterator` 边界；G11 |
+| `relative-ranks` | `findRelativeRanks` | `ArrayList<utf8>` | `Utf8Builder::append_i64` + 分数/下标编码降序；G3 |
+| `rank-transform-of-an-array` | `arrayRankTransform` | `ArrayList<i64>` | `BTreeSet.to_list()` 按秩建表 + HashMap 回填；G12 / G16 / G3 |
+| `sort-the-people` | `sortPeople` | `ArrayList<utf8>` | 身高 + 下标编码降序回填人名；G11 / G3 |
+| `merge-similar-items` | `mergeSimilarItems` | `ArrayList<ArrayList<i64>>` | HashMap 累加 + `keys()` + 升序物化；G12 / G3 |
+| `minimum-moves-to-equal-array-elements-ii` | `minMoves2` | `i64` | 副本 `merge_sort` 取中位数 + 绝对差求和；G11 |
+
 ## 批次 R9-2026-11-04（理想解滚动批次 9，8 题，写完未构建）
 
 - 范围：此前 `solution.v` 为阻塞标记的 8 题；只补理想解，不改算法绕 std 缺口。选题偏置压

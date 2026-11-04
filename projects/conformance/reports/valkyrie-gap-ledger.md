@@ -56,6 +56,8 @@ $n
 - 后续增量（2026-11-04，滚动批次 R8 后）：canonical 实测 **585**（R8 前 577；本批新编号 0 条）。
 - 后续增量（2026-11-04，滚动批次 R9 后）：canonical 实测 **593**（R9 前 585；本批新编号 0 条，
   但新增观察 4：R4–R8 的若干解法调用了尚不存在的提案 API，需在验证窗口前更正）。
+- 后续增量（2026-11-04，滚动批次 R10 后）：canonical 实测 **601**（R10 前 593；本批新编号 0 条，
+  四个点名 API 面仍无自然调用点，见「未命中面（第 10 批探测）」）。
 
 ## 系统性问题（观察，非编号）
 
@@ -393,12 +395,15 @@ micro sorted_by<T>(list: ArrayList<T>, cmp: micro(T, T) -> i32): ArrayList<T>
 micro sorted_by<T>(list: Array<T>, cmp: micro(T, T) -> i32): ArrayList<T>
 ```
 
-- 影响题（4，均已在 2026-11-04 更正提交改为「副本 + `merge_sort`」）：`groups-of-special-equivalent-strings`
-  （893，even/odd 两个副本）、`reorder-data-in-log-files`（937，整表副本）、`height-checker`
-  （1051，批次 R4 曾直接按 `[提案]` 的 `sorted_by(Array<T>)` 写）、`largest-perimeter-triangle`
-  （976，批次 R6 同上）。另有 7 题（`accounts-merge` / `custom-sort-string` / `group-anagrams` /
-  `meeting-rooms` / `queue-reconstruction-by-height` / `smallest-string-with-swaps` /
-  `top-k-frequent-words` 中的 7 处调用）同批清理，见观察 4。
+- 影响题（18）：`groups-of-special-equivalent-strings`（893，even/odd 两个副本）、
+  `reorder-data-in-log-files`（937，整表副本）、`height-checker`（1051，批次 R4 曾直接按 `[提案]`
+  的 `sorted_by(Array<T>)` 写）、`largest-perimeter-triangle`（976，批次 R6 同上）；
+  另有 7 题（`accounts-merge` / `custom-sort-string` / `group-anagrams` / `meeting-rooms` /
+  `queue-reconstruction-by-height` / `smallest-string-with-swaps` / `top-k-frequent-words` 中的
+  7 处调用）在 2026-11-04 更正提交清理，见观察 4。第 10 批又有 7 题走「副本 + `merge_sort`」：
+  `remove-covered-intervals`（1288）、`sort-even-and-odd-indices-independently`（2164）、
+  `sort-array-by-increasing-frequency`（1636）、`relative-ranks`（506）、`sort-the-people`（2418）、
+  `merge-similar-items`（2363）、`minimum-moves-to-equal-array-elements-ii`（462）。
 - 不对称点：`ArrayList` 有 **7 个**排序函数（`quick_sort` / `quick_sort_range` / `partition` / `swap` /
   `merge_sort` / `merge_sort_range` / `merge`；此前记为 6 个，漏了 `merge`），`Array<T>` 为 **0 个**
   排序入口；没有任何一个返回新序列。另：std 测试目录下无 `quick_sort` / `merge_sort` 用例，
@@ -418,13 +423,14 @@ micro new(capacity: usize): Self
 micro with_capacity(capacity: usize): Self
 ```
 
-- 影响题（8）：`groups-of-special-equivalent-strings`（893）、`longest-consecutive-sequence`（128，
+- 影响题（9）：`groups-of-special-equivalent-strings`（893）、`longest-consecutive-sequence`（128，
   元素数最大 1e5 的整表插入）、`unique-number-of-occurrences`（1207，批次 R6，频次去重集合
   规模 = 键数）、`top-k-frequent-elements`（347，批次 R9，去重保序集合）、
   `k-diff-pairs-in-an-array`（532，批次 R9，`BTreeSet::new()` 同样无容量）、
   `relative-sort-array`（1122，批次 R9，已出现值集合）、
   `find-the-difference-of-two-arrays`（2215，批次 R9，两个存在性集合）、
-  `accounts-merge`（721，R4–R8 曾按 `[提案]` 写 `new(count)`，2026-11-04 更正为 `new()`）。
+  `accounts-merge`（721，R4–R8 曾按 `[提案]` 写 `new(count)`，2026-11-04 更正为 `new()`）、
+  `rank-transform-of-an-array`（1331，批次 R10，`BTreeSet::new()` 同样无容量）。
 - 不对称点：`HashSet::new()` 固定 `SwissSet::new(16)`；`HashMap::new(capacity: usize)` 直传容量。
 - 判定：**std 缺口**。
 - 修复初判：**加 API**（一行转发 `SwissSet::new(capacity)`）。
@@ -548,14 +554,17 @@ micro ceiling_key(self, value: K) -> Option<K>   # BTreeMap，最小 >= value �
 micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value 的键（上界查询）
 ```
 
-- 影响题（4）：`contains-duplicate-iii`（220，窗口内前驱/后继判定；R4–R8 曾直接按 `[提案]`
+- 影响题（5）：`contains-duplicate-iii`（220，窗口内前驱/后继判定；R4–R8 曾直接按 `[提案]`
   的 `floor` / `ceiling` 写，2026-11-04 更正提交已改为 `to_list()` 快照 + 手写 `lower_bound`）、
   `sliding-window-median`（480，有序计数表按秩取中位；缺 `nth_key` 只能 `keys()` 全量物化，
   每步退化为 O(k)）、`find-right-interval`（436，批次 R6，按终点求「最小 >= 终点的起点」，
   即 `ceiling_key`；缺它只能 `keys()` 全量物化后手写二分）、`k-diff-pairs-in-an-array`（532，
-  批次 R9，去重后有序扫描只能 `to_list()` 后下标遍历，缺 `nth` / `range`）。
-- 核对补充（批次 R9）：`BTreeSet` / `BTreeMap` **都没有** `range`，观察 2 里「区间开闭待定」的
-  条目当前不存在实现，无从核对；`nth` / `rank` 同样只在提案里。
+  批次 R9，去重后有序扫描只能 `to_list()` 后下标遍历，缺 `nth` / `range`）、
+  `rank-transform-of-an-array`（1331，批次 R10，去重后按秩回填只能 `to_list()` 后线性建表）。
+- 核对补充（批次 R9 / R10）：`BTreeSet` / `BTreeMap` **都没有** `range`，观察 2 里「区间开闭待定」
+  的条目当前不存在实现，无从核对；`nth` / `rank` 同样只在提案里。第 10 批的
+  `minimum-moves-to-equal-array-elements-ii`（462）虽要「第 k 小」，但 `BTreeSet` 会去重、破坏重复值
+  语义，理想解须保留多重集，故**不**计入 `nth` 影响面——`nth` 本身仍无自然调用点。
 - 不对称点：`HashMap` 有 `keys` / `values`，`BTreeSet` 有 `to_list`，但有序容器只能被全量物化后
   线性扫描；`floor` / `ceiling` / `first` / `last` / `range` / `nth` 全部缺失，「有序」只剩存储形态。
 - 判定：**std 缺口**。
@@ -930,6 +939,25 @@ micro to_sorted_list(self) -> ArrayList<T> where T: Comparable
   本批 8 题不含纯文本题，未实际调用；结论写入观察 2。
 - **`Array<T>` 无排序入口仍成立**：本批没有再出现 `Array<T>` 排序需求，残留风险是 R4/R6 的
   `height-checker` / `largest-perimeter-triangle`（见观察 4）。
+
+### 未命中面（第 10 批探测，2026-11-04，新编号 0 条）
+
+- **`ArrayList.remove(ordinal)` 仍无自然调用点（第二批次确认）**：理想解不需要「按序数删元素并消费
+  被删值」。`remove-covered-intervals`（1288）单次扫描计数即最优，逐个 `remove` 会退化成 O(n²)，
+  属绕路写法；`merge-similar-items`（2363）是双表累加，不是删元素。返回值面（`Option<T>`）仍未被
+  真实题解压住，但仍有等价物（`pop()` / 下标游标 / `Deque`），故不编号。
+- **`ArrayList.to_array()` 仍无自然调用点**：本批返回数组一律走 `ArrayList`（全库无 `-> [i64]` 先例），
+  需要 `[T]` 的位置都是宿主入参或 `array_view`，没有一步要把 `ArrayList` 降成 `[T]`。全仓
+  `solvers/valkyrie/**` 至今 **0 次**调用（仅 `Utf8Builder.build()` 在 std 内部用到）。
+- **`HashMap.iterator` 的回调无捕获边界（第二次确认）**：`sort-array-by-increasing-frequency`（1636）
+  与 `merge-similar-items`（2363）都要遍历计数的键；回调不能捕获结果容器，无法在遍历中 `push`，
+  只能 `keys()` 物化后在外层循环处理。这是**能力边界**而非缺口（`keys()` 是等价写法）。
+- **`BTreeSet.nth` / `rank` 仍无自然调用点**：`rank-transform-of-an-array`（1331）要「值 → 名次」，
+  `to_list()` + 一次线性建表已是 O(n log n)，`nth` 帮不上；`minimum-moves-to-equal-array-elements-ii`
+  （462）要中位数，但 `BTreeSet` 会去重、破坏重复值语义，必须保留多重集。G16 影响题扩为 5，
+  但 `nth` 本身仍只在提案里。
+- **`utf8` 四个 `[host_contract]` 空壳未被本批使用**：8 题没有一题依赖 `trim` / `replace` /
+  `to_lower` / `to_upper`，因此本批无需「语义未定，待 adaptor 侧确认」标注；约束见观察 5。
 
 ### 建模提示（G8 的根部，比缺 API 严重）
 
