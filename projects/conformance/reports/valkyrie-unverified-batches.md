@@ -1593,3 +1593,19 @@ V 侧复跑：在 `projects/conformance` 下执行 `node --import tsx scripts/ru
 结论：本批 3 题通过（311 条用例），其余 10 题被 utf8 字节合同、`utf8` 泛型序实例化、
 `std::hash` 合同实例与 `BinaryHeap` 义务传播四条线挡住；`reorder-data-in-log-files`
 另触发 emitter panic，需在 `nyar-vm.rs` 侧修，不在本仓改。
+
+## 特性面空白批次 R30（2026-11-05）
+
+选题规则：`solution.v` 为 1 字节占位、`metadata.tests` 只有整数 / 整数数组、避开
+`utf8` 容器与返回值、`BinaryHeap` / `Comparable`、设计类实例 ABI。共享 addon `07b625aa`，不重建。
+
+| slug | 特性 | 构建 | 判题 |
+|---|---|---|---|
+| `number-of-zero-filled-subarrays` | 整数 / `ArrayList` 单遍扫描 | build=0 | **99/99 通过** |
+| `maximum-sum-score-of-array` | 前缀和 / 后缀和同步推进 | build=0 | **93/93 通过** |
+| `bag-of-tokens` | 双指针 + `sorted_by(i64)` | build=0 | **103/103 通过** |
+
+- 编译器缺陷（新，归口 `nyar-vm.rs`）：`loop value in nums { total = total + value }` 对导出形参
+  `ArrayList<i64>` 迭代了 5 次（同循环体改写 `HashMap.insert` 实测 5 个键，`seen.length()=5`），
+  但标量累加结果仍为 0。判据：同一输入 `[-10,-20,-30,-40,-50]`，`return total` 得 `0`，
+  期望 `-150`；改成 `while` 下标累加后全部通过。堆对象写入有效、标量写回丢失。

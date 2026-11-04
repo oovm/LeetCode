@@ -732,6 +732,7 @@
     ],
     "invoke": {
         "python": "Solution().bagOfTokensScore",
-        "typescript": "Solution().bagOfTokensScore"
+        "typescript": "Solution().bagOfTokensScore",
+        "valkyrie": "bagOfTokensScore"
     }
 }

@@ -635,6 +635,7 @@
     ],
     "invoke": {
         "python": "Solution().zeroFilledSubarray",
-        "typescript": "Solution().zeroFilledSubarray"
+        "typescript": "Solution().zeroFilledSubarray",
+        "valkyrie": "zeroFilledSubarray"
     }
 }

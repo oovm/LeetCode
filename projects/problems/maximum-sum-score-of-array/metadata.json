@@ -565,6 +565,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumSumScore",
-        "typescript": "Solution().maximumSumScore"
+        "typescript": "Solution().maximumSumScore",
+        "valkyrie": "maximumSumScore"
     }
 }
