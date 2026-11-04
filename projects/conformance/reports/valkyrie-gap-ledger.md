@@ -15,11 +15,50 @@
   `期望签名（[提案]，源码尚不存在）`；真实 API 另按源码签名书写，两者不得混排。
   写解法时以源码为准，不以本账本的愿望为准（见观察 4 / 观察 5）。
 
-G 编号定级规则（2026-11-04 起，适用于此后新增编号，并作为回头重审 G1–G27 的唯一判据）：
+G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归位与此后新增编号的唯一判据）：
 
-- 一个缺口要立 `G` 编号，必须至少有**一个真实调用点**证明「没有它这题写不出来」。
-- 没有调用点的，记「观察」，不记「缺口」。
-- 已有调用点但可以合理绕路的，降级为「观察」，并注明绕路成本。
+判据看绕路的**性质**，不看「能不能绕」——任何缺失都能靠调用点手写绕过去。
+
+- a) 换等价 API，零重复 → 观察。用别的现成 API 替一下，代码不膨胀。
+- b) 在调用点重复实现同一套逻辑，且随调用点数线性增长 → 真缺口。
+  这不是绕路，这是缺失被摊派给每个调用点。
+- c) 绕路改变题解结构或返回类型 → 真缺口。
+
+原则句：**没有抽象、只有每个调用点手写，那就是缺失，不是绕路。**
+
+## 缺口与观察分级（2026-11-04 重判）
+
+真缺口（10）：G2 / G3 / G10 / G11 / G13 / G16 / G17 / G22 / G25 / G26。
+
+| 编号 | 判据 | 摊派面 |
+| --- | --- | --- |
+| G2 浮点返回值合同 | c | 返回类型即题面合同，绕路必须改返回类型（1227 / 1344） |
+| G3 wasm JS glue 的 `ArrayList` ABI | c | ABI 边界由题面固定，题解改不了结构（36 题） |
+| G10 `DisjointSet` 分量聚合 | b | 3 处 × 重写 DSU 内部聚合 |
+| G11 `sorted_by` | b | 18 处 × 副本 + `merge_sort` |
+| G13 `utf8` 字典序比较 | b | 4 处 × 约 10 行比较脚手架 |
+| G16 `BTreeSet` / `BTreeMap` 界查询 | b | 5 处 × O(k) 物化 + 手写二分 |
+| G17 `char` 缺 `Hash` | b | 7 处 × 每次调用点换键型 |
+| G22 整数位元查询 | b | 5 处 × 重复位运算 |
+| G25 `BitSet` 基数 / 复制 | b | 4 处 × 手写 O(bits) 计数，丢掉位并行 |
+| G26 序关系无可用合同 | b | 14 处 × 同一套序逻辑 |
+
+观察（14）：G1 / G4 / G8 / G9 / G12 / G14 / G15 / G18 / G19 / G20 / G21 / G23 / G24 / G27。
+均为判据 a（换等价 API，零重复），或尚无已证实调用点。G9 处在 b 的边界：2 处 × 手写 BFS
+着色，按分级结论暂留观察，待定。
+
+编译器缺陷（3，属实但不归 std 线管）：G5 / G6 / G7。见下一节指向条目。
+
+## 编译器缺陷（不归 std 线）
+
+| 条目 | 现状 | 归口 |
+| --- | --- | --- |
+| G5 分支内丢弃 `Option<T>`（SMIR007） | 已有真实复现：`baseball-game` | 编译器 MIR 降级，不在 std / leetcode 线 |
+| G6 标识符 `round` 误拉 adaptor | 已有真实复现：`sum-of-digits-of-string-after-convert` | 编译器名字解析 / 闭包装配 |
+| G7 `HashMap.insert` 作 `else` 尾 + 嵌套 return | 已有真实复现：`isomorphic-strings` | 编译器 MIR 合流 |
+
+- 三条都属实，但修复位置在 `nyar-vm.rs`，不占 std 缺口名额，也不进第 18 批选题面。
+- 本节只作指向，详细证据留在各自 G 条内。
 
 ## 库内解法总量口径（2026-11-04 实测）
 
@@ -122,15 +161,15 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
 无法在 std 层核对的：`trim` / `replace` / `to_lower` / `to_upper`（全部 `[host_contract]` 空壳）。
 不存在而非语义不同：`range`（G16）。
 
-### 观察 3：表达力缺口至今只有 G8 一条
+### 观察 3：真正的「无近似物」只有 G2 / G3 两条
 
-24 条缺口里，只有 G8（无向图建模）属于「没有任何近似物」的表达力缺口；其余 23 条都有等价
-近似物（题内手写循环、数组下标保序、排序键、频次向量等）。这条决定下一轮 std 的修复顺序：
-1) 先补 trait 矩阵（G15 骨架 + G13 / G17 / G24 的 impl 缺项）；
-2) 再补 API（G11 / G12 / G14 / G16 / G18–G23 等）；
-3) 最后处理 G8 的建模塌陷。
-理由：1、2 是加法，风险局部；3 要动模型与既有容器约束，放在最后可避免把缺口修复和模型迁移
-混进同一笔改动。
+按 2026-11-04 重判（判据看绕路性质）：G8（无向图建模）已降为观察——真实调用点就是双写
+`add_edge`，属「换构造、零重复」。真正绕不过去的是 G2（浮点返回值合同）与 G3（wasm JS glue 的
+`ArrayList` ABI）：绕路会改变返回类型或跨不过 ABI 边界。这条决定下一轮 std 的修复顺序：
+1) 先补真缺口里有合同骨架的一档（G26 序关系 → G13 / G17 的 impl 缺项、G16 的有界查询）；
+2) 再补其余真缺口 API（G10 / G11 / G22 / G25）；
+3) 观察档（G8 / G12 / G14 / G15 / G18–G21 / G23 / G24 / G27）随修复窗口顺带处理，不单独排期。
+理由：真缺口是「每个调用点都在重复付成本」，优先修；观察档都有零重复的等价 API。
 
 ### 观察 4：未验证语料里混入了「按提案签名写的纸面 API」（R9 静态核对发现，已清）
 
@@ -295,6 +334,7 @@ micro probe(n: i64) -> i64 {
 - 期望：按 `valkyrie-guide/references/lambdas.md` 的「定长数组填充」语义构造并读取。
 - 实际：`parse error: 数组字面量缺少闭合括号`；随后连带 `entry source group declares no [export]`。
 - 影响：所有需要定长缓冲的题改用 `ArrayList`（见「已恢复」），不改算法结构。
+- 判定：**观察**（判据 a：换 `ArrayList`，零重复；全库解法已普遍如此，只有最小复现用到该字面量）。
 
 ### G2 浮点返回值合同
 
@@ -311,6 +351,7 @@ micro half() -> f64 {
 - 实际：`return` value type `f64` is incompatible with the function return type `Nominal(ItemId(3))`；
   尝试 `let one: f64 = 1.0`、`1.0 as f64`、`-> std::primitive::f64` 均失败（`浮点常量没有 canonical 形状`）。
 - 影响题：`airplane-seat-assignment-probability`（1227）、`angle-between-hands-of-a-clock`（1344）。
+- 判定：**真缺口**（判据 c：返回类型即题面合同，绕路必须改返回类型，与 `metadata.expected` 不相容）。
 
 ### G3 wasm JS glue 的 `ArrayList` ABI bridge 缺失（入参 marshal / 返回值 demarshal）
 
@@ -338,6 +379,7 @@ micro sequential_digits(low: i64, high: i64) -> ArrayList<i64>
   schema 已生成，缺的是 glue 侧聚合类型的字段访问合同；编译期全部 `build=0`，与题目解法无关。
 - 影响：本批 36 题判题 0 通过（25 marshal + 11 demarshal）。该项恢复前，任何返回或接收
   `ArrayList` 的题都不能计入构建通过数。
+- 判定：**真缺口**（判据 c：入参 / 返回值由题面固定为 `ArrayList`，题解内改不了结构，ABI 边界也跨不过去）。
 
 ### G4 std `Utf8Builder.append(char)` 在 std 模块自编译时无法实例化（疑似失效，待复验）
 
@@ -380,6 +422,7 @@ micro probe(c: char) -> i64 {
   `remove-all-adjacent-duplicates-in-string`、`replace-all-s-to-avoid-consecutive-repeating-characters`、
   `reverse-only-letters`、`reverse-vowels-of-a-string`、`sort-characters-by-frequency`、
   `summary-ranges`、`thousand-separator`。
+- 判定：**观察**（待复验：dev tip 复测已不再报 `append` 相关错误，当前无已证实调用点）。
 
 ### G5 分支内丢弃 `Option<T>` 返回值触发 SMIR 跳转 arity 失败
 
@@ -402,6 +445,7 @@ micro probe(mut s: ArrayList<i64>, flag: bool) -> i64 {
   数量与目标块不一致），非题解写法错误。修复位置在编译器的 MIR 降级，不在 `solution.v`。
 - 影响题（1）：`baseball-game`（`cal_points`，`stack.pop()` 位于 `else if` 分支，
   诊断 `location=block 4 terminator`）。该题未改写以规避缺口。
+- 判定：**已复现编译器缺陷**（属实，但现在不归 std 线管；见「编译器缺陷」条目）。
 
 ### G6 标识符 `round` 误拉入 `std.adaptor.wasm.math::round`
 
@@ -423,6 +467,7 @@ micro probe(round: i64) -> i64 {
   该实现 `return f64(math_round(value))` 在 MIR 里产出 `Float64` 而非 nominal `f64`）。
   修复位置在编译器的名字解析 / 闭包装配，不在 `solution.v`。
 - 影响题（1）：`sum-of-digits-of-string-after-convert`（局部变量 `round`）。
+- 判定：**已复现编译器缺陷**（属实，但现在不归 std 线管；见「编译器缺陷」条目）。
 
 ### G7 `HashMap.insert` 作为 `else` 分支尾 + then 分支嵌套 early return
 
@@ -452,6 +497,7 @@ micro probe(m: HashMap<i64, i64>, flag: bool, flag2: bool, a: i64, b: i64) -> bo
   （G5 是分支尾丢弃 `Option<T>`），不并入 G5。
 - 影响题（1）：`isomorphic-strings`（`is_isomorphic`，`forward.insert` 位于 `else`、
   `if forward.get(a).unwrap() != b { return false }` 位于 then，诊断 `location=block 12 terminator`）。
+- 判定：**已复现编译器缺陷**（属实，但现在不归 std 线管；见「编译器缺陷」条目）。
 
 ### G8 `DirectedGraph<N>` 缺无向边写入
 
@@ -471,7 +517,7 @@ micro add_undirected_edge(mut self, from: N, to: N): bool
   `WeightedGraph.add_undirected_edge`（`weighted.v` L124-L129）均存在（类型名是 `GraphMatrix`，
   此前记为 `MatrixGraph` 属笔误）；`DirectedGraph` 只有 `add_edge` / `add_node`。
   两处「无向边」实现均只是两次 `add_edge` 转发，只命名了约定，不建立合同。
-- 判定：**std 缺口**（非编译器）。
+- 判定：**观察**（判据 a：双写两条 `add_edge`，一行，不随调用点膨胀）。
 - 修复初判：**加 API**（一行转发两次 `add_edge`）。更根本的是建模问题，见本节末尾「建模提示」。
 
 ### G9 `std.math.graph_theory` 缺二分图判定（二色着色）
@@ -491,7 +537,7 @@ micro bipartition<N>(graph: std.collection.DirectedGraph<N>) -> Option<HashMap<N
 - 影响题（2）：`is-graph-bipartite`（785）、`possible-bipartition`（886），两题都在题内手写 BFS 着色。
 - 不对称点：`weak_components`、`strong_components`、`unweighted_shortest_paths` 均已提供，
   同级的二分性判定缺席。
-- 判定：**std 缺口**。
+- 判定：**观察**（判据 b 边界：2 处 × 手写 BFS 着色；按分级结论暂留观察，待定）。
 - 修复初判：**加 API**（直接复用 `DirectedGraph` 的 BFS）。
 
 ### G10 `DisjointSet<T>` 缺分量规模 / 成员聚合
@@ -511,7 +557,7 @@ micro group_members(mut self, root: T): ArrayList<T>
   `count-the-number-of-complete-components`（2685）、`largest-component-size-by-common-factor`（952）。
   三题都出现「`find_root` + `HashMap<i64, i64>` 累加」的同一段手写聚合。
 - 不对称点：`group_count()` 已提供、`length()` 是元素总数，二者都拿不到单个分量的规模。
-- 判定：**std 缺口**。
+- 判定：**真缺口**（判据 b：3 处 × 重写 DSU 内部聚合，缺失被摊派给每个调用点）。
 - 修复初判：**加 API**（`group_sizes` 一次遍历即可，且与路径压缩共用）。
 
 ### G11 `std.collection.sort` 只有就地排序，缺返回新序列的 `sorted_by`
@@ -540,7 +586,7 @@ micro sorted_by<T>(list: Array<T>, cmp: micro(T, T) -> i32): ArrayList<T>
   `merge_sort` / `merge_sort_range` / `merge`；此前记为 6 个，漏了 `merge`），`Array<T>` 为 **0 个**
   排序入口；没有任何一个返回新序列。另：std 测试目录下无 `quick_sort` / `merge_sort` 用例，
   「就地改容器」目前只有源码证据（`class` 是引用类型，`swap` 经 `list.set` 写穿）。
-- 判定：**std 缺口**。
+- 判定：**真缺口**（判据 b：18 处 × 副本 + `merge_sort`，每题重复同一套两行与一次分配）。
 - 修复初判：**加 API**（在副本上调 `merge_sort` 的薄封装）。
 
 ### G12 `HashSet::new()` 无容量参数
@@ -576,7 +622,7 @@ micro with_capacity(capacity: usize): Self
   - 最小必要 API 集（R17 收敛结果）：**只有一条签名** `new(capacity: usize)`（或同形的
     `with_capacity`），不需要桶视图 / 保留策略等其余入口；四个调用点（127 / 2442 / 187 / 2465）
     都只缺「一次性给足上界」。
-- 判定：**std 缺口**。
+- 判定：**观察**（判据 a：`new()` 可用，只是摊还增长，代码不膨胀）。
 - 修复初判：**加 API**（一行转发 `SwissSet::new(capacity)`）。
 
 ### G13 `utf8` 缺字典序比较
@@ -605,7 +651,7 @@ micro compare(self, other: utf8) -> i32   # <0 / 0 / >0，按码位（与 UTF-8 
 - 不对称点：`char` 只有 `as u32` 转换运算符、**无 `<`**、也不是 `Ordinal` 载体（`char.v` 仅实现
   `==` / `!=`）；`utf8` 连可比较的码位视图都没有。（此前记作「`char` 可经 `Ordinal` 转 `u32`」，
   该论断错误，已更正。）
-- 判定：**std 缺口**。
+- 判定：**真缺口**（判据 b：4 处 × 约 10 行逐字节比较脚手架）。
 - 修复初判：**加 API**（按字节序比较，与 UTF-8 编码自洽）。
 - 根因交叉引用：本缺口是 **G15**（顺序关系没有 trait 抽象）的下游表现 —— `utf8` 既无 `<` 可裸调，
   也无 `Comparable` 合同可挂，两者都是 G15 的同一空缺。
@@ -625,7 +671,7 @@ micro split_once(self, separator: utf8) -> Option<SplitParts>
 
 - 影响题（1）：`reorder-data-in-log-files`（937，`separator_of` + 两次 `slice`）。
 - 不对称点：`split` / `slice` / `try_slice` / `index_of` 都有，唯独缺单次切分。
-- 判定：**std 缺口**。
+- 判定：**观察**（判据 a：`index_of` + `slice` 组合，1 处，代码不膨胀）。
 - 修复初判：**加 API**（`index_of` + 两段 `slice` 即可，代价是要引入承载两段的记录类型）。
 
 ### G15 顺序关系没有 trait 抽象（约束与操作不一致）
@@ -670,7 +716,7 @@ imply Utf8Text: Comparable { ... }
   `BTreeSet` 用裸 `<` 而 `Utf8Text` / `char` 连 `<` 都没有 —— 同一语言里「有序」有两种互不兼容的表示。
 - 先例：`std.math.graph_theory.Weight`（`weighted.v` L6-L10）已把 `add` + `less` 做成合同，证明该形态
   可行；但它局限在图权重域内，不是通用序合同，且同样与 `operator/` 的四个合同平行、互不引用。
-- 判定：**std 模型缺口**（非编译器）。
+- 判定：**观察**（判据 a：裸 `<` 或 `as u32` 码位比较替一下，2 处）。
 - 与 G13 的关系：G13 是本条的下游表现。
 - 修复初判：**建 trait**（新增 `Comparable` 合同 + 逐 primitive impl + 收窄 BTree 系约束）。
 - 影响题（2，均已写）：`find-smallest-letter-greater-than-target`（744，批次 R5，
@@ -715,7 +761,7 @@ micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value �
   语义，理想解须保留多重集，故**不**计入 `nth` 影响面——`nth` 本身仍无自然调用点。
 - 不对称点：`HashMap` 有 `keys` / `values`，`BTreeSet` 有 `to_list`，但有序容器只能被全量物化后
   线性扫描；`floor` / `ceiling` / `first` / `last` / `range` / `nth` 全部缺失，「有序」只剩存储形态。
-- 判定：**std 缺口**。
+- 判定：**真缺口**（判据 b：5 处 × O(k) 物化 + 手写二分）。
 - 修复初判：**加 API**（底层节点已按序，查询不需新模型）。**实现前提是 G15 的 `Comparable`
   先落地，否则等于在无约束类型上裸调 `<`，和 `BTreeSet<T: Equal>` 那个不健全容器是同一个病。**
 
@@ -745,7 +791,7 @@ imply char: Hash {
   `shortest-completing-word`（748，批次 R7，`HashMap<char, i64>` 牌照频次）。
 - 不对称点：`utf8`、`i8`–`u64`、`f32` / `f64` 都有 `Hash`；`char` 有 `Ordinal`（可转 `u32`）
   却没有派生 `Hash`，因此「码位可排序」与「码位可哈希」只实现了一半。
-- 判定：**std 缺口**。
+- 判定：**真缺口**（判据 b：7 处 × 每次调用点换键型 `utf8` / `as u32`）。
 - 修复初判：**加 API**（补一个 impl，语义与 `Ordinal` 一致）。
 - 与 G15 的交叉引用：`char` 同时缺 `Comparable`。**这两条不是孤立缺 impl，而是同一个 primitive 的
   类型能力面没设计完**——`Ordinal` 视图 / `Comparable` / `Hash` 三条腿一条都没在 `char` 上落地，
@@ -768,7 +814,7 @@ micro split_whitespace(self) -> [utf8]
   `maximum-number-of-words-found-in-sentences`（2114，逐句求词数）。
 - 不对称点：`split` / `slice` / `try_slice` / `index_of` 都有，`split` 却只覆盖「固定分隔符 +
   保留空段」一种语义；空白类与空段折叠没有入口。
-- 判定：**std 缺口**。
+- 判定：**观察**（判据 a：`split` 加空段过滤，2 处）。
 - 修复初判：**加 API**（内部复用 `split` 后过滤空段即可，不引入新类型）。
 
 ### G19 `ArrayView` 缺区间窗口构造
@@ -788,7 +834,7 @@ micro array_view<T>(source: [T], offset: usize, length: usize) -> ArrayView<T>
 - 影响题（1）：`rotate-array`（189，三次反转各自需要 `[0, shift)` / `[shift, n)` 子窗口并写穿）。
 - 不对称点：读侧 `length` / `is_empty` / `Cardinal` 都在，写侧 `⁅ ⁆=` 也在，唯独
   「窗口从哪开始、多长」没有入口。
-- 判定：**std 缺口**（加 API，不加模型）。
+- 判定：**观察**（判据 a：下标循环替一下，1 处）。
 - 修复初判：**加 API**。模型不是缺的：`ArrayView` 已经就是这个模型，缺的是把非零 `offset`
   造出来的构造器，因此**不归入表达力缺口档**。
 
@@ -818,7 +864,7 @@ micro sum<I, T>(self: I, initial: T): T where I: Iterator<Item = T>
 - 不对称点：`f64` 有 `abs` / `max` / `min`，整数没有；迭代器有能表达一切的 `fold`，
   却没有最常用的 `max`。前者是重载缺失，后者是终端缺失，根因同一：数值归约没有按
   「整数 / 浮点」分行。
-- 判定：**std 缺口**。
+- 判定：**观察**（判据 a：一行手写 fold，1 处）。
 - 修复初判：**加 API**。`max` / `min` 的泛型约束依赖 G15 的 `Comparable`；在此之前只能
   先定 `i64` 重载。
 
@@ -849,7 +895,7 @@ micro prepend(mut self, value: char): unit
 - 不对称点：`LinkedList` 有 `iter_reverse`（回调式反向遍历），`ArrayList` 却连原地反转都没有；
   `sort.v` 已有 `swap<T>(list, a, b)` 私有工具，说明双指针交换是 std 内部常识，只是没暴露成
   `reverse`。`Utf8Builder` 的逆序构造在 2 题里靠「先拼再整串反转」绕过，等于多做一次全量拷贝。
-- 判定：**std 缺口**（不阻断：手写交换是等价表达）。
+- 判定：**观察**（判据 a：3 行双指针交换，不随调用点膨胀）。
 - 修复初判：**加 API**。`reverse` 在 `swap` 之上十行即可；`RevIterator` 需要 `Iterator` 有
   双端访问，若不做适配器，至少先补 `ArrayList::reverse`。
 - 表达力档位：**不属于表达力缺口**——有近似物（双指针交换 / 倒序下标循环）。
@@ -876,7 +922,7 @@ micro trailing_zeros(self): u32
 - 不对称点：位运算算子齐全但位元查询为零；`BitSet` 在容器层有 `get` / `set`，标量层却没有
   等价的「数 1 的个数」。这与 G20 同族（标量数值能力面只做了算子、没做归约），但作用对象是
   位而不是数值大小，故单列。
-- 判定：**std 缺口**（不阻断：手写循环等价）。
+- 判定：**真缺口**（判据 b：5 处 × 重复位运算）。
 - 修复初判：**加 API**（逐 primitive 一个 host contract 或纯循环实现）。
 - 表达力档位：**不属于表达力缺口**——有近似物（手写循环）。
 
@@ -897,7 +943,7 @@ micro lcm(a: i64, b: i64) -> i64
 - 影响题（1）：`x-of-a-kind-in-a-deck-of-cards`（914，批次 R6，全体频次的 gcd > 1）。
 - 不对称点：`f64` 有 `abs` / `max` / `min`，整数连 `gcd` 都没有；`BitSet` 在容器层有 `intersect` /
   `union` / `difference`，数值层却没有任何整除关系归约。
-- 判定：**std 缺口**（不阻断：题内 Euclid 循环是等价表达）。
+- 判定：**观察**（判据 a：题内 Euclid 循环，1 处约 10 行）。
 - 修复初判：**加 API**（十行 Euclid；`lcm` 需先定零值与溢出策略）。
 - 表达力档位：**不属于表达力缺口**——有近似物（题内 Euclid 循环）。
 - 与 G20 的关系：同一「标量数值能力面只做算子、不做归约」的根部，但对象是整除关系而非大小归约，
@@ -929,7 +975,7 @@ micro to_sorted_list(self) -> ArrayList<T> where T: Comparable
 - 不对称点：`HashMap` / `HashSet` 都有 `Equal` 语义（靠 `get` / `contains`），`MultiSet` 作为
   「带重数的集合」反而没有等价判定；`BitSet` 有 `union` / `intersect` 等结构运算，`MultiSet`
   连结构相等都没有。
-- 判定：**std 缺口**（不阻断：可用字符排序 / 频次向量等价表达）。
+- 判定：**观察**（判据 a：排序字符 / 频次向量，1 处）。
 - 修复初判：**加 API**（`equals` 只需 `distinct_length` 一致 + 逐元素 `count` 相等；
   注意不得依赖内部遍历序）。
 - 表达力档位：**不属于表达力缺口**——有近似物（排序键或频次向量）。
@@ -966,9 +1012,7 @@ micro to_bool_array(self) -> [bool]
 imply BitSet: Equal
 ```
 
-- 判定：**std 缺口**，且 `count` 没有等价近似物（不知道规模就无法安全遍历），按口径编号。
-  `length` / `clone` 同样无近似物；迭代器可用「外部记录全集大小 + 逐位 `get`」近似，但调用方必须
-  自己维护全集，不算容器自足。
+- 判定：**真缺口**（判据 b：4 处 × 手写 O(bits) 计数或源头重建，丢掉位并行；`count` 与 `clone` 是最小必要面）。
 - 影响题：1461、318、442、36、864（批次 R13）；1239（批次 R15，首次在解法里直接调用
   `clone` ×2 + `count` ×1）。847（R15）只用容量外知的 `get` / `set`，不计入本条影响题。
 - 本批验证情况（R15，`authored-unverified`）：
@@ -977,8 +1021,8 @@ imply BitSet: Equal
     三处缺失入口全部落在搜索主路径；其余 R15 题不含 `BitSet`。
   - `shortest-path-visiting-all-nodes`（847）以 `BitSet(n * 2^n)` 作 BFS 访问表，容量外部给定，
     只依赖现有 `get` / `set`；它证明 `BitSet` 能承担大规模访问表，但不构成缺失入口的调用点。
-  - 结论：`clone` / `count` 的「无等价近似物」判断在解法级复核后仍成立（1239 若不 `clone`
-    就只能退回逐位 `get` 的绕路写法）。
+  - 结论：`clone` / `count` 的绕路结论在解法级复核后仍成立——1239 不 `clone` 就只能退回逐位
+    `get` 手写计数，这正是判据 b：同一套计数逻辑被摊派到每个需要基数的调用点。
 - 本批验证情况（R17，`authored-unverified`）：
   - `find-the-prefix-common-array-of-two-arrays`（2657）两个前缀集合长期存活，求交必须
     `seen_a.clone()` 后 `intersect` 再 `count()`；`clone` 与 `count` 同时落在主路径。
@@ -1055,9 +1099,7 @@ micro order_items<T>(items: ArrayList<T>): unit
   694（自定义类型作 `BTreeSet` 键，同时依赖自定义 `Equal` impl）；
   R15：1366 / 2191 / 1691 / 2251 / 1751（自定义记录 `Comparable`）、
   1561（`i64` 直接依赖 `where T: Comparable` 单参入口）。
-- 判定：**std 缺口**。只补 G15 的 `Comparable` 骨架不够，还必须同时改三处：
-  加 `Comparable` 合同；给排序加 `where T: Comparable` 的单参入口；把 `BTreeSet` 的约束
-  从 `T: Equal` 收紧为 `T: Equal & Comparable`（或改 `Ord`），并让实现对结构体字段逐级比较。
+- 判定：**真缺口**（判据 b：14 处 × 同一套序逻辑，序被摊派到每个调用点）。
 - 与 G15 / G11 的关系：G15 是根因（无合同），G11 的 `merge_sort` 只解决「能排序」；
   本条要解决「序属于类型，而不是题解闭包」，并让有序容器能在签名层要求它。
 - 附带观察：仓内**没有任何用户自定义类型实现过 `Equal`**（只有 std 内部的 `i64` / `Utf8Text`
@@ -1110,8 +1152,7 @@ micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countabl
   调用方显式承担的风险。R14 / R15 题解里的 `order_items` 垫片已从 `merge_sort(items)`
   改指向 `sort(items)`（2026-11-04 随本条契约统一改写），不再赌某个实现恰好稳定。
 - 影响题（1，批次 R15）：2191（并列映射值依赖稳定性）。
-- 判定：**std 缺口**；与 G26 同一笔修复——单参入口按 `sort` / `sort_unstable` 命名承载
-  稳定性语义，`quick_sort` / `merge_sort` 降为 `private`。
+- 判定：**观察**（判据 a：改用显式 `merge_sort`，1 处，代码不膨胀）。
 - 与 G26 的关系：G26 解决「序属于类型」；本条解决「并列时谁先谁后属于入口语义」。
   只补 G26 不定本条，2191 仍有静默错序风险。
 
