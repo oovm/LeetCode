@@ -922,6 +922,7 @@
     ],
     "invoke": {
         "python": "Solution().numSpecialEquivGroups",
-        "typescript": "Solution().numSpecialEquivGroups"
+        "typescript": "Solution().numSpecialEquivGroups",
+        "valkyrie": "numSpecialEquivGroups"
     }
 }
