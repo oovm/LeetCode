@@ -730,6 +730,7 @@
     ],
     "invoke": {
         "python": "Solution().minMovesToSeat",
-        "typescript": "Solution().minMovesToSeat"
+        "typescript": "Solution().minMovesToSeat",
+        "valkyrie": "minMovesToSeat"
     }
 }

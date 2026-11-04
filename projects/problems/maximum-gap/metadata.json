@@ -780,6 +780,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumGap",
-        "typescript": "Solution().maximumGap"
+        "typescript": "Solution().maximumGap",
+        "valkyrie": "maximumGap"
     }
 }
