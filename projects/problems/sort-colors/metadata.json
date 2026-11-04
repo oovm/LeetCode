@@ -778,6 +778,7 @@
     ],
     "invoke": {
         "python": "Solution().sortColors",
-        "typescript": "Solution().sortColors"
+        "typescript": "Solution().sortColors",
+        "valkyrie": "sortColors"
     }
 }

@@ -702,6 +702,7 @@
     ],
     "invoke": {
         "python": "Solution().setZeroes",
-        "typescript": "Solution().setZeroes"
+        "typescript": "Solution().setZeroes",
+        "valkyrie": "setZeroes"
     }
 }
