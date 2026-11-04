@@ -7,6 +7,40 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R12-2026-11-04（理想解滚动批次 12，8 题，写完未构建）
+
+- 范围：容器 API 面已连续三批饱和，本批改压**语言构造面**：`unite` 和类型 / `enums` 标记类型、
+  递归 + 结果累加、内联 `micro` 闭包作比较器 / 累加器。理想解只用这些构造，不为规避限制退回
+  `i64` 魔法值或纯迭代。
+- 构建 / 判题状态：**未验证**。本轮按口径不跑构建与判题。
+- 新缺口：**0 条**（G1–G24 不变）。新增观察 7（定长 `Array<T>` 的「有无分配」边界 +
+  `sort.v` 7 函数只读核对）、观察 8（语言构造首次进入题解）。canonical 609 → 617。
+- 命中面：`unite` ×2（1106 递归和类型、394 聚合载荷和类型）、`enums` ×1（1598）、
+  内联闭包 ×2（179 比较器、2161 `fold` 累加器）、递归 ×4（241 分治、39 回溯、1087 展开、
+  1106 / 394 递归下降）。
+- 未命中：`ArrayList.reserve` 仍无调用点（容量都在构造时给定）；`BitSet` 本批未进入选题（另批核实）。
+- 预期阻断：`different-ways-to-add-parentheses` / `partition-array-according-to-given-pivot` 返回
+  `ArrayList<i64>`；`combination-sum` 返回 `ArrayList<ArrayList<i64>>`；`brace-expansion` 返回
+  `ArrayList<utf8>`；按 G3 在 wasm JS glue 处阻断。
+- 签名：8/8 导出形参与 `metadata.tests.args` 键同序、逐字一致（`expression` / `s` / `expression` /
+  `candidates`+`target` / `s` / `logs` / `nums` / `nums`+`pivot`）。
+- TS 参考解：`parsing-a-boolean-expression` / `crawler-log-folder` / `largest-number` 复用既有实现；
+  `decode-string` / `different-ways-to-add-parentheses` / `combination-sum` / `brace-expansion` /
+  `partition-array-according-to-given-pivot` 5 题新写。
+- 题材记账：1106 的 `metadata.json` 含 3 条 `expected` 为 `Error: list index out of range` 的用例，
+  与题面不符；本批未改数据，验证窗口前需单独修正。
+
+| slug | 导出入口 | 返回类型 | 语言构造 / 覆盖方向 |
+| --- | --- | --- | --- |
+| `parsing-a-boolean-expression` | `parseBoolExpr` | `bool` | 递归 `unite BoolNode`；`And` / `Or` 载荷为 `ArrayList<BoolNode>` 聚合体 |
+| `decode-string` | `decodeString` | `utf8` | 递归下降 + `unite DecodedPart`（`Repeated` 载荷 text+times）+ `Utf8Builder` |
+| `different-ways-to-add-parentheses` | `diffWaysToCompute` | `ArrayList<i64>` | 分治递归，左右结果笛卡尔积累加 |
+| `combination-sum` | `combinationSum` | `ArrayList<ArrayList<i64>>` | 回溯递归，`path` 压栈 / `remove` 弹栈，命中时复制路径 |
+| `brace-expansion` | `expand` | `ArrayList<utf8>` | 递归展开花括号分组，逐层笛卡尔累加 |
+| `crawler-log-folder` | `minOperations` | `i64` | `enums FolderOp` 替代 `0/1/2` 魔法值，`match` 分派 |
+| `largest-number` | `largestNumber` | `utf8` | 内联 `micro(a, b) -> i32` 作 `merge_sort` 比较器 |
+| `partition-array-according-to-given-pivot` | `pivotArray` | `ArrayList<i64>` | `fold` + 捕获 `pivot` 的内联闭包，三桶累加 |
+
 ## 批次 R11-2026-11-04（理想解滚动批次 11，8 题，写完未构建）
 
 - 范围：此前 `solution.v` 为阻塞标记的 8 题。按新口径**跳过**已确认无自然调用点的四个面

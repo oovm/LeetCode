@@ -60,6 +60,8 @@ $n
   四个点名 API 面仍无自然调用点，见「未命中面（第 10 批探测）」）。
 - 后续增量（2026-11-04，滚动批次 R11 后）：canonical 实测 **609**（R11 前 601；本批新编号 0 条，
   `remove` / `to_array` / `iterator` / `nth` 四个面按新口径跳过，改压写侧与容器构造面，见观察 6）。
+- 后续增量（2026-11-04，滚动批次 R12 后）：canonical 实测 **617**（R12 前 609；本批新编号 0 条，
+  改压语言构造面：`unite` / `enums` / 闭包 / 递归，见观察 8）。
 
 ## 系统性问题（观察，非编号）
 
@@ -162,6 +164,51 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
 - 结论：两者都**不是缺口**（有等价写法），但属于「有入口、零有效用法」的可疑冗余。
 - **口径：验证窗口打开前不动，只记账**。待宿主 / adaptor 实测确认后再决定是否裁剪，避免在未验证
   语料上先删接口、后补回。
+
+### 观察 7：定长 `Array<T>` 的边界是「有无分配」，不是「能不能解题」
+
+- 定位：定长 `Array<T>` 在 Valkyrie 是 **ABI / 宿主边界载体**（宿主入参、FFI 面、`ArrayView` 的底层），
+  不是默认解题载体。C/C++ 解题者频繁用裸定长数组的两个痛点在这里都不成立：`std::vector` 的
+  ergonomics 差（迫使手管 `new[]` / `delete[]`）、`vector<bool>` 是假特化（不能取地址、迭代器是代理
+  对象，因而退回 `bitset` 或裸数组）。Valkyrie 的 `ArrayList` 是 Vec 形态（`push` 原地摊还 O(1)、
+  `reserve`、精确预分配），位集合有专门 `BitSet`。
+- 能力边界（不是一刀切）：
+  - **mut `Array<T>` 的就地无分配变换是正当能力**：排序、反转、`swap`、原地重排。宿主给进来一块
+    固定缓冲、不想再分配一次时，这面真有用。
+  - **禁止的是需要分配或改变长度的 API**：`push`、`reserve`、返回新容器的 `sorted_by`、`clone`。
+- 结论：**不给定长 `Array<T>` 补分配型解题 API；就地 `mut` 变换不在此列**，不写成「定长数组不能用于
+  解题」的一刀切结论。
+- 只读核对 `std/source/collection/sort.v`（2026-11-04）：
+  - 7 个函数全部是 `ArrayList<T>` 专用，既没有对 `mut` 容器泛化，也不走 trait：
+    `quick_sort` L5、`quick_sort_range` L13、`partition` L23、`swap` L38、`merge_sort` L45、
+    `merge_sort_range` L53、`merge` L62（均为 `list: ArrayList<T>`，`cmp: micro(T, T) -> i32`）。
+  - `Array<T>` 的就地排序入口 **0 个**。
+  - 能否直接复用到 `mut Array<T>`：
+    - `quick_sort` / `quick_sort_range` / `partition` / `swap` 只依赖「长度 + 读 + 写」，且**不分配
+      临时容器**；把 `list.get((i + 1) as isize)` / `list.set(...)` 换成 `⁅ ⁆` 读写即可直接搬。
+      这是唯一适合定长形态的路径。
+    - `merge_sort` / `merge_sort_range` 的 `merge` 在 L63-L64 分配两个 `ArrayList<T>` 临时区，
+      **违反定长无分配前提**，不能原样复用。
+  - 结论：给 `mut Array<T>` 补就地排序只需 `swap` + 下标读写，不需要新增分配器；反过来说，任何把
+    `merge_sort` 直接搬到定长形态的方案都会引入临时分配，不予采纳。
+
+### 观察 8：第 12 批首次把语言构造（和类型 / 枚举 / 闭包 / 递归）写进真实题解
+
+- `unite`（带 tag 和类型）：生产代码（`yyds.kv`）与探针已用，变体可标 `[constructor]`，载荷可为记录
+  字段；`match` 用 `case Variant(payload)` 解构。本批首次在题解里用：`parsing-a-boolean-expression`
+  （1106，递归 `BoolNode`，`And` / `Or` 载荷是 `ArrayList<BoolNode>` 聚合体）与 `decode-string`
+  （394，`DecodedPart`，`Repeated` 载荷是「文本 + 次数」聚合体）。**递归和类型（变体载荷回指自身）
+  此前从未在题解路径构建过**，验证窗口应优先看这两题。
+- `enums`（无载荷标记类型）：变体裸用、`match` 分派；`crawler-log-folder`（1598）用它替掉
+  目录操作的 `0/1/2` 魔法值。
+- 闭包：`micro(a, b) -> i32` 作比较器（179 直接把内联闭包传给 `merge_sort`）、`micro(x) -> bool` 作
+  谓词、`micro(acc, x) -> acc` 作 `fold` 累加器（2161）。文档 `expressions.md` 声明复杂 lambda 可按
+  引用捕获，但本语料前 11 批全部用具名函数规避捕获；2161 首次写捕获外层 `pivot` 的闭包，捕获在
+  题解编译路径是否成立待验证，不作既成事实。
+- 递归：241 分治、39 回溯、1087 递归展开、1106 / 394 递归下降都是自然递归，没有为规避语言限制而
+  退化成纯迭代。
+- 未编号理由：以上都有等价近似物（扁平表示、具名函数、显式循环），按「无等价近似物才编号」的口径
+  记观察，不新增 `G` 编号。
 
 ## 未恢复
 
@@ -1003,8 +1050,29 @@ micro to_sorted_list(self) -> ArrayList<T> where T: Comparable
   `build()`；`letter-combinations-of-a-phone-number`（17）每串 1–4 次。与 R9 的「多次 append + 一次
   build」一致，除 G4（std 自编译）外未暴露新问题。
 - **`ArrayList` ↔ 定长 `Array<T>` 仍未命中**：8 题里没有一题需要把 `ArrayList` 降成 `[T]` 再交回 ——
-  宿主入参已是 `[T]` / `ArrayList<T>`，返回一律 `ArrayList`，885 也特意全程只用行容器。仍记
-  「无自然调用点」，不硬造。
+  宿主入参已是 `[T]` / `ArrayList<T>`，返回一律 `ArrayList`，885 也特意全程只用行容器。结论不是
+  「定长数组没用」，而是**没有分配型调用点**；定长 `Array<T>` 的就地无分配变换仍是正当能力，
+  边界与 `sort.v` 坐标见观察 7。
+
+### 未命中面（第 12 批探测，2026-11-04，新编号 0 条）
+
+本批按语言构造面选题，不再重复压容器 API。
+
+- **递归和类型（命中，但未构建）**：`parsing-a-boolean-expression`（1106）的 `BoolNode`、
+  `decode-string`（394）的 `DecodedPart` 都是 `unite`；1106 的 `And` / `Or` 载荷是
+  `ArrayList<BoolNode>`，即变体载荷回指自身。此前题解从未构建过递归和类型，验证窗口优先看这两题。
+- **无载荷标记类型（命中）**：`crawler-log-folder`（1598）用 `enums FolderOp` 替掉 `0/1/2` 魔法值，
+  `match` 三分派，属已存在语言构造，无缺口。
+- **闭包作比较器 / 谓词 / 累加器（命中）**：`largest-number`（179）把内联 `micro(a, b) -> i32`
+  直接传给 `merge_sort`；`partition-array-according-to-given-pivot`（2161）用 `fold` + 捕获 `pivot`
+  的内联闭包。比较器形态此前只用具名函数（观察 4 的 `sorted_by` 清理遗留），本批首次压内联闭包。
+- **递归 + 结果累加（命中）**：`different-ways-to-add-parentheses`（241）分治、
+  `combination-sum`（39）回溯、`brace-expansion`（1087）递归展开，均未退化为纯迭代。
+- **`ArrayList` 分配面（顺带）**：179 复制入参后再 `merge_sort`、39 结果行按 `path.length()` 预分配；
+  没有 `reserve` 调用点 —— 容量都在构造时给定，`reserve` 仍未被真实题解需要。
+- **题材问题（记账，不改数据）**：1106 的 `metadata.json` 有 3 条 `expected` 为
+  `Error: list index out of range` 的用例，与题面不符。本批只写理想解、未改 metadata，验证窗口前
+  需单独修正，否则该题永远无法判通过。
 
 ### 建模提示（G8 的根部，比缺 API 严重）
 
