@@ -596,5 +596,7 @@
     "invoke": {
         "python": "Solution().minPairSum",
         "typescript": "Solution().minPairSum"
+,
+        "valkyrie": "minPairSum"
     }
 }

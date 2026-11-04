@@ -706,5 +706,7 @@
     "invoke": {
         "python": "Solution().minimumSize",
         "typescript": "Solution().minimumSize"
+,
+        "valkyrie": "minimumSize"
     }
 }

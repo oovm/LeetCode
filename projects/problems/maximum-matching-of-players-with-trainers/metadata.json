@@ -848,5 +848,7 @@
     "invoke": {
         "python": "Solution().matchPlayersAndTrainers",
         "typescript": "Solution().matchPlayersAndTrainers"
+,
+        "valkyrie": "matchPlayersAndTrainers"
     }
 }

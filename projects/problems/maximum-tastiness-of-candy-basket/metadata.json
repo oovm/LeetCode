@@ -585,5 +585,7 @@
     "invoke": {
         "python": "Solution().maximumTastiness",
         "typescript": "Solution().maximumTastiness"
+,
+        "valkyrie": "maximumTastiness"
     }
 }

@@ -865,5 +865,7 @@
     "invoke": {
         "python": "Solution().maximumEnergy",
         "typescript": "Solution().maximumEnergy"
+,
+        "valkyrie": "maximumEnergy"
     }
 }

@@ -729,5 +729,7 @@
     "invoke": {
         "python": "Solution().minimumTime",
         "typescript": "Solution().minimumTime"
+,
+        "valkyrie": "minimumTime"
     }
 }

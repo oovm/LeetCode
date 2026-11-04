@@ -744,5 +744,7 @@
     "invoke": {
         "python": "Solution().dividePlayers",
         "typescript": "Solution().dividePlayers"
+,
+        "valkyrie": "dividePlayers"
     }
 }

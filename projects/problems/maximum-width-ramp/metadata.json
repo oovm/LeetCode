@@ -434,5 +434,7 @@
     "invoke": {
         "python": "Solution().maxWidthRamp",
         "typescript": "Solution().maxWidthRamp"
+,
+        "valkyrie": "maxWidthRamp"
     }
 }

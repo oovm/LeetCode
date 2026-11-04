@@ -640,5 +640,7 @@
     "invoke": {
         "python": "Solution().waysToSplitArray",
         "typescript": "Solution().waysToSplitArray"
+,
+        "valkyrie": "waysToSplitArray"
     }
 }

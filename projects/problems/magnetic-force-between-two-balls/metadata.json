@@ -656,5 +656,7 @@
     "invoke": {
         "python": "Solution().maxDistance",
         "typescript": "Solution().maxDistance"
+,
+        "valkyrie": "maxDistance"
     }
 }

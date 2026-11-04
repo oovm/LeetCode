@@ -645,5 +645,7 @@
     "invoke": {
         "python": "Solution().getStrongest",
         "typescript": "Solution().getStrongest"
+,
+        "valkyrie": "getStrongest"
     }
 }

@@ -41,13 +41,6 @@
         },
         {
             "args": {
-                "nums": [1, 1, 1, 1, 1],
-                "threshold": 1
-            },
-            "expected": 2
-        },
-        {
-            "args": {
                 "nums": [1, 2, 5, 9],
                 "threshold": 6
             },
@@ -262,24 +255,6 @@
                 "threshold": 30
             },
             "expected": 5
-        },
-        {
-            "args": {
-                "nums": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-                "threshold": 10
-            },
-            "expected": 6
-        },
-        {
-            "args": {
-                "nums": [
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1
-                ],
-                "threshold": 50
-            },
-            "expected": 2
         },
         {
             "args": {
@@ -579,5 +554,7 @@
     "invoke": {
         "python": "Solution().smallestDivisor",
         "typescript": "Solution().smallestDivisor"
+,
+        "valkyrie": "smallestDivisor"
     }
 }

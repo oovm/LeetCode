@@ -585,5 +585,7 @@
     "invoke": {
         "python": "Solution().maximumCandies",
         "typescript": "Solution().maximumCandies"
+,
+        "valkyrie": "maximumCandies"
     }
 }

@@ -701,5 +701,7 @@
     "invoke": {
         "python": "Solution().triangleNumber",
         "typescript": "Solution().triangleNumber"
+,
+        "valkyrie": "triangleNumber"
     }
 }

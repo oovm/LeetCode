@@ -178,6 +178,23 @@ $n
 - 后续增量（2026-11-04，Medium 哈希 / 排序 / 滑动窗口批次 R22 后）：canonical 实测 **753**
   （R22 前 727；本批 26 题，新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；
   构建停点与 R20 / R21 相同（同一 addon 基线过期，非 std 回归）。
+- 后续增量（2026-11-04，Medium 双指针 / 前缀和 / 二分答案批次 R23 后）：canonical 实测 **781**
+  （R23 前 753；本批 28 题，新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；
+  构建停点与 R20 / R21 / R22 相同（同一 addon 基线过期，非 std 回归）。
+
+### 依赖未实现特性的调用点（R23）
+
+- `sort(list)` 单参入口（G26 的 C4 定稿签名，待落地）：本批 **9 处调用点、8 题**。
+  `maximum-tastiness-of-candy-basket`（2517）、`magnetic-force-between-two-balls`（1552）、
+  `minimize-the-maximum-difference-of-pairs`（2616）、`the-k-strongest-values-in-an-array`（1471）、
+  `valid-triangle-number`（611）、`minimize-maximum-pair-sum-in-array`（1877）、
+  `divide-players-into-teams-of-equal-skill`（2491）、`maximum-matching-of-players-with-trainers`
+  （2410，两处：球员表与教练表各一次）。
+- `sorted_by(list, cmp)`（G11 提案，源码无此入口）：`the-k-strongest-values-in-an-array`（1471，
+  按「与中位数距离降序、值降序」排序）；比较器捕获外层 `median`（闭包捕获，待验证，见观察 8）。
+- 其余面只用源码已有签名：`HashMap<i64, i64>`（974 / 1248 的余数 / 奇偶前缀频次表）、
+  `Deque<i64>`（962 的单调递减下标栈）、`ArrayList` 构造 / `push` / `length` / `set`、与 `i64` 算术。
+  这些面**未经编译验证**（全局停点在前），不算缺口。
 
 ### 依赖未实现特性的调用点（R22）
 
@@ -192,12 +209,44 @@ $n
   `find-the-value-of-the-partition`（2740）、`maximize-greatness-of-an-array`（2592）、
   `frequency-of-the-most-frequent-element`（1838）。`i64` 的 `Comparable` 实现已在
   `std/source/operator/comparable_primitives.v`，缺的是单参入口本身。
+  **归集见下方「汇聚组」**，签名落地后一次性复跑。
 - `HashMap<char, i64>`（G17，`char` 无 `Hash`）：`longest-repeating-character-replacement`（424）、
   `longest-substring-with-at-most-k-distinct-characters`（340）。
+  **归集见下方「汇聚组」**，`char: Hash` 落地后一次性复跑。
 - 其余面只用源码已有签名：`HashMap::new` / `contains_key` / `get` / `insert` / `keys` / `remove`、
   `ArrayList::new` / `push` / `length` / `set`、`Deque::new` / `push_back` / `pop_back` /
   `peek_front` / `peek_back` / `pop_front` / `is_empty`、`char as u32` / `as i64` / `as usize`。
   这些面**未经编译验证**（全局停点在前），不算缺口。
+
+### 汇聚组（签名落地后一次性复跑）
+
+**阻塞于同一签名：`sort(list)` C4 定稿待落地**（10 题，R22 产出）
+
+| 题号 | slug | 入口 | 状态 |
+| --- | --- | --- | --- |
+| 870 | `advantage-shuffle` | `advantageCount` | `authored-unverified` |
+| 881 | `boats-to-save-people` | `numRescueBoats` | `authored-unverified` |
+| 2126 | `destroying-asteroids` | `asteroidsDestroyed` | `authored-unverified` |
+| 1679 | `max-number-of-k-sum-pairs` | `maxOperations` | `authored-unverified` |
+| 1481 | `least-number-of-unique-integers-after-k-removals` | `findLeastNumOfUniqueInts` | `authored-unverified` |
+| 846 | `hand-of-straights` | `isNStraightHand` | `authored-unverified` |
+| 1296 | `divide-array-in-sets-of-k-consecutive-numbers` | `isPossibleDivide` | `authored-unverified` |
+| 2740 | `find-the-value-of-the-partition` | `findValueOfPartition` | `authored-unverified` |
+| 2592 | `maximize-greatness-of-an-array` | `maximizeGreatness` | `authored-unverified` |
+| 1838 | `frequency-of-the-most-frequent-element` | `maxFrequency` | `authored-unverified` |
+
+同组判据：均直接调用单参 `sort(list)`、不传比较器；`i64: Comparable` 已实现，缺的是 C4 单参入口本身。
+签名落地后按本组 slug 一次性复跑，不必逐题重判。
+
+**阻塞于同一签名：`char` 缺 `Hash`（G17）**（2 题，R22 产出）
+
+| 题号 | slug | 入口 | 状态 |
+| --- | --- | --- | --- |
+| 424 | `longest-repeating-character-replacement` | `characterReplacement` | `authored-unverified` |
+| 340 | `longest-substring-with-at-most-k-distinct-characters` | `lengthOfLongestSubstringKDistinct` | `authored-unverified` |
+
+同组判据：`HashMap<char, i64>` / `HashSet<char>` 需要 `char: Hash`，当前 `char` 未实现 `Hash`。
+`char: Hash` 落地后按本组 slug 一次性复跑。
 
 ### 依赖未实现特性的调用点（R21）
 

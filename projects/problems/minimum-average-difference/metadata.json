@@ -584,5 +584,7 @@
     "invoke": {
         "python": "Solution().minimumAverageDifference",
         "typescript": "Solution().minimumAverageDifference"
+,
+        "valkyrie": "minimumAverageDifference"
     }
 }

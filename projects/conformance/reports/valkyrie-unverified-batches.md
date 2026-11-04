@@ -7,6 +7,71 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R23-2026-11-04（Medium 双指针 / 前缀和 / 二分答案 28 题，写完未构建）
+
+- 范围：Medium 的双指针 + 前缀和 + 二分答案面，全部按**理想写法**落地：
+  双指针首尾 / 同向内收、前缀和（含同余与奇偶前缀）、二分答案（下界 / 上界 / 极大化），
+  排序面继续按 `sort(list)` 与 `sorted_by(list, cmp)` 的理想形态写，缺什么记什么。
+- 构建 / 判题状态：**未验证（authored-unverified），构建通过 0 题**。全局停点是
+  **addon 二进制基线过期**（首个触发者 `valkyrie.v d48011b`），待 addon 重建后关闭；
+  不是 std 前端回归。
+- 覆盖口径：本块 **28 题**全部计入「仅写完未验证」；累计已构建通过数保持 **18**。
+- 新缺口编号：**0 条**。新增依赖未实现特性的调用点：
+  - `sort(list)` 单参入口（G26 的 C4 定稿签名，待落地）：2517 / 1552 / 2616 / 1471 / 611 /
+    1877 / 2491 / 2410（两处），共 **9 处调用点、8 题**。
+  - `sorted_by(list, cmp)`（G11 提案）：1471，共 1 处；比较器捕获外层 `median`。
+  - 已有签名的使用面（不算缺口，但同样未经编译验证）：`HashMap<i64, i64>`（974 / 1248）、
+    `Deque<i64>`（962）、`ArrayList` 构造 / `push` / `length` / `set`、`i64` 算术。
+- TS 参考解：28 题**全部实跑**
+  （`run_isolated_judge.ts --lang typescript --iterations 1 --warmup 0`），28/28 `ok=true`；
+  全部新写，无复用。
+- 数据清洗：仅删除**非答案形态或自相矛盾**的用例，未改断言、未删合法用例：
+  - `house-robber-iv`（2560）：5 条 `k > ceil(n/2)`（相邻不能同时选取，数学上无可行选取，
+    但 `expected` 仍给出数字）。
+  - `find-the-smallest-divisor-given-a-threshold`（1283）：3 条 `threshold < nums.length`
+    （任何除数都无法把向上取整和降到阈值以下）。
+  - `minimize-the-maximum-difference-of-pairs`（2616）：2 条 `p > floor(n/2)`（配对数超过上限）。
+  - `maximum-distance-between-a-pair-of-values`（1855）：2 条 `expected` 与合法配对可达到的最大
+    跨度矛盾（任意配对最大为 9，`expected` 为 4）。
+  - 共删除 12 条用例，删除后单题用例数见下表。
+  - 另有 2 条 `maximum-distance-between-a-pair-of-values` 用例输入不满足「两数组非递增」，
+    但其 `expected` 合法；按清洗规则**保留用例并适配解法**：改用「`nums1` 前缀最小值 + 对每个
+    `nums2` 右端点二分最小左端点」的推广形态，语义与原题一致。
+- 入口签名：28/28 导出形参与 `metadata.tests[].args` 键**逐字同序**（脚本比对，`bad=0`）；
+  入口名与 `metadata.invoke.valkyrie` 一致。
+- 写出形态：28/28 顶层 `[export(case: "camelCase")] micro` + `class Solution` 委托。
+
+| 题号 | slug | 入口 | 返回 | 命中面 | 用例数 |
+| --- | --- | --- | --- | --- | --- |
+| 1011 | `capacity-to-ship-packages-within-d-days` | `shipWithinDays` | `i64` | 二分答案（装船容量） | 80 |
+| 1482 | `minimum-number-of-days-to-make-m-bouquets` | `minDays` | `i64` | 二分答案（连续 k 朵） | 93 |
+| 2187 | `minimum-time-to-complete-trips` | `minimumTime` | `i64` | 二分答案（总趟数） | 103 |
+| 2226 | `maximum-candies-allocated-to-k-children` | `maximumCandies` | `i64` | 二分答案（每人份数） | 82 |
+| 1891 | `cutting-ribbons` | `maxLength` | `i64` | 二分答案（切割长度） | 100 |
+| 2560 | `house-robber-iv` | `minCapability` | `i64` | 二分答案 + 贪心选取 | 100 |
+| 1760 | `minimum-limit-of-balls-in-a-bag` | `minimumSize` | `i64` | 二分答案（拆分操作数） | 99 |
+| 1283 | `find-the-smallest-divisor-given-a-threshold` | `smallestDivisor` | `i64` | 二分答案（向上取整和） | 78 |
+| 2517 | `maximum-tastiness-of-candy-basket` | `maximumTastiness` | `i64` | `sort(list)` + 二分答案 | 81 |
+| 1552 | `magnetic-force-between-two-balls` | `maxDistance` | `i64` | `sort(list)` + 二分答案 | 87 |
+| 2616 | `minimize-the-maximum-difference-of-pairs` | `minimizeMax` | `i64` | `sort(list)` + 二分答案 | 104 |
+| 2422 | `merge-operations-to-turn-array-into-a-palindrome` | `minimumOperations` | `i64` | 双指针 + 合并 | 103 |
+| 1471 | `the-k-strongest-values-in-an-array` | `getStrongest` | `ArrayList<i64>` | `sort(list)` + `sorted_by(list, cmp)` | 91 |
+| 1855 | `maximum-distance-between-a-pair-of-values` | `maxDistance` | `i64` | 前缀最小值 + 二分 | 73 |
+| 611 | `valid-triangle-number` | `triangleNumber` | `i64` | `sort(list)` + 双指针 | 115 |
+| 1877 | `minimize-maximum-pair-sum-in-array` | `minPairSum` | `i64` | `sort(list)` + 首尾配对 | 97 |
+| 2491 | `divide-players-into-teams-of-equal-skill` | `dividePlayers` | `i64` | `sort(list)` + 首尾配对 | 122 |
+| 2410 | `maximum-matching-of-players-with-trainers` | `matchPlayersAndTrainers` | `i64` | `sort(list)` ×2 + 双指针 | 120 |
+| 962 | `maximum-width-ramp` | `maxWidthRamp` | `i64` | `Deque` 单调栈 + 反向扫描 | 69 |
+| 974 | `subarray-sums-divisible-by-k` | `subarraysDivByK` | `i64` | 前缀和同余 + `HashMap<i64, i64>` | 108 |
+| 2270 | `number-of-ways-to-split-array` | `waysToSplitArray` | `i64` | 前缀和 | 105 |
+| 2640 | `find-the-score-of-all-prefixes-of-an-array` | `findPrefixScore` | `ArrayList<i64>` | 前缀最大值 + 前缀和 | 94 |
+| 2256 | `minimum-average-difference` | `minimumAverageDifference` | `i64` | 前缀和 + 平均值 | 94 |
+| 1685 | `sum-of-absolute-differences-in-a-sorted-array` | `getSumAbsoluteDifferences` | `ArrayList<i64>` | 前缀和 | 69 |
+| 1664 | `ways-to-make-a-fair-array` | `waysToMakeFair` | `i64` | 奇偶前缀和 | 100 |
+| 3147 | `taking-maximum-energy-from-the-mystic-dungeon` | `maximumEnergy` | `i64` | 模 k 后缀和 | 120 |
+| 1248 | `count-number-of-nice-subarrays` | `numberOfSubarrays` | `i64` | 前缀奇数计数 + `HashMap` | 68 |
+| 1524 | `number-of-sub-arrays-with-odd-sum` | `numOfSubarrays` | `i64` | 前缀奇偶计数 | 87 |
+
 ## 批次 R22-2026-11-04（Medium 哈希 / 排序 / 滑动窗口 26 题，写完未构建）
 
 - 范围：Medium 的哈希 + 排序 + 滑动窗口面，全部按**理想写法**落地：

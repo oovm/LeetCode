@@ -708,5 +708,7 @@
     "invoke": {
         "python": "Solution().maxLength",
         "typescript": "Solution().maxLength"
+,
+        "valkyrie": "maxLength"
     }
 }

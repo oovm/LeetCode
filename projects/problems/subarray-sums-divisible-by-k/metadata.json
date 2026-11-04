@@ -764,5 +764,7 @@
     "invoke": {
         "python": "Solution().subarraysDivByK",
         "typescript": "Solution().subarraysDivByK"
+,
+        "valkyrie": "subarraysDivByK"
     }
 }

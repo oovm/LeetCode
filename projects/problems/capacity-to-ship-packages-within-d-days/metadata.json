@@ -578,5 +578,7 @@
     "invoke": {
         "python": "Solution().shipWithinDays",
         "typescript": "Solution().shipWithinDays"
+,
+        "valkyrie": "shipWithinDays"
     }
 }

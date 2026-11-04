@@ -538,5 +538,7 @@
     "invoke": {
         "python": "Solution().numOfSubarrays",
         "typescript": "Solution().numOfSubarrays"
+,
+        "valkyrie": "numOfSubarrays"
     }
 }

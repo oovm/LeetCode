@@ -644,5 +644,7 @@
     "invoke": {
         "python": "Solution().waysToMakeFair",
         "typescript": "Solution().waysToMakeFair"
+,
+        "valkyrie": "waysToMakeFair"
     }
 }
