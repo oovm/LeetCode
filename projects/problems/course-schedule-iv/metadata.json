@@ -1759,6 +1759,7 @@
     ],
     "invoke": {
         "python": "Solution().checkIfPrerequisite",
-        "typescript": "Solution().checkIfPrerequisite"
+        "typescript": "Solution().checkIfPrerequisite",
+        "valkyrie": "checkIfPrerequisite"
     }
 }

@@ -1410,6 +1410,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumFuelCost",
-        "typescript": "Solution().minimumFuelCost"
+        "typescript": "Solution().minimumFuelCost",
+        "valkyrie": "minimumFuelCost"
     }
 }

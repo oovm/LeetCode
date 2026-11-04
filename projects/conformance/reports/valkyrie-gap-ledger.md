@@ -184,6 +184,93 @@ $n
 - 后续增量（2026-11-04，Medium 单调栈 / 队列 / 堆 + 贪心批次 R24 后）：canonical 实测 **809**
   （R24 前 781；本批 28 题，新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；
   构建停点与 R20 / R21 / R22 / R23 相同（同一 addon 基线过期，非 std 回归）。
+- 后续增量（2026-11-04，Medium 图 / 并查集 / 拓扑排序批次 R25 后）：canonical 实测 **832**
+  （R25 前 809；本批 23 题，新编号 0 条）。本批**构建通过 0 题**，全部 `authored-unverified`；
+  构建停点与 R20–R24 相同（同一 addon 基线过期，非 std 回归）。
+
+### 依赖未实现特性的调用点（R25）
+
+- `Queue<T>`（**名字有、宿主实现无**）：`Queue.v` 的 `new` / `enqueue` / `dequeue` / `peek` /
+  `length` / `clear` 全是 `[host_contract]` 声明；`is_empty` 有体但内部调用宿主 `length`。
+  空壳 `enqueue` 的体写的是 `self.data.push(value)`，而 `Deque` 只有 `push_back` / `push_front`，
+  说明这个壳自身没进过编译。本批 **0 题使用**（全部 BFS 用 `Deque` + `pop_front`），保留工单。
+- `DisjointSet<i64>`（**真实实现，不是空壳**）：`DisjointSet.v` 用 `HashMap<T, T>` 父指针 +
+  `HashMap<T, usize>` 秩 + `_count` 计数，`find` 带路径压缩，`union` 按秩合并；约束
+  `T: Equal & Hash`，`i64` 已满足。本批 **3 题**：`redundant-connection`（684，`connected` 判环）、
+  `regions-cut-by-slashes`（959，`group_count` 数区域）、
+  `number-of-operations-to-make-network-connected`（1319，`group_count` + `connected`）。
+- `DirectedGraph<N>` / `topological_sort`（**真实实现，不是空壳**）：`DirectedGraph.v` 提供
+  `add_node` / `add_edge` / `successors` / `predecessors` / `out_degree` / `in_degree` / `clone`；
+  `topological_sort.v` 是真实 Kahn（`HashMap` 入度 + `ArrayList` 当队列 + `head` 游标，有环返回空表）。
+  本批 **0 题调用**：题面给的是 0..n-1 稠密节点和边表，`ArrayList<ArrayList<i64>>` 直接按下标建表
+  比逐点 `add_node` 更省；`find-eventual-safe-states`（802）要的是「全部安全节点」而不是拓扑序，
+  故手写反向 Kahn + 出度递减。结论只进工单，不算缺口。
+- `HashMap` 缺可变取值（**无 `get_mut` / `upsert`**）：`HashMap.v` 只有
+  `micro \`get\`(self, key: K): Option<V>`，返回的是副本。邻接表追加必须
+  `get` → 改副本 → `insert` 回写，每处 4 行。本批 **2 题**：`minimum-score-of-a-path-between-two-cities`
+  （2492）、`reorder-routes-to-make-all-paths-lead-to-the-city-zero`（1466），
+  均为 `HashMap<i64, ArrayList<ArrayList<i64>>>` 的边表追加。按判据 b 记账。
+- `char: Hash`（**已落地，纠正 G17**）：`std/source/collection/hashed/HashPrimitives.v:53` 已有
+  `imply char: Hash`（`hash` 返回 `self as usize`）。R22 / R24 记的「`char` 缺 `Hash`」前提已不成立，
+  `longest-repeating-character-replacement`（424）、
+  `longest-substring-with-at-most-k-distinct-characters`（340）、`task-scheduler`（621）
+  转入「阻塞解除」复跑组，与 `sort(list)` 组同样只等 addon 重建。
+- G2 浮点返回值合同：`path-with-maximum-probability`（1514）导出 `-> f64`，返回类型即题面合同，
+  绕不开（现有 G2 的第三处调用点）。
+- 其余面只用**已有真实实现**的签名（不算缺口，但仍未经编译验证）：`ArrayList` 构造 / `push` /
+  `set` / `get` / `length` / `is_empty`；`Deque::new` / `push_back` / `pop_back` / `pop_front` /
+  `length` / `is_empty`；`HashMap::new` / `get` / `insert` / `contains_key` / `keys`；
+  `DisjointSet` 见上；`i64` / `f64` 算术、整除与取模。
+
+### API 工单（R25 压面结果：图面基础设施）
+
+签名为「照着就能写实现」的形态。`T` 指并查集元素 / 队列元素类型，`N` 指图节点类型，
+`K` / `V` 指哈希表键值类型。`index` 的 1-based ordinal 约定与 `ArrayList::set` 一致。
+
+| API | 理想签名 | 当前 std | 影响的题（本批） |
+| --- | --- | --- | --- |
+| `DisjointSet::new` | `micro new(): Self` | 有（真实实现） | 684 / 959 / 1319 |
+| `DisjointSet::add` | `micro add(mut self, value: T): bool where T: Equal & Hash` | 有 | 959 / 1319 |
+| `DisjointSet::union` | `micro union(mut self, left: T, right: T): bool where T: Equal & Hash` | 有（按秩合并） | 684 / 959 / 1319 |
+| `DisjointSet::connected` | `micro connected(mut self, left: T, right: T): bool where T: Equal & Hash` | 有 | 684 / 1319 |
+| `DisjointSet::find` | `micro find(mut self, value: T): Option<T> where T: Equal & Hash` | 有（路径压缩） | 684（`connected` 间接） |
+| `DisjointSet::group_count` | `micro group_count(self): usize` | 有 | 959 / 1319 |
+| `DisjointSet::length` | `micro length(self): usize` | 有 | 未用（保留工单） |
+| `DisjointSet::is_empty` | `micro is_empty(self): bool` | 有 | 未用（保留工单） |
+| `DisjointSet::elements` | `micro elements(self): ArrayList<T>` | 有 | 未用（保留工单） |
+| `DirectedGraph::add_node` | `micro add_node(mut self, node: N): unit where N: Equal & Hash` | 有（真实实现） | 未用（保留工单） |
+| `DirectedGraph::add_edge` | `micro add_edge(mut self, from: N, to: N): unit where N: Equal & Hash` | 有 | 未用（保留工单） |
+| `DirectedGraph::successors` | `micro successors(self, node: N): ArrayList<N>` | 有 | 未用（保留工单） |
+| `DirectedGraph::out_degree` | `micro out_degree(self, node: N): usize` | 有 | 未用（保留工单） |
+| `DirectedGraph::in_degree` | `micro in_degree(self, node: N): usize` | 有 | 未用（保留工单） |
+| `DirectedGraph::topological_sort` | `micro topological_sort(self): ArrayList<N> where N: Equal & Hash` | 有（真实 Kahn；有环返回空表） | 未用（802 手写反向 Kahn） |
+| `Queue::new` | `micro new(): Self` | **名字有、宿主实现无** | 未用（保留工单） |
+| `Queue::enqueue` | `micro enqueue(mut self, value: T): unit` | **名字有、宿主实现无**（壳内调用不存在的 `Deque::push`） | 未用（保留工单） |
+| `Queue::dequeue` | `micro dequeue(mut self): Option<T>` | **名字有、宿主实现无** | 未用（保留工单） |
+| `Queue::peek` | `micro peek(self): Option<T>` | **名字有、宿主实现无** | 未用（保留工单） |
+| `Queue::length` | `micro length(self): usize` | **名字有、宿主实现无** | 未用（保留工单） |
+| `Queue::is_empty` | `micro is_empty(self): bool` | 有体，但依赖宿主 `length` | 未用（保留工单） |
+| `Queue::clear` | `micro clear(mut self): unit` | **名字有、宿主实现无** | 未用（保留工单） |
+| `HashMap::new` | `micro new(capacity: usize): Self` | 有 | 1976 / 2492 / 1466 |
+| `HashMap::get` | `micro \`get\`(self, key: K): Option<V>` | 有（返回值副本） | 1976 / 2492 / 1466 |
+| `HashMap::insert` | `micro insert(mut self, key: K, value: V): Option<V>` | 有 | 1976 / 2492 / 1466 |
+| `HashMap::contains_key` | `micro contains_key(self, key: K): bool` | 有 | 1976 / 2492 / 1466 |
+| `HashMap::keys` | `micro keys(self): ArrayList<K>` | 有 | 1976 |
+| `HashMap::upsert` | `micro upsert(mut self, key: K, fallback: V, update: micro(V) -> V): V`（[提案]；若语言支持引用则等价 `get_mut(mut self, key: K): Option<&mut V>`） | **无** | 2492 / 1466 |
+| `Deque::new` | `micro new(): Self` | 有 | 802 / 1020 / 994 / 2658 / 1905 / 851 / 2492 / 1466 / 1129 / 1376 / 1091 / 2477 / 2812 |
+| `Deque::push_back` | `micro push_back(mut self, value: T): unit` | 有 | 同上 13 题 |
+| `Deque::pop_front` | `micro pop_front(mut self): Option<T>` | 有 | 802 / 994 / 1129 / 1376 / 1091 / 2477 / 2812 |
+| `Deque::pop_back` | `micro pop_back(mut self): Option<T>` | 有 | 1020 / 2658 / 1905 / 851 / 2492 / 1466 |
+| `Deque::peek_front` | `micro peek_front(self): Option<T>` | 有 | 未用（保留工单） |
+| `Deque::peek_back` | `micro peek_back(self): Option<T>` | 有 | 未用（保留工单） |
+| `Deque::length` | `micro length(self): usize` | 有 | 994 / 1091 / 2477 / 2812（按层推进） |
+| `Deque::is_empty` | `micro is_empty(self): bool` | 有 | 全部用 `Deque` 的 13 题 |
+| `ArrayList::new` | `micro new(capacity: usize): Self` | 有 | 全部 23 题 |
+| `ArrayList::push` | `micro push(mut self, value: T): unit` | 有 | 全部 23 题 |
+| `ArrayList::set` | `micro set(mut self, index: isize, value: T): unit`（1-based ordinal） | 有 | 全部 23 题 |
+| `ArrayList::get` | `micro get(self, index: isize): Option<T>`（1-based ordinal） | 有 | 1-based 取值处 |
+| `ArrayList::length` | `micro length(self): usize` | 有 | 全部 23 题 |
+| 浮点返回值 | `micro maxProbability(n: i64, edges: ArrayList<ArrayList<i64>>, succProb: ArrayList<f64>, start_node: i64, end_node: i64) -> f64` | 签名已写，合同归 G2 | 1514 |
 
 ### 依赖未实现特性的调用点（R24）
 
@@ -320,7 +407,7 @@ $n
 `i64: Comparable` 已实现，阻塞前提已不成立。保留本组清单仅用于工具链刷新后批量复跑，
 不必逐题重判。`sort(list)` 不再计入未实现特性依赖；`sorted_by(list, cmp)` 仍是缺口。
 
-**阻塞于同一签名：`char` 缺 `Hash`（G17）**（3 题，R22 + R24 产出）
+**阻塞解除：`char: Hash` 已落地（`HashPrimitives.v:53`），待工具链刷新后批量复跑验证**（3 题，R22 + R24 产出）
 
 | 题号 | slug | 入口 | 状态 |
 | --- | --- | --- | --- |
@@ -328,8 +415,9 @@ $n
 | 340 | `longest-substring-with-at-most-k-distinct-characters` | `lengthOfLongestSubstringKDistinct` | `authored-unverified` |
 | 621 | `task-scheduler` | `leastInterval` | `authored-unverified`（另见 `BinaryHeap::new_by` 组） |
 
-同组判据：`HashMap<char, i64>` / `HashSet<char>` 需要 `char: Hash`，当前 `char` 未实现 `Hash`。
-`char: Hash` 落地后按本组 slug 一次性复跑。
+同组判据：`HashMap<char, i64>` / `HashSet<char>` 需要 `char: Hash`。R25 复核发现
+`std/source/collection/hashed/HashPrimitives.v:53` 已有 `imply char: Hash`，阻塞前提已不成立；
+本组保留清单仅用于工具链刷新后批量复跑，`char: Hash` 不再计入未实现特性依赖。
 
 **阻塞于同一签名：`BinaryHeap<T>::new_by(compare)` 缺比较器构造**（6 题，R24 产出）
 
@@ -382,6 +470,26 @@ $n
 
 同组判据：`sorted_by(list, cmp)` 源码无此入口（G11 提案）。`sort(list)` 已落地但不能接受
 比较器，因此需要自定义序的排序仍走本组。入口落地后按本组 slug 一次性复跑。
+
+**阻塞于 G2 浮点返回值合同**（1 题，R25 产出）
+
+| 题号 | slug | 入口 | 状态 |
+| --- | --- | --- | --- |
+| 1514 | `path-with-maximum-probability` | `maxProbability` | `authored-unverified` |
+
+同组判据：导出 `-> f64`，返回值即题面合同（0..1 的概率），与 1227 / 1344 属同一组。
+G2 关闭后按本组 slug 一次性复跑。
+
+**阻塞于 `HashMap` 邻接 upsert（[提案] `upsert` / `get_mut`）**（2 题，R25 产出）
+
+| 题号 | slug | 入口 | 状态 |
+| --- | --- | --- | --- |
+| 2492 | `minimum-score-of-a-path-between-two-cities` | `minScore` | `authored-unverified` |
+| 1466 | `reorder-routes-to-make-all-paths-lead-to-the-city-zero` | `minReorder` | `authored-unverified` |
+
+同组判据：`HashMap<i64, ArrayList<ArrayList<i64>>>` 的边表追加。`HashMap` 只有返回副本的
+`micro \`get\`(self, key: K): Option<V>`，每个追加点都要 `get` → 改副本 → `insert` 回写（4 行），
+按判据 b 记账。`upsert`（或等价引用型 `get_mut`）落地后按本组 slug 一次性复跑。
 
 ### 依赖未实现特性的调用点（R21）
 
@@ -1079,12 +1187,15 @@ micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value �
 
 ### G17 `char` 缺 `Hash` impl
 
-- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/text/char.v` 与
-  `std/source/collection/hashed/hash.v`）
-- 定性：**该有但没有**。`char` 只定义了 `==` / `!=`，没有 `Hash`，于是不能作
+- 状态：**已落地（2026-11-04，R25 复核）**。`std/source/collection/hashed/HashPrimitives.v:53` 已有
+  `imply char: Hash`（`micro hash(self) -> usize { return self as usize }`）。
+  本条目保留历史与影响面，仅用于 addon 重建后批量复跑，不再算未实现特性依赖。
+- 原状态（R22 / R24 记账时的静态核对）：未提供（**std 缺口**；2026-11-04 核对
+  `std/source/text/char.v` 与 `std/source/collection/hashed/hash.v` 时尚未有实现）
+- 定性：**该有但当时没有**。`char` 只定义了 `==` / `!=`，没有 `Hash`，于是不能作
   `HashMap` / `HashSet` / `DisjointSet` 的键；同样表示一个小写字母，用 `utf8` 可以入表，
   用 `char` 不行。
-- 期望签名（[提案]，源码尚不存在）：
+- 期望签名（已按此落地，实现位置在 `HashPrimitives.v`）：
 
 ```v
 # std/source/text/char.v
@@ -1107,6 +1218,9 @@ imply char: Hash {
   却没有派生 `Hash`，因此「码位可排序」与「码位可哈希」只实现了一半。
 - 判定：**真缺口**（判据 b：7 处 × 每次调用点换键型 `utf8` / `as u32`）。
 - 修复初判：**加 API**（补一个 impl，语义与 `Ordinal` 一致）。
+- 本批验证情况（R25，2026-11-04）：`Hash` 已补（`HashPrimitives.v:53`），上面 9 处调用点
+  不必再换键型；本批 `task-scheduler`（621）的 `HashMap<char, i64>` 与 R22 的 424 / 340
+  一并转入「阻塞解除」复跑组，只等 addon 重建。`char` 的 `Comparable` 仍缺，归 G15 / G26。
 - 与 G15 的交叉引用：`char` 同时缺 `Comparable`。**这两条不是孤立缺 impl，而是同一个 primitive 的
   类型能力面没设计完**——`Ordinal` 视图 / `Comparable` / `Hash` 三条腿一条都没在 `char` 上落地，
   只剩 `==` / `!=`，于是它既进不了有序容器也进不了哈希容器。

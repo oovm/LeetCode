@@ -7,6 +7,92 @@
 复跑方式：按下面的 slug 列表批量跑 `legionBuildProject` + 隔离判题；TS 侧已在
 `projects/conformance/scripts/run_ts_solver.ts` 实跑，结果列在每题行内。
 
+## 批次 R25-2026-11-04（Medium 图 / 并查集 / 拓扑排序 23 题，写完未构建）
+
+- 范围：Medium 的图 + 并查集 + 拓扑排序面，全部按**理想写法**落地：邻接表
+  （`ArrayList<ArrayList<i64>>` 稠密下标建表 / `HashMap<i64, ArrayList<...>>` 稀疏键值建表）、
+  入度出度计数、`Deque` 当 BFS 队列 / DFS 栈、`DisjointSet` 判环与分量数、Kahn 反向拓扑。
+  本批目标是**把图面基础设施的 API 面一次压清**，产出工单优先于出题数。
+- 构建 / 判题状态：**未验证（authored-unverified），构建通过 0 题**。全局停点与 R20–R24 相同：
+  **addon 二进制基线过期**，不是 std 前端回归。
+- 覆盖口径：本块 **23 题**全部计入「仅写完未验证」；累计已构建通过数保持 **18**，
+  累计未验证 = canonical **832** − 18 = **814**。
+- 新缺口编号：**0 条**。新增依赖未实现特性的调用点：
+  - `Queue<T>`（**名字有、宿主实现无**）：`new` / `enqueue` / `dequeue` / `peek` / `length` /
+    `clear` 全为 `[host_contract]`，`is_empty` 有体但依赖宿主 `length`；空壳 `enqueue` 内调
+    不存在的 `Deque::push`，说明壳自身未编译。本批 **0 题使用**，工单保留。
+  - `HashMap` 邻接 upsert（**无 `get_mut` / `upsert`**）：2492、1466，共 **2 题**，
+    均为 `HashMap<i64, ArrayList<ArrayList<i64>>>` 边表追加，每处 `get` → 改副本 → `insert`。
+  - G2 浮点返回值合同：1514 导出 `-> f64`，共 **1 题**。
+  - `char: Hash`（G17）：**已落地**（`HashPrimitives.v:53`），不再计入依赖，424 / 340 / 621
+    转入「阻塞解除」复跑组。
+- **std 图面核实结论（按要求写进工单）**：
+  - `DisjointSet<T>`：**真实实现**，`HashMap<T,T>` 父指针 + `HashMap<T,usize>` 秩 + `_count`，
+    `find` 路径压缩、`union` 按秩合并；约束 `T: Equal & Hash`。
+  - `DirectedGraph<N>` / `topological_sort`：**真实实现**，`add_node` / `add_edge` /
+    `successors` / `predecessors` / `out_degree` / `in_degree` / `clone`；拓扑排序是真实 Kahn
+    （`HashMap` 入度 + `ArrayList` 队列 + `head` 游标，有环返回空表）。
+  - `Queue<T>` / `PriorityQueue<T>`：同批 `[host_contract]` 空壳，签名齐全、宿主缺失。
+- TS 参考解：23 题**全部实跑**（`run_ts_solver.ts`），23/23 通过；全部新写，无复用。
+  复杂度与 V 侧同阶：684/1319/959 并查集、743/787 Bellman-Ford、802 反向 Kahn、
+  1514/1976 朴素 Dijkstra、1091/2812/1129/994/1020/2658/1905 BFS/DFS、2477 子树聚合、
+  1462 Floyd 传递闭包、851 n 次 DFS、1267 行列计数。
+- 数据清洗：仅删除**非答案形态或自相矛盾**的用例，未改断言、未删合法用例；共 **41 条**：
+  - `maximum-number-of-fish-in-a-grid`（2658）：1 条 `Error: list index out of range`。
+  - `reorder-routes-to-make-all-paths-lead-to-the-city-zero`（1466）：6 条（5 条
+    `Error: ...` + 1 条输入被拆成两个不相连分量、`expected` 与题面语义矛盾）。
+  - `path-with-maximum-probability`（1514）：1 条 `Error: list index out of range`。
+  - `find-closest-node-to-given-two-nodes`（2359）：1 条 `Error: list index out of range`。
+  - `find-the-safest-path-in-a-grid`（2812）：2 条 `Error: ...`。
+  - `number-of-ways-to-arrive-at-destination`（1976）：2 条（1 条 `Error: ...`；
+    1 条重边输入下最短路径实际有 2 条、`expected` 为 1）。
+  - `regions-cut-by-slashes`（959）：10 条非方阵 / 越界输入，`expected` 为宿主异常文本。
+  - `time-needed-to-inform-all-employees`（1376）：14 条 `Error: maximum recursion depth exceeded`
+    （`manager` 数组成环，非法输入）。
+  - `loud-and-rich`（851）：4 条（1 条宿主异常 + 3 条 `richer` 关系成环，非法输入；
+    `expected` 与任何正确传递闭包都对不上）。
+- 实现形态修正（不改数据）：
+  - 1091 `shortest-path-in-binary-matrix`：数据按方阵判（`n = grid.length`，多出的列不计），
+    与仓内 Python 参考一致；非方阵用例按此得到 `expected`。
+  - 1976 `number-of-ways-to-arrive-at-destination`：先按两端点去重（保留最小耗时），
+    否则并行重边会把同一最短路径重复计数。
+  - 1376：叶子不再加 `informTime`（数据里个别叶子 `informTime` 非 0，`expected` 按「到叶子即结束」）。
+  - 1462：可达矩阵含自反（`reach[a][a] = true`），与数据 `expected` 一致。
+  - 851 `loud-and-rich`：数据 `expected` 是**扁平数组**（每下标一项），导出也按扁平返回。
+  - 802：越界后继边计入出度、但不建反向边，因此指向不存在节点的节点永不安全（与数据一致）。
+  - 959：按「每格 4 小块（左上/右上/左下/右下）」建并查集，跨格连边 + 格内按字符连边，
+    分量数即答案。
+  - 2812：safeness 是曼哈顿距离，多源 BFS 与判定 BFS 都用 4 邻域。
+- 入口签名：23/23 导出形参与 `metadata.tests[].args` 键**逐字同序**（脚本比对，`bad=0`）；
+  入口名与 `metadata.invoke.valkyrie` 一致（新补 23 条）。
+- 写出形态：23/23 顶层 `[export(case: "camelCase")] micro` + `class Solution` 委托。
+
+| 题号 | slug | 入口 | 返回 | 命中面 | 用例数 |
+| --- | --- | --- | --- | --- | --- |
+| 684 | `redundant-connection` | `findRedundantConnection` | `ArrayList<i64>` | `DisjointSet::connected` / `union` | 76 |
+| 743 | `network-delay-time` | `networkDelayTime` | `i64` | Bellman-Ford + `ArrayList` 距离表 | 100 |
+| 787 | `cheapest-flights-within-k-stops` | `findCheapestPrice` | `i64` | Bellman-Ford（k 轮 + 副本回写） | 94 |
+| 802 | `find-eventual-safe-states` | `eventualSafeNodes` | `ArrayList<i64>` | 反向图 + Kahn（`Deque` 队列） | 81 |
+| 1020 | `number-of-enclaves` | `numEnclaves` | `i64` | 边界 DFS（`Deque` 栈） | 67 |
+| 994 | `rotting-oranges` | `orangesRotting` | `i64` | 多源 BFS（按层推进） | 96 |
+| 2658 | `maximum-number-of-fish-in-a-grid` | `findMaxFish` | `i64` | 网格 DFS 累加 | 105 |
+| 1905 | `count-sub-islands` | `countSubIslands` | `i64` | 双网格 DFS 校验 | 67 |
+| 959 | `regions-cut-by-slashes` | `regionsBySlashes` | `i64` | `DisjointSet::group_count` + 4 小块 | 89 |
+| 1319 | `number-of-operations-to-make-network-connected` | `makeConnected` | `i64` | `DisjointSet` 多余边 + 分量数 | 89 |
+| 2492 | `minimum-score-of-a-path-between-two-cities` | `minScore` | `i64` | `HashMap` 邻接 + DFS | 65 |
+| 1466 | `reorder-routes-to-make-all-paths-lead-to-the-city-zero` | `minReorder` | `i64` | `HashMap` 邻接 + DFS 定向计数 | 56 |
+| 1129 | `shortest-path-with-alternating-colors` | `shortestAlternatingPaths` | `ArrayList<i64>` | 状态图 BFS（`Deque`） | 97 |
+| 1376 | `time-needed-to-inform-all-employees` | `numOfMinutes` | `i64` | 汇报树递归 | 43 |
+| 1514 | `path-with-maximum-probability` | `maxProbability` | `f64` | 朴素 Dijkstra（`f64` 概率合同） | 69 |
+| 2359 | `find-closest-node-to-given-two-nodes` | `closestMeetingNode` | `i64` | 两次走链求距离 | 101 |
+| 851 | `loud-and-rich` | `loudAndRich` | `ArrayList<i64>` | n 次 DFS 取最小 `quiet` | 97 |
+| 1267 | `count-servers-that-communicate` | `countServers` | `i64` | 行列计数 | 50 |
+| 1091 | `shortest-path-in-binary-matrix` | `shortestPathBinaryMatrix` | `i64` | 8 邻域 BFS | 67 |
+| 1976 | `number-of-ways-to-arrive-at-destination` | `countPaths` | `i64` | 朴素 Dijkstra + 方案数取模 | 63 |
+| 2477 | `minimum-fuel-cost-to-report-to-the-capital` | `minimumFuelCost` | `i64` | 子树人数自底向上 | 65 |
+| 2812 | `find-the-safest-path-in-a-grid` | `maximumSafenessFactor` | `i64` | 多源 BFS + 二分 + BFS 判定 | 66 |
+| 1462 | `course-schedule-iv` | `checkIfPrerequisite` | `ArrayList<bool>` | Floyd 传递闭包 | 181 |
+
 ## 批次 R24-2026-11-04（Medium 单调栈 / 队列 / 堆 + 贪心 28 题，写完未构建）
 
 - 范围：Medium 的单调栈 + 队列 / 双端队列 + 堆（优先队列）+ 贪心面，全部按**理想写法**落地。

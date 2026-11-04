@@ -850,6 +850,7 @@
     ],
     "invoke": {
         "python": "Solution().shortestPathBinaryMatrix",
-        "typescript": "Solution().shortestPathBinaryMatrix"
+        "typescript": "Solution().shortestPathBinaryMatrix",
+        "valkyrie": "shortestPathBinaryMatrix"
     }
 }

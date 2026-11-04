@@ -830,6 +830,7 @@
     ],
     "invoke": {
         "python": "Solution().shortestAlternatingPaths",
-        "typescript": "Solution().shortestAlternatingPaths"
+        "typescript": "Solution().shortestAlternatingPaths",
+        "valkyrie": "shortestAlternatingPaths"
     }
 }

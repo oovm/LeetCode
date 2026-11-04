@@ -1331,6 +1331,7 @@
     ],
     "invoke": {
         "python": "Solution().makeConnected",
-        "typescript": "Solution().makeConnected"
+        "typescript": "Solution().makeConnected",
+        "valkyrie": "makeConnected"
     }
 }

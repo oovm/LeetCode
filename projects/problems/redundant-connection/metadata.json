@@ -1180,6 +1180,7 @@
     ],
     "invoke": {
         "python": "Solution().findRedundantConnection",
-        "typescript": "Solution().findRedundantConnection"
+        "typescript": "Solution().findRedundantConnection",
+        "valkyrie": "findRedundantConnection"
     }
 }

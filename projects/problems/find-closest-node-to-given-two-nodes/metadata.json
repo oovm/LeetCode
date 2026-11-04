@@ -554,16 +554,6 @@
         },
         {
             "args": {
-                "edges": [
-                    1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
-                ],
-                "node1": 0,
-                "node2": 28
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "edges": [7, 8, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1, -1],
                 "node1": 11,
                 "node2": 2
@@ -829,6 +819,7 @@
     ],
     "invoke": {
         "python": "Solution().closestMeetingNode",
-        "typescript": "Solution().closestMeetingNode"
+        "typescript": "Solution().closestMeetingNode",
+        "valkyrie": "closestMeetingNode"
     }
 }

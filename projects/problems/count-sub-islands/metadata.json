@@ -1276,6 +1276,7 @@
     ],
     "invoke": {
         "python": "Solution().countSubIslands",
-        "typescript": "Solution().countSubIslands"
+        "typescript": "Solution().countSubIslands",
+        "valkyrie": "countSubIslands"
     }
 }

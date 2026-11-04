@@ -646,6 +646,7 @@
     ],
     "invoke": {
         "python": "Solution().orangesRotting",
-        "typescript": "Solution().orangesRotting"
+        "typescript": "Solution().orangesRotting",
+        "valkyrie": "orangesRotting"
     }
 }

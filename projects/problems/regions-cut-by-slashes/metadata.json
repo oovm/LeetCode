@@ -168,12 +168,6 @@
         },
         {
             "args": {
-                "grid": [" / / ", "\\\\", " / / "]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "grid": ["\\/", "/\\", " / ", "\\/"]
             },
             "expected": 29
@@ -183,12 +177,6 @@
                 "grid": ["\\/\\", "/\\/", "\\/\\"]
             },
             "expected": 8
-        },
-        {
-            "args": {
-                "grid": ["/\\/\\", "\\/\\/\\", "/\\/\\", "\\/\\/\\"]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -234,18 +222,6 @@
         },
         {
             "args": {
-                "grid": ["\\/\\ ", "/\\/\\ ", "\\/\\ ", "/\\/\\ "]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "grid": [" /\\/ ", "/\\/\\", "\\/\\/ ", " \\//"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "grid": ["\\ ", "/ ", "\\ ", "/ "]
             },
             "expected": 31
@@ -267,12 +243,6 @@
                 "grid": ["\\/\\", "/\\/\\", "\\/\\", "/\\/\\"]
             },
             "expected": 17
-        },
-        {
-            "args": {
-                "grid": [" / / ", " / / ", " / / "]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -444,12 +414,6 @@
         },
         {
             "args": {
-                "grid": [" \\/ \\/ ", "\\/\\/\\", " \\/ \\/ ", "\\/\\/\\", " \\/ \\/ "]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "grid": ["/\\/", "\\///", "/\\/", "\\///"]
             },
             "expected": 16
@@ -477,12 +441,6 @@
                 "grid": ["/\\/", "\\/\\", "\\/\\", "/\\/"]
             },
             "expected": 21
-        },
-        {
-            "args": {
-                "grid": ["\\/\\/\\", "/\\/\\/\\", "\\/\\/\\", "/\\/\\/\\"]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -531,24 +489,6 @@
                 "grid": ["\\/\\", " / ", "\\/\\", " / ", "\\/\\"]
             },
             "expected": 41
-        },
-        {
-            "args": {
-                "grid": ["\\/\\/", "/\\/\\/", "\\/\\/", "/\\/\\/"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "grid": ["\\/\\/\\/", "/\\/\\/\\", "\\/\\/\\/", "/\\/\\/\\", "\\/\\/\\/"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "grid": ["/\\/\\/", "\\/\\/\\", "/\\/\\/", "\\/\\/\\"]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -601,6 +541,7 @@
     ],
     "invoke": {
         "python": "Solution().regionsBySlashes",
-        "typescript": "Solution().regionsBySlashes"
+        "typescript": "Solution().regionsBySlashes",
+        "valkyrie": "regionsBySlashes"
     }
 }

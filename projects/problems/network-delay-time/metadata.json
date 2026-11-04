@@ -1253,6 +1253,7 @@
     ],
     "invoke": {
         "python": "Solution().networkDelayTime",
-        "typescript": "Solution().networkDelayTime"
+        "typescript": "Solution().networkDelayTime",
+        "valkyrie": "networkDelayTime"
     }
 }

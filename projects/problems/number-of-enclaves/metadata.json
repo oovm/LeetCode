@@ -824,6 +824,7 @@
     ],
     "invoke": {
         "python": "Solution().numEnclaves",
-        "typescript": "Solution().numEnclaves"
+        "typescript": "Solution().numEnclaves",
+        "valkyrie": "numEnclaves"
     }
 }

@@ -1809,6 +1809,7 @@
     ],
     "invoke": {
         "python": "Solution().findCheapestPrice",
-        "typescript": "Solution().findCheapestPrice"
+        "typescript": "Solution().findCheapestPrice",
+        "valkyrie": "findCheapestPrice"
     }
 }

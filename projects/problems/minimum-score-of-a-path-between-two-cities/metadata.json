@@ -1075,6 +1075,7 @@
     ],
     "invoke": {
         "python": "Solution().minScore",
-        "typescript": "Solution().minScore"
+        "typescript": "Solution().minScore",
+        "valkyrie": "minScore"
     }
 }
