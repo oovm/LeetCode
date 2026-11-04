@@ -16,7 +16,8 @@ imply Jumbled: std::operator::Comparable {
     }
 }
 
-# [提案] 按 `Comparable` 合同的单参排序；现有 `sort.v` 的 7 个入口全部要求显式 `cmp`。
+# 依赖 std C4（待落地 API）：`micro sort<T, C>(list: mut C) where C: Cardinal<Element = T> & Countable, T: Comparable`
+# 该入口尚未落地，`sort` / `sorted` 不是现成能力；本处按定稿签名书写，C4 落地前不计通过。
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {
