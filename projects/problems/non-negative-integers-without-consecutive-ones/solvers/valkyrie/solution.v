@@ -14,7 +14,7 @@ micro fib_at(i: i64) -> i64 {
     return a
 }
 
-# 高位向低位扫描：置位累加 fib(i)，连 1 即终止，扫完补 +1。
+# 高位向低位扫描：置位累加长 i 位的合法串数 fib(i+1)，连 1 即终止，扫完补 +1。
 [export(case: "camelCase")]
 micro find_integers(n: i64) -> i64 {
     let mut total: i64 = 0
@@ -28,7 +28,7 @@ micro find_integers(n: i64) -> i64 {
             j = j + 1
         }
         if n / place % 2 == 1 {
-            total = total + fib_at(i)
+            total = total + fib_at(i + 1)
             if prev == 1 {
                 return total
             }

@@ -8,15 +8,19 @@ micro smallest_factorization(num: i64) -> i64 {
     }
     let mut rest: i64 = num
     let mut answer: i64 = 0
+    let mut place: i64 = 1
+    let mut digits: i64 = 0
     let mut d: i64 = 9
     while d >= 2 {
         while rest % d == 0 {
-            answer = answer * 10 + d
+            answer = answer + d * place
+            place = place * 10
+            digits = digits + 1
             rest = rest / d
         }
         d = d - 1
     }
-    if rest > 1 || answer > 2147483647 {
+    if rest > 1 || digits > 10 || answer > 2147483647 {
         return 0
     }
     return answer

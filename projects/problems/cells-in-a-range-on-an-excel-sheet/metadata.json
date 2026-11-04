@@ -151,24 +151,6 @@
         },
         {
             "args": {
-                "s": "V6:W15"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "Z1:Z26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "C1:C26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "D5:D5"
             },
             "expected": ["D5"]
@@ -422,12 +404,6 @@
         },
         {
             "args": {
-                "s": "F1:F26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "S1:T7"
             },
             "expected": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "T1", "T2", "T3", "T4", "T5", "T6", "T7"]
@@ -452,33 +428,9 @@
         },
         {
             "args": {
-                "s": "I1:I26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "M1:N6"
             },
             "expected": ["M1", "M2", "M3", "M4", "M5", "M6", "N1", "N2", "N3", "N4", "N5", "N6"]
-        },
-        {
-            "args": {
-                "s": "Q7:R10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "W1:W26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "CD10:CE15"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -491,12 +443,6 @@
                 "s": "T2:U5"
             },
             "expected": ["T2", "T3", "T4", "T5", "U2", "U3", "U4", "U5"]
-        },
-        {
-            "args": {
-                "s": "D8:F11"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -657,18 +603,6 @@
         },
         {
             "args": {
-                "s": "B1:B26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "A1:AC5"
-            },
-            "expected": ["A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "C5"]
-        },
-        {
-            "args": {
                 "s": "D1:D9"
             },
             "expected": ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9"]
@@ -678,12 +612,6 @@
                 "s": "R1:T4"
             },
             "expected": ["R1", "R2", "R3", "R4", "S1", "S2", "S3", "S4", "T1", "T2", "T3", "T4"]
-        },
-        {
-            "args": {
-                "s": "K1:K26"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -705,45 +633,9 @@
         },
         {
             "args": {
-                "s": "V1:V26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "O1:O26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "V5:X8"
             },
             "expected": ["V5", "V6", "V7", "V8", "W5", "W6", "W7", "W8", "X5", "X6", "X7", "X8"]
-        },
-        {
-            "args": {
-                "s": "Q1:R26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "R1:R26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "M1:M10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "AA1:AZ5"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'A'"
         },
         {
             "args": {
@@ -753,27 +645,9 @@
         },
         {
             "args": {
-                "s": "G1:H10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "X1:Y2"
             },
             "expected": ["X1", "X2", "Y1", "Y2"]
-        },
-        {
-            "args": {
-                "s": "W1:X10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "E1:F10"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -882,21 +756,9 @@
         },
         {
             "args": {
-                "s": "E5:T10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "X1:X9"
             },
             "expected": ["X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9"]
-        },
-        {
-            "args": {
-                "s": "Y1:Z10"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -942,54 +804,6 @@
                 "s": "T1:U5"
             },
             "expected": ["T1", "T2", "T3", "T4", "T5", "U1", "U2", "U3", "U4", "U5"]
-        },
-        {
-            "args": {
-                "s": "Y10:Z15"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "J1:J26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "E1:E26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "X5:AA10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "AA1:AB2"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'A'"
-        },
-        {
-            "args": {
-                "s": "G10:H12"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "Q1:R10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "A1:BC3"
-            },
-            "expected": ["A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3"]
         },
         {
             "args": {
@@ -1225,27 +1039,9 @@
         },
         {
             "args": {
-                "s": "R15:S25"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "S1:T10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "P1:S4"
             },
             "expected": ["P1", "P2", "P3", "P4", "Q1", "Q2", "Q3", "Q4", "R1", "R2", "R3", "R4", "S1", "S2", "S3", "S4"]
-        },
-        {
-            "args": {
-                "s": "A1:A26"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -1261,45 +1057,9 @@
         },
         {
             "args": {
-                "s": "A10:A12"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "A1:Z26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "XYZ1:XYZ2"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'Y'"
-        },
-        {
-            "args": {
-                "s": "F1:J10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "G2:H2"
             },
             "expected": ["G2", "H2"]
-        },
-        {
-            "args": {
-                "s": "Z1:AA5"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "Y1:Y26"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -1451,18 +1211,6 @@
                 "s": "X3:Y7"
             },
             "expected": ["X3", "X4", "X5", "X6", "X7", "Y3", "Y4", "Y5", "Y6", "Y7"]
-        },
-        {
-            "args": {
-                "s": "X25:Y30"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "A1:AA26"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -1707,75 +1455,15 @@
         },
         {
             "args": {
-                "s": "AA1:AB5"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'A'"
-        },
-        {
-            "args": {
                 "s": "G7:H9"
             },
             "expected": ["G7", "G8", "G9", "H7", "H8", "H9"]
         },
         {
             "args": {
-                "s": "M5:N10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "U1:V10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "M5:R10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "A1:AB1"
-            },
-            "expected": ["A1", "B1"]
-        },
-        {
-            "args": {
-                "s": "A1:B10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "AA1:BB5"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'A'"
-        },
-        {
-            "args": {
-                "s": "T1:T26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "W10:X20"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "Y1:Z3"
             },
             "expected": ["Y1", "Y2", "Y3", "Z1", "Z2", "Z3"]
-        },
-        {
-            "args": {
-                "s": "H1:H26"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -1822,42 +1510,6 @@
                 "s": "B4:E8"
             },
             "expected": ["B4", "B5", "B6", "B7", "B8", "C4", "C5", "C6", "C7", "C8", "D4", "D5", "D6", "D7", "D8", "E4", "E5", "E6", "E7", "E8"]
-        },
-        {
-            "args": {
-                "s": "F6:F20"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "L1:L26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "Y20:AB25"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "Q20:R22"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "J10:K15"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "AA10:AB10"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -1910,27 +1562,9 @@
         },
         {
             "args": {
-                "s": "P10:Q20"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "M10:N15"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "J1:K5"
             },
             "expected": ["J1", "J2", "J3", "J4", "J5", "K1", "K2", "K3", "K4", "K5"]
-        },
-        {
-            "args": {
-                "s": "M1:N12"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -1979,12 +1613,6 @@
         },
         {
             "args": {
-                "s": "G1:G26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "J2:L5"
             },
             "expected": ["J2", "J3", "J4", "J5", "K2", "K3", "K4", "K5", "L2", "L3", "L4", "L5"]
@@ -1997,63 +1625,15 @@
         },
         {
             "args": {
-                "s": "U1:U26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "B1:B10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "O1:P10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "A3:C6"
             },
             "expected": ["A3", "A4", "A5", "A6", "B3", "B4", "B5", "B6", "C3", "C4", "C5", "C6"]
         },
         {
             "args": {
-                "s": "M1:M26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "Q1:R9"
             },
             "expected": ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"]
-        },
-        {
-            "args": {
-                "s": "D4:P12"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "Y10:Y20"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "Z1:Z10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "AA1:AB10"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -2069,21 +1649,9 @@
         },
         {
             "args": {
-                "s": "P1:P26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "A1:A9"
             },
             "expected": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9"]
-        },
-        {
-            "args": {
-                "s": "B10:B19"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -2096,18 +1664,6 @@
                 "s": "M5:O8"
             },
             "expected": ["M5", "M6", "M7", "M8", "N5", "N6", "N7", "N8", "O5", "O6", "O7", "O8"]
-        },
-        {
-            "args": {
-                "s": "N1:N26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "Y1:AA2"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -2154,57 +1710,15 @@
         },
         {
             "args": {
-                "s": "B9:D12"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "C1:D10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "A1:B1"
             },
             "expected": ["A1", "B1"]
         },
         {
             "args": {
-                "s": "M1:N10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "D1:D26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "X1:X26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
-                "s": "K1:L10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "G5:H8"
             },
             "expected": ["G5", "G6", "G7", "G8", "H5", "H6", "H7", "H8"]
-        },
-        {
-            "args": {
-                "s": "AA1:AB3"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'A'"
         },
         {
             "args": {
@@ -2263,12 +1777,6 @@
         },
         {
             "args": {
-                "s": "I1:J10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "C1:C5"
             },
             "expected": ["C1", "C2", "C3", "C4", "C5"]
@@ -2305,12 +1813,6 @@
         },
         {
             "args": {
-                "s": "A5:C10"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "C4:D8"
             },
             "expected": ["C4", "C5", "C6", "C7", "C8", "D4", "D5", "D6", "D7", "D8"]
@@ -2320,12 +1822,6 @@
                 "s": "F1:H4"
             },
             "expected": ["F1", "F2", "F3", "F4", "G1", "G2", "G3", "G4", "H1", "H2", "H3", "H4"]
-        },
-        {
-            "args": {
-                "s": "DE2:DF5"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'E'"
         },
         {
             "args": {
@@ -2341,27 +1837,9 @@
         },
         {
             "args": {
-                "s": "BC2:BD5"
-            },
-            "expected": "Error: invalid literal for int() with base 10: 'C'"
-        },
-        {
-            "args": {
-                "s": "J9:K12"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "N3:Q6"
             },
             "expected": ["N3", "N4", "N5", "N6", "O3", "O4", "O5", "O6", "P3", "P4", "P5", "P6", "Q3", "Q4", "Q5", "Q6"]
-        },
-        {
-            "args": {
-                "s": "A10:C12"
-            },
-            "expected": []
         },
         {
             "args": {
@@ -2389,33 +1867,15 @@
         },
         {
             "args": {
-                "s": "B3:D15"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "W1:X3"
             },
             "expected": ["W1", "W2", "W3", "X1", "X2", "X3"]
         },
         {
             "args": {
-                "s": "Q1:Q26"
-            },
-            "expected": []
-        },
-        {
-            "args": {
                 "s": "P1:Q1"
             },
             "expected": ["P1", "Q1"]
-        },
-        {
-            "args": {
-                "s": "S1:S26"
-            },
-            "expected": []
         }
     ],
     "invoke": {

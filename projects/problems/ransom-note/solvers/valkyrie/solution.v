@@ -2,7 +2,7 @@ namespace leetcode.ransom_note;
 
 # 杂志字符计数，逐字扣减，O(n)
 [export(case: "camelCase")]
-micro can_construct(ransom_note: utf8, magazine: utf8) -> bool {
+micro can_construct(ransomNote: utf8, magazine: utf8) -> bool {
     let mut counts: HashMap<i64, i64> = HashMap::new(0)
     let mut i: usize = 0
     while i < magazine.length() {
@@ -15,8 +15,8 @@ micro can_construct(ransom_note: utf8, magazine: utf8) -> bool {
         i = i + 1
     }
     let mut k: usize = 0
-    while k < ransom_note.length() {
-        let key: i64 = ransom_note⁅k⁆ as u32 as i64
+    while k < ransomNote.length() {
+        let key: i64 = ransomNote⁅k⁆ as u32 as i64
         let mut left: i64 = 0
         if counts.contains_key(key) {
             left = counts.get(key).unwrap()

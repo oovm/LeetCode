@@ -192,12 +192,6 @@
         },
         {
             "args": {
-                "word": "abcdefghijkmnopqrstuvwxyzabc"
-            },
-            "expected": 64
-        },
-        {
-            "args": {
                 "word": "rstvwxy"
             },
             "expected": 7
@@ -420,12 +414,6 @@
         },
         {
             "args": {
-                "word": "bcdefghijklmnopqrstuvwxyzafe"
-            },
-            "expected": 64
-        },
-        {
-            "args": {
                 "word": "abcdefghijklmnopqrstuvwx"
             },
             "expected": 48
@@ -486,33 +474,15 @@
         },
         {
             "args": {
-                "word": "uvwxyzabcdefghijklmnopqrstuvwxy"
-            },
-            "expected": 76
-        },
-        {
-            "args": {
                 "word": "lmnopqrstuvwxyzabcdefghijk"
             },
             "expected": 56
         },
         {
             "args": {
-                "word": "zxcvbnmlkjhgfedcba"
-            },
-            "expected": 30
-        },
-        {
-            "args": {
                 "word": "xyzabcdefghijklmnop"
             },
             "expected": 33
-        },
-        {
-            "args": {
-                "word": "qrstuvwxyzzzzz"
-            },
-            "expected": 20
         },
         {
             "args": {
@@ -537,18 +507,6 @@
                 "word": "zxcvbnmlkjhgfdsapoiuytrewq"
             },
             "expected": 56
-        },
-        {
-            "args": {
-                "word": "nopqrstuvwxyzabcdefghijklmno"
-            },
-            "expected": 64
-        },
-        {
-            "args": {
-                "word": "opqrstuvwxyzabcdefghijklmnop"
-            },
-            "expected": 64
         },
         {
             "args": {
@@ -630,18 +588,6 @@
         },
         {
             "args": {
-                "word": "aeiouaeiou"
-            },
-            "expected": 12
-        },
-        {
-            "args": {
-                "word": "xyzabcdefghijklmnopqrstuvwx"
-            },
-            "expected": 60
-        },
-        {
-            "args": {
                 "word": "abcdefgxyz"
             },
             "expected": 12
@@ -720,12 +666,6 @@
         },
         {
             "args": {
-                "word": "yzabcdefghijklmnopqrstuvwxy"
-            },
-            "expected": 60
-        },
-        {
-            "args": {
                 "word": "zabcdefghijklmnopq"
             },
             "expected": 30
@@ -744,21 +684,9 @@
         },
         {
             "args": {
-                "word": "mnopqrstuvwxyzabcdefghijxyz"
-            },
-            "expected": 60
-        },
-        {
-            "args": {
                 "word": "mnopqrstuvwxyzaefghijkl"
             },
             "expected": 45
-        },
-        {
-            "args": {
-                "word": "wxyzabcdefghijklmnopqrstuvwxy"
-            },
-            "expected": 68
         },
         {
             "args": {
@@ -807,12 +735,6 @@
                 "word": "qrstuvwxyz"
             },
             "expected": 12
-        },
-        {
-            "args": {
-                "word": "uvwxyzaeiou"
-            },
-            "expected": 14
         },
         {
             "args": {
@@ -936,21 +858,9 @@
         },
         {
             "args": {
-                "word": "abcdefg hijklmnop qrstuv wxyz"
-            },
-            "expected": 68
-        },
-        {
-            "args": {
                 "word": "lmnopqrstuvwxyz"
             },
             "expected": 22
-        },
-        {
-            "args": {
-                "word": "rstuvxyzabcdefghijklmnopqrst"
-            },
-            "expected": 64
         },
         {
             "args": {
@@ -984,12 +894,6 @@
         },
         {
             "args": {
-                "word": "abcdefghijklmnopqrstuvmnop"
-            },
-            "expected": 56
-        },
-        {
-            "args": {
                 "word": "zxcvbnm"
             },
             "expected": 7
@@ -1014,12 +918,6 @@
         },
         {
             "args": {
-                "word": "abcdefghilmnopqrstuvwxyzz"
-            },
-            "expected": 52
-        },
-        {
-            "args": {
                 "word": "defghijklmnopqrstu"
             },
             "expected": 30
@@ -1029,12 +927,6 @@
                 "word": "vwxyzabcdefghijklmno"
             },
             "expected": 36
-        },
-        {
-            "args": {
-                "word": "vwxyzabcdefghijklmnopqrstuvwx"
-            },
-            "expected": 68
         },
         {
             "args": {
@@ -1051,12 +943,6 @@
         {
             "args": {
                 "word": "zabcdefghijklmnopqrstuvwxy"
-            },
-            "expected": 56
-        },
-        {
-            "args": {
-                "word": "defghijklmnopqrstuabcdefgh"
             },
             "expected": 56
         },
@@ -1083,12 +969,6 @@
                 "word": "yzabcdefghijklmnop"
             },
             "expected": 30
-        },
-        {
-            "args": {
-                "word": "qrstuvwxyzabcdefghijklmnoprstuvw"
-            },
-            "expected": 80
         },
         {
             "args": {

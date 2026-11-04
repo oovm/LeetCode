@@ -4,7 +4,7 @@ namespace leetcode.maximum_number_that_makes_result_of_bitwise_and_zero;
 [export(case: "camelCase")]
 micro max_number(n: i64) -> i64 {
     let mut p: i64 = 1
-    while p * 2 <= n {
+    while p <= n / 2 {
         p = p * 2
     }
     return p - 1

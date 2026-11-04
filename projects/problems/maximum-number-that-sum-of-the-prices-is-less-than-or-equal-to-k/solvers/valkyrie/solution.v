@@ -25,7 +25,7 @@ micro count_bit(n: i64, p: i64) -> i64 {
 micro price_sum(n: i64, x: i64) -> i64 {
     let mut total: i64 = 0
     let mut p: i64 = x
-    while p <= 63 {
+    while p <= 62 {
         total = total + count_bit(n, p)
         p = p + x
     }

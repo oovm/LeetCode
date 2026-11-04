@@ -24,12 +24,6 @@
         },
         {
             "args": {
-                "numPeople": 1000
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "numPeople": 12
             },
             "expected": 132
@@ -105,12 +99,6 @@
                 "numPeople": 64
             },
             "expected": 488309750
-        },
-        {
-            "args": {
-                "numPeople": 998
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {

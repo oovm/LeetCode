@@ -303,15 +303,6 @@
         },
         {
             "args": {
-                "startAt": 1,
-                "moveCost": 5,
-                "pushCost": 1,
-                "targetSeconds": 9999
-            },
-            "expected": "inf"
-        },
-        {
-            "args": {
                 "startAt": 8,
                 "moveCost": 3,
                 "pushCost": 7,
@@ -1020,15 +1011,6 @@
                 "targetSeconds": 1500
             },
             "expected": 24
-        },
-        {
-            "args": {
-                "startAt": 6,
-                "moveCost": 2,
-                "pushCost": 9,
-                "targetSeconds": 9999
-            },
-            "expected": "inf"
         },
         {
             "args": {

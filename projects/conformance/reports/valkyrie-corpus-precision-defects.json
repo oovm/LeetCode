@@ -1,14 +1,14 @@
 {
   "schema": "valkyrie-corpus-precision-defects",
   "generatedAt": "2026-11-04",
-  "quarantineForm": "sidecar manifest, metadata files and expected values untouched",
+  "quarantineForm": "sidecar manifest, scan baseline unchanged, metadata files repaired in place for the corpus cleanup batch and coordinates reindexed to the repaired files",
   "rule": {
     "threshold": "absolute integer value above 2^53-1 (9007199254740991)",
     "argsClassA": "numeric parameter whose stored literal is not exactly representable or is a canonical double rendering that lost the original digits",
     "expectedClassB": "expected stored as a canonical double rendering that is not exactly representable",
     "classC": "exactly representable numeric argument that cannot be passed through i64",
     "classD": "no precision loss detected: exact integer, text literal, binary literal, or untyped string",
-    "classS": "semantic corpus error: the stored value is a double-smoothed un-modded count, not a precision loss of a valid answer (paint-fence stores counts that should have been reduced mod 10^9+7)"
+    "classS": "semantic corpus error: the stored value is not a precision loss of a valid answer, the answer itself is wrong. paint-fence stores un-modded counts that should have been reduced mod 10^9+7, minimum-array-end stores the wrong end value, minimum-addition-to-make-integer-beautiful stores an off-by-one minimum addition"
   },
   "scan": {
     "problemsScanned": 2841,
@@ -32,8 +32,8 @@
       "slugs": 3
     },
     "S": {
-      "rows": 25,
-      "slugs": 1
+      "rows": 27,
+      "slugs": 3
     },
     "D": {
       "rows": 17365,
@@ -2784,6 +2784,38 @@
       "withinI64": true,
       "vParamType": "i64",
       "vReturnType": "bool"
+    },
+    {
+      "slug": "minimum-array-end",
+      "class": "S",
+      "field": "tests[28].expected",
+      "argsKey": null,
+      "stored": "107374182400000000",
+      "kind": "string",
+      "bits": 57,
+      "ulp": "16",
+      "trailingZeros": 8,
+      "exactlyRepresentable": true,
+      "withinI64": true,
+      "vParamType": null,
+      "vReturnType": "i64",
+      "recomputed": "107374182399999999"
+    },
+    {
+      "slug": "minimum-addition-to-make-integer-beautiful",
+      "class": "S",
+      "field": "tests[20].expected",
+      "argsKey": null,
+      "stored": "787",
+      "kind": "number",
+      "bits": 10,
+      "ulp": "1",
+      "trailingZeros": 0,
+      "exactlyRepresentable": true,
+      "withinI64": true,
+      "vParamType": null,
+      "vReturnType": "i64",
+      "recomputed": "788"
     }
   ],
   "quarantine": {
@@ -2794,9 +2826,9 @@
       "C",
       "S"
     ],
-    "rows": 180,
+    "rows": 182,
     "cases": 99,
-    "problems": 25,
+    "problems": 26,
     "coordinates": {
       "arithmetic-slices-ii-subsequence": [
         59
@@ -2832,15 +2864,13 @@
         20,
         21,
         43,
-        45,
-        58,
-        60,
-        71,
-        73,
-        75,
-        77,
-        78,
-        80
+        57,
+        59,
+        70,
+        72,
+        74,
+        76,
+        78
       ],
       "maximum-sized-array": [
         19,
@@ -2857,6 +2887,7 @@
         58
       ],
       "minimum-addition-to-make-integer-beautiful": [
+        20,
         25,
         30,
         32,
@@ -2875,6 +2906,9 @@
         76,
         92,
         101
+      ],
+      "minimum-array-end": [
+        28
       ],
       "minimum-cost-to-make-array-equalindromic": [
         66
@@ -2948,6 +2982,6 @@
         68
       ]
     },
-    "note": "manifest is read by projects/conformance/src/reporting/corpus-quarantine.ts. Removing the file disables the exclusion as a whole. metadata.json and expected values are untouched."
+    "note": "manifest is read by projects/conformance/src/reporting/corpus-quarantine.ts. Removing the file disables the exclusion as a whole. metadata.json and expected values were repaired in place where a case carries a `recomputed` value, and coordinates point at the repaired files."
   }
 }

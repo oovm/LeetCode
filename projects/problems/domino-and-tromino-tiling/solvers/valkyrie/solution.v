@@ -12,7 +12,7 @@ micro num_tilings(n: i64) -> i64 {
     let mut f3: i64 = 1
     let mut f2: i64 = 1
     let mut f1: i64 = 2
-    let mut i: i64 = 4
+    let mut i: i64 = 3
     while i <= n {
         let current: i64 = (2 * f1 % 1000000007 + f3) % 1000000007
         f3 = f2

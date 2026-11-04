@@ -335,13 +335,6 @@
         },
         {
             "args": {
-                "n": 16,
-                "k": 131071
-            },
-            "expected": "Error: negative shift count"
-        },
-        {
-            "args": {
                 "n": 19,
                 "k": 4096
             },
@@ -507,13 +500,6 @@
                 "k": 128
             },
             "expected": 1
-        },
-        {
-            "args": {
-                "n": 4,
-                "k": 24
-            },
-            "expected": "Error: negative shift count"
         },
         {
             "args": {

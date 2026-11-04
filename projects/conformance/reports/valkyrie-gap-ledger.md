@@ -167,6 +167,88 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 - 建议后续把上述 5 题补进 `valkyrie-corpus-precision-defects.json` / `valkyrie-quarantine.json`，
   本轮未改题库数据。
 
+### F7 跟进：题解线处置与语料清洗（2026-11-05，实测）
+
+判题线分桶的 15 条「题解算法错」逐题复判后分成两族：真实现错 10 题、语料非法 5 题。语料侧另按
+「用例数据清洗规则」清了三类。清洗宿主文本后又暴露 2 题残余问题（1 题实现错、1 题非法输入），
+一并处置。V lane 结果以 `run_v_solver.ts` 为准，当前 addon，未重建。
+
+A. 参数名对齐（`AbiSchemaError` 的真因是 schema `params[].name` 取自 V 形参名，harness 按名严格匹配）：
+
+| 题 | 形参改名 | 结果 |
+| --- | --- | --- |
+| `excel-sheet-column-number` | `s` → `columnTitle` | 201/201 |
+| `ransom-note` | `ransom_note` → `ransomNote` | 142/142 |
+| `maximize-number-of-nice-divisors` | `prime_factors` → `primeFactors`（另删 77 条宿主文本） | 3/3 |
+
+B. 真实现错 10 题（改 `solution.v`，无样例特判）：
+
+| 题 | 缺陷 | 结果 |
+| --- | --- | --- |
+| `best-time-to-buy-and-sell-stock` | `loop ... in` 零迭代，改显式索引 | 99/99 |
+| `domino-and-tromino-tiling` | 递推起点 `i=4`，n=3 错返 5 | 30/30 |
+| `majority-element` | `loop ... in` 零迭代 | 45/45 |
+| `single-number` | `loop ... in` 零迭代 | 108/108 |
+| `maximum-number-that-sum-of-the-prices-is-less-than-or-equal-to-k` | `pow2(63)` 溢出 i64，上限改 62 | 126/126 |
+| `minimum-factorization` | 位数拼接降序 + 漏 `>2^31-1` 保护 | 52/52 |
+| `non-negative-integers-without-consecutive-ones` | 斐波那契项偏移 1 | 26/26 |
+| `smallest-number-with-given-digit-product` | 无解应为 `-1`，并补 i64 溢出保护 | 41/41 |
+| `minimum-cost-to-set-cooking-time` | `m==0` 时秒位补零多算位数 | 116/116 |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | `p*2` 溢出成 0 死循环，改 `p <= n/2` | 86/86 |
+| `closest-fair-integer`（清洗后暴露） | 奇数位长区间内没有公平数，逐个数上探会穿越整个 9 位区间挂起；按位长跳到 `10^d` 再上探 | 67/67 |
+
+其余 5 题不是实现错，改判语料（见 C）：`find-minimum-in-rotated-sorted-array` 87/87、
+`kth-smallest-element-in-a-sorted-matrix` 86/86、`k-th-symbol-in-grammar` 50/50、
+`minimum-number-of-pushes-to-type-word-i` 182/182、`ugly-number-iii` 123/123。
+`find-the-minimum-possible-sum-of-a-beautiful-array` 两侧都有问题：30 条 expected 是 int32 溢出污染
+（BigInt 重算），实现另修 `m` 取值，91/91。
+
+C. 用例删除（旧/新 `tests` 数由 `git show HEAD:` 与工作区逐题比对得到）：
+
+| 判据 | 删除 | 题数 | 逐题（旧→新） |
+| --- | --- | --- | --- |
+| `expected` 是宿主异常文本（递归超限、超时、越界 / index、KeyError、`inf` 等），语义不可判定 | 392 | 15 | `count-the-number-of-arrays-with-k-matching-adjacent-elements` 158→1、`maximize-number-of-nice-divisors` 80→3、`number-of-ways-to-reach-a-position-after-exactly-k-steps` 91→39、`student-attendance-record-ii` 41→11、`decode-the-message` 230→204、`number-of-strings-which-can-be-rearranged-to-contain-substring` 31→21、`prime-palindrome` 62→52、`cells-in-a-range-on-an-excel-sheet` 183→175、`merge-sorted-array` 86→80、`sort-array-by-parity-ii` 85→74、`can-make-arithmetic-progression-from-sequence` 164→161、`closest-fair-integer` 70→67、`find-kth-bit-in-nth-binary-string` 87→85、`handshakes-that-dont-cross` 39→37、`minimum-cost-to-set-cooking-time` 118→116 |
+| `args` 违反题面约束（非旋转数组、非 n×n、`k > 2^(n-1)`、字母重复或长度越界、答案超 2e9 保证、`n` 超 i64、列/行非单字符） | 167 | 7 | `cells-in-a-range-on-an-excel-sheet` 82、`k-th-symbol-in-grammar` 36、`minimum-number-of-pushes-to-type-word-i` 20、`ugly-number-iii` 10、`find-minimum-in-rotated-sorted-array` 8、`kth-smallest-element-in-a-sorted-matrix` 2、`maximum-number-that-makes-result-of-bitwise-and-zero` 2 |
+| 偶奇数量不等 / 长度奇数，且同时是宿主文本（已计入第一行） | 4 | 1 | `sort-array-by-parity-ii` |
+
+合计删除 **559** 条（392 + 167，4 条同时命中两条判据，唯一用例数不重复计）。
+`cells-in-a-range-on-an-excel-sheet` 从 183 降到 93：先删 8 条宿主文本，再删 82 条
+「两字母列 / 两位行」的越界输入（官方格式是单字母列 + 单数字行，`expected` 多为 `[]`，无合法答案）。
+
+C 清洗后结果：
+
+| 题 | 处置 | 结果 |
+| --- | --- | --- |
+| `cells-in-a-range-on-an-excel-sheet` | 删 82 条越界输入后余量 | 93/93 |
+| `closest-fair-integer` | 奇数位长跳段（见 B） | 67/67 |
+
+`expected` 修复 62 条（未删用例）：
+
+| 题 | 改法 | 结果 |
+| --- | --- | --- |
+| `find-the-minimum-possible-sum-of-a-beautiful-array` | 30 条 int32 溢出值 → BigInt 真值 | 91/91 |
+| `maximum-number-that-makes-result-of-bitwise-and-zero` | 11 条 → `2^(bitlen-1)-1` | 86/86 |
+| `convert-a-number-to-hexadecimal` | 17 条数值 → 字符串 | 见下 |
+| `maximum-swap` | `...900` → `...100` | 119/119 |
+| `numbers-with-repeated-digits` | `...200` → `...110` | 59/59 |
+| `minimum-array-end` | `107374182400000000` → `107374182399999999` | 106/106 |
+| `minimum-addition-to-make-integer-beautiful` | `787` → `788` | 30/103，仍红 |
+
+追加两条语料的处置：
+
+- `convert-a-number-to-hexadecimal`：17 条 `expected` 由 number 改回字符串，语料错消失；判题错误形态从
+  `tests[7] expected: 0` 变为 `TypeError: Cannot convert object to primitive value` —— ABI schema 仍把
+  `utf8` 返回标成 `I32`，属 26 题 `Utf8` 返回值修复，**待重建 addon 后复验**，不是 V 算法错。
+- `sort-array-by-parity-ii`：删 11 条偶奇数量不等 / 长度奇数的非法用例（含 4 条
+  `Error: list index out of range`）。余下用例存在多解而 harness 精确比较落序，按规则改解法为
+  Python 同款原地双指针，74/74，`RuntimeError: unreachable` 不再出现。
+
+`minimum-addition-to-make-integer-beautiful` 仍红，定级精度缺陷：`tests[30]` 的 `n` 已超 i64，
+另有 13 条 expected 对应「舍入前原 n」而 args 已双精度舍入，真值不可恢复；两处已并入精度清单。
+
+`decode-the-message` 同为 `utf8` 返回值 marshal 的 `TypeError`，属 26 题 `Utf8` 修复面，
+与 `convert-a-number-to-hexadecimal` 一起**待重建 addon 后复验**。
+
 ## 用例数据清洗规则（通用）
 
 违反题面约束的用例，先看 `expected` 本身是不是**合法答案**，再决定删还是改：
@@ -2466,7 +2548,21 @@ Easy 133 题实测 30 题有缺陷、Medium 37 题实测 8 题有缺陷，该「
 | S | 语义性语料错误（不是精度问题） | 25 | 1 |
 | D | 无精度损失（精确整数 / 文本 / 二进制串 / 无类型串） | 17365 | 171 |
 
-- 逐条坐标与证据在 `valkyrie-corpus-precision-defects.json`（本目录），**metadata 与 expected 数值一行未改**。
+- 逐条坐标与证据在 `valkyrie-corpus-precision-defects.json`（本目录），本表是 2026-11-04 扫描基线；
+  R29 清洗后的增量见下（S 类 25/1 → 27/3，quarantine 180/99/25 → 182/99/26）。
+
+| 类 | 基线行 | 基线题 | R29 后行 | R29 后题 |
+| --- | --- | --- | --- | --- |
+| A | 127 | 21 | 127 | 21 |
+| B | 24 | 8 | 24 | 8 |
+| C | 4 | 3 | 4 | 3 |
+| S | 25 | 1 | 27 | 3 |
+| D | 17365 | 171 | 17365 | 171 |
+
+- R29 增量：`minimum-array-end`（`tests[28].expected`，精确但语义错）与
+  `minimum-addition-to-make-integer-beautiful`（`tests[20].expected`，`787` 应为 `788`）两条 class S 行。
+- `maximum-number-that-makes-result-of-bitwise-and-zero` 删除 `tests[45]`/`[78]`（`n` 超 i64）后，
+  quarantine 坐标已按新下标重排为 `20,21,43,57,59,70,72,74,76,78`；被删两条的 `cases[]` 行保留为删除证据。
 
 #### quarantine 落地与覆盖率剔除（2026-11-04 落定）
 
@@ -2474,6 +2570,8 @@ Easy 133 题实测 30 题有缺陷、Medium 37 题实测 8 题有缺陷，该「
   `tests[85].expected`、`tests[51].args.changed[60]`）。缺陷类 A/B/C/S 全部参与隔离，D 不参与。
 - 执行单位：`metadata.tests` 下标（整条用例）。180 条缺陷行收敛为 **99 条用例 / 25 题**
   （同一用例内多个元素命中只隔离一次；单个 args 元素无法单独执行，不能按元素隔离）。
+  R29 清洗后为 182 行 / 99 条用例 / 26 题：新增两条 S，bitwise 删掉的两条坐标退出。
+  注意清单坐标是**当前** `metadata.tests` 下标，清洗造成的偏移必须同步重排。
 - 解析与扣减：`projects/conformance/src/reporting/corpus-quarantine.ts`；
   矩阵报告 `valkyrie-lane-matrix.ts` 新增 `quarantine` 选项；CLI `src/cli/valkyrie-matrix.ts`
   读取清单。扣减同时作用于行级分母 `testCaseTotal` 与 `executed_pass / executed_fail / blocked / not_run`。

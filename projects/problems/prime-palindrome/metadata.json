@@ -138,18 +138,6 @@
         },
         {
             "args": {
-                "n": 999999999
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "n": 80779853381
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "n": 100000001
             },
             "expected": 100030001
@@ -198,18 +186,6 @@
         },
         {
             "args": {
-                "n": 999980001
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "n": 200000000
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "n": 50000000
             },
             "expected": 100030001
@@ -225,12 +201,6 @@
                 "n": 98765432
             },
             "expected": 100030001
-        },
-        {
-            "args": {
-                "n": 100003300001
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -276,12 +246,6 @@
         },
         {
             "args": {
-                "n": 765432123456789
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "n": 998899
             },
             "expected": 1003001
@@ -294,12 +258,6 @@
         },
         {
             "args": {
-                "n": 500000000
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "n": 11111111
             },
             "expected": 100030001
@@ -309,12 +267,6 @@
                 "n": 1000000
             },
             "expected": 1003001
-        },
-        {
-            "args": {
-                "n": 999888999
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -357,18 +309,6 @@
                 "n": 100001
             },
             "expected": 1003001
-        },
-        {
-            "args": {
-                "n": 807798533
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "n": 999999989
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {

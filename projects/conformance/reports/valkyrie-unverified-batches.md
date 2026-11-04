@@ -165,6 +165,39 @@
 - 新编号：**1 条**（G28 `BinaryHeap` 的 `Comparable` 义务传播）；
   另新增 F1 / F2 两条夹具与导出 ABI 缺口（见账本）。
 
+## 批次 R29-2026-11-05（判题侧移交：参数名 / 数值答案 / 语料清洗，27 题，实测）
+
+- 范围：判题线移交的 A/B/C 三批，27 题 `metadata.json` + 16 题 `solution.v`（不含设计类 6 题）。
+- 口径：`run_v_solver.ts` 实测，当前 addon，未重建。真通过 = `ok=true`；删除/修复的逐题旧→新
+  用例数与判据见账本 `F7 跟进` 小节。
+- A 参数名（3 题全绿）：`excel-sheet-column-number` 201/201、`ransom-note` 142/142、
+  `maximize-number-of-nice-divisors` 3/3。
+- B 真实现错（11 题全绿）：`best-time-to-buy-and-sell-stock` 99/99、
+  `domino-and-tromino-tiling` 30/30、`majority-element` 45/45、`single-number` 108/108、
+  `maximum-number-that-sum-of-the-prices-is-less-than-or-equal-to-k` 126/126、
+  `minimum-factorization` 52/52、`non-negative-integers-without-consecutive-ones` 26/26、
+  `smallest-number-with-given-digit-product` 41/41、`minimum-cost-to-set-cooking-time` 116/116、
+  `maximum-number-that-makes-result-of-bitwise-and-zero` 86/86、`closest-fair-integer` 67/67。
+- B 改判语料（5 题全绿）：`find-minimum-in-rotated-sorted-array` 87/87、
+  `kth-smallest-element-in-a-sorted-matrix` 86/86、`k-th-symbol-in-grammar` 50/50、
+  `minimum-number-of-pushes-to-type-word-i` 182/182、`ugly-number-iii` 123/123。
+- C 删除 **559** 条：宿主异常文本 392（15 题）、越界输入 167（7 题，其中 4 条同时是宿主文本）。
+- C `expected` 修复 62 条：`find-the-minimum-possible-sum-of-a-beautiful-array` 30、
+  `maximum-number-that-makes-result-of-bitwise-and-zero` 11、
+  `convert-a-number-to-hexadecimal` 17、`maximum-swap` / `numbers-with-repeated-digits` /
+  `minimum-array-end` / `minimum-addition-to-make-integer-beautiful` 各 1。
+- C 追加两条：`sort-array-by-parity-ii` 74/74（删 11 条非法 + 改解），
+  `convert-a-number-to-hexadecimal` 0/60（`TypeError`，`utf8` 返回仍标 `I32`，待重建 addon）。
+- C 清洗后暴露：`cells-in-a-range-on-an-excel-sheet` 93/93（删 82 条越界输入）、
+  `closest-fair-integer` 67/67（奇数位长跳段）。
+- 仍红 3 题：`convert-a-number-to-hexadecimal`、`decode-the-message`（同属 26 题 `Utf8` 返回值
+  修复，待重建 addon 复验）、`minimum-addition-to-make-integer-beautiful` 30/103
+  （`tests[30]` 的 `n` 超 i64 + 13 条不可恢复 expected，已并入精度清单）。
+- 覆盖被削（需补生成语料）：`count-the-number-of-arrays-with-k-matching-adjacent-elements` 158→1、
+  `maximize-number-of-nice-divisors` 80→3、`student-attendance-record-ii` 41→11、
+  `number-of-ways-to-reach-a-position-after-exactly-k-steps` 91→39。
+- 新编号：**0 条**。
+
 ## 批次 R25-2026-11-04（Medium 图 / 并查集 / 拓扑排序 23 题，写完未构建）
 
 - 范围：Medium 的图 + 并查集 + 拓扑排序面，全部按**理想写法**落地：邻接表

@@ -1,9 +1,9 @@
 namespace leetcode.find_the_minimum_possible_sum_of_a_beautiful_array;
 
-# 贪心：先取 i < target - i 的小端，剩余从 target 起连续取。
+# 贪心：先取 i < target - i 的小端（偶数 target 可取 target/2），剩余从 target 起连续取。
 [export(case: "camelCase")]
 micro minimum_possible_sum(n: i64, target: i64) -> i64 {
-    let mut m: i64 = (target - 1) / 2
+    let mut m: i64 = target / 2
     if n < m {
         m = n
     }

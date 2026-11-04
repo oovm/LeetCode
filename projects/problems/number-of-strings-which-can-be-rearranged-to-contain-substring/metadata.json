@@ -6,12 +6,6 @@
     "tests": [
         {
             "args": {
-                "n": 100000
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 4
             },
             "expected": 12
@@ -36,12 +30,6 @@
         },
         {
             "args": {
-                "n": 99999
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 3
             },
             "expected": 0
@@ -54,33 +42,9 @@
         },
         {
             "args": {
-                "n": 7500
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
-                "n": 90000
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 100
             },
             "expected": 86731066
-        },
-        {
-            "args": {
-                "n": 50000
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
-                "n": 1000
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {
@@ -93,12 +57,6 @@
                 "n": 30
             },
             "expected": 52805056
-        },
-        {
-            "args": {
-                "n": 10000
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {
@@ -132,18 +90,6 @@
         },
         {
             "args": {
-                "n": 5000
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
-                "n": 75000
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 20
             },
             "expected": 291395991
@@ -165,12 +111,6 @@
                 "n": 6
             },
             "expected": 106620
-        },
-        {
-            "args": {
-                "n": 500
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {

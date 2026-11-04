@@ -16,17 +16,17 @@ micro mod_pow(base: i64, exp: i64) -> i64 {
 
 # 因子数最大化 = 拆 3：余 1 拆一个 4，余 2 挂一个 2。
 [export(case: "camelCase")]
-micro max_nice_divisors(prime_factors: i64) -> i64 {
-    if prime_factors <= 3 {
-        return prime_factors
+micro max_nice_divisors(primeFactors: i64) -> i64 {
+    if primeFactors <= 3 {
+        return primeFactors
     }
-    if prime_factors % 3 == 1 {
-        return 4 * mod_pow(3, (prime_factors - 4) / 3) % 1000000007
+    if primeFactors % 3 == 1 {
+        return 4 * mod_pow(3, (primeFactors - 4) / 3) % 1000000007
     }
-    if prime_factors % 3 == 2 {
-        return 2 * mod_pow(3, (prime_factors - 2) / 3) % 1000000007
+    if primeFactors % 3 == 2 {
+        return 2 * mod_pow(3, (primeFactors - 2) / 3) % 1000000007
     }
-    return mod_pow(3, prime_factors / 3)
+    return mod_pow(3, primeFactors / 3)
 }
 
 class Solution {

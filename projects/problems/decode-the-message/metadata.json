@@ -13,13 +13,6 @@
         },
         {
             "args": {
-                "key": "jump quickly on this yellow pig",
-                "message": "fxudyjzjw lqdj fxej nqeo fxlwlt"
-            },
-            "expected": "Error: 'f'"
-        },
-        {
-            "args": {
                 "key": "a quick movement of the enemy will jeopardize five gunboats",
                 "message": "yfcj myj pyjl ufcj myj pyjl ufcj myj pyjl"
             },
@@ -31,13 +24,6 @@
                 "message": "jhxuh lqdj efxgh lpuaz fxdyjzjw"
             },
             "expected": "rbisb yvpr cdikb yusnm dipzrmrl"
-        },
-        {
-            "args": {
-                "key": "move forward zippy vim",
-                "message": "qldu bxwrdlw ecfbv"
-            },
-            "expected": "Error: 'q'"
         },
         {
             "args": {
@@ -76,20 +62,6 @@
         },
         {
             "args": {
-                "key": "a quick movement of the enemy will jeopardize five gunboats",
-                "message": "ejp mysljylc kd kxveddknmc re jsicpdrysi"
-            },
-            "expected": "Error: 'x'"
-        },
-        {
-            "args": {
-                "key": "gymnymphs fly by my wyrm",
-                "message": "cqdutsh sth sh ct sqwu"
-            },
-            "expected": "Error: 'c'"
-        },
-        {
-            "args": {
                 "key": "zabcdefghijklmnopqrstuvwxy",
                 "message": "sl rfc zdf"
             },
@@ -122,13 +94,6 @@
                 "message": "gigv symykgl igxvxjxg"
             },
             "expected": "auah cbpbtaq uaghgwga"
-        },
-        {
-            "args": {
-                "key": "sixty zippers were quickly judged faulty",
-                "message": "lwhuv amvhfuhw dhu hulhuqj fxufqk mncuf"
-            },
-            "expected": "Error: 'h'"
         },
         {
             "args": {
@@ -188,13 +153,6 @@
         },
         {
             "args": {
-                "key": "vampires love unicorns flying by my wyrm",
-                "message": "di vccvmr wv czebwqha wv iv lvyrj"
-            },
-            "expected": "Error: 'd'"
-        },
-        {
-            "args": {
                 "key": "mwp dhxjzvcqrkbyanflstguoei",
                 "message": "di vccvmr wv czebwqha wv iv lvyrj"
             },
@@ -230,13 +188,6 @@
         },
         {
             "args": {
-                "key": "cipher keys are always fun to create",
-                "message": "xjuwao awos wlu awjwy aojxw ao qjwjqao"
-            },
-            "expected": "Error: 'x'"
-        },
-        {
-            "args": {
                 "key": "a quick movement of the enemy will jeopardize five gunboats",
                 "message": "zruog glhvg frp fvdw zl glcgv"
             },
@@ -262,13 +213,6 @@
                 "message": "flgxswdliefyirukyoaqmpjc"
             },
             "expected": "fiphaboiszfdsgmwdlkrnxvy"
-        },
-        {
-            "args": {
-                "key": "all animals are equal but some animals are more equal than others",
-                "message": "zik xkkvmsw zmj xrsui zqtk ziv zsu xkkvmsw zmj iwti xrsui zqtk ziv zik"
-            },
-            "expected": "Error: 'z'"
         },
         {
             "args": {
@@ -384,13 +328,6 @@
         },
         {
             "args": {
-                "key": "if the army of pharaoh had followed them closely the lord would have swept them away",
-                "message": "tk svj fkhxjg zq xjfkfvmj xfvmtk svj gsvtqy svj ef kfvbvmb xjfv tk"
-            },
-            "expected": "Error: 'k'"
-        },
-        {
-            "args": {
                 "key": "zabcdefghijklmnopqrstuvwxy",
                 "message": "qxy xyx yxq"
             },
@@ -451,13 +388,6 @@
                 "message": "hfu q jhu"
             },
             "expected": "kmt z jkt"
-        },
-        {
-            "args": {
-                "key": "abcdefgijklmnopqrstuvwxyz",
-                "message": "hqv v yqv"
-            },
-            "expected": "Error: 'h'"
         },
         {
             "args": {
@@ -559,13 +489,6 @@
         },
         {
             "args": {
-                "key": "lazy dogs jump quickly on the brown fox and",
-                "message": "vqzj spwq yjiwxtw ovbxc yoj qjxv yoz"
-            },
-            "expected": "Error: 'v'"
-        },
-        {
-            "args": {
                 "key": "the quick brown fox jumps over the lazy dog",
                 "message": "wqiv xi sqin sqin"
             },
@@ -619,13 +542,6 @@
                 "message": "ajc eajc eajc"
             },
             "expected": "vmt rvmt rvmt"
-        },
-        {
-            "args": {
-                "key": "rhythms can be very exciting and mysterious",
-                "message": "kvgzo ozx yz ovbxc yvoqzgkxq ovgx yz xebc"
-            },
-            "expected": "Error: 'k'"
         },
         {
             "args": {
@@ -727,13 +643,6 @@
         },
         {
             "args": {
-                "key": "phinxajrhqdogesbcukmfltwyz",
-                "message": "zvmh ecv wvmazk wv hwvm jge wh yvmazk eg"
-            },
-            "expected": "Error: 'v'"
-        },
-        {
-            "args": {
                 "key": "nopqrstuvwxyzabcdefghijklm",
                 "message": "izk zkh bva jnfrdq"
             },
@@ -818,13 +727,6 @@
         },
         {
             "args": {
-                "key": "this is a very long key that contains all letters of the alphabet",
-                "message": "jktt tj x xqtj ofugj cftjkgm oayzj kgxqj kfxgy jgj"
-            },
-            "expected": "Error: 'j'"
-        },
-        {
-            "args": {
                 "key": "zyxwvutsrqponmlkjihgfedcba",
                 "message": "evh vhe yhe"
             },
@@ -850,13 +752,6 @@
                 "message": "jxqy xtgy efn nhr"
             },
             "expected": "gszr swjr lkc ciy"
-        },
-        {
-            "args": {
-                "key": "the fifth of july nineteen sixty four",
-                "message": "wlc vihwx zq mhqy xjwvexqv ksvj yhqw"
-            },
-            "expected": "Error: 'w'"
         },
         {
             "args": {
@@ -1049,13 +944,6 @@
         },
         {
             "args": {
-                "key": "this is a test key for decoding messages",
-                "message": "k xkxv v tvk dkk"
-            },
-            "expected": "Error: 'x'"
-        },
-        {
-            "args": {
                 "key": "abcdefghijklmnopqrstuvwxyz",
                 "message": "qzcf bfgs jgcd yqcf"
             },
@@ -1098,24 +986,10 @@
         },
         {
             "args": {
-                "key": "to be or not to be that is the question",
-                "message": "uj cf qz uqv uj cf uhvi zu ctzv"
-            },
-            "expected": "Error: 'j'"
-        },
-        {
-            "args": {
                 "key": "zebra quick brown fox jumps over the lazy dog",
                 "message": "gqjty efn nhr htyq"
             },
             "expected": "zfpux bnm mvd vuxf"
-        },
-        {
-            "args": {
-                "key": "gymnymphs fly by my wyrm",
-                "message": "hzoitpizh gza zj nz hztpi"
-            },
-            "expected": "Error: 'z'"
         },
         {
             "args": {
@@ -1245,20 +1119,6 @@
         },
         {
             "args": {
-                "key": "this is a very long key that contains all the letters of the alphabet",
-                "message": "slqv lv j uphb xqvo jxu qvojwv njo lvjwvq"
-            },
-            "expected": "Error: 'q'"
-        },
-        {
-            "args": {
-                "key": "jump quickly on this lazy dog and the brown fox",
-                "message": "yjiwxtw on qjxv yoj qzyc yvzctv yxqjvzq ovgx yz"
-            },
-            "expected": "Error: 'v'"
-        },
-        {
-            "args": {
                 "key": "jumped over the lazy brown fox quick",
                 "message": "ujxqyc efn nhr htyq"
             },
@@ -1322,13 +1182,6 @@
         },
         {
             "args": {
-                "key": "junta de los trabalhadores brasileiros",
-                "message": "hsvyz ys bse ksbvsvkzr yzctyvbs"
-            },
-            "expected": "Error: 'v'"
-        },
-        {
-            "args": {
                 "key": "onmlkjihgfedcbazyxwvutsrqp",
                 "message": "ixkz znxoz kx yq"
             },
@@ -1340,13 +1193,6 @@
                 "message": "ixw ikg ikg ikg"
             },
             "expected": "epy erd erd erd"
-        },
-        {
-            "args": {
-                "key": "the world is a stage and all the men and women merely players",
-                "message": "qef egvms gq xq e cqwmg ndeqq eeq egvms xq egvms bqqrfqv"
-            },
-            "expected": "Error: 'q'"
         },
         {
             "args": {
@@ -1389,13 +1235,6 @@
                 "message": "qnb wql fhw fql"
             },
             "expected": "zbc yzh mky mzh"
-        },
-        {
-            "args": {
-                "key": "abcdefgilmhjnopkrstuvwxyz",
-                "message": "qcp zc y"
-            },
-            "expected": "Error: 'q'"
         },
         {
             "args": {
@@ -1525,20 +1364,6 @@
         },
         {
             "args": {
-                "key": "g fmbycy fea rzvs vujx wptfk",
-                "message": "ceq gcf zvzfc kcz"
-            },
-            "expected": "Error: 'q'"
-        },
-        {
-            "args": {
-                "key": "edcba ponmlkj ihgfedcba ponmlkj",
-                "message": "xgv jgv xgv jgv"
-            },
-            "expected": "Error: 'x'"
-        },
-        {
-            "args": {
                 "key": "zyxwvutsrqponmlkjihgfedcba",
                 "message": "ixq kivk eiqb"
             },
@@ -1592,13 +1417,6 @@
                 "message": "zcf bvg jnfrdq"
             },
             "expected": "zcf bvg jnfrdq"
-        },
-        {
-            "args": {
-                "key": "four score and seven years ago our fathers brought forth on this continent a new nation",
-                "message": "svza iadzq cmz azggk ujifq zqv zmj qjgrjcz jsvvz zr svza sgvcczvqf azj xyv"
-            },
-            "expected": "Error: 'z'"
         },
         {
             "args": {

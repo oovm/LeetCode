@@ -24,7 +24,7 @@ micro digit_at(x: i64, p: i64) -> i64 {
     return (x / pow10(p)) % 10
 }
 
-# 显示为 m 的十进制（无前导零）后接 s 的两位零填充，逐位计价。
+# 显示为 m 的十进制（m>0 时后接两位零填充秒；m=0 时只按秒的实际位数），逐位计价。
 micro cost_of(m: i64, s: i64, start_at: i64, move_cost: i64, push_cost: i64) -> i64 {
     let mut cost: i64 = 0
     let mut prev: i64 = start_at
@@ -40,6 +40,9 @@ micro cost_of(m: i64, s: i64, start_at: i64, move_cost: i64, push_cost: i64) -> 
         p = p - 1
     }
     let mut q: i64 = 1
+    if m == 0 {
+        q = digit_count(s) - 1
+    }
     while q >= 0 {
         let d: i64 = digit_at(s, q)
         if d != prev {
