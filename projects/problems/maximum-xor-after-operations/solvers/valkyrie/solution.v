@@ -1,5 +1,6 @@
 namespace leetcode.maximum_xor_after_operations;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 每次把某个数与 2^b-1 相与只会清位，所有元素能贡献的位并集即按位或。
 [export(name: "maximumXOR")]
 micro maximum_x_o_r(nums: ArrayList<i64>) -> i64 {

@@ -2,6 +2,7 @@ namespace leetcode.count_nice_pairs_in_an_array;
 
 using std.collection;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 等价式：`nums[i] + rev(nums[j]) == nums[j] + rev(nums[i])` 当且仅当
 # `nums[i] - rev(nums[i]) == nums[j] - rev(nums[j])`；按该键计数并累加已有同类个数。
 micro reverse_number(value: i64) -> i64 {

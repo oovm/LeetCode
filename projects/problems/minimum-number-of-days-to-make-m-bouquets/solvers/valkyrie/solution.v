@@ -2,6 +2,7 @@ namespace leetcode.minimum_number_of_days_to_make_m_bouquets;
 
 using std.collection;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 二分答案：天数单调可行。检查窗口内连续开花长度，每凑够 k 朵收一束。
 micro bouquets(bloom_day: ArrayList<i64>, day: i64, k: i64) -> i64 {
     let mut total: i64 = 0

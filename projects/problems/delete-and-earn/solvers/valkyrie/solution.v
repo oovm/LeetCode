@@ -1,5 +1,6 @@
 namespace leetcode.delete_and_earn;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 按数值聚合成 points，再做打家劫舍式递推。
 [export(case: "camelCase")]
 micro delete_and_earn(nums: ArrayList<i64>) -> i64 {

@@ -2,6 +2,7 @@ namespace leetcode.count_number_of_nice_subarrays;
 
 using std.collection;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 前缀奇数计数 + 频次表：当前前缀有 `odd` 个奇数时，
 # 之前出现过 `odd - k` 个奇数的前缀都能构成恰好 `k` 个奇数的子数组。
 [export(case: "camelCase")]

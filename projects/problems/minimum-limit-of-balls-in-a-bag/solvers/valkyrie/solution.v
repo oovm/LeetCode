@@ -2,6 +2,7 @@ namespace leetcode.minimum_limit_of_balls_in_a_bag;
 
 using std.collection;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 二分答案：袋子上限越小，操作数越多；操作数关于上限单调递减。
 # 一个袋子拆到每袋不超过 `size` 需要 `(count - 1) / size` 次操作。
 micro operations(nums: ArrayList<i64>, size: i64) -> i64 {

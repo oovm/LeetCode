@@ -2,6 +2,7 @@ namespace leetcode.minimum_average_difference;
 
 using std.collection;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 前缀和：逐位置计算左侧平均值与右侧平均值，取绝对差最小者。
 # 右端为空时右侧平均值定义为 0。
 [export(case: "camelCase")]

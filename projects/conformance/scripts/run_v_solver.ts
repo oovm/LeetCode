@@ -29,7 +29,7 @@ import {
     wasmInvokeBlockedReason,
 } from '../src/adapters/valkyrie-node/ref.ts';
 import { valkyrieProjectDir } from '../src/catalog/index.ts';
-import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
+import { assertRejectsTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
 import { normalizeResultByAbiType, preserveI64Precision } from '../src/isolated/v-shared.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
 
@@ -168,9 +168,9 @@ async function main(): Promise<number> {
     for (const [index, case_] of tests.entries()) {
         try {
             if (typeof case_.expected === 'string' && case_.expected.startsWith('Error:')) {
-                assertTestCase(index, case_.expected, () => {
-                    void runCandidate(host, entry, case_.args, needsAbi ? abi : null);
-                });
+                await assertRejectsTestCase(index, case_.expected, () =>
+                    runCandidate(host, entry, case_.args, needsAbi ? abi : null),
+                );
             } else {
                 const actualRaw = normalizeTsTestResult(await runCandidate(host, entry, case_.args, needsAbi ? abi : null));
                 const expectedRaw = normalizeTsTestResult(case_.expected);

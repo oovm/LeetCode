@@ -2,6 +2,7 @@ namespace leetcode.maximum_candies_allocated_to_k_children;
 
 using std.collection;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 二分答案：每个孩子分到的糖数单调可行。
 # 给定份数 `size` 时，每堆能分出 `candies / size` 份。
 micro portions(candies: ArrayList<i64>, size: i64) -> i64 {

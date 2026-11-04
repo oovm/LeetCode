@@ -1,5 +1,6 @@
 namespace leetcode.single_number_iii;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 先取全部异或得到两个目标数的差异位，再按该位分组异或。
 [export(case: "camelCase")]
 micro single_number(nums: ArrayList<i64>) -> ArrayList<i64> {

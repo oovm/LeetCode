@@ -1,5 +1,6 @@
 namespace leetcode.single_number_ii;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 逐位统计 1 的个数，模 3 余 1 的位属于只出现一次的数。
 [export(case: "camelCase")]
 micro single_number(nums: ArrayList<i64>) -> i64 {

@@ -1,5 +1,6 @@
 namespace leetcode.maximum_xor_for_each_query;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 逐步移除末尾元素，累计异或与 (1 << maximumBit) - 1 配对即为该次最大值。
 [export(case: "camelCase")]
 micro get_maximum_xor(nums: ArrayList<i64>, maximumBit: i64) -> ArrayList<i64> {

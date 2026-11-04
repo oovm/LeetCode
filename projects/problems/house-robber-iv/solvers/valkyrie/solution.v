@@ -2,6 +2,7 @@ namespace leetcode.house_robber_iv;
 
 using std.collection;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 二分答案：最小可接受金额 `cap` 单调可行。
 # 贪心扫描：金额不超过 `cap` 就取，并跳过相邻下一间。
 micro enough(nums: ArrayList<i64>, cap: i64, k: i64) -> bool {

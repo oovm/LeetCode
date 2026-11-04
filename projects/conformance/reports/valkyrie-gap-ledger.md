@@ -484,14 +484,63 @@ $n
   `peek_front` / `peek_back` / `pop_front` / `is_empty`、`char as u32` / `as i64` / `as usize`。
   这些面**未经编译验证**（全局停点在前），不算缺口。
 
+### 待还原组：`loop in ArrayList` 静默零迭代（30 题，R26 产出）
+
+现象：`loop <var> in <ArrayList>` **编译不报错，运行期循环体一次也不执行**（`ForInProtocolUnsatisfied`
+守卫在当前树里还没有生效）。29 条 `expected "X", got "0"` 与 `delete-and-earn` 的
+`RuntimeError: unreachable`（零迭代后构造 0 长数组再取下标）都同源于此。
+
+处置：为不阻塞判题，本轮把循环改成显式索引 `while`。这是**临时绕过，不是题解的正确形态**；
+每份 `solution.v` 顶部已加一行 `# 临时绕过：…` 注释，与
+`find-all-possible-recipes-from-given-supplies` 的标注同一格式。`IntoIterator` / `loop in`
+合同恢复后，下列 30 题一次性还原为 `loop <var> in <list>`，其余逻辑不动。
+
+| slug | 题目录 |
+| --- | --- |
+| `binary-subarrays-with-sum` | `projects/problems/binary-subarrays-with-sum` |
+| `bitwise-ors-of-subarrays` | `projects/problems/bitwise-ors-of-subarrays` |
+| `bitwise-xor-of-all-pairings` | `projects/problems/bitwise-xor-of-all-pairings` |
+| `capacity-to-ship-packages-within-d-days` | `projects/problems/capacity-to-ship-packages-within-d-days` |
+| `count-nice-pairs-in-an-array` | `projects/problems/count-nice-pairs-in-an-array` |
+| `count-number-of-nice-subarrays` | `projects/problems/count-number-of-nice-subarrays` |
+| `cutting-ribbons` | `projects/problems/cutting-ribbons` |
+| `delete-and-earn` | `projects/problems/delete-and-earn` |
+| `find-the-smallest-divisor-given-a-threshold` | `projects/problems/find-the-smallest-divisor-given-a-threshold` |
+| `find-xor-beauty-of-array` | `projects/problems/find-xor-beauty-of-array` |
+| `house-robber` | `projects/problems/house-robber` |
+| `house-robber-iv` | `projects/problems/house-robber-iv` |
+| `last-stone-weight-ii` | `projects/problems/last-stone-weight-ii` |
+| `maximum-candies-allocated-to-k-children` | `projects/problems/maximum-candies-allocated-to-k-children` |
+| `maximum-product-subarray` | `projects/problems/maximum-product-subarray` |
+| `maximum-xor-after-operations` | `projects/problems/maximum-xor-after-operations` |
+| `maximum-xor-for-each-query` | `projects/problems/maximum-xor-for-each-query` |
+| `maximum-xor-of-two-numbers-in-an-array` | `projects/problems/maximum-xor-of-two-numbers-in-an-array` |
+| `minimum-average-difference` | `projects/problems/minimum-average-difference` |
+| `minimum-limit-of-balls-in-a-bag` | `projects/problems/minimum-limit-of-balls-in-a-bag` |
+| `minimum-number-of-days-to-make-m-bouquets` | `projects/problems/minimum-number-of-days-to-make-m-bouquets` |
+| `minimum-time-to-complete-trips` | `projects/problems/minimum-time-to-complete-trips` |
+| `number-of-sub-arrays-with-odd-sum` | `projects/problems/number-of-sub-arrays-with-odd-sum` |
+| `number-of-ways-to-split-array` | `projects/problems/number-of-ways-to-split-array` |
+| `range-addition-ii` | `projects/problems/range-addition-ii` |
+| `single-number-ii` | `projects/problems/single-number-ii` |
+| `single-number-iii` | `projects/problems/single-number-iii` |
+| `subarray-sums-divisible-by-k` | `projects/problems/subarray-sums-divisible-by-k` |
+| `sum-of-absolute-differences-in-a-sorted-array` | `projects/problems/sum-of-absolute-differences-in-a-sorted-array` |
+| `total-hamming-distance` | `projects/problems/total-hamming-distance` |
+
+判据：这 30 题改前都有 `<var> in <list>` 形式的循环，改后不含 `loop … in …`；文件顶部注释是
+还原锚点。还原后需按原批次逐题复跑，不重新分配题号。
+
 ### 汇聚组（签名落地后一次性复跑）
 
-**阻塞于 `ArrayList<T>` 泛型实例化不闭合（签名已在，不是签名缺失）**（13 题，R22 + R24 产出）
+**`sort` 组：拆成两条独立记录（题解侧形态 vs 编译器侧名义类型）**
+
+调用点清单（13 题，R22 + R24 产出；另 R23 8 题同族，共 **21 处调用**）：
 
 | 题号 | slug | 入口 | 复跑状态 |
 | --- | --- | --- | --- |
 | 870 | `advantage-shuffle` | `advantageCount` | 编译失败（`sort` 无候选 + `sorted_by` 不存在） |
-| 881 | `boats-to-save-people` | `numRescueBoats` | 编译失败（`sort` 无候选） |
+| 881 | `boats-to-save-people` | `numRescueBoats` | 编译失败（见 ②，`ArrayList` 实参） |
 | 2126 | `destroying-asteroids` | `asteroidsDestroyed` | 编译失败（`sort` 无候选） |
 | 1679 | `max-number-of-k-sum-pairs` | `maxOperations` | 编译失败（`sort` 无候选） |
 | 1481 | `least-number-of-unique-integers-after-k-removals` | `findLeastNumOfUniqueInts` | 编译失败（`sort` 无候选） |
@@ -502,16 +551,32 @@ $n
 | 1838 | `frequency-of-the-most-frequent-element` | `maxFrequency` | 编译失败（`sort` 无候选） |
 | 950 | `reveal-cards-in-increasing-order` | `deckRevealedIncreasing` | 编译失败（`sort` 无候选） |
 | 945 | `minimum-increment-to-make-array-unique` | `minIncrementForUnique` | 编译失败（`sort` 无候选） |
-| 1921 | `eliminate-maximum-number-of-monsters` | `eliminateMaximum` | 编译失败（`mut` 出现在形参类型位） |
+| 1921 | `eliminate-maximum-number-of-monsters` | `eliminateMaximum` | 编译失败（`mut` 出现在形参类型位，另一错误） |
 
-同组判据：均直接调用单参 `sort(list)`、不传比较器，**题解一处不改**（不改写成内联排序）。
-`sort.v:82` 已有 `micro sort<T>(mut list: ArrayList<T>): unit where T: std::operator::Comparable`
-（稳定归并），`imply i64: Comparable` 也已在 `comparable_primitives.v:68`，缺的不是签名，
-也不是 `i64` 的序关系，而是 **`ArrayList<T>` 的泛型实例化没有闭合**：实参为 `ArrayList<i64>`
-时仍然 `unresolved call "sort"：1 candidate(s) share the name, but none matches the argument types`。
-本组 12 题与 R23 的 8 题（共 20 题）全部命中，形态一致。
-证据已转交 `InstanceNotClosed` 那条线，本组保持理想写法，等实例化修复后按清单复跑。
-`sorted_by(list, cmp)` 仍是独立缺口（870、954、1471）。
+**① 实参形态不匹配：`Array` 实参 vs `ArrayList` 形参（题解侧）**
+
+- 签名只有 `micro sort<T>(mut list: ArrayList<T>): unit where T: std::operator::Comparable`
+  （`sort.v:82`），只收 `ArrayList`，不收 `Array`。
+- 可复现证据：`maximum-gap`（164）形参就是 `nums: [i64]`，直接 `sort(nums)`，报
+  `unresolved call "sort"：1 candidate(s) share the name, but none matches the argument types`。
+  报错的 21 处里，可复现的实参是 `[i64]`（`Array`）。
+- 题解侧结论：**不是签名缺失，也不是 `ArrayList<T>` 实例化不闭合**。把容器对齐到
+  `ArrayList<i64>` 即可解析——形参声明成 `ArrayList<i64>`，或先把 `[i64]` 逐元素拷入
+  `ArrayList<i64>` 再调用。`i64: Comparable` 已存在（`comparable_primitives.v:68`），签名不改。
+  题解保持一行 `sort(...)`，不改成内联排序。
+
+**② `ArrayList` 实参的真正停点：`Ordering` 在 SSA 层无身份（编译器侧）**
+
+- 参考题 `boats-to-save-people`（881，实参确为 `ArrayList<i64>`）：另一条线在最新树上前端合同
+  验证通过，停在 WASM 发射前验证器，原文
+  `std::collection::is_less_or_equal at SSA value 2 携带无身份名义类型 Ordering；declaration / TypeId 缺失时不得按短名解析存储类`。
+- 这是**编译器侧名义类型身份缺失**，与 `Array.v:162` 那族 `instance never closed` 不是同根，
+  与 ① 的容器形态也不是同根。
+- 本工作树（②的修复未合入）复测同一文件仍停在 HIR：`unresolved call "sort"`（同 ① 的报错文本）。
+  两种表现是同一题在不同树状态，不据此另立新名；等 ② 落地后按清单复跑。
+- 处置：题解保持理想写法；② 修复前，`ArrayList` 实参的题记「编译阻断（`Ordering` 无身份）」。
+
+`sorted_by(list, cmp)` 仍是独立缺口（870、954、1471），不并入以上两条。
 
 **复跑结果（2026-11-04 23:50 addon 重建后）：`char: Hash` 成立，失败点已不在 `Hash`**（3 题，R22 + R24 产出）
 

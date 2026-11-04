@@ -2,6 +2,7 @@ namespace leetcode.number_of_sub_arrays_with_odd_sum;
 
 using std.collection;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 前缀奇偶计数：当前前缀为奇时，之前每个偶前缀都构成一个奇数和的子数组。
 # 当前前缀为偶时，之前每个奇前缀都构成一个奇数和的子数组。
 [export(case: "camelCase")]

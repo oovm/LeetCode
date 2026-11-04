@@ -2,6 +2,7 @@ namespace leetcode.minimum_time_to_complete_trips;
 
 using std.collection;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 二分答案：总行程数关于时间单调递增。
 # 给定时间 `t` 时，每辆车能跑 `t / time` 趟。
 micro trips_in(time: ArrayList<i64>, total: i64) -> i64 {

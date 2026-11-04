@@ -1,5 +1,6 @@
 namespace leetcode.maximum_product_subarray;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 同时滚动当前最大值与最小值，负数翻转时交换角色。
 [export(case: "camelCase")]
 micro max_product(nums: ArrayList<i64>) -> i64 {

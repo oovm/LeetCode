@@ -73,3 +73,20 @@ export function assertTestCase(index: number, expected: unknown, run: () => unkn
         throw new Error(`tests[${index}]: expected ${JSON.stringify(normalized)}, got ${JSON.stringify(actual)}`);
     }
 }
+
+/**
+ * 异步调用方的错误断言：`run` 返回 Promise 时，同步 `assertTestCase` 的 `try/catch`
+ * 观察不到 rejection，期望抛错的用例会被误判成“未抛错”。这里先 `await` 再比较异常消息。
+ */
+export async function assertRejectsTestCase(index: number, expected: string, run: () => Promise<unknown>): Promise<void> {
+    try {
+        await run();
+    } catch (err) {
+        const actual = err instanceof Error ? `Error: ${err.message}` : `Error: ${String(err)}`;
+        if (actual !== expected) {
+            throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+        }
+        return;
+    }
+    throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, no exception raised`);
+}

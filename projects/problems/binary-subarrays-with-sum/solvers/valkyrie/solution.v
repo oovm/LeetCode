@@ -2,6 +2,7 @@ namespace leetcode.binary_subarrays_with_sum;
 
 using std.collection;
 
+# 临时绕过：`loop <var> in <ArrayList>` 当前编译不报错但运行期零迭代，这里改用显式索引循环；`IntoIterator` 合同恢复后还原为 `loop ... in`。
 # 前缀和 + 频次表：每个前缀 `prefix` 累加此前出现过的 `prefix - goal` 次数。
 [export(case: "camelCase")]
 micro numSubarraysWithSum(nums: ArrayList<i64>, goal: i64) -> i64 {
