@@ -981,6 +981,7 @@
     ],
     "invoke": {
         "python": "Solution().isAcronym",
-        "typescript": "Solution().isAcronym"
+        "typescript": "Solution().isAcronym",
+        "valkyrie": "isAcronym"
     }
 }

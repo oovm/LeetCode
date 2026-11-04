@@ -1,5 +1,31 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: isAcronym 需要 读取 words 首字母拼接比较 s
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.check_if_a_string_is_an_acronym_of_words;
+
+using std.collection;
+
+# 首字母比较全程停在 `char` 上：`utf8` 的 Cardinal 视图直接给 `char`，`char` 有 `==`/`!=`，
+# 不需要把首字母重新拼成字符串再比较，也不碰任何哈希或序关系。
+[export(case: "camelCase")]
+micro is_acronym(words: ArrayList<utf8>, s: utf8) -> bool {
+    let count: usize = words.length()
+    if count != s.length() {
+        return false
+    }
+
+    let mut i: usize = 0
+    while i < count {
+        let word: utf8 = words⁅i⁆
+        let initial: char = word⁅0⁆
+        let expected: char = s⁅i⁆
+        if initial != expected {
+            return false
+        }
+        i = i + 1
+    }
+    return true
+}
+
+class Solution {
+    micro isAcronym(self, words: ArrayList<utf8>, s: utf8): bool {
+        return is_acronym(words, s)
+    }
+}
