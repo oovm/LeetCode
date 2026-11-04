@@ -179,7 +179,7 @@ A. 参数名对齐（`AbiSchemaError` 的真因是 schema `params[].name` 取自
 | --- | --- | --- |
 | `excel-sheet-column-number` | `s` → `columnTitle` | 201/201 |
 | `ransom-note` | `ransom_note` → `ransomNote` | 142/142 |
-| `maximize-number-of-nice-divisors` | `prime_factors` → `primeFactors`（另删 77 条宿主文本） | 3/3 |
+| `maximize-number-of-nice-divisors` | `prime_factors` → `primeFactors`，77 条宿主文本由参考实现重算 | 80/80 |
 
 B. 真实现错 10 题（改 `solution.v`，无样例特判）：
 
@@ -203,17 +203,17 @@ B. 真实现错 10 题（改 `solution.v`，无样例特判）：
 `find-the-minimum-possible-sum-of-a-beautiful-array` 两侧都有问题：30 条 expected 是 int32 溢出污染
 （BigInt 重算），实现另修 `m` 取值，91/91。
 
-C. 用例删除（旧/新 `tests` 数由 `git show HEAD:` 与工作区逐题比对得到）：
+C. 用例删除与回补（旧/新 `tests` 数由 `git show HEAD~1:` 与工作区逐题机械比对得到）：
 
-| 判据 | 删除 | 题数 | 逐题（旧→新） |
-| --- | --- | --- | --- |
-| `expected` 是宿主异常文本（递归超限、超时、越界 / index、KeyError、`inf` 等），语义不可判定 | 392 | 15 | `count-the-number-of-arrays-with-k-matching-adjacent-elements` 158→1、`maximize-number-of-nice-divisors` 80→3、`number-of-ways-to-reach-a-position-after-exactly-k-steps` 91→39、`student-attendance-record-ii` 41→11、`decode-the-message` 230→204、`number-of-strings-which-can-be-rearranged-to-contain-substring` 31→21、`prime-palindrome` 62→52、`cells-in-a-range-on-an-excel-sheet` 183→175、`merge-sorted-array` 86→80、`sort-array-by-parity-ii` 85→74、`can-make-arithmetic-progression-from-sequence` 164→161、`closest-fair-integer` 70→67、`find-kth-bit-in-nth-binary-string` 87→85、`handshakes-that-dont-cross` 39→37、`minimum-cost-to-set-cooking-time` 118→116 |
-| `args` 违反题面约束（非旋转数组、非 n×n、`k > 2^(n-1)`、字母重复或长度越界、答案超 2e9 保证、`n` 超 i64、列/行非单字符） | 167 | 7 | `cells-in-a-range-on-an-excel-sheet` 82、`k-th-symbol-in-grammar` 36、`minimum-number-of-pushes-to-type-word-i` 20、`ugly-number-iii` 10、`find-minimum-in-rotated-sorted-array` 8、`kth-smallest-element-in-a-sorted-matrix` 2、`maximum-number-that-makes-result-of-bitwise-and-zero` 2 |
-| 偶奇数量不等 / 长度奇数，且同时是宿主文本（已计入第一行） | 4 | 1 | `sort-array-by-parity-ii` |
+| 判据 | 原始移除 | 当前删除 | 题数 | 逐题（旧→新，二次处置后） |
+| --- | --- | --- | --- | --- |
+| `expected` 是宿主异常文本（递归超限、超时、越界 / index、KeyError、`inf` 等），语义不可判定 | 392 | 74 | 10 | `decode-the-message` 230→204、`number-of-strings-which-can-be-rearranged-to-contain-substring` 31→21、`prime-palindrome` 62→52、`cells-in-a-range-on-an-excel-sheet` 183→93（8 宿主 + 82 越界）、`merge-sorted-array` 86→80、`sort-array-by-parity-ii` 85→74（4 宿主 + 7 越界，重叠不重复计）、`can-make-arithmetic-progression-from-sequence` 164→161、`closest-fair-integer` 70→67、`find-kth-bit-in-nth-binary-string` 87→85、`minimum-cost-to-set-cooking-time` 118→116 |
+| `args` 违反题面约束（非旋转数组、非 n×n、`k > 2^(n-1)`、字母重复或长度越界、答案超 2e9 保证、`n` 超 i64、列/行非单字符） | 167 | 167 | 7 | `cells-in-a-range-on-an-excel-sheet` 82、`k-th-symbol-in-grammar` 36、`minimum-number-of-pushes-to-type-word-i` 20、`ugly-number-iii` 10、`find-minimum-in-rotated-sorted-array` 8、`kth-smallest-element-in-a-sorted-matrix` 2、`maximum-number-that-makes-result-of-bitwise-and-zero` 2 |
+| 偶奇数量不等 / 长度奇数，且同时是宿主文本（已计入第一行） | 4 | 4 | 1 | `sort-array-by-parity-ii` |
 
-合计删除 **559** 条（392 + 167，4 条同时命中两条判据，唯一用例数不重复计）。
-`cells-in-a-range-on-an-excel-sheet` 从 183 降到 93：先删 8 条宿主文本，再删 82 条
-「两字母列 / 两位行」的越界输入（官方格式是单字母列 + 单数字行，`expected` 多为 `[]`，无合法答案）。
+原始移除合计 **559** 条 = 当前净删 **241**（宿主文本 392 − 316 四题回补 − 2 `handshakes` 回补 = 74，另 167 条越界输入，4 条重叠不重复计）+ 316 四题回补用例 + 2 `handshakes` 回补用例。
+二次处置把 316 条宿主文本的 `expected` 由参考实现真实运行重算，`handshakes` 2 条原用例重算恢复；`expected` 变更合计 **380** = 316 + 62（原 C 段修复）+ 2。
+`cells-in-a-range-on-an-excel-sheet` 从 183 降到 93：先删 8 条宿主文本，再删 82 条「两字母列 / 两位行」的越界输入（官方格式是单字母列 + 单数字行，`expected` 多为 `[]`，无合法答案）。
 
 C 清洗后结果：
 
@@ -248,6 +248,102 @@ C 清洗后结果：
 
 `decode-the-message` 同为 `utf8` 返回值 marshal 的 `TypeError`，属 26 题 `Utf8` 修复面，
 与 `convert-a-number-to-hexadecimal` 一起**待重建 addon 后复验**。
+
+### C-1 覆盖率塌陷的逐题定性（2026-11-05 二次处置，实测）
+
+结论先行：四题全部属 **(iii) 参考实现自身失败**，不是 (i) 生成器造非法输入，也不是 (ii) 校验过严。
+抽检的 `args` 全部落在题面约束内（`n <= 10^5`、`primeFactors <= 10^9`、`|startPos|,|endPos| <= 1000`、
+`k <= 1000`），参考实现分别在 3 参 `pow` 与递归深度上失败。
+
+| 题 | 旧→删后→现 | 根因定性 | 被删用例抽检（`args` → 参考实测重算值，stored 均为宿主文本） |
+| --- | --- | --- | --- |
+| `count-the-number-of-arrays-with-k-matching-adjacent-elements` | 158→1→158 | (iii) 共享 Python 头 `from math import *` 把内置 `pow` 覆盖为 2 参 `math.pow`，参考的 3 参调用抛 `TypeError` | `tests[0] n=100000,m=100000,k=50000` → `509990004`、`[1] 100/10/50` → `251177542`、`[2] 3/2/1` → `4`、`[3] 5/5/3` → `80`、`[4] 10/5/3` → `1720320`（157 条 stored 均为 `Error: pow expected 2 arguments, got 3`） |
+| `maximize-number-of-nice-divisors` | 80→3→80 | (iii) 同一 `pow` 遮蔽 | `[0] primeFactors=8` → `18`、`[1] 1000000000` → `897135186`、`[3] 100` → `703522804`、`[4] 10` → `36`、`[5] 5` → `6`（77 条同错误文本） |
+| `student-attendance-record-ii` | 41→11→41 | (iii) 递归 `@cache dfs` 深度随 `n` 增长，`n >= 1000` 即 `RecursionError` | `[1] n=100000` → `749184020`、`[3] 10101` → `183236316`、`[4] 10000` → `67802379`、`[7] 50000` → `320634376`、`[8] 1000` → `250434094`（30 条 stored 均为 `Error: maximum recursion depth exceeded`） |
+| `number-of-ways-to-reach-a-position-after-exactly-k-steps` | 91→39→91 | (iii) 同一递归深度 | `[9] 1000/995/1000` → `0`、`[11] 750/250/500` → `1`、`[13] 0/500/501` → `0`、`[14] 300/700/999` → `0`、`[15] 0/-500/501` → `0`（52 条同错误文本） |
+
+参考实现修法（本仓源代码改动，随本批提交）：
+
+| 文件 | 改动 |
+| --- | --- |
+| `count-the-number-of-arrays-with-k-matching-adjacent-elements/solvers/python/solution.py` | 删无用的 `from sortedcontainers import SortedList`（本机缺包，阻塞本地参考运行），`import builtins` 后 2 处 `pow` → `builtins.pow` |
+| `maximize-number-of-nice-divisors/solvers/python/solution.py` | `import builtins` 后 3 处 `pow` → `builtins.pow` |
+| `student-attendance-record-ii/solvers/python/solution.py` | 递归 `dfs` 改迭代 DP（状态 = 是否用过 A × 结尾连续 L 数） |
+| `number-of-ways-to-reach-a-position-after-exactly-k-steps/solvers/python/solution.py` | 递归 `dfs` 改迭代 DP（`f[i]` = 距终点 `i` 步、剩余步数的方案数） |
+| `count-k-subsequences-of-a-string-with-maximum-beauty/solvers/python/solution.py` | 同类 `pow` 遮蔽，顺手修（不在塌陷四题内） |
+
+迭代 DP 与原递归对照：`student` 300 例、`ways` 7236 例（穷举小参数）mismatch=0。
+
+重新生成（新 `expected` 全部由参考实现真实运行产出，`run_python_solver.py` 四题 RC=0）：
+
+| 题 | 重算条数 | 现用例数 | V lane |
+| --- | --- | --- | --- |
+| `count-the-number-of-arrays-with-k-matching-adjacent-elements` | 157 | 158 | 158/158 |
+| `maximize-number-of-nice-divisors` | 77 | 80 | 80/80 |
+| `student-attendance-record-ii` | 30 | 41 | 41/41 |
+| `number-of-ways-to-reach-a-position-after-exactly-k-steps` | 52 | 91 | 91/91 |
+
+### C-2 生成器缺口记账
+
+- 全库检索确认 `leetcode.v` 内没有写入 `metadata.tests` 的语料生成脚本（`scripts/sxo-batch-rollout.mjs`
+  只补 `invoke.wolframSxo` / `matlabSxo`，不改 `tests`）。生成器不在本仓，本轮无法在本仓修生成逻辑。
+- 归因证据表明问题不在生成器：四题 316 条 `args` 全部落在题面约束内，非法性来自参考实现（`pow` 遮蔽 /
+  递归深度）。
+- 处置原则：`expected` 为宿主异常文本时，先判「在题面约束内参考实现能否给出答案」。能 → 修参考实现并
+  真实重算；不能（如 `closest-fair-integer` `n=10^9` 递归、`prime-palindrome` 超时）→ 删除该组输入并
+  在本账本写不可判理由。禁止用「生成后过滤」掩盖参考实现缺陷。
+
+### C-3 其它个位数用例的题
+
+- 本批没有任何题掉到 `<10`（受影响题最低为 `number-of-strings-which-can-be-rearranged-to-contain-substring`
+  21 条）。
+- 全库现有 29 题 `<10` 条均非本批清洗造成：6 个设计类（`lru-cache` / `lfu-cache` /
+  `implement-trie-prefix-tree` / `design-hashset` / `design-hashmap` / `min-stack`）为 2 条
+  `OperationSequenceCase` 结构性用例；其余为二叉树 / 链表结构题 2~6 条（`merge-k-sorted-lists` 3、
+  `trim-a-binary-search-tree` 5、`binary-tree-right-side-view` 6 等）。
+- 豁免清单（2026-11-05 快照）：`design-hashmap:2`、`design-hashset:2`、`implement-trie-prefix-tree:2`、
+  `lfu-cache:2`、`lowest-common-ancestor-of-a-binary-tree:2`、`lru-cache:2`、`min-stack:2`、
+  `merge-k-sorted-lists:3`、`find-all-the-lonely-nodes:5`、`trim-a-binary-search-tree:5`、
+  `binary-tree-right-side-view:6`、`find-the-divisibility-array-of-a-string:6`、
+  `height-of-special-binary-tree:6`、`longest-zigzag-path-in-a-binary-tree:6`、`print-binary-tree:6`、
+  `construct-string-from-binary-tree:7`、`maximum-width-of-binary-tree:7`、
+  `statistics-from-a-large-sample:7`、`binary-tree-upside-down:8`、`boundary-of-binary-tree:8`、
+  `check-if-move-is-legal:8`、`generate-parentheses:8`、`largest-palindrome-product:8`、
+  `minimum-cost-to-connect-two-groups-of-points:8`、`clone-binary-tree-with-random-pointer:9`、
+  `find-leaves-of-binary-tree:9`、`maximize-amount-after-two-days-of-conversions:9`、`n-queens:9`、
+  `n-queens-ii:9`。这些题不属于「清洗造成变薄」，不触发下限门禁。
+
+### C-4 覆盖下限规则（清洗硬门禁）
+
+- 定义：`历史中位数` = 该题本轮清洗前（`HEAD~1`）的 `tests` 条数；`下限 = max(10, ceil(历史中位数 × 0.5))`。
+- 依据：全库 2847 题分布 min=2、p10=52、p25=76、median=98、p75=115、max=451。p10=52 说明 90% 题
+  `>=52` 条，10 条是「仍是覆盖来源」的绝对地板（1 条等于没有覆盖，个位数通常只剩单一规模 / 边界）；
+  50% 相对线防大题塌陷——本批四题一次掉到 1/158、3/80、11/41、39/91 即反例。
+- 规则：清洗后单题可用用例数低于下限时，**必须**重新生成 / 修复参考实现后重算，或显式隔离该组输入并在
+  本账本写判据；不允许静默变薄。天然低量的结构性题（设计序列 2 条、树 / 链表 2~6 条）入上方豁免清单，
+  逐题写明理由，不计入塌陷。
+
+### C-5 宿主文本删除抽检（392 条中抽 10 条，实测）
+
+| # | 题 | `args` | stored | 参考实测 |
+| --- | --- | --- | --- | --- |
+| 1 | `can-make-arithmetic-progression-from-sequence` | `{"arr":[1]}` | `Error: list index out of range` | `IndexError: list index out of range` |
+| 2 | `decode-the-message` | `{"key":"jump quickly on this yellow pig",...}` | `Error: 'f'` | `KeyError: 'f'` |
+| 3 | `decode-the-message` | `{"key":"move forward zippy vim",...}` | `Error: 'q'` | `KeyError: 'q'` |
+| 4 | `find-kth-bit-in-nth-binary-string` | `{"n":16,"k":131071}` | `Error: negative shift count` | `ValueError: negative shift count` |
+| 5 | `prime-palindrome` | `{"n":999999999}` | `Execution timed out` | `TIMEOUT >25s` |
+| 6 | `prime-palindrome` | `{"n":80779853381}` | `Execution timed out` | `TIMEOUT >25s` |
+| 7 | `merge-sorted-array` | `nums1` 长 14、`m=10`、`nums2` 长 10、`n=10`（缓冲不足） | `Error: list assignment index out of range` | `IndexError: list assignment index out of range` |
+| 8 | `closest-fair-integer` | `{"n":1000000000}` | `Error: maximum recursion depth exceeded` | `RecursionError: maximum recursion depth exceeded` |
+| 9 | `number-of-strings...` | `{"n":100000}` | `Error: maximum recursion depth exceeded` | `RecursionError: maximum recursion depth exceeded` |
+| 10 | `cells-in-a-range-on-an-excel-sheet` | `{"s":"AA1:AZ5"}` | `Error: invalid literal for int() with base 10: 'A'` | `ValueError: invalid literal for int() with base 10: 'A'` |
+
+结论：10/10 与 stored 同型复现（IndexError / KeyError / ValueError / 超时 / RecursionError），没有把判题或
+语料生成的其它缺陷误归类为「宿主异常」。另抽 `minimum-cost-to-set-cooking-time` 的 `inf` 类 1 条：
+`startAt=1,moveCost=5,pushCost=1,targetSeconds=9999`，stored `"inf"`，参考实地返回 `inf`，同属「无有限答案」。
+误伤复核：`handshakes-that-dont-cross` 的 2 条（`numPeople=1000` / `998`，stored 递归超限）当前参考实测返回
+`591137401` / `948528453`，属误删，已按原顺序恢复，39/39。`closest-fair-integer` 的 3 条（如 `n=10^9`）
+参考仍 `RecursionError`，维持删除。
 
 ## 用例数据清洗规则（通用）
 

@@ -14,6 +14,7 @@ from bisect import *
 from string import *
 from operator import *
 from math import *
+import builtins
 
 inf = float('inf')
 
@@ -81,7 +82,7 @@ class Solution:
         if primeFactors < 4:
             return primeFactors
         if primeFactors % 3 == 0:
-            return pow(3, primeFactors // 3, mod) % mod
+            return builtins.pow(3, primeFactors // 3, mod) % mod
         if primeFactors % 3 == 1:
-            return 4 * pow(3, primeFactors // 3 - 1, mod) % mod
-        return 2 * pow(3, primeFactors // 3, mod) % mod
+            return 4 * builtins.pow(3, primeFactors // 3 - 1, mod) % mod
+        return 2 * builtins.pow(3, primeFactors // 3, mod) % mod

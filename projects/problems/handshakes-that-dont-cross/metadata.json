@@ -2,7 +2,10 @@
     "id": "handshakes-that-dont-cross",
     "questionId": 1259,
     "difficulty": "Hard",
-    "tags": ["Math", "Dynamic Programming"],
+    "tags": [
+        "Math",
+        "Dynamic Programming"
+    ],
     "tests": [
         {
             "args": {
@@ -21,6 +24,12 @@
                 "numPeople": 8
             },
             "expected": 14
+        },
+        {
+            "args": {
+                "numPeople": 1000
+            },
+            "expected": 591137401
         },
         {
             "args": {
@@ -99,6 +108,12 @@
                 "numPeople": 64
             },
             "expected": 488309750
+        },
+        {
+            "args": {
+                "numPeople": 998
+            },
+            "expected": 948528453
         },
         {
             "args": {

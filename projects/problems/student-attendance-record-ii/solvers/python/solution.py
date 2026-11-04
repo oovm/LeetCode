@@ -77,19 +77,21 @@ def is_same_tree(p, q):
 
 class Solution:
     def checkRecord(self, n: int) -> int:
-        @cache
-        def dfs(i, j, k):
-            if i >= n:
-                return 1
-            ans = 0
-            if j == 0:
-                ans += dfs(i + 1, j + 1, 0)
-            if k < 2:
-                ans += dfs(i + 1, j, k + 1)
-            ans += dfs(i + 1, j, 0)
-            return ans % mod
-
+        # 迭代版 DP：状态 (是否已用 A, 结尾连续 L 数)，避免 n 大时递归超限。
         mod = 10**9 + 7
-        ans = dfs(0, 0, 0)
-        dfs.cache_clear()
-        return ans
+        dp = [[0] * 3 for _ in range(2)]
+        dp[0][0] = 1
+        for _ in range(n):
+            nxt = [[0] * 3 for _ in range(2)]
+            for used_a in range(2):
+                for late in range(3):
+                    ways = dp[used_a][late]
+                    if not ways:
+                        continue
+                    nxt[used_a][0] = (nxt[used_a][0] + ways) % mod
+                    if used_a == 0:
+                        nxt[1][0] = (nxt[1][0] + ways) % mod
+                    if late < 2:
+                        nxt[used_a][late + 1] = (nxt[used_a][late + 1] + ways) % mod
+            dp = nxt
+        return sum(sum(row) for row in dp) % mod

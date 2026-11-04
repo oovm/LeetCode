@@ -77,13 +77,14 @@ def is_same_tree(p, q):
 
 class Solution:
     def numberOfWays(self, startPos: int, endPos: int, k: int) -> int:
-        @cache
-        def dfs(i: int, j: int) -> int:
-            if i > j or j < 0:
-                return 0
-            if j == 0:
-                return 1 if i == 0 else 0
-            return (dfs(i + 1, j - 1) + dfs(abs(i - 1), j - 1)) % mod
-
+        # 迭代版 DP：f[i] = 距终点 i 步、剩余 steps 步的方案数，避免 k 大时递归超限。
         mod = 10**9 + 7
-        return dfs(abs(startPos - endPos), k)
+        dist = abs(startPos - endPos)
+        f = [0] * (k + 2)
+        f[0] = 1
+        for _ in range(k):
+            g = [0] * (k + 2)
+            for i in range(k + 1):
+                g[i] = (f[i + 1] + f[abs(i - 1)]) % mod
+            f = g
+        return f[dist] if dist <= k else 0

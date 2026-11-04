@@ -171,7 +171,7 @@
 - 口径：`run_v_solver.ts` 实测，当前 addon，未重建。真通过 = `ok=true`；删除/修复的逐题旧→新
   用例数与判据见账本 `F7 跟进` 小节。
 - A 参数名（3 题全绿）：`excel-sheet-column-number` 201/201、`ransom-note` 142/142、
-  `maximize-number-of-nice-divisors` 3/3。
+  `maximize-number-of-nice-divisors` 80/80（77 条宿主文本由参考实现重算）。
 - B 真实现错（11 题全绿）：`best-time-to-buy-and-sell-stock` 99/99、
   `domino-and-tromino-tiling` 30/30、`majority-element` 45/45、`single-number` 108/108、
   `maximum-number-that-sum-of-the-prices-is-less-than-or-equal-to-k` 126/126、
@@ -181,7 +181,9 @@
 - B 改判语料（5 题全绿）：`find-minimum-in-rotated-sorted-array` 87/87、
   `kth-smallest-element-in-a-sorted-matrix` 86/86、`k-th-symbol-in-grammar` 50/50、
   `minimum-number-of-pushes-to-type-word-i` 182/182、`ugly-number-iii` 123/123。
-- C 删除 **559** 条：宿主异常文本 392（15 题）、越界输入 167（7 题，其中 4 条同时是宿主文本）。
+- C 删除 **559** 条（原始移除）：宿主异常文本 392（15 题）、越界输入 167（7 题，其中 4 条同时是宿主文本）。
+  二次处置回补 **318** 条（316 条四题宿主文本由修好的参考实现真实重算 expected + 2 条 `handshakes`
+  原用例重算），当前净删 **241** 条（宿主文本 74 + 越界输入 167，重叠 4 不重复计）。
 - C `expected` 修复 62 条：`find-the-minimum-possible-sum-of-a-beautiful-array` 30、
   `maximum-number-that-makes-result-of-bitwise-and-zero` 11、
   `convert-a-number-to-hexadecimal` 17、`maximum-swap` / `numbers-with-repeated-digits` /
@@ -193,9 +195,11 @@
 - 仍红 3 题：`convert-a-number-to-hexadecimal`、`decode-the-message`（同属 26 题 `Utf8` 返回值
   修复，待重建 addon 复验）、`minimum-addition-to-make-integer-beautiful` 30/103
   （`tests[30]` 的 `n` 超 i64 + 13 条不可恢复 expected，已并入精度清单）。
-- 覆盖被削（需补生成语料）：`count-the-number-of-arrays-with-k-matching-adjacent-elements` 158→1、
-  `maximize-number-of-nice-divisors` 80→3、`student-attendance-record-ii` 41→11、
-  `number-of-ways-to-reach-a-position-after-exactly-k-steps` 91→39。
+- 覆盖回补（原「需补生成语料」已处置）：`count-the-number-of-arrays-with-k-matching-adjacent-elements`
+  1→158（157 条重算）、`maximize-number-of-nice-divisors` 3→80（77 条）、
+  `student-attendance-record-ii` 11→41（30 条）、`number-of-ways-to-reach-a-position-after-exactly-k-steps`
+  39→91（52 条）。四题均为参考实现失败（`pow` 被 `from math import *` 遮蔽 / 递归深度），
+  不是生成器造非法输入；`handshakes-that-dont-cross` 误删 2 条已恢复，39/39。
 - 新编号：**0 条**。
 
 ## 批次 R25-2026-11-04（Medium 图 / 并查集 / 拓扑排序 23 题，写完未构建）

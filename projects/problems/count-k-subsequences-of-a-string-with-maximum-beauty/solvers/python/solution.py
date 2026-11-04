@@ -14,6 +14,7 @@ from bisect import *
 from string import *
 from operator import *
 from math import *
+import builtins
 
 inf = float('inf')
 
@@ -90,5 +91,5 @@ class Solution:
                 break
             k -= 1
             ans = ans * v % mod
-        ans = ans * comb(x, k) * pow(val, k, mod) % mod
+        ans = ans * comb(x, k) * builtins.pow(val, k, mod) % mod
         return ans

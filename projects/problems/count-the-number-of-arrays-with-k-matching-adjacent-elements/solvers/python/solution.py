@@ -1,6 +1,5 @@
 import heapq
 import itertools
-from sortedcontainers import SortedList
 import random
 import functools
 import collections
@@ -17,6 +16,7 @@ from bisect import *
 from string import *
 from operator import *
 from math import *
+import builtins
 
 inf = float('inf')
 
@@ -94,7 +94,7 @@ class Solution:
             cls._fact[i] = cls._fact[i-1] * i % cls.MOD
         
         cls._inv_fact = [1] * (max_n + 1)
-        cls._inv_fact[max_n] = pow(cls._fact[max_n], cls.MOD - 2, cls.MOD)
+        cls._inv_fact[max_n] = builtins.pow(cls._fact[max_n], cls.MOD - 2, cls.MOD)
         for i in range(max_n - 1, -1, -1):
             cls._inv_fact[i] = cls._inv_fact[i + 1] * (i + 1) % cls.MOD
 
@@ -112,7 +112,7 @@ class Solution:
         comb = comb * Solution._inv_fact[a - b] % self.MOD
         
         exponent = (n - k - 1)
-        term = pow(m - 1, exponent, self.MOD)
+        term = builtins.pow(m - 1, exponent, self.MOD)
         
         ans = comb * m % self.MOD
         ans = ans * term % self.MOD
