@@ -612,6 +612,7 @@
     ],
     "invoke": {
         "python": "Solution().findShortestSubArray",
-        "typescript": "Solution().findShortestSubArray"
+        "typescript": "Solution().findShortestSubArray",
+        "valkyrie": "findShortestSubArray"
     }
 }

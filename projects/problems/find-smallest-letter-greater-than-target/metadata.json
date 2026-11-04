@@ -1094,6 +1094,7 @@
     ],
     "invoke": {
         "python": "Solution().nextGreatestLetter",
-        "typescript": "Solution().nextGreatestLetter"
+        "typescript": "Solution().nextGreatestLetter",
+        "valkyrie": "nextGreatestLetter"
     }
 }
