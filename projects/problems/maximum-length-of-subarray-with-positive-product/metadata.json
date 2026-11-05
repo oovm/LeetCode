@@ -763,6 +763,7 @@
     ],
     "invoke": {
         "python": "Solution().getMaxLen",
-        "typescript": "Solution().getMaxLen"
+        "typescript": "Solution().getMaxLen",
+        "valkyrie": "getMaxLen"
     }
 }

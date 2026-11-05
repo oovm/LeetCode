@@ -560,6 +560,7 @@
     ],
     "invoke": {
         "python": "Solution().minSubarray",
-        "typescript": "Solution().minSubarray"
+        "typescript": "Solution().minSubarray",
+        "valkyrie": "minSubarray"
     }
 }

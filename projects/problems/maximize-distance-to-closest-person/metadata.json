@@ -760,6 +760,7 @@
     ],
     "invoke": {
         "python": "Solution().maxDistToClosest",
-        "typescript": "Solution().maxDistToClosest"
+        "typescript": "Solution().maxDistToClosest",
+        "valkyrie": "maxDistToClosest"
     }
 }

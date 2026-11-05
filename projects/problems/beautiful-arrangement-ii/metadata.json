@@ -2199,6 +2199,7 @@
     ],
     "invoke": {
         "python": "Solution().constructArray",
-        "typescript": "Solution().constructArray"
+        "typescript": "Solution().constructArray",
+        "valkyrie": "constructArray"
     }
 }

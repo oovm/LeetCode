@@ -583,6 +583,7 @@
     ],
     "invoke": {
         "python": "Solution().partitionDisjoint",
-        "typescript": "Solution().partitionDisjoint"
+        "typescript": "Solution().partitionDisjoint",
+        "valkyrie": "partitionDisjoint"
     }
 }

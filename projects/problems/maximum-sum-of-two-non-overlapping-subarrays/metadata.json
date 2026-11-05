@@ -954,6 +954,7 @@
     ],
     "invoke": {
         "python": "Solution().maxSumTwoNoOverlap",
-        "typescript": "Solution().maxSumTwoNoOverlap"
+        "typescript": "Solution().maxSumTwoNoOverlap",
+        "valkyrie": "maxSumTwoNoOverlap"
     }
 }

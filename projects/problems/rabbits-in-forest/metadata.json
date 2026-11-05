@@ -447,6 +447,7 @@
     ],
     "invoke": {
         "python": "Solution().numRabbits",
-        "typescript": "Solution().numRabbits"
+        "typescript": "Solution().numRabbits",
+        "valkyrie": "numRabbits"
     }
 }

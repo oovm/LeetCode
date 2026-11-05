@@ -665,6 +665,7 @@
     ],
     "invoke": {
         "python": "Solution().maxAbsValExpr",
-        "typescript": "Solution().maxAbsValExpr"
+        "typescript": "Solution().maxAbsValExpr",
+        "valkyrie": "maxAbsValExpr"
     }
 }

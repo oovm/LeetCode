@@ -895,6 +895,7 @@
     ],
     "invoke": {
         "python": "Solution().movesToMakeZigzag",
-        "typescript": "Solution().movesToMakeZigzag"
+        "typescript": "Solution().movesToMakeZigzag",
+        "valkyrie": "movesToMakeZigzag"
     }
 }

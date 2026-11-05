@@ -754,6 +754,7 @@
     ],
     "invoke": {
         "python": "Solution().lenLongestFibSubseq",
-        "typescript": "Solution().lenLongestFibSubseq"
+        "typescript": "Solution().lenLongestFibSubseq",
+        "valkyrie": "lenLongestFibSubseq"
     }
 }

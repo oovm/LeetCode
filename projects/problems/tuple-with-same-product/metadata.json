@@ -676,6 +676,7 @@
     ],
     "invoke": {
         "python": "Solution().tupleSameProduct",
-        "typescript": "Solution().tupleSameProduct"
+        "typescript": "Solution().tupleSameProduct",
+        "valkyrie": "tupleSameProduct"
     }
 }

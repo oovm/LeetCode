@@ -3220,3 +3220,36 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 | `loop` for-in 标量写回 | 可用（已由 `172b944a` 修复） | `maximum-sum-score-of-array` 93/93；同批 30 题还原全通过（逐题数字见「待还原组」） | 旧 addon `07b625aa` 与其父 `8ebc289e` 实测 `0`，`172b944a` 实测 `-150`，当前 HEAD `25132ccf` 实测 `-150`；配套 `loop` + `HashMap.insert` 从 `5` 变 `-14995`，证明迭代本身一直正确。判据输入 `[-10,-20,-30,-40,-50]` 应得 `-150`。验收必须用 `172b944a` 或更新 addon 副本/重建，不得用共享旧 addon 复跑后宣布通过 |
 
 下一批选题依据：`Ordering` 布局缺口已修（`9d51ad08`），`sort(ArrayList<i64>)`、`BinaryHeap<i64>` 可用；优先补 `BTreeMap` / `HashMap<utf8,_>` 的 wasm ABI 与 `BinaryHeap::new_by`。`HashSet<utf8>`、`HashMap<char,_>`、`Utf8Builder` 已可用，for-in 标量写回已修，不再作为缺口。避免再撞 `sort`/`sorted_by` 的 utf8 实例化、设计类。
+
+## 理想解批次缺口登记（2026-11-05）
+
+口径：按题面最优复杂度手写 `solution.v` + TS 参考解，真跑 `legion build --target wasm32-unknown-unknown-wasm` 与隔离判题；本批 29 题，19 题双 lane 端到端通过，10 题标注 blocked-gap。
+
+### 阻断 A：裸整数字面量之间的 `infix -`
+
+形如 `0 - 1` / `0 - 1000000000` 的负常量在两侧都是裸字面量时无法唯一选中 `infix -` 的 impl 见证；右侧换成有类型的值（如 `0 - arr⁅0⁆`）不受影响。首错均为：
+`error[valkyrie.hir.unresolved_call]: unresolved call \`infix -\` ... : N explicit impl candidates share the same specificity, so no unique witness can be selected`
+
+| 题号 | 站点 | 首错摘要 |
+|---|---|---|
+| 690 `longest-turbulent-subarray` | `solvers/valkyrie/solution.v:20:20` `sign = 0 - 1` | 3 candidates |
+| 1007 `minimum-domino-rotations-for-equal-row` | `solvers/valkyrie/solution.v:13:20` `return 0 - 1` | 3 candidates |
+| 1014 `best-sightseeing-pair` | `solvers/valkyrie/solution.v:9:25` `0 - 1000000000` | 2 candidates |
+| 1031 `maximum-sum-of-two-non-overlapping-subarrays` | `solvers/valkyrie/solution.v:21:31`、`:37:32` | 3 candidates |
+| 1073 `adding-two-negabinary-numbers` | `solvers/valkyrie/solution.v:26:21` `carry = 0 - 1`、`:27:26` `sum == 0 - 1` | 3 candidates；随后 `infix ==` 6 candidates 无匹配 |
+| 1131 `maximum-of-absolute-value-expression` | `solvers/valkyrie/solution.v:8:28` 及 `:27:50`、`:31:47`、`:35:47`、`:35:54` | 2 candidates；`extreme` 调用实参类型不匹配 |
+| 1186 `maximum-subarray-sum-with-one-deletion` | `solvers/valkyrie/solution.v:10:31` `0 - 1000000000000000000` | 2 candidates |
+| 1590 `make-sum-divisible-by-p` | `solvers/valkyrie/solution.v:22:5` `first.insert(0, 0 - 1)`、`:22:21`、`:42:16` | `HashMap.insert` 4 candidates 无匹配 + 3 candidates |
+
+### 阻断 B：Semantic MIR 合同
+
+| 题号 | 站点 | 首错摘要 |
+|---|---|---|
+| 1546 `maximum-number-of-non-overlapping-subarrays-with-sum-equals-target` | `solvers/valkyrie/solution.v` 内 `seen = HashMap::new(0)` 重赋值处（block 4 instruction 7） | `SMIR007 ... call argument type differs from declared signature (actual=Unit, expected=Nominal { ... HashMap ... })` |
+
+### 语料缺陷（只标注，不改用例）
+
+| 题号 | 缺陷 | 影响 |
+|---|---|---|
+| 1007 `minimum-domino-rotations-for-equal-row` | 112 例中 4 例 `tops` 与 `bottoms` 长度不一致（索引 28、43、70、87）；索引 87 `tops` 全为 4 却期望 `1`，合法输入下应为 `0` | 该题无法整题验收；解法保留 |
+| 1343 `number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold` | 108 例中 7 例 `threshold` 为小数（5.5、10.5、1.5、3.5、0.5），题面签名为整数；首个不合法例为索引 20 | V lane 前 20 例通过后按 ABI 整数校验拒绝，不做隐式取整 |

@@ -675,6 +675,7 @@
     ],
     "invoke": {
         "python": "Solution().maxScoreSightseeingPair",
-        "typescript": "Solution().maxScoreSightseeingPair"
+        "typescript": "Solution().maxScoreSightseeingPair",
+        "valkyrie": "maxScoreSightseeingPair"
     }
 }

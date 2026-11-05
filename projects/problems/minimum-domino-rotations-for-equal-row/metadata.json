@@ -813,6 +813,7 @@
     ],
     "invoke": {
         "python": "Solution().minDominoRotations",
-        "typescript": "Solution().minDominoRotations"
+        "typescript": "Solution().minDominoRotations",
+        "valkyrie": "minDominoRotations"
     }
 }

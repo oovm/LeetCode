@@ -735,6 +735,7 @@
     ],
     "invoke": {
         "python": "Solution().addNegabinary",
-        "typescript": "Solution().addNegabinary"
+        "typescript": "Solution().addNegabinary",
+        "valkyrie": "addNegabinary"
     }
 }

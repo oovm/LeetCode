@@ -910,6 +910,7 @@
     ],
     "invoke": {
         "python": "Solution().maxTurbulenceSize",
-        "typescript": "Solution().maxTurbulenceSize"
+        "typescript": "Solution().maxTurbulenceSize",
+        "valkyrie": "maxTurbulenceSize"
     }
 }

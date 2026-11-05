@@ -695,6 +695,7 @@
     ],
     "invoke": {
         "python": "Solution().maxNonOverlapping",
-        "typescript": "Solution().maxNonOverlapping"
+        "typescript": "Solution().maxNonOverlapping",
+        "valkyrie": "maxNonOverlapping"
     }
 }

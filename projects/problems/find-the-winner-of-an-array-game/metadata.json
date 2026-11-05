@@ -747,6 +747,7 @@
     ],
     "invoke": {
         "python": "Solution().getWinner",
-        "typescript": "Solution().getWinner"
+        "typescript": "Solution().getWinner",
+        "valkyrie": "getWinner"
     }
 }

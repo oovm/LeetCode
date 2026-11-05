@@ -713,6 +713,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumUniqueSubarray",
-        "typescript": "Solution().maximumUniqueSubarray"
+        "typescript": "Solution().maximumUniqueSubarray",
+        "valkyrie": "maximumUniqueSubarray"
     }
 }

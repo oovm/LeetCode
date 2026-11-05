@@ -997,6 +997,7 @@
     ],
     "invoke": {
         "python": "Solution().checkPossibility",
-        "typescript": "Solution().checkPossibility"
+        "typescript": "Solution().checkPossibility",
+        "valkyrie": "checkPossibility"
     }
 }

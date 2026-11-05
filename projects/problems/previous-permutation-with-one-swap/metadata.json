@@ -847,6 +847,7 @@
     ],
     "invoke": {
         "python": "Solution().prevPermOpt1",
-        "typescript": "Solution().prevPermOpt1"
+        "typescript": "Solution().prevPermOpt1",
+        "valkyrie": "prevPermOpt1"
     }
 }

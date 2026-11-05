@@ -711,6 +711,7 @@
     ],
     "invoke": {
         "python": "Solution().mincostTickets",
-        "typescript": "Solution().mincostTickets"
+        "typescript": "Solution().mincostTickets",
+        "valkyrie": "mincostTickets"
     }
 }
