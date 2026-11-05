@@ -937,16 +937,16 @@ HIR 层证据是通的。真机制是 OVM 后端把 `Cast` 静默跳过（`_ => 
   `ArrayList<i64>` 再调用。`i64: Comparable` 已存在（`comparable_primitives.v:68`），签名不改。
   题解保持一行 `sort(...)`，不改成内联排序。
 
-**② `ArrayList` 实参的真正停点：`Ordering` 在 SSA 层无身份（编译器侧）**
+**② `ArrayList` 实参的真正停点：`Ordering` 在 SSA 层无身份（编译器侧；已由 `9d51ad08` 修复）**
 
-- 参考题 `boats-to-save-people`（881，实参确为 `ArrayList<i64>`）：另一条线在最新树上前端合同
-  验证通过，停在 WASM 发射前验证器，原文
-  `std::collection::is_less_or_equal at SSA value 2 携带无身份名义类型 Ordering；declaration / TypeId 缺失时不得按短名解析存储类`。
-- 这是**编译器侧名义类型身份缺失**，与 `Array.v:162` 那族 `instance never closed` 不是同根，
-  与 ① 的容器形态也不是同根。
-- 本工作树（②的修复未合入）复测同一文件仍停在 HIR：`unresolved call "sort"`（同 ① 的报错文本）。
-  两种表现是同一题在不同树状态，不据此另立新名；等 ② 落地后按清单复跑。
-- 处置：题解保持理想写法；② 修复前，`ArrayList` 实参的题记「编译阻断（`Ordering` 无身份）」。
+- 原停点：`std::collection::is_less_or_equal at SSA value 2 携带无身份名义类型 Ordering；declaration / TypeId 缺失时不得按短名解析存储类`。
+- 修复：`9d51ad08` 🐛 `Give non-generic sum declarations a tagged aggregate layout`。
+- **2026-11-05 复核（按 `9d51ad08` 独立 worktree 重建的 addon 副本，`VALKYRIE_NATIVE` 指向
+  `projects/conformance/.cache/valkyrie-ordering.node`）：已修，六题全绿**：
+  `advantage-shuffle` 99/99、`boats-to-save-people` 89/89、`destroying-asteroids` 88/88、
+  `max-number-of-k-sum-pairs` 68/68、`least-number-of-unique-integers-after-k-removals` 69/69、
+  `hand-of-straights` 81/81；同量具下 `last-stone-weight` 124/124、`furthest-building-you-can-reach` 118/118。
+- 题解保持理想写法（`ArrayList<i64>` 直接 `sort`），不再记「编译阻断」。
 
 `sorted_by(list, cmp)` 仍是独立缺口（870、954、1471），不并入以上两条。
 
@@ -967,16 +967,18 @@ HIR 层证据是通的。真机制是 OVM 后端把 `Cast` 静默跳过（`_ => 
 
 | 题号 | slug | 入口 | 状态 |
 | --- | --- | --- | --- |
-| 1962 | `remove-stones-to-minimize-the-total` | `minStoneSum` | `authored-unverified` |
-| 1642 | `furthest-building-you-can-reach` | `furthestBuilding` | `authored-unverified` |
-| 2208 | `minimum-operations-to-halve-array-sum` | `halveArray` | `authored-unverified`（`f64` 元素） |
-| 2530 | `maximal-score-after-applying-k-operations` | `maxKelements` | `authored-unverified` |
-| 2462 | `total-cost-to-hire-k-workers` | `totalCost` | `authored-unverified`（下标堆，比较器捕获 `costs`） |
-| 621 | `task-scheduler` | `leastInterval` | `authored-unverified` |
+| 1962 | `remove-stones-to-minimize-the-total` | `minStoneSum` | `authored-unverified`（未复验） |
+| 1642 | `furthest-building-you-can-reach` | `furthestBuilding` | **已改为最小堆直接用法，118/118 通过（`9d51ad08`）** |
+| 2208 | `minimum-operations-to-halve-array-sum` | `halveArray` | `authored-unverified`（`f64` 元素，未复验） |
+| 2530 | `maximal-score-after-applying-k-operations` | `maxKelements` | `authored-unverified`（未复验） |
+| 2462 | `total-cost-to-hire-k-workers` | `totalCost` | `authored-unverified`（下标堆，比较器捕获 `costs`，未复验） |
+| 621 | `task-scheduler` | `leastInterval` | `authored-unverified`（未复验） |
 
 同组判据：均写 `BinaryHeap<T>::new_by(compare: micro(T, T) -> i32)`（比较器负数先出堆）。
 `BinaryHeap.v` 只有 `new()` 的无比较器最小堆构造，`sift_up` / `sift_down` 的 `where` 锁在
-`T: Comparable` 上。入口落地后按本组 slug 一次性复跑。
+`T: Comparable` 上。`Ordering` 布局缺口（`9d51ad08`）修复后，最小序堆本身已可用；
+`furthest-building-you-can-reach` 不再需要 `new_by`（梯子保留最大几跳、砖块付最小几跳，直接最小堆），
+已在 `9d51ad08` addon 副本上真跑 118/118。`new_by` 仍缺，其余 5 题需按各自算法重写并复跑。
 
 **阻塞于同一实现：`PriorityQueue<T>` 无宿主实现**（4 题，R24 产出）
 
@@ -994,15 +996,15 @@ HIR 层证据是通的。真机制是 OVM 后端把 `Cast` 静默跳过（`_ => 
 
 | 题号 | slug | 入口 | 状态 |
 | --- | --- | --- | --- |
-| 1705 | `maximum-number-of-eaten-apples` | `eatenApples` | `authored-unverified` |
-| 1921 | `eliminate-maximum-number-of-monsters` | `eliminateMaximum` | `authored-unverified`（同时依赖 `sort(list)`） |
+| 1705 | `maximum-number-of-eaten-apples` | `eatenApples` | `authored-unverified`（未复验） |
+| 1921 | `eliminate-maximum-number-of-monsters` | `eliminateMaximum` | `authored-unverified`（未复验，同时依赖 `sort(list)`） |
 
 同组判据：`structure` + `imply X: std::operator::Comparable { micro compare ... }`，返回
-`std::operator::Ordering`。`sort.v` 的 `is_less` / `is_less_or_equal` 走 `a.compare(b)` +
-`match Ordering`，而 `Ordering.Less` / `Greater` / `Equal` 的裸名撞名仍未关闭（Q10）；Q11 已复核为
-旧 addon 测量误判（oak pin `555798a8` 含 `LessEqGreater`，当前 addon `2026-11-04 23:50:58` 含该 rev，
-当前 HEAD 源码二进制真跑 `1 <=> 2 = -1` / `2 <=> 1 = 1` / `7 <=> 7 = 0`），不再计入语言缺口。
-本组与 `sort(list)` 组分开记账：前者缺的是「类型侧能给出三态序」，后者只是入口形态。本组仍停在 Q10。
+`std::operator::Ordering`。`Ordering` 的声明级 tagged 布局已由 `9d51ad08` 落地
+（🐛 `Give non-generic sum declarations a tagged aggregate layout`），
+`is_less` / `is_less_or_equal` 的 `match Ordering` 不再停在无身份名义类型。
+**本组仍未复验**：上述六题证据证明的是 `sort(ArrayList<i64>)` 路径，自定义 `Comparable`
+结构体 + `<=>` 派生尚未在同一 addon 副本上真跑；按纪律记「未复验」，不记「已修」。
 
 **阻塞于 `sorted_by(list, cmp)`（G11 提案）**（7 题，R22 + R24 + R28 产出）
 
@@ -3075,8 +3077,8 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 | `group-anagrams` | `sorted_by` + utf8 canonical key | build 阻断：`std::hash#` 合同实例未进 consumer_imports（`HashMap<utf8,_>`） |
 | `longest-word-in-dictionary` | `sorted_by` + utf8 ordering | build 阻断：同上（`HashSet<utf8>`，空 stub 已补） |
 | `most-common-word`（新增） | utf8 扫描 + multi-key | build 阻断：`std::new#287` / `std::grow_to#300` 合同实例缺失（`Utf8Builder`） |
-| `last-stone-weight` | `BinaryHeap` + `Comparable` | build 阻断：`heap.push/pop` unresolved（`T: Comparable` 义务未在调用点消解） |
-| `furthest-building-you-can-reach` | `BinaryHeap` + `Comparable` | build 阻断：同上 |
+| `last-stone-weight` | `BinaryHeap` + `Comparable` | **已修（`9d51ad08`）**：真跑 124/124；原 build 阻断 `T: Comparable` 义务未消解属 `Ordering` 布局缺口 |
+| `furthest-building-you-can-reach` | `BinaryHeap` + `Comparable` | **已修（`9d51ad08`）**：最小堆正确策略重写后 118/118（原解把最大跳交给砖块，方向错误） |
 | `minimum-operations-to-halve-array-sum` | `BinaryHeap<f64>` | build 阻断：`BinaryHeap::new_by` 无定义，且 `f64` 无 `Comparable` |
 
 ### 本批实测新增/复测缺口
@@ -3084,6 +3086,9 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 - **G-utf8-byte**：`std::primitive::__u8_add` / `__u8_eq` host provider 未绑定。证据：
   `largest-number` 的 `Utf8Builder.append` 命中 `__u8_add`；`top-k-frequent-words` 未加
   `as u32` 的 `equal_text` 命中 `__u8_eq`。任何逐字节比较/拼接在 build 期失败。
+  **2026-11-05 复核更正**：`Utf8Builder.append` 已可用（`phone-number-prefix` 97/97、
+  `most-common-word` 20/20、`group-anagrams` 69/69，addon `25132ccf`），旧 `__u8_add` 结论不再成立；
+  `__u8_eq` 未复验。
 - **G-sorted-by-generic-utf8**：`sorted_by` 以 `utf8` 实例化时，`is_less_or_equal<T>` 的
   WASM 槽按 i32 预规划，实际参数是 anyref → `carrier mismatch`。对照：`i64` 与
   `ArrayList<ArrayList<i64>>` 实例化均通过（`sort-integers`、`k-closest`）。
@@ -3094,16 +3099,18 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
   `HashSet<utf8>` 已可用（`phone-number-prefix` 97/97）；`HashMap<utf8,_>` 仍阻断，但诊断变为
   `WASM ABI carrier mismatch in std::insert: slot=i32 actual=anyref operand=%1 (Utf8)`；
   `HashMap<char,i64>` 已可用（`sort-characters-by-frequency` 编译并运行）。
-- **G-binaryheap**（复核，仍阻断）：`BinaryHeap<i64>` build 失败
-  `WASM pre-emission verifier: std::infix < at SSA value 2 携带无身份名义类型 Ordering；declaration / TypeId 缺失时不得按短名解析存储类`。
+- **G-binaryheap**（2026-11-05 复核，**已修**）：`Ordering` 布局缺口由 `9d51ad08` 修复后，
+  `BinaryHeap<i64>` 可用：`last-stone-weight` 124/124、`furthest-building-you-can-reach` 118/118
+  （验收于 `.cache/valkyrie-ordering.node` 副本）。仍缺 `max()` / `new_by`，最大序需取负。
 - **F3**（复核，部分修复）：utf8 返回值在 addon `25132ccf` 上不再抛
   `Cannot convert object to primitive value`（`sort-characters-by-frequency` 已跑出真实字符串），
   但多字节字符仍被截断/替换（`İ` → `����`，tests[35]）。
 
-### 待还原组（2026-11-05 全面复核，addon `25132ccf`）
+### 待还原组（2026-11-05 全面复核，addon `25132ccf` + `9d51ad08`）
 
-复核量具：addon 副本 `25132ccf`（`projects/conformance/.cache/valkyrie-forin.node`，
-`VALKYRIE_NATIVE` 指向它），未使用共享旧 addon，未重建。
+复核量具：addon 副本 `25132ccf`（`projects/conformance/.cache/valkyrie-forin.node`）与
+`9d51ad08`（`projects/conformance/.cache/valkyrie-ordering.node`）；两者均由独立 worktree 构建，
+`VALKYRIE_NATIVE` 指向副本，不使用共享旧 addon、不替换共享 `.node`。
 
 | slug | 原绕法 | 缺陷 | 当前状态 | 实测数字 / 诊断原文 | 动作 |
 | --- | --- | --- | --- | --- | --- |
@@ -3111,13 +3118,14 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 | `top-k-frequent-words` | `HashMap<utf8,i64>` 计数 + `sorted_by` 桶内排序 | 同上 + `sorted_by(utf8)` | 仍阻断 | `std::insert` carrier mismatch 与 `is_less_or_equal` carrier mismatch（原文见 `solution.v` 顶部） | 保留线性计数，桶内改就地插入排序，92/92 通过 |
 | `most-common-word` | `HashMap<utf8,i64>` 计数 + `HashSet<utf8>` 去重 | 同上 | 仍阻断 | 同上；另 `ArrayList<char>` + utf8 `StoreVar` 触发 `CAN015 OperationResultTypeMismatch`（已按下标记录最优词绕开） | 保留线性查表，20/20 通过 |
 | `sort-characters-by-frequency` | 线性「码位表 + 计数表」替代 `HashMap<char,i64>` | `char: Hash` 缺失 | **已修** | `HashMap<char,i64>` 编译并运行，35/54；剩余掉红是多字节 ABI（`İ` → `����`），与容器无关 | **已还原 `HashMap<char,i64>`** |
-| `last-stone-weight` | 取负入最小堆 | `BinaryHeap` + `Comparable` | 仍阻断 | `WASM pre-emission verifier: std::infix < ... 携带无身份名义类型 Ordering` | 保留绕法，build 仍失败，顶部注「仍阻断」 |
-| `furthest-building-you-can-reach` | 取负入最小堆 | 同上 | 仍阻断 | 同上 | 同上 |
-| `phone-number-prefix` | `HashSet<utf8>` 枚举真前缀 | `sort` / `sorted_by` 的 utf8 实例化 | 仍阻断 | `is_less_or_equal` carrier mismatch（`sorted_by`）；`natural_order ... Ordering`（`sort`） | 保留绕法，97/97 通过 |
+| `last-stone-weight` | 取负入最小堆 | `BinaryHeap` + `Comparable` | **已修（`9d51ad08`）** | 124/124；取负保留原因改为 std 缺最大序构造（`max()` / `new_by` 仍不在 `BinaryHeap.v`） | 保留取负，顶部注释更新为「API 缺口，非编译器阻断」 |
+| `furthest-building-you-can-reach` | 取负入最小堆 | 同上 | **已修（`9d51ad08`）** | 118/118；原解策略方向错误（砖块付最大跳），改为最小堆保留最大几跳、砖块付最小跳 | 重写为正确策略，不再取负 |
+| `phone-number-prefix` | `HashSet<utf8>` 枚举真前缀 | `sort` / `sorted_by` 的 utf8 实例化 | 仍阻断 | `sort(utf8)` 与 `sorted_by(utf8)` 均报 `WASM ABI carrier mismatch in std::collection::is_less_or_equal: slot=i32 actual=anyref operand=%0 (Utf8)`（`Ordering` 报错已在 `9d51ad08` 消失） | 保留绕法，97/97 通过 |
 
-- `last-stone-weight` / `furthest-building-you-can-reach` 的绕法本身在该 addon 上也无法编译，
-  故两项仍是「未验证」，不是「已还原」。
-- `phone-number-prefix` 真写法与 TS / Python 参考实现一致（排序 + 相邻前缀检查），保留原因见上表。
+- `Ordering` 布局缺口修复后，`BinaryHeap<i64>` 的 build 阻断消失，两项改判为「已修」；
+  `furthest-building-you-can-reach` 的掉红是题解算法错，已按正确策略重写并全绿。
+- `phone-number-prefix` 真写法与 TS / Python 参考实现一致（排序 + 相邻前缀检查），
+  `Ordering` 修复后仍停在 `utf8` 的 ABI carrier mismatch。
 
 ## 参考实现精度审计（2026-11-05）
 
@@ -3173,7 +3181,8 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 
 口径：共享 addon `07b625aa` 不重建，真跑 `legion build` + 判题；通过写 `N/N`，阻断写诊断原文摘要。
 本批 10 题通过（818 条用例），另 1 题 `describe-the-painting` 命中 `BTreeMap` 阻断面并保留标记。
-2026-11-05 复核行以 addon 副本 `25132ccf` 复测（`VALKYRIE_NATIVE` 指向 `.cache/valkyrie-forin.node`）。
+2026-11-05 复核行以 addon 副本 `25132ccf`（`.cache/valkyrie-forin.node`）复测；
+`Ordering` 相关行以 `9d51ad08` 独立 worktree 重建的副本（`.cache/valkyrie-ordering.node`）复测。
 
 | 特性面 | 状态 | 证据题 | 阻断面（诊断原文摘要） |
 |---|---|---|---|
@@ -3181,15 +3190,15 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 | `HashMap<i32,_>` / `BTreeMap<i32,_>` | HashMap 可用；BTreeMap 阻断 | `pairs-of-songs-with-total-durations-divisible-by-60` 89/89（`HashMap<i32,i64>` i32 键）、`minimum-index-of-a-valid-split` 12/12（`HashMap<i64,i64>`） | BTreeMap：`unresolved call ... none matches the argument types`（`where K: Equal & std::operator::Comparable` 义务不在调用点消解，补 `using std.operator;` 无效） |
 | `sorted_by`（整型 / 嵌套 / packed-key） | 可用 | 96/96、117/117、98/98；本批 `maximum-length-of-pair-chain` 106/106（`ArrayList<i64>` 元素） | — |
 | `sorted_by` 以 `utf8` 实例化 | 阻断（`25132ccf` 复核） | `top-k-frequent-words`、`phone-number-prefix` | `WASM ABI carrier mismatch in std::collection::is_less_or_equal: slot=i32 actual=anyref operand=%0 (Utf8)` |
-| `sort` 以 `utf8` 实例化（`utf8: Comparable` 已存在） | 阻断（`25132ccf` 复核） | `phone-number-prefix` 真写法 | `WASM pre-emission verifier: std::collection::natural_order at SSA value 2 携带无身份名义类型 Ordering` |
+| `sort` 以 `utf8` 实例化（`utf8: Comparable` 已存在） | 阻断（`9d51ad08` 复核，诊断更新） | `phone-number-prefix` 真写法 | `Ordering` 报错已消失；改报 `WASM ABI carrier mismatch in std::collection::is_less_or_equal: slot=i32 actual=anyref operand=%0 (Utf8)` |
 | `HashSet<utf8>` | **可用**（`25132ccf` 复核，改判） | `phone-number-prefix` 97/97 | — |
 | `HashMap<utf8,_>` | 阻断（`25132ccf` 复核，诊断更新） | `group-anagrams`、`most-common-word`、`top-k-frequent-words` | `WASM ABI carrier mismatch in std::insert: slot=i32 actual=anyref operand=%1 (Utf8)` |
 | `HashMap<char,i64>` | **可用**（`25132ccf` 复核，改判） | `sort-characters-by-frequency` 编译并运行（35/54） | — |
 | `utf8` 返回值 | 部分可用（`25132ccf` 复核） | `sort-characters-by-frequency` 35/54 | 不再抛 `Cannot convert object to primitive value`，但多字节字符被截断（`İ` → `����`） |
 | `Utf8Builder` | 可用（`25132ccf` 复核） | `phone-number-prefix` 97/97、`group-anagrams` 69/69、`most-common-word` 20/20 | — |
-| `BinaryHeap` + `Comparable` | 阻断（`25132ccf` 复核） | `last-stone-weight`、`furthest-building-you-can-reach` | `WASM pre-emission verifier: std::infix < ... 携带无身份名义类型 Ordering` |
+| `BinaryHeap` + `Comparable` | **可用**（`9d51ad08` 复核，改判） | `last-stone-weight` 124/124、`furthest-building-you-can-reach` 118/118 | 原 `std::infix < ... 携带无身份名义类型 Ordering` 已由 `9d51ad08` 修复；仍缺 `max()` / `new_by`（最大序需取负） |
 | 设计类（多方法 + 实例状态） | 阻断 | 6 题 | 入口闭包 + 实例句柄 ABI |
 | 递归 / 深度 | 可用 | `construct-the-lexicographically-largest-valid-sequence` 18/18（递归深度 ≤ 40） | 上一轮 `RecursionError` 属 Python 语料，与 V 递归上限无关 |
 | `loop` for-in 标量写回 | 可用（已由 `172b944a` 修复） | `maximum-sum-score-of-array` 93/93；同批 30 题还原全通过（逐题数字见「待还原组」） | 旧 addon `07b625aa` 与其父 `8ebc289e` 实测 `0`，`172b944a` 实测 `-150`，当前 HEAD `25132ccf` 实测 `-150`；配套 `loop` + `HashMap.insert` 从 `5` 变 `-14995`，证明迭代本身一直正确。判据输入 `[-10,-20,-30,-40,-50]` 应得 `-150`。验收必须用 `172b944a` 或更新 addon 副本/重建，不得用共享旧 addon 复跑后宣布通过 |
 
-下一批选题依据：优先补 `BTreeMap` / `Comparable` 义务解析与 `HashMap<utf8,_>` 的 wasm ABI；`HashSet<utf8>`、`HashMap<char,_>`、`Utf8Builder` 已可用，for-in 标量写回已修，不再作为缺口。避免再撞 `sort`/`sorted_by` 的 utf8 实例化、`BinaryHeap`、设计类。
+下一批选题依据：`Ordering` 布局缺口已修（`9d51ad08`），`sort(ArrayList<i64>)`、`BinaryHeap<i64>` 可用；优先补 `BTreeMap` / `HashMap<utf8,_>` 的 wasm ABI 与 `BinaryHeap::new_by`。`HashSet<utf8>`、`HashMap<char,_>`、`Utf8Builder` 已可用，for-in 标量写回已修，不再作为缺口。避免再撞 `sort`/`sorted_by` 的 utf8 实例化、设计类。

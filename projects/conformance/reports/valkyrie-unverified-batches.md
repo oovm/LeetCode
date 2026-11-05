@@ -1639,10 +1639,11 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   用当前 HEAD 的 addon 副本真跑 **93/93**（`VALKYRIE_NATIVE` 指向 `.cache/valkyrie-forin.node`）。
   验收纪律：缺口"已修"的结论必须用对应 addon 副本或新重建 addon 验证，不得拿共享旧 addon 复跑后宣布通过。
 
-## 待还原组全面复核（2026-11-05，addon `25132ccf`）
+## 待还原组全面复核（2026-11-05，addon `25132ccf` + `9d51ad08`）
 
-量具：addon 副本 `projects/conformance/.cache/valkyrie-forin.node`（`25132ccf`，
-`VALKYRIE_NATIVE` 指向它），未使用共享旧 addon，未重建。
+量具：addon 副本 `projects/conformance/.cache/valkyrie-forin.node`（`25132ccf`）与
+`projects/conformance/.cache/valkyrie-ordering.node`（`9d51ad08` 独立 worktree 构建），
+`VALKYRIE_NATIVE` 指向副本，未使用共享旧 addon，未替换共享 `.node`。
 
 | 项 | 结论 | 证据 / 实测 |
 | --- | --- | --- |
@@ -1651,9 +1652,10 @@ receiver type is unknown, so member `unwrap` cannot be resolved
 | `HashMap<utf8,_>`（`group-anagrams` / `most-common-word` / `top-k-frequent-words`） | 仍阻断 | `WASM ABI carrier mismatch in std::insert: slot=i32 actual=anyref operand=%1 (Utf8)`；三题绕法版本 69/69、20/20、92/92 |
 | `HashMap<char,i64>`（`sort-characters-by-frequency`） | 已修 → 已还原 | 编译并运行 35/54；剩余掉红是多字节 ABI（`İ` → `����`） |
 | `Utf8Builder` | 可用 | `phone-number-prefix` 97/97、`group-anagrams` 69/69、`most-common-word` 20/20 |
-| `sorted_by` / `sort` 以 `utf8` 实例化 | 仍阻断 | `is_less_or_equal` carrier mismatch；`natural_order ... Ordering` |
-| `BinaryHeap` + `Comparable` | 仍阻断 | `WASM pre-emission verifier: std::infix < ... 携带无身份名义类型 Ordering`；绕法本身也无法编译 |
+| `sorted_by` / `sort` 以 `utf8` 实例化 | 仍阻断 | `is_less_or_equal` carrier mismatch（`sort` 的 `Ordering` 报错已在 `9d51ad08` 消失，但改报此 ABI 错） |
+| `BinaryHeap` + `Comparable` | **已修（`9d51ad08`）** | `last-stone-weight` 124/124、`furthest-building-you-can-reach` 118/118（后者原为算法错，已改正确策略）；仍缺 `max()` / `new_by` |
 | `utf8` 返回值（F3） | 部分修复 | 不再抛 `Cannot convert object to primitive value`，但多字节字符被截断（`İ` → `����`） |
+| `Ordering` 布局（`sort(ArrayList<i64>)`） | **已修（`9d51ad08`）** | `advantage-shuffle` 99/99、`boats-to-save-people` 89/89、`destroying-asteroids` 88/88、`max-number-of-k-sum-pairs` 68/68、`least-number-of-unique-integers-after-k-removals` 69/69、`hand-of-straights` 81/81 |
 
 附带修复：`most-common-word` 原 `Utf8Builder` 交接处触发
 `OperationResultTypeMismatch`（`StoreVar { name: "best" }`，utf8 变量重赋值），改为按最优词下标返回后消除。`sort-characters-by-frequency` 改回 `HashMap<char,i64>`，计数结果与线性版一致（同 35/54，说明差异只来自多字节 ABI）。
