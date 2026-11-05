@@ -2,12 +2,10 @@ namespace leetcode.furthest_building_you_can_reach;
 
 using std.collection;
 
-# std 的 `BinaryHeap::new()` 只有最小序（无 `new_by`），这里用负值入堆：
-# 堆里保存「准备由梯子承担」的楼层差，堆顶 = 最大的一跳。
-# 当梯子数不够时，弹出最大的一跳改由砖块承担；砖块不足即停在上一栋。
-# 复核于 addon `25132ccf`（2026-11-05）：`BinaryHeap<i64>` 仍阻断，build 失败诊断为
-# `WASM pre-emission verifier: std::infix < at SSA value 2 携带无身份名义类型 Ordering；`
-# `declaration / TypeId 缺失时不得按短名解析存储类`。
+# 最小堆里只保留「由梯子承担」的楼层差，堆大小不超过梯子数：
+# 超出时弹出其中最小的一跳交给砖块，砖块不足即停在上一栋。
+# `BinaryHeap::new()` 是最小序，这里直接用正值入堆，无需取负。
+# 复核于 addon `9d51ad08`（2026-11-05）：`Ordering` 布局缺口已修，`BinaryHeap<i64>` 可用。
 [export(case: "camelCase")]
 micro furthestBuilding(heights: ArrayList<i64>, bricks: i64, ladders: i64) -> i64 {
     let mut heap: BinaryHeap<i64> = BinaryHeap::new()
@@ -16,9 +14,9 @@ micro furthestBuilding(heights: ArrayList<i64>, bricks: i64, ladders: i64) -> i6
     while index < heights.length() {
         let difference: i64 = heights⁅index⁆ - heights⁅index - 1⁆
         if difference > 0 {
-            heap.push(0 - difference)
+            heap.push(difference)
             if (heap.length() as i64) > ladders {
-                let smallest: i64 = 0 - heap.pop().unwrap()
+                let smallest: i64 = heap.pop().unwrap()
                 remaining = remaining - smallest
                 if remaining < 0 {
                     return (index as i64) - 1

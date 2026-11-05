@@ -1,10 +1,9 @@
 namespace leetcode.phone_number_prefix;
 
-# 临时绕过（复核于 addon `25132ccf`，2026-11-05）：真写法是「按字典序排序后检查相邻两串」，
-# 与参考实现一致。当前排序入口在 `utf8` 实例化下仍编译失败，两条实测诊断：
-#   `sorted_by(numbers, compare_text)` → `WASM ABI carrier mismatch in std::collection::is_less_or_equal: slot=i32 actual=anyref operand=%0 (Utf8)`
-#   `sort(sorted)`（`utf8: Comparable` 已存在）→ `WASM pre-emission verifier: std::collection::natural_order at SSA value 2 携带无身份名义类型 Ordering`
-# 因此保留 `HashSet<utf8>` 枚举真前缀的等价写法；`utf8: Hash` 与 `Utf8Builder` 在该 addon 下可用。
+# 临时绕过（复核于 addon `9d51ad08`，2026-11-05）：真写法是「按字典序排序后检查相邻两串」，
+# 与参考实现一致。`Ordering` 布局缺口已由 `9d51ad08` 修复，但 `utf8` 实例化仍停在 ABI：
+#   `sorted_by(numbers, compare_text)` / `sort(sorted)` → `WASM ABI carrier mismatch in std::collection::is_less_or_equal: slot=i32 actual=anyref operand=%0 (Utf8)`
+# 因此保留 `HashSet<utf8>` 枚举真前缀的等价写法；`utf8: Hash` 与 `Utf8Builder` 已可用。
 using std.collection;
 using std.text;
 
