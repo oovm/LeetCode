@@ -49,6 +49,7 @@
     ],
     "invoke": {
         "python": "Solution().tree2str",
-        "typescript": "Solution().tree2str"
+        "typescript": "Solution().tree2str",
+        "valkyrie": "tree2str"
     }
 }

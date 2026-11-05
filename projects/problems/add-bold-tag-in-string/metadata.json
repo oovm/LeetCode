@@ -803,6 +803,7 @@
     ],
     "invoke": {
         "python": "Solution().addBoldTag",
-        "typescript": "Solution().addBoldTag"
+        "typescript": "Solution().addBoldTag",
+        "valkyrie": "addBoldTag"
     }
 }

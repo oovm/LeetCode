@@ -6111,6 +6111,7 @@
     ],
     "invoke": {
         "python": "Solution().generatePalindromes",
-        "typescript": "Solution().generatePalindromes"
+        "typescript": "Solution().generatePalindromes",
+        "valkyrie": "generatePalindromes"
     }
 }

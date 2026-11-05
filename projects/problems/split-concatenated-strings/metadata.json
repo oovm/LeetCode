@@ -1314,6 +1314,7 @@
     ],
     "invoke": {
         "python": "Solution().splitLoopedString",
-        "typescript": "Solution().splitLoopedString"
+        "typescript": "Solution().splitLoopedString",
+        "valkyrie": "splitLoopedString"
     }
 }

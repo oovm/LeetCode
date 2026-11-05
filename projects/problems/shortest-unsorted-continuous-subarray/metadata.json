@@ -955,6 +955,7 @@
     ],
     "invoke": {
         "python": "Solution().findUnsortedSubarray",
-        "typescript": "Solution().findUnsortedSubarray"
+        "typescript": "Solution().findUnsortedSubarray",
+        "valkyrie": "findUnsortedSubarray"
     }
 }

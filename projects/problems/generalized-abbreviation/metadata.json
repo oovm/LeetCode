@@ -31498,6 +31498,7 @@
     ],
     "invoke": {
         "python": "Solution().generateAbbreviations",
-        "typescript": "Solution().generateAbbreviations"
+        "typescript": "Solution().generateAbbreviations",
+        "valkyrie": "generateAbbreviations"
     }
 }

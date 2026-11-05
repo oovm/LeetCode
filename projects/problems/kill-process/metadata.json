@@ -557,6 +557,7 @@
     ],
     "invoke": {
         "python": "Solution().killProcess",
-        "typescript": "Solution().killProcess"
+        "typescript": "Solution().killProcess",
+        "valkyrie": "killProcess"
     }
 }

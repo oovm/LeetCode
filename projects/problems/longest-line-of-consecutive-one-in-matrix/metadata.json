@@ -695,6 +695,7 @@
     ],
     "invoke": {
         "python": "Solution().longestLine",
-        "typescript": "Solution().longestLine"
+        "typescript": "Solution().longestLine",
+        "valkyrie": "longestLine"
     }
 }

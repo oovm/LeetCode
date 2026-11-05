@@ -520,6 +520,7 @@
     ],
     "invoke": {
         "python": "Solution().combinationSum3",
-        "typescript": "Solution().combinationSum3"
+        "typescript": "Solution().combinationSum3",
+        "valkyrie": "combinationSum3"
     }
 }

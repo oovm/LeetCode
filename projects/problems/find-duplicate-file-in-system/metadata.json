@@ -1265,6 +1265,7 @@
     ],
     "invoke": {
         "python": "Solution().findDuplicate",
-        "typescript": "Solution().findDuplicate"
+        "typescript": "Solution().findDuplicate",
+        "valkyrie": "findDuplicate"
     }
 }

@@ -840,6 +840,7 @@
     ],
     "invoke": {
         "python": "Solution().shoppingOffers",
-        "typescript": "Solution().shoppingOffers"
+        "typescript": "Solution().shoppingOffers",
+        "valkyrie": "shoppingOffers"
     }
 }

@@ -178,6 +178,7 @@
     ],
     "invoke": {
         "python": "Solution().longestConsecutive",
-        "typescript": "Solution().longestConsecutive"
+        "typescript": "Solution().longestConsecutive",
+        "valkyrie": "longestConsecutive"
     }
 }

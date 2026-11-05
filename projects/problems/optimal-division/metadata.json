@@ -691,6 +691,7 @@
     ],
     "invoke": {
         "python": "Solution().optimalDivision",
-        "typescript": "Solution().optimalDivision"
+        "typescript": "Solution().optimalDivision",
+        "valkyrie": "optimalDivision"
     }
 }

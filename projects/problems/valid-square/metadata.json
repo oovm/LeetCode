@@ -808,6 +808,7 @@
     ],
     "invoke": {
         "python": "Solution().validSquare",
-        "typescript": "Solution().validSquare"
+        "typescript": "Solution().validSquare",
+        "valkyrie": "validSquare"
     }
 }

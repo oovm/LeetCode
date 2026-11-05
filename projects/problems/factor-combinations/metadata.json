@@ -5549,6 +5549,7 @@
     ],
     "invoke": {
         "python": "Solution().getFactors",
-        "typescript": "Solution().getFactors"
+        "typescript": "Solution().getFactors",
+        "valkyrie": "getFactors"
     }
 }

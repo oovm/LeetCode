@@ -1111,6 +1111,7 @@
     ],
     "invoke": {
         "python": "Solution().exclusiveTime",
-        "typescript": "Solution().exclusiveTime"
+        "typescript": "Solution().exclusiveTime",
+        "valkyrie": "exclusiveTime"
     }
 }

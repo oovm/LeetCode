@@ -555,6 +555,7 @@
     ],
     "invoke": {
         "python": "Solution().leastBricks",
-        "typescript": "Solution().leastBricks"
+        "typescript": "Solution().leastBricks",
+        "valkyrie": "leastBricks"
     }
 }
