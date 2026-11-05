@@ -3133,7 +3133,7 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 ## 特性面 × 可用性矩阵（R30，2026-11-05）
 
 口径：共享 addon `07b625aa` 不重建，真跑 `legion build` + 判题；通过写 `N/N`，阻断写诊断原文摘要。
-本批 10 题通过（853 条用例），另 1 题 `describe-the-painting` 命中 `BTreeMap` 阻断面并保留标记。
+本批 10 题通过（818 条用例），另 1 题 `describe-the-painting` 命中 `BTreeMap` 阻断面并保留标记。
 
 | 特性面 | 状态 | 证据题 | 阻断面（诊断原文摘要） |
 |---|---|---|---|
