@@ -5,6 +5,9 @@ using std.collection;
 # std 的 `BinaryHeap::new()` 只有最小序（无 `new_by`），这里用负值入堆：
 # 堆里保存「准备由梯子承担」的楼层差，堆顶 = 最大的一跳。
 # 当梯子数不够时，弹出最大的一跳改由砖块承担；砖块不足即停在上一栋。
+# 复核于 addon `25132ccf`（2026-11-05）：`BinaryHeap<i64>` 仍阻断，build 失败诊断为
+# `WASM pre-emission verifier: std::infix < at SSA value 2 携带无身份名义类型 Ordering；`
+# `declaration / TypeId 缺失时不得按短名解析存储类`。
 [export(case: "camelCase")]
 micro furthestBuilding(heights: ArrayList<i64>, bricks: i64, ladders: i64) -> i64 {
     let mut heap: BinaryHeap<i64> = BinaryHeap::new()

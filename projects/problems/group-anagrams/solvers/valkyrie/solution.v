@@ -37,23 +37,50 @@ micro sorted_key(word: utf8) -> utf8 {
     return builder.build()
 }
 
+# 临时绕过（复核于 addon `25132ccf`，2026-11-05）：真写法是 `HashMap<utf8, i64>` 按规范形分组，
+# 但 `HashMap<utf8, _>.insert` 在 wasm ABI 上仍阻断：
+# `WASM ABI carrier mismatch in std::insert: slot=i32 actual=anyref operand=%1 (Utf8)`。
+# 因此以「规范形表 + 线性查表」代替映射。
+
+micro equal_text(left: utf8, right: utf8) -> bool {
+    if left.length() != right.length() {
+        return false
+    }
+    let mut index: usize = 0
+    while index < left.length() {
+        if left⁅index⁆ != right⁅index⁆ {
+            return false
+        }
+        index = index + 1
+    }
+    return true
+}
+
 [export(case: "camelCase")]
 micro group_anagrams(strs: ArrayList<utf8>) -> ArrayList<ArrayList<utf8>> {
     let count: usize = strs.length()
-    let mut slots: HashMap<utf8, i64> = HashMap::new(count)
+    let mut keys: ArrayList<utf8> = ArrayList::new(count)
     let mut groups: ArrayList<ArrayList<utf8>> = ArrayList::new(count)
 
     let mut index: usize = 0
     while index < count {
         let word: utf8 = strs⁅index⁆
         let key: utf8 = sorted_key(word)
-        if slots.contains_key(key) {
-            let at: usize = slots.get(key).unwrap() as usize
-            let mut bucket: ArrayList<utf8> = groups⁅at⁆
+        let mut at: i64 = -1
+        let mut scan: usize = 0
+        while scan < keys.length() {
+            if equal_text(keys⁅scan⁆, key) {
+                at = scan as i64
+            }
+            scan = scan + 1
+        }
+        if at >= 0 {
+            let slot: usize = at as usize
+            let mut bucket: ArrayList<utf8> = groups⁅slot⁆
             bucket.push(word)
-            groups.set((at + 1) as isize, bucket)
+            groups.set((slot + 1) as isize, bucket)
         } else {
-            slots.insert(key, groups.length() as i64)
+            keys.push(key)
             let mut bucket: ArrayList<utf8> = ArrayList::new(0)
             bucket.push(word)
             groups.push(bucket)
