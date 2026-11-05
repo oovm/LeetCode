@@ -2,16 +2,13 @@ namespace leetcode.maximum_candies_allocated_to_k_children;
 
 using std.collection;
 
-# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
+# 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 二分答案：每个孩子分到的糖数单调可行。
 # 给定份数 `size` 时，每堆能分出 `candies / size` 份。
 micro portions(candies: ArrayList<i64>, size: i64) -> i64 {
     let mut total: i64 = 0
-    let mut loop_index_9: usize = 0
-    while loop_index_9 < candies.length() {
-        let count: i64 = candies⁅loop_index_9⁆
-            total = total + count / size
-        loop_index_9 = loop_index_9 + 1
+    loop count in candies {
+        total = total + count / size
     }
     return total
 }
@@ -20,14 +17,11 @@ micro portions(candies: ArrayList<i64>, size: i64) -> i64 {
 micro maximumCandies(candies: ArrayList<i64>, k: i64) -> i64 {
     let mut total: i64 = 0
     let mut high: i64 = 0
-    let mut loop_index_19: usize = 0
-    while loop_index_19 < candies.length() {
-        let count: i64 = candies⁅loop_index_19⁆
-            total = total + count
-            if count > high {
-                high = count
-            }
-        loop_index_19 = loop_index_19 + 1
+    loop count in candies {
+        total = total + count
+        if count > high {
+            high = count
+        }
     }
     if total < k {
         return 0

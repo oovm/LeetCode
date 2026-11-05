@@ -2,16 +2,13 @@ namespace leetcode.minimum_time_to_complete_trips;
 
 using std.collection;
 
-# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
+# 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 二分答案：总行程数关于时间单调递增。
 # 给定时间 `t` 时，每辆车能跑 `t / time` 趟。
 micro trips_in(time: ArrayList<i64>, total: i64) -> i64 {
     let mut trips: i64 = 0
-    let mut loop_index_9: usize = 0
-    while loop_index_9 < time.length() {
-        let cost: i64 = time⁅loop_index_9⁆
-            trips = trips + total / cost
-        loop_index_9 = loop_index_9 + 1
+    loop cost in time {
+        trips = trips + total / cost
     }
     return trips
 }
@@ -19,13 +16,10 @@ micro trips_in(time: ArrayList<i64>, total: i64) -> i64 {
 [export(case: "camelCase")]
 micro minimumTime(time: ArrayList<i64>, totalTrips: i64) -> i64 {
     let mut fastest: i64 = time⁅0⁆
-    let mut loop_index_18: usize = 0
-    while loop_index_18 < time.length() {
-        let cost: i64 = time⁅loop_index_18⁆
-            if cost < fastest {
-                fastest = cost
-            }
-        loop_index_18 = loop_index_18 + 1
+    loop cost in time {
+        if cost < fastest {
+            fastest = cost
+        }
     }
     let mut low: i64 = 1
     let mut high: i64 = fastest * totalTrips

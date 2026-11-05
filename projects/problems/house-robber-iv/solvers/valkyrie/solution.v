@@ -2,7 +2,7 @@ namespace leetcode.house_robber_iv;
 
 using std.collection;
 
-# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
+# 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 二分答案：最小可接受金额 `cap` 单调可行。
 # 贪心扫描：金额不超过 `cap` 就取，并跳过相邻下一间。
 micro enough(nums: ArrayList<i64>, cap: i64, k: i64) -> bool {
@@ -23,16 +23,13 @@ micro enough(nums: ArrayList<i64>, cap: i64, k: i64) -> bool {
 micro minCapability(nums: ArrayList<i64>, k: i64) -> i64 {
     let mut low: i64 = nums⁅0⁆
     let mut high: i64 = nums⁅0⁆
-    let mut loop_index_25: usize = 0
-    while loop_index_25 < nums.length() {
-        let value: i64 = nums⁅loop_index_25⁆
-            if value < low {
-                low = value
-            }
-            if value > high {
-                high = value
-            }
-        loop_index_25 = loop_index_25 + 1
+    loop value in nums {
+        if value < low {
+            low = value
+        }
+        if value > high {
+            high = value
+        }
     }
     while low < high {
         let mid: i64 = low + (high - low) / 2

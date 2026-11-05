@@ -1,6 +1,6 @@
 namespace leetcode.range_addition_ii;
 
-# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
+# 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 每次操作都从 (0, 0) 起覆盖，重叠次数最多的格子由「所有操作行列上界的最小值」唯一确定。
 [export(case: "camelCase")]
 micro maxCount(m: i64, n: i64, ops: ArrayList<ArrayList<i64>>) -> i64 {
@@ -9,18 +9,15 @@ micro maxCount(m: i64, n: i64, ops: ArrayList<ArrayList<i64>>) -> i64 {
     }
     let mut min_row: i64 = m
     let mut min_col: i64 = n
-    let mut loop_index_11: usize = 0
-    while loop_index_11 < ops.length() {
-        let op: ArrayList<i64> = ops⁅loop_index_11⁆
-            let row_bound: i64 = op⁅0⁆
-            let col_bound: i64 = op⁅1⁆
-            if row_bound < min_row {
-                min_row = row_bound
-            }
-            if col_bound < min_col {
-                min_col = col_bound
-            }
-        loop_index_11 = loop_index_11 + 1
+    loop op in ops {
+        let row_bound: i64 = op⁅0⁆
+        let col_bound: i64 = op⁅1⁆
+        if row_bound < min_row {
+            min_row = row_bound
+        }
+        if col_bound < min_col {
+            min_col = col_bound
+        }
     }
     return min_row * min_col
 }

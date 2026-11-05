@@ -1,16 +1,13 @@
 namespace leetcode.maximum_xor_for_each_query;
 
-# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
+# 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 逐步移除末尾元素，累计异或与 (1 << maximumBit) - 1 配对即为该次最大值。
 [export(case: "camelCase")]
 micro get_maximum_xor(nums: ArrayList<i64>, maximumBit: i64) -> ArrayList<i64> {
     let mask: i64 = (1 << maximumBit) - 1
     let mut total: i64 = 0
-    let mut loop_index_8: usize = 0
-    while loop_index_8 < nums.length() {
-        let x: i64 = nums⁅loop_index_8⁆
-            total = total ^ x
-        loop_index_8 = loop_index_8 + 1
+    loop x in nums {
+        total = total ^ x
     }
     let mut answer: ArrayList<i64> = ArrayList::new(nums.length())
     let mut i: usize = nums.length()

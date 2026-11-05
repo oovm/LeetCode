@@ -1,22 +1,16 @@
 namespace leetcode.bitwise_xor_of_all_pairings;
 
-# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
+# 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 每对 (i, j) 的异或：nums1[i] 参与 nums2.length 次，nums2[j] 参与 nums1.length 次。
 [export(case: "camelCase")]
 micro xor_all_nums(nums1: ArrayList<i64>, nums2: ArrayList<i64>) -> i64 {
     let mut xor1: i64 = 0
-    let mut loop_index_7: usize = 0
-    while loop_index_7 < nums1.length() {
-        let x: i64 = nums1⁅loop_index_7⁆
-            xor1 = xor1 ^ x
-        loop_index_7 = loop_index_7 + 1
+    loop x in nums1 {
+        xor1 = xor1 ^ x
     }
     let mut xor2: i64 = 0
-    let mut loop_index_11: usize = 0
-    while loop_index_11 < nums2.length() {
-        let y: i64 = nums2⁅loop_index_11⁆
-            xor2 = xor2 ^ y
-        loop_index_11 = loop_index_11 + 1
+    loop y in nums2 {
+        xor2 = xor2 ^ y
     }
     let mut result: i64 = 0
     if nums2.length() % 2 == 1 {

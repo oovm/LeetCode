@@ -1,17 +1,14 @@
 namespace leetcode.delete_and_earn;
 
-# 临时绕过：`loop <var> in <ArrayList>` 在 OVM 后端因 `Cast` lowering 缺失而编译期失败（fail-closed 前表现为运行期零迭代），这里改用显式索引循环；OVM 后端 `Cast` lowering 落地后还原为 `loop ... in`。
+# 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 按数值聚合成 points，再做打家劫舍式递推。
 [export(case: "camelCase")]
 micro delete_and_earn(nums: ArrayList<i64>) -> i64 {
     let mut maximum: i64 = 0
-    let mut loop_index_7: usize = 0
-    while loop_index_7 < nums.length() {
-        let x: i64 = nums⁅loop_index_7⁆
-            if x > maximum {
-                maximum = x
-            }
-        loop_index_7 = loop_index_7 + 1
+    loop x in nums {
+        if x > maximum {
+            maximum = x
+        }
     }
     let mut counts: ArrayList<i64> = ArrayList::new((maximum + 1) as usize)
     let mut v: i64 = 0
@@ -19,11 +16,8 @@ micro delete_and_earn(nums: ArrayList<i64>) -> i64 {
         counts.push(0)
         v = v + 1
     }
-    let mut loop_index_18: usize = 0
-    while loop_index_18 < nums.length() {
-        let x: i64 = nums⁅loop_index_18⁆
-            counts⁅x as usize⁆ = counts⁅x as usize⁆ + 1
-        loop_index_18 = loop_index_18 + 1
+    loop x in nums {
+        counts⁅x as usize⁆ = counts⁅x as usize⁆ + 1
     }
     let mut take: i64 = 0
     let mut skip: i64 = 0
