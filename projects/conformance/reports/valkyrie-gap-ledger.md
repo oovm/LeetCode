@@ -3241,27 +3241,46 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 
 口径：按题面最优复杂度手写 `solution.v` + TS 参考解，真跑 `legion build --target wasm32-unknown-unknown-wasm` 与隔离判题；本批 29 题，19 题双 lane 端到端通过，10 题标注 blocked-gap。
 
-### 阻断 A：裸整数字面量之间的 `infix -`
+### 阻断 A：裸整数字面量之间的 `infix -`（2026-11-06 已解决 6 题）
 
 形如 `0 - 1` / `0 - 1000000000` 的负常量在两侧都是裸字面量时无法唯一选中 `infix -` 的 impl 见证；右侧换成有类型的值（如 `0 - arr⁅0⁆`）不受影响。首错均为：
 `error[valkyrie.hir.unresolved_call]: unresolved call \`infix -\` ... : N explicit impl candidates share the same specificity, so no unique witness can be selected`
 
-| 题号 | 站点 | 首错摘要 |
-|---|---|---|
-| 690 `longest-turbulent-subarray` | `solvers/valkyrie/solution.v:20:20` `sign = 0 - 1` | 3 candidates |
-| 1007 `minimum-domino-rotations-for-equal-row` | `solvers/valkyrie/solution.v:13:20` `return 0 - 1` | 3 candidates |
-| 1014 `best-sightseeing-pair` | `solvers/valkyrie/solution.v:9:25` `0 - 1000000000` | 2 candidates |
-| 1031 `maximum-sum-of-two-non-overlapping-subarrays` | `solvers/valkyrie/solution.v:21:31`、`:37:32` | 3 candidates |
-| 1073 `adding-two-negabinary-numbers` | `solvers/valkyrie/solution.v:26:21` `carry = 0 - 1`、`:27:26` `sum == 0 - 1` | 3 candidates；随后 `infix ==` 6 candidates 无匹配 |
-| 1131 `maximum-of-absolute-value-expression` | `solvers/valkyrie/solution.v:8:28` 及 `:27:50`、`:31:47`、`:35:47`、`:35:54` | 2 candidates；`extreme` 调用实参类型不匹配 |
-| 1186 `maximum-subarray-sum-with-one-deletion` | `solvers/valkyrie/solution.v:10:31` `0 - 1000000000000000000` | 2 candidates |
-| 1590 `make-sum-divisible-by-p` | `solvers/valkyrie/solution.v:22:5` `first.insert(0, 0 - 1)`、`:22:21`、`:42:16` | `HashMap.insert` 4 candidates 无匹配 + 3 candidates |
+已由编译器 `nyar-vm.rs` 的 `e314ff46` 修复：并列时先按「字面量值是否落在形参范围内」、再按宽度转换次数评分；调用点有期望类型且唯一匹配返回类型时优先。真跑判题结果：
 
-### 阻断 B：Semantic MIR 合同
+| 题号 | 状态 | 证据 |
+|---|---|---|
+| 690 `longest-turbulent-subarray` | 已解决，移出 blocked | 150/150 |
+| 1014 `best-sightseeing-pair` | 已解决，移出 blocked | 真跑通过 |
+| 1031 `maximum-sum-of-two-non-overlapping-subarrays` | 已解决，移出 blocked | 真跑通过 |
+| 1131 `maximum-of-absolute-value-expression` | 已解决，移出 blocked | 94/94 |
+| 1186 `maximum-subarray-sum-with-one-deletion` | 已解决，移出 blocked | 139/139 |
+| 1590 `make-sum-divisible-by-p` | 已解决，移出 blocked | 76/76 |
+| 1007 `minimum-domino-rotations-for-equal-row` | 保留 blocked：编译已通过，`13:20` 不再报错，剩余失败为语料缺列（见下表） | 编译通过 |
+| 1073 `adding-two-negabinary-numbers` | 保留 blocked：字面量歧义已消失，`:27:26` 的 `infix ==` 仍 6 candidates 无匹配 | 见阻断 D |
+
+### 阻断 B：Semantic MIR 合同（1546，根因已定位）
 
 | 题号 | 站点 | 首错摘要 |
 |---|---|---|
 | 1546 `maximum-number-of-non-overlapping-subarrays-with-sum-equals-target` | `solvers/valkyrie/solution.v` 内 `seen = HashMap::new(0)` 重赋值处（block 4 instruction 7） | `SMIR007 ... call argument type differs from declared signature (actual=Unit, expected=Nominal { ... HashMap ... })` |
+
+2026-11-06 根因定位（最小 fixture：泛型 `class Holder<K,V>` + `imply Holder<K,V> { micro new(...): Self }`）：
+
+- 同一 `Holder::new(4)` 在 `let` 初始化处解析为 `instance=Some(ItemInstanceId)`、返回类型已实例化为 `<i64,i64>`；
+- 在 `x = Holder::new(4)` 赋值处解析为 `instance=None`、返回类型仍是 `Generic(K)/Generic(V)`，MIR 因无可调用实例把调用降为 Unit；
+- `let` 侧由声明类型掩盖（`StoreVar` 带声明类型），赋值侧随 `StoreVar` 把 Unit 传播为绑定类型，后续 `seen.insert` 接收者变成 Unit。
+
+因此修复点是 HIR 赋值值位置缺少期望类型，不是 MIR 降级（降级只是表现）。见阻断 D。
+
+### 阻断 D：赋值值位置的期望类型丢失（2026-11-06 新登记）
+
+| 位置 | 现状 | 影响题 |
+|---|---|---|
+| `nyar-vm.rs` `.../hir/overload/resolve_call/resolve.rs` `HirExprKind::Assign` 分支 | 值表达式沿用外层 `contextual_type`，未下传左值的声明类型；对照 `StoreField` 已按字段类型下传 | 1546 `seen = HashMap::new(0)` |
+| `nyar-vm.rs` `.../hir/overload/substitution.rs` `member_call_argument_contexts` | 原始数值接收者不按 owner 名归属实参类型 | 1073 `sum == 0 - 1` 中 `infix ==` 的另一实参拿不到 `i64` 上下文 |
+
+两个文件均属本轮并行会话在途文件，按任务纪律停下待排期，不在本线修改。
 
 ### 语料缺陷（只标注，不改用例）
 
