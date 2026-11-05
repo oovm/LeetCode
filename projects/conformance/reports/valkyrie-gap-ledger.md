@@ -49,7 +49,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G10 `DisjointSet` 分量聚合 | b | 3 处 × 重写 DSU 内部聚合 |
 | G11 `sorted_by` | b | 21 处 × 副本 + `merge_sort`（R28 后 +3） |
 | G13 `utf8` 字典序比较 | b | 5 处 × 约 10 行比较脚手架 |
-| G16 `BTreeSet` / `BTreeMap` 界查询 | b | 5 处 × O(k) 物化 + 手写二分 |
+| G16 `BTreeSet` / `BTreeMap` 界查询 | b | 3 处 × O(k) 物化 + 手写二分（其中 1 处为按秩查询；`nth` 已销案） |
 | G17 `char` 缺 `Hash` | b | 7 处 × 每次调用点换键型 |
 | G22 整数位元查询 | b | 5 处 × 重复位运算 |
 | G25 `BitSet` 基数 / 复制 | b | 4 处 × 手写 O(bits) 计数，丢掉位并行 |
@@ -1748,7 +1748,7 @@ imply Utf8Text: Comparable { ... }
 ### G16 `BTreeSet` / `BTreeMap` 缺序关系查询
 
 - 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/collection/sorted/BTreeSet.v`、
-  `BTreeMap.v`）
+  `BTreeMap.v`；2026-11-05 按 `nth` 复核订正影响面，见下）
 - 定性：**该有但没有**。容器按序存放，却只暴露「插入 / 存在性 / 删除 / 全量物化」，
   没有任何按值定位的界查询，调用方拿不到「最近的较小/较大元素」。
 - 期望签名（[提案]，源码尚不存在）：
@@ -1761,26 +1761,42 @@ micro ceiling(self, value: T) -> Option<T>
 micro first(self) -> Option<T>
 micro last(self) -> Option<T>
 micro range(self, low: T, high: T) -> ArrayList<T>
-micro nth(self, rank: usize) -> Option<T>        # BTreeSet，按秩取元素
-micro nth_key(self, rank: usize) -> Option<K>    # BTreeMap，按秩取键
+micro nth_key(self, rank: usize) -> Option<K>    # BTreeMap，按秩取键（需节点子树规模，当前节点无该字段）
 micro ceiling_key(self, value: K) -> Option<K>   # BTreeMap，最小 >= value 的键（下界查询）
 micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value 的键（上界查询）
 ```
 
-- 影响题（5）：`contains-duplicate-iii`（220，窗口内前驱/后继判定；R4–R8 曾直接按 `[提案]`
-  的 `floor` / `ceiling` 写，2026-11-04 更正提交已改为 `to_list()` 快照 + 手写 `lower_bound`）、
-  `sliding-window-median`（480，有序计数表按秩取中位；缺 `nth_key` 只能 `keys()` 全量物化，
-  每步退化为 O(k)）、`find-right-interval`（436，批次 R6，按终点求「最小 >= 终点的起点」，
-  即 `ceiling_key`；缺它只能 `keys()` 全量物化后手写二分）、`k-diff-pairs-in-an-array`（532，
-  批次 R9，去重后有序扫描只能 `to_list()` 后下标遍历，缺 `nth` / `range`）、
-  `rank-transform-of-an-array`（1331，批次 R10，去重后按秩回填只能 `to_list()` 后线性建表）。
-- 核对补充（批次 R9 / R10）：`BTreeSet` / `BTreeMap` **都没有** `range`，观察 2 里「区间开闭待定」
-  的条目当前不存在实现，无从核对；`nth` / `rank` 同样只在提案里。第 10 批的
-  `minimum-moves-to-equal-array-elements-ii`（462）虽要「第 k 小」，但 `BTreeSet` 会去重、破坏重复值
-  语义，理想解须保留多重集，故**不**计入 `nth` 影响面——`nth` 本身仍无自然调用点。
+- 影响题（3，`nth` 销案后）：`contains-duplicate-iii`（220，`solvers/valkyrie/solution.v:33-42`
+  为 `window.to_list()` 快照 + 手写 `lower_bound`，语义是前驱/后继的值查找，即 `floor` / `ceiling`）、
+  `find-right-interval`（436，`:26` 调用 `starts.ceiling_key(end)`，语义是「最小 >= 终点的键」）、
+  `sliding-window-median`（480，`:27/30/31` 调用 `counts.nth_key(size / 2)`，语义是**按秩取第 k 小**，
+  计数表必须保留重复值，`BTreeSet` 的去重语义不可替代）。
+- 不属 `nth` 影响面（全量物化即可，转观察）：`k-diff-pairs-in-an-array`（532，`:22` 起
+  `distinct.to_list()` 后双指针扫描，实际无 `nth` 调用）、`rank-transform-of-an-array`
+  （1331，`:15` 起 `distinct.to_list()` 后用 `⁅index⁆` 建名次表；这里是 `ArrayList` 的
+  `Cardinal`，不是有序容器的按秩查询）。
+- 核对补充（2026-11-05 代码事实，订正批次 R9 / R10 的 `nth` 表述）：
+  - `BTreeSet` / `BTreeMap` **都没有 `imply Cardinal`**（全 std 只有 `ArrayList` / `Array` /
+    `ArrayView` / `Utf8Text` / `Utf16Text` 实现），`⁅ ⁆` 对有序容器不可用。
+  - 迭代器 `nth` **已存在**：`std/source/iterator/iterator_terminal.v:99`，
+    `micro nth<I, T>(self: I, index: usize): Option<T> where I: Iterator<Item = T>`，线性
+    `has_next` / `next` 扫描，不是 O(log n) 的按秩查询。
+  - `BTreeSet` / `BTreeMap` **未实现 `IntoIterator`**（全 std 只有 `ArrayList` / `Array` /
+    `AsciiText` / `Utf8Text` / `Utf16Text` 实现），`into_iterator().nth(k)` 无法直接用于有序容器，
+    只能 `to_list().into_iterator().nth(k)`，先付 O(n) 物化。
+  - `BTreeSetNode`（`BTreeSet.v:3-8`）与 `BTreeNode`（`BTreeMap.v:8-14`）只有
+    `keys` / `children` / `next`，**没有子树规模字段**，当前结构做不了 O(log n) 的 rank。
+  - 全库 `solvers/valkyrie/**` **0 处 `.nth(`**，唯一真按秩调用是 480 的 `nth_key`。
+  - `minimum-moves-to-equal-array-elements-ii`（462）要中位数但必须保留重复值，`BTreeSet` 去重
+    语义不适用，故不计入。
 - 不对称点：`HashMap` 有 `keys` / `values`，`BTreeSet` 有 `to_list`，但有序容器只能被全量物化后
-  线性扫描；`floor` / `ceiling` / `first` / `last` / `range` / `nth` 全部缺失，「有序」只剩存储形态。
-- 判定：**真缺口**（判据 b：5 处 × O(k) 物化 + 手写二分）。
+  线性扫描；`floor` / `ceiling` / `first` / `last` / `range` 全部缺失，「有序」只剩存储形态。
+  `Cardinal` 是另一条独立路线（位置语义），与界查询不重叠；且需先给节点补子树规模，不能替代
+  `nth_key`（`BTreeMap` 的 `Index` 语义是键，不是秩）。
+- 判定：**真缺口**（判据 b：3 处 × O(k) 物化 + 手写二分，其中 1 处为按秩查询）。
+  `nth` 作为「`BTreeSet` 取第 k 个」的 API **销案**：迭代器 `nth` 已存在，容器侧 `to_list()⁅k⁆`
+  即可；`nth_key` 保留，但表述改为「按秩（order-statistic）查询」，实现前提是节点补子树规模。
+  `floor` / `ceiling` / `range` 是值查找语义，与 `Cardinal` 不重叠，独立保留。
 - 修复初判：**加 API**（底层节点已按序，查询不需新模型）。**实现前提是 G15 的 `Comparable`
   先落地，否则等于在无约束类型上裸调 `<`，和 `BTreeSet<T: Equal>` 那个不健全容器是同一个病。**
 
@@ -2366,8 +2382,9 @@ micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countabl
 - **`HashMap.iterator(f: micro(K, V) -> unit)` 形态不可用于累加**：回调没有捕获，只能做纯观察；
   任何「遍历时写入外部容器」的第二遍都表达不了。等价近似物是 `keys()` / `values()` 物化后遍历，
   本批全部走这条路，故不编号。与观察 4 无关，这是回调形态本身的限制。
-- **`BTreeSet` 按秩（G16 `nth`）仍缺**：`k-diff-pairs-in-an-array`（532）只需有序遍历，
-  `to_list()` 后下标访问即可；真正要「第 k 小」时仍得全量物化，已在 G16 补记。
+- **`BTreeSet` 取第 k 个（G16 复核后销案）**：`k-diff-pairs-in-an-array`（532）只需有序遍历，
+  `to_list()` 后下标访问即可；`BTreeSet` / `BTreeMap` 未实现 `Cardinal` 与 `IntoIterator`，
+  迭代器 `nth` 与 `to_list()⁅k⁆` 都要先付 O(n) 物化。真按秩需求只剩 480 的 `nth_key`，见 G16。
 - **`utf8.trim` / `replace` 语义不可核对**：两者在 `Utf8Text.v` 都是 `[host_contract]` 空壳
   （L186 / L199 直接 `return self`），std 源里没有「去哪些字符 / 全量还是首个替换」的实现。
   本批 8 题不含纯文本题，未实际调用；结论写入观察 2。
@@ -2386,10 +2403,11 @@ micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countabl
 - **`HashMap.iterator` 的回调无捕获边界（第二次确认）**：`sort-array-by-increasing-frequency`（1636）
   与 `merge-similar-items`（2363）都要遍历计数的键；回调不能捕获结果容器，无法在遍历中 `push`，
   只能 `keys()` 物化后在外层循环处理。这是**能力边界**而非缺口（`keys()` 是等价写法）。
-- **`BTreeSet.nth` / `rank` 仍无自然调用点**：`rank-transform-of-an-array`（1331）要「值 → 名次」，
+- **`BTreeSet.nth` 销案（2026-11-05 复核）**：`rank-transform-of-an-array`（1331）要「值 → 名次」，
   `to_list()` + 一次线性建表已是 O(n log n)，`nth` 帮不上；`minimum-moves-to-equal-array-elements-ii`
-  （462）要中位数，但 `BTreeSet` 会去重、破坏重复值语义，必须保留多重集。G16 影响题扩为 5，
-  但 `nth` 本身仍只在提案里。
+  （462）要中位数，但 `BTreeSet` 会去重、破坏重复值语义，必须保留多重集。`nth` 由迭代器
+  `nth`（`iterator_terminal.v:99`）与 `to_list()⁅k⁆` 覆盖，影响面订正为 3（220 / 436 / 480），
+  其中 480 的 `nth_key` 是真按秩需求，保留在 G16。
 - **`utf8` 四个 `[host_contract]` 空壳未被本批使用**：8 题没有一题依赖 `trim` / `replace` /
   `to_lower` / `to_upper`，因此本批无需「语义未定，待 adaptor 侧确认」标注；约束见观察 5。
 
