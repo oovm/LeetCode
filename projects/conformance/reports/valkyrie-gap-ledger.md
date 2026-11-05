@@ -3147,6 +3147,6 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 | `BinaryHeap` + `Comparable` | 阻断 | `last-stone-weight` 等 | 义务不在调用点消解 |
 | 设计类（多方法 + 实例状态） | 阻断 | 6 题 | 入口闭包 + 实例句柄 ABI |
 | 递归 / 深度 | 可用 | `construct-the-lexicographically-largest-valid-sequence` 18/18（递归深度 ≤ 40） | 上一轮 `RecursionError` 属 Python 语料，与 V 递归上限无关 |
-| `loop` for-in 标量写回 | 阻断（静默错值，非报错） | `maximum-sum-score-of-array` | `loop value in nums { total = total + value }` 迭代了 5 次（同循环体写 `HashMap` 得 5 个键），`total` 仍为 0；判据输入 `[-10,-20,-30,-40,-50]` 应得 `-150`，实测 `0` |
+| `loop` for-in 标量写回 | 阻断（静默错值，非报错） | `maximum-sum-score-of-array` | `loop value in nums { total = total + value }` 迭代了 5 次（同循环体写 `HashMap` 得 5 个键），`total` 仍为 0；判据输入 `[-10,-20,-30,-40,-50]` 应得 `-150`，实测 `0`。**观测于共享 addon `07b625aa`，早于 `172b944a`（MIR 块退出写回修复）；该形态可能已被修好，判据：重建 addon 后复跑 `maximum-sum-score-of-array`** |
 
 下一批选题依据：优先补 `BTreeMap` / `Comparable` 义务解析与 for-in 标量写回两条线；避免再撞 `utf8`、`BinaryHeap`、设计类。

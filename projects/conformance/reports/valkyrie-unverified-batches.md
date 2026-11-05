@@ -1635,3 +1635,5 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   `ArrayList<i64>` 迭代了 5 次（同循环体改写 `HashMap.insert` 实测 5 个键，`seen.length()=5`），
   但标量累加结果仍为 0。判据：同一输入 `[-10,-20,-30,-40,-50]`，`return total` 得 `0`，
   期望 `-150`；改成 `while` 下标累加后全部通过。堆对象写入有效、标量写回丢失。
+  观测于共享 addon `07b625aa`，早于 `172b944a`（MIR 块退出写回修复）；该形态可能已被修好，
+  判据：重建 addon 后复跑 `maximum-sum-score-of-array`。
