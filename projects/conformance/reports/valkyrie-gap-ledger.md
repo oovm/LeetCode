@@ -833,6 +833,25 @@ HIR 层证据是通的。真机制是 OVM 后端把 `Cast` 静默跳过（`_ => 
 `find-all-possible-recipes-from-given-supplies` 的标注同一格式。**OVM 后端 `Cast` lowering
 落地后**，下列 30 题一次性还原为 `loop <var> in <list>`，其余逻辑不动。
 
+**2026-11-05 复核结论：缺陷已修，30 题已还原（`172b944a` 修复块退出写回）。**
+验收量具为 addon 副本 `25132ccf`（`projects/conformance/.cache/valkyrie-forin.node`，
+`VALKYRIE_NATIVE` 指向它），逐题 `legion build` + 全量 `metadata.tests` 真跑，全部通过：
+`binary-subarrays-with-sum` 72/72、`bitwise-ors-of-subarrays` 93/93、`bitwise-xor-of-all-pairings` 96/96、
+`capacity-to-ship-packages-within-d-days` 80/80、`count-nice-pairs-in-an-array` 107/107、
+`count-number-of-nice-subarrays` 68/68、`cutting-ribbons` 100/100、`delete-and-earn` 115/115、
+`find-the-smallest-divisor-given-a-threshold` 78/78、`find-xor-beauty-of-array` 81/81、`house-robber` 117/117、
+`house-robber-iv` 100/100、`last-stone-weight-ii` 100/100、`maximum-candies-allocated-to-k-children` 82/82、
+`maximum-product-subarray` 91/91、`maximum-xor-after-operations` 101/101、`maximum-xor-for-each-query` 79/79、
+`maximum-xor-of-two-numbers-in-an-array` 102/102、`minimum-average-difference` 94/94、
+`minimum-limit-of-balls-in-a-bag` 99/99、`minimum-number-of-days-to-make-m-bouquets` 93/93、
+`minimum-time-to-complete-trips` 103/103、`number-of-sub-arrays-with-odd-sum` 87/87、
+`number-of-ways-to-split-array` 105/105、`range-addition-ii` 112/112、`single-number-ii` 86/86、
+`single-number-iii` 50/50、`subarray-sums-divisible-by-k` 108/108、
+`sum-of-absolute-differences-in-a-sorted-array` 69/69、`total-hamming-distance` 98/98。
+同批还有 3 题带同一注释的还原：`best-time-to-buy-and-sell-stock` 99/99、`majority-element` 45/45、
+`single-number` 108/108。残留 `while` 的 4 题（`house-robber-iv`、`maximum-xor-for-each-query`、
+`minimum-average-difference`、`number-of-ways-to-split-array`）是算法本身需要下标，不是绕法。
+
 | slug | 题目录 |
 | --- | --- |
 | `binary-subarrays-with-sum` | `projects/problems/binary-subarrays-with-sum` |
@@ -871,13 +890,18 @@ HIR 层证据是通的。真机制是 OVM 后端把 `Cast` 静默跳过（`_ => 
 
 ### 待还原组：`phone-number-prefix` 的 utf8 序面（1 题，R28 产出）
 
-`solution.v` 顶部已加 `# 临时绕过：...`。理想写法是把号码按字典序排序后逐对检查
-「前一个是否为后一个的真前缀」；当前 `sort` 只接受 `T: Comparable`，`utf8` 未实现该合同，
-也没有接收比较器的公共排序入口（`merge_sort` 是 `private` 三参实现），因此临时改用
-`HashSet<utf8>` 枚举每个号码的全部真前缀再查表。结论等价，但这是绕开排序入口的写法。
-还原判据：`sorted_by(list, cmp)` 落地或 `utf8: Comparable` 落地后，改回排序 + 相邻前缀检查。
-坐标：`projects/problems/phone-number-prefix/solvers/valkyrie/solution.v:3`（注释）与
-`:12`（`HashSet<utf8>` 建集）。
+理想写法是把号码按字典序排序后逐对检查「前一个是否为后一个的真前缀」（与 TS / Python
+参考实现一致）。**2026-11-05 复核（addon `25132ccf`）：仍阻断，绕法保留并真跑 97/97。**
+两条实测诊断：
+
+- `sorted_by(numbers, compare_text)`：`WASM ABI carrier mismatch in std::collection::is_less_or_equal: slot=i32 actual=anyref operand=%0 (Utf8)`。
+- `sort(sorted)`（`utf8: Comparable` 已存在于 `std/source/text/Utf8Text.v:555`）：
+  `WASM pre-emission verifier: std::collection::natural_order at SSA value 2 携带无身份名义类型 Ordering；declaration / TypeId 缺失时不得按短名解析存储类`。
+
+因此保留 `HashSet<utf8>` 枚举真前缀的绕法。**同时更正旧结论**：`utf8: Hash` 与
+`std::hash#` 合同实例在该 addon 上已可用（`HashSet<utf8>` 的 `insert`/`contains` 编译与运行均通过，
+本题 97/97 即证据），旧记录的「`std::hash#` 合同实例仍缺」不再成立。
+坐标：`projects/problems/phone-number-prefix/solvers/valkyrie/solution.v:3`（注释）与 `:16`（`HashSet<utf8>` 建集）。
 
 ### 汇聚组（签名落地后一次性复跑）
 
@@ -3065,20 +3089,35 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
   `ArrayList<ArrayList<i64>>` 实例化均通过（`sort-integers`、`k-closest`）。
 - **G-utf8-slice-panic**：`utf8.slice`（`host_slice`）触发 emitter 断言 panic
   （`nyar-emitter ... wasm/mir/calls.rs:245`），不是可读诊断；`reorder-data-in-log-files` 命中。
-- **G-hash-utf8**（复测，仍阻断）：`std::hash#` 合同实例未进 consumer_imports；
-  `HashMap<utf8,_>`、`HashSet<utf8>` 均不可编译（`group-anagrams`、`longest-word-in-dictionary`）。
-- **G-binaryheap**（复测，仍阻断）：`BinaryHeap<i64>.push/pop` 在调用点无法用
-  `i64: Comparable` 消解义务；`BinaryHeap::new_by` / `max()` 不存在；`f64` 无 `Comparable`。
-- **F3**（已知，仍阻断）：utf8 返回值在判题期 `TypeError: Cannot convert object to primitive value`，
-  需重建 addon（本批不重建）。
+- **G-hash-utf8**（2026-11-05 复核，addon `25132ccf`）：旧结论「`std::hash#` 合同实例未进
+  consumer_imports，`HashMap<utf8,_>`、`HashSet<utf8>` 均不可编译」**只有一半成立**：
+  `HashSet<utf8>` 已可用（`phone-number-prefix` 97/97）；`HashMap<utf8,_>` 仍阻断，但诊断变为
+  `WASM ABI carrier mismatch in std::insert: slot=i32 actual=anyref operand=%1 (Utf8)`；
+  `HashMap<char,i64>` 已可用（`sort-characters-by-frequency` 编译并运行）。
+- **G-binaryheap**（复核，仍阻断）：`BinaryHeap<i64>` build 失败
+  `WASM pre-emission verifier: std::infix < at SSA value 2 携带无身份名义类型 Ordering；declaration / TypeId 缺失时不得按短名解析存储类`。
+- **F3**（复核，部分修复）：utf8 返回值在 addon `25132ccf` 上不再抛
+  `Cannot convert object to primitive value`（`sort-characters-by-frequency` 已跑出真实字符串），
+  但多字节字符仍被截断/替换（`İ` → `����`，tests[35]）。
 
-### 待还原组（绕缺口写法，已在各 `solution.v` 顶部标注）
+### 待还原组（2026-11-05 全面复核，addon `25132ccf`）
 
-- `group-anagrams`、`top-k-frequent-words`、`most-common-word`、`sort-characters-by-frequency`：
-  以「词表/码位表 + 计数表」线性查找替代 `HashMap<utf8,_>` / `HashMap<char,i64>`。
-  真写法是哈希容器；还原判据：`std::hash#` 合同实例进入 consumer_imports。
-- `last-stone-weight`、`furthest-building-you-can-reach`：以「取负入最小堆」表达最大堆。
-  真写法是 `BinaryHeap::new_by(max comparator)` 或 `BinaryHeap::max()`；还原判据：该 API 落地。
+复核量具：addon 副本 `25132ccf`（`projects/conformance/.cache/valkyrie-forin.node`，
+`VALKYRIE_NATIVE` 指向它），未使用共享旧 addon，未重建。
+
+| slug | 原绕法 | 缺陷 | 当前状态 | 实测数字 / 诊断原文 | 动作 |
+| --- | --- | --- | --- | --- | --- |
+| `group-anagrams` | `HashMap<utf8,i64>` 按规范形分组 | `HashMap<utf8,_>.insert` ABI | 仍阻断 | `WASM ABI carrier mismatch in std::insert: slot=i32 actual=anyref operand=%1 (Utf8)` | 改回「规范形表 + 线性查表」，69/69 通过，顶部注「仍阻断」 |
+| `top-k-frequent-words` | `HashMap<utf8,i64>` 计数 + `sorted_by` 桶内排序 | 同上 + `sorted_by(utf8)` | 仍阻断 | `std::insert` carrier mismatch 与 `is_less_or_equal` carrier mismatch（原文见 `solution.v` 顶部） | 保留线性计数，桶内改就地插入排序，92/92 通过 |
+| `most-common-word` | `HashMap<utf8,i64>` 计数 + `HashSet<utf8>` 去重 | 同上 | 仍阻断 | 同上；另 `ArrayList<char>` + utf8 `StoreVar` 触发 `CAN015 OperationResultTypeMismatch`（已按下标记录最优词绕开） | 保留线性查表，20/20 通过 |
+| `sort-characters-by-frequency` | 线性「码位表 + 计数表」替代 `HashMap<char,i64>` | `char: Hash` 缺失 | **已修** | `HashMap<char,i64>` 编译并运行，35/54；剩余掉红是多字节 ABI（`İ` → `����`），与容器无关 | **已还原 `HashMap<char,i64>`** |
+| `last-stone-weight` | 取负入最小堆 | `BinaryHeap` + `Comparable` | 仍阻断 | `WASM pre-emission verifier: std::infix < ... 携带无身份名义类型 Ordering` | 保留绕法，build 仍失败，顶部注「仍阻断」 |
+| `furthest-building-you-can-reach` | 取负入最小堆 | 同上 | 仍阻断 | 同上 | 同上 |
+| `phone-number-prefix` | `HashSet<utf8>` 枚举真前缀 | `sort` / `sorted_by` 的 utf8 实例化 | 仍阻断 | `is_less_or_equal` carrier mismatch（`sorted_by`）；`natural_order ... Ordering`（`sort`） | 保留绕法，97/97 通过 |
+
+- `last-stone-weight` / `furthest-building-you-can-reach` 的绕法本身在该 addon 上也无法编译，
+  故两项仍是「未验证」，不是「已还原」。
+- `phone-number-prefix` 真写法与 TS / Python 参考实现一致（排序 + 相邻前缀检查），保留原因见上表。
 
 ## 参考实现精度审计（2026-11-05）
 
@@ -3134,19 +3173,23 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 
 口径：共享 addon `07b625aa` 不重建，真跑 `legion build` + 判题；通过写 `N/N`，阻断写诊断原文摘要。
 本批 10 题通过（818 条用例），另 1 题 `describe-the-painting` 命中 `BTreeMap` 阻断面并保留标记。
+2026-11-05 复核行以 addon 副本 `25132ccf` 复测（`VALKYRIE_NATIVE` 指向 `.cache/valkyrie-forin.node`）。
 
 | 特性面 | 状态 | 证据题 | 阻断面（诊断原文摘要） |
 |---|---|---|---|
 | 整数 / `ArrayList` / 双指针 / 前缀和 / DP / 矩阵 | 可用 | `number-of-zero-filled-subarrays` 99/99、`bag-of-tokens` 103/103、`maximum-sum-score-of-array` 93/93、`partition-array-for-maximum-sum` 104/104、`uncrossed-lines` 106/106、`matrix-block-sum` 88/88 | — |
 | `HashMap<i32,_>` / `BTreeMap<i32,_>` | HashMap 可用；BTreeMap 阻断 | `pairs-of-songs-with-total-durations-divisible-by-60` 89/89（`HashMap<i32,i64>` i32 键）、`minimum-index-of-a-valid-split` 12/12（`HashMap<i64,i64>`） | BTreeMap：`unresolved call ... none matches the argument types`（`where K: Equal & std::operator::Comparable` 义务不在调用点消解，补 `using std.operator;` 无效） |
 | `sorted_by`（整型 / 嵌套 / packed-key） | 可用 | 96/96、117/117、98/98；本批 `maximum-length-of-pair-chain` 106/106（`ArrayList<i64>` 元素） | — |
-| `sorted_by` 以 `utf8` 实例化 | 阻断 | — | `WASM ABI carrier mismatch` |
-| `utf8` 容器（`HashMap<utf8,_>`、`HashSet<utf8>`） | 阻断 | — | `std::hash#` 合同实例未进 `consumer_imports` |
-| `utf8` 返回值 | 阻断 | — | `TypeError: Cannot convert object to primitive value` |
-| `Utf8Builder` | 阻断 | — | `std::new#287` / `std::grow_to#300` |
-| `BinaryHeap` + `Comparable` | 阻断 | `last-stone-weight` 等 | 义务不在调用点消解 |
+| `sorted_by` 以 `utf8` 实例化 | 阻断（`25132ccf` 复核） | `top-k-frequent-words`、`phone-number-prefix` | `WASM ABI carrier mismatch in std::collection::is_less_or_equal: slot=i32 actual=anyref operand=%0 (Utf8)` |
+| `sort` 以 `utf8` 实例化（`utf8: Comparable` 已存在） | 阻断（`25132ccf` 复核） | `phone-number-prefix` 真写法 | `WASM pre-emission verifier: std::collection::natural_order at SSA value 2 携带无身份名义类型 Ordering` |
+| `HashSet<utf8>` | **可用**（`25132ccf` 复核，改判） | `phone-number-prefix` 97/97 | — |
+| `HashMap<utf8,_>` | 阻断（`25132ccf` 复核，诊断更新） | `group-anagrams`、`most-common-word`、`top-k-frequent-words` | `WASM ABI carrier mismatch in std::insert: slot=i32 actual=anyref operand=%1 (Utf8)` |
+| `HashMap<char,i64>` | **可用**（`25132ccf` 复核，改判） | `sort-characters-by-frequency` 编译并运行（35/54） | — |
+| `utf8` 返回值 | 部分可用（`25132ccf` 复核） | `sort-characters-by-frequency` 35/54 | 不再抛 `Cannot convert object to primitive value`，但多字节字符被截断（`İ` → `����`） |
+| `Utf8Builder` | 可用（`25132ccf` 复核） | `phone-number-prefix` 97/97、`group-anagrams` 69/69、`most-common-word` 20/20 | — |
+| `BinaryHeap` + `Comparable` | 阻断（`25132ccf` 复核） | `last-stone-weight`、`furthest-building-you-can-reach` | `WASM pre-emission verifier: std::infix < ... 携带无身份名义类型 Ordering` |
 | 设计类（多方法 + 实例状态） | 阻断 | 6 题 | 入口闭包 + 实例句柄 ABI |
 | 递归 / 深度 | 可用 | `construct-the-lexicographically-largest-valid-sequence` 18/18（递归深度 ≤ 40） | 上一轮 `RecursionError` 属 Python 语料，与 V 递归上限无关 |
-| `loop` for-in 标量写回 | 可用（已由 `172b944a` 修复） | `maximum-sum-score-of-array` 93/93 | 旧 addon `07b625aa` 与其父 `8ebc289e` 实测 `0`，`172b944a` 实测 `-150`，当前 HEAD `25132ccf` 实测 `-150`；配套 `loop` + `HashMap.insert` 从 `5` 变 `-14995`，证明迭代本身一直正确。判据输入 `[-10,-20,-30,-40,-50]` 应得 `-150`。验收必须用 `172b944a` 或更新 addon 副本/重建，不得用共享旧 addon 复跑后宣布通过 |
+| `loop` for-in 标量写回 | 可用（已由 `172b944a` 修复） | `maximum-sum-score-of-array` 93/93；同批 30 题还原全通过（逐题数字见「待还原组」） | 旧 addon `07b625aa` 与其父 `8ebc289e` 实测 `0`，`172b944a` 实测 `-150`，当前 HEAD `25132ccf` 实测 `-150`；配套 `loop` + `HashMap.insert` 从 `5` 变 `-14995`，证明迭代本身一直正确。判据输入 `[-10,-20,-30,-40,-50]` 应得 `-150`。验收必须用 `172b944a` 或更新 addon 副本/重建，不得用共享旧 addon 复跑后宣布通过 |
 
-下一批选题依据：优先补 `BTreeMap` / `Comparable` 义务解析；for-in 标量写回已由 `172b944a` 修复，不再作为缺口。避免再撞 `utf8`、`BinaryHeap`、设计类。
+下一批选题依据：优先补 `BTreeMap` / `Comparable` 义务解析与 `HashMap<utf8,_>` 的 wasm ABI；`HashSet<utf8>`、`HashMap<char,_>`、`Utf8Builder` 已可用，for-in 标量写回已修，不再作为缺口。避免再撞 `sort`/`sorted_by` 的 utf8 实例化、`BinaryHeap`、设计类。
