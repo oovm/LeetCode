@@ -1631,9 +1631,10 @@ receiver type is unknown, so member `unwrap` cannot be resolved
 即使补 `using std.operator;` 仍全部无法解析，`BTreeMap::keys()` 也无法走到。按规则不写绕法，
 该题保留阻断标记（文件顶部注释写明真写法与还原判据），用 `matrix-block-sum` / `maximum-length-of-pair-chain` 补足到 10 题通过。
 
-- 编译器缺陷（新，归口 `nyar-vm.rs`）：`loop value in nums { total = total + value }` 对导出形参
-  `ArrayList<i64>` 迭代了 5 次（同循环体改写 `HashMap.insert` 实测 5 个键，`seen.length()=5`），
-  但标量累加结果仍为 0。判据：同一输入 `[-10,-20,-30,-40,-50]`，`return total` 得 `0`，
-  期望 `-150`；改成 `while` 下标累加后全部通过。堆对象写入有效、标量写回丢失。
-  观测于共享 addon `07b625aa`，早于 `172b944a`（MIR 块退出写回修复）；该形态可能已被修好，
-  判据：重建 addon 后复跑 `maximum-sum-score-of-array`。
+- for-in 标量写回（已修复，`172b944a`）：`loop value in nums { total = total + value }` 对导出形参
+  `ArrayList<i64>` 在旧 addon `07b625aa` 与其父 `8ebc289e` 上迭代正常但标量写回丢失（输入
+  `[-10,-20,-30,-40,-50]` 应得 `-150`，实测 `0`）；`172b944a` 与当前 HEAD `25132ccf` 均实测 `-150`，
+  配套 `loop` + `HashMap.insert` 从 `5` 变 `-14995`，证明迭代本身一直正确。判据：`maximum-sum-score-of-array`。
+- 还原：`maximum-sum-score-of-array` 的求和已从 `while` 下标累加改回 `loop`，文件顶部注明还原依据；
+  用当前 HEAD 的 addon 副本真跑 **93/93**（`VALKYRIE_NATIVE` 指向 `.cache/valkyrie-forin.node`）。
+  验收纪律：缺口"已修"的结论必须用对应 addon 副本或新重建 addon 验证，不得拿共享旧 addon 复跑后宣布通过。
