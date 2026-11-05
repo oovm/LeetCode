@@ -3361,3 +3361,31 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 | 955 `delete-columns-to-make-sorted-ii` | `metadata.tests[42]` 行长度 5/4 不齐，期望 `"Error: string index out of range"` | 索引 0–41 全通过；其余 167 例同类越界形状 |
 | 1027 `longest-arithmetic-subsequence` | `metadata.tests[34]` 起差值超出参考解 `f[i][diff+500]` 的 1001 列，期望 `"Error: list index out of range"` | 索引 0–33 全通过；理想解用 `(下标, 公差)` 哈希键，不受该上限约束 |
 
+## 第五批跳过题与第六批预登记（2026-11-05）
+
+| 题号 | 类别 | 坐标/原因 | 处理 |
+|---|---|---|---|
+| 963 `minimum-area-rectangle-ii` | `f64` 返回 | 期望值含浮点噪声 `2.0000000000000004`，V 侧 `i64 as f64` 与 `f64` 返回均缺入口 | blocked-gap，跳题 |
+| 970 `powerful-integers` | 非确定性顺序 | 期望顺序等于 Python `set` 的整数哈希迭代序，非升序，无法由标准算法复现 | blocked-gap，跳题 |
+| 1058 `minimize-rounding-error-to-meet-target` | `f64` 返回 | 期望 `1.5` 等浮点值 | blocked-gap，跳题 |
+| 1093 `statistics-from-a-large-sample` | `f64` 返回 | 期望 `[1,3,2.375,2.5,3]` 含浮点中位数 | blocked-gap，跳题 |
+| 536/623/654/669/701/814/865/889/971/998/1008/1038/1080/1120/1123 | 树输出 | 输入是无 null 的堆式数组，无法还原「缺左留右」的非完全树；输出要求 LeetCode 层序含 `null` 序列化，仓内无权威编解码约定 | blocked-gap，待补序列化合同后统一处理 |
+| 912 `sort-an-array` | 语料参考解损坏 | `metadata.tests[0]` 期望 `"Error: name 'randint' is not defined"`，全部用例期望错误文本 | blocked-corpus，未写 |
+
+## 第六批 A 组实测（2026-11-05）
+
+本轮 7 题：817 / 1057 / 1066 / 1072 / 1094 / 1101 / 1104，三件套齐备，双 lane 实测：
+
+| 题号 | Valkyrie lane | TypeScript lane |
+|---|---|---|
+| 817 `linked-list-components` | 106/106 | 106/106 |
+| 1057 `campus-bikes` | 102/102 | 102/102 |
+| 1066 `campus-bikes-ii` | 89/89 | 89/89 |
+| 1072 `flip-columns-for-maximum-number-of-equal-rows` | 88/88 | 88/88 |
+| 1094 `car-pooling` | 112/112 | 112/112 |
+| 1101 `the-earliest-moment-when-everyone-become-friends` | 70 通过，首错 idx 70 | 同左 |
+| 1104 `path-in-zigzag-labelled-binary-tree` | 78/78 | 78/78 |
+
+- 1101 的 `tests[70]` 起日志节点号大于 `n`（如 `maxNode=40, n=10`），参考解抛 `list index out of range` 并被记为期望文本；语料缺陷，F6 处理，不改用例。
+- 813 `largest-sum-of-averages`：35/102 例期望含分数（`20.5`、`18.166666666666664`），`f64` 返回与 `i64 as f64` 入口均缺，blocked-gap，未写。
+- 1057 首轮 V 编译报 SMIR007（`jump argument ... actual=Integer64, expected=Integer32`）；把 `usize` 计数循环统一改成 `i64` 后通过。坐标：`campus-bikes/solvers/valkyrie/solution.v`。

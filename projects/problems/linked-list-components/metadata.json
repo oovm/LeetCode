@@ -761,6 +761,7 @@
     ],
     "invoke": {
         "python": "Solution().numComponents",
-        "typescript": "Solution().numComponents"
+        "typescript": "Solution().numComponents",
+        "valkyrie": "numComponents"
     }
 }

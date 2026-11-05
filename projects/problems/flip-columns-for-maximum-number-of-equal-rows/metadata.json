@@ -671,6 +671,7 @@
     ],
     "invoke": {
         "python": "Solution().maxEqualRowsAfterFlips",
-        "typescript": "Solution().maxEqualRowsAfterFlips"
+        "typescript": "Solution().maxEqualRowsAfterFlips",
+        "valkyrie": "maxEqualRowsAfterFlips"
     }
 }

@@ -492,6 +492,7 @@
     ],
     "invoke": {
         "python": "Solution().pathInZigZagTree",
-        "typescript": "Solution().pathInZigZagTree"
+        "typescript": "Solution().pathInZigZagTree",
+        "valkyrie": "pathInZigZagTree"
     }
 }

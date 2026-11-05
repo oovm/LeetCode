@@ -1603,6 +1603,7 @@
     ],
     "invoke": {
         "python": "Solution().earliestAcq",
-        "typescript": "Solution().earliestAcq"
+        "typescript": "Solution().earliestAcq",
+        "valkyrie": "earliestAcq"
     }
 }
