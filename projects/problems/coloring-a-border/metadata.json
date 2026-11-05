@@ -1135,6 +1135,7 @@
     ],
     "invoke": {
         "python": "Solution().colorBorder",
-        "typescript": "Solution().colorBorder"
+        "typescript": "Solution().colorBorder",
+        "valkyrie": "colorBorder"
     }
 }

@@ -1990,6 +1990,7 @@
     ],
     "invoke": {
         "python": "Solution().longestStrChain",
-        "typescript": "Solution().longestStrChain"
+        "typescript": "Solution().longestStrChain",
+        "valkyrie": "longestStrChain"
     }
 }

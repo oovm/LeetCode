@@ -891,6 +891,7 @@
     ],
     "invoke": {
         "python": "Solution().camelMatch",
-        "typescript": "Solution().camelMatch"
+        "typescript": "Solution().camelMatch",
+        "valkyrie": "camelMatch"
     }
 }

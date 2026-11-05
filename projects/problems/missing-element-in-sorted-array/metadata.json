@@ -822,6 +822,7 @@
     ],
     "invoke": {
         "python": "Solution().missingElement",
-        "typescript": "Solution().missingElement"
+        "typescript": "Solution().missingElement",
+        "valkyrie": "missingElement"
     }
 }

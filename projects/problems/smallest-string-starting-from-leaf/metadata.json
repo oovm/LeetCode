@@ -295,6 +295,7 @@
     ],
     "invoke": {
         "python": "Solution().smallestFromLeaf",
-        "typescript": "Solution().smallestFromLeaf"
+        "typescript": "Solution().smallestFromLeaf",
+        "valkyrie": "smallestFromLeaf"
     }
 }

@@ -842,6 +842,7 @@
     ],
     "invoke": {
         "python": "Solution().minHeightShelves",
-        "typescript": "Solution().minHeightShelves"
+        "typescript": "Solution().minHeightShelves",
+        "valkyrie": "minHeightShelves"
     }
 }

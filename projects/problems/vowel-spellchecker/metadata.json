@@ -1305,6 +1305,7 @@
     ],
     "invoke": {
         "python": "Solution().spellchecker",
-        "typescript": "Solution().spellchecker"
+        "typescript": "Solution().spellchecker",
+        "valkyrie": "spellchecker"
     }
 }

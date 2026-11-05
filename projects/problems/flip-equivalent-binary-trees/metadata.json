@@ -221,6 +221,7 @@
     ],
     "invoke": {
         "python": "Solution().flipEquiv",
-        "typescript": "Solution().flipEquiv"
+        "typescript": "Solution().flipEquiv",
+        "valkyrie": "flipEquiv"
     }
 }

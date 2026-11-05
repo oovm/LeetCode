@@ -883,6 +883,7 @@
     ],
     "invoke": {
         "python": "Solution().numMovesStonesII",
-        "typescript": "Solution().numMovesStonesII"
+        "typescript": "Solution().numMovesStonesII",
+        "valkyrie": "numMovesStonesII"
     }
 }

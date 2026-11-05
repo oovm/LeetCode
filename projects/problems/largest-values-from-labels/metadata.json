@@ -898,6 +898,7 @@
     ],
     "invoke": {
         "python": "Solution().largestValsFromLabels",
-        "typescript": "Solution().largestValsFromLabels"
+        "typescript": "Solution().largestValsFromLabels",
+        "valkyrie": "largestValsFromLabels"
     }
 }

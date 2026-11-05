@@ -756,6 +756,7 @@
     ],
     "invoke": {
         "python": "Solution().intervalIntersection",
-        "typescript": "Solution().intervalIntersection"
+        "typescript": "Solution().intervalIntersection",
+        "valkyrie": "intervalIntersection"
     }
 }

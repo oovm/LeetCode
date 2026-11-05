@@ -726,6 +726,7 @@
     ],
     "invoke": {
         "python": "Solution().minScoreTriangulation",
-        "typescript": "Solution().minScoreTriangulation"
+        "typescript": "Solution().minScoreTriangulation",
+        "valkyrie": "minScoreTriangulation"
     }
 }

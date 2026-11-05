@@ -81,6 +81,7 @@
     ],
     "invoke": {
         "python": "Solution().isCompleteTree",
-        "typescript": "Solution().isCompleteTree"
+        "typescript": "Solution().isCompleteTree",
+        "valkyrie": "isCompleteTree"
     }
 }

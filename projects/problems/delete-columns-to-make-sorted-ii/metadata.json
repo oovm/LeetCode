@@ -1677,6 +1677,7 @@
     ],
     "invoke": {
         "python": "Solution().minDeletionSize",
-        "typescript": "Solution().minDeletionSize"
+        "typescript": "Solution().minDeletionSize",
+        "valkyrie": "minDeletionSize"
     }
 }

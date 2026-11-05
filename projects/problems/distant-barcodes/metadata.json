@@ -770,6 +770,7 @@
     ],
     "invoke": {
         "python": "Solution().rearrangeBarcodes",
-        "typescript": "Solution().rearrangeBarcodes"
+        "typescript": "Solution().rearrangeBarcodes",
+        "valkyrie": "rearrangeBarcodes"
     }
 }

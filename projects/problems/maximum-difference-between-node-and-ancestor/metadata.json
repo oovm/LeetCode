@@ -172,6 +172,7 @@
     ],
     "invoke": {
         "python": "Solution().maxAncestorDiff",
-        "typescript": "Solution().maxAncestorDiff"
+        "typescript": "Solution().maxAncestorDiff",
+        "valkyrie": "maxAncestorDiff"
     }
 }

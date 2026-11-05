@@ -601,6 +601,7 @@
     ],
     "invoke": {
         "python": "Solution().pancakeSort",
-        "typescript": "Solution().pancakeSort"
+        "typescript": "Solution().pancakeSort",
+        "valkyrie": "pancakeSort"
     }
 }

@@ -917,6 +917,7 @@
     ],
     "invoke": {
         "python": "Solution().minAreaRect",
-        "typescript": "Solution().minAreaRect"
+        "typescript": "Solution().minAreaRect",
+        "valkyrie": "minAreaRect"
     }
 }

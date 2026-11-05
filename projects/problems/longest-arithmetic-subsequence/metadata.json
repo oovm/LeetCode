@@ -1079,6 +1079,7 @@
     ],
     "invoke": {
         "python": "Solution().longestArithSeqLength",
-        "typescript": "Solution().longestArithSeqLength"
+        "typescript": "Solution().longestArithSeqLength",
+        "valkyrie": "longestArithSeqLength"
     }
 }

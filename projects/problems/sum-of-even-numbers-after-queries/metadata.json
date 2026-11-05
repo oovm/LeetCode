@@ -770,6 +770,7 @@
     ],
     "invoke": {
         "python": "Solution().sumEvenAfterQueries",
-        "typescript": "Solution().sumEvenAfterQueries"
+        "typescript": "Solution().sumEvenAfterQueries",
+        "valkyrie": "sumEvenAfterQueries"
     }
 }

@@ -1413,6 +1413,7 @@
     ],
     "invoke": {
         "python": "Solution().videoStitching",
-        "typescript": "Solution().videoStitching"
+        "typescript": "Solution().videoStitching",
+        "valkyrie": "videoStitching"
     }
 }

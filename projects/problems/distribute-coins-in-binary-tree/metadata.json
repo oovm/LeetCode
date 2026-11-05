@@ -139,6 +139,7 @@
     ],
     "invoke": {
         "python": "Solution().distributeCoins",
-        "typescript": "Solution().distributeCoins"
+        "typescript": "Solution().distributeCoins",
+        "valkyrie": "distributeCoins"
     }
 }

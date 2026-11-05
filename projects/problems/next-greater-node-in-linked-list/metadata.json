@@ -697,6 +697,7 @@
     ],
     "invoke": {
         "python": "Solution().nextLargerNodes",
-        "typescript": "Solution().nextLargerNodes"
+        "typescript": "Solution().nextLargerNodes",
+        "valkyrie": "nextLargerNodes"
     }
 }

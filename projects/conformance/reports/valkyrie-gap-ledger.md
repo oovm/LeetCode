@@ -3337,3 +3337,27 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 | 909 `snakes-and-ladders` | `metadata.tests[23]`：棋盘 `24x14`（非方阵），期望 `"Error: list index out of range"` | 索引 0–22 全通过 |
 | 931 `minimum-falling-path-sum` | `metadata.tests[10]`：`matrix=[[1],[100]]` 期望 `0`（参考解非方阵残留 0） | 索引 0–9 全通过 |
 | 823 `binary-trees-with-factors` | `metadata.tests[89]` 含 `112840242932266120000`，超出 `i64` | TS 用 `BigInt` 通过；V 侧该用例无法承载 |
+
+## 理想解批次缺口登记（第五批，2026-11-05）
+
+口径：24 题（`questionId` 939–1105），每题 `solution.v` 理想解 + TS 参考解 + `invoke.valkyrie`。
+判题链路恢复后 V lane 首次可全批验证：**22 题整题通过，2 题首错为语料缺陷**。TypeScript lane 结果相同。
+选题跳过 `963`（期望含浮点噪声 `2.0000000000000004`，需 `f64` 返回）与 `970`（期望顺序等于 Python `set` 迭代序，非升序），改用 `1105` 补位。
+
+### 能力缺口（题内坐标）
+
+| 缺口 | 题内触发点 | 处理 |
+|---|---|---|
+| `std` 的 `cmp_i64` 解析不到可匹配重载 | `moving-stones-until-consecutive-ii`、`longest-string-chain`、`distant-barcodes`、`largest-values-from-labels` 首版均报 `unresolved call quick_sort` | 每题自定义 `micro compare_i64(a: i64, b: i64) -> i32` 传给 `quick_sort`，四题均 BUILD_OK |
+| ABI 形参名必须与 `metadata.tests.args` 键完全一致 | `interval-list-intersections`（`firstList`/`secondList`）、`largest-values-from-labels`（`numWanted`/`useLimit`）、`filling-bookcase-shelves`（`shelfWidth`）首版用 snake_case 形参 | 报 `AbiSchemaError: args.<key>: metadata.tests.args 缺少参数`；形参改为 metadata 的 camelCase 键名后三题全过 |
+| 参考解 `setdefault` 首值语义 | `vowel-spellchecker` 的 `["aeiou","AEIOU"]` 小写字典 | 小写/元音两级匹配必须在首次命中即 `break`，否则会取到后插入的 `AEIOU` |
+| `HashMap<utf8,_>` 载体缺口（R30）仍在 | `vowel-spellchecker`、`longest-string-chain` 的字符串比对 | 退化为线性扫描，复杂度非理想哈希 |
+| 编码基数必须覆盖语料值域 | `minimum-area-rectangle` 首版 `base=20001/offset=10000`，语料坐标到 `40000` 造成键碰撞，`tests[5]` 返回 `0` | 改为 `base=80001/offset=40000`，81/81 通过 |
+
+### 语料缺陷（F6，只标注不改用例）
+
+| 题号 | 缺陷坐标 | 实测 |
+|---|---|---|
+| 955 `delete-columns-to-make-sorted-ii` | `metadata.tests[42]` 行长度 5/4 不齐，期望 `"Error: string index out of range"` | 索引 0–41 全通过；其余 167 例同类越界形状 |
+| 1027 `longest-arithmetic-subsequence` | `metadata.tests[34]` 起差值超出参考解 `f[i][diff+500]` 的 1001 列，期望 `"Error: list index out of range"` | 索引 0–33 全通过；理想解用 `(下标, 公差)` 哈希键，不受该上限约束 |
+
