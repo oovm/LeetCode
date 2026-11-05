@@ -815,7 +815,7 @@ $n
   `peek_front` / `peek_back` / `pop_front` / `is_empty`、`char as u32` / `as i64` / `as usize`。
   这些面**未经编译验证**（全局停点在前），不算缺口。
 
-### 待还原组：`loop in ArrayList` 后端 `Cast` 未 lowering（30 题，R26 产出）
+### 待还原组：`loop in ArrayList` 后端 `Cast` 未 lowering（30 题，R26 产出；已由 `172b944a` 修复，2026-11-05 全部还原）
 
 现象：`loop <var> in <ArrayList>` 的失败点不在 for-in 协议，而在 OVM 后端。`IntoIterator for
 ArrayList` 已实现（`std/source/collection/ArrayList.v:291` 的
