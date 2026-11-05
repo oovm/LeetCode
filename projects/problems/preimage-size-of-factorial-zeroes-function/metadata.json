@@ -632,6 +632,6 @@
     "invoke": {
         "python": "Solution().preimageSizeFZF",
         "typescript": "Solution().preimageSizeFZF",
-        "valkyrie": "Solution().preimageSizeFZF"
+        "valkyrie": "Solution().preimageSizeFzf"
     }
 }

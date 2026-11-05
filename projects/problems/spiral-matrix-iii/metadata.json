@@ -14256,6 +14256,6 @@
     "invoke": {
         "python": "Solution().spiralMatrixIII",
         "typescript": "Solution().spiralMatrixIII",
-        "valkyrie": "spiralMatrixIII"
+        "valkyrie": "spiralMatrixIii"
     }
 }

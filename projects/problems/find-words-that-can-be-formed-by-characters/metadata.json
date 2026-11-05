@@ -1035,6 +1035,6 @@
     "invoke": {
         "python": "Solution().countCharacters",
         "typescript": "Solution().countCharacters",
-        "valkyrie": "countCharacters"
+        "valkyrie": "findWordsThatCanBeFormed"
     }
 }

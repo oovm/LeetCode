@@ -866,6 +866,6 @@
     "invoke": {
         "python": "Solution().medianSlidingWindow",
         "typescript": "Solution().medianSlidingWindow",
-        "valkyrie": "medianSlidingWindow"
+        "valkyrie": "slidingWindowMedian"
     }
 }
