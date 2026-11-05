@@ -18,14 +18,16 @@ micro count_chars(word: utf8) -> HashMap<char, i64> {
 
 micro meets(word: utf8, maxima: HashMap<char, i64>) -> bool {
     let counts: HashMap<char, i64> = count_chars(word)
-    let keys: ArrayList<char> = counts.keys()
+    let keys: ArrayList<char> = maxima.keys()
     let mut i: usize = 0
     while i < keys.length() {
         let character: char = keys⁅i⁆
-        if !maxima.contains_key(character) {
-            return false
+        let needed: i64 = maxima.get(character).unwrap()
+        let mut available: i64 = 0
+        if counts.contains_key(character) {
+            available = counts.get(character).unwrap()
         }
-        if maxima.get(character).unwrap() < counts.get(character).unwrap() {
+        if available < needed {
             return false
         }
         i = i + 1
