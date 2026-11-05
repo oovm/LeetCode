@@ -68,7 +68,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G5 分支内丢弃 `Option<T>`（SMIR007） | 已有真实复现：`baseball-game` | 编译器 MIR 降级，不在 std / leetcode 线 |
 | G6 标识符 `round` 误拉 adaptor | 已有真实复现：`sum-of-digits-of-string-after-convert` | 编译器名字解析 / 闭包装配 |
 | G7 `HashMap.insert` 作 `else` 尾 + 嵌套 return | 已有真实复现：`isomorphic-strings` | 编译器 MIR 合流 |
-| G29 `i64` / `u64` → `f64` 精确转换编码缺失 | `wasm 后端缺少 i64 → f64 的精确表示转换编码（acorn_wasm 未提供对应 opcode），不得退化为近似转换`；最小复现 `micro f(x: i64) -> f64 { return x as f64 }`，`u64` 同样报错 | 编译器 wasm 编码；坐标 `sliding-window-median/solvers/valkyrie/solution.v:58` |
+| G29 `i64` / `u64` → `f64` 精确转换编码缺失 | `wasm 后端缺少 i64 → f64 的精确表示转换编码（acorn_wasm 未提供对应 opcode），不得退化为近似转换`；最小复现 `micro f(x: i64) -> f64 { return x as f64 }`，`u64` 同样报错。`597ecdd5`（2026-11-05 18:45）已在 wasm lane 编码精确整数↔浮点转换，但本窗口加载的 `platforms/valkyrie-win32-x64/lib/valkyrie.win32-x64-msvc.node` 构建于 13:20，早于该提交，因此运行时仍报旧错 | 编译器 wasm 编码；坐标 `largest-sum-of-averages/solvers/valkyrie/solution.v:23`、`sliding-window-median/solvers/valkyrie/solution.v:58` |
 
 - 四条都属实，但修复位置在 `nyar-vm.rs`，不占 std 缺口名额，也不进第 18 批选题面。
 - 本节只作指向，详细证据留在各自 G 条内。
@@ -522,6 +522,21 @@ $n
   **编译通过 0 题、端到端通过 0 题、写完未验证 6 题**；TS 官方夹具 0/6（F1），
   同一 `metadata.tests` 用临时序列驱动实跑 TS **6/6**、Python **6/6**（非官方夹具，只作实现证据）。
   F1 / F2 见「判题夹具与导出 ABI 缺口」。
+- 后续增量（2026-11-05，f64 / 按秩查询批次 R30 后）：canonical 实测 **1039**（R29 记录 887，
+  差额含其它线并行写入；本轮自身新增 3 条 `invoke.valkyrie`：`largest-sum-of-averages`、
+  `minimum-cost-tree-from-leaf-values`、`largest-1-bordered-square`）。
+  **V lane：编译通过 2 题、端到端通过 2 题；TS lane 4/4 题全通过**：
+  - `minimum-cost-tree-from-leaf-values` V **108/108**、TS **108/108**。
+  - `largest-1-bordered-square` V **64/64**、TS **64/64**。
+  - `largest-sum-of-averages` TS **102/102**、V **编译失败**（G29，`firstFailureIndex=null`）。
+    参考实现是后缀递推，前序实现因浮点求和次序在 `tests[5]` 差 1 ulp；改为后缀 DP 后
+    TS 全过，V 侧算法相同、复杂度不变。
+  - `sliding-window-median` TS **115/115**、V **编译失败**（G29，`firstFailureIndex=null`）。
+  - `sliding-window-median` 前两处诊断已在本轮销账：`unresolved call fenwick_add` 由两参
+    `fenwick_add` / `fenwick_remove` 签名对齐消除，`infix -` 歧义由
+    `(0 as i64) - index` 消除。证据：临时把返回类型改为 `ArrayList<i64>` 的变体**构建成功**
+    并跑进断言（`firstFailureIndex=0`，差异只是 i64 截断语义）；恢复 `ArrayList<f64>` 后
+    只剩 G29 一条。其余代码不再登记为缺口。
 
 ### 验证窗口实测（2026-11-04 23:50 addon 重建后：编译关破碎 + marshal 夹具修复）
 

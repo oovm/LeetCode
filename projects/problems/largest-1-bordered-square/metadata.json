@@ -576,6 +576,7 @@
     ],
     "invoke": {
         "python": "Solution().largest1BorderedSquare",
-        "typescript": "Solution().largest1BorderedSquare"
+        "typescript": "Solution().largest1BorderedSquare",
+        "valkyrie": "largest1BorderedSquare"
     }
 }

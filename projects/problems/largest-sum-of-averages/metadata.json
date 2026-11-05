@@ -730,6 +730,7 @@
     ],
     "invoke": {
         "python": "Solution().largestSumOfAverages",
-        "typescript": "Solution().largestSumOfAverages"
+        "typescript": "Solution().largestSumOfAverages",
+        "valkyrie": "largestSumOfAverages"
     }
 }

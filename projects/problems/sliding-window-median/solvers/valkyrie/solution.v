@@ -17,7 +17,7 @@ micro fenwick_add(mut tree: ArrayList<i64>, position: i64) -> unit {
     let mut index: i64 = position
     while index <= limit {
         tree⁅index as usize⁆ = tree⁅index as usize⁆ + 1
-        index = index + (index & (0 - index))
+        index = index + (index & ((0 as i64) - index))
     }
 }
 
@@ -26,7 +26,7 @@ micro fenwick_remove(mut tree: ArrayList<i64>, position: i64) -> unit {
     let mut index: i64 = position
     while index <= limit {
         tree⁅index as usize⁆ = tree⁅index as usize⁆ - 1
-        index = index + (index & (0 - index))
+        index = index + (index & ((0 as i64) - index))
     }
 }
 
@@ -55,13 +55,13 @@ micro fenwick_kth(tree: ArrayList<i64>, target: i64, size: i64) -> i64 {
 micro window_median(unique: ArrayList<i64>, tree: ArrayList<i64>, k: i64, size: i64) -> f64 {
     if k % 2 == 1 {
         let rank: i64 = fenwick_kth(tree, k / 2 + 1, size)
-        return unique⁅(rank - 1) as usize⁆ as u64 as f64
+        return unique⁅(rank - 1) as usize⁆ as f64
     }
     let left_rank: i64 = fenwick_kth(tree, k / 2, size)
     let right_rank: i64 = fenwick_kth(tree, k / 2 + 1, size)
     let left_value: i64 = unique⁅(left_rank - 1) as usize⁆
     let right_value: i64 = unique⁅(right_rank - 1) as usize⁆
-    return (left_value + right_value) as u64 as f64 / 2.0
+    return (left_value + right_value) as f64 / 2.0
 }
 
 # 坐标压缩 + 树状数组计数：滑窗增删 O(log n)，按秩取中位数 O(log n)。
