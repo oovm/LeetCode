@@ -82,6 +82,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumIndex",
-        "typescript": "Solution().minimumIndex"
+        "typescript": "Solution().minimumIndex",
+        "valkyrie": "minimumIndex"
     }
 }

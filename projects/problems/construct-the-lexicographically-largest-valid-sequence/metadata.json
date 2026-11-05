@@ -120,6 +120,7 @@
     ],
     "invoke": {
         "python": "Solution().constructDistancedSequence",
-        "typescript": "Solution().constructDistancedSequence"
+        "typescript": "Solution().constructDistancedSequence",
+        "valkyrie": "constructDistancedSequence"
     }
 }

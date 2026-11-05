@@ -3129,3 +3129,24 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 
 漏报判定：以 `(^|[^A-Za-z0-9_])pow\(` 全库复扫为 0，`math\.(sqrt|pow|log|exp|hypot|fabs|ceil|floor)\(`
 全量枚举 4 处均已入表；未发现第二类通配导入。误报 6 处均给出操作数上界或同源比较依据。
+
+## 特性面 × 可用性矩阵（R30，2026-11-05）
+
+口径：共享 addon `07b625aa` 不重建，真跑 `legion build` + 判题；通过写 `N/N`，阻断写诊断原文摘要。
+本批 10 题通过（853 条用例），另 1 题 `describe-the-painting` 命中 `BTreeMap` 阻断面并保留标记。
+
+| 特性面 | 状态 | 证据题 | 阻断面（诊断原文摘要） |
+|---|---|---|---|
+| 整数 / `ArrayList` / 双指针 / 前缀和 / DP / 矩阵 | 可用 | `number-of-zero-filled-subarrays` 99/99、`bag-of-tokens` 103/103、`maximum-sum-score-of-array` 93/93、`partition-array-for-maximum-sum` 104/104、`uncrossed-lines` 106/106、`matrix-block-sum` 88/88 | — |
+| `HashMap<i32,_>` / `BTreeMap<i32,_>` | HashMap 可用；BTreeMap 阻断 | `pairs-of-songs-with-total-durations-divisible-by-60` 89/89（`HashMap<i32,i64>` i32 键）、`minimum-index-of-a-valid-split` 12/12（`HashMap<i64,i64>`） | BTreeMap：`unresolved call ... none matches the argument types`（`where K: Equal & std::operator::Comparable` 义务不在调用点消解，补 `using std.operator;` 无效） |
+| `sorted_by`（整型 / 嵌套 / packed-key） | 可用 | 96/96、117/117、98/98；本批 `maximum-length-of-pair-chain` 106/106（`ArrayList<i64>` 元素） | — |
+| `sorted_by` 以 `utf8` 实例化 | 阻断 | — | `WASM ABI carrier mismatch` |
+| `utf8` 容器（`HashMap<utf8,_>`、`HashSet<utf8>`） | 阻断 | — | `std::hash#` 合同实例未进 `consumer_imports` |
+| `utf8` 返回值 | 阻断 | — | `TypeError: Cannot convert object to primitive value` |
+| `Utf8Builder` | 阻断 | — | `std::new#287` / `std::grow_to#300` |
+| `BinaryHeap` + `Comparable` | 阻断 | `last-stone-weight` 等 | 义务不在调用点消解 |
+| 设计类（多方法 + 实例状态） | 阻断 | 6 题 | 入口闭包 + 实例句柄 ABI |
+| 递归 / 深度 | 可用 | `construct-the-lexicographically-largest-valid-sequence` 18/18（递归深度 ≤ 40） | 上一轮 `RecursionError` 属 Python 语料，与 V 递归上限无关 |
+| `loop` for-in 标量写回 | 阻断（静默错值，非报错） | `maximum-sum-score-of-array` | `loop value in nums { total = total + value }` 迭代了 5 次（同循环体写 `HashMap` 得 5 个键），`total` 仍为 0；判据输入 `[-10,-20,-30,-40,-50]` 应得 `-150`，实测 `0` |
+
+下一批选题依据：优先补 `BTreeMap` / `Comparable` 义务解析与 for-in 标量写回两条线；避免再撞 `utf8`、`BinaryHeap`、设计类。

@@ -909,6 +909,7 @@
     ],
     "invoke": {
         "python": "Solution().matrixBlockSum",
-        "typescript": "Solution().matrixBlockSum"
+        "typescript": "Solution().matrixBlockSum",
+        "valkyrie": "matrixBlockSum"
     }
 }

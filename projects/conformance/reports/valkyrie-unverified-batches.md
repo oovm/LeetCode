@@ -1607,6 +1607,29 @@ V 侧复跑：在 `projects/conformance` 下执行 `node --import tsx scripts/ru
 | `partition-array-for-maximum-sum` | 一维 DP（`ArrayList<i64>`） | build=0 | **104/104 通过** |
 | `uncrossed-lines` | 二维 DP（`ArrayList<ArrayList<i64>>` 嵌套下标读写） | build=0 | **106/106 通过** |
 | `pairs-of-songs-with-total-durations-divisible-by-60` | `HashMap<i32, i64>`（i32 键 + i32 相等/哈希） | build=0 | **89/89 通过** |
+| `minimum-index-of-a-valid-split` | `HashMap<i64, i64>` 频次 + 前缀计数 | build=0 | **12/12 通过** |
+| `construct-the-lexicographically-largest-valid-sequence` | 递归 / 回溯（深度 2n ≤ 40，`ArrayList` 引用写回） | build=0 | **18/18 通过** |
+| `matrix-block-sum` | 矩阵 + 二维前缀和（`ArrayList<ArrayList<i64>>` 嵌套下标） | build=0 | **88/88 通过** |
+| `maximum-length-of-pair-chain` | `sorted_by` 以 `ArrayList<i64>` 实例化 + 贪心 DP | build=0 | **106/106 通过** |
+| `describe-the-painting` | 命中已知阻断面 `BTreeMap` / `Comparable` 义务 | **build 失败** | 0/98，诊断见下 |
+
+`describe-the-painting` 首次失败诊断原文（共享 addon `07b625aa`）：
+
+```
+error[valkyrie.hir.unresolved_call]: unresolved call `deltas.contains_key` in splitPainting:
+1 candidate(s) share the name, but none matches the argument types
+  --> solution.v:16:12
+error[valkyrie.hir.unresolved_call]: unresolved call `deltas.insert` in splitPainting:
+2 candidate(s) share the name, but none matches the argument types
+error[valkyrie.hir.unresolved_call]: unresolved call `deltas.get` in splitPainting:
+4 candidate(s) share the name, but none matches the argument types
+error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>.unwrap` in splitPainting:
+receiver type is unknown, so member `unwrap` cannot be resolved
+```
+
+`BTreeMap<i64, i64>` 的 `get` / `insert` / `contains_key` 都带 `where K: Equal & std::operator::Comparable`，
+即使补 `using std.operator;` 仍全部无法解析，`BTreeMap::keys()` 也无法走到。按规则不写绕法，
+该题保留阻断标记（文件顶部注释写明真写法与还原判据），用 `matrix-block-sum` / `maximum-length-of-pair-chain` 补足到 10 题通过。
 
 - 编译器缺陷（新，归口 `nyar-vm.rs`）：`loop value in nums { total = total + value }` 对导出形参
   `ArrayList<i64>` 迭代了 5 次（同循环体改写 `HashMap.insert` 实测 5 个键，`seen.length()=5`），

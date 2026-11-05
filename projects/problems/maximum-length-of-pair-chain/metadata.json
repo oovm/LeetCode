@@ -991,6 +991,7 @@
     ],
     "invoke": {
         "python": "Solution().findLongestChain",
-        "typescript": "Solution().findLongestChain"
+        "typescript": "Solution().findLongestChain",
+        "valkyrie": "findLongestChain"
     }
 }
