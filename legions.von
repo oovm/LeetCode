@@ -2,7 +2,8 @@
     name: "leetcode",
     members: [
         "../valkyrie.v/projects/std",
-        "../valkyrie.v/projects/std.adaptors._"
+        "../valkyrie.v/projects/std.adaptors._",
+        "../valkyrie.v/projects/unicode._"
     ],
     workspace: {
         version: "0.1.0"
