@@ -3276,3 +3276,37 @@ V lane 14 题端到端通过，4 题撞语料缺陷，2 题在语料缺陷用例
 |---|---|---|
 | `HashMap<utf8,_>` 的 wasm ABI carrier 失配（R30 已登记） | `find-duplicate-file-in-system/solvers/valkyrie/solution.v` 的 `contents` 线性扫描 | 该题 83/83 通过，但同内容判定退化为 O(组数×路径长) 比较，按 R30 原有条目记录 |
 | 树返回含 `null` 的 ABI 表达缺口 | `binary-tree-longest-consecutive-sequence-ii` 之外的 536/623/654 未写 | 期望输出含 `null` 的树返回题无法用 `ArrayList<i64>` 表达可空元素，本批未选题 |
+
+## 理想解批次缺口登记（第三批，2026-11-05）
+
+口径：25 题（`questionId` 648–792），每题写 `solution.v` 理想解、TS 参考解并注册 `invoke.valkyrie`。
+TypeScript lane 20 题整题通过，5 题仅剩语料缺陷用例失败。V lane 本批**未能验证**：环境被 `valkyrie.v` 的 std 改造阻断（见「阻断 C」），19 题在阻断前已 `BUILD_OK`，6 题修复后待重建。
+
+### 阻断 C：std workspace 依赖缺成员（环境级，非题内）
+
+```text
+CompileTargetPlanError: plan_failed: ForcedWorkspaceDependencyMissing { project: "std", dependency: "unicode.core" }
+```
+
+随后复测变成 `dependency: "unicode.types"`。同一 `pour-water`（阻断前 `BUILD_OK`）也 `ERROR`，说明是 `valkyrie.v` 另一条线的 std 内改造（`de697ed` 引入 `projects/unicode._`，多个 std 文件 dirty/untracked），不是题解问题。按「不等 std 卡点」规则继续写作与 TS 验证。
+
+### 能力缺口（题内坐标）
+
+| 缺口 | 题内触发点 | 处理 |
+|---|---|---|
+| `sort(ArrayList<i64>)` 报 `unresolved call merge_sort in sort` | `split-array-into-consecutive-subsequences`、`number-of-longest-increasing-subsequence` | 改用 `quick_sort(arr, cmp_i64)`。账本上一节「`sort` 可用」的结论以本条实测为准 |
+| `HashSet::new(capacity)` 无该 arity | `pyramid-transition-matrix` 的 `HashSet::new(0)` | 改用 `HashSet::new()` |
+| `i64 as f64` 缺 opcode | `k-th-smallest-prime-fraction` 原 f64 排序方案 `BUILD_FAIL` | 改整数交叉相乘 + 手写最小堆，O((n+k) log n) |
+| 局部变量名与 std 内置 `write` 冲突 | `candy-crush` 报 `utf8_to_utf16 in write` | 局部变量改名 `top` / `cursor` |
+| 复合条件链触发 `SMIR007` jump arity | `asteroid-collision` 的 `continue` 前置长条件 | 抽出 `settle(stack, rock) -> bool` 消除复合条件 |
+| `utf8` 形参解析点分地址（非缺口，已适配） | `ip-to-cidr` 语料 132 例 `args.ip` 均为 `"1.2.3.4"` 形式 | 改为 `ip: utf8` 手写解析字节，TS 同步，132/132 通过 |
+
+### 语料缺陷（F6，只标注不改用例）
+
+| 题号 | 缺陷坐标 | 实测 |
+|---|---|---|
+| 752 `open-the-lock` | `metadata.tests[37]` 的 `target` 同时出现在 `deadends`，仍期望 `6` | 索引 0–36 通过，索引 37 起不可达即 `-1`，与期望矛盾 |
+| 756 `pyramid-transition-matrix` | `metadata.tests` 8 例（索引 31、36、38、50、56、65、72、80）期望 `"Error: too many values to unpack (expected 3)"`，`allowed` 含长度超过 3 的规则 | 其余 73 例通过。索引 39/73 曾因 `push(...next)` 展开过大数组栈溢出，已改逐步 `push` 修复 |
+| 764 `largest-plus-sign` | `metadata.tests[40]` 期望 `"Error: list assignment index out of range"`，`n=10` 但 `mines` 出现下标 `10` | 索引 0–39 通过，索引 40 的 `mines` 越界属语料错误 |
+| 786 `k-th-smallest-prime-fraction` | `metadata.tests[14]` 期望 `"Error: index out of range"` | 索引 0–13 通过，索引 14 期望越界异常文本 |
+| 789 `escape-the-ghosts` | `metadata.tests[4]`：`ghosts=[[1,0],[0,3]]`、`target=[0,1]`，幽灵距离 1 等于玩家距离 1，期望 `true` | 索引 0–3 通过，索引 4 与「先到才逃脱」语义矛盾 |

@@ -2,7 +2,10 @@
     "id": "remove-comments",
     "questionId": 722,
     "difficulty": "Medium",
-    "tags": ["Array", "String"],
+    "tags": [
+        "Array",
+        "String"
+    ],
     "tests": [
         {
             "args": {
@@ -13,13 +16,25 @@
                     "}"
                 ]
             },
-            "expected": ["int x = 10;", "cout << \"Hello World\";", "}"]
+            "expected": [
+                "int x = 10;",
+                "cout << \"Hello World\";",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["int main() {", "    printf(\"Hello World\"); // This is a comment", "}"]
+                "source": [
+                    "int main() {",
+                    "    printf(\"Hello World\"); // This is a comment",
+                    "}"
+                ]
             },
-            "expected": ["int main() {", "    printf(\"Hello World\"); ", "}"]
+            "expected": [
+                "int main() {",
+                "    printf(\"Hello World\"); ",
+                "}"
+            ]
         },
         {
             "args": {
@@ -31,23 +46,47 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", " end of block comment */", "int x = 10;", "cout << \"Hello World\";", "}"]
+            "expected": [
+                "int main() {",
+                " end of block comment */",
+                "int x = 10;",
+                "cout << \"Hello World\";",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["int x = 10;", "// This is a line comment", "int y = 20;"]
+                "source": [
+                    "int x = 10;",
+                    "// This is a line comment",
+                    "int y = 20;"
+                ]
             },
-            "expected": ["int x = 10;", "int y = 20;"]
+            "expected": [
+                "int x = 10;",
+                "int y = 20;"
+            ]
         },
         {
             "args": {
-                "source": ["/* This is a block comment", "and this is the second line", "and the third line */", "int z = 30;"]
+                "source": [
+                    "/* This is a block comment",
+                    "and this is the second line",
+                    "and the third line */",
+                    "int z = 30;"
+                ]
             },
-            "expected": ["int z = 30;"]
+            "expected": [
+                "int z = 30;"
+            ]
         },
         {
             "args": {
-                "source": ["/*", "block comment", "*/"]
+                "source": [
+                    "/*",
+                    "block comment",
+                    "*/"
+                ]
             },
             "expected": []
         },
@@ -62,25 +101,57 @@
                     "int y = 20;"
                 ]
             },
-            "expected": ["int x = 10; ", "int y = 20;"]
+            "expected": [
+                "int x = 10; ",
+                "int y = 20;"
+            ]
         },
         {
             "args": {
-                "source": ["void func() {", "/* This is a ", "multiline comment */", "int x = 10;", "// This is a single line comment", "}"]
+                "source": [
+                    "void func() {",
+                    "/* This is a ",
+                    "multiline comment */",
+                    "int x = 10;",
+                    "// This is a single line comment",
+                    "}"
+                ]
             },
-            "expected": ["void func() {", "int x = 10;", "}"]
+            "expected": [
+                "void func() {",
+                "int x = 10;",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["void fun() {", "   /* Multi", "line", "comment */", "   int k = 1;", "}"]
+                "source": [
+                    "void fun() {",
+                    "   /* Multi",
+                    "line",
+                    "comment */",
+                    "   int k = 1;",
+                    "}"
+                ]
             },
-            "expected": ["void fun() {", "   ", "   int k = 1;", "}"]
+            "expected": [
+                "void fun() {",
+                "   ",
+                "   int k = 1;",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["/* comment /* nested comment */ end of comment */", "int x = 1;"]
+                "source": [
+                    "/* comment /* nested comment */ end of comment */",
+                    "int x = 1;"
+                ]
             },
-            "expected": [" end of comment */", "int x = 1;"]
+            "expected": [
+                " end of comment */",
+                "int x = 1;"
+            ]
         },
         {
             "args": {
@@ -95,7 +166,12 @@
                     "}"
                 ]
             },
-            "expected": ["#include <iostream>", "int main() {", "cout << \"Hello World\";", "}"]
+            "expected": [
+                "#include <iostream>",
+                "int main() {",
+                "cout << \"Hello World\";",
+                "}"
+            ]
         },
         {
             "args": {
@@ -113,43 +189,104 @@
                     "}"
                 ]
             },
-            "expected": ["int main()", "{ ", "  ", "int a, b, c;", "a = b + c;", "}"]
+            "expected": [
+                "int main()",
+                "{ ",
+                "  ",
+                "int a, b, c;",
+                "a = b + c;",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["int main() {", "int x = 10; // This is a line comment", "cout << \"Hello World\";", "}"]
+                "source": [
+                    "int main() {",
+                    "int x = 10; // This is a line comment",
+                    "cout << \"Hello World\";",
+                    "}"
+                ]
             },
-            "expected": ["int main() {", "int x = 10; ", "cout << \"Hello World\";", "}"]
+            "expected": [
+                "int main() {",
+                "int x = 10; ",
+                "cout << \"Hello World\";",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["int x = 10;", "// This is a line comment", "x++;", "/* This is a block comment", "x--;", "*/", "return x;"]
+                "source": [
+                    "int x = 10;",
+                    "// This is a line comment",
+                    "x++;",
+                    "/* This is a block comment",
+                    "x--;",
+                    "*/",
+                    "return x;"
+                ]
             },
-            "expected": ["int x = 10;", "x++;", "return x;"]
+            "expected": [
+                "int x = 10;",
+                "x++;",
+                "return x;"
+            ]
         },
         {
             "args": {
-                "source": ["a/*comment", "line", "more_comment*/b"]
+                "source": [
+                    "a/*comment",
+                    "line",
+                    "more_comment*/b"
+                ]
             },
-            "expected": ["ab"]
+            "expected": [
+                "ab"
+            ]
         },
         {
             "args": {
-                "source": ["/*Hello", "World*/", "int main()"]
+                "source": [
+                    "/*Hello",
+                    "World*/",
+                    "int main()"
+                ]
             },
-            "expected": ["int main()"]
+            "expected": [
+                "int main()"
+            ]
         },
         {
             "args": {
-                "source": ["int main()", "{", "/* This is a test comment", "with multiple", "lines */", "return 0;", "}"]
+                "source": [
+                    "int main()",
+                    "{",
+                    "/* This is a test comment",
+                    "with multiple",
+                    "lines */",
+                    "return 0;",
+                    "}"
+                ]
             },
-            "expected": ["int main()", "{", "return 0;", "}"]
+            "expected": [
+                "int main()",
+                "{",
+                "return 0;",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["void f() {", "/* single line block comment */", "}"]
+                "source": [
+                    "void f() {",
+                    "/* single line block comment */",
+                    "}"
+                ]
             },
-            "expected": ["void f() {", "}"]
+            "expected": [
+                "void f() {",
+                "}"
+            ]
         },
         {
             "args": {
@@ -183,15 +320,28 @@
         },
         {
             "args": {
-                "source": ["int x = 1; // single line comment", "/* int y = 2; */", "int z = 3;"]
+                "source": [
+                    "int x = 1; // single line comment",
+                    "/* int y = 2; */",
+                    "int z = 3;"
+                ]
             },
-            "expected": ["int x = 1; ", "int z = 3;"]
+            "expected": [
+                "int x = 1; ",
+                "int z = 3;"
+            ]
         },
         {
             "args": {
-                "source": ["// comment", "// another comment", "int x = 1;"]
+                "source": [
+                    "// comment",
+                    "// another comment",
+                    "int x = 1;"
+                ]
             },
-            "expected": ["int x = 1;"]
+            "expected": [
+                "int x = 1;"
+            ]
         },
         {
             "args": {
@@ -204,7 +354,11 @@
                     "int c = 3;"
                 ]
             },
-            "expected": ["int a = 1;", "int b = 2;", "int c = 3;"]
+            "expected": [
+                "int a = 1;",
+                "int b = 2;",
+                "int c = 3;"
+            ]
         },
         {
             "args": {
@@ -220,7 +374,11 @@
                     "int c = 30;"
                 ]
             },
-            "expected": ["int a = 10;", "int b = 20;", "int c = 30;"]
+            "expected": [
+                "int a = 10;",
+                "int b = 20;",
+                "int c = 30;"
+            ]
         },
         {
             "args": {
@@ -234,7 +392,15 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "    ", "    int x = 1;", "    ", "    int y = 2;", "    printf(\"Result: %d\", x + y);", "}"]
+            "expected": [
+                "int main() {",
+                "    ",
+                "    int x = 1;",
+                "    ",
+                "    int y = 2;",
+                "    printf(\"Result: %d\", x + y);",
+                "}"
+            ]
         },
         {
             "args": {
@@ -249,7 +415,16 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "    int x = 1;", "    ", "    int y = 2;", "    ", "    printf(\"Result: %d\", x + y);", "    ", "}"]
+            "expected": [
+                "int main() {",
+                "    int x = 1;",
+                "    ",
+                "    int y = 2;",
+                "    ",
+                "    printf(\"Result: %d\", x + y);",
+                "    ",
+                "}"
+            ]
         },
         {
             "args": {
@@ -264,13 +439,25 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", " \" end of nested comment */", "int y = 20;", "*/ int z = 30;", "}"]
+            "expected": [
+                "int main() {",
+                " \" end of nested comment */",
+                "int y = 20;",
+                "*/ int z = 30;",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["/* Start of block comment \n /* nested block comment */ still in block comment */", "int x = 10;"]
+                "source": [
+                    "/* Start of block comment \n /* nested block comment */ still in block comment */",
+                    "int x = 10;"
+                ]
             },
-            "expected": [" still in block comment */", "int x = 10;"]
+            "expected": [
+                " still in block comment */",
+                "int x = 10;"
+            ]
         },
         {
             "args": {
@@ -283,13 +470,27 @@
                     "// Line comment /* not a block comment */"
                 ]
             },
-            "expected": ["End of nested block comment */", "int x = 40;"]
+            "expected": [
+                "End of nested block comment */",
+                "int x = 40;"
+            ]
         },
         {
             "args": {
-                "source": ["void func() {", "int x = 1;", "/* Comment with newline character \n */", "int y = 2;", "}"]
+                "source": [
+                    "void func() {",
+                    "int x = 1;",
+                    "/* Comment with newline character \n */",
+                    "int y = 2;",
+                    "}"
+                ]
             },
-            "expected": ["void func() {", "int x = 1;", "int y = 2;", "}"]
+            "expected": [
+                "void func() {",
+                "int x = 1;",
+                "int y = 2;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -302,7 +503,11 @@
                     "}"
                 ]
             },
-            "expected": ["int x = 1;", "int y = 2;", "}"]
+            "expected": [
+                "int x = 1;",
+                "int y = 2;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -313,7 +518,11 @@
                     "/* Another block comment */ int y = 2;"
                 ]
             },
-            "expected": [" end of comment */", "int x = 1;", " int y = 2;"]
+            "expected": [
+                " end of comment */",
+                "int x = 1;",
+                " int y = 2;"
+            ]
         },
         {
             "args": {
@@ -325,7 +534,11 @@
                     "cout << \"Hello World\";"
                 ]
             },
-            "expected": ["still in block comment \" end block comment */", "int x = 1;", "cout << \"Hello World\";"]
+            "expected": [
+                "still in block comment \" end block comment */",
+                "int x = 1;",
+                "cout << \"Hello World\";"
+            ]
         },
         {
             "args": {
@@ -337,7 +550,12 @@
                     "int s = 10;"
                 ]
             },
-            "expected": ["int q = 8;", "int r = 9;", " inside block comment */", "int s = 10;"]
+            "expected": [
+                "int q = 8;",
+                "int r = 9;",
+                " inside block comment */",
+                "int s = 10;"
+            ]
         },
         {
             "args": {
@@ -350,7 +568,13 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "int x = 20;", " comment */", "return x;", "}"]
+            "expected": [
+                "int main() {",
+                "int x = 20;",
+                " comment */",
+                "return x;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -363,7 +587,13 @@
                     "}"
                 ]
             },
-            "expected": ["void example() {", " and continues here */", "int a = 10;", "cout << \"Value: \" << a;", "}"]
+            "expected": [
+                "void example() {",
+                " and continues here */",
+                "int a = 10;",
+                "cout << \"Value: \" << a;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -379,7 +609,14 @@
                     "}"
                 ]
             },
-            "expected": ["class MyClass {", "    ", "    int a;", "    ", "    int c;", "}"]
+            "expected": [
+                "class MyClass {",
+                "    ",
+                "    int a;",
+                "    ",
+                "    int c;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -392,7 +629,10 @@
                     "}"
                 ]
             },
-            "expected": ["int z = 30;", "}"]
+            "expected": [
+                "int z = 30;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -410,9 +650,19 @@
         },
         {
             "args": {
-                "source": ["void func() {", "int x = 10;", "/* Start of block comment ", "int y = 20;", "int z = 30;", "}*/"]
+                "source": [
+                    "void func() {",
+                    "int x = 10;",
+                    "/* Start of block comment ",
+                    "int y = 20;",
+                    "int z = 30;",
+                    "}*/"
+                ]
             },
-            "expected": ["void func() {", "int x = 10;"]
+            "expected": [
+                "void func() {",
+                "int x = 10;"
+            ]
         },
         {
             "args": {
@@ -427,7 +677,15 @@
                     "}"
                 ]
             },
-            "expected": ["int func() {", "if (x < 0)  {", "return x;", "} else {", "return -x;", "}", "}"]
+            "expected": [
+                "int func() {",
+                "if (x < 0)  {",
+                "return x;",
+                "} else {",
+                "return -x;",
+                "}",
+                "}"
+            ]
         },
         {
             "args": {
@@ -438,7 +696,11 @@
                     "cout << \"Hello World\";"
                 ]
             },
-            "expected": [" comment \n end comment */", "int x = 1;", "cout << \"Hello World\";"]
+            "expected": [
+                " comment \n end comment */",
+                "int x = 1;",
+                "cout << \"Hello World\";"
+            ]
         },
         {
             "args": {
@@ -450,7 +712,12 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "int x = 10;", "cout << \"Hello World\";", "}"]
+            "expected": [
+                "int main() {",
+                "int x = 10;",
+                "cout << \"Hello World\";",
+                "}"
+            ]
         },
         {
             "args": {
@@ -460,7 +727,11 @@
                     "int y = 16;"
                 ]
             },
-            "expected": [" inside block comment */", "int x = 15;", "int y = 16;"]
+            "expected": [
+                " inside block comment */",
+                "int x = 15;",
+                "int y = 16;"
+            ]
         },
         {
             "args": {
@@ -472,7 +743,12 @@
                     "cout << \"Hello World\";"
                 ]
             },
-            "expected": [" end nested comment */", "still in block comment \" end block comment */", "int x = 1;", "cout << \"Hello World\";"]
+            "expected": [
+                " end nested comment */",
+                "still in block comment \" end block comment */",
+                "int x = 1;",
+                "cout << \"Hello World\";"
+            ]
         },
         {
             "args": {
@@ -487,7 +763,10 @@
                     "/* Last comment */"
                 ]
             },
-            "expected": ["int y = 20;", "*/ int z = 30;"]
+            "expected": [
+                "int y = 20;",
+                "*/ int z = 30;"
+            ]
         },
         {
             "args": {
@@ -501,11 +780,23 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "    ", "    */", "    int x = 10;", "    ", "}"]
+            "expected": [
+                "int main() {",
+                "    ",
+                "    */",
+                "    int x = 10;",
+                "    ",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["/* Start of block comment ", "void func() {", "int x = 10;", "} /* End of block comment */"]
+                "source": [
+                    "/* Start of block comment ",
+                    "void func() {",
+                    "int x = 10;",
+                    "} /* End of block comment */"
+                ]
             },
             "expected": []
         },
@@ -521,7 +812,12 @@
                     "int u = 12;"
                 ]
             },
-            "expected": ["inside it", "end of block comment */", "int t = 11;", "int u = 12;"]
+            "expected": [
+                "inside it",
+                "end of block comment */",
+                "int t = 11;",
+                "int u = 12;"
+            ]
         },
         {
             "args": {
@@ -532,13 +828,28 @@
                     "int p = 7;"
                 ]
             },
-            "expected": ["int o = 6;", " inside it */", "int p = 7;"]
+            "expected": [
+                "int o = 6;",
+                " inside it */",
+                "int p = 7;"
+            ]
         },
         {
             "args": {
-                "source": ["int main() {", "int x = 10;", "/* Comment with special characters !@#$%^&*()_+*/", "int y = 20;", "}"]
+                "source": [
+                    "int main() {",
+                    "int x = 10;",
+                    "/* Comment with special characters !@#$%^&*()_+*/",
+                    "int y = 20;",
+                    "}"
+                ]
             },
-            "expected": ["int main() {", "int x = 10;", "int y = 20;", "}"]
+            "expected": [
+                "int main() {",
+                "int x = 10;",
+                "int y = 20;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -551,7 +862,14 @@
                     "}"
                 ]
             },
-            "expected": [" still deep */ end of deep nesting */", "int x = 80;", "int main() {", "int y = 90;", "return x + y;", "}"]
+            "expected": [
+                " still deep */ end of deep nesting */",
+                "int x = 80;",
+                "int main() {",
+                "int y = 90;",
+                "return x + y;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -563,7 +881,13 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", " end of block comment */", "int x = 10;", "cout << \"Hello World\";", "}"]
+            "expected": [
+                "int main() {",
+                " end of block comment */",
+                "int x = 10;",
+                "cout << \"Hello World\";",
+                "}"
+            ]
         },
         {
             "args": {
@@ -575,7 +899,10 @@
                     "// Last single line comment"
                 ]
             },
-            "expected": ["int a = 1;", "int b = 2;"]
+            "expected": [
+                "int a = 1;",
+                "int b = 2;"
+            ]
         },
         {
             "args": {
@@ -590,7 +917,14 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "if (true) {", "int x = 1;", "}", "int y = 2;", "}"]
+            "expected": [
+                "int main() {",
+                "if (true) {",
+                "int x = 1;",
+                "}",
+                "int y = 2;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -606,7 +940,12 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "int x = 10;", "cout << \"Value: \" << x;", "}"]
+            "expected": [
+                "int main() {",
+                "int x = 10;",
+                "cout << \"Value: \" << x;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -618,7 +957,11 @@
                     "printf(\"Result: %d\", x + y);"
                 ]
             },
-            "expected": ["int x = 1;", "int y = 2;", "printf(\"Result: %d\", x + y);"]
+            "expected": [
+                "int x = 1;",
+                "int y = 2;",
+                "printf(\"Result: %d\", x + y);"
+            ]
         },
         {
             "args": {
@@ -630,7 +973,12 @@
                     "int z = 3;"
                 ]
             },
-            "expected": [" end of comment */", "int x = 1;", " int y = 2;", "int z = 3;"]
+            "expected": [
+                " end of comment */",
+                "int x = 1;",
+                " int y = 2;",
+                "int z = 3;"
+            ]
         },
         {
             "args": {
@@ -644,7 +992,11 @@
                     "}"
                 ]
             },
-            "expected": ["void foo() {", "int y = 30;", "}"]
+            "expected": [
+                "void foo() {",
+                "int y = 30;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -659,7 +1011,10 @@
                     "}"
                 ]
             },
-            "expected": ["int z = 70;", "}"]
+            "expected": [
+                "int z = 70;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -669,13 +1024,27 @@
                     "int v = 13;"
                 ]
             },
-            "expected": ["int v = 13;"]
+            "expected": [
+                "int v = 13;"
+            ]
         },
         {
             "args": {
-                "source": ["int main() {", "int x = 1;", "/* Comment with newline character \n and /* nested */ comment */", "int y = 2;", "}"]
+                "source": [
+                    "int main() {",
+                    "int x = 1;",
+                    "/* Comment with newline character \n and /* nested */ comment */",
+                    "int y = 2;",
+                    "}"
+                ]
             },
-            "expected": ["int main() {", "int x = 1;", " comment */", "int y = 2;", "}"]
+            "expected": [
+                "int main() {",
+                "int x = 1;",
+                " comment */",
+                "int y = 2;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -689,7 +1058,13 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "    ", "    int x = 10;", "    ", "}"]
+            "expected": [
+                "int main() {",
+                "    ",
+                "    int x = 10;",
+                "    ",
+                "}"
+            ]
         },
         {
             "args": {
@@ -700,13 +1075,29 @@
                     "}"
                 ]
             },
-            "expected": ["void foo() {", "     int y = 20;", "    ", "}"]
+            "expected": [
+                "void foo() {",
+                "     int y = 20;",
+                "    ",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["/* Comment line 1", "Comment line 2", "Comment line 3 */", "int a = 1;", "int b = 2;", "int c = 3;"]
+                "source": [
+                    "/* Comment line 1",
+                    "Comment line 2",
+                    "Comment line 3 */",
+                    "int a = 1;",
+                    "int b = 2;",
+                    "int c = 3;"
+                ]
             },
-            "expected": ["int a = 1;", "int b = 2;", "int c = 3;"]
+            "expected": [
+                "int a = 1;",
+                "int b = 2;",
+                "int c = 3;"
+            ]
         },
         {
             "args": {
@@ -724,13 +1115,23 @@
                     "}"
                 ]
             },
-            "expected": ["int z = 130;", "End of nested block comment */", "return x + y + z;", "}"]
+            "expected": [
+                "int z = 130;",
+                "End of nested block comment */",
+                "return x + y + z;",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["/* Start of block comment \n /* nested block comment \n still in block comment */", "int x = 10;"]
+                "source": [
+                    "/* Start of block comment \n /* nested block comment \n still in block comment */",
+                    "int x = 10;"
+                ]
             },
-            "expected": ["int x = 10;"]
+            "expected": [
+                "int x = 10;"
+            ]
         },
         {
             "args": {
@@ -757,9 +1158,18 @@
         },
         {
             "args": {
-                "source": ["int main() {", "// Line comment \" // still in line comment \" end of line comment ", "int x = 10;", "}"]
+                "source": [
+                    "int main() {",
+                    "// Line comment \" // still in line comment \" end of line comment ",
+                    "int x = 10;",
+                    "}"
+                ]
             },
-            "expected": ["int main() {", "int x = 10;", "}"]
+            "expected": [
+                "int main() {",
+                "int x = 10;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -772,7 +1182,13 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", " end of block comment */", "int x = 10;", "cout << \"Hello World\";", "}"]
+            "expected": [
+                "int main() {",
+                " end of block comment */",
+                "int x = 10;",
+                "cout << \"Hello World\";",
+                "}"
+            ]
         },
         {
             "args": {
@@ -781,7 +1197,10 @@
                     "int w = 14;"
                 ]
             },
-            "expected": [" end of inner block comment */ end of outer block comment */", "int w = 14;"]
+            "expected": [
+                " end of inner block comment */ end of outer block comment */",
+                "int w = 14;"
+            ]
         },
         {
             "args": {
@@ -794,13 +1213,28 @@
                     "}"
                 ]
             },
-            "expected": [" still inside */", "int main() {", " */", "int z = 100;", "return z;", "}"]
+            "expected": [
+                " still inside */",
+                "int main() {",
+                " */",
+                "int z = 100;",
+                "return z;",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["void func() {", "/* Start of block comment ", "int x = 10;", "} // End of function ", "*/"]
+                "source": [
+                    "void func() {",
+                    "/* Start of block comment ",
+                    "int x = 10;",
+                    "} // End of function ",
+                    "*/"
+                ]
             },
-            "expected": ["void func() {"]
+            "expected": [
+                "void func() {"
+            ]
         },
         {
             "args": {
@@ -810,7 +1244,10 @@
                     "// single line comment after block comment"
                 ]
             },
-            "expected": [" comment */ end */", "int x = 1;"]
+            "expected": [
+                " comment */ end */",
+                "int x = 1;"
+            ]
         },
         {
             "args": {
@@ -823,7 +1260,13 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", " \" end of block comment */", "int x = 10;", "cout << \"Hello World\";", "}"]
+            "expected": [
+                "int main() {",
+                " \" end of block comment */",
+                "int x = 10;",
+                "cout << \"Hello World\";",
+                "}"
+            ]
         },
         {
             "args": {
@@ -847,9 +1290,14 @@
         },
         {
             "args": {
-                "source": ["/* Comment with \"escaped quote\" inside */", "int x = 10;"]
+                "source": [
+                    "/* Comment with \"escaped quote\" inside */",
+                    "int x = 10;"
+                ]
             },
-            "expected": ["int x = 10;"]
+            "expected": [
+                "int x = 10;"
+            ]
         },
         {
             "args": {
@@ -863,7 +1311,14 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "int x = 1;", "int y = 2;", " end block comment */", "int z = 3;", "}"]
+            "expected": [
+                "int main() {",
+                "int x = 1;",
+                "int y = 2;",
+                " end block comment */",
+                "int z = 3;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -877,7 +1332,12 @@
                     "}"
                 ]
             },
-            "expected": ["void func() {", "end of block comment */", "int x = 10;", "}"]
+            "expected": [
+                "void func() {",
+                "end of block comment */",
+                "int x = 10;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -893,7 +1353,12 @@
                     "}"
                 ]
             },
-            "expected": ["void function() {", "int i = 0;", "int l = 3;", "}"]
+            "expected": [
+                "void function() {",
+                "int i = 0;",
+                "int l = 3;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -908,7 +1373,12 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "int x = 30;", "return x;", "}"]
+            "expected": [
+                "int main() {",
+                "int x = 30;",
+                "return x;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -938,9 +1408,21 @@
         },
         {
             "args": {
-                "source": ["/* Multi", "line", "block", "comment */", "int main() {", "return 0;", "}"]
+                "source": [
+                    "/* Multi",
+                    "line",
+                    "block",
+                    "comment */",
+                    "int main() {",
+                    "return 0;",
+                    "}"
+                ]
             },
-            "expected": ["int main() {", "return 0;", "}"]
+            "expected": [
+                "int main() {",
+                "return 0;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -984,7 +1466,13 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "    int x = 10;", "    ", "    int y = 20;", "}"]
+            "expected": [
+                "int main() {",
+                "    int x = 10;",
+                "    ",
+                "    int y = 20;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -997,13 +1485,22 @@
                     "cout << \"Hello World\";"
                 ]
             },
-            "expected": ["end of block comment */", "int x = 1;", "cout << \"Hello World\";"]
+            "expected": [
+                "end of block comment */",
+                "int x = 1;",
+                "cout << \"Hello World\";"
+            ]
         },
         {
             "args": {
-                "source": ["/* Start of block comment \n // line comment inside block comment \n still in block comment */", "int x = 10;"]
+                "source": [
+                    "/* Start of block comment \n // line comment inside block comment \n still in block comment */",
+                    "int x = 10;"
+                ]
             },
-            "expected": ["int x = 10;"]
+            "expected": [
+                "int x = 10;"
+            ]
         },
         {
             "args": {
@@ -1015,13 +1512,23 @@
                     "// End of file comment"
                 ]
             },
-            "expected": [" int x = 20;"]
+            "expected": [
+                " int x = 20;"
+            ]
         },
         {
             "args": {
-                "source": ["/* Comment before line */ int x = 10;", "int y = 20; /* Comment after line */", "int z = 30;"]
+                "source": [
+                    "/* Comment before line */ int x = 10;",
+                    "int y = 20; /* Comment after line */",
+                    "int z = 30;"
+                ]
             },
-            "expected": [" int x = 10;", "int y = 20; ", "int z = 30;"]
+            "expected": [
+                " int x = 10;",
+                "int y = 20; ",
+                "int z = 30;"
+            ]
         },
         {
             "args": {
@@ -1034,7 +1541,10 @@
                     "// End of file comment"
                 ]
             },
-            "expected": ["Back to outer comment */", "int z = 40;"]
+            "expected": [
+                "Back to outer comment */",
+                "int z = 40;"
+            ]
         },
         {
             "args": {
@@ -1052,7 +1562,13 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "int x = 10;", "cout << \"Value: \" << x;", "int y = 2;", "}"]
+            "expected": [
+                "int main() {",
+                "int x = 10;",
+                "cout << \"Value: \" << x;",
+                "int y = 2;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -1066,7 +1582,10 @@
                     "int z = 30;"
                 ]
             },
-            "expected": ["int y = 20;", "int z = 30;"]
+            "expected": [
+                "int y = 20;",
+                "int z = 30;"
+            ]
         },
         {
             "args": {
@@ -1079,7 +1598,13 @@
                     "}"
                 ]
             },
-            "expected": [" end of block comment */", "int x = 10;", "int y = 20;", "cout << \"Hello World\";", "}"]
+            "expected": [
+                " end of block comment */",
+                "int x = 10;",
+                "int y = 20;",
+                "cout << \"Hello World\";",
+                "}"
+            ]
         },
         {
             "args": {
@@ -1089,7 +1614,11 @@
                     "int a = 5;"
                 ]
             },
-            "expected": [" more text", "and continues here  still more text */", "int a = 5;"]
+            "expected": [
+                " more text",
+                "and continues here  still more text */",
+                "int a = 5;"
+            ]
         },
         {
             "args": {
@@ -1103,7 +1632,11 @@
                     "}"
                 ]
             },
-            "expected": ["void bar() {", "int a = 100;", "}"]
+            "expected": [
+                "void bar() {",
+                "int a = 100;",
+                "}"
+            ]
         },
         {
             "args": {
@@ -1119,13 +1652,25 @@
                     "/* Comment after code */"
                 ]
             },
-            "expected": ["int x = 10;", "cout << \"Value: \" << x;", "}"]
+            "expected": [
+                "int x = 10;",
+                "cout << \"Value: \" << x;",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["/* comment with newline \n inside it */", "int m = 4;", "// comment with newline \n inside it", "int n = 5;"]
+                "source": [
+                    "/* comment with newline \n inside it */",
+                    "int m = 4;",
+                    "// comment with newline \n inside it",
+                    "int n = 5;"
+                ]
             },
-            "expected": ["int m = 4;", "int n = 5;"]
+            "expected": [
+                "int m = 4;",
+                "int n = 5;"
+            ]
         },
         {
             "args": {
@@ -1141,7 +1686,12 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", "int x = 1;", "cout << \"Hello World\";", "}"]
+            "expected": [
+                "int main() {",
+                "int x = 1;",
+                "cout << \"Hello World\";",
+                "}"
+            ]
         },
         {
             "args": {
@@ -1155,13 +1705,22 @@
                     "// End of file comment"
                 ]
             },
-            "expected": ["int y = 20;", "*/ int z = 30;"]
+            "expected": [
+                "int y = 20;",
+                "*/ int z = 30;"
+            ]
         },
         {
             "args": {
-                "source": ["/* Start of block comment /* Nested block comment */ still in block comment */", "int x = 10;"]
+                "source": [
+                    "/* Start of block comment /* Nested block comment */ still in block comment */",
+                    "int x = 10;"
+                ]
             },
-            "expected": [" still in block comment */", "int x = 10;"]
+            "expected": [
+                " still in block comment */",
+                "int x = 10;"
+            ]
         },
         {
             "args": {
@@ -1174,7 +1733,14 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", " end of block comment */", "int x = 10;", "cout << \"Hello World\";", " end */", "}"]
+            "expected": [
+                "int main() {",
+                " end of block comment */",
+                "int x = 10;",
+                "cout << \"Hello World\";",
+                " end */",
+                "}"
+            ]
         },
         {
             "args": {
@@ -1189,17 +1755,37 @@
                     "}"
                 ]
             },
-            "expected": ["int main() {", " \" and continues here", "*/", "int a = 10;", "cout << \"Output: \" << a;", "}"]
+            "expected": [
+                "int main() {",
+                " \" and continues here",
+                "*/",
+                "int a = 10;",
+                "cout << \"Output: \" << a;",
+                "}"
+            ]
         },
         {
             "args": {
-                "source": ["int main() {", "if (/* inline block comment */ true) {", "printf(\"Hello\n\");", "}", "}"]
+                "source": [
+                    "int main() {",
+                    "if (/* inline block comment */ true) {",
+                    "printf(\"Hello\n\");",
+                    "}",
+                    "}"
+                ]
             },
-            "expected": ["int main() {", "if ( true) {", "printf(\"Hello\n\");", "}", "}"]
+            "expected": [
+                "int main() {",
+                "if ( true) {",
+                "printf(\"Hello\n\");",
+                "}",
+                "}"
+            ]
         }
     ],
     "invoke": {
         "python": "Solution().removeComments",
-        "typescript": "Solution().removeComments"
+        "typescript": "Solution().removeComments",
+        "valkyrie": "removeComments"
     }
 }
