@@ -1017,6 +1017,7 @@
     ],
     "invoke": {
         "python": "Solution().snakesAndLadders",
-        "typescript": "Solution().snakesAndLadders"
+        "typescript": "Solution().snakesAndLadders",
+        "valkyrie": "snakesAndLadders"
     }
 }

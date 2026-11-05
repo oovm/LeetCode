@@ -1013,6 +1013,7 @@
     ],
     "invoke": {
         "python": "Solution().carFleet",
-        "typescript": "Solution().carFleet"
+        "typescript": "Solution().carFleet",
+        "valkyrie": "carFleet"
     }
 }

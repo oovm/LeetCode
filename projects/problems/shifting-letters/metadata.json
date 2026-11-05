@@ -668,6 +668,7 @@
     ],
     "invoke": {
         "python": "Solution().shiftingLetters",
-        "typescript": "Solution().shiftingLetters"
+        "typescript": "Solution().shiftingLetters",
+        "valkyrie": "shiftingLetters"
     }
 }

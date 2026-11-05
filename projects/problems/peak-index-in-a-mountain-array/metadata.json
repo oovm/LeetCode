@@ -616,6 +616,7 @@
     ],
     "invoke": {
         "python": "Solution().peakIndexInMountainArray",
-        "typescript": "Solution().peakIndexInMountainArray"
+        "typescript": "Solution().peakIndexInMountainArray",
+        "valkyrie": "peakIndexInMountainArray"
     }
 }

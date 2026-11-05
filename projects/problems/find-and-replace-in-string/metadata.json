@@ -871,6 +871,7 @@
     ],
     "invoke": {
         "python": "Solution().findReplaceString",
-        "typescript": "Solution().findReplaceString"
+        "typescript": "Solution().findReplaceString",
+        "valkyrie": "findReplaceString"
     }
 }

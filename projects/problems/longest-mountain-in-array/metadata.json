@@ -986,6 +986,7 @@
     ],
     "invoke": {
         "python": "Solution().longestMountain",
-        "typescript": "Solution().longestMountain"
+        "typescript": "Solution().longestMountain",
+        "valkyrie": "longestMountain"
     }
 }

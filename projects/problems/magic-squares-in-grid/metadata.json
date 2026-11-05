@@ -768,6 +768,7 @@
     ],
     "invoke": {
         "python": "Solution().numMagicSquaresInside",
-        "typescript": "Solution().numMagicSquaresInside"
+        "typescript": "Solution().numMagicSquaresInside",
+        "valkyrie": "numMagicSquaresInside"
     }
 }

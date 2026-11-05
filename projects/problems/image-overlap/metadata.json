@@ -560,6 +560,7 @@
     ],
     "invoke": {
         "python": "Solution().largestOverlap",
-        "typescript": "Solution().largestOverlap"
+        "typescript": "Solution().largestOverlap",
+        "valkyrie": "largestOverlap"
     }
 }

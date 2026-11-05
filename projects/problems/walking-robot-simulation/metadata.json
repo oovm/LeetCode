@@ -909,6 +909,7 @@
     ],
     "invoke": {
         "python": "Solution().robotSim",
-        "typescript": "Solution().robotSim"
+        "typescript": "Solution().robotSim",
+        "valkyrie": "robotSim"
     }
 }

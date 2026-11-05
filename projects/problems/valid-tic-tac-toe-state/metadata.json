@@ -553,6 +553,7 @@
     ],
     "invoke": {
         "python": "Solution().validTicTacToe",
-        "typescript": "Solution().validTicTacToe"
+        "typescript": "Solution().validTicTacToe",
+        "valkyrie": "validTicTacToe"
     }
 }

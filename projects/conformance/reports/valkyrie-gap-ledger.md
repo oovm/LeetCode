@@ -3310,3 +3310,30 @@ CompileTargetPlanError: plan_failed: ForcedWorkspaceDependencyMissing { project:
 | 764 `largest-plus-sign` | `metadata.tests[40]` 期望 `"Error: list assignment index out of range"`，`n=10` 但 `mines` 出现下标 `10` | 索引 0–39 通过，索引 40 的 `mines` 越界属语料错误 |
 | 786 `k-th-smallest-prime-fraction` | `metadata.tests[14]` 期望 `"Error: index out of range"` | 索引 0–13 通过，索引 14 期望越界异常文本 |
 | 789 `escape-the-ghosts` | `metadata.tests[4]`：`ghosts=[[1,0],[0,3]]`、`target=[0,1]`，幽灵距离 1 等于玩家距离 1，期望 `true` | 索引 0–3 通过，索引 4 与「先到才逃脱」语义矛盾 |
+
+## 理想解批次缺口登记（第四批，2026-11-05）
+
+口径：24 题（`questionId` 794–932），每题 `solution.v` 理想解 + TS 参考解 + `invoke.valkyrie`。
+TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **未能验证**，阻塞点与第三批「阻断 C」相同（现报 `ForcedWorkspaceDependencyMissing { project: "std", dependency: "unicode.types" }`）。
+
+### 能力缺口（题内坐标）
+
+| 缺口 | 题内触发点 | 处理 |
+|---|---|---|
+| 直接下标赋值可用 | 多题 | `arr⁅i⁆ = value` 已有多处通过用例，无需 `set` |
+| `-1` 字面量可用，`0 - 1` 不可 | `walking-robot-simulation`、`find-and-replace-in-string` 初稿 | 一律写 `-1` / `-2`，不要写裸字面量减法 |
+| 整数实参可能是 `string`，TS 侧被转成 `BigInt` | `binary-trees-with-factors` 的 `tests[89]`（`"63842579163398340"`、`"112840242932266120000"`） | TS 全程 `BigInt` 运算后 `Number()` 返回；V 侧该值超过 `i64` 上限，属语料越界 |
+| `HashMap<utf8,_>` 载体缺口（R30）仍在 | `subdomain-visit-count` | 聚合退化为按插入序线性比对，复杂度不是理想哈希 |
+| 参考解语义怪癖（需对齐才能过语料） | `car-fleet`（初始 `pre = 0`，正好在终点的车不计入车队）；`find-and-replace-pattern`（`zip` 截断，忽略长度不等）；`minimum-falling-path-sum`（非方阵时未填的 `g` 保持 0） | 按参考解实现，已在文件注释标注 |
+
+### 语料缺陷（F6，只标注不改用例）
+
+| 题号 | 缺陷坐标 | 实测 |
+|---|---|---|
+| 825 `friends-of-appropriate-ages` | `metadata.tests[66]`、`[79]`、`[99]` 年龄 `185` / `280` / `300` 越界，期望 `"Error: list index out of range"` | 索引 0–65 全通过 |
+| 833 `find-and-replace-in-string` | `metadata.tests[15]` 期望 `12345`（数值），方法返回字符串 `"12345"` | 索引 0–14 全通过，其后多处同型类型错 |
+| 848 `shifting-letters` | `metadata.tests[38]`：`s` 长 36，`shifts` 只有 26 项，期望 `"Error: list index out of range"` | 索引 0–37 全通过 |
+| 853 `car-fleet` | `metadata.tests[117]`：`position` 49 项、`speed` 46 项，期望 `"Error: list index out of range"` | 索引 0–116 全通过 |
+| 909 `snakes-and-ladders` | `metadata.tests[23]`：棋盘 `24x14`（非方阵），期望 `"Error: list index out of range"` | 索引 0–22 全通过 |
+| 931 `minimum-falling-path-sum` | `metadata.tests[10]`：`matrix=[[1],[100]]` 期望 `0`（参考解非方阵残留 0） | 索引 0–9 全通过 |
+| 823 `binary-trees-with-factors` | `metadata.tests[89]` 含 `112840242932266120000`，超出 `i64` | TS 用 `BigInt` 通过；V 侧该用例无法承载 |

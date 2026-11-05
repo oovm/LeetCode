@@ -475,6 +475,7 @@
     ],
     "invoke": {
         "python": "Solution().splitIntoFibonacci",
-        "typescript": "Solution().splitIntoFibonacci"
+        "typescript": "Solution().splitIntoFibonacci",
+        "valkyrie": "splitIntoFibonacci"
     }
 }

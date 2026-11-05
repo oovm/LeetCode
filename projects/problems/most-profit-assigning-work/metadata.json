@@ -857,6 +857,7 @@
     ],
     "invoke": {
         "python": "Solution().maxProfitAssignment",
-        "typescript": "Solution().maxProfitAssignment"
+        "typescript": "Solution().maxProfitAssignment",
+        "valkyrie": "maxProfitAssignment"
     }
 }

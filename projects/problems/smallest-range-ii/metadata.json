@@ -764,6 +764,7 @@
     ],
     "invoke": {
         "python": "Solution().smallestRangeII",
-        "typescript": "Solution().smallestRangeII"
+        "typescript": "Solution().smallestRangeII",
+        "valkyrie": "smallestRangeIi"
     }
 }

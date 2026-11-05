@@ -558,6 +558,7 @@
     ],
     "invoke": {
         "python": "Solution().expressiveWords",
-        "typescript": "Solution().expressiveWords"
+        "typescript": "Solution().expressiveWords",
+        "valkyrie": "expressiveWords"
     }
 }

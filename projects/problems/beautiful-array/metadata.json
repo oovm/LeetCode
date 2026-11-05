@@ -880,6 +880,7 @@
     ],
     "invoke": {
         "python": "Solution().beautifulArray",
-        "typescript": "Solution().beautifulArray"
+        "typescript": "Solution().beautifulArray",
+        "valkyrie": "beautifulArray"
     }
 }

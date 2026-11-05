@@ -724,6 +724,7 @@
     ],
     "invoke": {
         "python": "Solution().stoneGame",
-        "typescript": "Solution().stoneGame"
+        "typescript": "Solution().stoneGame",
+        "valkyrie": "stoneGame"
     }
 }

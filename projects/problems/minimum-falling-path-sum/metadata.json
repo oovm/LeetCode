@@ -566,6 +566,7 @@
     ],
     "invoke": {
         "python": "Solution().minFallingPathSum",
-        "typescript": "Solution().minFallingPathSum"
+        "typescript": "Solution().minFallingPathSum",
+        "valkyrie": "minFallingPathSum"
     }
 }

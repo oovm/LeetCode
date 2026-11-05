@@ -850,6 +850,7 @@
     ],
     "invoke": {
         "python": "Solution().findAndReplacePattern",
-        "typescript": "Solution().findAndReplacePattern"
+        "typescript": "Solution().findAndReplacePattern",
+        "valkyrie": "findAndReplacePattern"
     }
 }

@@ -2448,6 +2448,7 @@
     ],
     "invoke": {
         "python": "Solution().ambiguousCoordinates",
-        "typescript": "Solution().ambiguousCoordinates"
+        "typescript": "Solution().ambiguousCoordinates",
+        "valkyrie": "ambiguousCoordinates"
     }
 }

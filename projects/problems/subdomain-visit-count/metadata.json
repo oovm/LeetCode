@@ -1656,6 +1656,7 @@
     ],
     "invoke": {
         "python": "Solution().subdomainVisits",
-        "typescript": "Solution().subdomainVisits"
+        "typescript": "Solution().subdomainVisits",
+        "valkyrie": "subdomainVisits"
     }
 }
