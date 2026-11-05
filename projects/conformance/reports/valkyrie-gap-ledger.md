@@ -3253,3 +3253,26 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 |---|---|---|
 | 1007 `minimum-domino-rotations-for-equal-row` | 112 例中 4 例 `tops` 与 `bottoms` 长度不一致（索引 28、43、70、87）；索引 87 `tops` 全为 4 却期望 `1`，合法输入下应为 `0` | 该题无法整题验收；解法保留 |
 | 1343 `number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold` | 108 例中 7 例 `threshold` 为小数（5.5、10.5、1.5、3.5、0.5），题面签名为整数；首个不合法例为索引 20 | V lane 前 20 例通过后按 ABI 整数校验拒绝，不做隐式取整 |
+
+## 理想解批次缺口登记（第二批，2026-11-05）
+
+口径：20 题（`questionId` 216–638），逐题真跑 `run_v_solver.ts`（`legion build` + 隔离判题）与 TypeScript lane。
+V lane 14 题端到端通过，4 题撞语料缺陷，2 题在语料缺陷用例上无法结束被 kill（按命令纪律不重试）。
+
+### 语料缺陷（F6，只标注不改用例）
+
+| 题号 | 缺陷坐标 | 实测 |
+|---|---|---|
+| 267 `palindrome-permutation-ii` | `metadata.tests[34]` 期望 `"Execution timed out"` | V 在索引 34 前全部通过，该例输出规模爆炸，300 秒超时被 kill |
+| 320 `generalized-abbreviation` | `metadata.tests[3]` 期望 `"Execution timed out"` | V 索引 0–2 通过，索引 3 期望超时文本，实际返回完整缩写集 |
+| 553 `optimal-division` | `metadata.tests[7]` 期望数字 `10`，题面返回字符串 | V 其余用例通过，索引 7 类型不符 |
+| 582 `kill-process` | `metadata.tests[20]` 期望 `"Error: maximum recursion depth exceeded"` | 该例 `pid` 与 `ppid` 长度不一致（索引 12 起 `ppid` 多一项，已按 `zip` 截断兼容），索引 20 为自环，迭代解返回 `"Error: requested new array is too large"` |
+| 606 `construct-string-from-binary-tree` | `metadata.tests[3]` 期望数字 `1`，题面返回字符串 | V 其余用例通过，索引 3 类型不符 |
+| 638 `shopping-offers` | `metadata.tests[84]` 期望 `"Error: maximum recursion depth exceeded"`，`special` 含全 0 且价格为 0 的包 | 记忆化搜索已跳过不改变状态的包，仍在语料用例上超时被 kill |
+
+### 能力缺口（题内坐标）
+
+| 缺口 | 题内触发点 | 处理 |
+|---|---|---|
+| `HashMap<utf8,_>` 的 wasm ABI carrier 失配（R30 已登记） | `find-duplicate-file-in-system/solvers/valkyrie/solution.v` 的 `contents` 线性扫描 | 该题 83/83 通过，但同内容判定退化为 O(组数×路径长) 比较，按 R30 原有条目记录 |
+| 树返回含 `null` 的 ABI 表达缺口 | `binary-tree-longest-consecutive-sequence-ii` 之外的 536/623/654 未写 | 期望输出含 `null` 的树返回题无法用 `ArrayList<i64>` 表达可空元素，本批未选题 |
