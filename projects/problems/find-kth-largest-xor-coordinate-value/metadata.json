@@ -686,6 +686,7 @@
     ],
     "invoke": {
         "python": "Solution().kthLargestValue",
-        "typescript": "Solution().kthLargestValue"
+        "typescript": "Solution().kthLargestValue",
+        "valkyrie": "kthLargestValue"
     }
 }

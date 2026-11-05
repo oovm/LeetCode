@@ -620,6 +620,7 @@
     ],
     "invoke": {
         "python": "Solution().longestWPI",
-        "typescript": "Solution().longestWPI"
+        "typescript": "Solution().longestWPI",
+        "valkyrie": "longestWPI"
     }
 }

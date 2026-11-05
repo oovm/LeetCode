@@ -632,6 +632,7 @@
     ],
     "invoke": {
         "python": "Solution().kthSmallestSubarraySum",
-        "typescript": "Solution().kthSmallestSubarraySum"
+        "typescript": "Solution().kthSmallestSubarraySum",
+        "valkyrie": "kthSmallestSubarraySum"
     }
 }

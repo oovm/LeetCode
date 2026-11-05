@@ -1174,6 +1174,7 @@
     ],
     "invoke": {
         "python": "Solution().corpFlightBookings",
-        "typescript": "Solution().corpFlightBookings"
+        "typescript": "Solution().corpFlightBookings",
+        "valkyrie": "corpFlightBookings"
     }
 }

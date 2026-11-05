@@ -59,7 +59,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 观察（13）：G1 / G4 / G8 / G12 / G14 / G15 / G18 / G19 / G20 / G21 / G23 / G24 / G27。
 均为判据 a（换等价 API，零重复），或尚无已证实调用点。
 
-编译器缺陷（3，属实但不归 std 线管）：G5 / G6 / G7。见下一节指向条目。
+编译器缺陷（4，属实但不归 std 线管）：G5 / G6 / G7 / G29。见下一节指向条目。
 
 ## 编译器缺陷（不归 std 线）
 
@@ -68,8 +68,9 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G5 分支内丢弃 `Option<T>`（SMIR007） | 已有真实复现：`baseball-game` | 编译器 MIR 降级，不在 std / leetcode 线 |
 | G6 标识符 `round` 误拉 adaptor | 已有真实复现：`sum-of-digits-of-string-after-convert` | 编译器名字解析 / 闭包装配 |
 | G7 `HashMap.insert` 作 `else` 尾 + 嵌套 return | 已有真实复现：`isomorphic-strings` | 编译器 MIR 合流 |
+| G29 `i64` / `u64` → `f64` 精确转换编码缺失 | `wasm 后端缺少 i64 → f64 的精确表示转换编码（acorn_wasm 未提供对应 opcode），不得退化为近似转换`；最小复现 `micro f(x: i64) -> f64 { return x as f64 }`，`u64` 同样报错 | 编译器 wasm 编码；坐标 `sliding-window-median/solvers/valkyrie/solution.v:58` |
 
-- 三条都属实，但修复位置在 `nyar-vm.rs`，不占 std 缺口名额，也不进第 18 批选题面。
+- 四条都属实，但修复位置在 `nyar-vm.rs`，不占 std 缺口名额，也不进第 18 批选题面。
 - 本节只作指向，详细证据留在各自 G 条内。
 
 ## 判题夹具与导出 ABI 缺口（不归 std 线，F 编号）
@@ -3389,3 +3390,20 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 - 1101 的 `tests[70]` 起日志节点号大于 `n`（如 `maxNode=40, n=10`），参考解抛 `list index out of range` 并被记为期望文本；语料缺陷，F6 处理，不改用例。
 - 813 `largest-sum-of-averages`：35/102 例期望含分数（`20.5`、`18.166666666666664`），`f64` 返回与 `i64 as f64` 入口均缺，blocked-gap，未写。
 - 1057 首轮 V 编译报 SMIR007（`jump argument ... actual=Integer64, expected=Integer32`）；把 `usize` 计数循环统一改成 `i64` 后通过。坐标：`campus-bikes/solvers/valkyrie/solution.v`。
+
+## 第六批 B 组实测（2026-11-05）
+
+本轮 6 题：1109 / 1111 / 1124 / 1738 / 1918 / 480。
+
+| 题号 | Valkyrie lane | TypeScript lane | 首错 |
+| --- | --- | --- | --- |
+| 1109 `corporate-flight-bookings` | 110/110 | 110/110 | — |
+| 1111 `maximum-nesting-depth-of-two-valid-parentheses-strings` | 146/146 | 146/146 | — |
+| 1124 `longest-well-performing-interval` | 99/99 | 99/99 | — |
+| 1738 `find-kth-largest-xor-coordinate-value` | 87/87 | 61/87 | TS idx 61：`k=25` > 单元格数 21，期望 0 为 `nlargest` 越界产物（语料缺陷，F6） |
+| 1918 `kth-smallest-subarray-sum` | 12/88 | 12/88 | idx 12：`k=25` > 子数组数 15，期望 16（= 总和 + 1）；全表 20 例同类，语料缺陷 |
+| 480 `sliding-window-median` | 未构建（G29） | 115/115 | V 编译报 `i64 → f64` opcode 缺失 |
+
+- 区间能力已用于 1109 / 1111 / 1738 / 1918 的 `loop i in 0..n`，四题 V 均真构建通过；`inclusive_range` 未使用。
+- 1738 的 V 快选把越界 `k` 恰好落在最小值，与期望 0 巧合一致，仍按语料缺陷记录。
+- 480 用坐标压缩 + 树状数组按秩取中位数（O(n log n)）；TS 115/115，V 停在 G29。
