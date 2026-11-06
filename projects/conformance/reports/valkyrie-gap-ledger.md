@@ -3257,9 +3257,9 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 | 1186 `maximum-subarray-sum-with-one-deletion` | 已解决，移出 blocked | 139/139 |
 | 1590 `make-sum-divisible-by-p` | 已解决，移出 blocked | 76/76 |
 | 1007 `minimum-domino-rotations-for-equal-row` | 保留 blocked：编译已通过，`13:20` 不再报错，剩余失败为语料缺列（见下表） | 编译通过 |
-| 1073 `adding-two-negabinary-numbers` | 保留 blocked：字面量歧义已消失，`:27:26` 的 `infix ==` 仍 6 candidates 无匹配 | 见阻断 D |
+| 1073 `adding-two-negabinary-numbers` | 已解决，移出 blocked（`c34926bb` 补运算符接收者上下文） | 104/104 |
 
-### 阻断 B：Semantic MIR 合同（1546，根因已定位）
+### 阻断 B：Semantic MIR 合同（1546，已解决）
 
 | 题号 | 站点 | 首错摘要 |
 |---|---|---|
@@ -3273,14 +3273,17 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 
 因此修复点是 HIR 赋值值位置缺少期望类型，不是 MIR 降级（降级只是表现）。见阻断 D。
 
-### 阻断 D：赋值值位置的期望类型丢失（2026-11-06 新登记）
+已由 `eedb98f4` 修复：`Assign` 的值位置改用左值声明类型作为期望类型（对照 `StoreField`）。真跑判题 96/96。
+新增正/反例：`mir_ssa_assign_constructor_context_tests`（有声明类型必须编译通过，无声明类型必须结构化报错）。
 
-| 位置 | 现状 | 影响题 |
+### 阻断 D：赋值值位置与运算符实参的期望类型丢失（2026-11-06 已解决）
+
+| 位置 | 修复 | 影响题 |
 |---|---|---|
-| `nyar-vm.rs` `.../hir/overload/resolve_call/resolve.rs` `HirExprKind::Assign` 分支 | 值表达式沿用外层 `contextual_type`，未下传左值的声明类型；对照 `StoreField` 已按字段类型下传 | 1546 `seen = HashMap::new(0)` |
-| `nyar-vm.rs` `.../hir/overload/substitution.rs` `member_call_argument_contexts` | 原始数值接收者不按 owner 名归属实参类型 | 1073 `sum == 0 - 1` 中 `infix ==` 的另一实参拿不到 `i64` 上下文 |
+| `nyar-vm.rs` `.../hir/overload/resolve_call/resolve.rs` `HirExprKind::Assign` 分支 | `eedb98f4`：值表达式改用左值声明类型，未声明时回退外层上下文 | 1546 `seen = HashMap::new(0)`，96/96 |
+| `nyar-vm.rs` `.../hir/overload/substitution.rs` `member_call_argument_contexts` | `c34926bb`：识别「单段运算符成员名 + 接收者在 `args[0]`」形态，按接收者类型归组候选并把形参位与实参位一一对齐 | 1073 `sum == 0 - 1`，104/104 |
 
-两个文件均属本轮并行会话在途文件，按任务纪律停下待排期，不在本线修改。
+运算符接收者类型不可推断时上下文保持为空，仍以 `unresolved call` 失败闭合（反例见 `hir_operator_literal_argument_context_tests`），不静默选宽度。
 
 ### 语料缺陷（只标注，不改用例）
 
