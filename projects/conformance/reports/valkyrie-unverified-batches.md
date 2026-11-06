@@ -1851,14 +1851,15 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   首轮在 #18 报 `args.nums[3] 需要整数实参，实际为非整数数值 -12.5`。处置：`solution.v` 还原为 blocked 注释并
   追加 `# corpusDefect` 具体证据，`metadata.corpusDefect=true`，删除 `invoke.valkyrie`，原用例与期望值未改。
 
-## 批次 R33-2026-11-06（纯整数占位题第三批：28 题写入 + 2 题语料缺陷，authored-unverified）
+## 批次 R33-2026-11-06（纯整数占位题第三批：27 题写入 + 3 题语料缺陷，本轮实测）
 
 - 选题：从剩余候选（`vk-remain2b.txt` 261 行，已排除 R31/R32 的 33 题）取 30 题，按能力面成组；
   同组题同签名、同语义族，便于后续一次构建验一组。
-- 口径：只写 `solvers/valkyrie/solution.v` 与 `metadata.invoke.valkyrie`；不运行 `legion build` / cargo；
-  全部 `authored-unverified`，不计通过数。判题框架、既有用例与 `expected` 未改。陈旧
+- 口径：只写 `solvers/valkyrie/solution.v` 与 `metadata.invoke.valkyrie`；写入窗口不运行 `legion build` / cargo，
+  写完后按 S1 / S2 / R 三组各做一次构建验证。判题框架、既有用例与 `expected` 未改。陈旧
   `# blocked: std.collection 数组参数读取` 已由 R30/R32 实证证伪，本批不照抄。
-- **写入实现 28 题**（每题目录用例数为镜像回放用例数）：
+- **写入实现 27 题**（每题目录用例数为镜像回放用例数；`count-subarrays-of-length-three-with-a-condition`
+  实测转语料缺陷后不再计入实现数）：
 
   - S1 单数组统计（9）：`count-elements-with-strictly-smaller-and-greater-elements`（120）、
     `count-hills-and-valleys-in-an-array`（154）、`find-closest-number-to-zero`（128）、
@@ -1866,11 +1867,10 @@ receiver type is unknown, so member `unwrap` cannot be resolved
     `largest-positive-integer-that-exists-with-its-negative`（116）、
     `number-of-unequal-triplets-in-array`（74）、`neither-minimum-nor-maximum`（94）、
     `sum-of-squares-of-special-elements`（105）；
-  - S2 单数组进阶（9）：`max-pair-sum-in-an-array`（126）、
+  - S2 单数组进阶（8）：`max-pair-sum-in-an-array`（126）、
     `maximum-value-of-an-ordered-triplet-i`（126）、`minimum-sum-of-mountain-triplets-i`（118）、
     `maximum-strong-pair-xor-i`（125）、`count-tested-devices-after-test-operations`（107）、
     `maximum-number-of-operations-with-the-same-score-i`（109）、
-    `count-subarrays-of-length-three-with-a-condition`（134）、
     `maximum-difference-between-adjacent-elements-in-a-circular-array`（120）、
     `unique-3-digit-even-numbers`（128）；
   - R 一维重建（10）：`minimum-subsequence-in-non-increasing-order`（60）、
@@ -1884,12 +1884,16 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   `Solution` 方法同名、`metadata.invoke.valkyrie` 为 `Solution().<method>`、无残留 `# blocked`。
 - 镜像回放（Python 镜像按 `metadata.tests[].args` 键序回放，非 V 构建，不作为通过证据）：
   **3224 条用例，mismatch=0**。
-- 构建：本批写入窗口**未运行** `legion build` / cargo；构建窗口当前空出但两条编译器线随时抢占，
-  按要求先只写不编译，待排期后按 S1 / S2 / R 三组各一次构建验证。
+- 构建验证（2026-11-06，写入完成后构建窗口开放）：单进程、逐题独立产物目录（三组复跑前
+  `.cache/<slug>-bench-node` 全部不存在，均为本次新产物）、单条 ≤300 秒、超时不重试；验证期间未再写新题。
+  - S1：9/9 题通过，**1017/1017 用例**；
+  - S2：8/9 题通过，**992/992 用例**（`count-subarrays-of-length-three-with-a-condition` 转语料缺陷，见下）；
+  - R：10/10 题通过，**1114/1114 用例**；
+  - 合计 **27/28 题端到端通过，3123/3123 用例**；1 题转语料缺陷。
 
 ### R33 语料缺陷逐条证据（供语料侧统一处理）
 
-以下 2 题保持 blocked、原用例与期望值未改、`metadata.corpusDefect=true`、不加 `invoke.valkyrie`。
+以下 3 题保持 blocked、原用例与期望值未改、`metadata.corpusDefect=true`、不加 `invoke.valkyrie`。
 
 - `semi-ordered-permutation`：2 条，索引 #21、#95。`#21` 为 51 个元素，其中 `1` 出现两次、缺 `51`，
   期望 `"Error: 51 is not in list"`；`#95` 为 39 个元素，其中 `1..5` 各出现两次、缺 `35..39`，
@@ -1898,3 +1902,8 @@ receiver type is unknown, so member `unwrap` cannot be resolved
 - `minimum-right-shifts-to-sort-the-array`：6 条，索引 #33、#52、#58、#62、#93、#117。这些用例只有一个
   降序点且位于末位（如 #33 `[1,2,3,5,4]`、#62 `[1,3,2]`），右旋任意次数都无法整体有序，期望却给出 `1`；
   参照公式 `n - pivot` 漏判 `nums[n-1] <= nums[0]`，正确结果应为 `-1`。原值未改。
+- `count-subarrays-of-length-three-with-a-condition`：3 条，索引 #28、#33、#124。`nums` 含小数：
+  #28 `[25,50,25,75,37.5,75,37.5,100,50,100,50,150,75]`、#33 `[7,14,7,21,10.5,21,14,28,14]`、
+  #124 `[99,198,99,297,148.5,297,148.5,396,198,396,198,495,247.5]`；三条期望均为 0。
+  首轮在 #28 报 `args.nums[4] 需要整数实参，实际为非整数数值 37.5`，已执行 28/134 用例后中止。
+  处置：`solution.v` 还原为 blocked 注释并追加 `# corpusDefect`，删除 `invoke.valkyrie`，原值未改。
