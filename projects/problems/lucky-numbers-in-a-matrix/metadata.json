@@ -610,6 +610,7 @@
     ],
     "invoke": {
         "python": "Solution().luckyNumbers",
-        "typescript": "Solution().luckyNumbers"
+        "typescript": "Solution().luckyNumbers",
+        "valkyrie": "luckyNumbers"
     }
 }

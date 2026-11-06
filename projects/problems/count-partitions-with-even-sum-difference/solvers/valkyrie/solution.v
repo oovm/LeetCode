@@ -1,5 +1,33 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: countPartitions 需要 读取 nums 计数偶差分割
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.count_partitions_with_even_sum_difference;
+
+using std.collection;
+
+# 前缀和推进，逐刀检查左和减右和是否为偶数。
+[export(case: "camelCase")]
+micro countPartitions(nums: ArrayList<i64>) -> i64 {
+    let mut total: i64 = 0
+    let mut index: usize = 0
+    while index < nums.length() {
+        total = total + nums⁅index⁆
+        index = index + 1
+    }
+    let mut answer: i64 = 0
+    let mut left_sum: i64 = 0
+    index = 0
+    while index + 1 < nums.length() {
+        left_sum = left_sum + nums⁅index⁆
+        let right_sum: i64 = total - left_sum
+        let difference: i64 = left_sum - right_sum
+        if difference % 2 == 0 {
+            answer = answer + 1
+        }
+        index = index + 1
+    }
+    return answer
+}
+
+class Solution {
+    micro countPartitions(self, nums: ArrayList<i64>): i64 {
+        return countPartitions(nums)
+    }
+}

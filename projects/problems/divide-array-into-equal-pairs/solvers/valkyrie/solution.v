@@ -1,5 +1,34 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: divideArray 需要 读取 nums 词频全偶判定
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.divide_array_into_equal_pairs;
+
+using std.collection;
+
+# 每个数值出现次数为偶数即可两两配对。
+[export(case: "camelCase")]
+micro divideArray(nums: ArrayList<i64>) -> bool {
+    let mut counts: HashMap<i64, i64> = HashMap::new(0)
+    let mut index: usize = 0
+    while index < nums.length() {
+        let value: i64 = nums⁅index⁆
+        if counts.contains_key(value) {
+            counts.insert(value, counts.get(value).unwrap() + 1)
+        } else {
+            counts.insert(value, 1)
+        }
+        index = index + 1
+    }
+    index = 0
+    while index < nums.length() {
+        let value: i64 = nums⁅index⁆
+        if counts.get(value).unwrap() % 2 != 0 {
+            return false
+        }
+        index = index + 1
+    }
+    return true
+}
+
+class Solution {
+    micro divideArray(self, nums: ArrayList<i64>) -> bool {
+        return divideArray(nums)
+    }
+}

@@ -847,6 +847,7 @@
     ],
     "invoke": {
         "python": "Solution().longestMonotonicSubarray",
-        "typescript": "Solution().longestMonotonicSubarray"
+        "typescript": "Solution().longestMonotonicSubarray",
+        "valkyrie": "longestMonotonicSubarray"
     }
 }

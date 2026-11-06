@@ -528,6 +528,7 @@
     ],
     "invoke": {
         "python": "Solution().isToeplitzMatrix",
-        "typescript": "Solution().isToeplitzMatrix"
+        "typescript": "Solution().isToeplitzMatrix",
+        "valkyrie": "isToeplitzMatrix"
     }
 }

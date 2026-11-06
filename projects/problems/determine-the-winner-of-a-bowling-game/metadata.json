@@ -668,6 +668,7 @@
     ],
     "invoke": {
         "python": "Solution().isWinner",
-        "typescript": "Solution().isWinner"
+        "typescript": "Solution().isWinner",
+        "valkyrie": "isWinner"
     }
 }

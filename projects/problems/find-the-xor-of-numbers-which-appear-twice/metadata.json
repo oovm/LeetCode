@@ -872,6 +872,7 @@
     ],
     "invoke": {
         "python": "Solution().duplicateNumbersXOR",
-        "typescript": "Solution().duplicateNumbersXOR"
+        "typescript": "Solution().duplicateNumbersXOR",
+        "valkyrie": "duplicateNumbersXOR"
     }
 }

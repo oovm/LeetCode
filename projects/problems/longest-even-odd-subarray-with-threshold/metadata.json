@@ -884,6 +884,7 @@
     ],
     "invoke": {
         "python": "Solution().longestAlternatingSubarray",
-        "typescript": "Solution().longestAlternatingSubarray"
+        "typescript": "Solution().longestAlternatingSubarray",
+        "valkyrie": "longestAlternatingSubarray"
     }
 }

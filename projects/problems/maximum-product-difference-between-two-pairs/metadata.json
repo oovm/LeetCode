@@ -598,6 +598,7 @@
     ],
     "invoke": {
         "python": "Solution().maxProductDifference",
-        "typescript": "Solution().maxProductDifference"
+        "typescript": "Solution().maxProductDifference",
+        "valkyrie": "maxProductDifference"
     }
 }

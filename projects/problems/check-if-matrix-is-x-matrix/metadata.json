@@ -642,6 +642,7 @@
     ],
     "invoke": {
         "python": "Solution().checkXMatrix",
-        "typescript": "Solution().checkXMatrix"
+        "typescript": "Solution().checkXMatrix",
+        "valkyrie": "checkXMatrix"
     }
 }

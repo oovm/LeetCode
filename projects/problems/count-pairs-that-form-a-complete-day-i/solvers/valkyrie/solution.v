@@ -1,5 +1,30 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: countCompleteDayPairs 需要 读取 hours 模 24 配对计数
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.count_pairs_that_form_a_complete_day_i;
+
+using std.collection;
+
+# 模 24 计频，配对数为之前出现的互补余数个数。
+[export(case: "camelCase")]
+micro countCompleteDayPairs(hours: ArrayList<i64>) -> i64 {
+    let mut counts: ArrayList<i64> = ArrayList::new(24)
+    let mut slot: usize = 0
+    while slot < 24 {
+        counts.push(0)
+        slot = slot + 1
+    }
+    let mut answer: i64 = 0
+    let mut index: usize = 0
+    while index < hours.length() {
+        let remainder: i64 = hours⁅index⁆ % 24
+        let need: i64 = (24 - remainder) % 24
+        answer = answer + counts⁅need as usize⁆
+        counts⁅remainder as usize⁆ = counts⁅remainder as usize⁆ + 1
+        index = index + 1
+    }
+    return answer
+}
+
+class Solution {
+    micro countCompleteDayPairs(self, hours: ArrayList<i64>): i64 {
+        return countCompleteDayPairs(hours)
+    }
+}

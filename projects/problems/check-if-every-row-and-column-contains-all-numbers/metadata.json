@@ -598,6 +598,7 @@
     ],
     "invoke": {
         "python": "Solution().checkValid",
-        "typescript": "Solution().checkValid"
+        "typescript": "Solution().checkValid",
+        "valkyrie": "checkValid"
     }
 }

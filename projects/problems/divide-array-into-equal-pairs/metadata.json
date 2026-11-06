@@ -623,6 +623,7 @@
     ],
     "invoke": {
         "python": "Solution().divideArray",
-        "typescript": "Solution().divideArray"
+        "typescript": "Solution().divideArray",
+        "valkyrie": "divideArray"
     }
 }

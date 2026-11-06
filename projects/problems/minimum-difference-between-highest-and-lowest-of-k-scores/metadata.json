@@ -700,6 +700,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumDifference",
-        "typescript": "Solution().minimumDifference"
+        "typescript": "Solution().minimumDifference",
+        "valkyrie": "minimumDifference"
     }
 }

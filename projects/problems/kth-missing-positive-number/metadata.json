@@ -782,6 +782,7 @@
     ],
     "invoke": {
         "python": "Solution().findKthPositive",
-        "typescript": "Solution().findKthPositive"
+        "typescript": "Solution().findKthPositive",
+        "valkyrie": "findKthPositive"
     }
 }

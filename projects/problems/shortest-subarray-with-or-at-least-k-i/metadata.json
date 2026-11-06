@@ -781,6 +781,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumSubarrayLength",
-        "typescript": "Solution().minimumSubarrayLength"
+        "typescript": "Solution().minimumSubarrayLength",
+        "valkyrie": "minimumSubarrayLength"
     }
 }

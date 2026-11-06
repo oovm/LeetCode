@@ -614,6 +614,7 @@
     ],
     "invoke": {
         "python": "Solution().largestUniqueNumber",
-        "typescript": "Solution().largestUniqueNumber"
+        "typescript": "Solution().largestUniqueNumber",
+        "valkyrie": "largestUniqueNumber"
     }
 }

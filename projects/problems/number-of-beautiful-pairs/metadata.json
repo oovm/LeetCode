@@ -619,6 +619,7 @@
     ],
     "invoke": {
         "python": "Solution().countBeautifulPairs",
-        "typescript": "Solution().countBeautifulPairs"
+        "typescript": "Solution().countBeautifulPairs",
+        "valkyrie": "countBeautifulPairs"
     }
 }

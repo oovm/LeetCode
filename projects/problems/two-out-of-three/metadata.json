@@ -807,6 +807,7 @@
     ],
     "invoke": {
         "python": "Solution().twoOutOfThree",
-        "typescript": "Solution().twoOutOfThree"
+        "typescript": "Solution().twoOutOfThree",
+        "valkyrie": "twoOutOfThree"
     }
 }

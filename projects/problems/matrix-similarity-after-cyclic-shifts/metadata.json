@@ -715,6 +715,7 @@
     ],
     "invoke": {
         "python": "Solution().areSimilar",
-        "typescript": "Solution().areSimilar"
+        "typescript": "Solution().areSimilar",
+        "valkyrie": "areSimilar"
     }
 }

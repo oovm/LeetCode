@@ -605,6 +605,7 @@
     ],
     "invoke": {
         "python": "Solution().countPartitions",
-        "typescript": "Solution().countPartitions"
+        "typescript": "Solution().countPartitions",
+        "valkyrie": "countPartitions"
     }
 }

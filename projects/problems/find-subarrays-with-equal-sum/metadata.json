@@ -735,6 +735,7 @@
     ],
     "invoke": {
         "python": "Solution().findSubarrays",
-        "typescript": "Solution().findSubarrays"
+        "typescript": "Solution().findSubarrays",
+        "valkyrie": "findSubarrays"
     }
 }

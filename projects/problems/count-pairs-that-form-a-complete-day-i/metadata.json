@@ -533,6 +533,7 @@
     ],
     "invoke": {
         "python": "Solution().countCompleteDayPairs",
-        "typescript": "Solution().countCompleteDayPairs"
+        "typescript": "Solution().countCompleteDayPairs",
+        "valkyrie": "countCompleteDayPairs"
     }
 }
