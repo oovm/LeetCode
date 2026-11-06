@@ -593,7 +593,7 @@
     ],
     "invoke": {
         "python": "Solution().arraySign",
-        "typescript": "Solution().arraySign",
-        "valkyrie": "arraySign"
-    }
+        "typescript": "Solution().arraySign"
+    },
+    "corpusDefect": true
 }
