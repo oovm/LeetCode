@@ -1569,16 +1569,12 @@ micro bipartition<N>(graph: std.collection.DirectedGraph<N>) -> Option<HashMap<N
 
 ### G10 `DisjointSet<T>` 缺分量规模 / 成员聚合
 
-- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `std/source/collection/DisjointSet.v`）
-- 定性：**该有但没有**。并查集把「合并」做成 API，却没把「这个分量有多大 / 有哪些成员」暴露出来；
-  调用方只能逐个 `find_root` 再自建 `HashMap` 归并，等于重写 DSU 的内部职责。
-- 期望签名（[提案]，源码尚不存在）：
-
-```v
-# std/source/collection/DisjointSet.v
-micro group_sizes(mut self): HashMap<T, usize>
-micro group_members(mut self, root: T): ArrayList<T>
-```
+- 状态：**已提供（2026-11-06 源码复核）**。`std/source/collection/DisjointSet.v` 现有
+  `group_members(mut self, root: T): ArrayList<T>` 与 `group_sizes(mut self, root: T) -> usize`
+  （按根查询，非整表聚合）。全部 12 项「find_root + 自建 HashMap 累加」的调用点可以改成逐分量查询。
+- 残余缺口：没有一次调用返回 `HashMap<T, usize>` 的整表聚合入口；本批调用点均只关心
+  「某节点的分量规模」，不阻断。
+- 原判断（2026-11-04，现已过时）：该组能力当时未提供。
 
 - 影响题（3）：`count-unreachable-pairs-of-nodes-in-an-undirected-graph`（2316）、
   `count-the-number-of-complete-components`（2685）、`largest-component-size-by-common-factor`（952）。
@@ -1589,16 +1585,12 @@ micro group_members(mut self, root: T): ArrayList<T>
 
 ### G11 `std.collection.sort` 只有就地排序，缺返回新序列的 `sorted_by`
 
-- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `std/source/collection/sort.v`）
-- 定性：**该有但没有**。`quick_sort` / `merge_sort` 形参是 `list: ArrayList<T>`（非 mut），语义为
-  「就地改容器」，调用方要排序必须先自建副本；`Array<T>` 没有任何排序入口。
-- 期望签名（[提案]，源码尚不存在）：
-
-```v
-# std/source/collection/sort.v
-micro sorted_by<T>(list: ArrayList<T>, cmp: micro(T, T) -> i32): ArrayList<T>
-micro sorted_by<T>(list: Array<T>, cmp: micro(T, T) -> i32): ArrayList<T>
-```
+- 状态：**部分已提供（2026-11-06 源码复核）**。`std/source/collection/sort.v` 现有
+  `sorted_by<T>(items: ArrayList<T>, cmp: micro(T, T) -> i32): ArrayList<T>`（返回新序列，不再要求调用方自建副本），
+  另有公开 `merge_sort<T>(mut list: ArrayList<T>, cmp)` / `quick_sort<T>(mut list: ArrayList<T>, cmp)` 与
+  `sort<T>(mut values: [T])`（固定数组按自然序就地排序）。
+- 残余缺口：`sorted_by` 没有 `[T]` / `Array<T>` 重载；按自定义比较器排固定数组仍需先物化成 `ArrayList`。
+- 原判断（2026-11-04，现已过时）：`sorted_by` 与数组排序入口都不存在。
 
 - 影响题（18）：`groups-of-special-equivalent-strings`（893，even/odd 两个副本）、
   `reorder-data-in-log-files`（937，整表副本）、`height-checker`（1051，批次 R4 曾直接按 `[提案]`
@@ -1660,15 +1652,10 @@ micro with_capacity(capacity: usize): Self
 
 ### G13 `utf8` 缺字典序比较
 
-- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 `reorder-data-in-log-files` 静态确认）
-- 定性：**该有但没有**。`utf8` 只实现 `equals` / `not_equals`，没有大小比较；任何按字典序排序的题
-  都要在题内逐字符手写比较函数。
-- 期望签名（[提案]，源码尚不存在）：
-
-```v
-# std/source/text/Utf8Text.v
-micro compare(self, other: utf8) -> i32   # <0 / 0 / >0，按码位（与 UTF-8 字节序一致）
-```
+- 状态：**已提供（2026-11-06 源码复核）**。`std/source/text/Utf8Text.v` 现有
+  `compare(self, other: Self): std::operator::Ordering`，按码位（与 UTF-8 字节序一致）。
+  返回 `Ordering` 而非 `i32`，与 `sort` 的 `natural_order` 同一转换点，调用点改用匹配即可。
+- 原判断（2026-11-04，现已过时）：`utf8` 只有 `equals` / `not_equals`。
 
 - 影响题（5）：`reorder-data-in-log-files`（937，题内 `compare_text`）、
   `find-smallest-letter-greater-than-target`（744，上界二分对 `utf8` 直接写 `<=`）、
@@ -1693,16 +1680,9 @@ micro compare(self, other: utf8) -> i32   # <0 / 0 / >0，按码位（与 UTF-8 
 
 ### G14 `utf8` 缺 `split_once`
 
-- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 `reorder-data-in-log-files` 静态确认）
-- 定性：**该有但没有**。`split(separator) -> [utf8]` 只能整段切分；需要「首个分隔符左/右两段」时，
-  只能组合 `index_of` + `slice` 三次，且「无分隔符 / 分隔符在末尾」等分支都要调用方自处理。
-- 期望签名（[提案]，源码尚不存在）：
-
-```v
-# std/source/text/Utf8Text.v（成对承载需要新增记录类型）
-class SplitParts { head: utf8; tail: utf8 }
-micro split_once(self, separator: utf8) -> Option<SplitParts>
-```
+- 状态：**已提供（2026-11-06 源码复核）**。`std/source/text/Utf8Text.v` 现有
+  `micro split_once(self, separator: utf8) -> Option<SplitParts>`，`SplitParts` 承载 head / tail。
+- 原判断（2026-11-04，现已过时）：`split_once` 不存在，只能 `index_of` + `slice` 组合。
 
 - 影响题（1）：`reorder-data-in-log-files`（937，`separator_of` + 两次 `slice`）。
 - 不对称点：`split` / `slice` / `try_slice` / `index_of` 都有，唯独缺单次切分。
@@ -1763,11 +1743,11 @@ imply Utf8Text: Comparable { ... }
 
 ### G16 `BTreeSet` / `BTreeMap` 缺序关系查询
 
-- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/collection/sorted/BTreeSet.v`、
-  `BTreeMap.v`；2026-11-05 按 `nth` 复核订正影响面，见下）
-- 定性：**该有但没有**。容器按序存放，却只暴露「插入 / 存在性 / 删除 / 全量物化」，
-  没有任何按值定位的界查询，调用方拿不到「最近的较小/较大元素」。
-- 期望签名（[提案]，源码尚不存在）：
+- 状态：**已提供（2026-11-06 源码复核）**。`BTreeSet.v` 现有 `floor(self, value: T) -> Option<T>`
+  与 `ceiling(self, value: T) -> Option<T>`；`BTreeMap.v` 现有 `floor_key` / `ceiling_key`
+  与 `nth_key(rank: usize): Option<K>`。影响题的界查询与按秩查询均有直接入口。
+- 原判断（2026-11-04，现已过时）：容器只有「插入 / 存在性 / 删除 / 全量物化」，没有界查询。
+- 现状签名（2026-11-06 已提供）：
 
 ```v
 # std/source/collection/sorted/BTreeSet.v、BTreeMap.v
@@ -1818,7 +1798,7 @@ micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value �
 
 ### G17 `char` 缺 `Hash` impl
 
-- 状态：**已落地（2026-11-04，R25 复核）**。`std/source/collection/hashed/HashPrimitives.v:53` 已有
+- 状态：**已落地（2026-11-04，2026-11-06 复核仍在）**。`std/source/collection/hashed/HashPrimitives.v:53` 已有
   `imply char: Hash`（`micro hash(self) -> usize { return self as usize }`）。
   本条目保留历史与影响面，仅用于 addon 重建后批量复跑，不再算未实现特性依赖。
 - 原状态（R22 / R24 记账时的静态核对）：未提供（**std 缺口**；2026-11-04 核对
@@ -1858,16 +1838,9 @@ imply char: Hash {
 
 ### G18 `utf8` 缺 `split_whitespace`
 
-- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/text/Utf8Text.v` 的
-  `split` / `slice` / `try_slice` / `index_of`）
-- 定性：**该有但没有**。`split` 只接受精确分隔符，既不按空白类切分，也不丢弃空段；
-  「按词切分」这类文本题只能自己逐字符扫描并手写状态机。
-- 期望签名（[提案]，源码尚不存在）：
-
-```v
-# std/source/text/Utf8Text.v
-micro split_whitespace(self) -> [utf8]
-```
+- 状态：**已提供（2026-11-06 源码复核）**。`std/source/text/Utf8Text.v` 现有
+  `micro split_whitespace(self) -> [utf8]`，按 Unicode 空白码位切分。
+- 原判断（2026-11-04，现已过时）：只有精确分隔符 `split`，按词切分需题内状态机。
 
 - 影响题（2）：`reverse-words-in-a-string`（151，多次空格与前导/尾随空格的切词）、
   `maximum-number-of-words-found-in-sentences`（2114，逐句求词数）。
@@ -1878,17 +1851,10 @@ micro split_whitespace(self) -> [utf8]
 
 ### G19 `ArrayView` 缺区间窗口构造
 
-- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/collection/array_view.v`）
-- 定性：**模型已描述、入口未提供**。`ArrayView<T>` 的结构注释写明「视图覆盖创建时刻源数组的
-  `[offset, offset + length)` 区间」，结构也持有 `_offset` / `_length`，但唯一构造入口是
-  `array_view(source)` 全窗，`_offset` 永远是 0。于是「持有子区间」这件事，类型本身表达不了
-  它自己文档化的语义。
-- 期望签名（[提案]，源码尚不存在）：
-
-```v
-# std/source/collection/array_view.v
-micro array_view<T>(source: [T], offset: usize, length: usize) -> ArrayView<T>
-```
+- 状态：**已提供（2026-11-06 源码复核）**。`std/source/collection/array_view.v:24` 现有
+  `array_view<T>(source: [T], offset: usize, count: usize) -> ArrayView<T>`（越界直接 panic），
+  另有 `ArrayList::view(self): ArrayView<T>` 从表头建窗。`_offset` 可非零，区间语义可表达。
+- 原判断（2026-11-04，现已过时）：唯一入口是 `array_view(source)` 全窗，`_offset` 恒为 0。
 
 - 影响题（1）：`rotate-array`（189，三次反转各自需要 `[0, shift)` / `[shift, n)` 子窗口并写穿）。
 - 不对称点：读侧 `length` / `is_empty` / `Cardinal` 都在，写侧 `⁅ ⁆=` 也在，唯独
@@ -1961,19 +1927,11 @@ micro prepend(mut self, value: char): unit
 
 ### G22 整数位元查询缺席
 
-- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/primitive/` 的 `i64` 位运算面、
-  `std/source/math/basic.v`）
-- 定性：**该有但没有**。`i64` 有完整的 `&` / `|` / `^` / `<<` / `>>` / `bit_not`，却没有
-  任何一个位元查询：`count_ones` / `leading_zeros` / `trailing_zeros`。位图类题只能把整数打回
-  成 `while value > 0 { value % 2; value / 2 }` 的十进制循环，或自己写 Brian Kernighan 循环。
-- 期望签名（[提案]，源码尚不存在）：
-
-```v
-# std/source/primitive/i64.v（以及 u8–u64 / i8–i32 同族逐类型）
-micro count_ones(self): u32
-micro leading_zeros(self): u32
-micro trailing_zeros(self): u32
-```
+- 状态：**部分已提供（2026-11-06 源码复核）**。`i8` / `i16` / `i32` / `i64` / `u8` / `u16` / `u32` / `u64`
+  八个定宽原始类型均已提供 `count_ones` / `leading_zeros` / `trailing_zeros`（返回 `u32`），
+  影响题的位元计数与位段扫描可直接调用。
+- 残余缺口：`i128` / `u128` 仍无这三个查询（`std/source/primitive/i128.v`、`u128.v` 为 0 处）。
+- 原判断（2026-11-04，现已过时）：位运算算子齐全但位元查询为零。
 
 - 影响题（5，均已写、均以手写循环表达）：`number-of-1-bits`（191，模 2 循环计 1）、
   `hamming-distance`（461，异或后逐位计数）、`minimum-bit-flips-to-convert-number`（2220，
@@ -1987,17 +1945,10 @@ micro trailing_zeros(self): u32
 
 ### G23 `std.math` 缺整数 gcd / lcm（数论面整体缺席）
 
-- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/math/` 全目录）
-- 定性：**该有但没有**。`std.math` 只有 `basic`（`abs` / `max` / `min` / `clamp`，且只收 `f64`）、
-  `constants`、`splitmix64`、`distribution/*`、`graph_theory/*`；**没有数论模块**，
-  `gcd` / `lcm` / `is_prime` / `factorize` 一个都没有。
-- 期望签名（[提案]，源码尚不存在）：
-
-```v
-# std/source/math/number_theory.v（新模块）
-micro gcd(a: i64, b: i64) -> i64
-micro lcm(a: i64, b: i64) -> i64
-```
+- 状态：**已提供（2026-11-06 源码复核）**。`std/source/math/number_theory.v` 现有
+  `micro gcd(a: i64, b: i64) -> i64` 与 `micro lcm(a: i64, b: i64) -> i64`。
+- 残余缺口：`is_prime` / `factorize` 仍未提供（本批无调用点）。
+- 原判断（2026-11-04，现已过时）：`std.math` 没有数论模块，`gcd` / `lcm` 都不存在。
 
 - 影响题（1）：`x-of-a-kind-in-a-deck-of-cards`（914，批次 R6，全体频次的 gcd > 1）。
 - 不对称点：`f64` 有 `abs` / `max` / `min`，整数连 `gcd` 都没有；`BitSet` 在容器层有 `intersect` /
@@ -2042,17 +1993,13 @@ micro to_sorted_list(self) -> ArrayList<T> where T: Comparable
 
 ### G25 `BitSet` 没有基数 / 规模 / 迭代 / 复制入口
 
-- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/collection/bitset.v` 全文件）
-- 真实入口（逐条核对，均带 `[host_contract]`，但函数体是具体实现，不是空壳）：
-  `new()` L10、`with_capacity(bits: usize)` L15、`set(mut self, index: usize)` L27、
-  `clear_bit(mut self, index: usize)` L36、`get(self, index: usize) -> bool` L47、
-  `toggle(mut self, index: usize)` L58、`intersect(mut self, other: BitSet)` L68、
-  `union(mut self, other: BitSet)` L84、`difference(mut self, other: BitSet)` L96、
-  `xor(mut self, other: BitSet)` L108、`is_empty(self) -> bool` L125、
-  `clear_all(mut self)` L137；私有 `ensure_capacity` L146。
-- **缺失**：`count()`（置位数）、`length()` / `capacity()`（位集规模）、迭代器（无法枚举置位下标）、
-  `clone()`（无法复制后做非破坏性结构运算）、与 `[u64]` / `[bool]` 的互转、`Equal` / `Hash`。
-- 后果：`BitSet` 只能「按已知下标 `get` / `set`」，**无法从自身得知有多少位被置、也无法枚举被置的位**。
+- 状态：**已提供（2026-11-06 源码复核）**。`std/source/collection/BitSet.v` 现有
+  `count(self): usize`（置位数）、`bit_length(self): usize`、`length(self): usize`、
+  `clone(self): Self`、`iter(self) -> BitSetIterator` 与 `into_iterator(self)`，
+  以及原有的 `new` / `with_capacity` / `set` / `clear_bit` / `get` / `toggle` /
+  `intersect` / `union` / `difference` / `xor` / `is_empty` / `clear_all`。
+- 残余缺口：没有 `[u64]` / `[bool]` 互转，也没有 `Equal` / `Hash`；本批调用点不依赖。
+- 原判断（2026-11-04，现已过时）：只有按已知下标 `get` / `set`，无法计基数、无法枚举置位。
   这直接影响：
   - `check-if-a-string-contains-all-binary-codes-of-size-k`（1461）：需要「已置位数」判断是否集齐，
     只能在外层另设计数器；`BitSet` 本身没有 `count`。
@@ -2220,16 +2167,15 @@ micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countabl
 
 ### G28 `BinaryHeap` 的 `where T: Comparable` 义务传播到每个调用点
 
-- 状态：未提供（std API 缺口，不阻断构建；2026-11-05 静态核对 `BinaryHeap.v` 与 13 处调用点）
-- 定性：**该有但没有**。`BinaryHeap` 只写 `push` / `pop` 把
-  `where T: std::operator::Comparable` 挂在方法上（`BinaryHeap.v:14-15`、`:21-22`），
-  `sift_up` / `sift_down` 继续传播同一义务（`:56-57`、`:74-75`）；`peek` / `length` /
-  `is_empty` / `clear` 不带约束。结果是：用堆的题必须在**类型侧**提供一个全局 `Comparable`，
-  「这口堆按什么序」绑不进构造，只能绑到元素类型上；想按另一个序再开一口堆，只能再造一个
-  包装类型或把比较键编码进 `i64`。
-- 期望签名（[提案]，源码尚不存在）：
-  - `micro new_by(cmp: micro(T, T) -> i32): Self`（比较器随实例走，义务不落到 `T`）
-  - `micro max(): Self`（最大序实例，与 `new()` 的默认最小序对称）
+- 状态：**部分已提供（2026-11-06 源码复核）**。`std/source/collection/BinaryHeap.v` 现有
+  `new_by(cmp: micro(T, T) -> i32): Self`，比较器随实例走，不再要求 `T: Comparable`；
+  另有 `max()` 与 `new()` 的高阶堆构造。
+- 残余缺口：`new()` 与 `max()` 仍带 `where T: std::operator::Comparable`（`:17`、`:38`），
+  即「默认自然序」路径仍把义务落到类型上；按自定义序必须显式走 `new_by`。
+- 原判断（2026-11-05，现已部分过时）：没有任何把比较器绑进构造的入口。
+- 现状签名（2026-11-06）：
+  - `micro new_by(cmp: micro(T, T) -> i32): Self`（已提供，比较器随实例走，义务不落到 `T`）
+  - `micro max(): Self`（已提供，最大序实例，仍带 `where T: Comparable`）
 - 真实调用点（13 处，2026-11-05 扫描 `projects/problems/**/solution.v`）：
   - 裸 `i64`、义务由 `i64: Comparable` 消解，但仍无法逐实例换序（5 处）：
     `find-k-pairs-with-smallest-sums/solution.v:37`、
