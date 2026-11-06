@@ -340,5 +340,6 @@
         "valkyrie": "isValidSudoku",
         "wolframSxo": "isValidSudoku",
         "matlabSxo": "isValidSudoku"
-    }
+    },
+    "corpusDefect": true
 }
