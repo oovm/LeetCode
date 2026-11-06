@@ -86,7 +86,8 @@ micro accounts_merge(accounts: ArrayList<ArrayList<utf8>>) -> ArrayList<ArrayLis
             # 没有返回新序列的 `sorted_by`（G11），组内邮箱副本就地 `merge_sort`。
             merge_sort(emails, compare_text)
             let ordered: ArrayList<utf8> = emails
-            let first: ArrayList<utf8> = accounts⁅i⁆
+            # 代表名取并查集根账户，扫描下标 i 可能落在组内其它账户上。
+            let first: ArrayList<utf8> = accounts⁅root as usize⁆
             let mut entry: ArrayList<utf8> = ArrayList::new(ordered.length() + 1)
             entry.push(first⁅0⁆)
             loop email in ordered {
