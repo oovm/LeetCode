@@ -9,6 +9,7 @@ class MinStack {
 }
 
 imply MinStack {
+    [export(name: "MinStack")]
     micro new(): Self {
         let values: ArrayList<i64> = ArrayList::new(0)
         let minimums: ArrayList<i64> = ArrayList::new(0)
@@ -18,6 +19,7 @@ imply MinStack {
         }
     }
 
+    [export]
     micro push(mut self, value: i64): unit {
         let depth: usize = self._values.length()
         let mut minimum: i64 = value
@@ -31,16 +33,19 @@ imply MinStack {
         self._minimums.push(minimum)
     }
 
+    [export]
     micro pop(mut self): unit {
         let popped_value: Option<i64> = self._values.pop()
         let popped_minimum: Option<i64> = self._minimums.pop()
     }
 
+    [export]
     micro top(self): i64 {
         let depth: usize = self._values.length()
         return self._values⁅depth - 1⁆
     }
 
+    [export(name: "getMin")]
     micro get_min(self): i64 {
         let depth: usize = self._minimums.length()
         return self._minimums⁅depth - 1⁆

@@ -12,6 +12,7 @@ class Trie {
 }
 
 imply Trie {
+    [export(name: "Trie")]
     micro new(): Self {
         let edges: HashMap<i64, i64> = HashMap::new(0)
         let mut ends: ArrayList<bool> = ArrayList::new(0)
@@ -40,6 +41,7 @@ imply Trie {
         return node
     }
 
+    [export]
     micro insert(mut self, word: utf8): unit {
         let count: usize = word.length()
         let mut node: i64 = 0
@@ -59,6 +61,7 @@ imply Trie {
         self._ends⁅node as usize⁆ = true
     }
 
+    [export]
     micro search(self, word: utf8): bool {
         let node: i64 = self.walk(word)
         if node == -1 {
@@ -67,6 +70,7 @@ imply Trie {
         return self._ends⁅node as usize⁆
     }
 
+    [export(name: "startsWith")]
     micro starts_with(self, prefix: utf8): bool {
         let node: i64 = self.walk(prefix)
         return node != -1

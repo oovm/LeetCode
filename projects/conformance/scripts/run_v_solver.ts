@@ -16,6 +16,7 @@ import {
 import {
     matchWasmExportSymbol,
     type AbiExport,
+    type AbiParameter,
     type LibraryInvokeSchema,
     loadLibraryInvokeSchema,
     orderArgsBySchema,
@@ -31,7 +32,8 @@ import {
 } from '../src/adapters/valkyrie-node/ref.ts';
 import { valkyrieProjectDir } from '../src/catalog/index.ts';
 import { assertRejectsTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
-import { isOperationSequenceCase, operationSequenceUnsupportedReason } from '../src/domain/operation-sequence.ts';
+import { isOperationSequenceCase, operationStepPath } from '../src/domain/operation-sequence.ts';
+import type { OperationSequenceCase } from '../src/domain/problem.ts';
 import { normalizeResultByAbiType, preserveI64Precision } from '../src/isolated/v-shared.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
 
@@ -103,6 +105,133 @@ function emitStats(stats: SolverCaseStats): void {
     console.log(formatSolverResultLine(stats));
 }
 
+/** 按 schema 的 `index` 升序取参数；操作入口剥掉常驻的实例句柄首参。 */
+function orderedParameters(schema: AbiExport, skipInstance: boolean, label: string): AbiParameter[] {
+    const params = [...schema.params].sort((left, right) => left.index - right.index);
+    if (!skipInstance) {
+        if (params.some((param) => param.type.kind === 'InstanceHandle')) {
+            throw new Error(`${label}: 构造入口不得带实例句柄参数`);
+        }
+        return params;
+    }
+    if (params.length === 0 || params[0]!.type.kind !== 'InstanceHandle') {
+        throw new Error(`${label}: 操作入口的首参不是 InstanceHandle，不能作为设计类实例方法`);
+    }
+    return params.slice(1);
+}
+
+/** 把操作序列的位置实参按 schema 类型展开；i64 保持精确十进制文本。 */
+function positionalArguments(params: readonly AbiParameter[], values: readonly unknown[], path: string): unknown[] {
+    if (params.length !== values.length) {
+        throw new Error(`${path}: 需要 ${params.length} 个实参，实际 ${values.length}`);
+    }
+    return params.map((param, index) => preserveI64Precision(param.type, values[index], `${path}[${index}] (${param.name})`));
+}
+
+async function callHostExport(
+    callExport: NonNullable<InvokeHost['callExport']>,
+    symbol: string,
+    args: readonly unknown[],
+): Promise<unknown> {
+    const raw = callExport(symbol, ...args);
+    return raw instanceof Promise ? await raw : raw;
+}
+
+/**
+ * 设计类操作序列：构造一次实例句柄，再逐步调用逐方法导出。
+ *
+ * 实例身份由 wasm glue 的不透明句柄保持；harness 只按 schema 的参数位置展开
+ * metadata 实参、按每步返回类型规约后比较。构造类名不符、方法缺失、返回实例
+ * 句柄或参数数量不符都按结构化错误失败，不静默跳过。
+ */
+async function runOperationSequenceCases(
+    host: InvokeHost,
+    entry: string,
+    abi: { schema: LibraryInvokeSchema; lookup: AbiLookup },
+    tests: OperationSequenceCase[],
+): Promise<number> {
+    const callExport = host.callExport;
+    if (typeof callExport !== 'function') {
+        throw new Error('设计类操作序列需要 node glue 的 callExport 与实例句柄，当前产物只暴露 invokeLeetCode');
+    }
+    if (abi.lookup.exportSchema.returns.kind !== 'InstanceHandle') {
+        throw new Error(
+            `设计类入口 "${entry}" 的构造返回不是 InstanceHandle（实际 ${abi.lookup.exportSchema.returns.kind}）`,
+        );
+    }
+    const constructorParams = orderedParameters(abi.lookup.exportSchema, false, `构造入口 "${entry}"`);
+
+    let pass = 0;
+    for (const [index, testCase] of tests.entries()) {
+        const sequence = testCase.args;
+        const operations = sequence.operations;
+        try {
+            if (operations[0] !== entry) {
+                throw new Error(
+                    `${operationStepPath(index, 0, operations[0] ?? '?')}: 第 0 步应为构造 "${entry}"，实际为 ${JSON.stringify(operations[0])}`,
+                );
+            }
+            const constructorArgs = positionalArguments(
+                constructorParams,
+                sequence.arguments[0] ?? [],
+                `tests[${index}].step[0].arguments`,
+            );
+            const instance = await callHostExport(callExport, abi.lookup.exportSymbol, constructorArgs);
+            if (instance === null || instance === undefined) {
+                throw new Error(`${operationStepPath(index, 0, operations[0])}: 构造返回了空实例句柄`);
+            }
+            for (let step = 1; step < operations.length; step += 1) {
+                const operation = operations[step]!;
+                const path = operationStepPath(index, step, operation);
+                const lookup = lookupAbiExport(abi.schema, operation);
+                const methodParams = orderedParameters(lookup.exportSchema, true, `操作 "${operation}"`);
+                const stepArgs = positionalArguments(methodParams, sequence.arguments[step] ?? [], `${path}.arguments`);
+                const raw = await callHostExport(callExport, lookup.exportSymbol, [instance, ...stepArgs]);
+                const returns = lookup.exportSchema.returns;
+                if (returns.kind === 'InstanceHandle') {
+                    throw new Error(`${path}: 操作返回实例句柄，宿主无法按值断言`);
+                }
+                const actual = returns.kind === 'Unit' ? null : normalizeResultByAbiType(normalizeTsTestResult(raw), returns);
+                const expected =
+                    returns.kind === 'Unit'
+                        ? (testCase.expected[step] ?? null)
+                        : normalizeResultByAbiType(normalizeTsTestResult(testCase.expected[step]), returns);
+                if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                    throw new Error(`${path}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+                }
+            }
+            pass += 1;
+        } catch (err) {
+            const message = String(err);
+            const infrastructureBlocked = isBlockedSolverMessage(message);
+            emitStats({
+                ok: false,
+                testCaseTotal: tests.length,
+                executed_pass: pass,
+                executed_fail: infrastructureBlocked ? 0 : 1,
+                blocked: infrastructureBlocked ? tests.length - pass : 0,
+                not_run: infrastructureBlocked ? 0 : tests.length - pass - 1,
+                firstFailureIndex: extractTestFailureIndex(message) ?? index,
+                firstFailure: message,
+            });
+            console.error(message);
+            return 1;
+        }
+    }
+
+    emitStats({
+        ok: true,
+        testCaseTotal: tests.length,
+        executed_pass: pass,
+        executed_fail: 0,
+        blocked: 0,
+        not_run: 0,
+        firstFailureIndex: null,
+        firstFailure: null,
+    });
+    return 0;
+}
+
 async function main(): Promise<number> {
     const problemDir = process.argv[2];
     if (!problemDir) {
@@ -149,23 +278,6 @@ async function main(): Promise<number> {
     }
 
     const { tests, invoke } = loadMetadata(problemDir);
-    // 设计类题目的操作序列需要类实例句柄；wasm 单入口 ABI 还不能表达，
-    // 明确报结构化 blocked，绝不把导出类当函数调用。
-    if (tests.some((test) => isOperationSequenceCase(test))) {
-        const message = operationSequenceUnsupportedReason('valkyrie-wasm');
-        emitStats({
-            ok: false,
-            testCaseTotal: tests.length,
-            executed_pass: 0,
-            executed_fail: 0,
-            blocked: tests.length,
-            not_run: 0,
-            firstFailureIndex: 0,
-            firstFailure: message,
-        });
-        console.error(message);
-        return 1;
-    }
     const entry = requireValkyrieInvokeEntry(invoke);
     const blocked = wasmInvokeBlockedReason(artifacts.entry.legionWasm, entry);
     if (blocked) {
@@ -183,6 +295,15 @@ async function main(): Promise<number> {
     const host = await loadInvokeHost(artifacts.entry.legionMjs);
     // host.callExport 存在则走 ABI marshal/unmarshal；只暴露 invokeLeetCode 时 abi 参数可省
     const needsAbi = typeof host.callExport === 'function';
+
+    // 设计类题目：构造一次实例句柄 + 逐操作调用，逐步断言。
+    const sequenceCases = tests.filter((test) => isOperationSequenceCase(test));
+    if (sequenceCases.length > 0) {
+        if (sequenceCases.length !== tests.length) {
+            throw new Error('同一道题混用了单入口用例与操作序列用例，无法判定执行模型');
+        }
+        return await runOperationSequenceCases(host, entry, abi, sequenceCases);
+    }
 
     let pass = 0;
     for (const [index, case_] of tests.entries()) {

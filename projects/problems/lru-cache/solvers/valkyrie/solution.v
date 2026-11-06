@@ -16,6 +16,7 @@ class LRUCache {
 }
 
 imply LRUCache {
+    [export(name: "LRUCache")]
     micro new(capacity: usize): Self {
         let slots: HashMap<i64, i64> = HashMap::new(0)
         let keys: ArrayList<i64> = ArrayList::new(0)
@@ -63,6 +64,7 @@ imply LRUCache {
         }
     }
 
+    [export]
     micro get(mut self, key: i64): i64 {
         if !self._slots.contains_key(key) {
             return -1
@@ -74,6 +76,7 @@ imply LRUCache {
         return value
     }
 
+    [export]
     micro put(mut self, key: i64, value: i64): unit {
         if self._slots.contains_key(key) {
             let node: i64 = self._slots.get(key).unwrap()

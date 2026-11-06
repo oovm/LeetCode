@@ -141,7 +141,7 @@
 - 待还原组新增：`phone-number-prefix`（见账本同名小节）。
 - 新编号：**0 条**。
 
-## 批次 R29-2026-11-05（设计类：多方法 + 内部状态 6 题，实测，夹具阻断）
+## 批次 R29-2026-11-05（设计类：多方法 + 内部状态 6 题，2026-11-07 复验通过）
 
 - 范围与题数（6）：`lru-cache`（146）、`lfu-cache`（460）、
   `implement-trie-prefix-tree`（208）、`design-hashset`（705）、
@@ -152,18 +152,17 @@
 - 题面形态：`metadata.tests` 保持 LeetCode 操作序列原形（`args.operations` +
   `args.arguments`，`expected` 为每步返回），**未压成单函数调用**。
 - 口径（三者分开）：
-  - **编译通过 0 题**：`legion build` 在入口闭包被拒（F2）。
-  - **端到端通过 0 题**：判题夹具无操作序列执行路径（F1）。
-  - **写完未验证 6 题**。
-- 实测原文：
-  - V：`source group closure failed: entry source group 'leetcode-<slug>' declares no [export], [main] or [test] entry`（6/6）。
-  - TS 官方夹具：`TypeError: Class constructor <Class> cannot be invoked without 'new'`（6/6）。
-- 非官方证据（只作实现核对，不计入端到端）：同一 `metadata.tests` 用临时序列驱动
-  （`new` 构造 + 逐操作 `instance[op](...)`）实跑 TS **12/12 用例**、Python **12/12 用例**。
-- V 侧形态：每题的类体只放字段，方法全部写在 `imply` 块（`new` / 各操作）；未触发
-  `valkyrie.hir.class_body_method_declared`，停点在更前面的入口闭包。
+  - **编译通过 6 题**：`legion build --target wasm` 全部 `status=0`（F2 已恢复）。
+  - **端到端通过 6 题**：`run_v_solver.ts` 真跑 **12/12 用例 PASS**（F1 + F2 均已恢复）。
+  - **写完未验证 0 题**。
+- 实测证据：导出面为构造入口（类名）+ 逐操作入口（题面方法名）；实例以
+  `InstanceHandle` 不透明 GC 引用跨调用保持同一身份。内部辅助方法（`walk` /
+  `unlink` / `push_front` 等）不占用宿主导出面，作为被调方进入可达闭包。
+- V 侧形态：每题的类体只放字段，方法全部写在 `imply` 块；构造与公开操作在
+  `imply` 成员上标 `[export(name: ...)]`，未触发
+  `valkyrie.hir.class_body_method_declared`。
 - 新编号：**1 条**（G28 `BinaryHeap` 的 `Comparable` 义务传播）；
-  另新增 F1 / F2 两条夹具与导出 ABI 缺口（见账本）。
+  另新增 F1 / F2 两条夹具与导出 ABI 缺口（均已恢复，见账本）。
 
 ## 批次 R29-2026-11-05（判题侧移交：参数名 / 数值答案 / 语料清洗，27 题，实测）
 

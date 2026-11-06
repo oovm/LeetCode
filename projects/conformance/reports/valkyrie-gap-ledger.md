@@ -83,7 +83,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | 编号 | 缺口 | 实测原文 | 坐标 |
 | --- | --- | --- | --- |
 | F1 设计类操作序列无法判题 | `TestCase` 只有 `args` / `expected`，没有「多操作序列 + 每步返回」；TS 候选只认单入口单调用，导出类被当成函数直接调用 | `TypeError: Class constructor LRUCache cannot be invoked without 'new'`（6/6 题同一形态） | `src/domain/problem.ts:2-5`；`src/adapters/typescript-node/ref.ts:48-71`（`makeTsCandidate` 的 `const exported = mod[expr]` 分支）；同文件 `:82-88`（`runTsSolverOnce` 每用例单次调用）；`scripts/run_v_solver.ts:55`（取单一 wasm export 符号）与 `:168`（逐用例单次调用） |
-| F2 设计类实例无 wasm 导出 / 实例句柄 ABI | 类方法不能 `[export]`，装配层要求单一入口，设计类没有「构造 + 逐方法调用」形态 | `source group closure failed: entry source group 'leetcode-min-stack' declares no [export], [main] or [test] entry`（6/6 题同一形态） | 题侧 `solvers/valkyrie/solution.v`（`class` 体只放字段，方法全在 `imply`）；装配侧入口闭包在 `nyar-vm.rs` |
+| F2 设计类实例无 wasm 导出 / 实例句柄 ABI | **已恢复**（2026-11-07 实测）：6 题全部 `legion build --target wasm` 构建通过；`run_v_solver.ts` 真跑 **12/12 用例 PASS**。导出面由构造入口（类名）+ 逐操作入口组成，实例以不透明 GC 引用跨调用保持同一身份 | ~~`source group closure failed: entry source group 'leetcode-min-stack' declares no [export], [main] or [test] entry`（6/6 题同一形态）~~ | 编译器：`nyar-vm.rs` 提交 `d7c65e6b` 的 `WasmAbiType::InstanceHandle` + JS glue 不透明句柄（`abi_schema.rs` / `library_invoke.rs` / `wasm_js_glue`）；题侧：`imply` 成员 `[export(name: ...)]` + `scripts/run_v_solver.ts` 操作序列执行 |
 | F3 库导出 `Utf8` 返回值缺宿主句柄物化 | **已恢复**（2026-11-07 实测）：`convert-a-number-to-hexadecimal`、`integer-to-roman`、`decode-the-message`、`capitalize-the-title` 均构建通过，`callExport` 真跑返回值与期望一致 | ~~`TypeError: Cannot convert object to primitive value`（26 题，全部为字符串返回题）~~ | 修复提交 `d3a8f0b7`（宿主边界物化 frozen `utf8` carrier）；原缺口位置 `nyar-emitter/src/lowering/backends/wasm/mir/entry.rs`（形参物化 vs 返回透传） |
 | F4 导出名缩写大小写漂移 | **已恢复**（2026-11-05 harness 侧修复，现有 dev 已包含）：`matchWasmExportSymbol` 先精确命中，失败后按归一化符号匹配 | ~~`wasm 里找不到 metadata.invoke 对应的 export "preimageSizeFZF"（已有: preimageSizeFzf ...）`（4 题）~~ | `src/adapters/valkyrie-node/abi.ts` 的 `matchWasmExportSymbol`；题侧 `solution.v` 导出声明 + `metadata.invoke` |
 | F5 schema 形参名与 metadata 键不一致 | **已恢复**（2026-11-07 实测）：三题 `solution.v` 形参已按题面命名，生成的 `params[].name` 与 metadata 键逐字相等，构建通过且真跑一致 | ~~`AbiSchemaError: args.s: metadata.tests.args 缺少参数 "s"`（2 题；另 1 题报 `prime_factors`）~~ | 已对齐：`excel-sheet-column-number`（`columnTitle`）、`ransom-note`（`ransomNote, magazine`）、`maximize-number-of-nice-divisors`（`primeFactors`）；历史定位 `src/adapters/valkyrie-node/abi.ts:422-437` |
@@ -120,8 +120,10 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 - 验证：6 题 × 2 用例，**TS 12/12、Python 12/12**（`scripts/run_ts_solver.ts` /
   `scripts/run_python_solver.py`）；定向 `npx vitest run tests/operation-sequence.test.ts
   tests/wasm-export-name.test.ts tests/isolated-judge.test.ts` = **21 passed**。
-- V 侧仍是 0/6：`scripts/run_v_solver.ts` 检测到操作序列直接发结构化 blocked
-  （`operationSequenceUnsupportedReason`），不再把导出类当函数调用；停点仍是 F2，与 F1 独立。
+- V 侧：**已恢复**（2026-11-07）。设计类入口在 `imply` 成员声明
+  `[export(name: ...)]`（构造入口用类名，操作入口用题面方法名），编译器按
+  `InstanceHandle` 返回不透明实例句柄；`scripts/run_v_solver.ts` 构造一次句柄后
+  逐操作调用并逐步断言，6 题 **12/12 用例 PASS**。
 
 ### F3 / F4 / F6 / F8 实测与处理
 

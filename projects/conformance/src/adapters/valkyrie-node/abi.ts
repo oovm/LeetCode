@@ -22,6 +22,13 @@ export interface AbiNamedAggregateType {
     generic_args: WasmAbiType[];
 }
 
+/** `InstanceHandle`：引用存储名义实例的不透明宿主句柄（同一 GC 引用，非字段快照）。 */
+export interface AbiInstanceHandleType {
+    kind: 'InstanceHandle';
+    name: string;
+    module_path: string;
+}
+
 /** 结构化 ABI 类型判别联合，对应 emitter 的 `WasmAbiType`。 */
 export type WasmAbiType =
     | { kind: 'Unit' }
@@ -37,6 +44,7 @@ export type WasmAbiType =
     | { kind: 'Option'; inner: WasmAbiType }
     | { kind: 'Tuple'; fields: WasmAbiType[] }
     | AbiNamedAggregateType
+    | AbiInstanceHandleType
     | { kind: 'Unsupported'; reason: string };
 
 /** 单个参数的 ABI 身份：`index` 决定位置，`name` 供 metadata 按名供货。 */
@@ -370,6 +378,15 @@ function validateType(path: string, raw: unknown): WasmAbiType {
                 module_path: obj.module_path,
                 generic_args: obj.generic_args.map((arg, index) => validateType(`${path}.generic_args[${index}]`, arg)),
             };
+        }
+        case 'InstanceHandle': {
+            if (typeof obj.name !== 'string' || obj.name.length === 0) {
+                throw new AbiSchemaError('invalid_type', `${path}.name`, 'InstanceHandle 缺少非空 name');
+            }
+            if (typeof obj.module_path !== 'string') {
+                throw new AbiSchemaError('invalid_type', `${path}.module_path`, 'InstanceHandle 缺少字符串 module_path');
+            }
+            return { kind: 'InstanceHandle', name: obj.name, module_path: obj.module_path };
         }
         case 'Unsupported': {
             if (typeof obj.reason !== 'string') {
