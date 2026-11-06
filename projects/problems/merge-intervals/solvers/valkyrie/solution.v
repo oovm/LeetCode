@@ -9,6 +9,20 @@ structure Interval {
     end: i64
 }
 
+# `Comparable: Equal` 是硬性前置：超 trait 的 evidence 是 fail-closed，不自动派生。
+imply Interval: std::operator::Equal {
+    infix `==`(self, other: Interval): bool {
+        if self.start != other.start {
+            return false
+        }
+        return self.end == other.end
+    }
+
+    infix `!=`(self, other: Interval): bool {
+        return !(self == other)
+    }
+}
+
 # 本块写出「自定义类型声明自己的序」的理想形态：起升序、同起终点升序。
 imply Interval: std::operator::Comparable {
     micro compare(self, other: Self): Ordering {
