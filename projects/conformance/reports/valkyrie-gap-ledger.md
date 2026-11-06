@@ -1201,7 +1201,7 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
 | `sorted_by(list, cmp)` ×9 | 只有 `quick_sort` / `merge_sort`（就地，`sort.v`） | `accounts-merge`、`custom-sort-string`、`group-anagrams`、`height-checker`、`largest-perimeter-triangle`、`meeting-rooms`、`queue-reconstruction-by-height`、`smallest-string-with-swaps`、`top-k-frequent-words` |
 | `BTreeSet.floor` / `ceiling` | 不存在（G16 提案） | `contains-duplicate-iii` |
 | `utf8.compare` | 不存在（G13 提案；`Utf8Text` 只有 `equals`） | `accounts-merge`（`compare_text`） |
-| `HashSet::new(capacity)` | 只有 `new()`（G12） | `accounts-merge` |
+| `HashSet::new(capacity)` | 已提供（G12，2026-11-06） | `accounts-merge` |
 
 - 定性：**这是语料错误，不是新缺口**。等价近似物都已存在（副本 + `merge_sort`、`to_list` 后手写
   二分、逐字节比较、`new()` 后逐个 `insert`），故不新增编号。
@@ -1617,14 +1617,19 @@ micro bipartition<N>(graph: std.collection.DirectedGraph<N>) -> Option<HashMap<N
 
 ### G12 `HashSet::new()` 无容量参数
 
-- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `std/source/collection/hashed/HashSet.v`）
-- 定性：**该有但没有**。同族容器 `HashMap::new(capacity)` 支持预分配，`HashSet` 把容量写死为 16。
-- 期望签名（[提案]，源码尚不存在）：
+- 状态：**已提供（2026-11-06 构建复核）**。`std/source/collection/hashed/HashSet.v` 在**保留既有
+  `new()`** 的同时新增 `new(capacity: usize): Self`（转发 `SwissSet::new(capacity)`）。
+  wasm 正例三种构造共存：旧 `new()`、`new(64)`、`new(0)`，insert(2) 重复插入后 `length() == 1`、
+  `contains` 均通过（build 0 / run 0）；反例 `HashSet::new("text")` 结构化报
+  5 candidate(s) / none matches（build 1）。此前「加容量构造连旧 `new()` 一起崩」是旧 addon 的
+  arity 缺陷（G30），已由编译器 `1bee7bff` 修复。
+- 现签名（2026-11-06 已提供）：
 
 ```v
 # std/source/collection/hashed/HashSet.v
-micro new(capacity: usize): Self
-micro with_capacity(capacity: usize): Self
+micro new(): Self                       # 既有，固定 SwissSet::new(16)
+micro new(capacity: usize): Self        # 新增，直传容量
+# with_capacity 仍未提供（本批无调用点）
 ```
 
 - 影响题（9）：`groups-of-special-equivalent-strings`（893）、`longest-consecutive-sequence`（128，
@@ -1870,10 +1875,13 @@ imply char: Hash {
   `std/source/iterator/iterator_terminal.v` 已提供并验证通过
   `std::iterator::max<I, T>(iter)` / `min<I, T>(iter)`（`I: Iterator<Item = T>`，`T: Comparable`，
   空迭代器返回 `None`）：wasm 正例 build 0 / run 0，空序列与 3/9/4 序列断言均通过。
-  `std/source/math/basic.v` 的 `i64` 重载**未落地**：加 `micro max(a: i64, b: i64)` 后，
-  任何一次该重载的调用都会让同文件既有 `f64` 体报
-  `unresolved call 'infix >' in max`（`basic.v:14:8`，`infix <` 同因），属编译器重载解析缺陷，
-  停在此交回编译器线，坐标见本轮报告。
+  `i64` 重载**已提供并验证通过**：`std/source/math/integer.v`（同 `std.math` 命名空间）新增
+  `abs` / `max` / `min` / `clamp` 的 `i64` 重载。正例 `abs(-5)==5`、`max(3,9)==9`、`min(3,9)==3`、
+  `clamp(9,3,7)==7`、`clamp(-3,0,7)==0`，wasm build 0 / run 0；反例 `max("left","right")`
+  结构化报 2 candidate(s) / none matches（build 1）。
+  落码位置说明：把 `i64` 重载与 `f64` 体放在同一文件时，同文件函数组分析会互相污染
+  （`f64` 体报 `infix <` / `infix >` 全候选不匹配，坐标 `basic.v:6/7/14/22/64/68`）；
+  拆到 `integer.v` 后同命名空间可正常解析。
 - 残余缺口：`sum` / `product` 仍未提供（需 `Additive` / `Multiplicative` 合同，合同级，留待 01）。
 - 现签名（2026-11-06 已提供）：
 
@@ -3457,7 +3465,8 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 - 账本修正：`is-graph-bipartite` 的停点不是 `HashSet::from_list` 的 `list.iter`，而是 HEAD
   `DirectedGraph.v` 的提取器合同；`possible-bipartition` 在 DG 修复后停在 F2（类方法 `[export]`
   无入口闭包，`artifact: library requires at least one resolved export`），不是 G9 / DG。
-- G12 仍成立（`HashSet::new(capacity)` 源码尚不存在），但阻断它的编译器 arity 缺陷已由 G30 修复；
+- G12 已落地（`HashSet::new(capacity)` 2026-11-06 已提供并验证），阻断它的编译器 arity 缺陷
+  已由 G30 修复（`1bee7bff`）；
   std 线可在保留 `new()` 的前提下增量落地 `new(capacity)`，既有调用点已验证不受影响。
 - Rust 回归：`cargo test -j 4 -p rusty-valkyrie --test frontend` = **572 passed / 0 failed / 11 ignored**，
   含新增正反例（`same_owner_constructors_with_distinct_arity_both_resolve` /
