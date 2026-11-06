@@ -557,6 +557,10 @@ $n
   #124 的 `148.5/247.5`）转语料缺陷，不计通过。相对上文「183」口径 **+27 → 210**（分母仍按 832）；
   R30 后 canonical 1039 的全库重算待下一次全窗口。
   - S1 9/9（1017 用例）、S2 8/9（992，1 题转缺陷）、R 10/10（1114）。
+- 后续写入（2026-11-06，R34 纯整数占位题第四批）：**编译通过 0、端到端通过 0、写完未验证 26 题**
+  （镜像回放 2599 用例 mismatch=0，不作为通过证据，不计覆盖）；待下一次构建窗口按能力组整组复跑。
+  同批收尾：`accounts-merge` 按并查集根取代表名后待复验（原 55/85 错名）；`path-with-maximum-probability`
+  因 8 条 `edges` / `succProb` 长度不一致转语料缺陷，原用例与期望未改。
 
 ### 验证窗口实测（2026-11-04 23:50 addon 重建后：编译关破碎 + marshal 夹具修复）
 
@@ -723,14 +727,14 @@ $n
 
 | 停点 | 影响 | 首错原文（节选） | 判定 |
 | --- | --- | --- | --- |
-| `DisjointSet<T>::union` 跳转类型不符 | 所有并查集题 | `(SMIR007): function=std::union#210, location=block 8 terminator, actual=Nominal{ItemId(48),[Integer32{unsigned}]}, expected=Nominal{ItemId(48),[Integer64{signed}]}` | 编译器 MIR 缺陷：`std::union` 内部把 `u32` 下标喂给 `i64` 块参数。签名完整、`i64: Comparable` 不相关 |
+| `DisjointSet<T>::union` 跳转类型不符 | 所有并查集题 | `(SMIR007): function=std::union#210, location=block 8 terminator, actual=Nominal{ItemId(48),[Integer32{unsigned}]}, expected=Nominal{ItemId(48),[Integer64{signed}]}` | **已修（`57992125`）**：`std::union` 内部 `u32` 下标与 `i64` 块参数的宽度不再不一致；旧 addon 上的反例现为结构化拒绝，不再是编译阻断 |
 | `HashMap<utf8, V>` 键 | 所有字符串哈希题 | `调用实例 ItemInstanceId(4) 没有定义或显式导入合同；callers=["std::hash#445"]` | `utf8: Hash` 合同缺失；`HashMap<utf8, i64>` 的 `==` 另会落到 `std::infix ==#449`（缺 `__u8_eq`） |
 
 - 交叉验证（不是本批写法问题）：此前已通过的 `redundant-connection`、
   `most-stones-removed-with-same-row-or-column`、`number-of-operations-to-make-network-connected`
-  现在同样停在 `std::union`；`is-graph-bipartite` 的 `DirectedGraph::nodes()` 另停在
-  `HashSet::from_list` 的 `list.iter` 未解析。三项均属工具链刷新后的回归，建议并入
-  `InstanceNotClosed` 那条线的证据。
+  当时同样停在 `std::union`；`is-graph-bipartite` 的 `DirectedGraph::nodes()` 另停在
+  `HashSet::from_list` 的 `list.iter` 未解析。**2026-11-06 更新（`57992125`）**：`std::union`
+  宽度不符已修，上述反例不再报 SMIR007；`list.iter` 一项仍按原状保留。
 - `sentence-similarity-ii`：`DisjointSet<i64>` + `HashMap<utf8, i64>`，先被 `std::hash#445`
   拦住，未到达 `std::union`。
 - `find-all-possible-recipes-from-given-supplies`：为过全用例临时回退到
@@ -3090,7 +3094,7 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 | `most-common-word`（新增） | utf8 扫描 + multi-key | build 阻断：`std::new#287` / `std::grow_to#300` 合同实例缺失（`Utf8Builder`） |
 | `last-stone-weight` | `BinaryHeap` + `Comparable` | **已修（`9d51ad08`）**：真跑 124/124；原 build 阻断 `T: Comparable` 义务未消解属 `Ordering` 布局缺口 |
 | `furthest-building-you-can-reach` | `BinaryHeap` + `Comparable` | **已修（`9d51ad08`）**：最小堆正确策略重写后 118/118（原解把最大跳交给砖块，方向错误） |
-| `minimum-operations-to-halve-array-sum` | `BinaryHeap<f64>` | build 阻断：`BinaryHeap::new_by` 无定义，且 `f64` 无 `Comparable` |
+| `minimum-operations-to-halve-array-sum` | `BinaryHeap<f64>` | **`57992125` 后仅剩 `new_by` 提案入口**：`f64` 序与宽度阻断已消失；`BinaryHeap::new_by` 仍无定义 |
 
 ### 本批实测新增/复测缺口
 
@@ -3191,14 +3195,15 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 ## 特性面 × 可用性矩阵（R30，2026-11-05）
 
 口径：共享 addon `07b625aa` 不重建，真跑 `legion build` + 判题；通过写 `N/N`，阻断写诊断原文摘要。
-本批 10 题通过（818 条用例），另 1 题 `describe-the-painting` 命中 `BTreeMap` 阻断面并保留标记。
+本批 10 题通过（818 条用例）。**2026-11-06 更新（addon `57992125`）**：`describe-the-painting`
+的 `BTreeMap` 阻断面已消失，复跑 **98/98 全绿**，本批 11 题全部通过（916 条用例）。
 2026-11-05 复核行以 addon 副本 `25132ccf`（`.cache/valkyrie-forin.node`）复测；
 `Ordering` 相关行以 `9d51ad08` 独立 worktree 重建的副本（`.cache/valkyrie-ordering.node`）复测。
 
 | 特性面 | 状态 | 证据题 | 阻断面（诊断原文摘要） |
 |---|---|---|---|
 | 整数 / `ArrayList` / 双指针 / 前缀和 / DP / 矩阵 | 可用 | `number-of-zero-filled-subarrays` 99/99、`bag-of-tokens` 103/103、`maximum-sum-score-of-array` 93/93、`partition-array-for-maximum-sum` 104/104、`uncrossed-lines` 106/106、`matrix-block-sum` 88/88 | — |
-| `HashMap<i32,_>` / `BTreeMap<i32,_>` | HashMap 可用；BTreeMap 阻断 | `pairs-of-songs-with-total-durations-divisible-by-60` 89/89（`HashMap<i32,i64>` i32 键）、`minimum-index-of-a-valid-split` 12/12（`HashMap<i64,i64>`） | BTreeMap：`unresolved call ... none matches the argument types`（`where K: Equal & std::operator::Comparable` 义务不在调用点消解，补 `using std.operator;` 无效） |
+| `HashMap<i32,_>` / `BTreeMap<i32,_>` | 均可用（`57992125` 复核，改判） | `pairs-of-songs-with-total-durations-divisible-by-60` 89/89（`HashMap<i32,i64>` i32 键）、`minimum-index-of-a-valid-split` 12/12（`HashMap<i64,i64>`）、`describe-the-painting` 98/98（`BTreeMap<i64,i64>`） | `where K: Equal & std::operator::Comparable` 义务已在 `57992125` 消解，旧 `07b625aa` 的 `unresolved call ... none matches the argument types` 不再复现 |
 | `sorted_by`（整型 / 嵌套 / packed-key） | 可用 | 96/96、117/117、98/98；本批 `maximum-length-of-pair-chain` 106/106（`ArrayList<i64>` 元素） | — |
 | `sorted_by` 以 `utf8` 实例化 | 阻断（`25132ccf` 复核） | `top-k-frequent-words`、`phone-number-prefix` | `WASM ABI carrier mismatch in std::collection::is_less_or_equal: slot=i32 actual=anyref operand=%0 (Utf8)` |
 | `sort` 以 `utf8` 实例化（`utf8: Comparable` 已存在） | 阻断（`9d51ad08` 复核，诊断更新） | `phone-number-prefix` 真写法 | `Ordering` 报错已消失；改报 `WASM ABI carrier mismatch in std::collection::is_less_or_equal: slot=i32 actual=anyref operand=%0 (Utf8)` |
@@ -3212,7 +3217,7 @@ Python/TS 参考 13/13 全通过（`run_python_solver.py`、`run_ts_solver.py` R
 | 递归 / 深度 | 可用 | `construct-the-lexicographically-largest-valid-sequence` 18/18（递归深度 ≤ 40） | 上一轮 `RecursionError` 属 Python 语料，与 V 递归上限无关 |
 | `loop` for-in 标量写回 | 可用（已由 `172b944a` 修复） | `maximum-sum-score-of-array` 93/93；同批 30 题还原全通过（逐题数字见「待还原组」） | 旧 addon `07b625aa` 与其父 `8ebc289e` 实测 `0`，`172b944a` 实测 `-150`，当前 HEAD `25132ccf` 实测 `-150`；配套 `loop` + `HashMap.insert` 从 `5` 变 `-14995`，证明迭代本身一直正确。判据输入 `[-10,-20,-30,-40,-50]` 应得 `-150`。验收必须用 `172b944a` 或更新 addon 副本/重建，不得用共享旧 addon 复跑后宣布通过 |
 
-下一批选题依据：`Ordering` 布局缺口已修（`9d51ad08`），`sort(ArrayList<i64>)`、`BinaryHeap<i64>` 可用；优先补 `BTreeMap` / `HashMap<utf8,_>` 的 wasm ABI 与 `BinaryHeap::new_by`。`HashSet<utf8>`、`HashMap<char,_>`、`Utf8Builder` 已可用，for-in 标量写回已修，不再作为缺口。避免再撞 `sort`/`sorted_by` 的 utf8 实例化、设计类。
+下一批选题依据：`Ordering` 布局缺口已修（`9d51ad08`/`57992125`），`sort(ArrayList<i64>)`、`BinaryHeap<i64>` 可用；`BTreeMap` 的 `where` 义务已在 `57992125` 消解，`describe-the-painting` 98/98 全绿，选题不再回避。优先补 `HashMap<utf8,_>` 的 wasm ABI 与 `BinaryHeap::new_by`。`HashSet<utf8>`、`HashMap<char,_>`、`Utf8Builder` 已可用，for-in 标量写回已修，不再作为缺口。避免再撞 `sort`/`sorted_by` 的 utf8 实例化、设计类。
 
 ## 理想解批次缺口登记（2026-11-05）
 
@@ -3380,10 +3385,10 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 
 | 题号 | 类别 | 坐标/原因 | 处理 |
 |---|---|---|---|
-| 963 `minimum-area-rectangle-ii` | `f64` 返回 | 期望值含浮点噪声 `2.0000000000000004`，V 侧 `i64 as f64` 与 `f64` 返回均缺入口 | blocked-gap，跳题 |
+| 963 `minimum-area-rectangle-ii` | `f64` 返回 | 期望值含浮点噪声 `2.0000000000000004` | `57992125` 已解除 `f64` 入口阻断，待窗口复验后补理想解 |
 | 970 `powerful-integers` | 非确定性顺序 | 期望顺序等于 Python `set` 的整数哈希迭代序，非升序，无法由标准算法复现 | blocked-gap，跳题 |
-| 1058 `minimize-rounding-error-to-meet-target` | `f64` 返回 | 期望 `1.5` 等浮点值 | blocked-gap，跳题 |
-| 1093 `statistics-from-a-large-sample` | `f64` 返回 | 期望 `[1,3,2.375,2.5,3]` 含浮点中位数 | blocked-gap，跳题 |
+| 1058 `minimize-rounding-error-to-meet-target` | `f64` 返回 | 期望 `1.5` 等浮点值 | `57992125` 已解除 `f64` 入口阻断，待窗口复验后补理想解 |
+| 1093 `statistics-from-a-large-sample` | `f64` 返回 | 期望 `[1,3,2.375,2.5,3]` 含浮点中位数 | `57992125` 已解除 `f64` 入口阻断，待窗口复验后补理想解 |
 | 536/623/654/669/701/814/865/889/971/998/1008/1038/1080/1120/1123 | 树输出 | 输入是无 null 的堆式数组，无法还原「缺左留右」的非完全树；输出要求 LeetCode 层序含 `null` 序列化，仓内无权威编解码约定 | blocked-gap，待补序列化合同后统一处理 |
 | 912 `sort-an-array` | 语料参考解损坏 | `metadata.tests[0]` 期望 `"Error: name 'randint' is not defined"`，全部用例期望错误文本 | blocked-corpus，未写 |
 
@@ -3402,7 +3407,7 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 | 1104 `path-in-zigzag-labelled-binary-tree` | 78/78 | 78/78 |
 
 - 1101 的 `tests[70]` 起日志节点号大于 `n`（如 `maxNode=40, n=10`），参考解抛 `list index out of range` 并被记为期望文本；语料缺陷，F6 处理，不改用例。
-- 813 `largest-sum-of-averages`：35/102 例期望含分数（`20.5`、`18.166666666666664`），`f64` 返回与 `i64 as f64` 入口均缺，blocked-gap，未写。
+- 813 `largest-sum-of-averages`：35/102 例期望含分数（`20.5`、`18.166666666666664`），`f64` 返回与 `i64 as f64` 入口已在 `57992125` 解除阻断，待窗口复验后补理想解。
 - 1057 首轮 V 编译报 SMIR007（`jump argument ... actual=Integer64, expected=Integer32`）；把 `usize` 计数循环统一改成 `i64` 后通过。坐标：`campus-bikes/solvers/valkyrie/solution.v`。
 
 ## 第六批 B 组实测（2026-11-05）

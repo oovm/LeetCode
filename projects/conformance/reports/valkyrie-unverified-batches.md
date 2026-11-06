@@ -82,7 +82,7 @@
 | `the-time-when-the-network-becomes-idle` | BFS + 重发时刻 | 51/51 | 通过 |
 | `node-with-highest-edge-score` | 出度加权 | 26/26 | 通过 |
 | `sentence-similarity-ii` | `DisjointSet<i64>` + `HashMap<utf8, i64>` | **编译失败** `std::hash#445` | 通过 |
-| `minimize-hamming-distance-after-swap-operations` | `DisjointSet<i64>` | **编译失败** `std::union` SMIR007 | 通过 |
+| `minimize-hamming-distance-after-swap-operations` | `DisjointSet<i64>` | **已修（`57992125`）**：`std::union` SMIR007 不再复现，待复验 | 通过 |
 | `validate-binary-tree-nodes` | 入度唯一根 + 显式栈 | 137/137 | 通过 |
 | `reachable-nodes-with-restrictions` | 显式栈 DFS | 71/71 | 通过 |
 | `detect-cycles-in-2d-grid` | 迭代 DFS + 父格 | 74/74 | 通过 |
@@ -1588,7 +1588,7 @@ V 侧复跑：在 `projects/conformance` 下执行 `node --import tsx scripts/ru
 | `most-common-word` | utf8 扫描 + multi-key | 阻断（`Utf8Builder` 合同实例缺失） | 未执行 |
 | `last-stone-weight` | `BinaryHeap` + `Comparable` | 阻断（`push/pop` 义务未消解） | 未执行 |
 | `furthest-building-you-can-reach` | `BinaryHeap` + `Comparable` | 阻断（同上） | 未执行 |
-| `minimum-operations-to-halve-array-sum` | `BinaryHeap<f64>` | 阻断（`new_by` 缺失，`f64` 无 `Comparable`） | 未执行 |
+| `minimum-operations-to-halve-array-sum` | `BinaryHeap<f64>` | **`57992125` 后仅剩 `new_by` 提案入口**（`f64` 序与宽度阻断已消失） | 未执行 |
 
 结论：本批 3 题通过（311 条用例），其余 10 题被 utf8 字节合同、`utf8` 泛型序实例化、
 `std::hash` 合同实例与 `BinaryHeap` 义务传播四条线挡住；`reorder-data-in-log-files`
@@ -1611,9 +1611,9 @@ V 侧复跑：在 `projects/conformance` 下执行 `node --import tsx scripts/ru
 | `construct-the-lexicographically-largest-valid-sequence` | 递归 / 回溯（深度 2n ≤ 40，`ArrayList` 引用写回） | build=0 | **18/18 通过** |
 | `matrix-block-sum` | 矩阵 + 二维前缀和（`ArrayList<ArrayList<i64>>` 嵌套下标） | build=0 | **88/88 通过** |
 | `maximum-length-of-pair-chain` | `sorted_by` 以 `ArrayList<i64>` 实例化 + 贪心 DP | build=0 | **106/106 通过** |
-| `describe-the-painting` | 命中已知阻断面 `BTreeMap` / `Comparable` 义务 | **build 失败** | 0/98，诊断见下 |
+| `describe-the-painting` | `BTreeMap` / `Comparable` 义务 | **build=0**（`57992125`） | **98/98 通过**（旧 `07b625aa` 诊断见下，已不再复现） |
 
-`describe-the-painting` 首次失败诊断原文（共享 addon `07b625aa`）：
+`describe-the-painting` 旧 addon `07b625aa` 上的失败诊断原文（历史记录，`57992125` 已不复现）：
 
 ```
 error[valkyrie.hir.unresolved_call]: unresolved call `deltas.contains_key` in splitPainting:
@@ -1628,8 +1628,9 @@ receiver type is unknown, so member `unwrap` cannot be resolved
 ```
 
 `BTreeMap<i64, i64>` 的 `get` / `insert` / `contains_key` 都带 `where K: Equal & std::operator::Comparable`，
-即使补 `using std.operator;` 仍全部无法解析，`BTreeMap::keys()` 也无法走到。按规则不写绕法，
-该题保留阻断标记（文件顶部注释写明真写法与还原判据），用 `matrix-block-sum` / `maximum-length-of-pair-chain` 补足到 10 题通过。
+旧 `07b625aa` 上即使补 `using std.operator;` 仍全部无法解析，`BTreeMap::keys()` 也无法走到。
+**2026-11-06 更新（addon `57992125`）**：该 `where` 义务已在调用点消解，复跑 **98/98 全绿**，
+该阻断面从 blocked 摘除。
 
 - for-in 标量写回（已修复，`172b944a`）：`loop value in nums { total = total + value }` 对导出形参
   `ArrayList<i64>` 在旧 addon `07b625aa` 与其父 `8ebc289e` 上迭代正常但标量写回丢失（输入
@@ -1907,3 +1908,40 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   #124 `[99,198,99,297,148.5,297,148.5,396,198,396,198,495,247.5]`；三条期望均为 0。
   首轮在 #28 报 `args.nums[4] 需要整数实参，实际为非整数数值 37.5`，已执行 28/134 用例后中止。
   处置：`solution.v` 还原为 blocked 注释并追加 `# corpusDefect`，删除 `invoke.valkyrie`，原值未改。
+
+## 批次 R34-2026-11-06（纯整数占位题 26 题，写完未验证）
+
+- 范围与能力分组（26）：
+  - 矩阵扫描 6：`toeplitz-matrix`、`lucky-numbers-in-a-matrix`、
+    `check-if-every-row-and-column-contains-all-numbers`、
+    `determine-whether-matrix-can-be-obtained-by-rotation`、`check-if-matrix-is-x-matrix`、
+    `matrix-similarity-after-cyclic-shifts`。
+  - 计数 / 频次 6：`largest-unique-number`、`divide-array-into-equal-pairs`、
+    `number-of-beautiful-pairs`、`count-pairs-that-form-a-complete-day-i`、
+    `find-the-xor-of-numbers-which-appear-twice`、`two-out-of-three`。
+  - 子数组 / 滑窗 5：`longest-strictly-increasing-or-strictly-decreasing-subarray`、
+    `longest-even-odd-subarray-with-threshold`、`shortest-subarray-with-or-at-least-k-i`、
+    `find-subarrays-with-equal-sum`、`count-partitions-with-even-sum-difference`。
+  - 排序 / 前缀 / 二分 4：`minimum-difference-between-highest-and-lowest-of-k-scores`、
+    `longest-subsequence-with-limited-sum`、`kth-missing-positive-number`、
+    `maximum-product-difference-between-two-pairs`。
+  - 模拟 / 贪心 5：`determine-the-winner-of-a-bowling-game`、`min-max-game`、
+    `minimum-total-operations`、`minimum-operations-to-make-array-values-equal-to-k`、
+    `minimum-number-of-operations-to-make-elements-in-array-distinct`。
+- 三件套：**26/26**（`solution.v` + `metadata.invoke.valkyrie`；题库原有 TS / Python 参照不变）。
+- 口径（三者分开）：**编译通过 0 题、端到端通过 0 题、写完未验证 26 题**；本轮不占构建窗口。
+- 镜像回放（Python 镜像按 `metadata.tests[].args` 键序回放，非 V 构建，不作为通过证据）：
+  **2599 条用例，mismatch=0**，本批无 `corpusDefect`。
+- 形参名与 `tests[].args` 键：26/26 逐字同序（脚本静态核对）。
+- 静态一致性：namespace / `[export(case: "camelCase")]` / `micro` 与 `Class Solution` 方法名 /
+  `invoke.valkyrie` 五处 26/26 一致。
+- 特性适配：全部只用整数与 `ArrayList` 下标读写，未使用 `ArrayList.get`（避开 1 基序数与
+  `None` 上的 `unwrap()`）；`length()` 现按 Unicode 标量计数，本批无 `utf8` 断言，不受影响。
+
+### 2026-11-06 判题 / 编译器线移交的两条收尾
+
+- `accounts-merge`：`tests[55]` 的账户组 2/4/5 并查集根为 5（Bob），旧解取扫描下标 `i=2` 的
+  `accounts[2][0]`（Charlie）；已改为按根取代表名，待窗口复验。
+- `path-with-maximum-probability`：8 条用例（索引 20、24、31、40、44、49、62、63）的 `edges` 与
+  `succProb` 长度不一致（#24 为 9 条边、8 个概率），属 metadata 自相矛盾；原用例与期望未改，
+  `solution.v` 还原 blocked 并标 `corpusDefect`，删除 `invoke.valkyrie`。
