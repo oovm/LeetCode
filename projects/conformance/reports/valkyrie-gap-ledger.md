@@ -86,7 +86,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | F2 设计类实例无 wasm 导出 / 实例句柄 ABI | 类方法不能 `[export]`，装配层要求单一入口，设计类没有「构造 + 逐方法调用」形态 | `source group closure failed: entry source group 'leetcode-min-stack' declares no [export], [main] or [test] entry`（6/6 题同一形态） | 题侧 `solvers/valkyrie/solution.v`（`class` 体只放字段，方法全在 `imply`）；装配侧入口闭包在 `nyar-vm.rs` |
 | F3 库导出 `Utf8` 返回值缺宿主句柄物化 | **已恢复**（2026-11-07 实测）：`convert-a-number-to-hexadecimal`、`integer-to-roman`、`decode-the-message`、`capitalize-the-title` 均构建通过，`callExport` 真跑返回值与期望一致 | ~~`TypeError: Cannot convert object to primitive value`（26 题，全部为字符串返回题）~~ | 修复提交 `d3a8f0b7`（宿主边界物化 frozen `utf8` carrier）；原缺口位置 `nyar-emitter/src/lowering/backends/wasm/mir/entry.rs`（形参物化 vs 返回透传） |
 | F4 导出名缩写大小写漂移 | camelCase 转换压平连续大写缩写（`preimage_size_fzf` → `preimageSizeFzf`），题面是 `preimageSizeFZF` | `wasm 里找不到 metadata.invoke 对应的 export "preimageSizeFZF"（已有: preimageSizeFzf ...）`（4 题） | 题侧 `solution.v` 导出声明 + 题库 `metadata.invoke`；harness 单点归一在 `src/adapters/valkyrie-node/abi.ts` 的 `matchWasmExportSymbol` |
-| F5 schema 形参名与 metadata 键不一致 | schema 的 `params[].name` 取自 V 源码形参标识符，`orderArgsBySchema` 双向严格按名匹配 | `AbiSchemaError: args.s: metadata.tests.args 缺少参数 "s"`（2 题；另 1 题报 `prime_factors`） | `src/adapters/valkyrie-node/abi.ts:422-437`；`excel-sheet-column-number`（`s` vs `columnTitle`）、`ransom-note`（`ransom_note` vs `ransomNote`）、`maximize-number-of-nice-divisors`（`prime_factors` vs `primeFactors`） |
+| F5 schema 形参名与 metadata 键不一致 | **已恢复**（2026-11-07 实测）：三题 `solution.v` 形参已按题面命名，生成的 `params[].name` 与 metadata 键逐字相等，构建通过且真跑一致 | ~~`AbiSchemaError: args.s: metadata.tests.args 缺少参数 "s"`（2 题；另 1 题报 `prime_factors`）~~ | 已对齐：`excel-sheet-column-number`（`columnTitle`）、`ransom-note`（`ransomNote, magazine`）、`maximize-number-of-nice-divisors`（`primeFactors`）；历史定位 `src/adapters/valkyrie-node/abi.ts:422-437` |
 | F6 `expected` 存宿主异常文本 | metadata 期望值是 Python 参考实现的宿主异常文本，但判题驱动不设递归上限，V / TS 也不产生该文本 | `expected "Error: maximum recursion depth exceeded", no exception raised`（5 题） | 5 题见下；`scripts/isolated_python_child.py` 无 `setrecursionlimit`，TS / Bun / V lane 同样无递归上限 |
 | F7 数值答案错 22 条未分类 | 用户口径 21 条，实测严格 numeric-vs-numeric 22 条，混有题解错、语料错与 ABI 缺陷 | 逐题见分桶小节 | `.cache/judge-failures.json`；定位脚本 `.cache/probe-numeric.ts`、`probe-fixtures.py`、`probe-minadd.py` |
 | F8 计时轮污染实参 | 子进程多轮复用同一 args 对象，题解原地改写（排序 / 去重 / 填充）污染收集轮 | `tests[0]: expected "1", got "0"`（`remove-duplicates-from-sorted-array`、`remove-element` 的 TS lane） | `src/isolated/child-loops.ts`、`scripts/isolated_python_child.py`；已修：`structuredClone` / `copy.deepcopy`，克隆在计时窗口外 |
@@ -1388,8 +1388,10 @@ micro probe(n: i64) -> i64 {
 
 ### G2 浮点返回值合同
 
-- 状态：未恢复（2026-11-03 复测）
-- 最小复现：
+- 状态：**已恢复**（2026-11-07 实测）。`-> f64` 现接受浮点字面量与 `i64 → f64` 精确转换；
+  两题已补真实解并通过全量用例：`airplane-seat-assignment-probability`（`nthPersonGetsNthSeat`，32/32）、
+  `angle-between-hands-of-a-clock`（`angleClock`，72/72），legion wasm 构建 `status=0`。
+- 最小复现（历史）：
 
 ```v
 micro half() -> f64 {
@@ -1401,7 +1403,7 @@ micro half() -> f64 {
 - 实际：`return` value type `f64` is incompatible with the function return type `Nominal(ItemId(3))`；
   尝试 `let one: f64 = 1.0`、`1.0 as f64`、`-> std::primitive::f64` 均失败（`浮点常量没有 canonical 形状`）。
 - 影响题：`airplane-seat-assignment-probability`（1227）、`angle-between-hands-of-a-clock`（1344）。
-- 判定：**真缺口**（判据 c：返回类型即题面合同，绕路必须改返回类型，与 `metadata.expected` 不相容）。
+- 判定：**已恢复**（2026-11-07）；原判定为真缺口（判据 c），恢复后本案只留档，不再作为失败归族依据。
 
 ### G3 wasm JS glue 的 `ArrayList` ABI bridge 缺失（入参 marshal / 返回值 demarshal）
 
