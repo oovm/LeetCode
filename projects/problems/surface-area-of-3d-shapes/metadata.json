@@ -485,6 +485,7 @@
     ],
     "invoke": {
         "python": "Solution().surfaceArea",
-        "typescript": "Solution().surfaceArea"
+        "typescript": "Solution().surfaceArea",
+        "valkyrie": "surfaceArea"
     }
 }

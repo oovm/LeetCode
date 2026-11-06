@@ -1420,6 +1420,7 @@
     ],
     "invoke": {
         "python": "Solution().numEquivDominoPairs",
-        "typescript": "Solution().numEquivDominoPairs"
+        "typescript": "Solution().numEquivDominoPairs",
+        "valkyrie": "numEquivDominoPairs"
     }
 }

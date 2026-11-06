@@ -856,6 +856,7 @@
     ],
     "invoke": {
         "python": "Solution().countGoodRectangles",
-        "typescript": "Solution().countGoodRectangles"
+        "typescript": "Solution().countGoodRectangles",
+        "valkyrie": "countGoodRectangles"
     }
 }

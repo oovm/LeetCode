@@ -806,5 +806,6 @@
     "invoke": {
         "python": "Solution().flipAndInvertImage",
         "typescript": "Solution().flipAndInvertImage"
-    }
+    },
+    "corpusDefect": true
 }

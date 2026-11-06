@@ -1,5 +1,29 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: maximumWealth 需要 读取 accounts 求最大行和
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.richest_customer_wealth;
+
+using std.collection;
+
+# 逐行求和取最大值。
+[export(case: "camelCase")]
+micro maximumWealth(accounts: ArrayList<ArrayList<i64>>) -> i64 {
+    let mut best: i64 = 0
+    let mut row: usize = 0
+    while row < accounts.length() {
+        let mut total: i64 = 0
+        let mut column: usize = 0
+        while column < accounts⁅row⁆.length() {
+            total = total + accounts⁅row⁆⁅column⁆
+            column = column + 1
+        }
+        if total > best {
+            best = total
+        }
+        row = row + 1
+    }
+    return best
+}
+
+class Solution {
+    micro maximumWealth(self, accounts: ArrayList<ArrayList<i64>>): i64 {
+        return maximumWealth(accounts)
+    }
+}

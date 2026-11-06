@@ -453,6 +453,7 @@
     ],
     "invoke": {
         "python": "Solution().projectionArea",
-        "typescript": "Solution().projectionArea"
+        "typescript": "Solution().projectionArea",
+        "valkyrie": "projectionArea"
     }
 }

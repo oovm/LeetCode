@@ -1,5 +1,22 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: createTargetArray 需要 读取 nums/index 按位插入
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.create_target_array_in_the_given_order;
+
+using std.collection;
+
+# 按 positions 逐个插入到目标序列的指定位置。
+[export(case: "camelCase")]
+micro createTargetArray(nums: ArrayList<i64>, positions: ArrayList<i64>) -> ArrayList<i64> {
+    let mut target: ArrayList<i64> = ArrayList::new(nums.length())
+    let mut position: usize = 0
+    while position < nums.length() {
+        let slot: usize = positions⁅position⁆ as usize
+        target.insert(slot, nums⁅position⁆)
+        position = position + 1
+    }
+    return target
+}
+
+class Solution {
+    micro createTargetArray(self, nums: ArrayList<i64>, positions: ArrayList<i64>): ArrayList<i64> {
+        return createTargetArray(nums, positions)
+    }
+}

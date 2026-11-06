@@ -1,5 +1,50 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: transformArray 需要 读取 arr 逐轮增减变换至稳定
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.array_transformation;
+
+using std.collection;
+
+# 每轮按上一轮快照更新中间元素，直到不再变化。
+[export(case: "camelCase")]
+micro transformArray(arr: ArrayList<i64>) -> ArrayList<i64> {
+    let count: usize = arr.length()
+    let mut current: ArrayList<i64> = ArrayList::new(count)
+    let mut position: usize = 0
+    while position < count {
+        current.push(arr⁅position⁆)
+        position = position + 1
+    }
+
+    let mut changed: bool = true
+    while changed {
+        changed = false
+        let mut previous: ArrayList<i64> = ArrayList::new(count)
+        position = 0
+        while position < count {
+            previous.push(current⁅position⁆)
+            position = position + 1
+        }
+
+        position = 1
+        while position + 1 < count {
+            let value: i64 = previous⁅position⁆
+            if value < previous⁅position - 1⁆ {
+                if value < previous⁅position + 1⁆ {
+                    current⁅position⁆ = value + 1
+                    changed = true
+                }
+            } else if value > previous⁅position - 1⁆ {
+                if value > previous⁅position + 1⁆ {
+                    current⁅position⁆ = value - 1
+                    changed = true
+                }
+            }
+            position = position + 1
+        }
+    }
+    return current
+}
+
+class Solution {
+    micro transformArray(self, arr: ArrayList<i64>): ArrayList<i64> {
+        return transformArray(arr)
+    }
+}

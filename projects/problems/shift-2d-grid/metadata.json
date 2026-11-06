@@ -705,6 +705,7 @@
     ],
     "invoke": {
         "python": "Solution().shiftGrid",
-        "typescript": "Solution().shiftGrid"
+        "typescript": "Solution().shiftGrid",
+        "valkyrie": "shiftGrid"
     }
 }

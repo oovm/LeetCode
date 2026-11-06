@@ -1102,5 +1102,6 @@
     "invoke": {
         "python": "Solution().oddCells",
         "typescript": "Solution().oddCells"
-    }
+    },
+    "corpusDefect": true
 }

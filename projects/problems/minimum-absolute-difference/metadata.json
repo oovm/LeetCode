@@ -1155,6 +1155,7 @@
     ],
     "invoke": {
         "python": "Solution().minimumAbsDifference",
-        "typescript": "Solution().minimumAbsDifference"
+        "typescript": "Solution().minimumAbsDifference",
+        "valkyrie": "minimumAbsDifference"
     }
 }

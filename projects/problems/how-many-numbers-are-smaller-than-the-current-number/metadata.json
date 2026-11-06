@@ -695,6 +695,7 @@
     ],
     "invoke": {
         "python": "Solution().smallerNumbersThanCurrent",
-        "typescript": "Solution().smallerNumbersThanCurrent"
+        "typescript": "Solution().smallerNumbersThanCurrent",
+        "valkyrie": "smallerNumbersThanCurrent"
     }
 }

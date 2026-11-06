@@ -637,6 +637,7 @@
     ],
     "invoke": {
         "python": "Solution().replaceElements",
-        "typescript": "Solution().replaceElements"
+        "typescript": "Solution().replaceElements",
+        "valkyrie": "replaceElements"
     }
 }

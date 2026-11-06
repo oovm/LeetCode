@@ -1659,3 +1659,34 @@ receiver type is unknown, so member `unwrap` cannot be resolved
 
 附带修复：`most-common-word` 原 `Utf8Builder` 交接处触发
 `OperationResultTypeMismatch`（`StoreVar { name: "best" }`，utf8 变量重赋值），改为按最优词下标返回后消除。`sort-characters-by-frequency` 改回 `HashMap<char,i64>`，计数结果与线性版一致（同 35/54，说明差异只来自多字节 ABI）。
+
+## 批次 R31-2026-11-06（纯整数占位题：24 题写入 + 6 题语料缺陷，authored-unverified）
+
+- 起点：`dev` 领先 `origin/dev` 2 个提交；17 个他人未提交 metadata（permutations / backtracking 一组）全部避开。
+- 对账（实测非引用）：`solvers/valkyrie/solution.v` 无 `[export` 共 1841 个 —— 空白/1 字节 1129、
+  `# blocked` 注释 706、其他纯注释 6；其中纯整数/纯算术签名且无 `invoke.valkyrie` 的 291 道，本轮从该池选 30 道。
+  这些题的阻塞注释统一是 `# blocked: std.collection 数组参数读取`，已被 `two-sum` 与 R30 的同类数组形参实测证伪。
+- 写入 24 题并补 `metadata.invoke.valkyrie`，**全部 `authored-unverified`（本轮未构建，不计入通过数）**：
+  `final-prices-with-a-special-discount-in-a-shop`、`replace-elements-with-greatest-element-on-right-side`、
+  `create-target-array-in-the-given-order`、`how-many-numbers-are-smaller-than-the-current-number`、
+  `defuse-the-bomb`、`number-of-equivalent-domino-pairs`、`minimum-time-visiting-all-points`、
+  `richest-customer-wealth`、`shift-2d-grid`、`transpose-matrix`、`projection-area-of-3d-shapes`、
+  `surface-area-of-3d-shapes`、`largest-subarray-length-k`、`sum-of-unique-elements`、
+  `number-of-rectangles-that-can-form-the-largest-square`、`counting-elements`、
+  `find-lucky-integer-in-an-array`、`minimum-absolute-difference`、
+  `widest-vertical-area-between-two-points-containing-no-points`、`special-positions-in-a-binary-matrix`、
+  `how-many-apples-can-you-put-into-the-basket`、`array-transformation`、
+  `minimum-moves-to-equal-array-elements`、`sign-of-the-product-of-an-array`。
+- 静态自查：24 题 `namespace` / `[export(case: "camelCase")]` / `class Solution` / invoke 名一致；
+  按 metadata 参数序镜像回放全量用例 **2287 条，mismatch=0**（Python 镜像，非 V 构建，不作为通过证据）。
+  其中 `surface-area-of-3d-shapes` 按用例中的非方阵（5×3、5×6）修正为行列分别取值。
+- 语料缺陷 6 题：不删除、不改原值，保持 blocked，`solution.v` 还原为阻塞注释并注明缺陷，
+  `metadata.corpusDefect=true`，不加 `invoke.valkyrie`：
+  - `decompress-run-length-encoded-list`：4 条奇数长度输入，期望值 `Error: list index out of range`；
+  - `cells-with-odd-values-in-a-matrix`：4 条同类字符串期望；
+  - `element-appearing-more-than-25-in-sorted-array`：31 条同类字符串期望；
+  - `count-negative-numbers-in-a-sorted-matrix`：20 条期望与 TS/Python 参照解矛盾（5×1 网格期望 0）；
+  - `flipping-an-image`：8 条期望与参照解矛盾（全 1 行期望半 0 半 1）；
+  - `n-repeated-element-in-size-2n-array`：1 条全不重复且期望 null，违反题面约束。
+- 构建：按构建窗口约束本轮**未运行** `legion build` / cargo；待通知后用独立 `CARGO_TARGET_DIR`、`-j 4`、
+  单进程、单条 ≤300 秒复跑，并以该次 passed/failed 为准。

@@ -740,5 +740,6 @@
     "invoke": {
         "python": "Solution().countNegatives",
         "typescript": "Solution().countNegatives"
-    }
+    },
+    "corpusDefect": true
 }

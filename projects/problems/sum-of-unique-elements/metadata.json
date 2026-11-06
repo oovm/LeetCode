@@ -647,6 +647,7 @@
     ],
     "invoke": {
         "python": "Solution().sumOfUnique",
-        "typescript": "Solution().sumOfUnique"
+        "typescript": "Solution().sumOfUnique",
+        "valkyrie": "sumOfUnique"
     }
 }

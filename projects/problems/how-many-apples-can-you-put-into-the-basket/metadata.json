@@ -435,6 +435,7 @@
     ],
     "invoke": {
         "python": "Solution().maxNumberOfApples",
-        "typescript": "Solution().maxNumberOfApples"
+        "typescript": "Solution().maxNumberOfApples",
+        "valkyrie": "maxNumberOfApples"
     }
 }

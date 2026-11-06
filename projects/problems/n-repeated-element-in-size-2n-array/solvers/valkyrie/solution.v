@@ -3,3 +3,4 @@
 # 期望语义: 宿主传入的数组参数可直接索引与遍历
 # 实际报错: unresolved call <computed>（数组参数读取不被支持）
 # 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+# corpusDefect: 1 条用例全不重复且期望 null，违反题目约束，保持 blocked

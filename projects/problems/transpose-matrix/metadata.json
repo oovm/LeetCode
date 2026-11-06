@@ -462,6 +462,7 @@
     ],
     "invoke": {
         "python": "Solution().transpose",
-        "typescript": "Solution().transpose"
+        "typescript": "Solution().transpose",
+        "valkyrie": "transpose"
     }
 }

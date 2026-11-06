@@ -1324,6 +1324,7 @@
     ],
     "invoke": {
         "python": "Solution().maxWidthOfVerticalArea",
-        "typescript": "Solution().maxWidthOfVerticalArea"
+        "typescript": "Solution().maxWidthOfVerticalArea",
+        "valkyrie": "maxWidthOfVerticalArea"
     }
 }

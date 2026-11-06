@@ -868,6 +868,7 @@
     ],
     "invoke": {
         "python": "Solution().largestSubarray",
-        "typescript": "Solution().largestSubarray"
+        "typescript": "Solution().largestSubarray",
+        "valkyrie": "largestSubarray"
     }
 }

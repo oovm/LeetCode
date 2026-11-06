@@ -556,6 +556,7 @@
     ],
     "invoke": {
         "python": "Solution().numSpecial",
-        "typescript": "Solution().numSpecial"
+        "typescript": "Solution().numSpecial",
+        "valkyrie": "numSpecial"
     }
 }

@@ -1,5 +1,38 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: maxNumberOfApples 需要 读取 weight 排序贪心装篮
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.how_many_apples_can_you_put_into_the_basket;
+
+using std.collection;
+
+micro compare_ascending(a: i64, b: i64) -> i32 {
+    if a < b {
+        return -1
+    }
+    if a > b {
+        return 1
+    }
+    return 0
+}
+
+# 升序贪心：总重量不超过 5000 时尽量多装。
+[export(case: "camelCase")]
+micro maxNumberOfApples(weight: ArrayList<i64>) -> i64 {
+    let ordered: ArrayList<i64> = sorted_by(weight, compare_ascending)
+    let mut total: i64 = 0
+    let mut count: i64 = 0
+    let mut position: usize = 0
+    while position < ordered.length() {
+        let current: i64 = ordered⁅position⁆
+        if total + current > 5000 {
+            break
+        }
+        total = total + current
+        count = count + 1
+        position = position + 1
+    }
+    return count
+}
+
+class Solution {
+    micro maxNumberOfApples(self, weight: ArrayList<i64>): i64 {
+        return maxNumberOfApples(weight)
+    }
+}

@@ -724,5 +724,6 @@
     "invoke": {
         "python": "Solution().decompressRLElist",
         "typescript": "Solution().decompressRLElist"
-    }
+    },
+    "corpusDefect": true
 }

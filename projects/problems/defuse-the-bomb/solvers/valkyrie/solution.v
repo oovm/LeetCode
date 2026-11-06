@@ -1,5 +1,49 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: decrypt 需要 读取 code 按 k 环形窗口求和
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.defuse_the_bomb;
+
+using std.collection;
+
+# 环形窗口求和，k 的正负决定窗口方向。
+[export(case: "camelCase")]
+micro decrypt(code: ArrayList<i64>, k: i64) -> ArrayList<i64> {
+    let count: usize = code.length()
+    let mut answer: ArrayList<i64> = ArrayList::new(count)
+    let mut position: usize = 0
+    while position < count {
+        answer.push(0)
+        position = position + 1
+    }
+    if k == 0 {
+        return answer
+    }
+
+    position = 0
+    while position < count {
+        let mut total: i64 = 0
+        let mut step: i64 = 1
+        if k > 0 {
+            while step <= k {
+                let offset: i64 = (position as i64 + step) % (count as i64)
+                let offset_index: usize = offset as usize
+                total = total + code⁅offset_index⁆
+                step = step + 1
+            }
+        } else {
+            step = -1
+            while step >= k {
+                let offset: i64 = (position as i64 + step + count as i64) % (count as i64)
+                let offset_index: usize = offset as usize
+                total = total + code⁅offset_index⁆
+                step = step - 1
+            }
+        }
+        answer⁅position⁆ = total
+        position = position + 1
+    }
+    return answer
+}
+
+class Solution {
+    micro decrypt(self, code: ArrayList<i64>, k: i64): ArrayList<i64> {
+        return decrypt(code, k)
+    }
+}

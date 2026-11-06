@@ -662,5 +662,6 @@
     "invoke": {
         "python": "Solution().repeatedNTimes",
         "typescript": "Solution().repeatedNTimes"
-    }
+    },
+    "corpusDefect": true
 }

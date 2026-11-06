@@ -709,6 +709,7 @@
     ],
     "invoke": {
         "python": "Solution().finalPrices",
-        "typescript": "Solution().finalPrices"
+        "typescript": "Solution().finalPrices",
+        "valkyrie": "finalPrices"
     }
 }

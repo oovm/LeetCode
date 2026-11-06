@@ -593,6 +593,7 @@
     ],
     "invoke": {
         "python": "Solution().arraySign",
-        "typescript": "Solution().arraySign"
+        "typescript": "Solution().arraySign",
+        "valkyrie": "arraySign"
     }
 }

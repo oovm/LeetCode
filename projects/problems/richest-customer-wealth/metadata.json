@@ -571,6 +571,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumWealth",
-        "typescript": "Solution().maximumWealth"
+        "typescript": "Solution().maximumWealth",
+        "valkyrie": "maximumWealth"
     }
 }

@@ -815,6 +815,7 @@
     ],
     "invoke": {
         "python": "Solution().minTimeToVisitAllPoints",
-        "typescript": "Solution().minTimeToVisitAllPoints"
+        "typescript": "Solution().minTimeToVisitAllPoints",
+        "valkyrie": "minTimeToVisitAllPoints"
     }
 }

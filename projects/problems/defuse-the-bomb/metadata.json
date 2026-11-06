@@ -846,6 +846,7 @@
     ],
     "invoke": {
         "python": "Solution().decrypt",
-        "typescript": "Solution().decrypt"
+        "typescript": "Solution().decrypt",
+        "valkyrie": "decrypt"
     }
 }
