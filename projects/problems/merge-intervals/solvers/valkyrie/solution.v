@@ -40,20 +40,6 @@ imply Interval: std::operator::Comparable {
         }
         return Equal
     }
-
-    infix `<`(self, other: Interval): bool {
-        if self.start != other.start {
-            return self.start < other.start
-        }
-        return self.end < other.end
-    }
-}
-
-# 排序入口按 `Comparable` 合同取序。
-micro order_items<T>(items: ArrayList<T>): unit
-    where T: Equal & Comparable
-{
-    sort(items)
 }
 
 class Solution {
@@ -63,7 +49,7 @@ class Solution {
         loop row in intervals {
             rows.push(Interval { start: row⁅0⁆, end: row⁅1⁆ })
         }
-        order_items(rows)
+        sort(rows)
 
         let mut merged: ArrayList<ArrayList<i64>> = ArrayList::new(rows.length())
         if rows.length() == 0 {
