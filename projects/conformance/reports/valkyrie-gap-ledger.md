@@ -84,7 +84,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | --- | --- | --- | --- |
 | F1 设计类操作序列无法判题 | `TestCase` 只有 `args` / `expected`，没有「多操作序列 + 每步返回」；TS 候选只认单入口单调用，导出类被当成函数直接调用 | `TypeError: Class constructor LRUCache cannot be invoked without 'new'`（6/6 题同一形态） | `src/domain/problem.ts:2-5`；`src/adapters/typescript-node/ref.ts:48-71`（`makeTsCandidate` 的 `const exported = mod[expr]` 分支）；同文件 `:82-88`（`runTsSolverOnce` 每用例单次调用）；`scripts/run_v_solver.ts:55`（取单一 wasm export 符号）与 `:168`（逐用例单次调用） |
 | F2 设计类实例无 wasm 导出 / 实例句柄 ABI | 类方法不能 `[export]`，装配层要求单一入口，设计类没有「构造 + 逐方法调用」形态 | `source group closure failed: entry source group 'leetcode-min-stack' declares no [export], [main] or [test] entry`（6/6 题同一形态） | 题侧 `solvers/valkyrie/solution.v`（`class` 体只放字段，方法全在 `imply`）；装配侧入口闭包在 `nyar-vm.rs` |
-| F3 库导出 `Utf8` 返回值缺宿主句柄物化 | schema 声明 `returns: Utf8`（宿主 i32 句柄），wasm 物理签名却返回 `anyref` managed struct；emitter 只为形参合成句柄物化 wrapper，返回值原样透传 | `TypeError: Cannot convert object to primitive value`（26 题，全部为字符串返回题） | 26/26 题 schema `returns.kind=Utf8` 且实测导出签名 `(result anyref)`（如 `convert-a-number-to-hexadecimal` 的 `toHex`）；`nyar-emitter/src/lowering/backends/wasm/mir/entry.rs:191-227`（形参物化）与 `:515-580`（仅 param wrapper，返回透传） |
+| F3 库导出 `Utf8` 返回值缺宿主句柄物化 | **已恢复**（2026-11-07 实测）：`convert-a-number-to-hexadecimal`、`integer-to-roman`、`decode-the-message`、`capitalize-the-title` 均构建通过，`callExport` 真跑返回值与期望一致 | ~~`TypeError: Cannot convert object to primitive value`（26 题，全部为字符串返回题）~~ | 修复提交 `d3a8f0b7`（宿主边界物化 frozen `utf8` carrier）；原缺口位置 `nyar-emitter/src/lowering/backends/wasm/mir/entry.rs`（形参物化 vs 返回透传） |
 | F4 导出名缩写大小写漂移 | camelCase 转换压平连续大写缩写（`preimage_size_fzf` → `preimageSizeFzf`），题面是 `preimageSizeFZF` | `wasm 里找不到 metadata.invoke 对应的 export "preimageSizeFZF"（已有: preimageSizeFzf ...）`（4 题） | 题侧 `solution.v` 导出声明 + 题库 `metadata.invoke`；harness 单点归一在 `src/adapters/valkyrie-node/abi.ts` 的 `matchWasmExportSymbol` |
 | F5 schema 形参名与 metadata 键不一致 | schema 的 `params[].name` 取自 V 源码形参标识符，`orderArgsBySchema` 双向严格按名匹配 | `AbiSchemaError: args.s: metadata.tests.args 缺少参数 "s"`（2 题；另 1 题报 `prime_factors`） | `src/adapters/valkyrie-node/abi.ts:422-437`；`excel-sheet-column-number`（`s` vs `columnTitle`）、`ransom-note`（`ransom_note` vs `ransomNote`）、`maximize-number-of-nice-divisors`（`prime_factors` vs `primeFactors`） |
 | F6 `expected` 存宿主异常文本 | metadata 期望值是 Python 参考实现的宿主异常文本，但判题驱动不设递归上限，V / TS 也不产生该文本 | `expected "Error: maximum recursion depth exceeded", no exception raised`（5 题） | 5 题见下；`scripts/isolated_python_child.py` 无 `setrecursionlimit`，TS / Bun / V lane 同样无递归上限 |
@@ -125,7 +125,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 
 ### F3 / F4 / F6 / F8 实测与处理
 
-- **F3（26 条，编译器侧，移交）**：26 题 26/26 的 ABI schema 都声明 `returns.kind=Utf8`
+- **F3（26 条，编译器侧，2026-11-07 已恢复）**：26 题 26/26 的 ABI schema 都声明 `returns.kind=Utf8`
   （全部为字符串返回题，如 `integer-to-roman`、`decode-the-message`、`capitalize-the-title`），
   但 `wasm-tools print` 实测导出物理签名是 `(param i64) (result anyref)`，返回的是 prototype 为 null
   的 wasm GC struct。glue 的 `demarshalLibraryReturn` 在 Utf8 分支对 raw 调 `describeValue(raw)`，
@@ -134,6 +134,8 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
   `host_handle_to_managed_utf8` wrapper，却没有返回值侧的 managed → i32 句柄物化；
   **修点在 `nyar-vm.rs`，不是 harness 的 marshal 递归**（`preserveI64Precision` /
   `normalizeResultByAbiType` 对 Utf8 均按原值透传，且它们不调 `String`）。
+  修复已随 `d3a8f0b7` 落地；2026-11-07 复验同族 4 个代表题（`convert-a-number-to-hexadecimal`、
+  `integer-to-roman`、`decode-the-message`、`capitalize-the-title`）均构建通过并真跑返回正确字符串。
 - **F4（4 条，已在 harness 修）**：归一化放在 `matchWasmExportSymbol`：精确命中优先；仅当精确失败
   且候选里恰有一个大小写变体时接受，多候选或无候选都失败闭合。**不改题库、不改 `solution.v`**
   ——题面命名是唯一权威，若反过来要求编译器 / 题库接受 `Fzf` / `Iii` 这类压平名，会把
