@@ -1660,13 +1660,13 @@ receiver type is unknown, so member `unwrap` cannot be resolved
 附带修复：`most-common-word` 原 `Utf8Builder` 交接处触发
 `OperationResultTypeMismatch`（`StoreVar { name: "best" }`，utf8 变量重赋值），改为按最优词下标返回后消除。`sort-characters-by-frequency` 改回 `HashMap<char,i64>`，计数结果与线性版一致（同 35/54，说明差异只来自多字节 ABI）。
 
-## 批次 R31-2026-11-06（纯整数占位题：24 题写入 + 6 题语料缺陷，authored-unverified）
+## 批次 R31-2026-11-06（纯整数占位题：24 题写入 + 6 题语料缺陷，本轮实测）
 
 - 起点：`dev` 领先 `origin/dev` 2 个提交；17 个他人未提交 metadata（permutations / backtracking 一组）全部避开。
 - 对账（实测非引用）：`solvers/valkyrie/solution.v` 无 `[export` 共 1841 个 —— 空白/1 字节 1129、
   `# blocked` 注释 706、其他纯注释 6；其中纯整数/纯算术签名且无 `invoke.valkyrie` 的 291 道，本轮从该池选 30 道。
   这些题的阻塞注释统一是 `# blocked: std.collection 数组参数读取`，已被 `two-sum` 与 R30 的同类数组形参实测证伪。
-- 写入 24 题并补 `metadata.invoke.valkyrie`，**全部 `authored-unverified`（本轮未构建，不计入通过数）**：
+- 写入 24 题并补 `metadata.invoke.valkyrie`（本轮分组复跑后 **23 题端到端通过**，1 题转语料缺陷，见文末「R31 + R32 48 题分组复跑」）：
   `final-prices-with-a-special-discount-in-a-shop`、`replace-elements-with-greatest-element-on-right-side`、
   `create-target-array-in-the-given-order`、`how-many-numbers-are-smaller-than-the-current-number`、
   `defuse-the-bomb`、`number-of-equivalent-domino-pairs`、`minimum-time-visiting-all-points`、
@@ -1688,8 +1688,8 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   - `count-negative-numbers-in-a-sorted-matrix`：20 条期望与 TS/Python 参照解矛盾（5×1 网格期望 0）；
   - `flipping-an-image`：8 条期望与参照解矛盾（全 1 行期望半 0 半 1）；
   - `n-repeated-element-in-size-2n-array`：1 条全不重复且期望 null，违反题面约束。
-- 构建：按构建窗口约束本轮**未运行** `legion build` / cargo；待通知后用独立 `CARGO_TARGET_DIR`、`-j 4`、
-  单进程、单条 ≤300 秒复跑，并以该次 passed/failed 为准。
+- 构建：R31 写入窗口未运行 `legion build`；2026-11-06 构建窗口开放后按能力面分组复跑，
+  单进程、逐题独立产物目录、单条 ≤300 秒，结果见文末「R31 + R32 48 题分组复跑」。
 
 ### 语料缺陷逐条证据（供语料侧统一处理）
 
@@ -1714,7 +1714,7 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   违反“恰有一个元素出现 n 次”的题面约束，期望为 `null`，TS 参照解返回 `-1`，
   i64 通道无法表达 `null`，只能保持 blocked。
 
-## 批次 R32-2026-11-06（纯整数占位题第二批：24 题写入 + 9 题语料缺陷，authored-unverified）
+## 批次 R32-2026-11-06（纯整数占位题第二批：24 题写入 + 9 题语料缺陷，本轮实测）
 
 - 口径：与 R31 相同。只改 `leetcode.v` 的 `solvers/valkyrie/solution.v` 与 `metadata.json`；
   `valkyrie.v`、`nyar-vm.rs`、`valkyrie.rs` 未动；判题框架、既有用例与期望值未改。
@@ -1735,7 +1735,7 @@ receiver type is unknown, so member `unwrap` cannot be resolved
     `find-the-width-of-columns-of-a-grid`、`row-with-maximum-ones`、
     `find-missing-and-repeated-values`、`maximum-area-of-longest-diagonal-rectangle`、
     `modify-the-matrix`、`zigzag-grid-traversal-with-skip`、`find-the-number-of-good-pairs-i`。
-- **写入实现 24 题**（`solution.v` + `metadata.invoke.valkyrie`，全部 `authored-unverified`）：
+- **写入实现 24 题**（`solution.v` + `metadata.invoke.valkyrie`，本轮分组复跑 **24/24 端到端通过**）：
   - 矩阵 / 区间（5）：`maximum-students-on-a-single-bench`（86）、
     `delete-greatest-value-in-each-row`（93）、`prime-in-diagonal`（73）、
     `minimum-operations-to-make-columns-strictly-increasing`（93）、
@@ -1758,7 +1758,7 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   **2318 条用例，mismatch=0**。
 - 陈旧 `# blocked: std.collection 数组参数读取` 的处理：两批实证（R30 的 `ArrayList<i64>` 形参、
   `two-sum`）已证伪该阻塞理由，本批全部按实际可读数组参数写法实现，不照抄旧注释。
-- 构建：按窗口约束本轮**未运行** `legion build` / cargo。
+- 构建：R32 写入窗口未运行 `legion build`；2026-11-06 构建窗口开放后分组复跑，24/24 通过，详见文末。
 
 ### R32 语料缺陷逐条证据（供语料侧统一处理）
 
@@ -1787,3 +1787,66 @@ receiver type is unknown, so member `unwrap` cannot be resolved
 - `find-missing-and-repeated-values`：20 条，索引 3、12、15、17、18、31、37、40、41、43、44、
   52、58、59、66、67、68、73、80、81。其中 17 条含超出 `1..n²` 的值（如 #3 的 4×4 含 17）；
   #15 为 10×5、#41/#43 为 10×6 的非方阵；期望为错误串或 `[x, 100]`，参照解越界或无法定义。
+
+## R31 + R32 48 题分组复跑（2026-11-06 构建窗口实测）
+
+- 环境：`leetcode.v` `dev` 基线 `81f5592b5`（文档提交 `d94b85a95` 之上）；兄弟仓 `valkyrie.v` 本地 tip
+  `a3a8af6`（`i64` 重载与 `HashSet` 容量构造已验证）。`std` 线收工后本窗口只做 V 构建与判题，不写新题。
+- 口径：`node --import tsx projects/conformance/scripts/run_v_solver.ts ../problems/<slug>` 逐题
+  `resolveCompileTargetPlan` + `legion build` + 全量 `metadata.tests`。单进程顺序执行，同一时刻只留一个构建或测试进程；
+  每题使用独立产物目录 `.cache/<slug>-bench-node`（复跑前全部不存在，均为本次新产物）；单条命令 ≤300 秒，超时不重试。
+  `legion build` 走 N-API 结构调用，不接受 `-j 4`，以单进程等同约束执行。
+- 分组与结果：
+
+| 组 | 能力面 | 题数 | 已跑用例 | 通过题 | 失败/转缺陷 | 结果 |
+| --- | --- | --- | --- | --- | --- | --- |
+| G1 | 矩阵（R31） | 8 | 687 | 8 | 0 | 全绿 |
+| G2 | 矩阵（R32） | 12 | 1028 | 12 | 0 | 全绿 |
+| G3 | 一维重建（R31 3 + R32 5） | 8 | 898 | 8 | 0 | 全绿（1 题实现修复后复跑） |
+| G4 | 单数组扫描（R31） | 13 | 1175 | 12 | 1 转语料缺陷 | 12 绿 |
+| G5 | 单数组扫描（R32） | 7 | 724 | 7 | 0 | 全绿 |
+| 合计 | | 48 | 4512 | 47 | 1 | 47/48 |
+
+- G1 逐题（全部 `ok=true`）：`minimum-time-visiting-all-points` 120/120、`richest-customer-wealth` 85/85、
+  `shift-2d-grid` 84/84、`transpose-matrix` 74/74、`projection-area-of-3d-shapes` 72/72、
+  `surface-area-of-3d-shapes` 78/78、`widest-vertical-area-between-two-points-containing-no-points` 104/104、
+  `special-positions-in-a-binary-matrix` 70/70。
+- G2 逐题（全部 `ok=true`）：`maximum-students-on-a-single-bench` 86/86、
+  `delete-greatest-value-in-each-row` 93/93、`prime-in-diagonal` 73/73、
+  `minimum-operations-to-make-columns-strictly-increasing` 93/93、`button-with-longest-push-time` 104/104、
+  `image-smoother` 81/81、`largest-local-values-in-a-matrix` 56/56、`row-with-maximum-ones` 71/71、
+  `maximum-area-of-longest-diagonal-rectangle` 107/107、`modify-the-matrix` 85/85、
+  `zigzag-grid-traversal-with-skip` 71/71、`find-the-number-of-good-pairs-i` 106/106。
+- G3 逐题（全部 `ok=true`）：`replace-elements-with-greatest-element-on-right-side` 104/104、
+  `create-target-array-in-the-given-order` 115/115、`how-many-numbers-are-smaller-than-the-current-number` 110/110、
+  `transform-array-by-parity` 104/104、`bitwise-or-of-adjacent-elements` 104/104、
+  `find-the-distinct-difference-array` 107/107、`left-and-right-sum-differences` 131/131、
+  `apply-operations-to-an-array` 123/123。
+- G4 逐题（12 题 `ok=true`）：`final-prices-with-a-special-discount-in-a-shop` 117/117、
+  `defuse-the-bomb` 119/119、`number-of-equivalent-domino-pairs` 89/89、`largest-subarray-length-k` 123/123、
+  `sum-of-unique-elements` 99/99、`number-of-rectangles-that-can-form-the-largest-square` 83/83、
+  `counting-elements` 125/125、`find-lucky-integer-in-an-array` 61/61、`minimum-absolute-difference` 101/101、
+  `how-many-apples-can-you-put-into-the-basket` 59/59、`array-transformation` 122/122、
+  `minimum-moves-to-equal-array-elements` 77/77。`sign-of-the-product-of-an-array` 转语料缺陷，见下。
+- G5 逐题（全部 `ok=true`）：`count-pairs-whose-sum-is-less-than-target` 112/112、`buy-two-chocolates` 111/111、
+  `maximum-sum-with-exactly-k-elements` 97/97、`count-equal-and-divisible-pairs-in-an-array` 89/89、
+  `count-number-of-pairs-with-absolute-difference-k` 106/106、
+  `minimum-operations-to-exceed-threshold-value-i` 104/104、`number-of-arithmetic-triplets` 104/104。
+
+### 失败归并与处置
+
+- `create-target-array-in-the-given-order`（G3，首次运行）：`AbiSchemaError: args.positions: metadata.tests.args
+  缺少参数 "positions"`。根因是实现侧形参名与 `metadata.tests.args` 键 `index` 不一致，不是编译器缺口。
+  同日改 `positions` 为 `index` 后暴露第二层：`ArrayList::insert` 在空表上不增长（`tests[0]` 期望 `[1]` 得 `[]`），
+  改为 `push(0)` + 显式右移后 `tests[4]` 触发越界（该用例 `index=[4,3,2,1,0]`，`index[0]=4 > i=0` 越出题面
+  `0 <= index[i] <= i`，但 TS/Python 参照都按 `insert` 钳制到表尾并给出期望 `[1,5,2,4,3]`）。
+  最终按参照的钳制语义实现（`slot = min(index[i], 当前长度)`），复跑 **115/115**。用例与期望未改。
+- `sign-of-the-product-of-an-array`（G4）：3 条用例的 `nums` 含非整数元素，`i64` 通道无法表达，转语料缺陷。
+
+### G4 新增语料缺陷证据（供语料侧统一处理）
+
+- `sign-of-the-product-of-an-array`：3 条，索引 18、30、51。`metadata.tests[i].args.nums` 含小数：
+  #18 `[100,-50,25,-12.5,6.25]`、#30 `[50,25,-10,4,-2,0.5,0.2]`、#51 `[100,-50,25,-12.5,0.5]`；
+  题面与其余 93 条用例均为整数数组，三条期望均为 1（按浮点符号积一致），但 ABI 形参是 `ArrayList<i64>`，
+  首轮在 #18 报 `args.nums[3] 需要整数实参，实际为非整数数值 -12.5`。处置：`solution.v` 还原为 blocked 注释并
+  追加 `# corpusDefect` 具体证据，`metadata.corpusDefect=true`，删除 `invoke.valkyrie`，原用例与期望值未改。
