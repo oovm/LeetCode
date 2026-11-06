@@ -7,10 +7,10 @@ using std.collection;
 micro minimumSubarrayLength(nums: ArrayList<i64>, k: i64) -> i64 {
     let n: usize = nums.length()
     let mut counts: ArrayList<i64> = ArrayList::new(32)
-    let mut shift: usize = 0
-    while shift < 32 {
+    let mut i: usize = 0
+    while i < 32 {
         counts.push(0)
-        shift = shift + 1
+        i = i + 1
     }
     let mut answer: i64 = n as i64 + 1
     let mut current: i64 = 0
@@ -19,10 +19,12 @@ micro minimumSubarrayLength(nums: ArrayList<i64>, k: i64) -> i64 {
     while right < n {
         let value: i64 = nums⁅right⁆
         current = current.bit_or(value)
-        shift = 0
+        let mut shift: i64 = 0
         while shift < 32 {
-            if value.bit_and(1 << shift) != 0 {
-                counts⁅shift⁆ = counts⁅shift⁆ + 1
+            # `1 << shift` 的移位量按位宽同型，统一用 i64 掩码避免跨类型候选歧义。
+            let mask: i64 = (1 as i64).bit_shift_left(shift)
+            if value.bit_and(mask) != 0 {
+                counts⁅shift as usize⁆ = counts⁅shift as usize⁆ + 1
             }
             shift = shift + 1
         }
@@ -32,12 +34,13 @@ micro minimumSubarrayLength(nums: ArrayList<i64>, k: i64) -> i64 {
                 answer = length
             }
             let leaving: i64 = nums⁅left⁆
-            shift = 0
+            let mut shift: i64 = 0
             while shift < 32 {
-                if leaving.bit_and(1 << shift) != 0 {
-                    counts⁅shift⁆ = counts⁅shift⁆ - 1
-                    if counts⁅shift⁆ == 0 {
-                        current = current.bit_xor(1 << shift)
+                let mask: i64 = (1 as i64).bit_shift_left(shift)
+                if leaving.bit_and(mask) != 0 {
+                    counts⁅shift as usize⁆ = counts⁅shift as usize⁆ - 1
+                    if counts⁅shift as usize⁆ == 0 {
+                        current = current.bit_xor(mask)
                     }
                 }
                 shift = shift + 1

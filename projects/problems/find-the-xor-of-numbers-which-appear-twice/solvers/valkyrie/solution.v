@@ -21,7 +21,7 @@ micro duplicateNumbersXOR(nums: ArrayList<i64>) -> i64 {
     while index < nums.length() {
         let value: i64 = nums⁅index⁆
         if counts.get(value).unwrap() == 2 {
-            answer = bit_xor(answer, value)
+            answer = answer.bit_xor(value)
             counts.insert(value, 0)
         }
         index = index + 1
