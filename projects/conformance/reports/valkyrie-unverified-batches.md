@@ -1909,7 +1909,7 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   首轮在 #28 报 `args.nums[4] 需要整数实参，实际为非整数数值 37.5`，已执行 28/134 用例后中止。
   处置：`solution.v` 还原为 blocked 注释并追加 `# corpusDefect`，删除 `invoke.valkyrie`，原值未改。
 
-## 批次 R34-2026-11-06（纯整数占位题 26 题，写完未验证）
+## 批次 R34-2026-11-06（纯整数占位题 26 题，本轮已整组复跑）
 
 - 范围与能力分组（26）：
   - 矩阵扫描 6：`toeplitz-matrix`、`lucky-numbers-in-a-matrix`、
@@ -1945,3 +1945,42 @@ receiver type is unknown, so member `unwrap` cannot be resolved
 - `path-with-maximum-probability`：8 条用例（索引 20、24、31、40、44、49、62、63）的 `edges` 与
   `succProb` 长度不一致（#24 为 9 条边、8 个概率），属 metadata 自相矛盾；原用例与期望未改，
   `solution.v` 还原 blocked 并标 `corpusDefect`，删除 `invoke.valkyrie`。
+
+## 102 题待验证池整组复跑（2026-11-06 构建窗口实测）
+
+- 环境：新 addon `leetcode.v/.cache/utf8abi/addon-fixed.node`（`Option::unwrap` 在 `None` 上变为结构化 panic），经 `VALKYRIE_NATIVE` 注入 `run_v_solver.ts`。
+- 口径：单进程顺序执行，同一时刻只留一个构建或测试进程；每题独立产物目录 `.cache/<slug>-bench-node`，
+  `legion build` 每次都重建（harness 不做第二层缓存判断）；单条 ≤300 秒，超时不重试；验证期间未写新题。
+- 分组结果（用例数按实际执行计，语料缺陷题因无入口不计执行）：
+
+| 组 | 能力面 | 题数 | 执行用例 | 通过题 | 失败坐标 |
+| --- | --- | --- | --- | --- | --- |
+| R31/R32-A1 | 矩阵（R31） | 8 | 687 | 8 | 无 |
+| R31/R32-A2 | 矩阵（R32） | 12 | 1026 | 12 | 无 |
+| R31/R32-A3 | 一维重建（R31+R32） | 8 | 898 | 8 | 无 |
+| R31/R32-A4 | 单数组扫描（R31） | 13 | 1175 | 12 | `sign-of-the-product-of-an-array` 语料缺陷（无 `[export]` 入口，96 条不可执行） |
+| R31/R32-A5 | 单数组扫描（R32） | 7 | 723 | 7 | 无 |
+| R33-S1 | 单数组统计 | 9 | 1017 | 9 | 无 |
+| R33-S2 | 单数组进阶 | 9 | 959 | 8 | `count-subarrays-of-length-three-with-a-condition` 语料缺陷（134 条不可执行） |
+| R33-R | 一维重建 | 10 | 1114 | 10 | 无 |
+| R34-G1 | 矩阵扫描 | 6 | 476 | 6 | 无 |
+| R34-G2 | 计数/频次 | 6 | 585 | 6 | 首跑 `find-the-xor-of-numbers-which-appear-twice` 编译失败，修复后 120/120 |
+| R34-G3 | 子数组/滑窗 | 5 | 583 | 5 | 首跑 `shortest-subarray-with-or-at-least-k-i` 编译失败，修复后 109/109 |
+| R34-G4 | 排序/前缀/二分 | 4 | 410 | 4 | 无 |
+| R34-G5 | 模拟/贪心 | 5 | 545 | 5 | 无 |
+
+- 合计 **102 题：100 题端到端通过，2 题语料缺陷（均为既有登记项）**，执行 **10198 条用例全部通过**
+  （R31/R32 4509、R33 3090、R34 2599）。新 addon 下未出现 `illegal cast`。
+- 首跑暴露并已修复的两处实现缺陷（commit `d1fca6e7d`）：
+  - `find-the-xor-of-numbers-which-appear-twice`：`bit_xor` 只有 `i64` 方法形态，自由函数调用在
+    `solution.v:24` 报 `unresolved_call`；改为 `answer.bit_xor(value)` 后 120/120。
+  - `shortest-subarray-with-or-at-least-k-i`：`1 << shift` 的移位量是 `usize`，`value.bit_and(...)` 候选
+    类型不匹配；改为 `(1 as i64).bit_shift_left(shift)` 掩码后 109/109。
+- `accounts-merge` 复验（commit `a7c2adaaa`）：85/85。仅按并查集根取名仍不够——`std` `DisjointSet::union`
+  同秩取左根，语料参照解同秩取右根，`tests[6]` 的组根因此落在 Charlie；改为本地按规模合并（同规模取右）
+  并按槽位聚合邮箱后与参照解逐个用例一致。
+- `63 个 case` 抽样复跑（6 题）：`1-bit-and-2-bit-characters` 95/95、`132-pattern` 143/143、
+  `add-minimum-number-of-rungs` 102/102 通过。另 3 题为既有实现/提案问题，与 `[export(case:)]` 修复无关：
+  `crawler-log-folder`（`solution.v:29` `classify_folder` unresolved）、`merge-intervals`（`solution.v:38`
+  `order_items` 走未落地的 `sort` 提案入口）、`valid-sudoku`（`source/collection` `self.words.set` 5 个候选
+  均不匹配实参类型）。
