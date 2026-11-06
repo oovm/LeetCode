@@ -1,5 +1,34 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: targetIndices 需要 读取 nums 排序找 target 下标段
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.find_target_indices_after_sorting_array;
+
+using std.collection;
+
+# 排序后 target 占据 [小于个数, 小于个数+等于个数) 区间。
+[export(case: "camelCase")]
+micro targetIndices(nums: ArrayList<i64>, target: i64) -> ArrayList<i64> {
+    let mut less: i64 = 0
+    let mut equal: i64 = 0
+    let mut index: usize = 0
+    while index < nums.length() {
+        let value: i64 = nums⁅index⁆
+        if value < target {
+            less = less + 1
+        }
+        if value == target {
+            equal = equal + 1
+        }
+        index = index + 1
+    }
+    let mut result: ArrayList<i64> = ArrayList::new(equal as usize)
+    let mut offset: i64 = 0
+    while offset < equal {
+        result.push(less + offset)
+        offset = offset + 1
+    }
+    return result
+}
+
+class Solution {
+    micro targetIndices(self, nums: ArrayList<i64>, target: i64): ArrayList<i64> {
+        return targetIndices(nums, target)
+    }
+}

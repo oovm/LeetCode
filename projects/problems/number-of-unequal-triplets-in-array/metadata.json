@@ -472,6 +472,7 @@
     ],
     "invoke": {
         "python": "Solution().unequalTriplets",
-        "typescript": "Solution().unequalTriplets"
+        "typescript": "Solution().unequalTriplets",
+        "valkyrie": "Solution().unequalTriplets"
     }
 }

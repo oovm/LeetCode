@@ -762,6 +762,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumStrongPairXor",
-        "typescript": "Solution().maximumStrongPairXor"
+        "typescript": "Solution().maximumStrongPairXor",
+        "valkyrie": "Solution().maximumStrongPairXor"
     }
 }

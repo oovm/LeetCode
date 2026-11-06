@@ -931,6 +931,7 @@
     ],
     "invoke": {
         "python": "Solution().countHillValley",
-        "typescript": "Solution().countHillValley"
+        "typescript": "Solution().countHillValley",
+        "valkyrie": "Solution().countHillValley"
     }
 }

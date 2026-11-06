@@ -1,5 +1,32 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: findClosestNumber 需要 读取 nums 找最接近零的值
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.find_closest_number_to_zero;
+
+using std.collection;
+
+# 找绝对值最小的数；绝对值相同取较大者。
+[export(case: "camelCase")]
+micro findClosestNumber(nums: ArrayList<i64>) -> i64 {
+    let mut best: i64 = nums⁅0⁆
+    let mut index: usize = 1
+    while index < nums.length() {
+        let value: i64 = nums⁅index⁆
+        let mut magnitude: i64 = value
+        if magnitude < 0 {
+            magnitude = -magnitude
+        }
+        let mut best_magnitude: i64 = best
+        if best_magnitude < 0 {
+            best_magnitude = -best_magnitude
+        }
+        if magnitude < best_magnitude || (magnitude == best_magnitude && value > best) {
+            best = value
+        }
+        index = index + 1
+    }
+    return best
+}
+
+class Solution {
+    micro findClosestNumber(self, nums: ArrayList<i64>): i64 {
+        return findClosestNumber(nums)
+    }
+}

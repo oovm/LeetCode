@@ -659,6 +659,7 @@
     ],
     "invoke": {
         "python": "Solution().countTestedDevices",
-        "typescript": "Solution().countTestedDevices"
+        "typescript": "Solution().countTestedDevices",
+        "valkyrie": "Solution().countTestedDevices"
     }
 }

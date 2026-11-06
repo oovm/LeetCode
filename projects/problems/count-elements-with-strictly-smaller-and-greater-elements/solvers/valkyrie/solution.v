@@ -1,5 +1,41 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: countElements 需要 读取 nums 统计非极值元素
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.count_elements_with_strictly_smaller_and_greater_elements;
+
+using std.collection;
+
+# 统计严格大于最小值且严格小于最大值的元素个数。
+[export(case: "camelCase")]
+micro countElements(nums: ArrayList<i64>) -> i64 {
+    let count: usize = nums.length()
+    if count == 0 {
+        return 0
+    }
+    let mut low: i64 = nums⁅0⁆
+    let mut high: i64 = nums⁅0⁆
+    let mut index: usize = 1
+    while index < count {
+        let value: i64 = nums⁅index⁆
+        if value < low {
+            low = value
+        }
+        if value > high {
+            high = value
+        }
+        index = index + 1
+    }
+    let mut total: i64 = 0
+    index = 0
+    while index < count {
+        let value: i64 = nums⁅index⁆
+        if value > low && value < high {
+            total = total + 1
+        }
+        index = index + 1
+    }
+    return total
+}
+
+class Solution {
+    micro countElements(self, nums: ArrayList<i64>): i64 {
+        return countElements(nums)
+    }
+}

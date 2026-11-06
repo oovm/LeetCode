@@ -831,5 +831,6 @@
     "invoke": {
         "python": "Solution().minimumRightShifts",
         "typescript": "Solution().minimumRightShifts"
-    }
+    },
+    "corpusDefect": true
 }

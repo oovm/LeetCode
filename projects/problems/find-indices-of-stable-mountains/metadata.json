@@ -798,6 +798,7 @@
     ],
     "invoke": {
         "python": "Solution().stableMountains",
-        "typescript": "Solution().stableMountains"
+        "typescript": "Solution().stableMountains",
+        "valkyrie": "Solution().stableMountains"
     }
 }

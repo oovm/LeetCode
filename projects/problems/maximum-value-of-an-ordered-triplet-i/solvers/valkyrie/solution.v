@@ -1,5 +1,34 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: maximumTripletValue 需要 读取 nums 枚举三元组最大值
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.maximum_value_of_an_ordered_triplet_i;
+
+using std.collection;
+
+# 线性扫描维护最大左值与最大差，枚举第三个下标。
+[export(case: "camelCase")]
+micro maximumTripletValue(nums: ArrayList<i64>) -> i64 {
+    let mut best: i64 = 0
+    let mut best_left: i64 = nums⁅0⁆
+    let mut best_diff: i64 = 0
+    let mut index: usize = 1
+    while index < nums.length() {
+        let value: i64 = nums⁅index⁆
+        let candidate: i64 = best_diff * value
+        if candidate > best {
+            best = candidate
+        }
+        let diff: i64 = best_left - value
+        if diff > best_diff {
+            best_diff = diff
+        }
+        if value > best_left {
+            best_left = value
+        }
+        index = index + 1
+    }
+    return best
+}
+
+class Solution {
+    micro maximumTripletValue(self, nums: ArrayList<i64>): i64 {
+        return maximumTripletValue(nums)
+    }
+}

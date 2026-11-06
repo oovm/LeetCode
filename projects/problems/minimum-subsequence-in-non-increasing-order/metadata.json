@@ -414,6 +414,7 @@
     ],
     "invoke": {
         "python": "Solution().minSubsequence",
-        "typescript": "Solution().minSubsequence"
+        "typescript": "Solution().minSubsequence",
+        "valkyrie": "Solution().minSubsequence"
     }
 }

@@ -775,6 +775,7 @@
     ],
     "invoke": {
         "python": "Solution().totalNumbers",
-        "typescript": "Solution().totalNumbers"
+        "typescript": "Solution().totalNumbers",
+        "valkyrie": "Solution().totalNumbers"
     }
 }

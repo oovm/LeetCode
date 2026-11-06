@@ -1,5 +1,40 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: findNonMinOrMax 需要 读取 nums 找非极值元素
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.neither_minimum_nor_maximum;
+
+using std.collection;
+
+# 返回第一个既非全局最小也非全局最大的元素；不足 3 个返回 -1。
+[export(case: "camelCase")]
+micro findNonMinOrMax(nums: ArrayList<i64>) -> i64 {
+    let count: usize = nums.length()
+    if count < 3 {
+        return -1
+    }
+    let mut low: i64 = nums⁅0⁆
+    let mut high: i64 = nums⁅0⁆
+    let mut index: usize = 1
+    while index < count {
+        let value: i64 = nums⁅index⁆
+        if value < low {
+            low = value
+        }
+        if value > high {
+            high = value
+        }
+        index = index + 1
+    }
+    index = 0
+    while index < count {
+        let value: i64 = nums⁅index⁆
+        if value != low && value != high {
+            return value
+        }
+        index = index + 1
+    }
+    return -1
+}
+
+class Solution {
+    micro findNonMinOrMax(self, nums: ArrayList<i64>): i64 {
+        return findNonMinOrMax(nums)
+    }
+}

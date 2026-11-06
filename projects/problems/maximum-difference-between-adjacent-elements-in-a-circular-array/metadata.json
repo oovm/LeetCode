@@ -744,6 +744,7 @@
     ],
     "invoke": {
         "python": "Solution().maxAdjacentDistance",
-        "typescript": "Solution().maxAdjacentDistance"
+        "typescript": "Solution().maxAdjacentDistance",
+        "valkyrie": "Solution().maxAdjacentDistance"
     }
 }

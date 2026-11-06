@@ -1,5 +1,26 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: minCosts 需要 读取 cost 前缀最小输出
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.minimum_cost_to_reach_every_position;
+
+using std.collection;
+
+# 前缀最小值即到达每个位置的最小花费。
+[export(case: "camelCase")]
+micro minCosts(cost: ArrayList<i64>) -> ArrayList<i64> {
+    let mut result: ArrayList<i64> = ArrayList::new(cost.length())
+    let mut best: i64 = cost⁅0⁆
+    let mut index: usize = 0
+    while index < cost.length() {
+        let value: i64 = cost⁅index⁆
+        if value < best {
+            best = value
+        }
+        result.push(best)
+        index = index + 1
+    }
+    return result
+}
+
+class Solution {
+    micro minCosts(self, cost: ArrayList<i64>): ArrayList<i64> {
+        return minCosts(cost)
+    }
+}

@@ -618,6 +618,7 @@
     ],
     "invoke": {
         "python": "Solution().getSneakyNumbers",
-        "typescript": "Solution().getSneakyNumbers"
+        "typescript": "Solution().getSneakyNumbers",
+        "valkyrie": "Solution().getSneakyNumbers"
     }
 }

@@ -1,5 +1,29 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: maxAdjacentDistance 需要 读取 nums 环形相邻差最大
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.maximum_difference_between_adjacent_elements_in_a_circular_array;
+
+using std.collection;
+
+# 首尾相接扫描相邻绝对差，取最大值。
+[export(case: "camelCase")]
+micro maxAdjacentDistance(nums: ArrayList<i64>) -> i64 {
+    let mut best: i64 = 0
+    let count: usize = nums.length()
+    let mut index: usize = 0
+    while index < count {
+        let next_index: usize = (index + 1) % count
+        let mut diff: i64 = nums⁅index⁆ - nums⁅next_index⁆
+        if diff < 0 {
+            diff = -diff
+        }
+        if diff > best {
+            best = diff
+        }
+        index = index + 1
+    }
+    return best
+}
+
+class Solution {
+    micro maxAdjacentDistance(self, nums: ArrayList<i64>): i64 {
+        return maxAdjacentDistance(nums)
+    }
+}

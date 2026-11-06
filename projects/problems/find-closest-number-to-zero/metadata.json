@@ -846,6 +846,7 @@
     ],
     "invoke": {
         "python": "Solution().findClosestNumber",
-        "typescript": "Solution().findClosestNumber"
+        "typescript": "Solution().findClosestNumber",
+        "valkyrie": "Solution().findClosestNumber"
     }
 }

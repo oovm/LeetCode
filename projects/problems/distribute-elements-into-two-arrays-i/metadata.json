@@ -733,6 +733,7 @@
     ],
     "invoke": {
         "python": "Solution().resultArray",
-        "typescript": "Solution().resultArray"
+        "typescript": "Solution().resultArray",
+        "valkyrie": "Solution().resultArray"
     }
 }

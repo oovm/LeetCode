@@ -571,6 +571,7 @@
     ],
     "invoke": {
         "python": "Solution().findNonMinOrMax",
-        "typescript": "Solution().findNonMinOrMax"
+        "typescript": "Solution().findNonMinOrMax",
+        "valkyrie": "Solution().findNonMinOrMax"
     }
 }

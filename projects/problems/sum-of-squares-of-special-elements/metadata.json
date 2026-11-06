@@ -673,6 +673,7 @@
     ],
     "invoke": {
         "python": "Solution().sumOfSquares",
-        "typescript": "Solution().sumOfSquares"
+        "typescript": "Solution().sumOfSquares",
+        "valkyrie": "Solution().sumOfSquares"
     }
 }

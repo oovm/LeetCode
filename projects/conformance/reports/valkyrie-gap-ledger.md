@@ -547,6 +547,10 @@ $n
     G4 单数组扫描 R31 12/13（1175，1 题转缺陷）、G5 单数组扫描 R32 7/7（724）。
   - `create-target-array-in-the-given-order` 首次运行的 `args.positions` 缺参是实现侧形参名错误，不是语言缺口；
     同日修 `positions → index` 并按参照钳制语义实现逐位插入后 115/115 通过，不新增 G 编号。
+  - **std 缺陷登记（不属本批题解缺口，待 std 线统一处理）**：`ArrayList::insert` 对空表不增长。
+    `ArrayList::new(hint)` 后调用 `insert(0, value)` 是 no-op，返回空表（`create-target-array-in-the-given-order`
+    的 `tests[0]` 期望 `[1]` 实得 `[]`）。当前调用点用 `push(0)` + 显式右移绕过，`valkyrie.v` 未改；
+    本项仅登记，不并入验证缺口。
 
 ### 验证窗口实测（2026-11-04 23:50 addon 重建后：编译关破碎 + marshal 夹具修复）
 

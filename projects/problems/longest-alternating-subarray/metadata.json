@@ -949,6 +949,7 @@
     ],
     "invoke": {
         "python": "Solution().alternatingSubarray",
-        "typescript": "Solution().alternatingSubarray"
+        "typescript": "Solution().alternatingSubarray",
+        "valkyrie": "Solution().alternatingSubarray"
     }
 }

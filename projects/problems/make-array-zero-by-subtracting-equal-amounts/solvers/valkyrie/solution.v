@@ -1,5 +1,26 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: minimumOperations 需要 读取 nums 统计正数去重个数
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.make_array_zero_by_subtracting_equal_amounts;
+
+using std.collection;
+
+# 最少操作次数等于不同正数的个数。
+[export(case: "camelCase")]
+micro minimumOperations(nums: ArrayList<i64>) -> i64 {
+    let mut seen: HashMap<i64, i64> = HashMap::new(0)
+    let mut total: i64 = 0
+    let mut index: usize = 0
+    while index < nums.length() {
+        let value: i64 = nums⁅index⁆
+        if value > 0 && !seen.contains_key(value) {
+            seen.insert(value, 1)
+            total = total + 1
+        }
+        index = index + 1
+    }
+    return total
+}
+
+class Solution {
+    micro minimumOperations(self, nums: ArrayList<i64>): i64 {
+        return minimumOperations(nums)
+    }
+}

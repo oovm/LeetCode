@@ -777,6 +777,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumTripletValue",
-        "typescript": "Solution().maximumTripletValue"
+        "typescript": "Solution().maximumTripletValue",
+        "valkyrie": "Solution().maximumTripletValue"
     }
 }

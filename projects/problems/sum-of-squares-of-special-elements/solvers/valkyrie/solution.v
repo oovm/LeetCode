@@ -1,5 +1,25 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: sumOfSquares 需要 读取 nums 下标整除 n 平方和
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.sum_of_squares_of_special_elements;
+
+using std.collection;
+
+# 对下标 i（1 基）能整除 n 的元素求平方和。
+[export(case: "camelCase")]
+micro sumOfSquares(nums: ArrayList<i64>) -> i64 {
+    let count: usize = nums.length()
+    let mut total: i64 = 0
+    let mut index: usize = 0
+    while index < count {
+        if count % (index + 1) == 0 {
+            let value: i64 = nums⁅index⁆
+            total = total + value * value
+        }
+        index = index + 1
+    }
+    return total
+}
+
+class Solution {
+    micro sumOfSquares(self, nums: ArrayList<i64>): i64 {
+        return sumOfSquares(nums)
+    }
+}

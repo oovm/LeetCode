@@ -833,6 +833,7 @@
     ],
     "invoke": {
         "python": "Solution().targetIndices",
-        "typescript": "Solution().targetIndices"
+        "typescript": "Solution().targetIndices",
+        "valkyrie": "Solution().targetIndices"
     }
 }

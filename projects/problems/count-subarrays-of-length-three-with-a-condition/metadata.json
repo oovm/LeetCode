@@ -811,6 +811,7 @@
     ],
     "invoke": {
         "python": "Solution().countSubarrays",
-        "typescript": "Solution().countSubarrays"
+        "typescript": "Solution().countSubarrays",
+        "valkyrie": "Solution().countSubarrays"
     }
 }

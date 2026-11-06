@@ -708,6 +708,7 @@
     ],
     "invoke": {
         "python": "Solution().mostFrequentEven",
-        "typescript": "Solution().mostFrequentEven"
+        "typescript": "Solution().mostFrequentEven",
+        "valkyrie": "Solution().mostFrequentEven"
     }
 }

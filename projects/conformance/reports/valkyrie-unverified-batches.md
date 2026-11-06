@@ -1850,3 +1850,51 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   题面与其余 93 条用例均为整数数组，三条期望均为 1（按浮点符号积一致），但 ABI 形参是 `ArrayList<i64>`，
   首轮在 #18 报 `args.nums[3] 需要整数实参，实际为非整数数值 -12.5`。处置：`solution.v` 还原为 blocked 注释并
   追加 `# corpusDefect` 具体证据，`metadata.corpusDefect=true`，删除 `invoke.valkyrie`，原用例与期望值未改。
+
+## 批次 R33-2026-11-06（纯整数占位题第三批：28 题写入 + 2 题语料缺陷，authored-unverified）
+
+- 选题：从剩余候选（`vk-remain2b.txt` 261 行，已排除 R31/R32 的 33 题）取 30 题，按能力面成组；
+  同组题同签名、同语义族，便于后续一次构建验一组。
+- 口径：只写 `solvers/valkyrie/solution.v` 与 `metadata.invoke.valkyrie`；不运行 `legion build` / cargo；
+  全部 `authored-unverified`，不计通过数。判题框架、既有用例与 `expected` 未改。陈旧
+  `# blocked: std.collection 数组参数读取` 已由 R30/R32 实证证伪，本批不照抄。
+- **写入实现 28 题**（每题目录用例数为镜像回放用例数）：
+
+  - S1 单数组统计（9）：`count-elements-with-strictly-smaller-and-greater-elements`（120）、
+    `count-hills-and-valleys-in-an-array`（154）、`find-closest-number-to-zero`（128）、
+    `make-array-zero-by-subtracting-equal-amounts`（116）、`most-frequent-even-element`（110）、
+    `largest-positive-integer-that-exists-with-its-negative`（116）、
+    `number-of-unequal-triplets-in-array`（74）、`neither-minimum-nor-maximum`（94）、
+    `sum-of-squares-of-special-elements`（105）；
+  - S2 单数组进阶（9）：`max-pair-sum-in-an-array`（126）、
+    `maximum-value-of-an-ordered-triplet-i`（126）、`minimum-sum-of-mountain-triplets-i`（118）、
+    `maximum-strong-pair-xor-i`（125）、`count-tested-devices-after-test-operations`（107）、
+    `maximum-number-of-operations-with-the-same-score-i`（109）、
+    `count-subarrays-of-length-three-with-a-condition`（134）、
+    `maximum-difference-between-adjacent-elements-in-a-circular-array`（120）、
+    `unique-3-digit-even-numbers`（128）；
+  - R 一维重建（10）：`minimum-subsequence-in-non-increasing-order`（60）、
+    `maximum-number-of-pairs-in-array`（126）、`distribute-elements-into-two-arrays-i`（107）、
+    `construct-the-minimum-bitwise-array-i`（124）、`transformed-array`（126）、
+    `minimum-cost-to-reach-every-position`（109）、`the-two-sneaky-numbers-of-digitville`（74）、
+    `find-target-indices-after-sorting-array`（118）、`find-indices-of-stable-mountains`（113）、
+    `longest-alternating-subarray`（157）。
+
+- 静态自查（28/28）：namespace 与目录名一致、`[export(case: "camelCase")]` 恰一处、全局函数与
+  `Solution` 方法同名、`metadata.invoke.valkyrie` 为 `Solution().<method>`、无残留 `# blocked`。
+- 镜像回放（Python 镜像按 `metadata.tests[].args` 键序回放，非 V 构建，不作为通过证据）：
+  **3224 条用例，mismatch=0**。
+- 构建：本批写入窗口**未运行** `legion build` / cargo；构建窗口当前空出但两条编译器线随时抢占，
+  按要求先只写不编译，待排期后按 S1 / S2 / R 三组各一次构建验证。
+
+### R33 语料缺陷逐条证据（供语料侧统一处理）
+
+以下 2 题保持 blocked、原用例与期望值未改、`metadata.corpusDefect=true`、不加 `invoke.valkyrie`。
+
+- `semi-ordered-permutation`：2 条，索引 #21、#95。`#21` 为 51 个元素，其中 `1` 出现两次、缺 `51`，
+  期望 `"Error: 51 is not in list"`；`#95` 为 39 个元素，其中 `1..5` 各出现两次、缺 `35..39`，
+  期望 `"Error: 39 is not in list"`。两例都违反题面「`nums` 是 `1..n` 的排列」约束，期望是宿主
+  `index()` 异常串而非整数返回值。其余 99 条（含 #38/#61 缺值的非错误串用例）与参考公式一致。
+- `minimum-right-shifts-to-sort-the-array`：6 条，索引 #33、#52、#58、#62、#93、#117。这些用例只有一个
+  降序点且位于末位（如 #33 `[1,2,3,5,4]`、#62 `[1,3,2]`），右旋任意次数都无法整体有序，期望却给出 `1`；
+  参照公式 `n - pivot` 漏判 `nums[n-1] <= nums[0]`，正确结果应为 `-1`。原值未改。
