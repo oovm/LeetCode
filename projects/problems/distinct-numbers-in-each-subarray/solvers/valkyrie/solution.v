@@ -31,9 +31,11 @@ micro distinctNumbers(nums: ArrayList<i64>, k: i64) -> ArrayList<i64> {
     while index < count {
         let leaving: i64 = nums⁅index - window⁆
         let remaining: i64 = counts.get(leaving).unwrap() - 1
-        counts.insert(leaving, remaining)
         if remaining == 0 {
+            counts.remove(leaving)
             distinct = distinct - 1
+        } else {
+            counts.insert(leaving, remaining)
         }
 
         let value: i64 = nums⁅index⁆
