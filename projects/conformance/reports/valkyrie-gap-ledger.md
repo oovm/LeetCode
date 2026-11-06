@@ -85,10 +85,10 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | F1 设计类操作序列无法判题 | `TestCase` 只有 `args` / `expected`，没有「多操作序列 + 每步返回」；TS 候选只认单入口单调用，导出类被当成函数直接调用 | `TypeError: Class constructor LRUCache cannot be invoked without 'new'`（6/6 题同一形态） | `src/domain/problem.ts:2-5`；`src/adapters/typescript-node/ref.ts:48-71`（`makeTsCandidate` 的 `const exported = mod[expr]` 分支）；同文件 `:82-88`（`runTsSolverOnce` 每用例单次调用）；`scripts/run_v_solver.ts:55`（取单一 wasm export 符号）与 `:168`（逐用例单次调用） |
 | F2 设计类实例无 wasm 导出 / 实例句柄 ABI | 类方法不能 `[export]`，装配层要求单一入口，设计类没有「构造 + 逐方法调用」形态 | `source group closure failed: entry source group 'leetcode-min-stack' declares no [export], [main] or [test] entry`（6/6 题同一形态） | 题侧 `solvers/valkyrie/solution.v`（`class` 体只放字段，方法全在 `imply`）；装配侧入口闭包在 `nyar-vm.rs` |
 | F3 库导出 `Utf8` 返回值缺宿主句柄物化 | **已恢复**（2026-11-07 实测）：`convert-a-number-to-hexadecimal`、`integer-to-roman`、`decode-the-message`、`capitalize-the-title` 均构建通过，`callExport` 真跑返回值与期望一致 | ~~`TypeError: Cannot convert object to primitive value`（26 题，全部为字符串返回题）~~ | 修复提交 `d3a8f0b7`（宿主边界物化 frozen `utf8` carrier）；原缺口位置 `nyar-emitter/src/lowering/backends/wasm/mir/entry.rs`（形参物化 vs 返回透传） |
-| F4 导出名缩写大小写漂移 | camelCase 转换压平连续大写缩写（`preimage_size_fzf` → `preimageSizeFzf`），题面是 `preimageSizeFZF` | `wasm 里找不到 metadata.invoke 对应的 export "preimageSizeFZF"（已有: preimageSizeFzf ...）`（4 题） | 题侧 `solution.v` 导出声明 + 题库 `metadata.invoke`；harness 单点归一在 `src/adapters/valkyrie-node/abi.ts` 的 `matchWasmExportSymbol` |
+| F4 导出名缩写大小写漂移 | **已恢复**（2026-11-05 harness 侧修复，现有 dev 已包含）：`matchWasmExportSymbol` 先精确命中，失败后按归一化符号匹配 | ~~`wasm 里找不到 metadata.invoke 对应的 export "preimageSizeFZF"（已有: preimageSizeFzf ...）`（4 题）~~ | `src/adapters/valkyrie-node/abi.ts` 的 `matchWasmExportSymbol`；题侧 `solution.v` 导出声明 + `metadata.invoke` |
 | F5 schema 形参名与 metadata 键不一致 | **已恢复**（2026-11-07 实测）：三题 `solution.v` 形参已按题面命名，生成的 `params[].name` 与 metadata 键逐字相等，构建通过且真跑一致 | ~~`AbiSchemaError: args.s: metadata.tests.args 缺少参数 "s"`（2 题；另 1 题报 `prime_factors`）~~ | 已对齐：`excel-sheet-column-number`（`columnTitle`）、`ransom-note`（`ransomNote, magazine`）、`maximize-number-of-nice-divisors`（`primeFactors`）；历史定位 `src/adapters/valkyrie-node/abi.ts:422-437` |
 | F6 `expected` 存宿主异常文本 | metadata 期望值是 Python 参考实现的宿主异常文本，但判题驱动不设递归上限，V / TS 也不产生该文本 | `expected "Error: maximum recursion depth exceeded", no exception raised`（5 题） | 5 题见下；`scripts/isolated_python_child.py` 无 `setrecursionlimit`，TS / Bun / V lane 同样无递归上限 |
-| F7 数值答案错 22 条未分类 | 用户口径 21 条，实测严格 numeric-vs-numeric 22 条，混有题解错、语料错与 ABI 缺陷 | 逐题见分桶小节 | `.cache/judge-failures.json`；定位脚本 `.cache/probe-numeric.ts`、`probe-fixtures.py`、`probe-minadd.py` |
+| F7 数值答案错 22 条未分类 | **已处置**（2026-11-05 完整逐题复判，2026-11-07 复验）：15 条分桶为 10 题真实现错 + 5 题语料非法，均已在题解/语料侧闭环；仅 `minimum-addition-to-make-integer-beautiful` 仍红并归精度清单（args 超 i64，真值不可恢复） | ~~逐题见分桶小节~~ | 分桶与逐题结果见「F7 跟进」小节；`.cache/judge-failures.json`、`.cache/probe-numeric.ts` |
 | F8 计时轮污染实参 | 子进程多轮复用同一 args 对象，题解原地改写（排序 / 去重 / 填充）污染收集轮 | `tests[0]: expected "1", got "0"`（`remove-duplicates-from-sorted-array`、`remove-element` 的 TS lane） | `src/isolated/child-loops.ts`、`scripts/isolated_python_child.py`；已修：`structuredClone` / `copy.deepcopy`，克隆在计时窗口外 |
 
 - F1 不是「题面写法问题」：操作序列（`["LRUCache", "put", "get", ...]` 加每步返回）是题面本身，
@@ -243,7 +243,7 @@ C 清洗后结果：
 
 - `convert-a-number-to-hexadecimal`：17 条 `expected` 由 number 改回字符串，语料错消失；判题错误形态从
   `tests[7] expected: 0` 变为 `TypeError: Cannot convert object to primitive value` —— ABI schema 仍把
-  `utf8` 返回标成 `I32`，属 26 题 `Utf8` 返回值修复，**待重建 addon 后复验**，不是 V 算法错。
+  `utf8` 返回标成 `I32`，属 26 题 `Utf8` 返回值修复，不是 V 算法错。2026-11-07 已按 `origin/dev` 重建 addon 复验：`toHex(26/-1/0)` 真跑返回 `"1a"/"ffffffff"/"0"` 正确，该形态消失。
 - `sort-array-by-parity-ii`：删 11 条偶奇数量不等 / 长度奇数的非法用例（含 4 条
   `Error: list index out of range`）。余下用例存在多解而 harness 精确比较落序，按规则改解法为
   Python 同款原地双指针，74/74，`RuntimeError: unreachable` 不再出现。
@@ -252,7 +252,7 @@ C 清洗后结果：
 另有 13 条 expected 对应「舍入前原 n」而 args 已双精度舍入，真值不可恢复；两处已并入精度清单。
 
 `decode-the-message` 同为 `utf8` 返回值 marshal 的 `TypeError`，属 26 题 `Utf8` 修复面，
-与 `convert-a-number-to-hexadecimal` 一起**待重建 addon 后复验**。
+与 `convert-a-number-to-hexadecimal` 一起，2026-11-07 重建 addon 后复验：`decodeMessage` 真跑返回正确字符串。
 
 ### C-1 覆盖率塌陷的逐题定性（2026-11-05 二次处置，实测）
 
@@ -1443,9 +1443,9 @@ micro sequential_digits(low: i64, high: i64) -> ArrayList<i64>
 
 ### G4 std `Utf8Builder.append(char)` 在 std 模块自编译时无法实例化（疑似失效，待复验）
 
-- 状态：**疑似失效，待复验**（2026-11-04 编译线在 dev tip 实测）。旧的「未恢复 / 编译器问题」
-  结论作废，不再作为失败归族的依据扩散。旧分类共 24 题（Easy 文本重建组 20 题 + 未登记批次
-  4 题），std 修复后逐题重跑再归类。
+- 状态：**已复验为非阻塞**（2026-11-07 实测）：使用 `Utf8Builder` 的
+  `repeated-dna-sequences`、`largest-time-for-given-digits` 均 legion wasm 构建 `status=0`；
+  `append` / `infix +` / `bit_shift_right` 一条错误都没有，G4 不再作为失败归族依据。
 - 最小复现（只用 std，无题解代码）：
 
 ```v
