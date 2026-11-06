@@ -1,23 +1,6 @@
-namespace leetcode.count_subarrays_of_length_three_with_a_condition;
-
-using std.collection;
-
-# 统计长度为 3 且 2*(首+尾) == 中间的子数组。
-[export(case: "camelCase")]
-micro countSubarrays(nums: ArrayList<i64>) -> i64 {
-    let mut total: i64 = 0
-    let mut index: usize = 0
-    while index + 2 < nums.length() {
-        if 2 * (nums⁅index⁆ + nums⁅index + 2⁆) == nums⁅index + 1⁆ {
-            total = total + 1
-        }
-        index = index + 1
-    }
-    return total
-}
-
-class Solution {
-    micro countSubarrays(self, nums: ArrayList<i64>): i64 {
-        return countSubarrays(nums)
-    }
-}
+# blocked: std.collection 数组参数读取
+# 题内触发点: countSubarrays 需要 读取 nums 统计满足条件的长度为 3 的子数组
+# 期望语义: 宿主传入的数组参数可直接索引与遍历
+# 实际报错: unresolved call <computed>（数组参数读取不被支持）
+# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+# corpusDefect: 3 条用例（索引 28、33、124）的 nums 含小数（#28 的 37.5、#33 的 10.5、#124 的 148.5/247.5），题面要求整数数组，i64 通道无法表达；三条期望均为 0，原值未改，保持 blocked
