@@ -59,7 +59,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 观察（13）：G1 / G4 / G8 / G12 / G14 / G15 / G18 / G19 / G20 / G21 / G23 / G24 / G27。
 均为判据 a（换等价 API，零重复），或尚无已证实调用点。
 
-编译器缺陷（4，属实但不归 std 线管）：G5 / G6 / G7 / G29。见下一节指向条目。
+编译器缺陷（5，属实但不归 std 线管）：G5 / G6 / G7 / G29 / G30。见下一节指向条目。
 
 ## 编译器缺陷（不归 std 线）
 
@@ -69,8 +69,9 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G6 标识符 `round` 误拉 adaptor | 已有真实复现：`sum-of-digits-of-string-after-convert` | 编译器名字解析 / 闭包装配 |
 | G7 `HashMap.insert` 作 `else` 尾 + 嵌套 return | 已有真实复现：`isomorphic-strings` | 编译器 MIR 合流 |
 | G29 `i64` / `u64` → `f64` 精确转换编码缺失 | `wasm 后端缺少 i64 → f64 的精确表示转换编码（acorn_wasm 未提供对应 opcode），不得退化为近似转换`；最小复现 `micro f(x: i64) -> f64 { return x as f64 }`，`u64` 同样报错。`597ecdd5`（2026-11-05 18:45）已在 wasm lane 编码精确整数↔浮点转换，但本窗口加载的 `platforms/valkyrie-win32-x64/lib/valkyrie.win32-x64-msvc.node` 构建于 13:20，早于该提交，因此运行时仍报旧错 | 编译器 wasm 编码；坐标 `largest-sum-of-averages/solvers/valkyrie/solution.v:23`、`sliding-window-median/solvers/valkyrie/solution.v:58` |
+| G30 零参候选对多参调用「空匹配」 | `match_call_candidate` 对无 `param_specs` 的候选直接取全部实参，随后 `zip` 静默截断：零参候选对一参调用「空匹配」，与真实候选并列后判 Ambiguous，最终退化成「无一候选」；arity 不符还会漏到 SMIR007。2026-11-06 已在 `nyar-vm.rs/projects/nyar.rs/languages/rusty-valkyrie/src/compiler/hir/overload/call_resolver/core.rs` 加「实参绑定结果与签名槽位等长」守卫，不等长即不匹配。正例：同一 `imply` 块内 `new()` / `new(capacity)` 均解析；反例：零参构造收一参在 HIR `unresolved_call` 失败 | 编译器调用解析；最小复现 `.cache/probes/two-constructors`、`.cache/probes/arity-bad-call`；回归测试 `tests/frontend/hir/hir_overload_identity_tests.rs`（`same_owner_constructors_with_distinct_arity_both_resolve`、`nullary_constructor_rejects_extra_argument_at_call_boundary`） |
 
-- 四条都属实，但修复位置在 `nyar-vm.rs`，不占 std 缺口名额，也不进第 18 批选题面。
+- 五条都属实，但修复位置在 `nyar-vm.rs`，不占 std 缺口名额，也不进第 18 批选题面。
 - 本节只作指向，详细证据留在各自 G 条内。
 
 ## 判题夹具与导出 ABI 缺口（不归 std 线，F 编号）
@@ -3438,3 +3439,26 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 | `design-hashset` | 入口闭包无 `[export]/[main]/[test]` | 设计题 harness 入口，不是 std 缺口 |
 
 剩余待办属题库/题解侧：补齐 335 个占位题解、修 `find-k-pairs` 与 `accounts-merge` 的逻辑、给 `design-hashset` 类设计题补入口约定。std 侧下一批仍以本账本既有 G 清单为准。
+
+## 2026-11-06 std 线三失败复验（编译器侧）
+
+复验环境：`nyar-vm.rs` HEAD `c34926bb`（12 个在途 dirty 文件未触碰），`valkyrie.v` HEAD `eece3ee`；
+`HashSet.v` / `math/basic.v` 已回滚到 HEAD，`DirectedGraph.v` 为他人 `MM` 在途（`.get(...)`）。
+对照 addon 为 11-05 13:20 平台包，复验 addon 为 `.target-litbind/valkyrie-litbind-fixed.node`
+（11-06 11:16，仅含 G30 守卫）。探针统一在 `projects/conformance` 下以
+`node --import tsx .cache/probe-build.ts` 单进程执行，诊断上限 50。
+
+| 失败 | 定性 | 干净对照与证据 |
+| --- | --- | --- |
+| `max(i64, i64)` | **既有限制**，非回归 | HEAD `math/basic.v` 只有 `max(f64, f64)`；`max(i64, i64)` 停在调用点，2 candidates（std.math 的 f64 版 + iterator terminal）none matches。改成泛型 `max<T>(a, b)` 后，`a > b` 立即在 `basic.v:14:8` 报 `unresolved call infix >`——泛型运算符没有约束证据。沙箱加 `where T: std::operator::Comparable` 后 `max(i64, i64)` 可解析（`i64: Comparable` 有 imply），但 `f64` 未实现 `Comparable`，约束路线不适用于 f64。正解是具体重载（同模块 f64 + i64 已验证可编译），不是编译器缺陷。新旧 addon 结果一致 |
+| `HashSet.new`（`new(capacity)`） | **真编译器缺陷 G30**，已修 | 最小复现 `.cache/probes/two-constructors`：旧 addon 一参构造失配（零参候选空匹配），修复后两个构造均 `STATUS=0`。`.cache/probes/arity-bad-call`：旧 addon HIR 解析成功、漏到 SMIR007 `call arguments differ from declared signature arity`；修复后在 `solution.v:20:25` 结构化 `valkyrie.hir.unresolved_call`。std 侧加**增量** `new(capacity)`（保留 `new()`）后，修复版两个调用点均 `STATUS=0`；旧 addon 只有一参调用失败（5 candidates），零参调用点正常——**「既有 `new()` 调用点一起崩」只在替换/删除零参 `new` 时出现，不是加法重载的必然结果**。回归题 `contains-duplicate` / `distribute-candies` / `accounts-merge` / `keys-and-rooms` / `is-graph-bipartite` 全部 `STATUS=0` |
+| `DirectedGraph<i64>`（`remove_edge` 的 `unwrap`） | **在途修复，非回归** | HEAD `DirectedGraph.v` 仍按 `self._forward[from]` 返回 `Option` 写 `.unwrap()`，与 `HashMap.v` 的 `suffix [ ](key): V` 裸值合同冲突；干净 HEAD 沙箱精确复现 `127/130/150/165` 共 6 条 `<fn value>.unwrap` none matches。把该处换成 `.get(...)`（即工作树在途 `MM`）后编译通过，`keys-and-rooms` / `is-graph-bipartite` 在修复版 addon 上 `STATUS=0`。编译器无动作 |
+
+- 账本修正：`is-graph-bipartite` 的停点不是 `HashSet::from_list` 的 `list.iter`，而是 HEAD
+  `DirectedGraph.v` 的提取器合同；`possible-bipartition` 在 DG 修复后停在 F2（类方法 `[export]`
+  无入口闭包，`artifact: library requires at least one resolved export`），不是 G9 / DG。
+- G12 仍成立（`HashSet::new(capacity)` 源码尚不存在），但阻断它的编译器 arity 缺陷已由 G30 修复；
+  std 线可在保留 `new()` 的前提下增量落地 `new(capacity)`，既有调用点已验证不受影响。
+- Rust 回归：`cargo test -j 4 -p rusty-valkyrie --test frontend` = **572 passed / 0 failed / 11 ignored**，
+  含新增正反例（`same_owner_constructors_with_distinct_arity_both_resolve` /
+  `nullary_constructor_rejects_extra_argument_at_call_boundary`）。
