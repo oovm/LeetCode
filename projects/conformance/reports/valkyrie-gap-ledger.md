@@ -65,13 +65,14 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 
 | 条目 | 现状 | 归口 |
 | --- | --- | --- |
-| G5 分支内丢弃 `Option<T>`（SMIR007） | 已有真实复现：`baseball-game` | 编译器 MIR 降级，不在 std / leetcode 线 |
-| G6 标识符 `round` 误拉 adaptor | 已有真实复现：`sum-of-digits-of-string-after-convert` | 编译器名字解析 / 闭包装配 |
-| G7 `HashMap.insert` 作 `else` 尾 + 嵌套 return | 已有真实复现：`isomorphic-strings` | 编译器 MIR 合流 |
-| G29 `i64` / `u64` → `f64` 精确转换编码缺失 | `wasm 后端缺少 i64 → f64 的精确表示转换编码（acorn_wasm 未提供对应 opcode），不得退化为近似转换`；最小复现 `micro f(x: i64) -> f64 { return x as f64 }`，`u64` 同样报错。`597ecdd5`（2026-11-05 18:45）已在 wasm lane 编码精确整数↔浮点转换，但本窗口加载的 `platforms/valkyrie-win32-x64/lib/valkyrie.win32-x64-msvc.node` 构建于 13:20，早于该提交，因此运行时仍报旧错 | 编译器 wasm 编码；坐标 `largest-sum-of-averages/solvers/valkyrie/solution.v:23`、`sliding-window-median/solvers/valkyrie/solution.v:58` |
+| G5 分支内丢弃 `Option<T>`（SMIR007） | 已恢复（2026-11-07 实测）：`origin/dev` 上 `baseball-game` legion wasm 构建通过，3 条用例真跑 PASS | 编译器 MIR 降级，不在 std / leetcode 线 |
+| G6 标识符 `round` 误拉 adaptor | 已恢复（2026-11-07 实测）：`origin/dev` 上 `sum-of-digits-of-string-after-convert` 构建通过，`getLucky` 真跑 PASS | 编译器名字解析 / 闭包装配 |
+| G7 `HashMap.insert` 作 `else` 尾 + 嵌套 return | 已恢复（2026-11-07 实测）：`origin/dev` 上 `isomorphic-strings` 构建通过，`isIsomorphic` 3 条用例真跑 PASS | 编译器 MIR 合流 |
+| G29 `i64` / `u64` → `f64` 精确转换编码缺失 | `wasm 后端缺少 i64 → f64 的精确表示转换编码（acorn_wasm 未提供对应 opcode），不得退化为近似转换`；最小复现 `micro f(x: i64) -> f64 { return x as f64 }`，`u64` 同样报错。`597ecdd5`（2026-11-05 18:45）已在 wasm lane 编码精确整数↔浮点转换；2026-11-07 已按 `origin/dev` `dcb49a6a` 重建 `platforms/valkyrie-win32-x64/lib/valkyrie.win32-x64-msvc.node`，两坐标题均构建通过，`largestSumOfAverages` 3 条用例真跑 PASS | 编译器 wasm 编码；坐标 `largest-sum-of-averages/solvers/valkyrie/solution.v:23`、`sliding-window-median/solvers/valkyrie/solution.v:58` |
 | G30 零参候选对多参调用「空匹配」 | `match_call_candidate` 对无 `param_specs` 的候选直接取全部实参，随后 `zip` 静默截断：零参候选对一参调用「空匹配」，与真实候选并列后判 Ambiguous，最终退化成「无一候选」；arity 不符还会漏到 SMIR007。2026-11-06 已在 `nyar-vm.rs/projects/nyar.rs/languages/rusty-valkyrie/src/compiler/hir/overload/call_resolver/core.rs` 加「实参绑定结果与签名槽位等长」守卫，不等长即不匹配。正例：同一 `imply` 块内 `new()` / `new(capacity)` 均解析；反例：零参构造收一参在 HIR `unresolved_call` 失败 | 编译器调用解析；最小复现 `.cache/probes/two-constructors`、`.cache/probes/arity-bad-call`；回归测试 `tests/frontend/hir/hir_overload_identity_tests.rs`（`same_owner_constructors_with_distinct_arity_both_resolve`、`nullary_constructor_rejects_extra_argument_at_call_boundary`） |
 
-- 五条都属实，但修复位置在 `nyar-vm.rs`，不占 std 缺口名额，也不进第 18 批选题面。
+- 五条均已由 `origin/dev` 的编译器提交覆盖（G5/G6/G7/G29 于 2026-11-07 复验恢复，G30 修复已进 `dev`），
+  不占 std 缺口名额，也不进第 18 批选题面。
 - 本节只作指向，详细证据留在各自 G 条内。
 
 ## 判题夹具与导出 ABI 缺口（不归 std 线，F 编号）
@@ -1481,7 +1482,8 @@ micro probe(c: char) -> i64 {
 
 ### G5 分支内丢弃 `Option<T>` 返回值触发 SMIR 跳转 arity 失败
 
-- 状态：未恢复（2026-11-04 实测，未登记批次 1 题）
+- 状态：已恢复（2026-11-07 实测，未登记批次 1 题）。`baseball-game` legion wasm 构建 `status=0`，
+  3 条用例经 `callExport("calPoints", operations)` 真跑 PASS（9 / 210 / -37）。
 - 最小复现（4 行）：
 
 ```v
@@ -1504,7 +1506,9 @@ micro probe(mut s: ArrayList<i64>, flag: bool) -> i64 {
 
 ### G6 标识符 `round` 误拉入 `std.adaptor.wasm.math::round`
 
-- 状态：未恢复（2026-11-04 实测，canonical 未构建 214 题扫块 1 题）
+- 状态：已恢复（2026-11-07 实测，canonical 未构建 214 题扫块 1 题）。
+  `sum-of-digits-of-string-after-convert` legion wasm 构建 `status=0`，
+  `callExport("getLucky", s, k)` 真跑 PASS（`iiii`/1→36、`leetcode`/2→6、`zbax`/2→8）。
 - 最小复现（导出入口里出现同名的局部变量或形参即可）：
 
 ```v
@@ -1526,7 +1530,9 @@ micro probe(round: i64) -> i64 {
 
 ### G7 `HashMap.insert` 作为 `else` 分支尾 + then 分支嵌套 early return
 
-- 状态：未恢复（2026-11-04 实测，canonical 未构建 214 题扫块 1 题）
+- 状态：已恢复（2026-11-07 实测，canonical 未构建 214 题扫块 1 题）。
+  `isomorphic-strings` legion wasm 构建 `status=0`，
+  `callExport("isIsomorphic", s, t)` 3 条用例真跑 PASS（egg/add、foo/bar、paper/title）。
 - 最小复现：
 
 ```v
