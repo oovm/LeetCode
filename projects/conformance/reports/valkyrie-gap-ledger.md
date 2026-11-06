@@ -3444,3 +3444,11 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 - 区间能力已用于 1109 / 1111 / 1738 / 1918 的 `loop i in 0..n`，四题 V 均真构建通过；`inclusive_range` 未使用。
 - 1738 的 V 快选把越界 `k` 恰好落在最小值，与期望 0 巧合一致，仍按语料缺陷记录。
 - 480 用坐标压缩 + 树状数组按秩取中位数（O(n log n)）；TS 115/115，V 停在 G29。
+
+## 合同级待定项（2026-11-06，未落码）
+
+以下三项缺的不是 std 实现，而是语言/合同面，本轮不动：
+
+- **`Iterator::sum` / `Iterator::product`**：需要加法/乘法 operator 合同（现无 `Additive` / `Multiplicative`）。泛型 `T + T` 无法解析，硬塞会绕过三 lane provider 机制。
+- **`HashMap::get_mut`**：需要 `&mut V` 引用合同，语言暂无。当前以 `HashMap::upsert(key, fallback, update)` 覆盖读改写场景（`std/source/collection/hashed/HashMap.v`）。
+- **`MultiSet` 等价语义 / 排序稳定性可声明属性（G24 / G27）**：属 `01 架构与编译合同` 级新增，按裁决留在账本，不单开块。
