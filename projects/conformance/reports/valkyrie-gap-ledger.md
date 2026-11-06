@@ -1617,7 +1617,11 @@ micro bipartition<N>(graph: std.collection.DirectedGraph<N>) -> Option<HashMap<N
   `sorted_by<T>(items: ArrayList<T>, cmp: micro(T, T) -> i32): ArrayList<T>`（返回新序列，不再要求调用方自建副本），
   另有公开 `merge_sort<T>(mut list: ArrayList<T>, cmp)` / `quick_sort<T>(mut list: ArrayList<T>, cmp)` 与
   `sort<T>(mut values: [T])`（固定数组按自然序就地排序）。
-- 残余缺口：`sorted_by` 没有 `[T]` / `Array<T>` 重载；按自定义比较器排固定数组仍需先物化成 `ArrayList`。
+- 残余缺口（2026-11-06 登记，**待排期，本轮不纳入**）：`[T]` **没有带比较器的排序入口**。
+  `sort.v` 现有比较器入口全部收 `ArrayList`（`merge_sort` `:106`、`quick_sort` `:231`、`sorted_by` `:143`）；
+  `[T]` 侧只有自然序 `sort`（`:116`），没有 `merge_sort` / `quick_sort` / `sorted_by` 的 `[T]` 重载。
+  按自定义比较器排固定数组仍需先物化成 `ArrayList`。`Array<T>` 同样为 0 个排序入口。
+  本项是独立 API 增补，不并入 `sorted_by`（`ArrayList` 版）已交付部分，留待排期。
 - 原判断（2026-11-04，现已过时）：`sorted_by` 与数组排序入口都不存在。
 
 - 影响题（18）：`groups-of-special-equivalent-strings`（893，even/odd 两个副本）、
