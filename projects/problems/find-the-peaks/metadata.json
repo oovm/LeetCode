@@ -703,6 +703,7 @@
     ],
     "invoke": {
         "python": "Solution().findPeaks",
-        "typescript": "Solution().findPeaks"
+        "typescript": "Solution().findPeaks",
+        "valkyrie": "Solution().findPeaks"
     }
 }

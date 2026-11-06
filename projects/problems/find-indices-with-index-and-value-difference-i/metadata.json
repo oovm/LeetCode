@@ -1109,6 +1109,7 @@
     ],
     "invoke": {
         "python": "Solution().findIndices",
-        "typescript": "Solution().findIndices"
+        "typescript": "Solution().findIndices",
+        "valkyrie": "Solution().findIndices"
     }
 }

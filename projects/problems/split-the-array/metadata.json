@@ -681,6 +681,7 @@
     ],
     "invoke": {
         "python": "Solution().isPossibleToSplit",
-        "typescript": "Solution().isPossibleToSplit"
+        "typescript": "Solution().isPossibleToSplit",
+        "valkyrie": "Solution().isPossibleToSplit"
     }
 }

@@ -1,5 +1,27 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: findPeaks 需要 读取 mountain 找峰下标
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.find_the_peaks;
+
+using std.collection;
+
+# 严格局部极大值：左右邻居都更小才计入；按下标升序扫描，返回天然有序。
+[export(case: "camelCase")]
+micro findPeaks(mountain: ArrayList<i64>) -> ArrayList<i64> {
+    let count: usize = mountain.length()
+    let mut peaks: ArrayList<i64> = ArrayList::new(count)
+    let mut index: usize = 1
+    while index + 1 < count {
+        let left: i64 = mountain⁅index - 1⁆
+        let current: i64 = mountain⁅index⁆
+        let right: i64 = mountain⁅index + 1⁆
+        if left < current && current > right {
+            peaks.push(index as i64)
+        }
+        index = index + 1
+    }
+    return peaks
+}
+
+class Solution {
+    micro findPeaks(self, mountain: ArrayList<i64>): ArrayList<i64> {
+        return findPeaks(mountain)
+    }
+}

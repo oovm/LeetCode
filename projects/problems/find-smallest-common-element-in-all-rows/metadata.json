@@ -669,6 +669,7 @@
     ],
     "invoke": {
         "python": "Solution().smallestCommonElement",
-        "typescript": "Solution().smallestCommonElement"
+        "typescript": "Solution().smallestCommonElement",
+        "valkyrie": "Solution().smallestCommonElement"
     }
 }

@@ -795,6 +795,7 @@
     ],
     "invoke": {
         "python": "Solution().canAliceWin",
-        "typescript": "Solution().canAliceWin"
+        "typescript": "Solution().canAliceWin",
+        "valkyrie": "Solution().canAliceWin"
     }
 }

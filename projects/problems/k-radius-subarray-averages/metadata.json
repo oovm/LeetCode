@@ -665,6 +665,7 @@
     ],
     "invoke": {
         "python": "Solution().getAverages",
-        "typescript": "Solution().getAverages"
+        "typescript": "Solution().getAverages",
+        "valkyrie": "Solution().getAverages"
     }
 }

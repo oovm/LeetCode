@@ -869,6 +869,7 @@
     ],
     "invoke": {
         "python": "Solution().findKDistantIndices",
-        "typescript": "Solution().findKDistantIndices"
+        "typescript": "Solution().findKDistantIndices",
+        "valkyrie": "Solution().findKDistantIndices"
     }
 }

@@ -1,5 +1,37 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: isConsecutive 需要 读取 nums 判定连续整数
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.check_if_an_array_is_consecutive;
+
+using std.collection;
+
+# 连续数组：元素互不相同且最大值减最小值等于长度减一。
+[export(case: "camelCase")]
+micro isConsecutive(nums: ArrayList<i64>) -> bool {
+    let count: usize = nums.length()
+    if count == 0 {
+        return false
+    }
+    let mut seen: HashSet<i64> = HashSet::new()
+    let mut minimum: i64 = nums⁅0⁆
+    let mut maximum: i64 = nums⁅0⁆
+    let mut index: usize = 0
+    while index < count {
+        let value: i64 = nums⁅index⁆
+        if seen.contains(value) {
+            return false
+        }
+        seen.insert(value)
+        if value < minimum {
+            minimum = value
+        }
+        if value > maximum {
+            maximum = value
+        }
+        index = index + 1
+    }
+    return maximum - minimum == count as i64 - 1
+}
+
+class Solution {
+    micro isConsecutive(self, nums: ArrayList<i64>): bool {
+        return isConsecutive(nums)
+    }
+}

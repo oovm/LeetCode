@@ -861,6 +861,7 @@
     ],
     "invoke": {
         "python": "Solution().canBeEqual",
-        "typescript": "Solution().canBeEqual"
+        "typescript": "Solution().canBeEqual",
+        "valkyrie": "Solution().canBeEqual"
     }
 }

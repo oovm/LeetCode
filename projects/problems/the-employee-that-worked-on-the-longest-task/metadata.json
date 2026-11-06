@@ -1519,6 +1519,7 @@
     ],
     "invoke": {
         "python": "Solution().hardestWorker",
-        "typescript": "Solution().hardestWorker"
+        "typescript": "Solution().hardestWorker",
+        "valkyrie": "Solution().hardestWorker"
     }
 }

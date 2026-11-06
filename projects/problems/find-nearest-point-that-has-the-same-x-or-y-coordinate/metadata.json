@@ -1150,6 +1150,7 @@
     ],
     "invoke": {
         "python": "Solution().nearestValidPoint",
-        "typescript": "Solution().nearestValidPoint"
+        "typescript": "Solution().nearestValidPoint",
+        "valkyrie": "Solution().nearestValidPoint"
     }
 }

@@ -827,6 +827,7 @@
     ],
     "invoke": {
         "python": "Solution().isConsecutive",
-        "typescript": "Solution().isConsecutive"
+        "typescript": "Solution().isConsecutive",
+        "valkyrie": "Solution().isConsecutive"
     }
 }

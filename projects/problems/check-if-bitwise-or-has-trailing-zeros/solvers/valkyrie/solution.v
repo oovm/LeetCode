@@ -1,5 +1,21 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: hasTrailingZeros 需要 读取 nums 判定存在两偶数
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.check_if_bitwise_or_has_trailing_zeros;
+
+using std.collection;
+
+# 两数按位或的末位为零，当且仅当两数都是偶数；因此等价于偶数个数至少为二。
+[export(case: "camelCase")]
+micro hasTrailingZeros(nums: ArrayList<i64>) -> bool {
+    let mut evens: i64 = 0
+    loop value in nums {
+        if value.bit_and(1) == 0 {
+            evens = evens + 1
+        }
+    }
+    return evens >= 2
+}
+
+class Solution {
+    micro hasTrailingZeros(self, nums: ArrayList<i64>): bool {
+        return hasTrailingZeros(nums)
+    }
+}

@@ -771,6 +771,7 @@
     ],
     "invoke": {
         "python": "Solution().isArraySpecial",
-        "typescript": "Solution().isArraySpecial"
+        "typescript": "Solution().isArraySpecial",
+        "valkyrie": "Solution().isArraySpecial"
     }
 }

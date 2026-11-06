@@ -723,6 +723,7 @@
     ],
     "invoke": {
         "python": "Solution().hasTrailingZeros",
-        "typescript": "Solution().hasTrailingZeros"
+        "typescript": "Solution().hasTrailingZeros",
+        "valkyrie": "Solution().hasTrailingZeros"
     }
 }

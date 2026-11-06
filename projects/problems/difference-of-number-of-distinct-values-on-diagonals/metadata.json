@@ -743,6 +743,7 @@
     ],
     "invoke": {
         "python": "Solution().differenceOfDistinctValues",
-        "typescript": "Solution().differenceOfDistinctValues"
+        "typescript": "Solution().differenceOfDistinctValues",
+        "valkyrie": "Solution().differenceOfDistinctValues"
     }
 }

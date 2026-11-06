@@ -1609,6 +1609,7 @@
     ],
     "invoke": {
         "python": "Solution().lastVisitedIntegers",
-        "typescript": "Solution().lastVisitedIntegers"
+        "typescript": "Solution().lastVisitedIntegers",
+        "valkyrie": "Solution().lastVisitedIntegers"
     }
 }

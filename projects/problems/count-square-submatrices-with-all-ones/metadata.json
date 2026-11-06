@@ -526,6 +526,7 @@
     ],
     "invoke": {
         "python": "Solution().countSquares",
-        "typescript": "Solution().countSquares"
+        "typescript": "Solution().countSquares",
+        "valkyrie": "Solution().countSquares"
     }
 }

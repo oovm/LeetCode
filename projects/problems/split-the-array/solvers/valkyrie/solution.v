@@ -1,5 +1,27 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: isPossibleToSplit 需要 读取 nums 词频判定二分
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.split_the_array;
+
+using std.collection;
+
+# 能拆成两个各含互不相同元素的数组，等价于每个值出现次数不超过二。
+[export(case: "camelCase")]
+micro isPossibleToSplit(nums: ArrayList<i64>) -> bool {
+    let mut counts: HashMap<i64, i64> = HashMap::new(nums.length())
+    loop value in nums {
+        if counts.contains_key(value) {
+            let next: i64 = counts.get(value).unwrap() + 1
+            if next > 2 {
+                return false
+            }
+            counts.insert(value, next)
+        } else {
+            counts.insert(value, 1)
+        }
+    }
+    return true
+}
+
+class Solution {
+    micro isPossibleToSplit(self, nums: ArrayList<i64>): bool {
+        return isPossibleToSplit(nums)
+    }
+}

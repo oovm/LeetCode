@@ -790,6 +790,7 @@
     ],
     "invoke": {
         "python": "Solution().distinctNumbers",
-        "typescript": "Solution().distinctNumbers"
+        "typescript": "Solution().distinctNumbers",
+        "valkyrie": "Solution().distinctNumbers"
     }
 }

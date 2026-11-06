@@ -1,5 +1,28 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: check 需要 读取 nums 判定旋转有序
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.check_if_array_is_sorted_and_rotated;
+
+using std.collection;
+
+# 有序且至多旋转一次，等价于环形相邻下降次数不超过一。
+[export(case: "camelCase")]
+micro check(nums: ArrayList<i64>) -> bool {
+    let count: usize = nums.length()
+    if count == 0 {
+        return true
+    }
+    let mut drops: i64 = 0
+    let mut index: usize = 0
+    while index < count {
+        let next: usize = (index + 1) % count
+        if nums⁅index⁆ > nums⁅next⁆ {
+            drops = drops + 1
+        }
+        index = index + 1
+    }
+    return drops <= 1
+}
+
+class Solution {
+    micro check(self, nums: ArrayList<i64>): bool {
+        return check(nums)
+    }
+}
