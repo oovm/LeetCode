@@ -3452,3 +3452,31 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 - **`Iterator::sum` / `Iterator::product`**：需要加法/乘法 operator 合同（现无 `Additive` / `Multiplicative`）。泛型 `T + T` 无法解析，硬塞会绕过三 lane provider 机制。
 - **`HashMap::get_mut`**：需要 `&mut V` 引用合同，语言暂无。当前以 `HashMap::upsert(key, fallback, update)` 覆盖读改写场景（`std/source/collection/hashed/HashMap.v`）。
 - **`MultiSet` 等价语义 / 排序稳定性可声明属性（G24 / G27）**：属 `01 架构与编译合同` 级新增，按裁决留在账本，不单开块。
+
+## std 侧能力池复审（2026-11-06）
+
+口径：扫描 `projects/problems/**/solvers/valkyrie/solution.v` 的全部 `# 阻塞：` 标记，再对其中含真实代码的题真跑 `run_v_solver.ts`（addon 为当前 tip 构建）。
+
+阻塞标记分布：302 `std.text 文本索引/构造`、19 `std.collection 数组分配与索引`、7 `std.collection 数组参数读取`、4 `f64 浮点语义`、3 `std.collection 队列/集合`、2 `std.collection 哈希表/备忘表`、2 `浮点返回值合同`、其余 5 项各 1。
+
+**结论：本轮没有可归因于 std 缺口的题目，`valkyrie.v` 不改。**
+
+- 上述前六族共 335 个题解**只有注释**，没有任何 `micro` / `[export]` / `class` / `imply` 声明，属「题解未写」，不是 std 能力缺口；`f64` 两族同样只有注释占位。
+- 带真实代码的阻塞题仅 3 个：`add-two-numbers`（ovm typed sum / jvm-clr lane）、`integer-to-roman`（四 lane `unresolved call <computed>`）、`reverse-string`。
+
+真跑探针（当前 tip 构建）：
+
+| 题 | 结果 | 判定 |
+|---|---|---|
+| `reverse-string` | 39/39 | 旧 `ArrayList<utf8>` ABI 阻断已消失，摘出 blocked 并删除陈旧标记 |
+| `string-compression` | 25/25 | `Utf8Builder::append_i64` + `utf8.slice` 已可用 |
+| `find-right-interval` | 113/113 | `BTreeMap<i64,i64>` 可用 |
+| `furthest-building-you-can-reach` | 118/118 | `BinaryHeap<i64>` 可用 |
+| `count-common-words-with-one-occurrence` | 103/103 | `HashMap<utf8,i64>` 可用 |
+| `flip-columns-for-maximum-number-of-equal-rows` | 88/88 | `HashMap<utf8,i64>` 可用 |
+| `distribute-candies` | 106/106 | `HashSet<i64>` 可用 |
+| `find-k-pairs-with-smallest-sums` | `tests[0]` 输出顺序与期望相反 | 题解堆键编码逻辑，不是 std 缺口 |
+| `accounts-merge` | `tests[55]` 归组人名不符 | 题解并查集逻辑，不是 std 缺口 |
+| `design-hashset` | 入口闭包无 `[export]/[main]/[test]` | 设计题 harness 入口，不是 std 缺口 |
+
+剩余待办属题库/题解侧：补齐 335 个占位题解、修 `find-k-pairs` 与 `accounts-merge` 的逻辑、给 `design-hashset` 类设计题补入口约定。std 侧下一批仍以本账本既有 G 清单为准。
