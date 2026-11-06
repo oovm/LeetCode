@@ -1752,6 +1752,7 @@
     ],
     "invoke": {
         "python": "Solution().maxStudentsOnBench",
-        "typescript": "Solution().maxStudentsOnBench"
+        "typescript": "Solution().maxStudentsOnBench",
+        "valkyrie": "Solution().maxStudentsOnBench"
     }
 }

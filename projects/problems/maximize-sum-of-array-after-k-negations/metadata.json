@@ -855,5 +855,6 @@
     "invoke": {
         "python": "Solution().largestSumAfterKNegations",
         "typescript": "Solution().largestSumAfterKNegations"
-    }
+    },
+    "corpusDefect": true
 }

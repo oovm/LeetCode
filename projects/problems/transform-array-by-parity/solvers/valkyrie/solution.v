@@ -1,5 +1,36 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: transformArray 需要 读取 nums 奇偶变换排序
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.transform_array_by_parity;
+
+using std.collection;
+
+# 每个元素替换为奇偶标记后升序，即前半 0、后半 1。
+[export(case: "camelCase")]
+micro transformArray(nums: ArrayList<i64>) -> ArrayList<i64> {
+    let count: usize = nums.length()
+    let mut odd_count: usize = 0
+    let mut index: usize = 0
+    while index < count {
+        if nums⁅index⁆ % 2 != 0 {
+            odd_count = odd_count + 1
+        }
+        index = index + 1
+    }
+
+    let mut answer: ArrayList<i64> = ArrayList::new(count)
+    let mut zeros: usize = count - odd_count
+    while zeros > 0 {
+        answer.push(0)
+        zeros = zeros - 1
+    }
+    let mut ones: usize = odd_count
+    while ones > 0 {
+        answer.push(1)
+        ones = ones - 1
+    }
+    return answer
+}
+
+class Solution {
+    micro transformArray(self, nums: ArrayList<i64>): ArrayList<i64> {
+        return transformArray(nums)
+    }
+}

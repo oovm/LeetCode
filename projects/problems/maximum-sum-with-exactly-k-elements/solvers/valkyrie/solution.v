@@ -1,5 +1,25 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: maximizeSum 需要 读取 nums 取最大累加 k 次
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.maximum_sum_with_exactly_k_elements;
+
+using std.collection;
+
+# 每次把当前最大值加一，k 次后的总和为 max * k + k * (k - 1) / 2。
+[export(case: "camelCase")]
+micro maximizeSum(nums: ArrayList<i64>, k: i64) -> i64 {
+    let count: usize = nums.length()
+    let mut largest: i64 = nums⁅0⁆
+    let mut index: usize = 1
+    while index < count {
+        let value: i64 = nums⁅index⁆
+        if value > largest {
+            largest = value
+        }
+        index = index + 1
+    }
+    return largest * k + k * (k - 1) / 2
+}
+
+class Solution {
+    micro maximizeSum(self, nums: ArrayList<i64>, k: i64): i64 {
+        return maximizeSum(nums, k)
+    }
+}

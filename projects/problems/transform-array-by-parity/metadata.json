@@ -631,6 +631,7 @@
     ],
     "invoke": {
         "python": "Solution().transformArray",
-        "typescript": "Solution().transformArray"
+        "typescript": "Solution().transformArray",
+        "valkyrie": "Solution().transformArray"
     }
 }

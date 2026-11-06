@@ -1,5 +1,32 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: countKDifference 需要 读取 nums 计数差为 k 的对
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.count_number_of_pairs_with_absolute_difference_k;
+
+using std.collection;
+
+# 枚举 i < j，统计绝对差恰为 k 的数对。
+[export(case: "camelCase")]
+micro countKDifference(nums: ArrayList<i64>, k: i64) -> i64 {
+    let count: usize = nums.length()
+    let mut total: i64 = 0
+    let mut left: usize = 0
+    while left < count {
+        let mut right: usize = left + 1
+        while right < count {
+            let mut gap: i64 = nums⁅left⁆ - nums⁅right⁆
+            if gap < 0 {
+                gap = -gap
+            }
+            if gap == k {
+                total = total + 1
+            }
+            right = right + 1
+        }
+        left = left + 1
+    }
+    return total
+}
+
+class Solution {
+    micro countKDifference(self, nums: ArrayList<i64>, k: i64): i64 {
+        return countKDifference(nums, k)
+    }
+}

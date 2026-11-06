@@ -1,5 +1,28 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: numberOfPairs 需要 读取 nums1/nums2 计数 k 倍整除对
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.find_the_number_of_good_pairs_i;
+
+using std.collection;
+
+# 双重枚举，检查 nums1[i] 能否被 nums2[j] * k 整除。
+[export(case: "camelCase")]
+micro numberOfPairs(nums1: ArrayList<i64>, nums2: ArrayList<i64>, k: i64) -> i64 {
+    let mut total: i64 = 0
+    let mut left: usize = 0
+    while left < nums1.length() {
+        let mut right: usize = 0
+        while right < nums2.length() {
+            let divisor: i64 = nums2⁅right⁆ * k
+            if nums1⁅left⁆ % divisor == 0 {
+                total = total + 1
+            }
+            right = right + 1
+        }
+        left = left + 1
+    }
+    return total
+}
+
+class Solution {
+    micro numberOfPairs(self, nums1: ArrayList<i64>, nums2: ArrayList<i64>, k: i64): i64 {
+        return numberOfPairs(nums1, nums2, k)
+    }
+}

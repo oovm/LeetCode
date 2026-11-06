@@ -1,5 +1,24 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: minOperations 需要 读取 nums 计数小于 k 的元素
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.minimum_operations_to_exceed_threshold_value_i;
+
+using std.collection;
+
+# 每个小于 k 的元素都需要被并掉一次。
+[export(case: "camelCase")]
+micro minOperations(nums: ArrayList<i64>, k: i64) -> i64 {
+    let count: usize = nums.length()
+    let mut total: i64 = 0
+    let mut index: usize = 0
+    while index < count {
+        if nums⁅index⁆ < k {
+            total = total + 1
+        }
+        index = index + 1
+    }
+    return total
+}
+
+class Solution {
+    micro minOperations(self, nums: ArrayList<i64>, k: i64): i64 {
+        return minOperations(nums, k)
+    }
+}

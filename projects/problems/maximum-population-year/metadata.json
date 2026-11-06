@@ -873,5 +873,6 @@
     "invoke": {
         "python": "Solution().maximumPopulation",
         "typescript": "Solution().maximumPopulation"
-    }
+    },
+    "corpusDefect": true
 }

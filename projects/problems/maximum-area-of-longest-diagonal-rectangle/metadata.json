@@ -664,6 +664,7 @@
     ],
     "invoke": {
         "python": "Solution().areaOfMaxDiagonal",
-        "typescript": "Solution().areaOfMaxDiagonal"
+        "typescript": "Solution().areaOfMaxDiagonal",
+        "valkyrie": "Solution().areaOfMaxDiagonal"
     }
 }

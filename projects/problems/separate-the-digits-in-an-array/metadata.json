@@ -697,5 +697,6 @@
     "invoke": {
         "python": "Solution().separateDigits",
         "typescript": "Solution().separateDigits"
-    }
+    },
+    "corpusDefect": true
 }

@@ -1,5 +1,28 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: countPairs 需要 读取 nums 计数和小于 target 的对
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.count_pairs_whose_sum_is_less_than_target;
+
+using std.collection;
+
+# 数据规模很小，直接枚举所有 i < j 的和。
+[export(case: "camelCase")]
+micro countPairs(nums: ArrayList<i64>, target: i64) -> i64 {
+    let count: usize = nums.length()
+    let mut total: i64 = 0
+    let mut left: usize = 0
+    while left < count {
+        let mut right: usize = left + 1
+        while right < count {
+            if nums⁅left⁆ + nums⁅right⁆ < target {
+                total = total + 1
+            }
+            right = right + 1
+        }
+        left = left + 1
+    }
+    return total
+}
+
+class Solution {
+    micro countPairs(self, nums: ArrayList<i64>, target: i64): i64 {
+        return countPairs(nums, target)
+    }
+}

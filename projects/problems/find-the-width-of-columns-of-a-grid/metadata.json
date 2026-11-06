@@ -628,5 +628,6 @@
     "invoke": {
         "python": "Solution().findColumnWidth",
         "typescript": "Solution().findColumnWidth"
-    }
+    },
+    "corpusDefect": true
 }

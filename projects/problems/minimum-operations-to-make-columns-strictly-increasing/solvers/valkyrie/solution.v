@@ -1,5 +1,46 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: minimumOperations 需要 读取 grid 逐列抬升严格递增
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.minimum_operations_to_make_columns_strictly_increasing;
+
+using std.collection;
+
+# 逐列自上而下抬升，每个数至少要比上一行大 1。
+[export(case: "camelCase")]
+micro minimumOperations(grid: ArrayList<ArrayList<i64>>) -> i64 {
+    let rows: usize = grid.length()
+    let columns: usize = grid⁅0⁆.length()
+    let mut working: ArrayList<ArrayList<i64>> = ArrayList::new(rows)
+    let mut row: usize = 0
+    while row < rows {
+        let source: ArrayList<i64> = grid⁅row⁆
+        let mut copied: ArrayList<i64> = ArrayList::new(columns)
+        let mut column: usize = 0
+        while column < columns {
+            copied.push(source⁅column⁆)
+            column = column + 1
+        }
+        working.push(copied)
+        row = row + 1
+    }
+
+    let mut operations: i64 = 0
+    let mut column: usize = 0
+    while column < columns {
+        let mut row: usize = 1
+        while row < rows {
+            let previous: i64 = working⁅row - 1⁆⁅column⁆
+            let current: i64 = working⁅row⁆⁅column⁆
+            if current <= previous {
+                operations = operations + previous + 1 - current
+                working⁅row⁆⁅column⁆ = previous + 1
+            }
+            row = row + 1
+        }
+        column = column + 1
+    }
+    return operations
+}
+
+class Solution {
+    micro minimumOperations(self, grid: ArrayList<ArrayList<i64>>): i64 {
+        return minimumOperations(grid)
+    }
+}

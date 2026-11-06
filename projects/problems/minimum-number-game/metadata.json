@@ -593,5 +593,6 @@
     "invoke": {
         "python": "Solution().numberGame",
         "typescript": "Solution().numberGame"
-    }
+    },
+    "corpusDefect": true
 }

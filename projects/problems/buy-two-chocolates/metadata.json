@@ -836,6 +836,7 @@
     ],
     "invoke": {
         "python": "Solution().buyChoco",
-        "typescript": "Solution().buyChoco"
+        "typescript": "Solution().buyChoco",
+        "valkyrie": "Solution().buyChoco"
     }
 }

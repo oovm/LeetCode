@@ -597,6 +597,7 @@
     ],
     "invoke": {
         "python": "Solution().zigzagTraversal",
-        "typescript": "Solution().zigzagTraversal"
+        "typescript": "Solution().zigzagTraversal",
+        "valkyrie": "Solution().zigzagTraversal"
     }
 }

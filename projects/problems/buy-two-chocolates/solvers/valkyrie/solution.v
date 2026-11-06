@@ -1,5 +1,30 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: buyChoco 需要 读取 prices 两最小价求余额
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.buy_two_chocolates;
+
+using std.collection;
+
+micro compare_ascending(a: i64, b: i64) -> i32 {
+    if a < b {
+        return -1
+    }
+    if a > b {
+        return 1
+    }
+    return 0
+}
+
+# 买最便宜的两块，钱不够就一分不花。
+[export(case: "camelCase")]
+micro buyChoco(prices: ArrayList<i64>, money: i64) -> i64 {
+    let ordered: ArrayList<i64> = sorted_by(prices, compare_ascending)
+    let cost: i64 = ordered⁅0⁆ + ordered⁅1⁆
+    if cost > money {
+        return money
+    }
+    return money - cost
+}
+
+class Solution {
+    micro buyChoco(self, prices: ArrayList<i64>, money: i64): i64 {
+        return buyChoco(prices, money)
+    }
+}

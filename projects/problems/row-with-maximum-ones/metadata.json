@@ -653,6 +653,7 @@
     ],
     "invoke": {
         "python": "Solution().rowAndMaximumOnes",
-        "typescript": "Solution().rowAndMaximumOnes"
+        "typescript": "Solution().rowAndMaximumOnes",
+        "valkyrie": "Solution().rowAndMaximumOnes"
     }
 }

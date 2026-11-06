@@ -755,5 +755,6 @@
     "invoke": {
         "python": "Solution().findMissingAndRepeatedValues",
         "typescript": "Solution().findMissingAndRepeatedValues"
-    }
+    },
+    "corpusDefect": true
 }

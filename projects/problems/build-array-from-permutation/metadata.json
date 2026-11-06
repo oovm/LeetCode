@@ -539,5 +539,6 @@
     "invoke": {
         "python": "Solution().buildArray",
         "typescript": "Solution().buildArray"
-    }
+    },
+    "corpusDefect": true
 }

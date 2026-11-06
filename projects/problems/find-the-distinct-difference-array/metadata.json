@@ -665,6 +665,7 @@
     ],
     "invoke": {
         "python": "Solution().distinctDifferenceArray",
-        "typescript": "Solution().distinctDifferenceArray"
+        "typescript": "Solution().distinctDifferenceArray",
+        "valkyrie": "Solution().distinctDifferenceArray"
     }
 }

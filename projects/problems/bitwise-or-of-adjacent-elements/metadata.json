@@ -631,6 +631,7 @@
     ],
     "invoke": {
         "python": "Solution().orArray",
-        "typescript": "Solution().orArray"
+        "typescript": "Solution().orArray",
+        "valkyrie": "Solution().orArray"
     }
 }

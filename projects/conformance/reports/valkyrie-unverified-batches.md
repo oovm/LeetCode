@@ -1690,3 +1690,100 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   - `n-repeated-element-in-size-2n-array`：1 条全不重复且期望 null，违反题面约束。
 - 构建：按构建窗口约束本轮**未运行** `legion build` / cargo；待通知后用独立 `CARGO_TARGET_DIR`、`-j 4`、
   单进程、单条 ≤300 秒复跑，并以该次 passed/failed 为准。
+
+### 语料缺陷逐条证据（供语料侧统一处理）
+
+以下“期望”均指 `metadata.tests[i].expected`，参照解指同题 TS/Python 解法。
+
+- `decompress-run-length-encoded-list`：4 条，索引 23、24、77、81。输入均为奇数长度，
+  参照解按游程展开会缺最后一个值，语料生成器把期望写成字符串 `Error: list index out of range`；
+  例：#23 的 `nums` 长度 31，#24 为 `[10,1,9,2,8,3,7,4,6]`。
+- `cells-with-odd-values-in-a-matrix`：4 条，索引 1、42、69、72。`indices` 中的列号越出 `n`，
+  例：#1 `m=4,n=3` 但含 `[3,3]`；参照解直接抛 `IndexError`，期望同样被写成该错误串。
+  说明缺陷同时存在于输入与期望两侧。
+- `element-appearing-more-than-25-in-sorted-array`：31 条，索引 1、17、18、19、23、24、34、35、43、45、
+  46、49、54、57、59、61、66、67、77、80、83、85、86、89、96、99、100、101、106、108、109。
+  多数输入不存在占比严格大于 25% 的元素，例：#1 `[0..10]` 每个值各 1 次，#18 中 2 只占 3/12，
+  期望被写成错误串，参照解返回候选值或回退 `arr[0]`。
+- `count-negative-numbers-in-a-sorted-matrix`：20 条，索引 1、20、26、28、30、32、35、37、38、39、41、
+  43、49、68、76、81、86、90、91、94。期望与参照解成对矛盾，例：#1 为 5×1 的 `[-3,-2,-1,0,1]`，
+  期望 0 而参照解得 5；#20 为 5×5 阶梯矩阵，期望 20 而参照解得 0。
+- `flipping-an-image`：8 条，索引 7、8、15、30、34、38、39、58。期望不符合“水平翻转再取反”：
+  例：#7 输入首行全 1，期望为前 5 个 0、后 5 个 1，参照解为全 0；#8、#15 同样只翻转或只取反了部分行列。
+- `n-repeated-element-in-size-2n-array`：1 条，索引 43。`nums` 共 100 个且全不重复，
+  违反“恰有一个元素出现 n 次”的题面约束，期望为 `null`，TS 参照解返回 `-1`，
+  i64 通道无法表达 `null`，只能保持 blocked。
+
+## 批次 R32-2026-11-06（纯整数占位题第二批：24 题写入 + 9 题语料缺陷，authored-unverified）
+
+- 口径：与 R31 相同。只改 `leetcode.v` 的 `solvers/valkyrie/solution.v` 与 `metadata.json`；
+  `valkyrie.v`、`nyar-vm.rs`、`valkyrie.rs` 未动；判题框架、既有用例与期望值未改。
+- 挑题：按“同一能力面成组”选 33 题，三组各 8 题，另 9 题作为同面替换/补充：
+  - 矩阵 / 区间组（8）：`maximum-students-on-a-single-bench`、`find-champion-i`、
+    `delete-greatest-value-in-each-row`、`prime-in-diagonal`、`maximum-population-year`、
+    `points-that-intersect-with-cars`、`minimum-operations-to-make-columns-strictly-increasing`、
+    `button-with-longest-push-time`。
+  - 一维重建组（8）：`build-array-from-permutation`、`minimum-number-game`、
+    `separate-the-digits-in-an-array`、`transform-array-by-parity`、
+    `bitwise-or-of-adjacent-elements`、`find-the-distinct-difference-array`、
+    `left-and-right-sum-differences`、`apply-operations-to-an-array`。
+  - 单数组扫描组（8）：`count-pairs-whose-sum-is-less-than-target`、`buy-two-chocolates`、
+    `maximum-sum-with-exactly-k-elements`、`count-equal-and-divisible-pairs-in-an-array`、
+    `count-number-of-pairs-with-absolute-difference-k`、`maximize-sum-of-array-after-k-negations`、
+    `minimum-operations-to-exceed-threshold-value-i`、`number-of-arithmetic-triplets`。
+  - 同面补充（9）：`image-smoother`、`largest-local-values-in-a-matrix`、
+    `find-the-width-of-columns-of-a-grid`、`row-with-maximum-ones`、
+    `find-missing-and-repeated-values`、`maximum-area-of-longest-diagonal-rectangle`、
+    `modify-the-matrix`、`zigzag-grid-traversal-with-skip`、`find-the-number-of-good-pairs-i`。
+- **写入实现 24 题**（`solution.v` + `metadata.invoke.valkyrie`，全部 `authored-unverified`）：
+  - 矩阵 / 区间（5）：`maximum-students-on-a-single-bench`（86）、
+    `delete-greatest-value-in-each-row`（93）、`prime-in-diagonal`（73）、
+    `minimum-operations-to-make-columns-strictly-increasing`（93）、
+    `button-with-longest-push-time`（104）；
+  - 一维重建（5）：`transform-array-by-parity`（104）、`bitwise-or-of-adjacent-elements`（104）、
+    `find-the-distinct-difference-array`（107）、`left-and-right-sum-differences`（131）、
+    `apply-operations-to-an-array`（123）；
+  - 单数组扫描（7）：`count-pairs-whose-sum-is-less-than-target`（112）、
+    `buy-two-chocolates`（111）、`maximum-sum-with-exactly-k-elements`（97）、
+    `count-equal-and-divisible-pairs-in-an-array`（89）、
+    `count-number-of-pairs-with-absolute-difference-k`（106）、
+    `minimum-operations-to-exceed-threshold-value-i`（104）、`number-of-arithmetic-triplets`（104）；
+  - 同面补充（7）：`image-smoother`（81）、`largest-local-values-in-a-matrix`（56）、
+    `row-with-maximum-ones`（71）、`maximum-area-of-longest-diagonal-rectangle`（107）、
+    `modify-the-matrix`（85）、`zigzag-grid-traversal-with-skip`（71）、
+    `find-the-number-of-good-pairs-i`（106）。
+- 静态自查：24 题 `namespace` 与 slug、`[export(case: "camelCase")]`、全局函数名、
+  `class Solution` 方法名、`metadata.invoke.valkyrie` 六者一致；无残留 `# blocked` 注释。
+- 镜像回放（Python 镜像按 metadata 参数序回放，非 V 构建，不作为通过证据）：
+  **2318 条用例，mismatch=0**。
+- 陈旧 `# blocked: std.collection 数组参数读取` 的处理：两批实证（R30 的 `ArrayList<i64>` 形参、
+  `two-sum`）已证伪该阻塞理由，本批全部按实际可读数组参数写法实现，不照抄旧注释。
+- 构建：按窗口约束本轮**未运行** `legion build` / cargo。
+
+### R32 语料缺陷逐条证据（供语料侧统一处理）
+
+以下 9 题保持 blocked、原用例与期望值未改、`metadata.corpusDefect=true`、不加 `invoke.valkyrie`；
+“参照”指同题 TS/Python 解法。
+
+- `find-champion-i`：44/56 条用例。多数输入不存在“击败其他所有队”的冠军（如 #2 的 3×3
+  石头剪刀布循环 `[[0,1,0],[0,0,1],[1,0,0]]`），题面保证冠军存在；期望 `null` 与 Python 参照
+  （返回 `None`）一致，而 TypeScript 参照返回 `-1`，两侧参照互相矛盾。
+- `maximum-population-year`：#33。`logs` 含 `[2045, 2055]`，死亡年份 2055 超出题面上界 2050，
+  Python 参照抛 `IndexError`，期望被写成 `Error: list index out of range`。
+- `points-that-intersect-with-cars`：5 条，索引 17、50、54、62、78。区间右端点超过 100
+  （如 #17 的 `[200, 300]`），Python 参照抛 `IndexError`，期望为错误串。
+- `build-array-from-permutation`：#42。`nums=[2,4,6,8,10,1,3,5,7,9]` 不是 `0..n-1` 的置换，
+  按置换取值越界，Python 参照抛 `IndexError`，期望为错误串。
+- `minimum-number-game`：5 条，索引 21、35、76、89、92。数组长度分别为 15、15、15、45、15，
+  题面要求偶数长度；Python 参照两两交换时越界，期望为错误串。
+- `separate-the-digits-in-an-array`：#14 含 0（题面要求 `nums[i] >= 1`），期望丢弃该位，
+  而 TypeScript 参照 `String(0)` 会保留 0；#48 含字符串元素 `"112233445566778900"`，
+  且数值超过 10^5，属类型与约束双重错误。
+- `maximize-sum-of-array-after-k-negations`：#106。`nums` 含 -200..-500，超出题面下界 -100；
+  期望 -1500 等于完全不翻转的原始和，与 TypeScript 参照 300 矛盾
+  （Python 参照只对 `[-100, 100]` 建表，因此也输出 -1500）。
+- `find-the-width-of-columns-of-a-grid`：#41。`grid` 三行长度分别为 5、5、4（列长不一致），
+  期望 `[9, 10, 8, 8]` 按 4 列给出，参照按 3 列输出。
+- `find-missing-and-repeated-values`：20 条，索引 3、12、15、17、18、31、37、40、41、43、44、
+  52、58、59、66、67、68、73、80、81。其中 17 条含超出 `1..n²` 的值（如 #3 的 4×4 含 17）；
+  #15 为 10×5、#41/#43 为 10×6 的非方阵；期望为错误串或 `[x, 100]`，参照解越界或无法定义。

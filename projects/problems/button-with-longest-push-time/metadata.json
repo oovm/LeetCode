@@ -893,6 +893,7 @@
     ],
     "invoke": {
         "python": "Solution().buttonWithLongestTime",
-        "typescript": "Solution().buttonWithLongestTime"
+        "typescript": "Solution().buttonWithLongestTime",
+        "valkyrie": "Solution().buttonWithLongestTime"
     }
 }

@@ -603,5 +603,6 @@
     "invoke": {
         "python": "Solution().numberOfPoints",
         "typescript": "Solution().numberOfPoints"
-    }
+    },
+    "corpusDefect": true
 }

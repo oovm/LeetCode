@@ -1,5 +1,44 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: applyOperations 需要 读取 nums 相邻合并后零后置
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.apply_operations_to_an_array;
+
+using std.collection;
+
+# 先就地合并相邻相等项，再把所有 0 移到末尾。
+[export(case: "camelCase")]
+micro applyOperations(nums: ArrayList<i64>) -> ArrayList<i64> {
+    let count: usize = nums.length()
+    let mut working: ArrayList<i64> = ArrayList::new(count)
+    let mut index: usize = 0
+    while index < count {
+        working.push(nums⁅index⁆)
+        index = index + 1
+    }
+
+    index = 0
+    while index + 1 < count {
+        if working⁅index⁆ == working⁅index + 1⁆ {
+            working⁅index⁆ = working⁅index⁆ * 2
+            working⁅index + 1⁆ = 0
+        }
+        index = index + 1
+    }
+
+    let mut answer: ArrayList<i64> = ArrayList::new(count)
+    index = 0
+    while index < count {
+        let value: i64 = working⁅index⁆
+        if value != 0 {
+            answer.push(value)
+        }
+        index = index + 1
+    }
+    while answer.length() < count {
+        answer.push(0)
+    }
+    return answer
+}
+
+class Solution {
+    micro applyOperations(self, nums: ArrayList<i64>): ArrayList<i64> {
+        return applyOperations(nums)
+    }
+}
