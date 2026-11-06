@@ -15,7 +15,7 @@ micro place_digit(rows: ArrayList<BitSet>, cols: ArrayList<BitSet>, boxes: Array
 }
 
 class Solution {
-    [export(case: "isValidSudoku")]
+    [export(case: "camelCase")]
     micro isValidSudoku(board: ArrayList<ArrayList<utf8>>) -> bool {
         let rows: ArrayList<BitSet> = ArrayList::new(9)
         let cols: ArrayList<BitSet> = ArrayList::new(9)

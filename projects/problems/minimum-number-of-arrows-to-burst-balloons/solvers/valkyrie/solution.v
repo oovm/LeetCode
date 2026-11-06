@@ -27,7 +27,7 @@ micro order_items<T>(items: ArrayList<T>): unit
 }
 
 class Solution {
-    [export(case: "findMinArrowShots")]
+    [export(case: "camelCase")]
     micro findMinArrowShots(points: ArrayList<ArrayList<i64>>) -> i64 {
         let mut rows: ArrayList<Balloon> = ArrayList::new(points.length())
         loop row in points {

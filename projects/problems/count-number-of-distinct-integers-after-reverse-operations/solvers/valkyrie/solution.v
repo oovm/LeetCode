@@ -16,7 +16,7 @@ micro reverse_number(value: i64) -> i64 {
 }
 
 class Solution {
-    [export(case: "countDistinctIntegers")]
+    [export(case: "camelCase")]
     micro countDistinctIntegers(nums: ArrayList<i64>) -> i64 {
         let mut seen: HashSet<i64> = HashSet::new()
         loop value in nums {

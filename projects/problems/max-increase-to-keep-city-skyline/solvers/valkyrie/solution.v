@@ -5,7 +5,7 @@ using std.collection
 # 每个格子的上限是该行最大值与该列最大值的较小者，答案就是所有上限与原值之差的和。
 # 题面写 n×n；生成器有一条 4×3 用例（期望自洽），所以行列分别取长度，不假设方阵，这是有意选择。
 class Solution {
-    [export(case: "maxIncreaseKeepingSkyline")]
+    [export(case: "camelCase")]
     micro maxIncreaseKeepingSkyline(grid: ArrayList<ArrayList<i64>>) -> i64 {
         let rows: usize = grid.length()
         if rows == 0 {

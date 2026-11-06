@@ -25,7 +25,7 @@ micro sink(grid: ArrayList<ArrayList<i64>>, row: usize, col: usize, rows: usize,
 }
 
 class Solution {
-    [export(case: "maxAreaOfIsland")]
+    [export(case: "camelCase")]
     micro maxAreaOfIsland(grid: ArrayList<ArrayList<i64>>) -> i64 {
         let rows: usize = grid.length()
         if rows == 0 {

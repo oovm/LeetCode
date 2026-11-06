@@ -5,7 +5,7 @@ using std.collection
 # 顺着 nums[i] 走，把走过的位置改成 -1；一条环的长度就是这条链的答案。
 # 生成器用例有 3 条把下标写到界外（期望本身就是 Error），已删，不按越界做兜底。
 class Solution {
-    [export(case: "arrayNesting")]
+    [export(case: "camelCase")]
     micro arrayNesting(nums: ArrayList<i64>) -> i64 {
         let n: usize = nums.length()
         let mut best: i64 = 0

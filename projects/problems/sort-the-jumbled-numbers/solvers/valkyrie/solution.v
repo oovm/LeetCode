@@ -45,7 +45,7 @@ micro jumbled_value(value: i64, mapping: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    [export(case: "sortJumbled")]
+    [export(case: "camelCase")]
     micro sortJumbled(mapping: ArrayList<i64>, nums: ArrayList<i64>) -> ArrayList<i64> {
         let mut entries: ArrayList<Jumbled> = ArrayList::new(nums.length())
         let mut index: usize = 0

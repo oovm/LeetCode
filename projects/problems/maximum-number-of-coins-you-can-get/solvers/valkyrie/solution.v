@@ -13,7 +13,7 @@ micro order_items<T>(items: ArrayList<T>): unit
 }
 
 class Solution {
-    [export(case: "maxCoins")]
+    [export(case: "camelCase")]
     micro maxCoins(piles: ArrayList<i64>) -> i64 {
         order_items(piles)
 

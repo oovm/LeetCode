@@ -31,7 +31,7 @@ micro order_items<T>(items: ArrayList<T>): unit
 }
 
 class Solution {
-    [export(case: "jobScheduling")]
+    [export(case: "camelCase")]
     micro jobScheduling(startTime: ArrayList<i64>, endTime: ArrayList<i64>, profit: ArrayList<i64>) -> i64 {
         let count: usize = startTime.length()
         if count == 0 {

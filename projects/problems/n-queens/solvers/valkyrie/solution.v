@@ -54,7 +54,7 @@ micro place(row: usize, size: usize, columns: BitSet, downward: BitSet, upward: 
 }
 
 class Solution {
-    [export(case: "solveNQueens")]
+    [export(case: "camelCase")]
     micro solveNQueens(n: i64) -> ArrayList<ArrayList<utf8>> {
         let size: usize = n as usize
         let mut columns: BitSet = BitSet::with_capacity(size)

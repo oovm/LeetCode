@@ -3,7 +3,7 @@ namespace leetcode.solution
 using std.collection
 
 class Solution {
-    [export(case: "trap")]
+    [export(case: "camelCase")]
     micro trap(height: ArrayList<i64>) -> i64 {
         let total: usize = height.length()
         if total == 0 {

@@ -33,7 +33,7 @@ micro fill(nums: ArrayList<i64>, target: i64, start: usize, current: i64, groups
 }
 
 class Solution {
-    [export(case: "canPartitionKSubsets")]
+    [export(case: "camelCase")]
     micro canPartitionKSubsets(nums: ArrayList<i64>, k: i64) -> bool {
         let length: usize = nums.length()
         let mut total: i64 = 0

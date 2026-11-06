@@ -33,7 +33,7 @@ micro order_items<T>(items: ArrayList<T>): unit
 }
 
 class Solution {
-    [export(case: "twoCitySchedCost")]
+    [export(case: "camelCase")]
     micro twoCitySchedCost(costs: ArrayList<ArrayList<i64>>) -> i64 {
         let mut rows: ArrayList<CostRow> = ArrayList::new(costs.length())
         loop row in costs {

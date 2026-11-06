@@ -25,7 +25,7 @@ micro collect_sums(candidates: ArrayList<i64>, start: i64, target: i64, path: Ar
 }
 
 class Solution {
-    [export(case: "combinationSum")]
+    [export(case: "camelCase")]
     micro combinationSum(candidates: ArrayList<i64>, target: i64) -> ArrayList<ArrayList<i64>> {
         let out: ArrayList<ArrayList<i64>> = ArrayList::new(8)
         let path: ArrayList<i64> = ArrayList::new(8)

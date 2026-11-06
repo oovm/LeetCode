@@ -88,7 +88,7 @@ micro eval_bool(node: BoolNode) -> bool {
 }
 
 class Solution {
-    [export(case: "parseBoolExpr")]
+    [export(case: "camelCase")]
     micro parseBoolExpr(expression: utf8) -> bool {
         let cursor: ArrayList<i64> = ArrayList::new(1)
         cursor.push(0)

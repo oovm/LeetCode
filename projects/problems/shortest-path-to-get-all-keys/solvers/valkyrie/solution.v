@@ -5,7 +5,7 @@ using std.collection
 # 题内触发点: BFS 状态是「格子 + 6 位钥匙掩码」；`BitSet(rows * cols * 64)` 作访问表，
 # 容量由题面上界给出，不依赖 BitSet 自身报告长度（G25）。
 class Solution {
-    [export(case: "shortestPathAllKeys")]
+    [export(case: "camelCase")]
     micro shortestPathAllKeys(grid: ArrayList<utf8>) -> i64 {
         let rows: i64 = grid.length() as i64
         let cols: i64 = grid⁅0⁆.byte_length() as i64

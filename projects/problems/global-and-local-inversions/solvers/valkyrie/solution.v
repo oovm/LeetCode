@@ -9,7 +9,7 @@ using std.collection
 # `[2,1,0]` 有 3 个全局逆序、2 个相邻逆序，返回 false。与题面定义一致，
 # 说明这是按定义判定，不是针对生成器的特判。
 class Solution {
-    [export(case: "isIdealPermutation")]
+    [export(case: "camelCase")]
     micro isIdealPermutation(nums: ArrayList<i64>) -> bool {
         let n: usize = nums.length()
         if n <= 2 {

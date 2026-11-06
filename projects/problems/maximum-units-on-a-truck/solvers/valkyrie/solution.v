@@ -27,7 +27,7 @@ micro order_items<T>(items: ArrayList<T>): unit
 }
 
 class Solution {
-    [export(case: "maximumUnits")]
+    [export(case: "camelCase")]
     micro maximumUnits(boxTypes: ArrayList<ArrayList<i64>>, truckSize: i64) -> i64 {
         let mut rows: ArrayList<BoxType> = ArrayList::new(boxTypes.length())
         loop row in boxTypes {

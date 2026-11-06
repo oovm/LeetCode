@@ -29,7 +29,7 @@ micro order_items<T>(items: ArrayList<T>): unit
 }
 
 class Solution {
-    [export(case: "merge")]
+    [export(case: "camelCase")]
     micro merge(intervals: ArrayList<ArrayList<i64>>) -> ArrayList<ArrayList<i64>> {
         let mut rows: ArrayList<Interval> = ArrayList::new(intervals.length())
         loop row in intervals {

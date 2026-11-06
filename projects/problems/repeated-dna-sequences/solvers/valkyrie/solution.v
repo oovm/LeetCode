@@ -17,7 +17,7 @@ micro window_text(s: utf8, start: usize) -> utf8 {
 }
 
 class Solution {
-    [export(case: "findRepeatedDnaSequences")]
+    [export(case: "camelCase")]
     micro findRepeatedDnaSequences(s: utf8) -> ArrayList<utf8> {
         let mut result: ArrayList<utf8> = ArrayList::new(0)
         let length: usize = s.byte_length()

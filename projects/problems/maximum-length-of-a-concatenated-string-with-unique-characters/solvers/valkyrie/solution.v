@@ -28,7 +28,7 @@ micro search(words: ArrayList<BitSet>, sizes: ArrayList<i64>, start: usize, curr
 }
 
 class Solution {
-    [export(case: "maxLength")]
+    [export(case: "camelCase")]
     micro maxLength(arr: ArrayList<utf8>) -> i64 {
         let mut words: ArrayList<BitSet> = ArrayList::new(arr.length())
         let mut sizes: ArrayList<i64> = ArrayList::new(arr.length())

@@ -5,7 +5,7 @@ using std.collection
 # 环形取三连点：`colors[i]` 与 `colors[i+1]` 不同、且 `colors[i+1]` 与 `colors[i+2]` 不同，
 # 就以 `i` 开头形成一个长度为 3 的交替组。下标越过末尾就回到 0，首尾相接。
 class Solution {
-    [export(case: "numberOfAlternatingGroups")]
+    [export(case: "camelCase")]
     micro numberOfAlternatingGroups(colors: ArrayList<i64>) -> i64 {
         let count: usize = colors.length()
         if count < 3 {

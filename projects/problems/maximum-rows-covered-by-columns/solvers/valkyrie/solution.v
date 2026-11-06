@@ -54,7 +54,7 @@ micro probe(rows: ArrayList<BitSet>, row_count: usize, width: usize, num_select:
 }
 
 class Solution {
-    [export(case: "maximumRows")]
+    [export(case: "camelCase")]
     micro maximumRows(matrix: ArrayList<ArrayList<i64>>, numSelect: i64) -> i64 {
         let row_count: usize = matrix.length()
         if row_count == 0 {

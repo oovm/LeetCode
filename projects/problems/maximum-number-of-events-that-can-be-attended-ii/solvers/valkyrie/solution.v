@@ -47,7 +47,7 @@ micro first_start_after(starts: ArrayList<i64>, value: i64) -> usize {
 }
 
 class Solution {
-    [export(case: "maxValue")]
+    [export(case: "camelCase")]
     micro maxValue(events: ArrayList<ArrayList<i64>>, k: i64) -> i64 {
         let mut rows: ArrayList<Event> = ArrayList::new(events.length())
         loop row in events {

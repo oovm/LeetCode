@@ -4,7 +4,7 @@ using std.collection
 
 # 题内触发点: 前缀异或表，区间异或用「右端前缀 ^ 左端前一位前缀」两次查表。
 class Solution {
-    [export(case: "xorQueries")]
+    [export(case: "camelCase")]
     micro xorQueries(arr: ArrayList<i64>, queries: ArrayList<ArrayList<i64>>) -> ArrayList<i64> {
         let prefix: ArrayList<i64> = ArrayList::new(arr.length() + 1)
         prefix.push(0)

@@ -13,7 +13,7 @@ micro fill_spaces(builder: Utf8Builder, count: usize) -> unit {
 }
 
 class Solution {
-    [export(case: "fullJustify")]
+    [export(case: "camelCase")]
     micro fullJustify(words: ArrayList<utf8>, maxWidth: i64) -> ArrayList<utf8> {
         let width: usize = maxWidth as usize
         let total: usize = words.length()

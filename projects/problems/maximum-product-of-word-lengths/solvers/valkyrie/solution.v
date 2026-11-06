@@ -27,7 +27,7 @@ micro disjoint(left: BitSet, right: BitSet) -> bool {
 }
 
 class Solution {
-    [export(case: "maxProduct")]
+    [export(case: "camelCase")]
     micro maxProduct(words: ArrayList<utf8>) -> i64 {
         let masks: ArrayList<BitSet> = ArrayList::new(words.length())
         loop word in words {

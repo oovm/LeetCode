@@ -19,7 +19,7 @@ micro row_bits(row: ArrayList<i64>, cols: usize) -> BitSet {
 }
 
 class Solution {
-    [export(case: "countCornerRectangles")]
+    [export(case: "camelCase")]
     micro countCornerRectangles(grid: ArrayList<ArrayList<i64>>) -> i64 {
         let rows: usize = grid.length()
         if rows == 0 {

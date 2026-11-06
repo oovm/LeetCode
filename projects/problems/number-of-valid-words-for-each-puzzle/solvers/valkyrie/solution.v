@@ -15,7 +15,7 @@ micro letter_mask(word: utf8) -> i64 {
 }
 
 class Solution {
-    [export(case: "findNumOfValidWords")]
+    [export(case: "camelCase")]
     micro findNumOfValidWords(words: ArrayList<utf8>, puzzles: ArrayList<utf8>) -> ArrayList<i64> {
         let masks: ArrayList<i64> = ArrayList::new(words.length())
         loop word in words {

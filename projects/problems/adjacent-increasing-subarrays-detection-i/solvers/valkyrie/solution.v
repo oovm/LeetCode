@@ -14,7 +14,7 @@ micro strict_run(nums: ArrayList<i64>, start: usize, limit: usize) -> i64 {
 }
 
 class Solution {
-    [export(case: "hasIncreasingSubarrays")]
+    [export(case: "camelCase")]
     micro hasIncreasingSubarrays(nums: ArrayList<i64>, k: i64) -> bool {
         let count: usize = nums.length()
         let need: usize = k as usize

@@ -6,7 +6,7 @@ using std.text
 # 题内触发点: G18 —— std 的 `utf8` 只有精确分隔符 `split`，没有 `split_whitespace`；
 # 题面保证单词由单个空格分隔，故用 `split(" ")` 等价展开。
 class Solution {
-    [export(case: "printVertically")]
+    [export(case: "camelCase")]
     micro printVertically(s: utf8) -> ArrayList<utf8> {
         let words: [utf8] = s.split(" ")
         let word_count: usize = words.length()

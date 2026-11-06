@@ -19,7 +19,7 @@ micro count_at_most(nums: ArrayList<i64>, bound: i64) -> i64 {
 }
 
 class Solution {
-    [export(case: "numSubarrayBoundedMax")]
+    [export(case: "camelCase")]
     micro numSubarrayBoundedMax(nums: ArrayList<i64>, left: i64, right: i64) -> i64 {
         return count_at_most(nums, right) - count_at_most(nums, left - 1)
     }

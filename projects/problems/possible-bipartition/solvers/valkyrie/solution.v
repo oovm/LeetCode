@@ -6,7 +6,7 @@ using std.collection
 # std 的 graph 模块已有 cycle / topological_sort / bfs / dfs 与 successors，唯独没有二色判定入口（G9），
 # 这里在 DirectedGraph 上组合，不另造图结构。入参是嵌套 ArrayList，marshal 面待验证。
 class Solution {
-    [export(case: "possibleBipartition")]
+    [export(case: "camelCase")]
     micro possibleBipartition(n: i64, dislikes: ArrayList<ArrayList<i64>>) -> bool {
         let size: usize = n as usize
         let mut graph: DirectedGraph<i64> = DirectedGraph::new()

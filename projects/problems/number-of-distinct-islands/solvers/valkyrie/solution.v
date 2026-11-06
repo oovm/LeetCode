@@ -82,7 +82,7 @@ micro mark_island(grid: ArrayList<ArrayList<i64>>, start_row: usize, start_col: 
 }
 
 class Solution {
-    [export(case: "numDistinctIslands")]
+    [export(case: "camelCase")]
     micro numDistinctIslands(grid: ArrayList<ArrayList<i64>>) -> i64 {
         let rows: usize = grid.length()
         if rows == 0 {

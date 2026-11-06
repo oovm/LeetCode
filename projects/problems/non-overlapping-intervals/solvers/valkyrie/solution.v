@@ -27,7 +27,7 @@ micro order_items<T>(items: ArrayList<T>): unit
 }
 
 class Solution {
-    [export(case: "eraseOverlapIntervals")]
+    [export(case: "camelCase")]
     micro eraseOverlapIntervals(intervals: ArrayList<ArrayList<i64>>) -> i64 {
         let mut rows: ArrayList<Interval> = ArrayList::new(intervals.length())
         loop row in intervals {

@@ -7,7 +7,7 @@ using std.collection
 #   [待补 API] micro new(capacity: usize) -> Self    # 预分配入口（G12），源码不存在
 # 题面要求长度偶数；生成器用例存在奇数长度，但「两两平均值的种数」仍良定义，解法按 i64 通用处理，不删用例。
 class Solution {
-    [export(case: "distinctAverages")]
+    [export(case: "camelCase")]
     micro distinctAverages(nums: ArrayList<i64>) -> i64 {
         let length: usize = nums.length()
         let mut sums: HashSet<i64> = HashSet::new()

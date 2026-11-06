@@ -64,7 +64,7 @@ micro ways_in_range(text: utf8, start: i64, stop: i64) -> ArrayList<i64> {
 }
 
 class Solution {
-    [export(case: "diffWaysToCompute")]
+    [export(case: "camelCase")]
     micro diffWaysToCompute(expression: utf8) -> ArrayList<i64> {
         let length: i64 = expression.byte_length() as i64
         return ways_in_range(expression, 0, length)

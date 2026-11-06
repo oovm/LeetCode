@@ -14,7 +14,7 @@ micro hours_needed(piles: ArrayList<i64>, speed: i64) -> i64 {
 }
 
 class Solution {
-    [export(case: "minEatingSpeed")]
+    [export(case: "camelCase")]
     micro minEatingSpeed(piles: ArrayList<i64>, h: i64) -> i64 {
         let mut high: i64 = 0
         loop pile in piles {

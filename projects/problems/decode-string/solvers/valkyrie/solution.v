@@ -86,7 +86,7 @@ micro decode_parts(text: utf8, cursor: ArrayList<i64>) -> ArrayList<DecodedPart>
 }
 
 class Solution {
-    [export(case: "decodeString")]
+    [export(case: "camelCase")]
     micro decodeString(s: utf8) -> utf8 {
         let cursor: ArrayList<i64> = ArrayList::new(1)
         cursor.push(0)

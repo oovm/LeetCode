@@ -58,7 +58,7 @@ micro count_closed(ends: ArrayList<i64>, value: i64) -> usize {
 }
 
 class Solution {
-    [export(case: "fullBloomFlowers")]
+    [export(case: "camelCase")]
     micro fullBloomFlowers(flowers: ArrayList<ArrayList<i64>>, people: ArrayList<i64>) -> ArrayList<i64> {
         let mut periods: ArrayList<Flower> = ArrayList::new(flowers.length())
         let mut ends: ArrayList<i64> = ArrayList::new(flowers.length())

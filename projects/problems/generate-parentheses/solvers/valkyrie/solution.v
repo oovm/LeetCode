@@ -17,7 +17,7 @@ micro expand(open: i64, close: i64, limit: i64, current: utf8, results: ArrayLis
 }
 
 class Solution {
-    [export(case: "generateParenthesis")]
+    [export(case: "camelCase")]
     micro generateParenthesis(n: i64) -> ArrayList<utf8> {
         let mut results: ArrayList<utf8> = ArrayList::new(0)
         expand(0, 0, n, "", results)

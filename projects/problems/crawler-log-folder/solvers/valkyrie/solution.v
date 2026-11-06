@@ -22,7 +22,7 @@ micro classify_folder(entry: utf8) -> FolderOp {
 }
 
 class Solution {
-    [export(case: "minOperations")]
+    [export(case: "camelCase")]
     micro minOperations(logs: ArrayList<utf8>) -> i64 {
         let mut depth: i64 = 0
         loop entry in logs {

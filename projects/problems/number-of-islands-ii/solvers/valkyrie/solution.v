@@ -5,7 +5,7 @@ using std.collection
 # 题内触发点: G10 —— `DisjointSet` 以「集合元素」为键，题内把二维坐标压成单 i64 后直接建森林，
 # 只依赖 `new` / `add` / `contains` / `union` / `group_count`，不依赖索引式并查集构造。
 class Solution {
-    [export(case: "numIslands2")]
+    [export(case: "camelCase")]
     micro numIslands2(m: i64, n: i64, positions: ArrayList<ArrayList<i64>>) -> ArrayList<i64> {
         let cols: i64 = n
         let mut islands: DisjointSet<i64> = DisjointSet::new()

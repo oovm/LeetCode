@@ -10,7 +10,7 @@ using std.collection
 # 代价是位集容量由输入数据决定、不可预测；题面写 1..n，但生成器用例存在取值超出 n 的情形，
 # 换来的好处是不为此删用例、也不给越界值加特判。
 class Solution {
-    [export(case: "findThePrefixCommonArray")]
+    [export(case: "camelCase")]
     micro findThePrefixCommonArray(A: ArrayList<i64>, B: ArrayList<i64>) -> ArrayList<i64> {
         let n: usize = A.length()
         let mut largest: i64 = 0

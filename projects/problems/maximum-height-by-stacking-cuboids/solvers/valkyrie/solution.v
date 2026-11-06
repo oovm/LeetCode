@@ -55,7 +55,7 @@ micro normalize(row: ArrayList<i64>) -> Cuboid {
 }
 
 class Solution {
-    [export(case: "maxHeight")]
+    [export(case: "camelCase")]
     micro maxHeight(cuboids: ArrayList<ArrayList<i64>>) -> i64 {
         let mut rows: ArrayList<Cuboid> = ArrayList::new(cuboids.length())
         loop row in cuboids {

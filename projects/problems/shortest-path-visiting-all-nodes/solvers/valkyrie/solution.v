@@ -6,7 +6,7 @@ using std.collection
 # 容量由题面上界（n <= 12）给出，因而只用到现有 `get` / `set`；本解不依赖 `count` / `length` / 迭代，
 # 也不作「BitSet 已能自报规模」的假设。
 class Solution {
-    [export(case: "shortestPathLength")]
+    [export(case: "camelCase")]
     micro shortestPathLength(graph: ArrayList<ArrayList<i64>>) -> i64 {
         let nodes: usize = graph.length()
         let states: i64 = (1 as i64) << (nodes as i64)

@@ -12,7 +12,7 @@ micro partition_buckets(capacity: usize) -> ArrayList<ArrayList<i64>> {
 }
 
 class Solution {
-    [export(case: "pivotArray")]
+    [export(case: "camelCase")]
     micro pivotArray(nums: ArrayList<i64>, pivot: i64) -> ArrayList<i64> {
         let buckets: ArrayList<ArrayList<i64>> = nums.into_iterator().fold(
             partition_buckets(nums.length()),

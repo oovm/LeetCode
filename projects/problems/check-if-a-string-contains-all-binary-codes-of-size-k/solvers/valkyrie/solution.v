@@ -4,7 +4,7 @@ using std.collection
 
 # 题内触发点: `BitSet(2^k)` 记录所有长度为 k 的子串码值；置位数只能外部累计（G25 无 `count`）。
 class Solution {
-    [export(case: "hasAllCodes")]
+    [export(case: "camelCase")]
     micro hasAllCodes(s: utf8, k: i64) -> bool {
         let width: usize = k as usize
         let mut universe: usize = 1

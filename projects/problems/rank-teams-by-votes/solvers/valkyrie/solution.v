@@ -33,7 +33,7 @@ micro order_items<T>(items: ArrayList<T>): unit
 }
 
 class Solution {
-    [export(case: "rankTeams")]
+    [export(case: "camelCase")]
     micro rankTeams(votes: ArrayList<utf8>) -> utf8 {
         let first: utf8 = votes⁅0⁆
         let width: usize = first.byte_length()

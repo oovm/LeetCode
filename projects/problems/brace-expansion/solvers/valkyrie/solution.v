@@ -63,7 +63,7 @@ micro expand_run(text: utf8, cursor: ArrayList<i64>, stop_at_comma: bool) -> Arr
 }
 
 class Solution {
-    [export(case: "expand")]
+    [export(case: "camelCase")]
     micro expand(s: utf8) -> ArrayList<utf8> {
         let cursor: ArrayList<i64> = ArrayList::new(1)
         cursor.push(0)
