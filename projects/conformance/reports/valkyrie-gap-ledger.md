@@ -1865,27 +1865,29 @@ imply char: Hash {
 
 ### G20 数值归约只有手写 fold（整数域缺席）
 
-- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/math/basic.v`、
-  `std/source/iterator/iterator_terminal.v`）
-- 定性：**该有但没有，且在两处同时缺**。`std.math` 的 `abs` / `max` / `min` / `clamp`
-  只接受 `f64`，没有整数重载；`Iterator` 终端有 `fold` / `reduce` / `any` / `all` /
-  `find` / `position` / `count`，但没有 `max` / `min` / `sum` / `product`。于是
-  「数组最大值」这种最基础归约只能手写 fold，或手写比较循环。
-- 期望签名（[提案]，源码尚不存在）：
+- 状态：**部分已提供（2026-11-06 构建复核）**。
+  `std/source/iterator/iterator_terminal.v` 已提供并验证通过
+  `std::iterator::max<I, T>(iter)` / `min<I, T>(iter)`（`I: Iterator<Item = T>`，`T: Comparable`，
+  空迭代器返回 `None`）：wasm 正例 build 0 / run 0，空序列与 3/9/4 序列断言均通过。
+  `std/source/math/basic.v` 的 `i64` 重载**未落地**：加 `micro max(a: i64, b: i64)` 后，
+  任何一次该重载的调用都会让同文件既有 `f64` 体报
+  `unresolved call 'infix >' in max`（`basic.v:14:8`，`infix <` 同因），属编译器重载解析缺陷，
+  停在此交回编译器线，坐标见本轮报告。
+- 残余缺口：`sum` / `product` 仍未提供（需 `Additive` / `Multiplicative` 合同，合同级，留待 01）。
+- 现签名（2026-11-06 已提供）：
 
 ```v
-# std/source/math/basic.v
-micro abs(value: i64): i64
-micro max(a: i64, b: i64): i64
-micro min(a: i64, b: i64): i64
-
 # std/source/iterator/iterator_terminal.v
-micro max<I, T>(self: I): Option<T> where I: Iterator<Item = T>, T: Comparable
-micro min<I, T>(self: I): Option<T> where I: Iterator<Item = T>, T: Comparable
-micro sum<I, T>(self: I, initial: T): T where I: Iterator<Item = T>
+micro max<I, T>(iter: I) -> Option<T> where I: Iterator<Item = T>, T: Comparable
+micro min<I, T>(iter: I) -> Option<T> where I: Iterator<Item = T>, T: Comparable
 ```
 
 - 影响题（1）：`kids-with-the-greatest-number-of-candies`（1431，糖果最大值）。
+- 2026-11-06 复跑：该题 V 解**仍不编译**，报 `unresolved call '<fn value>.fold'`（`solution.v:9`）
+  与 `unresolved call '<fn value>.map'`、`collect_array_list`（`solution.v:16`），接收者为数组
+  `into_iterator()` 产出的 `Nominal<i64>`；在 **pristine HEAD std** 上同样复现，与本轮改动无关。
+  同一迭代器改用自由函数形式 `std::iterator::max(iter)` 可通过，说明调用点用的是方法式
+  `iter.fold(...)`，需改成 `std::iterator::fold(iter, ...)` 的自由函数形式。
 - 不对称点：`f64` 有 `abs` / `max` / `min`，整数没有；迭代器有能表达一切的 `fold`，
   却没有最常用的 `max`。前者是重载缺失，后者是终端缺失，根因同一：数值归约没有按
   「整数 / 浮点」分行。
@@ -1895,22 +1897,23 @@ micro sum<I, T>(self: I, initial: T): T where I: Iterator<Item = T>
 
 ### G21 序列反向没有一等入口
 
-- 状态：未提供（**std 缺口**；2026-11-04 静态核对 `std/source/collection/ArrayList.v`、
-  `std/source/iterator/Iterator.v`、`std/source/text/Utf8Builder.v`）
-- 定性：**该有但没有，且三处同时缺**。`ArrayList` 有 `push` / `pop` / `first` / `last` 与
-  `insert` / `remove`，但没有 `reverse`；`Iterator` 有 `map` / `filter` / `skip` / `take` /
-  `enumerate`，但没有 `rev`；`Utf8Builder` 只有正向 `append`，没有 `prepend`。于是「低位先
-  追加、最后整段翻面」这种最常见的构造顺序，只能每次都手写双指针交换。
-- 期望签名（[提案]，源码尚不存在）：
+- 状态：**部分已提供（2026-11-06 构建复核）**。
+  `ArrayList::reverse(mut self): unit` 已提供并验证通过（空表 / 单元素 / 4 元素 / 连续两次翻面，
+  wasm build 0 / run 0）。逆序适配入口以**自由函数** `std::iterator::rev<I, T>(source)` 提供
+  （`ReverseIterator` 结构 + `Iterator` 实现），同样验证通过（6/5/4→None、空→None，build 0 / run 0）；
+  它不是 `Iterator` 的 trait 默认成员——默认成员里用关联类型 `Item` 构造泛型容器
+  （`ArrayList<Item>`）目前过不了类型检查，坐标见本轮报告。
+  `Utf8Builder::prepend` 仍缺（本批无调用点）。
+- 现签名（2026-11-06 已提供）：
 
 ```v
 # std/source/collection/ArrayList.v
 micro reverse(mut self): unit
 
-# std/source/iterator/Iterator.v
-micro rev(self) -> RevIterator<Item, Self>
+# std/source/iterator/ReverseIterator.v
+micro rev<I, T>(source: I) -> ReverseIterator<T> where I: Iterator<Item = T>
 
-# std/source/text/Utf8Builder.v
+# std/source/text/Utf8Builder.v（仍缺）
 micro prepend(mut self, value: char): unit
 ```
 
