@@ -3453,6 +3453,15 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 - **`HashMap::get_mut`**：需要 `&mut V` 引用合同，语言暂无。当前以 `HashMap::upsert(key, fallback, update)` 覆盖读改写场景（`std/source/collection/hashed/HashMap.v`）。
 - **`MultiSet` 等价语义 / 排序稳定性可声明属性（G24 / G27）**：属 `01 架构与编译合同` 级新增，按裁决留在账本，不单开块。
 
+## 待办：`Queue` / `PriorityQueue` 去 `[host_contract]`（2026-11-06，未落码）
+
+按 S7 影响面清单结论，本轮**不执行**，只修 `Queue::enqueue` 方法体（`push_back`），标签保留、解析面零变化。若后续执行去标签，必须同批完成下列全部动作，否则是静默死绑定：
+
+- 同步处理 `std.adaptor.jvm` / `std.adaptor.clr` 各 12 条 `[host_provider(std::collection::Queue::*)]` / `[host_provider(std::collection::PriorityQueue::*)]` 声明（删除或改为显式本地实现），两个 adaptor 共 24 条。
+- 规划器对「契约不存在的 provider」是静默跳过（`host.rs` 无 orphan 诊断），去标签后不会出现构建报错提示。
+- 需在 jvm/clr target 复跑，比对 `selected_host_providers` 数量（−12）与 `host_provider_binding_hash` 变化。
+- 风险面：jvm/clr SDK 消费方会从宿主原生 `Queue` / `PriorityQueue` 静默退回 Valkyrie 本地实现（`PriorityQueue` 等键顺序可能不同）。
+
 ## std 侧能力池复审（2026-11-06）
 
 口径：扫描 `projects/problems/**/solvers/valkyrie/solution.v` 的全部 `# 阻塞：` 标记，再对其中含真实代码的题真跑 `run_v_solver.ts`（addon 为当前 tip 构建）。
