@@ -14,20 +14,13 @@ micro count_pairs(n: i64, edges: ArrayList<ArrayList<i64>>) -> i64 {
         sets.union(edge⁅0⁆, edge⁅1⁆)
     }
 
-    # 分量规模：按根聚合元素个数。
-    let mut sizes: HashMap<i64, i64> = HashMap::new(n as usize)
-    loop member in sets.elements() {
-        let root: i64 = sets.find_root(member)
-        if sizes.contains_key(root) {
-            sizes.insert(root, sizes.get(root).unwrap() + 1)
-        } else {
-            sizes.insert(root, 1)
-        }
-    }
+    # 分量规模：一次遍历拿到全部根的分量表（等价于逐根 `group_sizes`，不重复扫描）。
+    let sizes: HashMap<i64, usize> = sets.group_size_table()
 
     let mut intra_component: i64 = 0
     loop size in sizes.values() {
-        intra_component = intra_component + size * (size - 1) / 2
+        let count: i64 = size as i64
+        intra_component = intra_component + count * (count - 1) / 2
     }
 
     let total: i64 = n * (n - 1) / 2

@@ -14,18 +14,9 @@ micro count_complete_components(n: i64, edges: ArrayList<ArrayList<i64>>) -> i64
         sets.union(edge⁅0⁆, edge⁅1⁆)
     }
 
-    let mut vertices: HashMap<i64, i64> = HashMap::new(n as usize)
+    # 分量点数：一次遍历拿到全部根的分量表（等价于逐根 `group_sizes`）。
+    let vertices: HashMap<i64, usize> = sets.group_size_table()
     let mut links: HashMap<i64, i64> = HashMap::new(edges.length())
-    node = 0
-    while node < n {
-        let root: i64 = sets.find_root(node)
-        if vertices.contains_key(root) {
-            vertices.insert(root, vertices.get(root).unwrap() + 1)
-        } else {
-            vertices.insert(root, 1)
-        }
-        node = node + 1
-    }
 
     loop edge in edges {
         let root: i64 = sets.find_root(edge⁅0⁆)
@@ -38,7 +29,7 @@ micro count_complete_components(n: i64, edges: ArrayList<ArrayList<i64>>) -> i64
 
     let mut complete: i64 = 0
     loop root in vertices.keys() {
-        let member_count: i64 = vertices.get(root).unwrap()
+        let member_count: i64 = vertices.get(root).unwrap() as i64
         let mut link_count: i64 = 0
         if links.contains_key(root) {
             link_count = links.get(root).unwrap()

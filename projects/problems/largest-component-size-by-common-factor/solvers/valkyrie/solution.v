@@ -48,22 +48,14 @@ micro largest_component_size(nums: ArrayList<i64>) -> i64 {
         index = index + 1
     }
 
-    let mut sizes: HashMap<i64, i64> = HashMap::new(count)
-    index = 0
-    while index < total {
-        let root: i64 = sets.find_root(index)
-        if sizes.contains_key(root) {
-            sizes.insert(root, sizes.get(root).unwrap() + 1)
-        } else {
-            sizes.insert(root, 1)
-        }
-        index = index + 1
-    }
+    # 分量规模：一次遍历拿到全部根的分量表（等价于逐根 `group_sizes`）。
+    let sizes: HashMap<i64, usize> = sets.group_size_table()
 
     let mut largest: i64 = 0
     loop size in sizes.values() {
-        if size > largest {
-            largest = size
+        let members: i64 = size as i64
+        if members > largest {
+            largest = members
         }
     }
     return largest
