@@ -39,13 +39,13 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 
 ## 缺口与观察分级（2026-11-04 重判）
 
-真缺口（12）：G2 / G3 / G9 / G10 / G11 / G13 / G16 / G17 / G22 / G25 / G26 / G28。
+真缺口（11）：G2 / G3 / G10 / G11 / G13 / G16 / G17 / G22 / G25 / G26 / G28。
 
 | 编号 | 判据 | 摊派面 |
 | --- | --- | --- |
 | G2 浮点返回值合同 | c | 返回类型即题面合同，绕路必须改返回类型（1227 / 1344） |
 | G3 wasm JS glue 的 `ArrayList` ABI | c | ABI 边界由题面固定，题解改不了结构（36 题） |
-| G9 二分图判定 | 模块内空洞 | std graph 模块已有 `cycle` / `topological_sort` / 连通分量等**同类**图算法，独缺二分图判定；摊派面 2 处 |
+| G9 二分图判定 | **已恢复**（2026-11-07）：`std.math.graph_theory.bipartition` 已提供，两题改用 std 入口；真跑 179/181 用例 PASS（余 2 条为 F6 语料宿主异常文本） | `valkyrie.v` 提交 `59a4acad`；消费者 `is-graph-bipartite` / `possible-bipartition` |
 | G10 `DisjointSet` 分量聚合 | b | 3 处 × 重写 DSU 内部聚合 |
 | G11 `sorted_by` | b | 21 处 × 副本 + `merge_sort`（R28 后 +3） |
 | G13 `utf8` 字典序比较 | b | 5 处 × 约 10 行比较脚手架 |
@@ -1589,10 +1589,9 @@ micro add_undirected_edge(mut self, from: N, to: N): bool
 
 ### G9 `std.math.graph_theory` 缺二分图判定（二色着色）
 
-- 状态：未提供（std API 缺口，不阻断构建；2026-11-04 静态核对 `unweighted.v`）
-- 定性：**该有但没有**。模块自述「只补连通分量与无权最短路，BFS/DFS 归 `DirectedGraph`」，
-  但二分性（二色着色）是图上最基础的可判定性质，目前无入口。
-- 期望签名（[提案]，源码尚不存在）：
+- 状态：**已恢复**（2026-11-07 实测）。`std/source/math/graph_theory/unweighted.v`
+  已新增 `bipartition`，两题消费者已改用 std 入口（`valkyrie.v` 提交 `59a4acad`）。
+- 现有签名（已存在，源码为准）：
 
 ```v
 # std/source/math/graph_theory/unweighted.v（与 weak_components 同形）
@@ -1600,12 +1599,16 @@ micro bipartition<N>(graph: std.collection.DirectedGraph<N>) -> Option<HashMap<N
     where N: Equal & Hash
 ```
 
-  `Some(coloring)`（每点 0/1 着色）表示二分；`None` 表示存在冲突边。
-- 影响题（2）：`is-graph-bipartite`（785）、`possible-bipartition`（886），两题都在题内手写 BFS 着色。
-- 不对称点：`weak_components`、`strong_components`、`unweighted_shortest_paths` 均已提供，
-  同级的二分性判定缺席。
-- 判定：**真缺口**（模块内空洞：std 的 graph 模块已提供 `cycle` / `topological_sort` / 连通分量等**同类**图算法，唯独缺二分图判定。同模块有 A 有 B 没 C，C 就是模块内空洞，不是「能绕过去」）。
-- 修复初判：**加 API**（直接复用 `DirectedGraph` 的 BFS）。
+  `Some(coloring)`（每点 0/1 着色）表示二分；`None` 表示存在冲突边。有向边按无向处理，
+  与 `weak_components` 同口径；分量按节点插入序、分量内按 BFS 发现序，结果确定。
+- 影响题（2）：`is-graph-bipartite`（785）、`possible-bipartition`（886），两题已删除题内
+  手写 BFS 着色，改为「装图 → `bipartition(...).is_some()`」。
+- 验证证据：隔离 std 探针 **6/6**（`--target ovm`，偶环正例 / 奇环反例 / 单向边 / 空图）；
+  两题 wasm 构建通过，`metadata.tests` 真跑 **179/181**。余 2 条
+  （`is-graph-bipartite` tests[15] / tests[35]）期望值是宿主异常文本
+  `Error: list index out of range`，属 F6 语料缺陷，按裁决暂缓处理，不计入 G9 残留。
+- 原判断（2026-11-04）：真缺口（模块内空洞：std 的 graph 模块已提供 `cycle` /
+  `topological_sort` / 连通分量等**同类**图算法，唯独缺二分图判定）。
 
 ### G10 `DisjointSet<T>` 缺分量规模 / 成员聚合
 
