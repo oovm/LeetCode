@@ -3,8 +3,7 @@ namespace leetcode.remove_covered_intervals;
 using std.collection;
 
 # 起点升序、同起点终点降序后单次扫描：一个区间被覆盖，当且仅当它的终点不超过此前最大终点。
-# 题内触发点: G11 —— `std.collection.sort` 没有返回新序列的 `sorted_by`，
-# 只能先把输入拷进副本，再 `merge_sort(ordered, compare_interval)` 就地排序。
+# 排序走 `sorted_by`：返回新序列，不改动入参，不再手写副本 + 就地排序。
 micro compare_interval(a: ArrayList<i64>, b: ArrayList<i64>) -> i32 {
     if a⁅0⁆ < b⁅0⁆ {
         return -1
@@ -28,11 +27,7 @@ micro remove_covered_intervals(intervals: ArrayList<ArrayList<i64>>) -> i64 {
         return 0
     }
 
-    let mut ordered: ArrayList<ArrayList<i64>> = ArrayList::new(count)
-    loop interval in intervals {
-        ordered.push(interval)
-    }
-    merge_sort(ordered, compare_interval)
+    let ordered: ArrayList<ArrayList<i64>> = sorted_by(intervals, compare_interval)
 
     let head: ArrayList<i64> = ordered⁅0⁆
     let mut reach: i64 = head⁅1⁆
