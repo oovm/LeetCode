@@ -251,6 +251,8 @@ async function runOperationSequenceCases(
                 blocked: infrastructureBlocked ? rawTotal - skipped - pass : 0,
                 not_run: infrastructureBlocked ? 0 : rawTotal - skipped - pass - 1,
                 skipped,
+                skipped_timeout: skipped,
+                skipped_integer_argument: 0,
                 firstFailureIndex: extractTestFailureIndex(message) ?? index,
                 firstFailure: message,
             });
@@ -267,6 +269,8 @@ async function runOperationSequenceCases(
         blocked: 0,
         not_run: 0,
         skipped,
+        skipped_timeout: skipped,
+        skipped_integer_argument: 0,
         firstFailureIndex: null,
         firstFailure: null,
     });
@@ -402,6 +406,8 @@ async function main(): Promise<number> {
                 blocked: infrastructureBlocked ? rawTotal - skipped - pass : 0,
                 not_run: infrastructureBlocked ? 0 : rawTotal - skipped - pass - 1,
                 skipped,
+                skipped_timeout: skippedApriori,
+                skipped_integer_argument: unrepresentableIndices.size,
                 firstFailureIndex: extractTestFailureIndex(message) ?? index,
                 firstFailure: message,
             });
@@ -418,6 +424,8 @@ async function main(): Promise<number> {
         blocked: 0,
         not_run: 0,
         skipped,
+        skipped_timeout: skippedApriori,
+        skipped_integer_argument: unrepresentableIndices.size,
         firstFailureIndex: null,
         firstFailure: null,
     });
@@ -434,6 +442,8 @@ main().catch((err) => {
         blocked: 0,
         not_run: 0,
         skipped: 0,
+        skipped_timeout: 0,
+        skipped_integer_argument: 0,
         firstFailureIndex: extractTestFailureIndex(message),
         firstFailure: message,
     });

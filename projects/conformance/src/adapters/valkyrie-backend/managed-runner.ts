@@ -175,19 +175,20 @@ export function runManagedReference(
         }
 
         let pass = 0;
-        let skipped = 0;
+        let skippedTimeout = 0;
+        let skippedIntegerArgument = 0;
         let firstCommand: string | null = null;
         let exitStatus: number | null = null;
         for (const [index, testCase] of tests.entries()) {
             if (NO_EXECUTABLE_EXPECTATION === testCase.expected) {
-                skipped += 1;
+                skippedTimeout += 1;
                 continue;
             }
             const values = Object.values(testCase.args);
             if (
                 entry.parameter_types.some((type, position) => isUnrepresentableIntegerValue(values[position], type))
             ) {
-                skipped += 1;
+                skippedIntegerArgument += 1;
                 continue;
             }
             if (typeof testCase.expected === 'string' && testCase.expected.startsWith('Error:')) {
@@ -238,7 +239,9 @@ export function runManagedReference(
                 executed_fail: 0,
                 blocked: 0,
                 not_run: 0,
-                skipped,
+                skipped: skippedTimeout + skippedIntegerArgument,
+                skipped_timeout: skippedTimeout,
+                skipped_integer_argument: skippedIntegerArgument,
                 firstFailureIndex: null,
                 firstFailure: null,
             },

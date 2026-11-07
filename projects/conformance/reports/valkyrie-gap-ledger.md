@@ -3805,16 +3805,34 @@ WASI 轨与非文本 payload（结构化 effect 值没有文本 ABI）维持原�
 `solver-case-stats.ts`、`matrix-green.ts`、lane summary 与三条 runner 均按此口径；
 绿判据为 `testCaseTotal > 0` 且 `executed_pass === testCaseTotal` 且
 `executed_fail` / `blocked` / `not_run` 均为 0；`skipped` 不抵扣分母、也不计入通过，
-单列为「未验证」桶，`casePassRate` 分母保持 `testCaseTotal`。
+`casePassRate` 分母保持 `testCaseTotal`。
 `Execution timed out` 在计数前被排除；
 整数 ABI 送不进去的非整数实参也预先计入 `skipped`，即使中途失败中止也保持全量。
+
+**三态汇总口径**：报表与账本分开统计「绿 / 红 / 未验证」。
+
+- 绿：`isMatrixRowGreen` 成立，即全部用例真实执行并通过。
+- 红：build / manifest 失败，或有真实断言失败（`executed_fail > 0`）。
+- 未验证：build 与 manifest 正常、`executed_fail === 0`，但仍有未执行用例
+  （`skipped` / `blocked` / `not_run`）。未验证**不计入失败数**，但必须在题级与总计里
+  显式列出，并注明原因码。
+
+`solver-case-stats.ts` 的 `classifyMatrixOutcome` / `collectUnverifiedReasons` 输出三态与原因；
+`SolverCaseStats` 增加 `skipped_timeout` 与 `skipped_integer_argument`，三条 runner
+按原因拆分计数；lane summary 增加 `red`、`unverified`、`unverifiedIds`、
+`skipped_timeout`、`skipped_integer_argument`；行内保留 `outcome` 与 `unverifiedReasons`。
+原因码：`timeout`（`Execution timed out` 哨兵）、`integer-abi`（整数 ABI 送不进非整数实参）、
+`infrastructure`（`blocked`）、`not-run`（因更早中止而未执行）、
+`unspecified-skip`（旧统计只有 `skipped` 总数、没有原因细分）。
 
 **真实产物实测**：
 
 - `letter-case-permutation`（wasm）：`testCaseTotal=126`、`executed_pass=0`、
   `executed_fail=1`、`not_run=116`、`skipped=9`；`0+1+116+9=126`。
 - `minimum-operations-to-halve-array-sum`（wasm）：`testCaseTotal=81`、
-  `executed_pass=78`、`executed_fail=0`、`skipped=3`；绿判定 `78+3=81` 成立。
+  `executed_pass=78`、`executed_fail=0`、`skipped=3`（均为 `timeout`）。
+  结论是**未验证**（78 通过 + 3 未验证，原因 `timeout`），不是「失败 3 条」；
+  红计数为 0，未验证不计入 `executed_fail`。
 
 **`62.5` 五例的确认结论**：`preserveI64Precision` 对 `i64` 形参收到非整数时抛
 `需要整数实参，实际为非整数数值 62.5`，错误发生在输入进入 ABI 之前。因此这 5 例是

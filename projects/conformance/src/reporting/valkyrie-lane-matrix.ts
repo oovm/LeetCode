@@ -1,5 +1,6 @@
 import type { CompileTargetPlanSource } from '../adapters/shared/compile-target-plan.ts';
 import type { ArtifactRuntimeStatus } from '../adapters/shared/artifact-runtime-status.ts';
+import { classifyMatrixOutcome } from '../adapters/shared/solver-case-stats.ts';
 import type { ValkyrieMatrixRow } from '../adapters/valkyrie-node/matrix.ts';
 import type { ValkyrieBackendMatrixRow } from '../adapters/valkyrie-backend/matrix.ts';
 
@@ -76,6 +77,12 @@ export type LaneMatrixSummary = {
     executed: number;
     notExecuted: number;
     green: number;
+    /** 真实失败的行数：只含 `executed_fail` 或 build/manifest 失败，不吞掉未验证。 */
+    red: number;
+    /** 未验证的行数：仍有用例未执行，但没有任何真实失败。 */
+    unverified: number;
+    /** 未验证的题目 id，题级显式列出；与 `summary.unverified` 计数一致。 */
+    unverifiedIds: string[];
     buildPass: number;
     manifestFresh: number;
     runtimePass: number;
@@ -87,6 +94,10 @@ export type LaneMatrixSummary = {
     not_run: number;
     /** 没有可执行期望、已从 `casePassRate` 分母排除的用例数。 */
     skipped: number;
+    /** `skipped` 中因 `Execution timed out` 哨兵的条数。 */
+    skipped_timeout: number;
+    /** `skipped` 中因整数 ABI 送不进非整数实参的条数。 */
+    skipped_integer_argument: number;
     /** 从 `testCaseTotal` 与四字段中剔除的隔离用例数。 */
     quarantinedCases: number;
     problemPassRate: number;
@@ -117,8 +128,21 @@ export type LaneMatrixProblemEntry = {
     rows: Record<MatrixLaneId, ValkyrieLaneRow>;
 };
 
-function summarizeLane(rows: ValkyrieLaneRow[], denominator: number, baselineRows?: ValkyrieLaneRow[]): LaneMatrixSummary {
-    const green = rows.filter((row) => row.green).length;
+function summarizeLane(
+    entries: LaneMatrixProblemEntry[],
+    lane: MatrixLaneId,
+    denominator: number,
+    baselineRows?: ValkyrieLaneRow[],
+): LaneMatrixSummary {
+    const rows = entries.map((entry) => entry.rows[lane]);
+    // 三态逐行判定：绿 / 红 / 未验证。未验证不计入失败，但必须计数并列出题目。
+    const outcomes = rows.map((row) => classifyMatrixOutcome(row));
+    const green = outcomes.filter((outcome) => outcome === 'green').length;
+    const unverified = outcomes.filter((outcome) => outcome === 'unverified').length;
+    const red = outcomes.filter((outcome) => outcome === 'red').length;
+    const unverifiedIds = entries
+        .filter((entry) => classifyMatrixOutcome(entry.rows[lane]) === 'unverified')
+        .map((entry) => entry.id);
     const buildPass = rows.filter((row) => row.buildStatus === 0).length;
     const manifestFresh = rows.filter((row) => row.manifestFresh).length;
     const runtimePass = rows.filter((row) => row.runtimeOk).length;
@@ -133,12 +157,17 @@ function summarizeLane(rows: ValkyrieLaneRow[], denominator: number, baselineRow
     const blocked = rows.reduce((sum, row) => sum + row.blocked, 0);
     const notRun = rows.reduce((sum, row) => sum + row.not_run, 0);
     const skipped = rows.reduce((sum, row) => sum + (row.skipped ?? 0), 0);
+    const skippedTimeout = rows.reduce((sum, row) => sum + (row.skipped_timeout ?? 0), 0);
+    const skippedIntegerArgument = rows.reduce((sum, row) => sum + (row.skipped_integer_argument ?? 0), 0);
     const rate = (count: number, denom = denominator) => (denom === 0 ? 0 : count / denom);
     return {
         denominator,
         executed: rows.length,
         notExecuted: denominator - rows.length,
         green,
+        red,
+        unverified,
+        unverifiedIds,
         buildPass,
         manifestFresh,
         runtimePass,
@@ -149,6 +178,8 @@ function summarizeLane(rows: ValkyrieLaneRow[], denominator: number, baselineRow
         blocked,
         not_run: notRun,
         skipped,
+        skipped_timeout: skippedTimeout,
+        skipped_integer_argument: skippedIntegerArgument,
         quarantinedCases: baselineTotal - testCaseTotal,
         problemPassRate: rate(green),
         buildPassRate: rate(buildPass),
@@ -209,7 +240,8 @@ export function buildValkyrieLaneMatrixReport(
         MATRIX_LANE_IDS.map((lane) => [
             lane,
             summarizeLane(
-                appliedEntries.map((entry) => entry.rows[lane]),
+                appliedEntries,
+                lane,
                 corpusIds.length,
                 quarantine ? entries.map((entry) => entry.rows[lane]) : undefined,
             ),

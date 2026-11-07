@@ -15,7 +15,14 @@ import {
 } from '../shared/compile-target-plan.ts';
 import { readMatrixManifestAudit } from '../shared/matrix-manifest-audit.ts';
 import { isMatrixRowGreen } from '../shared/matrix-green.ts';
-import { emptySolverCaseStats, type SolverCaseStats } from '../shared/solver-case-stats.ts';
+import {
+    classifyMatrixOutcome,
+    collectUnverifiedReasons,
+    emptySolverCaseStats,
+    type MatrixRowOutcome,
+    type MatrixUnverifiedReason,
+    type SolverCaseStats,
+} from '../shared/solver-case-stats.ts';
 import { VALKYRIE_NODE } from './config.ts';
 import { formatLegionError, legionBuildNative, legionTest, valkyrieSolverBlockedReason } from './valkyrie.ts';
 import {
@@ -65,13 +72,21 @@ export type ValkyrieMatrixRow = {
     not_run: number;
     /** 没有可执行期望、已从 pass/fail 分母排除的用例数。 */
     skipped?: number;
+    /** `skipped` 中因 `Execution timed out` 哨兵的条数。 */
+    skipped_timeout?: number;
+    /** `skipped` 中因整数 ABI 送不进非整数实参的条数。 */
+    skipped_integer_argument?: number;
     firstFailureIndex: number | null;
     firstFailure: string | null;
     solverNote: string | null;
     green: boolean;
+    /** 行级三态：绿 / 红 / 未验证。未验证不是失败。 */
+    outcome: MatrixRowOutcome;
+    /** 未验证原因清单；非未验证时为空。 */
+    unverifiedReasons: MatrixUnverifiedReason[];
 };
 
-type ValkyrieMatrixRowNoGreen = Omit<ValkyrieMatrixRow, 'green'>;
+type ValkyrieMatrixRowNoGreen = Omit<ValkyrieMatrixRow, 'green' | 'outcome' | 'unverifiedReasons'>;
 
 function withCaseStats(row: ValkyrieMatrixRowNoGreen, stats: SolverCaseStats): ValkyrieMatrixRow {
     return {
@@ -82,9 +97,14 @@ function withCaseStats(row: ValkyrieMatrixRowNoGreen, stats: SolverCaseStats): V
         blocked: stats.blocked,
         not_run: stats.not_run,
         skipped: stats.skipped ?? 0,
+        skipped_timeout: stats.skipped_timeout ?? 0,
+        skipped_integer_argument: stats.skipped_integer_argument ?? 0,
         firstFailureIndex: stats.firstFailureIndex,
         firstFailure: stats.firstFailure,
         green: false,
+        // 三态在 probe 末尾按完整行证据重算；这里先给安全的红色占位。
+        outcome: 'red',
+        unverifiedReasons: [],
     };
 }
 
@@ -227,6 +247,8 @@ export async function probeValkyrieProblem(problem: ProblemDefinition, projectPa
         caseStats,
     );
     row.green = isMatrixRowGreen(row);
+    row.outcome = classifyMatrixOutcome(row);
+    row.unverifiedReasons = collectUnverifiedReasons(row);
     return row;
 }
 

@@ -102,10 +102,20 @@ async function main(): Promise<number> {
 
     const laneLine = (label: string, summary: (typeof report.summary)['wasm'], note: string) =>
         `lane ${label}: green ${summary.green}/${summary.denominator} ` +
-        `(${(summary.greenRate * 100).toFixed(1)}%) cases pass ${summary.executed_pass}/${summary.testCaseTotal} ` +
+        `(${(summary.greenRate * 100).toFixed(1)}%) red ${summary.red} unverified ${summary.unverified} ` +
+        `cases pass ${summary.executed_pass}/${summary.testCaseTotal} ` +
         `(${(summary.casePassRate * 100).toFixed(1)}%) executed_fail ${summary.executed_fail} ` +
-        `blocked ${summary.blocked} not_run ${summary.not_run} runtime ready/blocked/pending ` +
+        `blocked ${summary.blocked} not_run ${summary.not_run} skipped ${summary.skipped} ` +
+        `(timeout ${summary.skipped_timeout}, integer-abi ${summary.skipped_integer_argument}) ` +
+        `runtime ready/blocked/pending ` +
         `${summary.runtime.ready}/${summary.runtime.blocked}/${summary.runtime.pending} ${note}`;
+    const unverifiedLines = report.lanes
+        .filter((lane) => report.summary[lane.id].unverifiedIds.length > 0)
+        .map(
+            (lane) =>
+                `unverified ${lane.id}: ${report.summary[lane.id].unverified}/${report.denominator} 题 ` +
+                `(${report.summary[lane.id].unverifiedIds.join(', ')})`,
+        );
     const laneNotes: Record<string, string> = {
         wasm: '(delivery, target=manifest-declared)',
         ovm: '(execution, target=lane-explicit ovm, 不计入完成度)',
@@ -117,7 +127,8 @@ async function main(): Promise<number> {
             `denominator=${report.denominator} executed=${report.executedIds.length} notExecuted=${report.notExecutedIds.length} complete=${report.complete} batchLimit=${batchLimit ?? 'all'}\n` +
             `quarantine=${report.quarantine ? `${report.quarantine.caseCount} cases / ${report.quarantine.problemCount} problems (excluded from case totals, source=${report.quarantine.source})` : 'none'}\n` +
             `delivery lane: ${report.deliveryLane}（只有该 lane 计入交付完成度）\n` +
-            report.lanes.map((lane) => laneLine(lane.id, report.summary[lane.id], laneNotes[lane.id] ?? '')).join('\n'),
+            report.lanes.map((lane) => laneLine(lane.id, report.summary[lane.id], laneNotes[lane.id] ?? '')).join('\n') +
+            (unverifiedLines.length > 0 ? `\n${unverifiedLines.join('\n')}` : ''),
     );
     return 0;
 }

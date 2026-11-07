@@ -42,6 +42,8 @@ function greenWasm(id: string): ValkyrieMatrixRow {
         firstFailure: null,
         solverNote: null,
         green: true,
+        outcome: 'green',
+        unverifiedReasons: [],
     };
 }
 
@@ -58,6 +60,8 @@ function failingWasm(id: string): ValkyrieMatrixRow {
         firstFailureIndex: 2,
         firstFailure: 'tests[2]: expected 2, got 3',
         green: false,
+        outcome: 'red',
+        unverifiedReasons: [],
     };
 }
 
@@ -94,6 +98,8 @@ function backendRow(id: string, overrides: Partial<ValkyrieBackendMatrixRow> = {
         firstFailure: 'compile failed',
         solverNote: null,
         green: false,
+        outcome: 'red',
+        unverifiedReasons: [],
         ...overrides,
     };
 }
@@ -120,6 +126,7 @@ function greenOvm(id: string): ValkyrieBackendMatrixRow {
         firstFailureIndex: null,
         firstFailure: null,
         green: true,
+        outcome: 'green',
     });
 }
 
@@ -219,14 +226,94 @@ describe('valkyrie lane matrix report', () => {
         expect(report.complete).toBe(false);
     });
 
-    it('reports skipped without discounting the case pass-rate denominator', () => {
+    it('reports skipped as unverified without discounting the case pass-rate denominator', () => {
         const report = buildValkyrieLaneMatrixReport(
-            [entry('two-sum', { wasm: { ...greenWasm('two-sum'), testCaseTotal: 4, executed_pass: 3, skipped: 1 } })],
+            [
+                entry('two-sum', {
+                    wasm: {
+                        ...greenWasm('two-sum'),
+                        testCaseTotal: 4,
+                        executed_pass: 3,
+                        skipped: 1,
+                        skipped_timeout: 1,
+                        green: false,
+                        outcome: 'unverified',
+                        unverifiedReasons: ['timeout'],
+                    },
+                }),
+            ],
             { corpusIds: ['two-sum'] },
         );
         expect(report.summary.wasm.skipped).toBe(1);
         expect(report.summary.wasm.executed_pass).toBe(3);
         expect(report.summary.wasm.casePassRate).toBe(0.75);
+        expect(report.summary.wasm.green).toBe(0);
+        expect(report.summary.wasm.unverified).toBe(1);
+        expect(report.summary.wasm.red).toBe(0);
+    });
+
+    it('reports 78 pass plus 3 skipped as unverified rather than 3 failures', () => {
+        const id = 'minimum-operations-to-halve-array-sum';
+        const report = buildValkyrieLaneMatrixReport(
+            [
+                entry(id, {
+                    wasm: {
+                        ...greenWasm(id),
+                        testCaseTotal: 81,
+                        executed_pass: 78,
+                        skipped: 3,
+                        skipped_timeout: 3,
+                        green: false,
+                        outcome: 'unverified',
+                        unverifiedReasons: ['timeout'],
+                    },
+                }),
+            ],
+            { corpusIds: [id] },
+        );
+        const summary = report.summary.wasm;
+        expect(summary.green).toBe(0);
+        expect(summary.red).toBe(0);
+        expect(summary.unverified).toBe(1);
+        expect(summary.unverifiedIds).toEqual([id]);
+        expect(summary.executed_fail).toBe(0);
+        expect(summary.not_run).toBe(0);
+        expect(summary.skipped).toBe(3);
+        expect(summary.skipped_timeout).toBe(3);
+        expect(summary.skipped_integer_argument).toBe(0);
+    });
+
+    it('keeps real assertion failures red and separate from unverified rows', () => {
+        const report = buildValkyrieLaneMatrixReport([entry('two-sum', { wasm: failingWasm('two-sum') })], {
+            corpusIds: ['two-sum'],
+        });
+        expect(report.summary.wasm.red).toBe(1);
+        expect(report.summary.wasm.unverified).toBe(0);
+        expect(report.summary.wasm.unverifiedIds).toEqual([]);
+        expect(report.summary.wasm.executed_fail).toBe(1);
+    });
+
+    it('counts integer ABI skips as unverified with an explicit reason code', () => {
+        const report = buildValkyrieLaneMatrixReport(
+            [
+                entry('two-sum', {
+                    wasm: {
+                        ...greenWasm('two-sum'),
+                        testCaseTotal: 10,
+                        executed_pass: 8,
+                        skipped: 2,
+                        skipped_integer_argument: 2,
+                        green: false,
+                        outcome: 'unverified',
+                        unverifiedReasons: ['integer-abi'],
+                    },
+                }),
+            ],
+            { corpusIds: ['two-sum'] },
+        );
+        expect(report.summary.wasm.unverified).toBe(1);
+        expect(report.summary.wasm.skipped_integer_argument).toBe(2);
+        expect(report.summary.wasm.red).toBe(0);
     });
 
     it('excludes quarantined cases from the case denominator without claiming a re-judge', () => {

@@ -18,6 +18,10 @@ export type SolverCaseStats = {
     not_run: number;
     /** 没有可执行期望、已从 pass/fail 分母排除的用例数。 */
     skipped?: number;
+    /** `skipped` 中因 `Execution timed out` 哨兵（没有可执行期望）的条数。 */
+    skipped_timeout?: number;
+    /** `skipped` 中因整数 ABI 无法承载非整数实参的条数。 */
+    skipped_integer_argument?: number;
     firstFailureIndex: number | null;
     firstFailure: string | null;
 };
@@ -31,6 +35,8 @@ export function emptySolverCaseStats(error: string | null = null): SolverCaseSta
         blocked: 0,
         not_run: 0,
         skipped: 0,
+        skipped_timeout: 0,
+        skipped_integer_argument: 0,
         firstFailureIndex: null,
         firstFailure: error,
     };
@@ -86,6 +92,10 @@ export function parseSolverResultLine(text: string): SolverCaseStats | null {
                 blocked: payload.blocked,
                 not_run: payload.not_run,
                 skipped: typeof payload.skipped === 'number' ? payload.skipped : 0,
+                skipped_timeout: typeof payload.skipped_timeout === 'number' ? payload.skipped_timeout : 0,
+                skipped_integer_argument: typeof payload.skipped_integer_argument === 'number'
+                    ? payload.skipped_integer_argument
+                    : 0,
                 firstFailureIndex: payload.firstFailureIndex ?? null,
                 firstFailure: payload.firstFailure ?? null,
             };
@@ -103,4 +113,79 @@ export function extractTestFailureIndex(message: string): number | null {
         return null;
     }
     return Number(match[1]);
+}
+
+/** 行级三态：绿 = 全部用例真实通过；红 = 真实失败；未验证 = 仍有用例未执行。 */
+export type MatrixRowOutcome = 'green' | 'red' | 'unverified';
+
+/** 未验证的原因码：`skipped` 的细分与 `blocked` / `not_run` 分开列出。 */
+export type MatrixUnverifiedReason =
+    | 'timeout'
+    | 'integer-abi'
+    | 'unspecified-skip'
+    | 'infrastructure'
+    | 'not-run';
+
+/** 三态判定所需的行级证据；与 lane 行类型结构兼容。 */
+export type MatrixOutcomeFlags = {
+    green: boolean;
+    buildStatus: number;
+    manifestFresh: boolean;
+    testCaseTotal: number;
+    executed_pass: number;
+    executed_fail: number;
+    blocked: number;
+    not_run: number;
+    skipped?: number;
+    skipped_timeout?: number;
+    skipped_integer_argument?: number;
+};
+
+/**
+ * 按三态归类一行。
+ *
+ * build / manifest 失败没有可验证对象，是真实的红。真实断言失败优先于未验证。
+ * 只有构建、manifest 正常且没有断言失败、却仍有未执行用例（`skipped` / `blocked` / `not_run`）时，
+ * 才是「未验证」：它不计入失败数，但也不能算绿。
+ */
+export function classifyMatrixOutcome(row: MatrixOutcomeFlags): MatrixRowOutcome {
+    if (row.green) {
+        return 'green';
+    }
+    if (row.buildStatus !== 0 || !row.manifestFresh) {
+        return 'red';
+    }
+    if (row.executed_fail > 0) {
+        return 'red';
+    }
+    const unexecuted = (row.skipped ?? 0) + row.blocked + row.not_run;
+    if (row.testCaseTotal > 0 && unexecuted > 0) {
+        return 'unverified';
+    }
+    return 'red';
+}
+
+/** 未验证行的原因清单；非未验证行返回空数组。 */
+export function collectUnverifiedReasons(row: MatrixOutcomeFlags): MatrixUnverifiedReason[] {
+    if (classifyMatrixOutcome(row) !== 'unverified') {
+        return [];
+    }
+    const reasons: MatrixUnverifiedReason[] = [];
+    if ((row.skipped_timeout ?? 0) > 0) {
+        reasons.push('timeout');
+    }
+    if ((row.skipped_integer_argument ?? 0) > 0) {
+        reasons.push('integer-abi');
+    }
+    const unattributedSkip = (row.skipped ?? 0) - (row.skipped_timeout ?? 0) - (row.skipped_integer_argument ?? 0);
+    if (unattributedSkip > 0) {
+        reasons.push('unspecified-skip');
+    }
+    if (row.blocked > 0) {
+        reasons.push('infrastructure');
+    }
+    if (row.not_run > 0) {
+        reasons.push('not-run');
+    }
+    return reasons;
 }
