@@ -3917,31 +3917,69 @@ WASI 轨与非文本 payload（结构化 effect 值没有文本 ABI）维持原�
 - 以上 blocked 的剩余用例在题解修复前不得计入任何通过数。
 - dirty 保护的 3 题保留原状，待其改动方落地后按同一脚本清理。
 
-## oracle 未独立验证（2026-11-07 降级）
+## oracle 独立重算（2026-11-07，解除原「未独立验证」降级）
 
 以下题目的 `metadata.tests[].expected` 曾由参考解运行时输出生成或在改写输入后用参考算法重算。
-生成期望的实现与被判绿实现同源，因此当时的绿只证明「实现与期望一致」，不证明「与题面一致」；
-在独立重算完成前不计入覆盖率。
+生成期望的实现与被判绿实现同源，因此当时的绿只证明「实现与期望一致」，不证明「与题面一致」。
 
-| 题 | 来源 | 条数 | 原报告 |
-| --- | --- | --- | --- |
-| `count-the-number-of-arrays-with-k-matching-adjacent-elements` | 参考解生成 | 157 | R29 判题侧移交 |
-| `maximize-number-of-nice-divisors` | 参考解生成 | 77 | R29 A 参数名 |
-| `student-attendance-record-ii` | 参考解生成 | 30 | R29 判题侧移交 |
-| `number-of-ways-to-reach-a-position-after-exactly-k-steps` | 参考解生成 | 52 | R29 判题侧移交 |
-| `handshakes-that-dont-cross` | 参考解生成 | 2 | R29 判题侧移交 |
-| `number-of-strings-which-can-be-rearranged-to-contain-substring` | 参考解生成 | 10 | R29 判题侧移交 |
-| `closest-fair-integer` | 参考解生成 | 3 | R29 B 真实现错 |
-| `subsets` | 派生重算 | 2 | lane coverage 数据清洗 |
-| `hamming-distance` | 派生重算 | 未记账 | lane coverage 数据清洗 |
-| `binary-number-with-alternating-bits` | 派生重算 | 未记账 | lane coverage 数据清洗 |
-| `reverse-bits` | 派生重算 | 18 | lane coverage 数据清洗 |
-| `sum-of-square-numbers` | 派生重算 | 未记账 | lane coverage 数据清洗 |
-| `monotone-increasing-digits` | 派生重算 | 未记账 | lane coverage 数据清洗 |
-| `sum-of-number-and-its-reverse` | 派生重算 | 21 | lane coverage 数据清洗 |
+**2026-11-07 已用独立口径逐条重算解除降级**：14 题全部用例 1131 条与独立重算一致，0 条不一致；
+`oracleStatus` 升为 `independent`，重新计入覆盖率。证据：
+[`oracle-independent-recompute.md`](./oracle-independent-recompute.md) /
+[`oracle-independent-recompute.json`](./oracle-independent-recompute.json)。
 
-- 已知可确数合计 **331 条**（参考解生成 331 条中的可数部分：157+77+30+52+2+10+3）；
-  派生重算另有 `subsets` 2、`reverse-bits` 18、`sum-of-number-and-its-reverse` 21，
-  其余题只记题名未记条数。
-- 解除条件：用独立口径（暴力枚举 / 精确有理数 / 数学推导）逐条重算并留证，见
-  `host-error-expected-audit.md` 之后的独立重算记录。
+| 题 | 来源 | 重算前记账条数 | 本轮重算覆盖 | 结果 |
+| --- | --- | --- | --- | --- |
+| `count-the-number-of-arrays-with-k-matching-adjacent-elements` | 参考解生成 | 157 | 158/158 | 一致 |
+| `maximize-number-of-nice-divisors` | 参考解生成 | 77 | 80/80 | 一致 |
+| `student-attendance-record-ii` | 参考解生成 | 30 | 41/41 | 一致 |
+| `number-of-ways-to-reach-a-position-after-exactly-k-steps` | 参考解生成 | 52 | 91/91 | 一致 |
+| `handshakes-that-dont-cross` | 参考解生成 | 2 | 39/39 | 一致 |
+| `number-of-strings-which-can-be-rearranged-to-contain-substring` | 参考解生成 | 10 | 31/31 | 一致 |
+| `closest-fair-integer` | 参考解生成 | 3 | 70/70 | 一致 |
+| `subsets` | 派生重算 | 2 | 93/93 | 一致（集合口径） |
+| `hamming-distance` | 派生重算 | 未记账 | 88/88 | 一致 |
+| `binary-number-with-alternating-bits` | 派生重算 | 未记账 | 72/72 | 一致 |
+| `reverse-bits` | 派生重算 | 18 | 24/24 | 一致 |
+| `sum-of-square-numbers` | 派生重算 | 未记账 | 53/53 | 一致 |
+| `monotone-increasing-digits` | 派生重算 | 未记账 | 111/111 | 一致 |
+| `sum-of-number-and-its-reverse` | 派生重算 | 21 | 180/180 | 一致 |
+
+- 原可确数合计 331 条属于「参考解生成」的可数部分；本轮按题全量重算，覆盖面大于原记账数，
+  并把此前未记账的派生重算条目一并覆盖。
+- 首轮 5 条不一致（`maximize-number-of-nice-divisors tests[#42]` 未取模、
+  `hamming-distance` 4 条 JS 有符号 32 位截断）已逐条归因为重算脚本自身实现错，未覆盖原期望值。
+- `subsets` 集合等价但 `expected` 顺序与独立枚举顺序不同（`orderMatches=false`），
+  属多解题判题比较方式问题，见第 5 步审计，不计入本条的 expected 来源结论。
+
+## 题面约束前置（2026-11-07）
+
+- 新增 `src/domain/args-constraints.ts` 注册表：清单内每题必须显式登记 args 题面约束，
+  `problem-coverage.test.ts` 在三通道判题前逐条校验，未登记或越界即失败。
+- 全量重放 `git HEAD` 基线：26 题 2599 条 → 2374 条。越界 227 条（19 题）；修复 2 条（R34 两道），
+  作废 225 条。证据：`corpus-args-constraint-audit.md` / `corpus-args-constraint-audit.json`。
+- 修复：`check-if-every-row-and-column-contains-all-numbers tests[16]` 矩阵整体 -6（7..16 → 1..10），
+  expected `true` 保留；`two-out-of-three tests[60]` nums2/nums3 改回 1..100，expected `[25,50,100]` 保留。
+- 门禁：R34 批次 26 题 2374 条三通道复跑全部通过，约束违规 0。
+
+## 多解比较模式（2026-11-07）
+
+- 判题错误与 expected 来源是两个独立错误源。整改前三通道与 isolated / managed backend lane
+  全部是顺序敏感 JSON 精确相等。
+- 新增 `coverage/compare-modes.json` + `src/domain/compare-mode.ts`：strict / unordered-1d /
+  unordered-2d / outer-only / nested-1d / validator-required；覆盖清单每题必须显式登记，
+  `problem-coverage.test.ts` 缺登记即失败。
+- 盘点：2876 题中 223 题命中文句，95 题输出顺序自由（61 `unordered-1d`、12 `unordered-2d`、
+  15 `outer-only`、2 `nested-1d`），15 题多合法解登记 `validator-required`（执行期拒绝，不计绿）。
+  证据：`multi-answer-compare-audit.md` / `multi-answer-compare-audit.json`。
+- `subsets` 的 `orderMatches=false` 由 `unordered-2d` 解释；expected 集合本身已由独立重算确认。
+
+## 空绿判据移除（2026-11-07）
+
+- 实测 `legion test` 在无 `test/` 目录时返回 `status=0`（“0 通过、0 失败、跳过”），不得作为绿判据。
+- 已移除：`problem-coverage.test.ts`、`tests/conformance.test.ts` 的 `testStatus === 0` 断言；
+  `isMatrixRowGreen` 不再看 `testStatus`；`valkyrie-lane-matrix.ts` 删除 `testPass` 统计
+  （该统计按 `status=0` 计数，即空绿）。
+- 绿现在必须拿到真实执行计数：`testCaseTotal > 0`、`executed_pass === testCaseTotal`、
+  `executed_fail === 0`、`blocked === 0`、`not_run === 0`。
+- `skipped` 是未执行用例，不能抵扣分母（`executed_pass + skipped === testCaseTotal` 已改为
+  `executed_pass === testCaseTotal`）。
