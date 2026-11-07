@@ -11,9 +11,16 @@ import { loadProblemMetadata, requireInvoke } from '../src/domain/metadata.ts';
 import { CONFORMANCE_ROOT, LEETCODE_ROOT } from '../src/domain/paths.ts';
 
 type BlockedLane = { id: string; lane: 'typescript'; caseIndex: number; reason: string };
+type CoverageProblem = {
+    id: string;
+    expectedProvenance: 'official-static' | 'reference-generated' | 'derived-recompute' | 'host-error-text' | 'initial-corpus';
+    oracleStatus: 'independent' | 'cross-checked' | 'unverified';
+    coverageEligible: boolean;
+};
 type CoverageManifest = {
     schemaVersion: number;
-    batches: Array<{ id: string; note?: string; blocked?: BlockedLane[]; problems: string[] }>;
+    provenancePolicy?: { allowedProvenance: string[]; allowedOracleStatus: string[]; rule?: string };
+    batches: Array<{ id: string; note?: string; blocked?: BlockedLane[]; problems: CoverageProblem[] }>;
 };
 
 const MANIFEST_PATH = join(CONFORMANCE_ROOT, 'coverage', 'verified-problems.json');
@@ -29,7 +36,7 @@ if (requestedBatch && activeBatches.length === 0) {
 }
 
 const catalogById = new Map(PROBLEMS.map((problem) => [problem.id, problem]));
-const entries = activeBatches.flatMap((batch) => batch.problems.map((id) => ({ id, batch: batch.id })));
+const entries = activeBatches.flatMap((batch) => batch.problems.map((problem) => ({ problem, batch: batch.id })));
 const blockedByProblem = new Map(
     activeBatches.flatMap((batch) => (batch.blocked ?? []).map((blocked) => [blocked.id, blocked] as const)),
 );
@@ -39,20 +46,51 @@ describe('题库覆盖清单', () => {
         const batchIds = manifest.batches.map((batch) => batch.id);
         expect(new Set(batchIds).size).toBe(batchIds.length);
 
-        const allIds = manifest.batches.flatMap((batch) => batch.problems);
+        const allIds = manifest.batches.flatMap((batch) => batch.problems.map((problem) => problem.id));
         expect(new Set(allIds).size).toBe(allIds.length);
 
         for (const batch of manifest.batches) {
             for (const blocked of batch.blocked ?? []) {
-                expect(batch.problems, `${batch.id}: blocked 题目不在批次内`).toContain(blocked.id);
+                expect(batch.problems.map((problem) => problem.id), `${batch.id}: blocked 题目不在批次内`).toContain(blocked.id);
             }
         }
+    });
+
+    it('每题显式填写期望来源与 oracle 状态', () => {
+        const allowedProvenance = new Set(manifest.provenancePolicy?.allowedProvenance ?? []);
+        const allowedStatus = new Set(manifest.provenancePolicy?.allowedOracleStatus ?? []);
+        const missing: string[] = [];
+
+        for (const batch of manifest.batches) {
+            for (const problem of batch.problems) {
+                if (!allowedProvenance.has(problem.expectedProvenance)) {
+                    missing.push(`${batch.id} / ${problem.id}: expectedProvenance=${String(problem.expectedProvenance)}`);
+                }
+                if (!allowedStatus.has(problem.oracleStatus)) {
+                    missing.push(`${batch.id} / ${problem.id}: oracleStatus=${String(problem.oracleStatus)}`);
+                }
+                if (typeof problem.coverageEligible !== 'boolean') {
+                    missing.push(`${batch.id} / ${problem.id}: coverageEligible 缺失`);
+                }
+                const generated =
+                    problem.expectedProvenance === 'reference-generated' || problem.expectedProvenance === 'derived-recompute';
+                if (generated && problem.oracleStatus !== 'unverified') {
+                    missing.push(`${batch.id} / ${problem.id}: 生成/派生来源必须标 unverified`);
+                }
+                if (generated && problem.coverageEligible) {
+                    missing.push(`${batch.id} / ${problem.id}: 生成/派生来源不得计入覆盖率`);
+                }
+            }
+        }
+
+        expect(missing, missing.join('\n')).toEqual([]);
     });
 
     it('清单内每题都有解、参考解、用例与判题入口', () => {
         const missing: string[] = [];
 
-        for (const { id } of entries) {
+        for (const { problem: entry } of entries) {
+            const id = entry.id;
             const problem = catalogById.get(id);
             if (!problem) {
                 missing.push(`${id}: 不在 catalog`);
@@ -90,11 +128,12 @@ describe('题库覆盖清单', () => {
     });
 });
 
-for (const { id, batch } of entries) {
+for (const { problem: entry, batch } of entries) {
     it(
-        `${batch} / ${id} 三通道真实判题（Python + TypeScript + Valkyrie wasm）`,
+        `${batch} / ${entry.id} 三通道真实判题（Python + TypeScript + Valkyrie wasm）`,
         { timeout: 10 * 60 * 1000 },
         async () => {
+            const id = entry.id;
             const problem = catalogById.get(id);
             expect(problem, `${id}: 不在 catalog`).toBeTruthy();
             if (!problem) {

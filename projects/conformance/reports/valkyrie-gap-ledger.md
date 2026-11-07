@@ -3839,3 +3839,32 @@ WASI 轨与非文本 payload（结构化 effect 值没有文本 ABI）维持原�
 
 - 以上 blocked 的剩余用例在题解修复前不得计入任何通过数。
 - dirty 保护的 3 题保留原状，待其改动方落地后按同一脚本清理。
+
+## oracle 未独立验证（2026-11-07 降级）
+
+以下题目的 `metadata.tests[].expected` 曾由参考解运行时输出生成或在改写输入后用参考算法重算。
+生成期望的实现与被判绿实现同源，因此当时的绿只证明「实现与期望一致」，不证明「与题面一致」；
+在独立重算完成前不计入覆盖率。
+
+| 题 | 来源 | 条数 | 原报告 |
+| --- | --- | --- | --- |
+| `count-the-number-of-arrays-with-k-matching-adjacent-elements` | 参考解生成 | 157 | R29 判题侧移交 |
+| `maximize-number-of-nice-divisors` | 参考解生成 | 77 | R29 A 参数名 |
+| `student-attendance-record-ii` | 参考解生成 | 30 | R29 判题侧移交 |
+| `number-of-ways-to-reach-a-position-after-exactly-k-steps` | 参考解生成 | 52 | R29 判题侧移交 |
+| `handshakes-that-dont-cross` | 参考解生成 | 2 | R29 判题侧移交 |
+| `number-of-strings-which-can-be-rearranged-to-contain-substring` | 参考解生成 | 10 | R29 判题侧移交 |
+| `closest-fair-integer` | 参考解生成 | 3 | R29 B 真实现错 |
+| `subsets` | 派生重算 | 2 | lane coverage 数据清洗 |
+| `hamming-distance` | 派生重算 | 未记账 | lane coverage 数据清洗 |
+| `binary-number-with-alternating-bits` | 派生重算 | 未记账 | lane coverage 数据清洗 |
+| `reverse-bits` | 派生重算 | 18 | lane coverage 数据清洗 |
+| `sum-of-square-numbers` | 派生重算 | 未记账 | lane coverage 数据清洗 |
+| `monotone-increasing-digits` | 派生重算 | 未记账 | lane coverage 数据清洗 |
+| `sum-of-number-and-its-reverse` | 派生重算 | 21 | lane coverage 数据清洗 |
+
+- 已知可确数合计 **331 条**（参考解生成 331 条中的可数部分：157+77+30+52+2+10+3）；
+  派生重算另有 `subsets` 2、`reverse-bits` 18、`sum-of-number-and-its-reverse` 21，
+  其余题只记题名未记条数。
+- 解除条件：用独立口径（暴力枚举 / 精确有理数 / 数学推导）逐条重算并留证，见
+  `host-error-expected-audit.md` 之后的独立重算记录。

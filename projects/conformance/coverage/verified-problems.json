@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "batches": [
     {
       "id": "r34-2026-11-06",
@@ -19,33 +19,178 @@
         }
       ],
       "problems": [
-        "toeplitz-matrix",
-        "lucky-numbers-in-a-matrix",
-        "check-if-every-row-and-column-contains-all-numbers",
-        "determine-whether-matrix-can-be-obtained-by-rotation",
-        "check-if-matrix-is-x-matrix",
-        "matrix-similarity-after-cyclic-shifts",
-        "largest-unique-number",
-        "divide-array-into-equal-pairs",
-        "number-of-beautiful-pairs",
-        "count-pairs-that-form-a-complete-day-i",
-        "find-the-xor-of-numbers-which-appear-twice",
-        "two-out-of-three",
-        "longest-strictly-increasing-or-strictly-decreasing-subarray",
-        "longest-even-odd-subarray-with-threshold",
-        "shortest-subarray-with-or-at-least-k-i",
-        "find-subarrays-with-equal-sum",
-        "count-partitions-with-even-sum-difference",
-        "minimum-difference-between-highest-and-lowest-of-k-scores",
-        "longest-subsequence-with-limited-sum",
-        "kth-missing-positive-number",
-        "maximum-product-difference-between-two-pairs",
-        "determine-the-winner-of-a-bowling-game",
-        "min-max-game",
-        "minimum-total-operations",
-        "minimum-operations-to-make-array-values-equal-to-k",
-        "minimum-number-of-operations-to-make-elements-in-array-distinct"
+        {
+          "id": "toeplitz-matrix",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "lucky-numbers-in-a-matrix",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "check-if-every-row-and-column-contains-all-numbers",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "unverified",
+          "coverageEligible": false
+        },
+        {
+          "id": "determine-whether-matrix-can-be-obtained-by-rotation",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "check-if-matrix-is-x-matrix",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "matrix-similarity-after-cyclic-shifts",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "largest-unique-number",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "divide-array-into-equal-pairs",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "number-of-beautiful-pairs",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "count-pairs-that-form-a-complete-day-i",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "find-the-xor-of-numbers-which-appear-twice",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "two-out-of-three",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "unverified",
+          "coverageEligible": false
+        },
+        {
+          "id": "longest-strictly-increasing-or-strictly-decreasing-subarray",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "longest-even-odd-subarray-with-threshold",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "shortest-subarray-with-or-at-least-k-i",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "find-subarrays-with-equal-sum",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "count-partitions-with-even-sum-difference",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "minimum-difference-between-highest-and-lowest-of-k-scores",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "longest-subsequence-with-limited-sum",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "kth-missing-positive-number",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "maximum-product-difference-between-two-pairs",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "determine-the-winner-of-a-bowling-game",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "min-max-game",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "minimum-total-operations",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "minimum-operations-to-make-array-values-equal-to-k",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        },
+        {
+          "id": "minimum-number-of-operations-to-make-elements-in-array-distinct",
+          "expectedProvenance": "initial-corpus",
+          "oracleStatus": "cross-checked",
+          "coverageEligible": true
+        }
       ]
     }
-  ]
+  ],
+  "provenancePolicy": {
+    "allowedProvenance": [
+      "official-static",
+      "reference-generated",
+      "derived-recompute",
+      "host-error-text",
+      "initial-corpus"
+    ],
+    "allowedOracleStatus": [
+      "independent",
+      "cross-checked",
+      "unverified"
+    ],
+    "rule": "reference-generated 与 derived-recompute 必须标 unverified 且 coverageEligible=false；每题必须显式填写 expectedProvenance 与 oracleStatus。"
+  }
 }
