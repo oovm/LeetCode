@@ -71,12 +71,12 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G29 `i64` / `u64` → `f64` 精确转换编码缺失 | `wasm 后端缺少 i64 → f64 的精确表示转换编码（acorn_wasm 未提供对应 opcode），不得退化为近似转换`；最小复现 `micro f(x: i64) -> f64 { return x as f64 }`，`u64` 同样报错。`597ecdd5`（2026-11-05 18:45）已在 wasm lane 编码精确整数↔浮点转换；2026-11-07 已按 `origin/dev` `dcb49a6a` 重建 `platforms/valkyrie-win32-x64/lib/valkyrie.win32-x64-msvc.node`，两坐标题均构建通过，`largestSumOfAverages` 3 条用例真跑 PASS | 编译器 wasm 编码；坐标 `largest-sum-of-averages/solvers/valkyrie/solution.v:23`、`sliding-window-median/solvers/valkyrie/solution.v:58` |
 | G30 零参候选对多参调用「空匹配」 | `match_call_candidate` 对无 `param_specs` 的候选直接取全部实参，随后 `zip` 静默截断：零参候选对一参调用「空匹配」，与真实候选并列后判 Ambiguous，最终退化成「无一候选」；arity 不符还会漏到 SMIR007。2026-11-06 已在 `nyar-vm.rs/projects/nyar.rs/languages/rusty-valkyrie/src/compiler/hir/overload/call_resolver/core.rs` 加「实参绑定结果与签名槽位等长」守卫，不等长即不匹配。正例：同一 `imply` 块内 `new()` / `new(capacity)` 均解析；反例：零参构造收一参在 HIR `unresolved_call` 失败 | 编译器调用解析；最小复现 `.cache/probes/two-constructors`、`.cache/probes/arity-bad-call`；回归测试 `tests/frontend/hir/hir_overload_identity_tests.rs`（`same_owner_constructors_with_distinct_arity_both_resolve`、`nullary_constructor_rejects_extra_argument_at_call_boundary`） |
 | G31 用户 `imply` + 结构体构造触发 MIR lowering 失败 | **已恢复**（2026-11-07 实测）：原报 `MIR lowering unresolved callable identity \`construct missing HIR callable contract\``。根因不是构造调用契约缺失，而是单态化铸造 gate 用**声明所在模块**（std）的 `where` 证据视图结算，看不到调用方模块的 `imply`，`call.instance` 停留 `None`。修复一：gate 改为按程序闭包全模块视图结算（`358a56ee`）；修复二：`layout_field_type` 补函数类型递归分支，解决 `BinaryHeap<用户 nominal>` 的 `_cmp: micro(T, T) -> i32` 字段布局（CAN058，`49566a9a`）。正例 `merge-intervals` 91/91、`maximum-number-of-eaten-apples` 72/72 真跑 PASS；反例（缺 `Equal` 超 trait / 缺 `Comparable` 证据 / 非法构造缺字段）均在 HIR 结构化失败，未静默推断 | 编译器单态化证据视图 / MIR 降级；坐标 `merge-intervals/solvers/valkyrie/solution.v:13-43`、`maximum-number-of-eaten-apples/solvers/valkyrie/solution.v`（`Fruit` + `BinaryHeap::new()`） |
-| G32 `utf8` 返回被按 Nominal 校验（SMIR007） | `rearrangeString` 声明 `-> utf8`，`return ""` 分支报 `return operand type differs from function return type (actual=Utf8, expected=Nominal { declaration: ItemId(60), arguments: [], primitive_identity: None })`；同函数另一分支返回 `Utf8Builder::build()` | 编译器 SMIR 类型合流；坐标 `rearrange-string-k-distance-apart/solvers/valkyrie/solution.v:62` |
+| G32 `utf8` 返回被按 Nominal 校验（SMIR007） | **已恢复**（2026-11-07 实测）：`mir_return_operand_type_compatible` 补文本编码与名义别名归一（与调用边界共用 `text_encoding_matches_nominal`），`Utf8` 返回可对上 `utf8` 名义声明；提交 `15ec9858`。正例 `rearrange-string-k-distance-apart` 104/104 真跑 PASS；反例 `-> utf16` 返回 `Utf8`、`-> Wrapper` 返回 `""` 均仍 SMIR007 失败闭合 | 编译器 MIR 返回合流；坐标 `rearrange-string-k-distance-apart/solvers/valkyrie/solution.v` |
 
 - G5/G6/G7/G29/G30 五条已由 `origin/dev` 的编译器提交覆盖（G5/G6/G7/G29 于 2026-11-07 复验恢复，
   G30 修复已进 `dev`），不占 std 缺口名额，也不进第 18 批选题面。
-- G31 已由 `origin/dev` `358a56ee` / `49566a9a` 关闭（2026-11-07，推送后 `origin/dev` HEAD 一致）；
-  G32 仍开放，阻断 `rearrange-string-k-distance-apart`；两者均不归 std 线。
+- G31 已由 `origin/dev` `358a56ee` / `49566a9a` 关闭，G32 已由 `15ec9858` 关闭（2026-11-07，推送后
+  `origin/dev` HEAD 一致）；两者均不归 std 线。
 - 本节只作指向，详细证据留在各自 G 条内。
 
 ## 判题夹具与导出 ABI 缺口（不归 std 线，F 编号）
@@ -3673,3 +3673,14 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 | `count-the-number-of-complete-components` | 69/69 | 该题 `metadata.invoke` 只有 python/typescript，缺 `valkyrie`；用 `callExport` 逐用例真跑（不伪造 metadata） |
 | `largest-component-size-by-common-factor` | 98/99 | 同上缺 `valkyrie` invoke；唯一红为 `tests[69]` 期望 `Execution timed out`（超时占位语料） |
 | `count-unreachable-pairs-of-nodes-in-an-undirected-graph` | 50/56 执行通过 | canonical harness：`tests[50]` 期望 Python 宿主异常文本 `not enough values to unpack`，实际输入含单端点边 `[14]` 触发越界；余 5 条未执行。非法语料坐标 `metadata.tests[50].args.edges`，不删用例 |
+
+## G32 文本返回值归一实测（2026-11-07，编译器 `15ec9858`）
+
+最小复现 `.wt-std/.cache/g32-probe`：`micro rebase(value: i64) -> utf8 { if value < 0 { return "" } return "ok" }`
+在修复前报 `SMIR007 ... actual=Utf8, expected=Nominal { declaration: ItemId(8), ... }`，修复后构建通过。
+
+| 用例 | 结果 |
+| --- | --- |
+| `rearrange-string-k-distance-apart`（canonical，104 用例） | **104/104 PASS** |
+| 反例 `g32-negative-cross`：`-> utf16` 返回 `Utf8` 字面量 | SMIR007 结构化失败（跨编码不归一） |
+| 反例 `g32-negative-nominal`：`-> Wrapper` 返回 `""` | SMIR007 结构化失败（非文本名义不归一） |
