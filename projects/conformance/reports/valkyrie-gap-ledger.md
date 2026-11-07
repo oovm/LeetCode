@@ -53,7 +53,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G17 `char` 缺 `Hash` | **已恢复**（2026-11-07 实测）：`HashPrimitives.v:53` 的 `imply char: Hash` 已随 addon 生效，8 题以 `HashMap<char, i64>` / `DisjointSet<char>` 真跑 **778/778** 用例 PASS；另 3 题仍红但均非 `Hash` 阻塞（详见 G17 小节） | `custom-sort-string` / `find-words-that-can-be-formed-by-characters` / `longest-repeating-character-replacement` / `longest-substring-with-at-most-k-distinct-characters` / `word-subsets` / `permutation-in-string` / `sort-characters-by-frequency` / `task-scheduler` |
 | G22 整数位元查询 | b | 5 处 × 重复位运算 |
 | G25 `BitSet` 基数 / 复制 | **已恢复**（2026-11-07 实测）：`count` / `clone` 已随源码提供，6 个消费者真跑 **479/509** 用例 PASS；余 30 条由 `find-the-prefix-common-array-of-two-arrays` 语料 A/B 长度不一致中断（基线 A/B 同样复现） | `check-if-a-string-contains-all-binary-codes-of-size-k` / `maximum-product-of-word-lengths` / `maximum-length-of-a-concatenated-string-with-unique-characters` / `find-the-prefix-common-array-of-two-arrays` / `number-of-corner-rectangles` / `maximum-rows-covered-by-columns` |
-| G26 序关系无可用合同 | **部分已恢复**（2026-11-07 源码复核）：`Comparable` 合同与原语 impl 已提供，`sort` 按合同派生比较器，`BTreeSet` 约束改为 `Equal & Comparable`；残余为 `[T]` 单参排序入口（G11 残余），14 处消费者复跑被 G31 阻断 | `sort(items)` 调用点见小节 |
+| G26 序关系无可用合同 | **已恢复**（2026-11-07 实测，G31 关闭后复跑）：`Comparable` 合同与原语 impl 已提供，`sort` 按合同派生比较器，`BTreeSet` 约束改为 `Equal & Comparable`；14 处消费者全部构建通过，其中 9 题真跑 **878/878** 用例 PASS（详见 G26 复跑小节）；残余 5 题为题内实现错或语料越界，均非序关系能力缺口 | `sort(items)` 调用点见小节 |
 | G28 `BinaryHeap` 的 `Comparable` 义务传播 | **部分已提供（2026-11-07 实测）**：`new_by` / `max` / `new` 均已提供；13 个消费者中 9 题真跑 **917/917**，3 题分别卡并列序 / 非法语料 / G32，1 题卡 G31 | 见小节逐题清单 |
 
 观察（13）：G1 / G4 / G8 / G12 / G14 / G15 / G18 / G19 / G20 / G21 / G23 / G24 / G27。
@@ -70,13 +70,13 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G7 `HashMap.insert` 作 `else` 尾 + 嵌套 return | 已恢复（2026-11-07 实测）：`origin/dev` 上 `isomorphic-strings` 构建通过，`isIsomorphic` 3 条用例真跑 PASS | 编译器 MIR 合流 |
 | G29 `i64` / `u64` → `f64` 精确转换编码缺失 | `wasm 后端缺少 i64 → f64 的精确表示转换编码（acorn_wasm 未提供对应 opcode），不得退化为近似转换`；最小复现 `micro f(x: i64) -> f64 { return x as f64 }`，`u64` 同样报错。`597ecdd5`（2026-11-05 18:45）已在 wasm lane 编码精确整数↔浮点转换；2026-11-07 已按 `origin/dev` `dcb49a6a` 重建 `platforms/valkyrie-win32-x64/lib/valkyrie.win32-x64-msvc.node`，两坐标题均构建通过，`largestSumOfAverages` 3 条用例真跑 PASS | 编译器 wasm 编码；坐标 `largest-sum-of-averages/solvers/valkyrie/solution.v:23`、`sliding-window-median/solvers/valkyrie/solution.v:58` |
 | G30 零参候选对多参调用「空匹配」 | `match_call_candidate` 对无 `param_specs` 的候选直接取全部实参，随后 `zip` 静默截断：零参候选对一参调用「空匹配」，与真实候选并列后判 Ambiguous，最终退化成「无一候选」；arity 不符还会漏到 SMIR007。2026-11-06 已在 `nyar-vm.rs/projects/nyar.rs/languages/rusty-valkyrie/src/compiler/hir/overload/call_resolver/core.rs` 加「实参绑定结果与签名槽位等长」守卫，不等长即不匹配。正例：同一 `imply` 块内 `new()` / `new(capacity)` 均解析；反例：零参构造收一参在 HIR `unresolved_call` 失败 | 编译器调用解析；最小复现 `.cache/probes/two-constructors`、`.cache/probes/arity-bad-call`；回归测试 `tests/frontend/hir/hir_overload_identity_tests.rs`（`same_owner_constructors_with_distinct_arity_both_resolve`、`nullary_constructor_rejects_extra_argument_at_call_boundary`） |
-| G31 用户 `imply` + 结构体构造触发 MIR lowering 失败 | 用户命名空间同时存在 `imply T: std::operator::Equal` / `imply T: std::operator::Comparable` 与结构体字面量构造时，构建报 `compile pipeline rejected module (valkyrie.mir.diagnostic_rejected): MIR lowering unresolved callable identity \`construct missing HIR callable contract\``；`merge-intervals` 删掉两个 `imply` 块后该 lowering 诊断不再出现（转为预期的 `sort` 无匹配）。另：用户命名空间按全限定 `std::operator::Ordering` 写返回类型会报 `unknown type name \`Ordering\``，加 `using std.operator;` 后解析 | 编译器 MIR 降级 / 命名空间类型解析；坐标 `merge-intervals/solvers/valkyrie/solution.v:13-43`、`maximum-number-of-eaten-apples/solvers/valkyrie/solution.v`（`Fruit` + `BinaryHeap::new()`） |
+| G31 用户 `imply` + 结构体构造触发 MIR lowering 失败 | **已恢复**（2026-11-07 实测）：原报 `MIR lowering unresolved callable identity \`construct missing HIR callable contract\``。根因不是构造调用契约缺失，而是单态化铸造 gate 用**声明所在模块**（std）的 `where` 证据视图结算，看不到调用方模块的 `imply`，`call.instance` 停留 `None`。修复一：gate 改为按程序闭包全模块视图结算（`358a56ee`）；修复二：`layout_field_type` 补函数类型递归分支，解决 `BinaryHeap<用户 nominal>` 的 `_cmp: micro(T, T) -> i32` 字段布局（CAN058，`49566a9a`）。正例 `merge-intervals` 91/91、`maximum-number-of-eaten-apples` 72/72 真跑 PASS；反例（缺 `Equal` 超 trait / 缺 `Comparable` 证据 / 非法构造缺字段）均在 HIR 结构化失败，未静默推断 | 编译器单态化证据视图 / MIR 降级；坐标 `merge-intervals/solvers/valkyrie/solution.v:13-43`、`maximum-number-of-eaten-apples/solvers/valkyrie/solution.v`（`Fruit` + `BinaryHeap::new()`） |
 | G32 `utf8` 返回被按 Nominal 校验（SMIR007） | `rearrangeString` 声明 `-> utf8`，`return ""` 分支报 `return operand type differs from function return type (actual=Utf8, expected=Nominal { declaration: ItemId(60), arguments: [], primitive_identity: None })`；同函数另一分支返回 `Utf8Builder::build()` | 编译器 SMIR 类型合流；坐标 `rearrange-string-k-distance-apart/solvers/valkyrie/solution.v:62` |
 
 - G5/G6/G7/G29/G30 五条已由 `origin/dev` 的编译器提交覆盖（G5/G6/G7/G29 于 2026-11-07 复验恢复，
   G30 修复已进 `dev`），不占 std 缺口名额，也不进第 18 批选题面。
-- G31 / G32 是 2026-11-07 新发现、仍开放：G31 阻断 G26 的 `imply` 消费者，
-  G32 阻断 `rearrange-string-k-distance-apart`；两者均不归 std 线，修好后回跑对应题。
+- G31 已由 `origin/dev` `358a56ee` / `49566a9a` 关闭（2026-11-07，推送后 `origin/dev` HEAD 一致）；
+  G32 仍开放，阻断 `rearrange-string-k-distance-apart`；两者均不归 std 线。
 - 本节只作指向，详细证据留在各自 G 条内。
 
 ## 判题夹具与导出 ABI 缺口（不归 std 线，F 编号）
@@ -3609,3 +3609,40 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 - Rust 回归：`cargo test -j 4 -p rusty-valkyrie --test frontend` = **572 passed / 0 failed / 11 ignored**，
   含新增正反例（`same_owner_constructors_with_distinct_arity_both_resolve` /
   `nullary_constructor_rejects_extra_argument_at_call_boundary`）。
+
+## G26 消费者复跑（2026-11-07，G31 `358a56ee` / `49566a9a` 之后）
+
+构建用修复版 addon（`.wt-deliver/build-artifacts/valkyrie-g31-fix4.node`），消费者副本在
+`.wt-std/.cache/g26-consumers/<slug>`（以 `.wt-std` 为 cwd 构建，避免 `legions.von` 的主树硬绑定）；
+判题在 `projects/conformance` 下以 `run_v_solver.ts` + `VALKYRIE_PIN_*` 跑 canonical metadata。
+
+全部 14 题构建 `status=0`。逐题真跑：
+
+| 题 | 结果 | 判定 |
+| --- | --- | --- |
+| `merge-intervals` | 91/91 | G26 通过 |
+| `minimum-number-of-arrows-to-burst-balloons` | 110/110 | G26 通过 |
+| `number-of-distinct-islands` | 64/64 | G26 通过 |
+| `two-city-scheduling` | 67/67 | G26 通过 |
+| `maximum-profit-in-job-scheduling` | 92/92 | G26 通过 |
+| `best-team-with-no-conflicts` | 137/137 | G26 通过 |
+| `maximum-height-by-stacking-cuboids` | 108/108 | G26 通过 |
+| `maximum-units-on-a-truck` | 104/104 | G26 通过 |
+| `number-of-flowers-in-full-bloom` | 105/105 | G26 通过 |
+| `non-overlapping-intervals` | `tests[53]` 期望 3 实得 1 | 题内实现错：贪心用了 `start >= reach`，本题端点相接视为重叠，须 `start > reach` |
+| `maximum-number-of-coins-you-can-get` | `tests[0]` 期望 32 实得 36 | 题内实现错：排序后应从 `n-2` 起隔一取，解法从 `n-1` 起 |
+| `rank-teams-by-votes` | `tests[3]` `RuntimeError: unreachable` | 题内实现错（单字母票 `A`–`E` 用例触发），非序关系能力 |
+| `maximum-number-of-events-that-can-be-attended-ii` | `tests[45]` 期望 200 实得 50 | 语料非法：10 个事件两两重叠，真值应为 50，期望是按价值排序忽略重叠的生成器产物 |
+| `sort-the-jumbled-numbers` | `tests[55]` 参数超 `i64` | 语料非法：`nums` 含 `"102030405060708100"` / `"98765432109876540000"`，超出 `i64` 合同 |
+
+结论：G26 的序关系合同与 `sort` 派生比较器已被 9 题 878 条用例证实；余 5 题不构成能力缺口。
+消费者 `solution.v` 同步改为 `imply T: Equal` + `imply T: Comparable { micro compare }`（`Comparable: Equal`
+是 fail-closed 超 trait，旧稿的 `infix <` 形态不再合法）。
+
+## 工作区语料状态登记（2026-11-07，只登记不改数据）
+
+- `leetcode.v` 有 16 个本地 dirty `metadata.json`：本地含 **204 条**真实期望，而 origin 版本对应位置是
+  `Execution timed out` 占位。**禁止 checkout 覆盖**；这 16 个文件保持工作树原样，不作为同步对象。
+  只读诊断结论：1193 个被比较用例中 989 一致、185 条 origin 为超时占位、19 条输入缩小、0 条原真实期望被替换。
+- `find-the-prefix-common-array-of-two-arrays`（2657）：语料 `A` 长 32、`B` 长 30，题面要求等长；
+  只登记坐标（`metadata.tests` 的 A/B 长度不一致），不删用例、不改期望。
