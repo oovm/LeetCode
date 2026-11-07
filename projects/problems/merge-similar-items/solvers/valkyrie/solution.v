@@ -38,11 +38,7 @@ micro merge_similar_items(items1: ArrayList<ArrayList<i64>>, items2: ArrayList<A
     }
 
     let keys: ArrayList<i64> = weight.keys()
-    let mut ordered: ArrayList<i64> = ArrayList::new(keys.length())
-    loop value in keys {
-        ordered.push(value)
-    }
-    merge_sort(ordered, compare_asc)
+    let ordered: ArrayList<i64> = sorted_by(keys, compare_asc)
 
     let mut result: ArrayList<ArrayList<i64>> = ArrayList::new(ordered.length())
     let mut index: usize = 0
