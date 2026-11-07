@@ -1575,9 +1575,19 @@ micro add_undirected_edge(mut self, a: N, b: N): unit
     where N: Equal & Hash
 ```
 
-- 影响题（4，调用点仍为「同一关系双写 `add_edge`」；改用它属可选清理）：`is-graph-bipartite`（785）、
-  `maximal-network-rank`（1615）、`possible-bipartition`（886）、`find-center-of-star-graph`（1791）。
-  消费者改用该入口需主工作树 std 先同步到 `57e784a`，本轮不动主工作树。
+- 影响题（4，已清理 2026-11-07）：`is-graph-bipartite`（785）、`maximal-network-rank`（1615）、
+  `possible-bipartition`（886）、`find-center-of-star-graph`（1791）均由「同一关系双写 `add_edge`」
+  改为单次 `add_undirected_edge`（`leetcode.v` 提交 `8831ec08b`）。
+- 验证路径：题仓 `legions.von` 的 workspace 成员写死主工作树 `../valkyrie.v/projects/std`，
+  主树 std 尚未含 `57e784a`；因此四题副本放在 `.wt-std/.cache/g8-consumers/<slug>`，以 `.wt-std`
+  为调用目录执行 `legion build`（workspace 解析到 `.wt-std` 的 std），再用 `VALKYRIE_PIN_*`
+  注入产物、从 `conformance` 目录跑 canonical `metadata.tests`。主工作树未改。
+- 真跑证据：`maximal-network-rank` 40/40 PASS；`possible-bipartition` 76/76 PASS；
+  `is-graph-bipartite` 15 pass，首个失败 `tests[15]`（期望宿主异常文本，F6 类语料）；
+  `find-center-of-star-graph` 18 pass，首个失败 `tests[18]`（50 环输入期望 2，非星形约束）。
+  两处失败均在上游 `HEAD` 解法上复现，与本次消费者清理无关。
+- `find-center-of-star-graph` 原 `metadata.invoke` 缺 `valkyrie` 键，本轮补 `"valkyrie": "findCenter"`
+  （与相邻图题「裸 camelCase 函数名」口径一致），否则 harness 以 `ValkyrieEntryContractError` 拒跑。
 - 不对称点：`std.math.graph_theory.GraphMatrix.add_undirected_edge`（`matrix.v` L49-L52）、
   `WeightedGraph.add_undirected_edge`（`weighted.v` L124-L129）均存在（类型名是 `GraphMatrix`，
   此前记为 `MatrixGraph` 属笔误）；`DirectedGraph` 已补同名入口（`57e784a`）。
