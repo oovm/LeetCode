@@ -13,8 +13,7 @@ micro is_bipartite(graph: ArrayList<ArrayList<i64>>) -> bool {
         let neighbours: ArrayList<i64> = graph⁅node⁆
         let mut k: usize = 0
         while k < neighbours.length() {
-            network.add_edge(node as i64, neighbours⁅k⁆)
-            network.add_edge(neighbours⁅k⁆, node as i64)
+            network.add_undirected_edge(node as i64, neighbours⁅k⁆)
             k = k + 1
         }
         node = node + 1

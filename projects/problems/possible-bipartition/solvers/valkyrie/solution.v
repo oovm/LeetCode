@@ -17,10 +17,7 @@ class Solution {
         loop pair in dislikes {
             let first: i64 = pair⁅0⁆
             let second: i64 = pair⁅1⁆
-            graph.add_node(first)
-            graph.add_node(second)
-            graph.add_edge(first, second)
-            graph.add_edge(second, first)
+            graph.add_undirected_edge(first, second)
         }
         return bipartition(graph).is_some()
     }

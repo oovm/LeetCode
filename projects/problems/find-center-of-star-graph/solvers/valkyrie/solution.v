@@ -5,8 +5,7 @@ namespace leetcode.find_center_of_star_graph;
 micro find_center(edges: ArrayList<ArrayList<i64>>) -> i64 {
     let mut network: DirectedGraph<i64> = DirectedGraph::new()
     loop edge in edges {
-        network.add_edge(edge⁅0⁆, edge⁅1⁆)
-        network.add_edge(edge⁅1⁆, edge⁅0⁆)
+        network.add_undirected_edge(edge⁅0⁆, edge⁅1⁆)
     }
 
     let threshold: usize = 2

@@ -1358,6 +1358,7 @@
     ],
     "invoke": {
         "python": "Solution().findCenter",
-        "typescript": "Solution().findCenter"
+        "typescript": "Solution().findCenter",
+        "valkyrie": "findCenter"
     }
 }

@@ -11,8 +11,7 @@ micro maximal_network_rank(n: i64, roads: ArrayList<ArrayList<i64>>) -> i64 {
     }
 
     loop road in roads {
-        network.add_edge(road⁅0⁆, road⁅1⁆)
-        network.add_edge(road⁅1⁆, road⁅0⁆)
+        network.add_undirected_edge(road⁅0⁆, road⁅1⁆)
     }
 
     let mut best: i64 = 0
