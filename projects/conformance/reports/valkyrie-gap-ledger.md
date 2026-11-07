@@ -3798,6 +3798,83 @@ WASI 轨与非文本 payload（结构化 effect 值没有文本 ABI）维持原�
 建议：先执行 B（保留哨兵、统计为 skipped、账本登记 472 条坐标），再按题目优先级用 C 逐步替换；
 每次替换必须附独立真值来源。
 
+### 方案 B 落地与 472 条哨兵坐标
+
+**统计语义**：`SolverCaseStats` 新增 `skipped`；恒定关系改为
+`executed_pass + executed_fail + blocked + not_run === testCaseTotal - skipped`。
+`solver-case-stats.ts`、`matrix-green.ts`、lane summary 与三条 runner 均按此口径；
+绿判定为 `executed_pass + skipped === testCaseTotal`，`casePassRate` 分母为
+`testCaseTotal - skipped`，报告单列 `skipped`。`Execution timed out` 在计数前被排除；
+整数 ABI 送不进去的非整数实参也预先计入 `skipped`，即使中途失败中止也保持全量。
+
+**真实产物实测**：
+
+- `letter-case-permutation`（wasm）：`testCaseTotal=126`、`executed_pass=0`、
+  `executed_fail=1`、`not_run=116`、`skipped=9`；`0+1+116+9=126`。
+- `minimum-operations-to-halve-array-sum`（wasm）：`testCaseTotal=81`、
+  `executed_pass=78`、`executed_fail=0`、`skipped=3`；绿判定 `78+3=81` 成立。
+
+**`62.5` 五例的确认结论**：`preserveI64Precision` 对 `i64` 形参收到非整数时抛
+`需要整数实参，实际为非整数数值 62.5`，错误发生在输入进入 ABI 之前。因此这 5 例是
+**输入永久送不进去**，不是“送进去但语义变了”；已归入 `skipped`，不再留在失败里。
+坐标：`check-if-n-and-its-double-exist` `tests[83]`、`tests[119]`；
+`minimum-operations-to-halve-array-sum` `tests[17]`、`tests[60]`、`tests[77]`。
+
+**472 条坐标分题登记**（基线 `HEAD~1` = `10d5a11ef`）。当前工作树已被并行提交
+`951a53ca8` 作废 423 条 metadata 哨兵，现存 49 条：`letter-case-permutation` metadata 9 条、
+`generalized-abbreviation.cases.ts` 40 条（runner 只读 `metadata.json`，cases.ts 用于 isolated 参考路径）。
+每条记录格式为「题 / 来源 / 条数 / tests 下标 / 当前状态」。
+
+| 题 | 来源 | 条数 | tests 下标 | 当前状态 |
+| --- | --- | --- | --- | --- |
+| `check-if-an-original-string-exists-given-two-encoded-strings` | metadata.json | 18 | `39,46,50,62,70,72,77,81,85,103,104,142,144,195,196,199,200,212` | 已作废（951a53ca8） |
+| `closest-subsequence-sum` | metadata.json | 2 | `26,50` | 已作废（951a53ca8） |
+| `combination-sum` | metadata.json | 1 | `117` | 已作废（951a53ca8） |
+| `count-connected-components-in-lcm-graph` | metadata.json | 9 | `15,19,29,34,37,60,66,83,96` | 已作废（951a53ca8） |
+| `count-number-of-maximum-bitwise-or-subsets` | metadata.json | 2 | `68,69` | 已作废（951a53ca8） |
+| `different-ways-to-add-parentheses` | metadata.json | 28 | `38,40,41,42,47,48,49,54,77,84,95,103,112,114,116,133,139,144,148,154,173,184,187,196,199,202,206,211` | 已作废（951a53ca8） |
+| `distance-between-bus-stops` | metadata.json | 3 | `22,52,61` | 已作废（951a53ca8） |
+| `distribute-repeating-integers` | metadata.json | 3 | `16,22,36` | 已作废（951a53ca8） |
+| `find-the-maximum-length-of-valid-subsequence-ii` | metadata.json | 8 | `28,46,54,81,94,96,116,124` | 已作废（951a53ca8） |
+| `find-the-number-of-subsequences-with-equal-gcd` | metadata.json | 5 | `40,51,55,65,77` | 已作废（951a53ca8） |
+| `find-the-shortest-superstring` | metadata.json | 7 | `22,37,42,49,51,53,88` | 已作废（951a53ca8） |
+| `flip-game-ii` | metadata.json | 14 | `15,17,33,36,39,60,66,73,81,83,108,112,116,128` | 已作废（951a53ca8） |
+| `generalized-abbreviation` | generalized-abbreviation.cases.ts | 40 | `3,5,8,16,23,24,35,38,40,42,43,44,47,50,53,54,56,57,58,59,60,61,63,65,66,69,70,71,72,74,75,77,78,83,85,86,87,88,89,90` | 现存（isolated 用例文件） |
+| `generalized-abbreviation` | metadata.json | 40 | `3,5,8,16,23,24,35,38,40,42,43,44,47,50,53,54,56,57,58,59,60,61,63,65,66,69,70,71,72,74,75,77,78,83,85,86,87,88,89,90` | 已作废（951a53ca8） |
+| `k-similar-strings` | metadata.json | 19 | `11,12,13,15,17,19,21,23,24,36,38,39,41,42,43,47,57,59,65` | 已作废（951a53ca8） |
+| `largest-component-size-by-common-factor` | metadata.json | 1 | `69` | 已作废（951a53ca8） |
+| `letter-case-permutation` | metadata.json | 9 | `56,68,70,80,82,99,117,119,123` | 现存（受保护脏文件） |
+| `letter-tile-possibilities` | metadata.json | 8 | `19,20,21,37,39,40,58,78` | 已作废（951a53ca8） |
+| `longest-subsequence-repeated-k-times` | metadata.json | 3 | `32,37,44` | 已作废（951a53ca8） |
+| `maximum-number-of-achievable-transfer-requests` | metadata.json | 4 | `14,19,28,58` | 已作废（951a53ca8） |
+| `maximum-path-quality-of-a-graph` | metadata.json | 2 | `55,63` | 已作废（951a53ca8） |
+| `maximum-strength-of-a-group` | metadata.json | 1 | `111` | 已作废（951a53ca8） |
+| `minimum-incompatibility` | metadata.json | 7 | `36,45,72,75,76,87,95` | 已作废（951a53ca8） |
+| `minimum-moves-to-spread-stones-over-grid` | metadata.json | 73 | `5,9,10,11,12,14,16,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,38,39,42,43,44,45,46,48,49,51,53,54,55,57,58,59,60,61,62,63,65,67,68,69,71,72,74,75,77,78,79,80,83,84,85,87,89,90,91,92,93,95,96,97,100,103,106,107,108,110,111` | 已作废（951a53ca8） |
+| `minimum-number-of-flips-to-convert-binary-matrix-to-zero-matrix` | metadata.json | 12 | `10,12,24,30,32,39,40,46,49,54,57,61` | 已作废（951a53ca8） |
+| `minimum-number-of-operations-to-sort-a-binary-tree-by-level` | metadata.json | 1 | `50` | 已作废（951a53ca8） |
+| `minimum-unique-word-abbreviation` | metadata.json | 6 | `63,66,67,78,87,91` | 已作废（951a53ca8） |
+| `non-decreasing-subsequences` | metadata.json | 26 | `30,43,45,50,53,55,58,59,64,66,69,70,83,87,88,93,96,99,104,105,107,108,109,110,113,119` | 已作废（951a53ca8） |
+| `number-of-great-partitions` | metadata.json | 1 | `33` | 已作废（951a53ca8） |
+| `number-of-ways-to-wear-different-hats-to-each-other` | metadata.json | 1 | `29` | 已作废（951a53ca8） |
+| `palindrome-partitioning` | metadata.json | 15 | `34,49,54,74,80,83,86,88,106,111,117,119,121,127,134` | 已作废（951a53ca8） |
+| `palindrome-permutation-ii` | metadata.json | 31 | `34,42,45,48,50,52,53,55,57,63,65,70,77,80,84,86,88,89,91,92,93,95,98,102,103,111,114,120,121,122,128` | 已作废（951a53ca8） |
+| `partition-array-into-two-arrays-to-minimize-sum-difference` | metadata.json | 2 | `32,44` | 已作废（951a53ca8） |
+| `range-addition` | metadata.json | 5 | `64,69,82,87,93` | 已作废（951a53ca8） |
+| `sell-diminishing-valued-colored-balls` | metadata.json | 2 | `40,67` | 已作废（951a53ca8） |
+| `shortest-distance-after-road-addition-queries-ii` | metadata.json | 34 | `2,5,7,9,12,13,14,16,18,20,21,24,27,28,29,31,32,34,36,39,40,42,43,45,47,50,51,57,62,63,66,69,70,71` | 已作废（951a53ca8） |
+| `shortest-path-to-get-all-keys` | metadata.json | 1 | `40` | 已作废（951a53ca8） |
+| `spiral-matrix-iv` | metadata.json | 4 | `29,35,54,64` | 已作废（951a53ca8） |
+| `split-a-string-into-the-max-number-of-unique-substrings` | metadata.json | 13 | `21,27,34,43,47,51,55,56,77,92,103,106,108` | 已作废（951a53ca8） |
+| `word-break-ii` | metadata.json | 11 | `8,15,17,29,44,52,56,60,61,67,68` | 已作废（951a53ca8） |
+
+**方案 C 替换顺序（仅针对现存的 49 条；先易后难，逐题提交）**：
+
+1. `letter-case-permutation` 9 条：题目稳定，输入是 ASCII 字符串，真值可用独立枚举离线生成并逐条比对。
+2. `generalized-abbreviation` cases.ts 40 条：生成规则确定，但用例量大；先用独立实现验证 1-2 条再批量。
+
+每次替换在账本追加「原哨兵 → 新期望 → 独立真值来源」，不一次性批量替换。
+
 > **2026-11-07 决策更新（取代上表 D 的「禁止」）**：宿主异常文本与 `Execution timed out`
 > 不是答案，不能进入任何绿统计。执行结果见文末「宿主异常 expected 清理」小节与
 > `host-error-expected-audit.md`；整题异常占比 ≥ 50% 的登记 blocked，其余逐条作废用例。
