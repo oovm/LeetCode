@@ -3,10 +3,8 @@ namespace leetcode.find_right_interval;
 using std.collection;
 
 # 以每个区间的起点为键建有序表（值 = 原下标），再对每个区间的终点做一次下界查询：
-# 「最小且 >= 终点的起点」就是右区间，越界即 -1。
-# 题内触发点: G16 —— `BTreeMap` 只有插入 / 精确 `get` / 全量 `keys()`，
-# 没有任何按值定位的界查询（`ceiling` / `floor`）。理想写法是一次 O(log n) 定位，
-# 而不是 `keys()` 全量物化后手写二分。
+# 「最小且 >= 终点的起点」就是右区间，越界即 -1；`ceiling_key` 直接给出该键（G16 已提供），
+# 不再全量物化 `keys()` 后手写二分。
 [export(case: "camelCase")]
 micro find_right_interval(intervals: ArrayList<ArrayList<i64>>) -> ArrayList<i64> {
     let count: usize = intervals.length()
