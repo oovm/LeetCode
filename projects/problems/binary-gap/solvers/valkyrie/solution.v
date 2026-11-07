@@ -2,25 +2,21 @@ namespace leetcode.binary_gap;
 
 [export(case: "camelCase")]
 micro binary_gap(n: i64) -> i64 {
-    let mut max_gap: i64 = 0
-    let mut last_one: i64 = -1
-    let mut pos: i64 = 0
-    let mut num: i64 = n
-    while num > 0 {
-        let bit: i64 = num.bit_and(1)
-        if bit == 1 {
-            if last_one >= 0 {
-                let gap: i64 = pos - last_one
-                if gap > max_gap {
-                    max_gap = gap
-                }
-            }
-            last_one = pos
-        }
-        num = num.bit_shift_right(1)
-        pos = pos + 1
+    let ones: i64 = n.count_ones() as i64
+    if ones < 2 {
+        return 0
     }
-    return max_gap
+    let mut num: i64 = n.bit_shift_right(n.trailing_zeros() as i64)
+    let mut max_zeros: i64 = 0
+    while num > 1 {
+        num = num.bit_shift_right(1)
+        let gap: i64 = num.trailing_zeros() as i64
+        if gap > max_zeros {
+            max_zeros = gap
+        }
+        num = num.bit_shift_right(gap)
+    }
+    return max_zeros + 1
 }
 
 class Solution {
