@@ -153,7 +153,7 @@ function summarizeLane(rows: ValkyrieLaneRow[], denominator: number, baselineRow
         problemPassRate: rate(green),
         buildPassRate: rate(buildPass),
         runtimePassRate: rate(runtimePass),
-        casePassRate: rate(executedPass, testCaseTotal - skipped),
+        casePassRate: rate(executedPass, testCaseTotal),
         greenRate: rate(green),
     };
 }

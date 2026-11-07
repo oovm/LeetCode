@@ -3803,8 +3803,10 @@ WASI 轨与非文本 payload（结构化 effect 值没有文本 ABI）维持原�
 **统计语义**：`SolverCaseStats` 新增 `skipped`；恒定关系改为
 `executed_pass + executed_fail + blocked + not_run === testCaseTotal - skipped`。
 `solver-case-stats.ts`、`matrix-green.ts`、lane summary 与三条 runner 均按此口径；
-绿判定为 `executed_pass + skipped === testCaseTotal`，`casePassRate` 分母为
-`testCaseTotal - skipped`，报告单列 `skipped`。`Execution timed out` 在计数前被排除；
+绿判据为 `testCaseTotal > 0` 且 `executed_pass === testCaseTotal` 且
+`executed_fail` / `blocked` / `not_run` 均为 0；`skipped` 不抵扣分母、也不计入通过，
+单列为「未验证」桶，`casePassRate` 分母保持 `testCaseTotal`。
+`Execution timed out` 在计数前被排除；
 整数 ABI 送不进去的非整数实参也预先计入 `skipped`，即使中途失败中止也保持全量。
 
 **真实产物实测**：
