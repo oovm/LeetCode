@@ -90,18 +90,18 @@ describe('Valkyrie lane 矩阵绿门禁', () => {
         expect(isMatrixRowGreen(baseNyarRow())).toBe(isValkyrieNyarGreen(baseNyarRow()));
     });
 
-    it('wasm 绿必须同时满足 build、test、manifest 与 runtime', () => {
+    it('wasm 绿只看 build、manifest 与真实执行计数，`legion test` status 不作判据', () => {
         expect(isValkyrieGreen(baseNodeRow())).toBe(true);
         expect(isValkyrieGreen(baseNodeRow({ buildStatus: 1 }))).toBe(false);
-        expect(isValkyrieGreen(baseNodeRow({ testStatus: 1 }))).toBe(false);
+        expect(isValkyrieGreen(baseNodeRow({ testStatus: 1 }))).toBe(true);
         expect(isValkyrieGreen(baseNodeRow({ manifestFresh: false }))).toBe(false);
         expect(isValkyrieGreen(baseNodeRow({ runtimeOk: false }))).toBe(false);
     });
 
-    it('nyar 绿必须同时满足 build、test、manifest 与 runtime', () => {
+    it('nyar 绿只看 build、manifest 与真实执行计数，`legion test` status 不作判据', () => {
         expect(isValkyrieNyarGreen(baseNyarRow())).toBe(true);
         expect(isValkyrieNyarGreen(baseNyarRow({ buildStatus: 1 }))).toBe(false);
-        expect(isValkyrieNyarGreen(baseNyarRow({ testStatus: 1 }))).toBe(false);
+        expect(isValkyrieNyarGreen(baseNyarRow({ testStatus: 1 }))).toBe(true);
         expect(isValkyrieNyarGreen(baseNyarRow({ manifestFresh: false }))).toBe(false);
         expect(isValkyrieNyarGreen(baseNyarRow({ runtimeOk: false }))).toBe(false);
     });
@@ -115,10 +115,9 @@ describe('Valkyrie lane 矩阵绿门禁', () => {
         expect(isValkyrieGreen(baseNodeRow({ testCaseTotal: 3, executed_pass: 0, executed_fail: 0, blocked: 3 }))).toBe(false);
     });
 
-    it('skipped cases are excluded from the green denominator', () => {
-        const row = baseNodeRow({ testCaseTotal: 4, executed_pass: 3, skipped: 1 });
-        expect(isValkyrieGreen(row)).toBe(true);
-        expect(isMatrixRowGreen(row)).toBe(true);
-        expect(isValkyrieGreen(baseNodeRow({ testCaseTotal: 4, executed_pass: 2, not_run: 1, skipped: 1 }))).toBe(false);
+    it('skipped 用例是未执行用例，不能抵扣真实执行计数', () => {
+        expect(isValkyrieGreen(baseNodeRow({ testCaseTotal: 4, executed_pass: 3, skipped: 1 }))).toBe(false);
+        expect(isMatrixRowGreen(baseNodeRow({ testCaseTotal: 4, executed_pass: 3, skipped: 1 }))).toBe(false);
+        expect(isValkyrieGreen(baseNodeRow({ testCaseTotal: 4, executed_pass: 4, skipped: 1, not_run: 1 }))).toBe(false);
     });
 });

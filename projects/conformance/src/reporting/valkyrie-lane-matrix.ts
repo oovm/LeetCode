@@ -77,7 +77,6 @@ export type LaneMatrixSummary = {
     notExecuted: number;
     green: number;
     buildPass: number;
-    testPass: number;
     manifestFresh: number;
     runtimePass: number;
     runtime: LaneRuntimeCounts;
@@ -121,7 +120,6 @@ export type LaneMatrixProblemEntry = {
 function summarizeLane(rows: ValkyrieLaneRow[], denominator: number, baselineRows?: ValkyrieLaneRow[]): LaneMatrixSummary {
     const green = rows.filter((row) => row.green).length;
     const buildPass = rows.filter((row) => row.buildStatus === 0).length;
-    const testPass = rows.filter((row) => row.testStatus === 0).length;
     const manifestFresh = rows.filter((row) => row.manifestFresh).length;
     const runtimePass = rows.filter((row) => row.runtimeOk).length;
     const runtime: LaneRuntimeCounts = { ready: 0, blocked: 0, pending: 0 };
@@ -142,7 +140,6 @@ function summarizeLane(rows: ValkyrieLaneRow[], denominator: number, baselineRow
         notExecuted: denominator - rows.length,
         green,
         buildPass,
-        testPass,
         manifestFresh,
         runtimePass,
         runtime,
