@@ -96,21 +96,9 @@
         },
         {
             "args": {
-                "currentState": "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "currentState": "+-+--++"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "currentState": "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -204,12 +192,6 @@
         },
         {
             "args": {
-                "currentState": "++++++++++++++--++++++++++++++--++++++++++++++--++++++++++++++"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "currentState": "+++++++++++++--++++"
             },
             "expected": false
@@ -222,12 +204,6 @@
         },
         {
             "args": {
-                "currentState": "++++++++++++++++++++++++++++++++++++--++++++++++++++++++++++++++++++++++++"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "currentState": "++-++-++-++-++-++"
             },
             "expected": false
@@ -237,12 +213,6 @@
                 "currentState": "+-++++-++++-+"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "currentState": "++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -366,12 +336,6 @@
         },
         {
             "args": {
-                "currentState": "-++++++++++++++-++++++++++++++-++++++++++++++-"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "currentState": "-++-++-++-++-++-++-++-++"
             },
             "expected": false
@@ -399,12 +363,6 @@
                 "currentState": "+++++++++++++++++++++++++++++"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "currentState": "++++++++++--++++++++++--++++++++++--++++++++++"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -441,12 +399,6 @@
                 "currentState": "+-+-+-++++-+-++++-+-++++-+-++++-+-++++"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "currentState": "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -492,21 +444,9 @@
         },
         {
             "args": {
-                "currentState": "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "currentState": "-+-+--++-+-+"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "currentState": "++++++++++--++++++++++--++++++++++--++++++++++--++++++++++--++++++++++"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -654,12 +594,6 @@
         },
         {
             "args": {
-                "currentState": "++++++++++++++++++++++++++++++++++++++++"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "currentState": "+++++-+++++-+++++-+++++-+++++-+++++"
             },
             "expected": false
@@ -678,12 +612,6 @@
         },
         {
             "args": {
-                "currentState": "++++++++++++++++++++++++++++++++++++++++++++++++++++"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "currentState": "--++++--++++--++++"
             },
             "expected": true
@@ -699,12 +627,6 @@
                 "currentState": "++++++-++++++-++++++-++++++"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "currentState": "++++++++++++++++++++++++++++++++++++"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -771,12 +693,6 @@
                 "currentState": "++++++---++++++---++++++---++++++---++++++"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "currentState": "++++++++++++++++++++++++++++++++++++++"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {

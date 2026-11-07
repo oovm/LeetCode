@@ -306,16 +306,6 @@
         },
         {
             "args": {
-                "s": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "power": 999999937,
-                "modulo": 1000000007,
-                "k": 10000,
-                "hashValue": 123456789
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s": "mmmmmmmmmabcdefghimnopqrstuvwxyz",
                 "power": 37,
                 "modulo": 1000000007,
@@ -713,16 +703,6 @@
                 "hashValue": 876543210
             },
             "expected": "acacacacacac"
-        },
-        {
-            "args": {
-                "s": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "power": 1000000007,
-                "modulo": 1000000009,
-                "k": 10000,
-                "hashValue": 123456789
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {

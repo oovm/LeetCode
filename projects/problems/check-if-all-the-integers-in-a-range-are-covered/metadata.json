@@ -230,14 +230,6 @@
         },
         {
             "args": {
-                "ranges": [[1, 100], [101, 200], [201, 300]],
-                "left": 50,
-                "right": 250
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "ranges": [[1, 4], [6, 9], [11, 14], [16, 19], [21, 24], [26, 29]],
                 "left": 1,
                 "right": 29

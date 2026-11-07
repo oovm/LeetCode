@@ -4,6 +4,8 @@
 未验证批次按能力分组登记在 `valkyrie-unverified-batches.md`，本表不重复题目清单。
 
 维护口径：
+- 判题绿只证明「与 `metadata.tests[].expected` 一致」，不证明「与题面一致」。题面约束校验与
+  期望值来源必须单列；来源为参考解运行时输出或派生重算的，一律降级为「oracle 未独立验证」。
 - 「已构建通过」= `legionBuildProject` 返回 `status=0` 且隔离判题 `ok=true`。
 - 仅写完未编译的题不计入覆盖数，也不标 `blocked`；按能力分组登记在
   `valkyrie-unverified-batches.md`，等对应能力复跑。
@@ -3791,7 +3793,49 @@ WASI 轨与非文本 payload（结构化 effect 值没有文本 ABI）维持原�
 | A 标记 skip | 给 472 条加显式 `skip`/`skipReason`，runner 排除 | 语义最明确 | 大范围改语料；需 schema + runner 改动 |
 | B 保留但排除统计（推荐） | 不改语料；`loadMetadata`/统计层识别该哨兵值为 `skipped`，不计入 pass/fail 分母，报告单列 | 零语料改动、可审计、可逐题替换 | 需 runner 统计口径改动 |
 | C 补真期望 | 每题用独立参考实现（暴力/DP/精确算术）算出真值 | 质量最高 | 成本高，需逐题验证；风险是把参考实现 bug 写成期望 |
-| D 删除 | — | — | **禁止** |
+| D 删除 | — | — | 2026-11-07 已改为执行：异常文本不是答案，作废该条用例 |
 
 建议：先执行 B（保留哨兵、统计为 skipped、账本登记 472 条坐标），再按题目优先级用 C 逐步替换；
-每次替换必须附独立真值来源。任何阶段都不删除用例。
+每次替换必须附独立真值来源。
+
+> **2026-11-07 决策更新（取代上表 D 的「禁止」）**：宿主异常文本与 `Execution timed out`
+> 不是答案，不能进入任何绿统计。执行结果见文末「宿主异常 expected 清理」小节与
+> `host-error-expected-audit.md`；整题异常占比 ≥ 50% 的登记 blocked，其余逐条作废用例。
+
+## 宿主异常 expected 清理（2026-11-07）
+
+- 扫描口径：`metadata.tests[].expected` 为 `Error: ...` 或 `Execution timed out`。
+- 命中：**303 题 / 3915 条**。其中 3 题为既有 dirty 文件（`all-paths-from-source-to-target`
+  13 条、`circular-permutation-in-binary-representation` 15 条、`letter-case-permutation`
+  9 条），按保护规则未改动。
+- 实际处理：**300 题 / 3878 条**作废；其中 **19 题**异常占比 ≥ 50%，判为「题解未解出」并
+  blocked；**281 题**仅作废异常用例，其余用例保留。
+- 清理前 29383 条 → 清理后 25505 条（本组 300 题合计）。
+- 异常文本分类（3878 条）：`other-error` 1673、`index` 1397、`timeout` 432、`recursion` 409、
+  `shift` 4。
+- 审计清单：`host-error-expected-audit.md` / `host-error-expected-audit.json`。
+
+| blocked 题目 | 原/作废/剩余 | 最小复现 |
+| --- | --- | --- |
+| `check-if-dfs-strings-are-palindromes` | 95/56/39 | `tests[0]` `{"parent":[-1,0,1,2,3,4],"s":"abcdefg"}` → `Error: list index out of range` |
+| `clone-binary-tree-with-random-pointer` | 9/8/1 | `tests[0]` `{"root":[[1,1],[2,2],[3,3]]}` → `Error: unhashable type: 'list'` |
+| `construct-binary-tree-from-preorder-and-postorder-traversal` | 79/50/29 | `tests[0]` `{"preorder":[1..8],"postorder":[4,5,2,6,7,3,8,1]}` → `Error: list index out of range` |
+| `dice-roll-simulation` | 136/95/41 | `tests[0]` `{"n":1000,"rollMax":[15,15,15,15,15,15]}` → `Error: maximum recursion depth exceeded` |
+| `find-if-path-exists-in-graph` | 64/60/4 | `tests[0]` `{"n":6,"edges":[[0,1],[0,2],[3,5],[5,4],[4,3]],"source":0,"destination":5}` → 递归深度 |
+| `find-the-k-th-character-in-string-game-ii` | 102/55/47 | `tests[0]` `{"k":987654321,"operations":[1,0,...]}` → `Error: list index out of range` |
+| `find-the-number-of-k-even-arrays` | 119/64/55 | `tests[0]` `{"n":750,"m":1000,"k":0}` → 递归深度 |
+| `intersection-of-two-linked-lists` | 129/119/10 | `tests[0]` `{"headA":[2,6,4],"headB":[1,5],"skipA":3,"skipB":2}` → `unexpected keyword argument 'skipA'` |
+| `linked-list-cycle` | 123/117/6 | `tests[0]` `{"head":[3,2,0,-4],"pos":1}` → `unexpected keyword argument 'pos'` |
+| `minimum-moves-to-spread-stones-over-grid` | 112/73/39 | `tests[0]` `{"grid":[[2,0,0],[0,0,0],[0,0,1]]}` → `Execution timed out` |
+| `minimum-path-cost-in-a-grid` | 60/32/28 | `tests[0]` `{"grid":[[10,15],[20,25],[30,35]],"moveCost":[...]}` → `Error: list index out of range` |
+| `number-of-unique-categories` | 78/77/1 | `tests[0]` `{"n":6,"categoryHandler":[1,1,2,2,3,3]}` → `'list' object has no attribute 'haveSameCategory'` |
+| `recover-binary-search-tree` | 41/25/16 | `tests[0]` `{"root":[7,3,15,1,5,9,20]}` → `'NoneType' object has no attribute 'val'` |
+| `reverse-odd-levels-of-binary-tree` | 33/17/16 | `tests[0]` `{"root":[6,5,4,3,2,1,0,9,...]}` → `'NoneType' object has no attribute 'left'` |
+| `shortest-matching-substring` | 172/119/53 | `tests[0]` `{"s":"ab","p":"a*b"}` → `not enough values to unpack (expected 3, got 2)` |
+| `sort-an-array` | 122/117/5 | `tests[0]` `{"nums":[-4,-2,-3,-1]}` → `name 'randint' is not defined` |
+| `stone-game-iv` | 66/42/24 | `tests[0]` `{"n":100000}` → `Error: maximum recursion depth exceeded` |
+| `ternary-expression-parser` | 59/34/25 | `tests[0]` `{"expression":"F?T?F?T?F?9:8:7:6:5"}` → `Error: list index out of range` |
+| `zuma-game` | 330/329/1 | `tests[0]` `{"board":"RRR","hand":"RRR"}` → `name 're' is not defined` |
+
+- 以上 blocked 的剩余用例在题解修复前不得计入任何通过数。
+- dirty 保护的 3 题保留原状，待其改动方落地后按同一脚本清理。

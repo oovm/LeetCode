@@ -125,13 +125,6 @@
         },
         {
             "args": {
-                "receiver": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-                "k": 1000000
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "receiver": [5, 4, 3, 2, 1, 0, 9, 8, 7, 6],
                 "k": 875000000
             },
@@ -318,13 +311,6 @@
                 "k": 5
             },
             "expected": 27
-        },
-        {
-            "args": {
-                "receiver": [2, 3, 4, 5, 6, 7, 8, 9, 10, 1],
-                "k": 500000000
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -755,13 +741,6 @@
                 "k": 1000000000
             },
             "expected": 1000000009
-        },
-        {
-            "args": {
-                "receiver": [2, 3, 4, 5, 6, 7, 8, 9, 10, 1],
-                "k": 1000
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {

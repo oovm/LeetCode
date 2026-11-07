@@ -348,12 +348,6 @@
         },
         {
             "args": {
-                "word": "abcdefghijjihgfe_dcbaabcdefghijjihgfe_dcba"
-            },
-            "expected": "Error: negative shift count"
-        },
-        {
-            "args": {
                 "word": "aabbaaabbbaaaabbbaaa"
             },
             "expected": 159

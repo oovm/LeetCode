@@ -391,13 +391,6 @@
         },
         {
             "args": {
-                "s1": "dynamicprogramming",
-                "s2": "nmmagorpdynci"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s1": "optimization",
                 "s2": "tivioonpmzas"
             },
@@ -468,24 +461,10 @@
         },
         {
             "args": {
-                "s1": "mississippi",
-                "s2": "ppiimssiss"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s1": "scramble",
                 "s2": "rscmable"
             },
             "expected": true
-        },
-        {
-            "args": {
-                "s1": "abcdefghij",
-                "s2": "ihgfedcba"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -507,13 +486,6 @@
                 "s2": "mnopqrjkl"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "s1": "abcdefghij",
-                "s2": "hgfecdba"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {

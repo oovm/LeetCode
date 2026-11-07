@@ -132,12 +132,6 @@
         },
         {
             "args": {
-                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "zabac"
             },
             "expected": 4
@@ -165,12 +159,6 @@
                 "s": "abcdefg"
             },
             "expected": 7
-        },
-        {
-            "args": {
-                "s": "abcdefghijabcdefghijabcdefghijabcdefghij"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -207,12 +195,6 @@
                 "s": "ababababababababababababababababab"
             },
             "expected": 10
-        },
-        {
-            "args": {
-                "s": "aaaaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnooooppppqqqqrrrrssssttttuuuuvvvvwwwwxxxxyyyyzzzz"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -264,12 +246,6 @@
         },
         {
             "args": {
-                "s": "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "abacaxabacaxabacax"
             },
             "expected": 10
@@ -285,12 +261,6 @@
                 "s": "aaaaaaaaaaaaaaa"
             },
             "expected": 5
-        },
-        {
-            "args": {
-                "s": "zzzzzyyyyxxxxwwwwvvvvuuuuttttssssrrrrqqqqpppplllloooo"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -312,12 +282,6 @@
         },
         {
             "args": {
-                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzzzzzzzzzzzzzzzz"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "qwertyuiopasdfghjklzxcvbnm"
             },
             "expected": 26
@@ -333,18 +297,6 @@
                 "s": "ababababababab"
             },
             "expected": 6
-        },
-        {
-            "args": {
-                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzzzz"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s": "abcdefghijklmnopqrstuvqponmlkjihgfedcba"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -468,12 +420,6 @@
         },
         {
             "args": {
-                "s": "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "abcdefghij"
             },
             "expected": 10
@@ -558,12 +504,6 @@
         },
         {
             "args": {
-                "s": "abacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabadabacabad"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "ababababab"
             },
             "expected": 5
@@ -624,12 +564,6 @@
         },
         {
             "args": {
-                "s": "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "reviled"
             },
             "expected": 6
@@ -642,21 +576,9 @@
         },
         {
             "args": {
-                "s": "pneumonoultramicroscopicsilicovolcanoconiosis"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "aabbccddeeffgghh"
             },
             "expected": 12
-        },
-        {
-            "args": {
-                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzzzzzzzz"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {

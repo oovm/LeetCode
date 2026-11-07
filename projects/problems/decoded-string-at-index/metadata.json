@@ -251,13 +251,6 @@
         },
         {
             "args": {
-                "s": "a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7a8b9c0",
-                "k": 1200
-            },
-            "expected": "Error: integer modulo by zero"
-        },
-        {
-            "args": {
                 "s": "z9y8x7w6v5u4t3s2r1",
                 "k": 362880
             },
@@ -300,13 +293,6 @@
         },
         {
             "args": {
-                "s": "abc2def3ghi4jkl5mno6pqr7stu8vwx9yz10",
-                "k": 500
-            },
-            "expected": "Error: integer modulo by zero"
-        },
-        {
-            "args": {
                 "s": "a2b2c2d2e2f2g2h2i2j2",
                 "k": 20
             },
@@ -325,13 +311,6 @@
                 "k": 17
             },
             "expected": "e"
-        },
-        {
-            "args": {
-                "s": "abc2def3ghi4jkl5mno6pqr7stu8vwx9yz10",
-                "k": 12345
-            },
-            "expected": "Error: integer modulo by zero"
         },
         {
             "args": {
@@ -374,13 +353,6 @@
                 "k": 362880
             },
             "expected": "a"
-        },
-        {
-            "args": {
-                "s": "leetcode10",
-                "k": 47
-            },
-            "expected": "Error: integer modulo by zero"
         },
         {
             "args": {
@@ -489,20 +461,6 @@
         },
         {
             "args": {
-                "s": "xyz10",
-                "k": 23
-            },
-            "expected": "Error: integer modulo by zero"
-        },
-        {
-            "args": {
-                "s": "a10b20c30",
-                "k": 500
-            },
-            "expected": "Error: integer modulo by zero"
-        },
-        {
-            "args": {
                 "s": "abc2def3ghi4",
                 "k": 30
             },
@@ -601,24 +559,10 @@
         },
         {
             "args": {
-                "s": "xyz20",
-                "k": 1000
-            },
-            "expected": "Error: integer modulo by zero"
-        },
-        {
-            "args": {
                 "s": "ab12c3",
                 "k": 20
             },
             "expected": "c"
-        },
-        {
-            "args": {
-                "s": "a2b3c4d5e6f7g8h9i10",
-                "k": 123
-            },
-            "expected": "Error: integer modulo by zero"
         },
         {
             "args": {
@@ -706,13 +650,6 @@
         },
         {
             "args": {
-                "s": "a1b2c3d4e5f6g7h8i9j0",
-                "k": 250
-            },
-            "expected": "Error: integer modulo by zero"
-        },
-        {
-            "args": {
                 "s": "leet2code3abc4",
                 "k": 40
             },
@@ -724,13 +661,6 @@
                 "k": 52
             },
             "expected": "b"
-        },
-        {
-            "args": {
-                "s": "a1b2c3d4e5f6g7h8i9j10",
-                "k": 150
-            },
-            "expected": "Error: integer modulo by zero"
         },
         {
             "args": {
@@ -759,27 +689,6 @@
                 "k": 1000
             },
             "expected": "t"
-        },
-        {
-            "args": {
-                "s": "a1b2c3d4e5f6g7h8i9j0",
-                "k": 3628800
-            },
-            "expected": "Error: integer modulo by zero"
-        },
-        {
-            "args": {
-                "s": "a2b3c4d5e6f7g8h9i10",
-                "k": 300
-            },
-            "expected": "Error: integer modulo by zero"
-        },
-        {
-            "args": {
-                "s": "a10b10c10",
-                "k": 25
-            },
-            "expected": "Error: integer modulo by zero"
         },
         {
             "args": {

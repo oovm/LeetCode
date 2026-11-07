@@ -388,39 +388,6 @@
         },
         {
             "args": {
-                "board": [
-                    ["x", "y", "z", "w"],
-                    ["v", "u", "t", "s"],
-                    ["r", "q", "p", "o"],
-                    ["n", "m", "l", "k"],
-                    ["j", "i", "h", "g"],
-                    ["f", "e", "d", "c"],
-                    ["b", "a", "9", "8"],
-                    ["7", "6", "5", "4"]
-                ],
-                "words": [
-                    "xyztuvw",
-                    "vutsrqponmlkjihgfedcba",
-                    "wvutsrqponmlkjihgfedcba",
-                    "ponmlkjihgfedcba",
-                    "lmkjihgfedcba",
-                    "kjihgfedcba",
-                    "jihgfedcba",
-                    "ihgfedcba",
-                    "hgfedcba",
-                    "gfedcba",
-                    "fedcba",
-                    "edcba",
-                    "dcba",
-                    "cba",
-                    "ba",
-                    "a"
-                ]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "board": [["o", "a", "a", "n"], ["e", "t", "a", "e"], ["i", "h", "k", "r"], ["i", "f", "l", "v"]],
                 "words": ["oath", "pea", "eat", "rain", "kite", "pear", "lane"]
             },

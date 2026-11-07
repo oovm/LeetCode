@@ -24,12 +24,6 @@
         },
         {
             "args": {
-                "board": ["E", "S"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "board": ["E111", "1X11", "1111", "111S"]
             },
             "expected": [5, 8]
@@ -69,12 +63,6 @@
                 "board": ["E23", "2X2", "12S"]
             },
             "expected": [7, 1]
-        },
-        {
-            "args": {
-                "board": ["E1", "X1", "1S"]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -144,12 +132,6 @@
         },
         {
             "args": {
-                "board": ["E11", "1X1", "11X", "X1S"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "board": ["E1234", "56X89", "4X321", "12X56", "789XS"]
             },
             "expected": [30, 1]
@@ -159,12 +141,6 @@
                 "board": ["E1234567", "23456789", "3456789X", "456789XS", "56789XSX", "6789XSXX", "789XSXXX", "89XSXXXX"]
             },
             "expected": [0, 0]
-        },
-        {
-            "args": {
-                "board": ["E123", "45X7", "89XS", "1234", "5678", "9XS1", "2345", "6789", "XS12", "3456"]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -258,18 +234,6 @@
         },
         {
             "args": {
-                "board": ["E11", "X11", "11S", "111", "111", "111", "111", "111", "111", "111"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "board": ["E12345", "1X2X3X", "4X5X6X", "7X8X9X", "1X2X3X", "45678X", "12345S"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "board": ["E2222", "2X2X2", "2X2X2", "2X2X2", "2222S"]
             },
             "expected": [14, 3]
@@ -345,12 +309,6 @@
                 "board": ["E12345", "6789XS", "54321X", "98765X", "43210X", "32109S"]
             },
             "expected": [55, 1]
-        },
-        {
-            "args": {
-                "board": ["E123", "4567", "89X1", "2345", "678S"]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -469,23 +427,6 @@
         },
         {
             "args": {
-                "board": [
-                    "E12345678",
-                    "9X1234567",
-                    "89X123456",
-                    "789X12345",
-                    "6789X1234",
-                    "56789X123",
-                    "456789XS1",
-                    "345678912",
-                    "234567891",
-                    "12345678S"
-                ]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "board": ["E12345", "1X2X3X", "4X5X6X", "7X8X9X", "1X2X3X", "45678S"]
             },
             "expected": [43, 1]
@@ -513,23 +454,6 @@
                 "board": ["E1X1X1", "1X1X1X", "1X1X1X", "1X1X1X", "1X1X1S"]
             },
             "expected": [0, 0]
-        },
-        {
-            "args": {
-                "board": [
-                    "E123456789",
-                    "1X2X3X4X5",
-                    "6X7X8X9X0",
-                    "1X2X3X4X5",
-                    "6X7X8X9X0",
-                    "1X2X3X4X5",
-                    "6X7X8X9X0",
-                    "1X2X3X4X5",
-                    "6X7X8X9X0",
-                    "123456789S"
-                ]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -562,12 +486,6 @@
         },
         {
             "args": {
-                "board": ["E9876", "8765X", "76543", "65432", "54321", "4321S"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "board": ["E111111", "1X1X1X1", "111X1X1", "1X1X1X1", "111X1X1", "1X1X1X1", "111111S"]
             },
             "expected": [11, 6]
@@ -577,12 +495,6 @@
                 "board": ["E11X1", "1X1X1", "1X1X1", "1X1X1", "11X1S"]
             },
             "expected": [6, 1]
-        },
-        {
-            "args": {
-                "board": ["E1234", "56X78", "9X1X2", "34567", "89XS"]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -714,30 +626,6 @@
                 "board": ["E1111", "1X1X1", "1X1X1", "1111S"]
             },
             "expected": [6, 2]
-        },
-        {
-            "args": {
-                "board": [
-                    "E1X1X1X1X",
-                    "1X1X1X1X1",
-                    "1X1X1X1X1",
-                    "1X1X1X1X1",
-                    "1X1X1X1X1",
-                    "1X1X1X1X1",
-                    "1X1X1X1X1",
-                    "1X1X1X1X1",
-                    "1X1X1X1X1",
-                    "1X1X1X1X1",
-                    "1X1X1X1XS"
-                ]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "board": ["E12", "2X3", "321", "X1S"]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {

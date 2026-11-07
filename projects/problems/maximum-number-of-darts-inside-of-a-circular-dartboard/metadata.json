@@ -202,13 +202,6 @@
         },
         {
             "args": {
-                "darts": [[1, 1], [1, 1], [1, 1]],
-                "r": 1
-            },
-            "expected": "Error: float division by zero"
-        },
-        {
-            "args": {
                 "darts": [[1, 2], [2, 3], [3, 4], [4, 5]],
                 "r": 1
             },
@@ -488,13 +481,6 @@
                 "r": 2
             },
             "expected": 3
-        },
-        {
-            "args": {
-                "darts": [[-2, -2], [-2, 2], [2, 2], [2, -2], [0, 0], [1, 1], [-1, 1], [-1, -1], [1, -1], [-1, 1]],
-                "r": 2
-            },
-            "expected": "Error: float division by zero"
         },
         {
             "args": {

@@ -550,14 +550,6 @@
         },
         {
             "args": {
-                "lo": 5,
-                "hi": 25,
-                "k": 25
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "lo": 25,
                 "hi": 75,
                 "k": 25

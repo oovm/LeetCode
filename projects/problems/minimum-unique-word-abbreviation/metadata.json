@@ -122,24 +122,10 @@
         },
         {
             "args": {
-                "target": "optimization",
-                "dictionary": ["optimal", "optimizer", "optimization", "optimize", "optimism"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
                 "target": "antidisestablishmentarianism",
                 "dictionary": ["antisemitism", "establishment", "disestablishment", "disestablishmentarianism", "antidisestablishmentarian"]
             },
             "expected": 28
-        },
-        {
-            "args": {
-                "target": "universality",
-                "dictionary": ["universal", "universals", "universality", "universal", "universals"]
-            },
-            "expected": "Error: min() iterable argument is empty"
         },
         {
             "args": {
@@ -189,13 +175,6 @@
                 ]
             },
             "expected": 26
-        },
-        {
-            "args": {
-                "target": "acknowledgment",
-                "dictionary": ["acknowledge", "acknowledges", "acknowledged", "acknowledging", "acknowledgments", "acknowledgment"]
-            },
-            "expected": "Error: min() iterable argument is empty"
         },
         {
             "args": {
@@ -259,27 +238,6 @@
         },
         {
             "args": {
-                "target": "explanation",
-                "dictionary": ["explain", "explains", "explanation", "explaining", "explained"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
-                "target": "congratulations",
-                "dictionary": ["congratulate", "congratulatory", "congratulating", "congratulate", "congratulations"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
-                "target": "congratulations",
-                "dictionary": ["congratulate", "congratulates", "congratulations", "congratulating", "congratulated"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
                 "target": "honorificabilitudinitatibus",
                 "dictionary": ["honorificabilitudinitatib", "honorificabilitudinitati", "honorificabilitudinit", "honorificabilitudini"]
             },
@@ -287,31 +245,10 @@
         },
         {
             "args": {
-                "target": "rehabilitation",
-                "dictionary": ["rehabilitate", "rehabilitating", "rehabilitation", "rehabilitated", "rehabilitations"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
-                "target": "inextricably",
-                "dictionary": ["inextricably", "inextricably", "inextricably", "inextricably", "inextricably"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
                 "target": "microprocessors",
                 "dictionary": ["microscopic", "microphones", "microorganisms"]
             },
             "expected": 15
-        },
-        {
-            "args": {
-                "target": "superconductivity",
-                "dictionary": ["superconduct", "superconducting", "superconductivity", "superconductive", "superconductor"]
-            },
-            "expected": "Error: min() iterable argument is empty"
         },
         {
             "args": {
@@ -356,31 +293,10 @@
         },
         {
             "args": {
-                "target": "metropolitan",
-                "dictionary": [
-                    "metropolitan",
-                    "metropolitanization",
-                    "metropolitanity",
-                    "metropolitanities",
-                    "metropolitanize",
-                    "metropolitanized"
-                ]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
                 "target": "electroencephalography",
                 "dictionary": ["electro", "encephalogram", "graphy", "electronic"]
             },
             "expected": 22
-        },
-        {
-            "args": {
-                "target": "optimization",
-                "dictionary": ["optimism", "optimizer", "optimally", "optimization", "optimization"]
-            },
-            "expected": "Error: min() iterable argument is empty"
         },
         {
             "args": {
@@ -404,45 +320,10 @@
         },
         {
             "args": {
-                "target": "optimization",
-                "dictionary": ["optimist", "optimal", "optimize", "optimizer", "optimization"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
-                "target": "mississippi",
-                "dictionary": ["missisipie", "mississippi", "miss", "missis"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
                 "target": "floccinaucinihilipilification",
                 "dictionary": ["floccinaucinihilipilific", "floccinaucinihil", "floccinauc", "floccina", "flocc"]
             },
             "expected": 29
-        },
-        {
-            "args": {
-                "target": "characterization",
-                "dictionary": ["character", "characterize", "characterization", "characterizations"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
-                "target": "characterization",
-                "dictionary": ["characterize", "characterized", "characterizing", "characterization", "characterizations", "charact"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
-                "target": "congratulations",
-                "dictionary": ["congratulate", "congratulated", "congratulates", "congratulating", "congratulations", "congratulatory"]
-            },
-            "expected": "Error: min() iterable argument is empty"
         },
         {
             "args": {
@@ -474,13 +355,6 @@
         },
         {
             "args": {
-                "target": "environmentally",
-                "dictionary": ["environment", "environmental", "environmentally", "environmentalist", "environmentalists"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
                 "target": "algorithm",
                 "dictionary": [
                     "algorith",
@@ -507,13 +381,6 @@
         },
         {
             "args": {
-                "target": "acknowledgments",
-                "dictionary": ["acknowledge", "acknowledges", "acknowledged", "acknowledging", "acknowledgments", "acknowledgment"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
                 "target": "counterdemonstration",
                 "dictionary": [
                     "counter",
@@ -532,20 +399,6 @@
                 "dictionary": ["electrocardiogram", "electromyography", "electrochemical", "electroconductive"]
             },
             "expected": 21
-        },
-        {
-            "args": {
-                "target": "administrative",
-                "dictionary": ["administrators", "administrative", "administrates", "administrating", "administrative"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
-                "target": "unpredictability",
-                "dictionary": ["unpredictable", "unpredictably", "unpredictability", "unpredictable", "unpredictability"]
-            },
-            "expected": "Error: min() iterable argument is empty"
         },
         {
             "args": {
@@ -570,55 +423,10 @@
         },
         {
             "args": {
-                "target": "pneumonoultramicroscopicsilicovolcanoconiosis",
-                "dictionary": [
-                    "pneumonoultramicroscopicsilicovolcanoconioses",
-                    "pneumonoultramicroscopicsilicovolcanoconiosis",
-                    "pneumonoultramicroscopicsilicovolcanoconiosing",
-                    "pneumonoultramicroscopicsilicovolcanoconiosed"
-                ]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "target": "algorithm",
                 "dictionary": ["algebra", "algorithmic", "alge", "rithm", "algo", "rith", "logarithm", "algor", "rithmo", "algorith"]
             },
             "expected": "a8"
-        },
-        {
-            "args": {
-                "target": "appropriateness",
-                "dictionary": ["appropriate", "appropriately", "appropriateness", "appropriating", "appropriation"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
-                "target": "thyroparathyroidectomized",
-                "dictionary": [
-                    "thyroparathyroidectomizes",
-                    "thyroparathyroidectomize",
-                    "thyroparathyroidectomy",
-                    "thyroparathyroidectom",
-                    "thyroparathyroidect"
-                ]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "target": "pseudopseudohypoparathyroidism",
-                "dictionary": [
-                    "pseudopseudohypoparathyroidisms",
-                    "pseudopseudohypoparathyroidism",
-                    "pseudopseudohypoparathyroidis",
-                    "pseudopseudohypoparathyroidi",
-                    "pseudopseudohypoparathyroid"
-                ]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -648,31 +456,10 @@
         },
         {
             "args": {
-                "target": "responsibility",
-                "dictionary": ["responsible", "responsibilities", "responsibility", "responsible", "responsibilities"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
-                "target": "xerophthalmia",
-                "dictionary": ["xerophthalmic", "xerophthymia", "xerophthalmal", "xerophthalmic", "xerophthalmia"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
                 "target": "supercalifragilisticexpialidocious",
                 "dictionary": ["super", "cali", "fragilistic", "expialidocious", "supercalifragilisticexpialido"]
             },
             "expected": 34
-        },
-        {
-            "args": {
-                "target": "unbelievable",
-                "dictionary": ["unbelievably", "unbeliever", "unbelieving", "unbelievable"]
-            },
-            "expected": "Error: min() iterable argument is empty"
         },
         {
             "args": {
@@ -711,25 +498,6 @@
         },
         {
             "args": {
-                "target": "characterization",
-                "dictionary": ["characterize", "characterizes", "characterization", "characterized", "characterizing"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
-                "target": "honorificabilitudinitatibus",
-                "dictionary": [
-                    "honorificabilitudinitatibus",
-                    "honorificabilitudinitati",
-                    "honorificabilitudinitatibus",
-                    "honorificabilitudinitate"
-                ]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "target": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
                 "dictionary": [
                     "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyz",
@@ -741,13 +509,6 @@
                 ]
             },
             "expected": 52
-        },
-        {
-            "args": {
-                "target": "imperfections",
-                "dictionary": ["imperfection", "imperfections", "imperfect", "imperfectionist", "imperfectionism"]
-            },
-            "expected": "Error: min() iterable argument is empty"
         },
         {
             "args": {
@@ -784,30 +545,10 @@
         },
         {
             "args": {
-                "target": "specialization",
-                "dictionary": ["special", "specialize", "specializing", "specialized", "specialization"]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
                 "target": "microprocessor",
                 "dictionary": ["micro", "processor", "microchip", "microwave"]
             },
             "expected": 14
-        },
-        {
-            "args": {
-                "target": "pneumonoultramicroscopicsilicovolcanoconiosis",
-                "dictionary": [
-                    "pneumonoultramicroscopicsilicovolcanoconiosis",
-                    "pneumonoultramicroscopicsilicovolcano",
-                    "pneumonoultramicroscopicsilico",
-                    "pneumonoultramicroscopic",
-                    "pneumonoultra"
-                ]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -859,19 +600,6 @@
         },
         {
             "args": {
-                "target": "hippopotomonstrosesquippedaliophobia",
-                "dictionary": [
-                    "hippopotomonstrosesquippedaliophobias",
-                    "hippopotomonstrosesquippedaliophobia",
-                    "hippopotomonstrosesquippedaliophob",
-                    "hippopotomonstrosesquippedaliopho",
-                    "hippopotomonstrosesquippedalioph"
-                ]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "target": "unquestionableness",
                 "dictionary": ["question", "unquestionable", "unquestionably", "unquestionablenes"]
             },
@@ -907,39 +635,6 @@
         },
         {
             "args": {
-                "target": "encyclopedia",
-                "dictionary": [
-                    "encyclopedia",
-                    "encyclo",
-                    "pedia",
-                    "ency",
-                    "clo",
-                    "pedia",
-                    "encyclop",
-                    "encyclop",
-                    "encyclo",
-                    "encycl",
-                    "ency",
-                    "enc",
-                    "ency",
-                    "ency",
-                    "ency",
-                    "enc",
-                    "encyc",
-                    "ency",
-                    "enc",
-                    "ency",
-                    "enc",
-                    "encyc",
-                    "encyc",
-                    "encyc",
-                    "encyc"
-                ]
-            },
-            "expected": "Error: min() iterable argument is empty"
-        },
-        {
-            "args": {
                 "target": "supercalifragilisticexpialidocious",
                 "dictionary": [
                     "super",
@@ -956,41 +651,6 @@
                 ]
             },
             "expected": 34
-        },
-        {
-            "args": {
-                "target": "unbelievable",
-                "dictionary": [
-                    "unbeliev",
-                    "believable",
-                    "unbelievable",
-                    "unbelieve",
-                    "unbelievabl",
-                    "unbelieva",
-                    "unbelievab",
-                    "unbelieva",
-                    "unbeliev",
-                    "unbelie",
-                    "unbelie",
-                    "unbeli",
-                    "unbel",
-                    "unbe",
-                    "unb",
-                    "un",
-                    "u",
-                    "n",
-                    "b",
-                    "e",
-                    "l",
-                    "i",
-                    "v",
-                    "a",
-                    "b",
-                    "l",
-                    "e"
-                ]
-            },
-            "expected": "Error: min() iterable argument is empty"
         }
     ],
     "invoke": {

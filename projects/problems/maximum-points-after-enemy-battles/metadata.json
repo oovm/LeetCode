@@ -293,13 +293,6 @@
         },
         {
             "args": {
-                "enemyEnergies": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
-                "currentEnergy": 45
-            },
-            "expected": "Error: integer division or modulo by zero"
-        },
-        {
-            "args": {
                 "enemyEnergies": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5],
                 "currentEnergy": 15
             },

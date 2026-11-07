@@ -125,36 +125,6 @@
         },
         {
             "args": {
-                "s": "abacabadabacaba",
-                "queries": [
-                    [0, 4, 1],
-                    [1, 5, 1],
-                    [2, 6, 1],
-                    [3, 7, 1],
-                    [4, 8, 1],
-                    [5, 9, 1],
-                    [6, 10, 1],
-                    [7, 11, 1],
-                    [8, 12, 1],
-                    [9, 13, 1],
-                    [10, 14, 1],
-                    [11, 15, 1],
-                    [12, 16, 1],
-                    [13, 17, 1],
-                    [14, 18, 1]
-                ]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "s": "babababababababababa",
-                "queries": [[0, 4, 1], [5, 9, 2], [10, 14, 3], [15, 19, 4], [20, 24, 5], [0, 25, 12]]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
                 "queries": [[0, 51, 12], [10, 20, 5], [30, 40, 10], [25, 45, 20]]
             },
@@ -187,13 +157,6 @@
                 "queries": [[0, 4, 2], [5, 9, 2], [0, 9, 4], [0, 9, 5], [2, 7, 2]]
             },
             "expected": [true, true, false, true, false]
-        },
-        {
-            "args": {
-                "s": "xyxzyzyxzyzyxzyzyxzyzyxzyzyx",
-                "queries": [[0, 10, 3], [11, 21, 4], [22, 32, 5], [0, 32, 16], [5, 27, 11]]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -232,13 +195,6 @@
         },
         {
             "args": {
-                "s": "abcdedcbaabcdedcba",
-                "queries": [[0, 18, 4], [5, 13, 3], [2, 16, 5]]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "zyxwvutsrqponmlkjihgfedcba",
                 "queries": [[0, 25, 12], [10, 20, 5], [0, 15, 8], [5, 25, 15], [0, 10, 3]]
             },
@@ -257,13 +213,6 @@
                 "queries": [[0, 51, 25], [10, 30, 15], [0, 26, 13], [27, 51, 13], [13, 39, 20]]
             },
             "expected": [true, true, true, true, true]
-        },
-        {
-            "args": {
-                "s": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "queries": [[0, 100, 50], [50, 100, 25], [0, 50, 25], [25, 75, 25], [50, 99, 50], [0, 99, 50], [10, 90, 40], [20, 80, 30]]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -302,13 +251,6 @@
         },
         {
             "args": {
-                "s": "abababababababababababababababab",
-                "queries": [[0, 39, 10], [5, 25, 15], [10, 30, 20], [20, 39, 10], [0, 19, 10]]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "racecar",
                 "queries": [[0, 6, 0], [1, 5, 0], [2, 4, 0], [0, 3, 1], [3, 6, 1], [1, 4, 1], [2, 5, 1]]
             },
@@ -334,13 +276,6 @@
                 "queries": [[0, 50, 13], [0, 50, 14], [0, 25, 10], [25, 50, 10]]
             },
             "expected": [true, true, true, true]
-        },
-        {
-            "args": {
-                "s": "thisisaverylongstringwithmanysamecharacters",
-                "queries": [[0, 20, 5], [5, 30, 10], [15, 45, 15], [35, 50, 7], [40, 49, 3]]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -386,13 +321,6 @@
         },
         {
             "args": {
-                "s": "thisisaverylongstringwithvariouscharacters",
-                "queries": [[0, 30, 10], [5, 25, 12], [15, 45, 15]]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "abcdefghij",
                 "queries": [
                     [0, 9, 5],
@@ -434,13 +362,6 @@
                 "queries": [[0, 9, 3], [1, 8, 3], [2, 7, 3], [3, 6, 2], [4, 5, 1], [0, 5, 3], [5, 10, 3]]
             },
             "expected": [true, true, true, true, true, true, true]
-        },
-        {
-            "args": {
-                "s": "ababababababababababababababababababababab",
-                "queries": [[0, 49, 12], [5, 45, 25], [10, 40, 15], [0, 49, 13], [25, 49, 10]]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -528,13 +449,6 @@
         },
         {
             "args": {
-                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
-                "queries": [[0, 25, 12], [26, 51, 13], [0, 51, 26], [13, 38, 18], [0, 103, 52]]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "mississippi",
                 "queries": [[0, 4, 2], [1, 3, 0], [0, 10, 4], [5, 9, 1], [2, 8, 3]]
             },
@@ -570,13 +484,6 @@
         },
         {
             "args": {
-                "s": "",
-                "queries": [[0, 0, 0]]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "abacaxb",
                 "queries": [[0, 6, 2], [0, 3, 1], [3, 6, 1], [0, 6, 3]]
             },
@@ -588,13 +495,6 @@
                 "queries": [[0, 14, 3], [5, 10, 2], [0, 6, 1], [7, 13, 2], [1, 13, 6]]
             },
             "expected": [true, true, true, true, true]
-        },
-        {
-            "args": {
-                "s": "hello world",
-                "queries": [[0, 4, 2], [5, 9, 1], [0, 10, 4], [1, 9, 3], [6, 10, 2]]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -633,13 +533,6 @@
         },
         {
             "args": {
-                "s": "abcbabcbabcba",
-                "queries": [[0, 4, 1], [5, 9, 1], [10, 14, 1], [0, 6, 2], [7, 13, 2], [0, 12, 3]]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "racecar",
                 "queries": [[0, 4, 0], [1, 3, 1], [2, 2, 0], [0, 6, 2]]
             },
@@ -675,13 +568,6 @@
         },
         {
             "args": {
-                "s": "aaaaabbbbcccccdddddeeeee",
-                "queries": [[0, 4, 2], [5, 9, 2], [10, 14, 2], [15, 19, 2], [20, 24, 2], [0, 24, 5]]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "thisisaverylongandrandomstringfornumberofqueries",
                 "queries": [[0, 40, 15], [10, 35, 10], [20, 30, 5], [0, 40, 20], [15, 25, 8]]
             },
@@ -707,13 +593,6 @@
                 "queries": [[0, 15, 4], [0, 7, 3], [8, 15, 3], [0, 15, 7]]
             },
             "expected": [true, true, true, true]
-        },
-        {
-            "args": {
-                "s": "aaaabbbbccccddddeeeeffffgggghhhhiiii",
-                "queries": [[0, 39, 19], [10, 35, 15], [20, 30, 5], [0, 39, 20], [15, 25, 10]]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -777,13 +656,6 @@
                 "queries": [[0, 4, 0], [0, 5, 1], [0, 6, 1], [1, 5, 1]]
             },
             "expected": [false, true, true, true]
-        },
-        {
-            "args": {
-                "s": "abcabcabcabcabcabc",
-                "queries": [[0, 5, 2], [5, 11, 2], [10, 16, 2], [15, 21, 2], [20, 25, 2]]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {

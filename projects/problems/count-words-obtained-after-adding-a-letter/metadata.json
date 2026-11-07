@@ -55,13 +55,6 @@
         },
         {
             "args": {
-                "startWords": ["python", "java", "c++"],
-                "targetWords": ["pythona", "javab", "c++c", "pythonb", "javac", "c++d"]
-            },
-            "expected": "Error: negative shift count"
-        },
-        {
-            "args": {
                 "startWords": ["xyz", "uvw", "rst"],
                 "targetWords": ["xyza", "uvwq", "rstv", "rstw"]
             },
@@ -693,33 +686,6 @@
                 "targetWords": ["abcdefghijklmnopqrstuvwxyza", "abcdefghijklmnopqrstuvwxyzb", "abcdefghijklmnopqrstuvwxyzc"]
             },
             "expected": 0
-        },
-        {
-            "args": {
-                "startWords": ["abcdefghijklmnopqrstuvwxyz"],
-                "targetWords": [
-                    "abcdefghijklmnopqrstuvwxyza",
-                    "abcdefghijklmnopqrstuvwxyzb",
-                    "abcdefghijklmnopqrstuvwxyzc",
-                    "abcdefghijklmnopqrstuvwxyzd",
-                    "abcdefghijklmnopqrstuvwxyze",
-                    "abcdefghijklmnopqrstuvwxyzf",
-                    "abcdefghijklmnopqrstuvwxy zg",
-                    "abcdefghijklmnopqrstuvwxyzh",
-                    "abcdefghijklmnopqrstuvwxyzi",
-                    "abcdefghijklmnopqrstuvwxyzj",
-                    "abcdefghijklmnopqrstuvwxyzk",
-                    "abcdefghijklmnopqrstuvwxyzl",
-                    "abcdefghijklmnopqrstuvwxyzm",
-                    "abcdefghijklmnopqrstuvwxyzn",
-                    "abcdefghijklmnopqrstuvwxyzo",
-                    "abcdefghijklmnopqrstuvwxyzp",
-                    "abcdefghijklmnopqrstuvwxyzq",
-                    "abcdefghijklmnopqrstuvwxyza",
-                    "abcdefghijklmnopqrstuvwxyzz"
-                ]
-            },
-            "expected": "Error: negative shift count"
         },
         {
             "args": {

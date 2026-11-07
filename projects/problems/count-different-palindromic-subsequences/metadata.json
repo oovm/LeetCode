@@ -108,12 +108,6 @@
         },
         {
             "args": {
-                "s": "abcdeabcdeabcdeabcdeabcde"
-            },
-            "expected": "Error: list assignment index out of range"
-        },
-        {
-            "args": {
                 "s": "aabbaabbaabb"
             },
             "expected": 44
@@ -123,12 +117,6 @@
                 "s": "aaaabbbbccccaaaabbbbccccaaaabbbbcccc"
             },
             "expected": 996
-        },
-        {
-            "args": {
-                "s": "abcdabcdabcdabcdabcde"
-            },
-            "expected": "Error: list assignment index out of range"
         },
         {
             "args": {
@@ -147,12 +135,6 @@
                 "s": "aaaaabbbbbccccddddaaaaabbbbbccccddddaaaaabbbbbccccddddaaaaabbbbbccccddddaaaaabbbbbccccddddaaaaabbbbbccccddddaaaaabbbbbccccdddd"
             },
             "expected": 127372410
-        },
-        {
-            "args": {
-                "s": "aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeffffffffffgggggggggghhhhhhhhhh"
-            },
-            "expected": "Error: list assignment index out of range"
         },
         {
             "args": {
@@ -180,12 +162,6 @@
         },
         {
             "args": {
-                "s": "aabbccddeeefffggghhhhiiiijjjkkklllmmmmmnnnooooppppqqqqrrrsssttttuuuuvvvvwxxxxyyzz"
-            },
-            "expected": "Error: list assignment index out of range"
-        },
-        {
-            "args": {
                 "s": "abacaba"
             },
             "expected": 19
@@ -207,12 +183,6 @@
                 "s": "abcdcba"
             },
             "expected": 22
-        },
-        {
-            "args": {
-                "s": "abacabadabacabadaaaabbbbccccddddeeeeffff"
-            },
-            "expected": "Error: list assignment index out of range"
         },
         {
             "args": {
@@ -249,12 +219,6 @@
                 "s": "abcdabcdaabbccbddc"
             },
             "expected": 184
-        },
-        {
-            "args": {
-                "s": "aabbccddeedccbbaa"
-            },
-            "expected": "Error: list assignment index out of range"
         },
         {
             "args": {
@@ -336,12 +300,6 @@
         },
         {
             "args": {
-                "s": "abcdabcdabcdabcdabcdabcdabcdabcdabcde"
-            },
-            "expected": "Error: list assignment index out of range"
-        },
-        {
-            "args": {
                 "s": "aaaaa"
             },
             "expected": 5
@@ -390,12 +348,6 @@
         },
         {
             "args": {
-                "s": "abracadabraabracadabra"
-            },
-            "expected": "Error: list assignment index out of range"
-        },
-        {
-            "args": {
                 "s": "abcabcdabcabcdabcabcdabcabcdabcabcdabcabcdabcabcdabcabcdabcabcdabcabcdabcabcd"
             },
             "expected": 852725823
@@ -405,12 +357,6 @@
                 "s": "abcdabcdbabcdbabcdb"
             },
             "expected": 607
-        },
-        {
-            "args": {
-                "s": "aabbccddeeffaabbccddeeff"
-            },
-            "expected": "Error: list assignment index out of range"
         },
         {
             "args": {

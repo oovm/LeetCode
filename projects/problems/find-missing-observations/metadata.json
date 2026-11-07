@@ -566,14 +566,6 @@
         },
         {
             "args": {
-                "rolls": [3, 3, 3, 3],
-                "mean": 3,
-                "n": 0
-            },
-            "expected": "Error: integer division or modulo by zero"
-        },
-        {
-            "args": {
                 "rolls": [6, 6, 6, 6],
                 "mean": 4,
                 "n": 8

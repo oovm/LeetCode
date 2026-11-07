@@ -125,13 +125,6 @@
         },
         {
             "args": {
-                "wordsContainer": ["qwerty", "werty", "erty", "rty", "ty", "y"],
-                "wordsQuery": ["y", "ty", "rty", "erty", "werty", "qwerty", "ertyu", "qwertyu"]
-            },
-            "expected": "Error: ord() expected a character, but string of length 7 found"
-        },
-        {
-            "args": {
                 "wordsContainer": ["aaaaa", "bbbbb", "ccccc", "abcde", "bcdef", "cdefg"],
                 "wordsQuery": ["abcde", "bcdef", "cdefg", "de", "ef", "f"]
             },
@@ -298,38 +291,6 @@
         },
         {
             "args": {
-                "wordsContainer": [
-                    "longestword",
-                    "longestwor",
-                    "longestwo",
-                    "longestw",
-                    "longest",
-                    "longes",
-                    "longe",
-                    "long",
-                    "lon",
-                    "lo",
-                    "l"
-                ],
-                "wordsQuery": [
-                    "longestword",
-                    "longestwor",
-                    "longestwo",
-                    "longestw",
-                    "longest",
-                    "longes",
-                    "longe",
-                    "long",
-                    "lon",
-                    "lo",
-                    "l",
-                    "abc"
-                ]
-            },
-            "expected": "Error: ord() expected a character, but string of length 3 found"
-        },
-        {
-            "args": {
                 "wordsContainer": ["abcdexyz", "bcdexyz", "xbcdexyz", "abcdexyz"],
                 "wordsQuery": ["cdexyz", "bcdexyz", "xyz", "abcdexyz"]
             },
@@ -455,40 +416,10 @@
         },
         {
             "args": {
-                "wordsContainer": ["zxcvbn", "xcvbn", "cvbn", "vbn", "bn", "n"],
-                "wordsQuery": ["n", "bn", "vbn", "cvbn", "xcvbn", "zxcvbn", "mnbvcx", "cvb"]
-            },
-            "expected": "Error: ord() expected a character, but string of length 3 found"
-        },
-        {
-            "args": {
                 "wordsContainer": ["aabbcc", "bbaacc", "ccaabb", "aabb", "bbaa", "ccaac", "aac", "ac", "c"],
                 "wordsQuery": ["aabbcc", "bbaacc", "ccaabb", "aabb", "bbaa", "ccaac", "aac", "ac", "c", "aa", "bb", "cc"]
             },
             "expected": [0, 1, 2, 3, 4, 5, 6, 7, 8, 4, 3, 0]
-        },
-        {
-            "args": {
-                "wordsContainer": ["aaaaa", "aaabb", "aabbb", "abbbb", "bbbbb", "bbbbc", "bbbcc", "bbccc", "bcccc", "ccccc"],
-                "wordsQuery": [
-                    "ccccc",
-                    "bbbbb",
-                    "aaaaa",
-                    "bbbcc",
-                    "aaabb",
-                    "abbbb",
-                    "bbbbc",
-                    "bcccc",
-                    "bbccc",
-                    "aabb",
-                    "bbbb",
-                    "bbb",
-                    "bb",
-                    "b",
-                    "c"
-                ]
-            },
-            "expected": "Error: ord() expected a character, but string of length 2 found"
         },
         {
             "args": {
@@ -534,26 +465,6 @@
         },
         {
             "args": {
-                "wordsContainer": [
-                    "qwerty",
-                    "werty",
-                    "erty",
-                    "rty",
-                    "ty",
-                    "y",
-                    "qwertyuiop",
-                    "wertyuiop",
-                    "ertyuiop",
-                    "rtyuiop",
-                    "tyuiop",
-                    "yuiop"
-                ],
-                "wordsQuery": ["ty", "yuiop", "ertyuiop", "qwertyuiop", "werty", "erty", "rty", "qwerty", "uiop", "op", "p", "xyz"]
-            },
-            "expected": "Error: ord() expected a character, but string of length 3 found"
-        },
-        {
-            "args": {
                 "wordsContainer": ["unique", "uniq", "un", "u"],
                 "wordsQuery": ["ue", "iq", "n", "u", "uniq", "unique", "nique"]
             },
@@ -572,13 +483,6 @@
                 "wordsQuery": ["gram", "ing", "world", "hello", "pro", "gramming"]
             },
             "expected": [4, 2, 1, 0, 0, 2]
-        },
-        {
-            "args": {
-                "wordsContainer": ["algorithm", "logarithm", "rhythm", "symptom", "lymphom"],
-                "wordsQuery": ["rhythm", "symptom", "lymphom", "algorithm", "logarithm", "thm", "m"]
-            },
-            "expected": "Error: ord() expected a character, but string of length 3 found"
         },
         {
             "args": {

@@ -13,13 +13,6 @@
         },
         {
             "args": {
-                "n": 100000,
-                "primes": [2, 3, 5]
-            },
-            "expected": "Error: index out of range"
-        },
-        {
-            "args": {
                 "n": 5,
                 "primes": [2, 11, 13, 17, 19]
             },
@@ -150,13 +143,6 @@
         },
         {
             "args": {
-                "n": 5000,
-                "primes": [2, 3]
-            },
-            "expected": "Error: index out of range"
-        },
-        {
-            "args": {
                 "n": 500,
                 "primes": [2, 5, 7, 11, 13, 17, 19, 23, 29, 31]
             },
@@ -168,13 +154,6 @@
                 "primes": [2, 3, 5, 7, 11]
             },
             "expected": 280
-        },
-        {
-            "args": {
-                "n": 3000,
-                "primes": [2, 5, 7]
-            },
-            "expected": "Error: index out of range"
         },
         {
             "args": {
@@ -244,13 +223,6 @@
                 "primes": [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
             },
             "expected": 141797760
-        },
-        {
-            "args": {
-                "n": 10000,
-                "primes": [2, 3, 5]
-            },
-            "expected": "Error: index out of range"
         },
         {
             "args": {
@@ -705,13 +677,6 @@
                 ]
             },
             "expected": 2610239
-        },
-        {
-            "args": {
-                "n": 10000,
-                "primes": [2, 3, 5, 7]
-            },
-            "expected": "Error: index out of range"
         },
         {
             "args": {

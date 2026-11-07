@@ -36,12 +36,6 @@
         },
         {
             "args": {
-                "nums": [1, 2, -1, -2, 3, 4]
-            },
-            "expected": "Error: list assignment index out of range"
-        },
-        {
-            "args": {
                 "nums": [7, 10, -5, -3, 2, -8]
             },
             "expected": [7, -5, 10, -3, 2, -8]

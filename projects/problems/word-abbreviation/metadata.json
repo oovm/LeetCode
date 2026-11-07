@@ -1230,12 +1230,6 @@
         },
         {
             "args": {
-                "words": ["establishment", "establish", "estABLishment", "estimated", "establisher"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "words": ["unbelievable", "unbelievably", "unbeliever", "unbelievable", "unbelieving"]
             },
             "expected": ["unbelievable", "u10y", "u8r", "unbelievable", "u9g"]

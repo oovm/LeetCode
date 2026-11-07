@@ -1045,13 +1045,6 @@
         },
         {
             "args": {
-                "candidates": [1, 10, 100, 1000, 10000, 100000],
-                "target": 111111
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "candidates": [11, 22, 33, 44, 55, 66, 77, 88, 99],
                 "target": 100
             },
@@ -6765,13 +6758,6 @@
         },
         {
             "args": {
-                "candidates": [1, 2, 4, 8, 16, 32, 64, 128, 256, 512],
-                "target": 1023
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "candidates": [8, 16, 32, 64, 128],
                 "target": 255
             },
@@ -9781,13 +9767,6 @@
                 "target": 50
             },
             "expected": [[15, 15, 20], [25, 25]]
-        },
-        {
-            "args": {
-                "candidates": [2, 5, 10, 20, 50, 100],
-                "target": 200
-            },
-            "expected": "Execution timed out"
         }
     ],
     "invoke": {

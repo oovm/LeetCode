@@ -110,14 +110,6 @@
         },
         {
             "args": {
-                "nums": [1],
-                "x": 1,
-                "y": 1
-            },
-            "expected": "Error: division by zero"
-        },
-        {
-            "args": {
                 "nums": [100, 200, 300],
                 "x": 50,
                 "y": 10
@@ -219,14 +211,6 @@
                 "y": 5
             },
             "expected": 14
-        },
-        {
-            "args": {
-                "nums": [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-                "x": 1,
-                "y": 1
-            },
-            "expected": "Error: division by zero"
         },
         {
             "args": {
@@ -438,14 +422,6 @@
         },
         {
             "args": {
-                "nums": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "x": 1,
-                "y": 1
-            },
-            "expected": "Error: division by zero"
-        },
-        {
-            "args": {
                 "nums": [1, 3, 5, 7, 9, 11, 13, 15, 17, 19],
                 "x": 10,
                 "y": 5
@@ -459,14 +435,6 @@
                 "y": 2
             },
             "expected": 15
-        },
-        {
-            "args": {
-                "nums": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "x": 1,
-                "y": 1
-            },
-            "expected": "Error: division by zero"
         },
         {
             "args": {
@@ -593,14 +561,6 @@
         },
         {
             "args": {
-                "nums": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "x": 1,
-                "y": 1
-            },
-            "expected": "Error: division by zero"
-        },
-        {
-            "args": {
                 "nums": [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
                 "x": 10,
                 "y": 9
@@ -686,14 +646,6 @@
                 "y": 500000000
             },
             "expected": 2
-        },
-        {
-            "args": {
-                "nums": [10, 20, 30, 40, 50],
-                "x": 1,
-                "y": 1
-            },
-            "expected": "Error: division by zero"
         },
         {
             "args": {

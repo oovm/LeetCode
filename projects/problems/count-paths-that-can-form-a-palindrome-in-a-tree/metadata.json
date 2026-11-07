@@ -13,13 +13,6 @@
         },
         {
             "args": {
-                "parent": [-1, 0, 1, 2, 3, 2],
-                "s": "abcba"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "parent": [-1, 0, 0, 1, 1, 2],
                 "s": "acaabc"
             },
@@ -34,38 +27,10 @@
         },
         {
             "args": {
-                "parent": [-1, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4],
-                "s": "abcdefghij"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "parent": [-1, 0, 0, 0, 1, 2, 3],
-                "s": "abcabc"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "parent": [-1, 0, 0, 1, 1],
-                "s": "abac"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "parent": [-1, 0, 0, 0, 0],
                 "s": "aaaaa"
             },
             "expected": 10
-        },
-        {
-            "args": {
-                "parent": [-1, 0, 0, 1, 2],
-                "s": "aabb"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -87,13 +52,6 @@
                 "s": "aabbccdd"
             },
             "expected": 10
-        },
-        {
-            "args": {
-                "parent": [-1, 0, 0, 0, 1, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8],
-                "s": "abacabadabacabada"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -174,13 +132,6 @@
         },
         {
             "args": {
-                "parent": [-1, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14],
-                "s": "abacabadabacabadabacaba"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "parent": [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
                 "s": "abacabadabacabadabacabadabac"
             },
@@ -229,24 +180,10 @@
         },
         {
             "args": {
-                "parent": [-1, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6],
-                "s": "abacabadabacaba"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "parent": [-1, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12],
                 "s": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
             },
             "expected": 28
-        },
-        {
-            "args": {
-                "parent": [-1, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9],
-                "s": "abacabadabacabadabacaba"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -296,13 +233,6 @@
         },
         {
             "args": {
-                "parent": [-1, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14],
-                "s": "abcdefghijklmnopqrstuvwxyz"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "parent": [
                     -1, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17,
                     17, 18, 18, 19, 19, 20, 20, 21, 21
@@ -321,16 +251,6 @@
         {
             "args": {
                 "parent": [
-                    -1, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16,
-                    16, 17, 17, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23
-                ],
-                "s": "abacabadabacabadabacabadabacabadabacaba"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "parent": [
                     -1, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 11, 11, 11, 12,
                     12, 12, 13, 13, 13, 14, 14, 14, 15, 15, 15, 16, 16, 16, 17, 17, 17, 18, 18, 18, 19, 19, 19, 20, 20, 20, 21, 21, 21, 22, 22,
                     22, 23, 23, 23, 24, 24, 24, 25, 25, 25, 26, 26, 26, 27, 27, 27, 28, 28, 28, 29, 29, 29, 30, 30, 30
@@ -338,13 +258,6 @@
                 "s": "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc"
             },
             "expected": 2202
-        },
-        {
-            "args": {
-                "parent": [-1, 0, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9],
-                "s": "abcdefghabcdefgh"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -368,13 +281,6 @@
         },
         {
             "args": {
-                "parent": [-1, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9],
-                "s": "aabbaabbccdd"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "parent": [
                     -1, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17,
                     17, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25, 26, 26, 27, 27, 28, 28, 29, 29, 30, 30, 31, 31, 32, 32,
@@ -383,16 +289,6 @@
                 "s": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             },
             "expected": 2628
-        },
-        {
-            "args": {
-                "parent": [
-                    -1, 0, 1, 1, 2, 3, 3, 3, 4, 4, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18,
-                    18, 19, 19, 20, 20, 21, 21, 22, 22
-                ],
-                "s": "abacabadabacabadabacabadabacabadabacabad"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -486,20 +382,6 @@
         },
         {
             "args": {
-                "parent": [-1, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9],
-                "s": "abacabadabacabadaba"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "parent": [-1, 0, 0, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-                "s": "abcdefghijk"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "parent": [
                     -1, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17,
                     17, 18, 18, 19, 19, 20, 20
@@ -542,13 +424,6 @@
                 "s": "zyxwvutsrqponmlkjihgfedcbazyxwvutsrqponmlkjihgfedcba"
             },
             "expected": 44
-        },
-        {
-            "args": {
-                "parent": [-1, 0, 0, 0, 1, 2, 3, 3, 4, 4],
-                "s": "ababababa"
-            },
-            "expected": "Error: string index out of range"
         }
     ],
     "invoke": {

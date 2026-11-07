@@ -94,14 +94,6 @@
         },
         {
             "args": {
-                "nums": [-5, 1, 7],
-                "s": "LRRL",
-                "d": 4
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "nums": [10, -10, 0],
                 "s": "RLR",
                 "d": 5
@@ -179,14 +171,6 @@
                 "d": 5
             },
             "expected": 165
-        },
-        {
-            "args": {
-                "nums": [-2000000000, -1000000000, 0, 1000000000, 2000000000],
-                "s": "RLRLRL",
-                "d": 999999999
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -310,14 +294,6 @@
         },
         {
             "args": {
-                "nums": [-50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50],
-                "s": "LRRLRRRLRRRL",
-                "d": 10
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "nums": [-5, 0, 5, 10],
                 "s": "RLRR",
                 "d": 20
@@ -363,14 +339,6 @@
                 "d": 2
             },
             "expected": 330
-        },
-        {
-            "args": {
-                "nums": [-10, -5, 0, 5, 10, 15, 20],
-                "s": "LRRLRLRLR",
-                "d": 8
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -558,14 +526,6 @@
         },
         {
             "args": {
-                "nums": [-10, -5, 0, 5, 10],
-                "s": "RLRRLL",
-                "d": 5
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "nums": [1, -1, 2, -2, 3, -3, 4, -4, 5, -5],
                 "s": "RLRLRLRLRL",
                 "d": 4
@@ -603,14 +563,6 @@
                 "d": 5
             },
             "expected": 200
-        },
-        {
-            "args": {
-                "nums": [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6],
-                "s": "RLLRLRLRLRL",
-                "d": 2
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -758,14 +710,6 @@
         },
         {
             "args": {
-                "nums": [-100, 0, 100, 200, 300],
-                "s": "RRLLRR",
-                "d": 50
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "nums": [-500, -400, -300, -200, -100],
                 "s": "RRRRR",
                 "d": 100
@@ -843,14 +787,6 @@
                 "d": 10
             },
             "expected": 180
-        },
-        {
-            "args": {
-                "nums": [-20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 30],
-                "s": "RRRRRRRRRRRR",
-                "d": 12
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {

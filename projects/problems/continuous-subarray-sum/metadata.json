@@ -48,13 +48,6 @@
         },
         {
             "args": {
-                "nums": [23, 2, 6, 4, 7],
-                "k": 0
-            },
-            "expected": "Error: integer modulo by zero"
-        },
-        {
-            "args": {
                 "nums": [1, 2, 3, 4, 5, 6],
                 "k": 10
             },
@@ -227,13 +220,6 @@
                 "k": 25
             },
             "expected": true
-        },
-        {
-            "args": {
-                "nums": [23, 2, 4, 6, 7, 1, 2, 4, 6, 7, 1, 2, 4, 6, 7, 1, 2, 4, 6, 7, 1, 2, 4, 6, 7, 1, 2, 4, 6, 7],
-                "k": 0
-            },
-            "expected": "Error: integer modulo by zero"
         },
         {
             "args": {
@@ -420,13 +406,6 @@
                 "k": 12
             },
             "expected": true
-        },
-        {
-            "args": {
-                "nums": [23, 2, 4, 6, 7, 10, 11, 12],
-                "k": 0
-            },
-            "expected": "Error: integer modulo by zero"
         },
         {
             "args": {

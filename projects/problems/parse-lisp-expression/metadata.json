@@ -42,12 +42,6 @@
         },
         {
             "args": {
-                "expression": "(add (let x 1 y 2 x) (mult x y))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "(let a 5 (let b 6 (let c 7 (mult (add a b) (add b c)))))"
             },
             "expected": 143
@@ -96,12 +90,6 @@
         },
         {
             "args": {
-                "expression": "(mult (let x 2 y 3) (let x 4 y 5))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "(let x 1 y 2 x (add x y) (add x y))"
             },
             "expected": 5
@@ -135,12 +123,6 @@
                 "expression": "(let x 1 (mult (let x 2 (add x 2)) x))"
             },
             "expected": 4
-        },
-        {
-            "args": {
-                "expression": "(mult (let x 5) (let y 2 (add x y)))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -222,27 +204,9 @@
         },
         {
             "args": {
-                "expression": "(let x 3 y (mult x 2) z (let w (add x y) (mult w z)) (add x (mult y z)))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "(let a 1 b (add a 1) c (mult a b) (add c (let a 2 (mult a b))))"
             },
             "expected": 6
-        },
-        {
-            "args": {
-                "expression": "(let x 2 (let y (let z (add x 3) (mult z 2)) (add y (let a (add z 4) (mult a 3))))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "expression": "(let x 5 (let y (mult x 2) (add (let z (add x y)) (mult z (let w (mult y 2)) w))))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -306,21 +270,9 @@
         },
         {
             "args": {
-                "expression": "(let x 1 (let y (let z (let w (let v 5 (mult v v)) (add w v)) (mult z w)) (add y z)) (add x y))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "(add (let x 5 (mult x 2)) (let y 3 (mult y 4)))"
             },
             "expected": 22
-        },
-        {
-            "args": {
-                "expression": "(let a 1 b 2 c 3 d (add a (mult b c)) e (let f 4 (add d (mult f c))))"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -339,18 +291,6 @@
                 "expression": "(let x 5 (let y 3 (mult (add x y) (let z 2 (add z (mult x y)))))"
             },
             "expected": 136
-        },
-        {
-            "args": {
-                "expression": "(let x (add 1 (mult 2 3)) y (let z (mult x 4) (add x (mult y z))) (mult x (add y z)))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "expression": "(mult (let a 2 b (add a 3) c (mult a b)) (let a 4 b (add a 5) c (mult a b)))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -408,18 +348,6 @@
         },
         {
             "args": {
-                "expression": "(let a 5 b (let a 6 c (let a 7 (mult a b))) (add a c))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "expression": "(let a (mult 2 3) b (add a 4) c (mult b a) d (add c b) e (mult d c) f (add e b) g (mult f e) h (add g f) i (mult h g) j (add i h))"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "expression": "(let x 7 y (add x 2) z (mult x y) (let w (add y z) (mult w x)))"
             },
             "expected": 504
@@ -429,12 +357,6 @@
                 "expression": "(let x 5 y (add x 3) z (mult y 2) (let w (add x y) (mult w z)))"
             },
             "expected": 208
-        },
-        {
-            "args": {
-                "expression": "(let x 1 (let y (let z (let w (let v 1 (let u 2 (mult u u))) (mult v v)) (mult w w)) (mult z z)) (mult y y))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -468,27 +390,9 @@
         },
         {
             "args": {
-                "expression": "(let a 1 b (let a 2 (let a 3 (add a b))) c (let a 4 (mult a b)) (add c (mult a b)))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "(let x 5 y (add x 3) z (mult x y) (add z (let x 10 (mult x y))))"
             },
             "expected": 120
-        },
-        {
-            "args": {
-                "expression": "(let x 1 y (let x 2 z (let x 3 (let w 4 (let v 5 (mult (add (add x y) (add z w)) v))))) (add x z))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "expression": "(mult (let x 5 (add (let y 3 (mult x y)) (let z 4 (add x z)))) (let a 2 (mult (let b 3 (add a b)) (let c 4 (mult b c))))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -513,12 +417,6 @@
                 "expression": "(let x 5 y (let x 10 (add x 5)) z (mult y 2) (add z y))"
             },
             "expected": 45
-        },
-        {
-            "args": {
-                "expression": "(let x 2 y (let x 3 (let x 4 (add x y))) z (let x 5 (mult x y)) (add z (mult x y)))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -576,24 +474,6 @@
         },
         {
             "args": {
-                "expression": "(let a 5 b (let a 10 (mult a b)) (add a b))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "expression": "(let x 1 y (let x 2 z (let x 3 (add x y))) (add x z))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "expression": "(mult (let x 2 y (add x 3) z (mult x y)) (let x 4 y (add x 5) z (mult x y)))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "(let x 7 (let y (add x 3) z (mult y 2) (let w (add z 5) (mult w y))))"
             },
             "expected": 250
@@ -621,12 +501,6 @@
                 "expression": "(mult (let x 3 (let y 4 (add x y))) (let x 6 (let y 7 (mult x y))))"
             },
             "expected": 294
-        },
-        {
-            "args": {
-                "expression": "(let x 2 y (let x 3 z (add x y)) (mult x z))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -666,12 +540,6 @@
         },
         {
             "args": {
-                "expression": "(let x 5 y (let x 10 (add x 5)) z (mult y 2) w (add z y) v (mult w z) u (add v w) t (mult u v) s (add t u))"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "expression": "(let x (let y (let z 3 (mult z z)) (add y 5)) (mult x x))"
             },
             "expected": 196
@@ -684,27 +552,9 @@
         },
         {
             "args": {
-                "expression": "(mult (let x 1 (let y (let z 2 (let w 3 (add (mult x y) (mult z w)))) (mult x y) (add z w))) (add x y))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "expression": "(let x 1 (let y (let z 2 (let w 3 (add (mult x y) (mult z w)))) (mult x y) (add z w)))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "(mult (let x 7 (let y 3 (add x y))) (let x 4 (let y 6 (mult x y))))"
             },
             "expected": 240
-        },
-        {
-            "args": {
-                "expression": "(let x (let y (let z 1 (let w 2 (let v 3 (mult v v)) (add w v)) (mult z w)) (add y z)) (add x y) (mult x y))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -738,21 +588,9 @@
         },
         {
             "args": {
-                "expression": "(let x 1 y (let x 2 (let x 3 (add x y))) z (let x 4 (mult x y)) (add z (mult x y)))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "(let x 1 (let y (add x 1) (let z (mult y 2) (let w (add x z) (mult w (let v (mult z 2) v)))))"
             },
             "expected": 40
-        },
-        {
-            "args": {
-                "expression": "(mult (let a 1 b (let a 2 (mult a b))) (let a 3 b (let a 4 (add a b))))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -768,12 +606,6 @@
         },
         {
             "args": {
-                "expression": "(let a 1 b (let a 2 (mult a b)) (let a 3 (add a b)) (let a 4 (mult a b)))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "(let x 10 y (let x 5 (add x 3)) z (mult x y) (add z y))"
             },
             "expected": 88
@@ -786,27 +618,9 @@
         },
         {
             "args": {
-                "expression": "(let x 1 y (let x 2 z (let x 3 (add x y))) (mult x z))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "expression": "(let a 1 b (let a 2 c (let a 3 (let b 4 (mult (add a b) (let a 5 (add a b)))))) (add a c))"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "expression": "(let x 1 (let y 2 (let z 3 (add (mult x y) z))))"
             },
             "expected": 5
-        },
-        {
-            "args": {
-                "expression": "(let x 10 y (let x 20 z (let x 30 (let w 40 (mult (add x y) (add z w))))) (add x z))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -825,12 +639,6 @@
                 "expression": "(let a 1 b 2 c 3 d 4 e 5 (add (mult a b) (add (mult b c) (add (mult c d) (mult d e)))))"
             },
             "expected": 40
-        },
-        {
-            "args": {
-                "expression": "(let a 1 b 2 c 3 d 4 e 5 f 6 g 7 h 8 i 9 j (add a (mult b (add c (mult d (add e (mult f (add g (mult h (add i j))))))))))"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {

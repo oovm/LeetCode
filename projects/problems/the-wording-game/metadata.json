@@ -1021,13 +1021,6 @@
         },
         {
             "args": {
-                "a": ["zebra", "zoo"],
-                "b": ["yak", "yodel"]
-            },
-            "expected": "Error: ord() expected a character, but string of length 3 found"
-        },
-        {
-            "args": {
                 "a": ["banana", "berry", "blueberry"],
                 "b": ["banana", "berry", "blueberry", "blackberry"]
             },

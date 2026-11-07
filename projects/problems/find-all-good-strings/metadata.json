@@ -16,15 +16,6 @@
         {
             "args": {
                 "n": 5,
-                "s1": "a",
-                "s2": "zzzzz",
-                "evil": "z"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "n": 5,
                 "s1": "apple",
                 "s2": "appla",
                 "evil": "appl"
@@ -123,24 +114,6 @@
         },
         {
             "args": {
-                "n": 30,
-                "s1": "aaaaaaaaaaaaaaaaaaaaaaa",
-                "s2": "zzzzzzzzzzzzzzzzzzzzzzzzz",
-                "evil": "zzz"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "n": 50,
-                "s1": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "s2": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "evil": "ab"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "n": 10,
                 "s1": "aaaaaaaaaa",
                 "s2": "zzzzzzzzzz",
@@ -150,30 +123,12 @@
         },
         {
             "args": {
-                "n": 20,
-                "s1": "aaaaaaaaaa",
-                "s2": "zzzzzzzzzz",
-                "evil": "mnop"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "n": 10,
                 "s1": "abcdefghij",
                 "s2": "zzzzzzzzzz",
                 "evil": "mnop"
             },
             "expected": 67339166
-        },
-        {
-            "args": {
-                "n": 45,
-                "s1": "abcdefghijklmnopqrstuvwxyzabcde",
-                "s2": "zyxwvutsrqponmlkjihgfedcbaedcba",
-                "evil": "abcde"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -204,15 +159,6 @@
         },
         {
             "args": {
-                "n": 30,
-                "s1": "abcdefghijklmnopqrstuvwxyzabcde",
-                "s2": "zzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "evil": "mnopqr"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "n": 20,
                 "s1": "aaabaaabaaabaaabaa",
                 "s2": "zzzzzzzzzzzzzzzzzzzz",
@@ -228,33 +174,6 @@
                 "evil": "apple"
             },
             "expected": 695022504
-        },
-        {
-            "args": {
-                "n": 15,
-                "s1": "aaaaaabbbbb",
-                "s2": "zzzzzzzzzzz",
-                "evil": "abcde"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "n": 50,
-                "s1": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "s2": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "evil": "abcde"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "n": 25,
-                "s1": "abcdeabcdeabcdeabcde",
-                "s2": "edcbaedcbaedcbaedcba",
-                "evil": "abc"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -276,39 +195,12 @@
         },
         {
             "args": {
-                "n": 15,
-                "s1": "abcdefghijklm",
-                "s2": "nopqrstuvwxyz",
-                "evil": "uvw"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "n": 10,
                 "s1": "abcdefghij",
                 "s2": "abcdefghiz",
                 "evil": "ghi"
             },
             "expected": 0
-        },
-        {
-            "args": {
-                "n": 50,
-                "s1": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "s2": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "evil": "zzz"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "n": 50,
-                "s1": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "s2": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "evil": "xyzxyzxyzxyzxyz"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -327,42 +219,6 @@
                 "evil": "vwxyz"
             },
             "expected": 858527385
-        },
-        {
-            "args": {
-                "n": 40,
-                "s1": "aaaabaaaabaaaabaaaab",
-                "s2": "zzzzzzzzzzzzzzzzzzzz",
-                "evil": "aaaa"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "n": 30,
-                "s1": "zzzzzzzzzzzzzzzzzzzz",
-                "s2": "zzzzzzzzzzzzzzzzzzzz",
-                "evil": "abc"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "n": 50,
-                "s1": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "s2": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "evil": "ab"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "n": 40,
-                "s1": "abcdabcdabcdabcdabcdabcdabcdabcdabcd",
-                "s2": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "evil": "xyz"
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -402,48 +258,12 @@
         },
         {
             "args": {
-                "n": 15,
-                "s1": "aaaabbbbcccc",
-                "s2": "zzzzzzzzzzzzzz",
-                "evil": "xyz"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "n": 40,
-                "s1": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "s2": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "evil": "xyz"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "n": 5,
                 "s1": "aaaaa",
                 "s2": "zzzzz",
                 "evil": "b"
             },
             "expected": 9765625
-        },
-        {
-            "args": {
-                "n": 20,
-                "s1": "aaaaeaaaagaaaa",
-                "s2": "zzzzkzzzzzzzzz",
-                "evil": "kzz"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "n": 50,
-                "s1": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "s2": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-                "evil": "zzzz"
-            },
-            "expected": "Error: string index out of range"
         }
     ],
     "invoke": {

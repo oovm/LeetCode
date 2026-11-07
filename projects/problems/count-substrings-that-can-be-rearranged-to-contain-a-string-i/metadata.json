@@ -76,13 +76,6 @@
         },
         {
             "args": {
-                "word1": "a",
-                "word2": ""
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "word1": "abcdeabcde",
                 "word2": "abc"
             },

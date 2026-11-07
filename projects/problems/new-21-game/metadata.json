@@ -6,14 +6,6 @@
     "tests": [
         {
             "args": {
-                "n": 10000,
-                "k": 5000,
-                "maxPts": 500
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 10,
                 "k": 5,
                 "maxPts": 5
@@ -78,14 +70,6 @@
         },
         {
             "args": {
-                "n": 10000,
-                "k": 10000,
-                "maxPts": 1
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 0,
                 "k": 0,
                 "maxPts": 1
@@ -123,14 +107,6 @@
                 "maxPts": 10
             },
             "expected": 0.18009983358324094
-        },
-        {
-            "args": {
-                "n": 800,
-                "k": 800,
-                "maxPts": 5
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {
@@ -214,14 +190,6 @@
         },
         {
             "args": {
-                "n": 8000,
-                "k": 4000,
-                "maxPts": 1000
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 100,
                 "k": 80,
                 "maxPts": 20
@@ -270,14 +238,6 @@
         },
         {
             "args": {
-                "n": 1000,
-                "k": 500,
-                "maxPts": 500
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 200,
                 "k": 150,
                 "maxPts": 30
@@ -310,22 +270,6 @@
         },
         {
             "args": {
-                "n": 5000,
-                "k": 2500,
-                "maxPts": 100
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
-                "n": 3000,
-                "k": 2500,
-                "maxPts": 100
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 80,
                 "k": 40,
                 "maxPts": 15
@@ -342,27 +286,11 @@
         },
         {
             "args": {
-                "n": 5000,
-                "k": 4000,
-                "maxPts": 1000
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 90,
                 "k": 85,
                 "maxPts": 5
             },
             "expected": 1
-        },
-        {
-            "args": {
-                "n": 4000,
-                "k": 3500,
-                "maxPts": 500
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {
@@ -390,27 +318,11 @@
         },
         {
             "args": {
-                "n": 5000,
-                "k": 4999,
-                "maxPts": 1
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 15,
                 "k": 7,
                 "maxPts": 5
             },
             "expected": 1
-        },
-        {
-            "args": {
-                "n": 1000,
-                "k": 500,
-                "maxPts": 100
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {
@@ -438,30 +350,6 @@
         },
         {
             "args": {
-                "n": 9999,
-                "k": 9999,
-                "maxPts": 1
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
-                "n": 5000,
-                "k": 5000,
-                "maxPts": 10000
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
-                "n": 15000,
-                "k": 7500,
-                "maxPts": 500
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 25,
                 "k": 25,
                 "maxPts": 1
@@ -475,14 +363,6 @@
                 "maxPts": 25
             },
             "expected": 1
-        },
-        {
-            "args": {
-                "n": 9999,
-                "k": 9990,
-                "maxPts": 10
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {
@@ -502,27 +382,11 @@
         },
         {
             "args": {
-                "n": 5000,
-                "k": 5000,
-                "maxPts": 1
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 25,
                 "k": 20,
                 "maxPts": 15
             },
             "expected": 0.6217079716932831
-        },
-        {
-            "args": {
-                "n": 1000,
-                "k": 500,
-                "maxPts": 200
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {
@@ -579,14 +443,6 @@
                 "maxPts": 25
             },
             "expected": 1
-        },
-        {
-            "args": {
-                "n": 10000,
-                "k": 9999,
-                "maxPts": 10
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {

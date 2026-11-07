@@ -484,10 +484,6 @@
             "expected": 7
         },
         {
-            "args": {},
-            "expected": "Error: Solution.minChanges() missing 2 required positional arguments: 'nums' and 'k'"
-        },
-        {
             "args": {
                 "nums": [99999, 0, 99999, 0, 99999, 0, 99999, 0, 99999, 0, 99999, 0, 99999, 0, 99999, 0],
                 "k": 100000
@@ -503,21 +499,10 @@
         },
         {
             "args": {
-                "nums": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5],
-                "k": 5
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "nums": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
                 "k": 4
             },
             "expected": 4
-        },
-        {
-            "args": {},
-            "expected": "Error: Solution.minChanges() missing 2 required positional arguments: 'nums' and 'k'"
         },
         {
             "args": {

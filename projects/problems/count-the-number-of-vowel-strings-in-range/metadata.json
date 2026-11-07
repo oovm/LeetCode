@@ -745,14 +745,6 @@
         },
         {
             "args": {
-                "words": ["", "a", "e", "i", "o", "u"],
-                "left": 0,
-                "right": 5
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "words": ["elephant", "giraffe", "hippo", "iguana", "jaguar"],
                 "left": 0,
                 "right": 4

@@ -286,14 +286,6 @@
         },
         {
             "args": {
-                "nodes": 30,
-                "parent": [-1, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14],
-                "value": [1, -1, 2, -2, 3, -3, 4, -4, 5, -5, 6, -6, 7, -7, 8, -8, 9, -9, 10, -10, 11, -11, 12, -12, 13, -13, 14, -14, 15]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "nodes": 8,
                 "parent": [-1, 0, 0, 1, 1, 2, 2, 3],
                 "value": [1, -1, 2, -2, 3, -3, 4, -4]
@@ -323,10 +315,6 @@
                 "value": [1, 2, -3, 4, -4, 5, -5, 0, 0, 0, 0]
             },
             "expected": 0
-        },
-        {
-            "args": {},
-            "expected": "Error: Solution.deleteTreeNodes() missing 3 required positional arguments: 'nodes', 'parent', and 'value'"
         },
         {
             "args": {
@@ -399,10 +387,6 @@
                 "value": [1, 2, -3, 4, -4, 5, -5, 6, -6, 7, -7, 8, -8, 9, -9, 10, -10, 11, -11, 12]
             },
             "expected": 20
-        },
-        {
-            "args": {},
-            "expected": "Error: Solution.deleteTreeNodes() missing 3 required positional arguments: 'nodes', 'parent', and 'value'"
         },
         {
             "args": {

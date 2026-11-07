@@ -468,13 +468,6 @@
         },
         {
             "args": {
-                "products": ["umbrella", "umbrella stand", "umbrella frame", "umbrella holder", "umbrella cover"],
-                "searchWord": "umb"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "products": ["aardvark", "aardwolf", "albatross", "albino", "alligator", "alpaca", "almighty"],
                 "searchWord": "al"
             },
@@ -648,10 +641,6 @@
             "expected": [["guitar", "guitarcase", "guitarhero"], ["guitar", "guitarcase", "guitarhero"]]
         },
         {
-            "args": {},
-            "expected": "Error: Solution.suggestedProducts() missing 2 required positional arguments: 'products' and 'searchWord'"
-        },
-        {
             "args": {
                 "products": ["ocean", "ocelot", "octopus", "octagon", "octagonal"],
                 "searchWord": "oct"
@@ -742,10 +731,6 @@
                 ["water", "watercolor", "waterfall"],
                 ["watermark", "watermelon", "watermelon"]
             ]
-        },
-        {
-            "args": {},
-            "expected": "Error: Solution.suggestedProducts() missing 2 required positional arguments: 'products' and 'searchWord'"
         },
         {
             "args": {

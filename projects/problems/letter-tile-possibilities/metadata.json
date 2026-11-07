@@ -120,24 +120,6 @@
         },
         {
             "args": {
-                "tiles": "ABCDEFGHIJKLMNOP"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "tiles": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "tiles": "AABBCCDDEEFFGGHH"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "tiles": "JKJKJKJKJK"
             },
             "expected": 922
@@ -228,27 +210,9 @@
         },
         {
             "args": {
-                "tiles": "ABCDEFGHIJKLMNOPQRST"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "tiles": "PPPPQQRR"
             },
             "expected": 1350
-        },
-        {
-            "args": {
-                "tiles": "ABCDEFFFGGGHHH"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "tiles": "ABCDEFGHIJK"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -351,12 +315,6 @@
                 "tiles": "AABCCD"
             },
             "expected": 522
-        },
-        {
-            "args": {
-                "tiles": "AABBCCDDEEFFGG"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -471,12 +429,6 @@
                 "tiles": "AAAABBBCCC"
             },
             "expected": 13298
-        },
-        {
-            "args": {
-                "tiles": "COMBINATIONS"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {

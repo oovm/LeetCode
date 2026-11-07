@@ -419,13 +419,6 @@
         },
         {
             "args": {
-                "pizza": ["A.AAA.A", "AAAAAAA", "AA.AAA.A", "AAAAAAA", "A.AAA.A"],
-                "k": 5
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "pizza": ["A.A.A.A", ".A.A.A.", "A.A.A.A", ".A.A.A."],
                 "k": 3
             },
@@ -514,13 +507,6 @@
                 "k": 5
             },
             "expected": 0
-        },
-        {
-            "args": {
-                "pizza": ["A......A", ".......A", "....A...", "A........A", ".......A", ".......A", ".......A"],
-                "k": 5
-            },
-            "expected": "Error: list index out of range"
         }
     ],
     "invoke": {

@@ -682,24 +682,6 @@
         {
             "args": {
                 "watchedVideos": [
-                    ["Horror", "Thriller"],
-                    ["Thriller", "Horror"],
-                    ["Horror", "Drama"],
-                    ["Drama", "Thriller"],
-                    ["Horror", "Drama"],
-                    ["Drama", "Thriller"],
-                    ["Thriller", "Horror"],
-                    ["Horror", "Drama"]
-                ],
-                "friends": [[1, 2, 4], [0, 3, 5], [0, 4, 6], [1, 5, 7], [0, 2, 8], [1, 3, 8], [2], [3], [4, 5]],
-                "id": 3,
-                "level": 2
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "watchedVideos": [
                     ["Animation", "ShortFilm"],
                     ["ShortFilm", "Documentary"],
                     ["Documentary", "Animation"],

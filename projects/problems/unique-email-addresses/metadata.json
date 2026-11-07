@@ -425,18 +425,6 @@
         },
         {
             "args": {
-                "emails": [
-                    "alice+bob.cathy@leetcode.com",
-                    "alice.bob.cathy@leetcode.com",
-                    "alice+bob@cathy@leetcode.com",
-                    "alice+@leetcode.com",
-                    "alice@leetcode.com"
-                ]
-            },
-            "expected": "Error: too many values to unpack (expected 2)"
-        },
-        {
-            "args": {
                 "emails": ["first.last+tag1+tag2@service.com", "firstlast+tag1tag2@service.com", "first.last@service.com"]
             },
             "expected": 1

@@ -144,12 +144,6 @@
         },
         {
             "args": {
-                "word": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "word": "ABCDEFGHIJKLMNOP"
             },
             "expected": 18

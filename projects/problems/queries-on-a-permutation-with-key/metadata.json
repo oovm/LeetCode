@@ -449,13 +449,6 @@
         },
         {
             "args": {
-                "queries": [8, 6, 7, 5, 3, 0, 9],
-                "m": 10
-            },
-            "expected": "Error: 0 is not in list"
-        },
-        {
-            "args": {
                 "queries": [5, 3, 7, 1, 4, 2, 8, 6],
                 "m": 8
             },

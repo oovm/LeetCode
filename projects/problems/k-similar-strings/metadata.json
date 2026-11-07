@@ -83,38 +83,10 @@
         },
         {
             "args": {
-                "s1": "abcdeffedcba",
-                "s2": "fedcbadeffcba"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s1": "aabbccddeeff",
-                "s2": "fedcbbaabbcc"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s1": "abacabad",
-                "s2": "dcbadcba"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "abcabcabc",
                 "s2": "cbacbacba"
             },
             "expected": 3
-        },
-        {
-            "args": {
-                "s1": "abacabadabacaba",
-                "s2": "babacababacabaa"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -125,24 +97,10 @@
         },
         {
             "args": {
-                "s1": "abcdeabcde",
-                "s2": "edcbadcbad"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "aabbccddeeff",
                 "s2": "fedcbafedcba"
             },
             "expected": 7
-        },
-        {
-            "args": {
-                "s1": "abcdeffedcba",
-                "s2": "fedcbaffedcba"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -153,31 +111,10 @@
         },
         {
             "args": {
-                "s1": "aabbccddeeffgghh",
-                "s2": "hhggeffeeddcbaab"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "aabbccdd",
                 "s2": "ddccbaab"
             },
             "expected": 5
-        },
-        {
-            "args": {
-                "s1": "abacabad",
-                "s2": "dabcabac"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s1": "abcdeffedcbaabcdeffedcbaabcdeffedcba",
-                "s2": "fedcbadeffcbafeedcbadeffcbafeedcbadeffcba"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -237,13 +174,6 @@
         },
         {
             "args": {
-                "s1": "aabbccddeeffgghhii",
-                "s2": "ihhgfeedccbaab"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "s1": "abcdabcd",
                 "s2": "dcbadcba"
             },
@@ -255,62 +185,6 @@
                 "s2": "fabcde"
             },
             "expected": 5
-        },
-        {
-            "args": {
-                "s1": "abcdefabc",
-                "s2": "fedcbafed"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s1": "aabbccddeeffgghh",
-                "s2": "hhgfedcbbaabbcc"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s1": "abcdefabcdeffedcba",
-                "s2": "fedcbaabccbaabefdcba"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s1": "abcdeffedcbaabcdeffedcba",
-                "s2": "fedcbadeffcbafeedcbadeffcba"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s1": "aabbccddeeffgghh",
-                "s2": "hhggeeffddbbaa"
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "s1": "abacabad",
-                "s2": "dabcabab"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s1": "aabbccddeeffgg",
-                "s2": "ggfedcbbaabbcc"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s1": "abcdabcdabcd",
-                "s2": "dcbaedcbadcb"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -332,13 +206,6 @@
                 "s2": "cccbbbaa"
             },
             "expected": 3
-        },
-        {
-            "args": {
-                "s1": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
-                "s2": "zyxwvutsrqponmlkjihgfedcbaabcdefghijklmnopqrstuvwxyz"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -405,24 +272,10 @@
         },
         {
             "args": {
-                "s1": "aabbccddeeff",
-                "s2": "ffeeddcbaabb"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "abcdefabcdef",
                 "s2": "defabcfedcba"
             },
             "expected": 6
-        },
-        {
-            "args": {
-                "s1": "aabbaabbaabb",
-                "s2": "bbabbababbab"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -458,13 +311,6 @@
                 "s2": "bbbbaaaa"
             },
             "expected": 4
-        },
-        {
-            "args": {
-                "s1": "abcdabcdeabcd",
-                "s2": "dcbadcbadcbad"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {

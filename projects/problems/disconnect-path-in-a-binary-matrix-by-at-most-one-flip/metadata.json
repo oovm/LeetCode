@@ -323,10 +323,6 @@
             "expected": true
         },
         {
-            "args": {},
-            "expected": "Error: Solution.isPossibleToCutPath() missing 1 required positional argument: 'grid'"
-        },
-        {
             "args": {
                 "grid": [[1, 1, 1, 1, 1, 1, 1], [1, 0, 0, 1, 0, 0, 1], [1, 1, 1, 1, 1, 1, 1], [1, 0, 0, 0, 0, 1, 1], [1, 1, 1, 1, 1, 1, 1]]
             },
@@ -337,10 +333,6 @@
                 "grid": [[1, 1, 0, 0, 1, 0], [1, 0, 1, 0, 1, 1], [1, 1, 1, 0, 1, 0], [1, 0, 0, 1, 1, 1], [1, 1, 1, 1, 1, 1], [1, 0, 1, 1, 1, 1]]
             },
             "expected": true
-        },
-        {
-            "args": {},
-            "expected": "Error: Solution.isPossibleToCutPath() missing 1 required positional argument: 'grid'"
         },
         {
             "args": {

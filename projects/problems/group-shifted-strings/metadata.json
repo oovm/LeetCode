@@ -3360,39 +3360,6 @@
             "args": {
                 "strings": [
                     "zzzz",
-                    "aaa",
-                    "zzz",
-                    "aa",
-                    "z",
-                    "",
-                    "abcdef",
-                    "fedcba",
-                    "ghijkl",
-                    "lkjihg",
-                    "mnopqr",
-                    "rqponm",
-                    "stuvwx",
-                    "xwvuts",
-                    "yz",
-                    "zy",
-                    "abc",
-                    "bca",
-                    "cab",
-                    "xyz",
-                    "yzx",
-                    "zxy",
-                    "aaaa",
-                    "bbbb",
-                    "cccc",
-                    "ddddd"
-                ]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "strings": [
-                    "zzzz",
                     "aaaa",
                     "zzzy",
                     "zzyz",

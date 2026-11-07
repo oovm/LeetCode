@@ -46,14 +46,6 @@
         },
         {
             "args": {
-                "tires": [[1, 1], [2, 1]],
-                "changeTime": 1,
-                "numLaps": 10
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "tires": [[10, 10], [5, 5], [2, 2]],
                 "changeTime": 5,
                 "numLaps": 3
@@ -75,14 +67,6 @@
                 "numLaps": 1
             },
             "expected": 1
-        },
-        {
-            "args": {
-                "tires": [[1, 1], [2, 1], [3, 1]],
-                "changeTime": 1,
-                "numLaps": 10
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -123,14 +107,6 @@
                 "numLaps": 10
             },
             "expected": 27
-        },
-        {
-            "args": {
-                "tires": [[2, 3], [3, 2], [4, 1]],
-                "changeTime": 5,
-                "numLaps": 2
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -198,14 +174,6 @@
                 "numLaps": 50
             },
             "expected": 99
-        },
-        {
-            "args": {
-                "tires": [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]],
-                "changeTime": 5,
-                "numLaps": 50
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -337,22 +305,6 @@
         },
         {
             "args": {
-                "tires": [[10, 10], [5, 5], [1, 1], [2, 2]],
-                "changeTime": 20,
-                "numLaps": 20
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "tires": [[100, 10], [50, 5], [25, 3], [10, 2], [5, 1]],
-                "changeTime": 50,
-                "numLaps": 100
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "tires": [[10, 10], [9, 9], [8, 8], [7, 7], [6, 6]],
                 "changeTime": 5,
                 "numLaps": 500
@@ -481,22 +433,6 @@
         },
         {
             "args": {
-                "tires": [[100, 10], [50, 5], [20, 2], [10, 1]],
-                "changeTime": 50,
-                "numLaps": 100
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "tires": [[9, 9], [8, 8], [7, 7], [6, 6], [5, 5], [4, 4], [3, 3], [2, 2], [1, 1]],
-                "changeTime": 10,
-                "numLaps": 100
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "tires": [[2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8]],
                 "changeTime": 3,
                 "numLaps": 40
@@ -593,14 +529,6 @@
         },
         {
             "args": {
-                "tires": [[5, 3], [10, 2], [15, 1]],
-                "changeTime": 8,
-                "numLaps": 15
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "tires": [[5, 2], [10, 2], [15, 2]],
                 "changeTime": 20,
                 "numLaps": 1000
@@ -654,14 +582,6 @@
                 "numLaps": 30
             },
             "expected": 115
-        },
-        {
-            "args": {
-                "tires": [[1, 1], [1, 1], [1, 1], [1, 1]],
-                "changeTime": 1,
-                "numLaps": 50
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -729,14 +649,6 @@
         },
         {
             "args": {
-                "tires": [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]],
-                "changeTime": 50,
-                "numLaps": 500
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "tires": [[10, 10], [5, 5], [1, 2]],
                 "changeTime": 5,
                 "numLaps": 30
@@ -766,14 +678,6 @@
                 "numLaps": 500
             },
             "expected": 27650
-        },
-        {
-            "args": {
-                "tires": [[10, 10], [9, 9], [8, 8], [7, 7], [6, 6], [5, 5], [4, 4], [3, 3], [2, 2], [1, 1]],
-                "changeTime": 50,
-                "numLaps": 1000
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -809,27 +713,11 @@
         },
         {
             "args": {
-                "tires": [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7]],
-                "changeTime": 2,
-                "numLaps": 900
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "tires": [[1, 10], [2, 5], [3, 2]],
                 "changeTime": 10,
                 "numLaps": 999
             },
             "expected": 9482
-        },
-        {
-            "args": {
-                "tires": [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
-                "changeTime": 10,
-                "numLaps": 1000
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -934,14 +822,6 @@
                 "numLaps": 1000
             },
             "expected": 199900000
-        },
-        {
-            "args": {
-                "tires": [[1, 100000], [100000, 1]],
-                "changeTime": 100000,
-                "numLaps": 10
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {

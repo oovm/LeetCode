@@ -574,13 +574,6 @@
         },
         {
             "args": {
-                "board": [[9, 9, 9, 9, 9], [9, 8, 8, 8, 9], [9, 8, 7, 8, 9], [9, 8, 8, 8, 9], [9, 9, 9, 9, 9]],
-                "pattern": ["eeeee", "eccc", "ebed", "eccc", "eeeee"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "board": [[5, 5, 5, 5, 5], [5, 5, 5, 5, 5], [5, 5, 1, 5, 5], [5, 5, 5, 5, 5], [5, 5, 5, 5, 5]],
                 "pattern": ["aaaaa", "aaaaa", "aabaa", "aaaaa", "aaaaa"]
             },

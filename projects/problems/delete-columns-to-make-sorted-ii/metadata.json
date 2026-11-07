@@ -341,12 +341,6 @@
         },
         {
             "args": {
-                "strs": ["aaaaa", "aaabb", "aabbb", "abbbb", "bbbbb", "baaab", "baabb", "babbb", "bbaab", "bbabb", "bbbab", "bbbb"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "strs": ["abc", "bac", "bca", "cab", "cba", "acb"]
             },
             "expected": 3
@@ -935,12 +929,6 @@
         },
         {
             "args": {
-                "strs": ["monotonic", "monotonicity", "monotone", "monotonicity", "monotone"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "strs": ["qwe", "qaz", "qwr"]
             },
             "expected": 2
@@ -1436,12 +1424,6 @@
         },
         {
             "args": {
-                "strs": ["leetcode", "leet", "code"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "strs": ["aabbbabbb", "bbbaabaab", "aabbbbaab", "abbbababa", "bbaaabbbb", "bbabaabab", "abababbaa"]
             },
             "expected": 9
@@ -1574,12 +1556,6 @@
         },
         {
             "args": {
-                "strs": ["hello", "hero", "herm"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "strs": ["hello", "helps", "hero"]
             },
             "expected": 0
@@ -1643,12 +1619,6 @@
                 "strs": ["axb", "ayb", "azb"]
             },
             "expected": 0
-        },
-        {
-            "args": {
-                "strs": ["leetcode", "lintcode", "gcd"]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {

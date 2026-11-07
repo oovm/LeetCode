@@ -488,12 +488,6 @@
         },
         {
             "args": {
-                "s": "reviledmadamdeifiedlevelmadamdeifiedlevelmadam"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "referrefer"
             },
             "expected": [
@@ -964,12 +958,6 @@
         },
         {
             "args": {
-                "s": "aaaaabbbbccccdddd"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "madamatoyotademadam"
             },
             "expected": [
@@ -1239,12 +1227,6 @@
                 ["aa", "bb", "cc", "dd", "ee", "e"],
                 ["aa", "bb", "cc", "dd", "eee"]
             ]
-        },
-        {
-            "args": {
-                "s": "rotorlevelmadamdeifiedlevelmadamdeified"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -1836,12 +1818,6 @@
         },
         {
             "args": {
-                "s": "aabbccddeeffgghhii"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "deifiedcivic"
             },
             "expected": [
@@ -1955,12 +1931,6 @@
         },
         {
             "args": {
-                "s": "repapermadamracecarlevelmadamdeifiedlevelmadamdeified"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "aibohphobia"
             },
             "expected": [
@@ -1998,12 +1968,6 @@
                 ["refer", "r", "edde", "r"],
                 ["refer", "redder"]
             ]
-        },
-        {
-            "args": {
-                "s": "xxyyyxxzzzyyyyzzzz"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -2078,12 +2042,6 @@
                 ["detartrated", "e", "t", "a", "rtatr", "a"],
                 ["detartrated", "e", "t", "artatra"]
             ]
-        },
-        {
-            "args": {
-                "s": "abcddcbaaabbccddeeeffgffggfeeeddccbbaa"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -2197,12 +2155,6 @@
                 ["referrefer", "refer"],
                 ["referreferrefer"]
             ]
-        },
-        {
-            "args": {
-                "s": "rotorlevelmadammadammadam"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -2730,12 +2682,6 @@
         },
         {
             "args": {
-                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "xyzyzyzyzyz"
             },
             "expected": [
@@ -2989,12 +2935,6 @@
                 ["ama", "naplanacanalpan", "ama"],
                 ["amanaplanacanalpanama"]
             ]
-        },
-        {
-            "args": {
-                "s": "civicmadamdeifiedlevelmadamdeifiedlevelmadam"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -3375,12 +3315,6 @@
         },
         {
             "args": {
-                "s": "rotorlevelmadamdeifiedlevelmadamdeifiedrotor"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "rotorleveldetartrated"
             },
             "expected": [
@@ -3442,12 +3376,6 @@
         },
         {
             "args": {
-                "s": "rotorrotorrotorrotor"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "aabbababa"
             },
             "expected": [
@@ -3481,12 +3409,6 @@
                 ["aa", "bb", "aba", "b", "a"],
                 ["aa", "bb", "ababa"]
             ]
-        },
-        {
-            "args": {
-                "s": "aaaaaaaaaaaaaaaa"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -3694,12 +3616,6 @@
         },
         {
             "args": {
-                "s": "aabbccddeeffgghhiijjkk"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "wowzowwow"
             },
             "expected": [
@@ -3899,12 +3815,6 @@
                 "s": "xyxzyx"
             },
             "expected": [["x", "y", "x", "z", "y", "x"], ["xyx", "z", "y", "x"]]
-        },
-        {
-            "args": {
-                "s": "rotarotorlevelmadamdeifiedlevelmadamdeified"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {

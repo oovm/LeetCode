@@ -335,13 +335,6 @@
         },
         {
             "args": {
-                "x": 0.5,
-                "n": -2147483648
-            },
-            "expected": "Error: float division by zero"
-        },
-        {
-            "args": {
                 "x": 0.1,
                 "n": -3
             },
@@ -500,13 +493,6 @@
                 "n": -1000
             },
             "expected": 1
-        },
-        {
-            "args": {
-                "x": 0.1,
-                "n": -100000000
-            },
-            "expected": "Error: float division by zero"
         },
         {
             "args": {

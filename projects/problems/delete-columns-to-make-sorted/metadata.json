@@ -381,18 +381,6 @@
         },
         {
             "args": {
-                "strs": [
-                    "zyxwvutsrqponmlkjihgfedcba",
-                    "yxwvutsrqponmlkjihgfedcba",
-                    "xwvutsrqponmlkjihgfedcba",
-                    "wvutsrqponmlkjihgfedcba",
-                    "vutsrqponmlkjihgfedcba"
-                ]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "strs": ["abcdef", "bcdefg", "cdefgh", "defghi", "efghij", "fghijk"]
             },
             "expected": 0
@@ -408,12 +396,6 @@
                 "strs": ["mnop", "qrst", "uvwx", "yzab"]
             },
             "expected": 2
-        },
-        {
-            "args": {
-                "strs": ["abcdefg", "ghijklm", "nopqrst", "uvwxyz"]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -903,12 +885,6 @@
         },
         {
             "args": {
-                "strs": ["zebra", "yak", "antelope"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "strs": ["abcd", "efgh", "ijkl", "mnop"]
             },
             "expected": 0
@@ -930,12 +906,6 @@
                 "strs": ["aaaa", "bbbb", "cccc", "dddd", "eeee"]
             },
             "expected": 0
-        },
-        {
-            "args": {
-                "strs": ["zebra", "yak", "xerox"]
-            },
-            "expected": "Error: string index out of range"
         }
     ],
     "invoke": {

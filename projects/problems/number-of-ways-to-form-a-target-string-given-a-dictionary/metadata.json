@@ -153,13 +153,6 @@
         },
         {
             "args": {
-                "words": ["python", "java", "javascript", "csharp", "ruby"],
-                "target": "java"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "words": ["abcdefgh", "ijklmnop", "qrstuvwx", "yzabcdef"],
                 "target": "aceg"
             },
@@ -206,17 +199,6 @@
                 "target": "miss"
             },
             "expected": 1792
-        },
-        {
-            "args": {
-                "words": [
-                    "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
-                    "zzzzyyxwwvvuuttrrssqqponnmlkkjjiihhggffeeddccbaab",
-                    "abcdefghijklmnopqrstuvwxyzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
-                ],
-                "target": "abcdefghijklmnopqrstuvwxyz"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -283,13 +265,6 @@
         },
         {
             "args": {
-                "words": ["abacabad", "acadaeaf", "agahaiaj", "akalaalaa"],
-                "target": "baa"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "words": ["zzzz", "zzzz", "zzzz", "zzzz", "zzzz"],
                 "target": "zz"
             },
@@ -333,13 +308,6 @@
                 "target": "abcdefghij"
             },
             "expected": 999999937
-        },
-        {
-            "args": {
-                "words": ["algorithms", "datastructures", "programming"],
-                "target": "ds"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -420,17 +388,6 @@
         },
         {
             "args": {
-                "words": [
-                    "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
-                    "zzzzyyxwwvvuuttrrssqqponnmlkkjjiihhggffeeddccbaab",
-                    "abcdefghijklmnopqrstuvwxyzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
-                ],
-                "target": "zzzzzzzzzz"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "words": ["abcdef", "bcdefg", "cdefgh", "defghi", "efghij"],
                 "target": "abcde"
             },
@@ -473,28 +430,10 @@
         },
         {
             "args": {
-                "words": ["hello", "world", "python", "programming", "challenge"],
-                "target": "how"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "words": ["aaaaaaaaaa", "aaaaaaaaaa", "aaaaaaaaaa", "aaaaaaaaaa"],
                 "target": "aaaa"
             },
             "expected": 53760
-        },
-        {
-            "args": {
-                "words": [
-                    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-                    "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
-                ],
-                "target": "abc"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -516,13 +455,6 @@
                 "target": "acegi"
             },
             "expected": 3125
-        },
-        {
-            "args": {
-                "words": ["abcdefghij", "klmnopqrstu", "vwxyzabcde", "fghijklmno"],
-                "target": "fedcba"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -582,31 +514,10 @@
         },
         {
             "args": {
-                "words": ["xyzxyzxyz", "uvwuvwuvw", "mnopqmnopq"],
-                "target": "xum"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "words": ["abcdefghij", "klmnopqrstu", "vwxyz"],
-                "target": "xyz"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "words": ["abcdefghij", "klmnopqr", "stuvwxyz", "abcdefghij", "klmnopqr"],
                 "target": "mnop"
             },
             "expected": 16
-        },
-        {
-            "args": {
-                "words": ["abacabad", "acadaeaf", "agahaiaj", "akalaalaa"],
-                "target": "aaa"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -621,13 +532,6 @@
                 "target": "abcdefghij"
             },
             "expected": 59049
-        },
-        {
-            "args": {
-                "words": ["qwertyuiop", "asdfghjklz", "xcvbnm,./", "qwertyuiop"],
-                "target": "qzv"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -649,13 +553,6 @@
                 "target": "abcdefg"
             },
             "expected": 78125
-        },
-        {
-            "args": {
-                "words": ["hellohellohellohello", "worldworldworldworld", "pythonpythonpythonpython"],
-                "target": "python"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -740,13 +637,6 @@
                 "target": "qwe"
             },
             "expected": 125
-        },
-        {
-            "args": {
-                "words": ["aabbcc", "bbccdd", "ccddeeff", "ddeeffgg", "eeffgghh"],
-                "target": "abcde"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -941,13 +831,6 @@
         },
         {
             "args": {
-                "words": ["abcdefghij", "klmnopqrstu", "vwxyzabcde", "fghijklmno"],
-                "target": "aeiou"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "words": [
                     "abcd",
                     "abcd",
@@ -1001,13 +884,6 @@
                 "target": "zzz"
             },
             "expected": 540
-        },
-        {
-            "args": {
-                "words": ["thisisatest", "anotherstring", "stringmatching"],
-                "target": "string"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -1158,20 +1034,6 @@
         },
         {
             "args": {
-                "words": ["qwert", "qwerty", "qwertyu", "qwertyui", "qwertyuiop"],
-                "target": "qwerty"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "words": ["qwertyuiop", "asdfghjklz", "xcvbnm,./"],
-                "target": "asdf"
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "words": ["abcdefghij", "abcdefghij", "abcdefghij"],
                 "target": "afik"
             },
@@ -1204,13 +1066,6 @@
                 "target": "abrac"
             },
             "expected": 1024
-        },
-        {
-            "args": {
-                "words": ["hello", "world", "python", "programming", "language"],
-                "target": "python"
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {

@@ -634,12 +634,6 @@
         },
         {
             "args": {
-                "words": ["aabbccdd", "ddeeffgg", "hhiijjkk", "llmmnnoo", "ppqqrrss", "ttuuvvww", "xx yyzz"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "words": ["hello", "world", "python", "programming", "challenge"]
             },
             "expected": 5

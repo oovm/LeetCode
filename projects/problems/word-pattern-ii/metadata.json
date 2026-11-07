@@ -286,12 +286,6 @@
         },
         {
             "args": {
-                "pattern": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz"
-            },
-            "expected": "Error: Solution.wordPatternMatch() missing 1 required positional argument: 's'"
-        },
-        {
-            "args": {
                 "pattern": "abac",
                 "s": "xyzzyzyxzyxzyx"
             },

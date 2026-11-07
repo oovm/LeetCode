@@ -30,12 +30,6 @@
         },
         {
             "args": {
-                "s": "***************************"
-            },
-            "expected": "Error: pop from empty list"
-        },
-        {
-            "args": {
                 "s": "ab*cd*ef*gh*i*j*k*l*m*n*o*p*q*r*s*t*u*v*w*x*y*z*"
             },
             "expected": "aceg"
@@ -48,12 +42,6 @@
         },
         {
             "args": {
-                "s": "*********"
-            },
-            "expected": "Error: pop from empty list"
-        },
-        {
-            "args": {
                 "s": "abcdef"
             },
             "expected": "abcdef"
@@ -63,12 +51,6 @@
                 "s": "zyxwvutsrqponmlkjihgfedcba"
             },
             "expected": "zyxwvutsrqponmlkjihgfedcba"
-        },
-        {
-            "args": {
-                "s": "*a*b*c*"
-            },
-            "expected": "Error: pop from empty list"
         },
         {
             "args": {
@@ -120,21 +102,9 @@
         },
         {
             "args": {
-                "s": "abcdefghijklmnopqrstuvwxyz************************************"
-            },
-            "expected": "Error: pop from empty list"
-        },
-        {
-            "args": {
                 "s": "aaabbbcccddd***eee***fffgggggghhhhiiiiijkkkkkllllmmmmnnnnoooo***pppppqqqqrrrrsssss"
             },
             "expected": "aaabbbcccfffgggggghhhhiiiiijkkkkkllllmmmmnnnnopppppqqqqrrrrsssss"
-        },
-        {
-            "args": {
-                "s": "a*b*c*d*e*f*g*h*i*j*k*l*m*n*o*p*q*r*s*t*u*v*w*x*y*z**a*b*c*d*e*f*g*h*i*j*k*l*m*n*o*p*q*r*s*t*u*v*w*x*y*z**a*b*c*d*e*f*g*h*i*j*k*l*m*n*o*p*q*r*s*t*u*v*w*x*y*z"
-            },
-            "expected": "Error: pop from empty list"
         },
         {
             "args": {
@@ -147,12 +117,6 @@
                 "s": "abcdefghijklmnopqrstuv*xyzwvutsrponmlkjihgfedcba*"
             },
             "expected": "abcdefghijklmnopqrstuxyzwvutsrponmlkjihgfedcb"
-        },
-        {
-            "args": {
-                "s": "******************"
-            },
-            "expected": "Error: pop from empty list"
         },
         {
             "args": {
@@ -174,12 +138,6 @@
         },
         {
             "args": {
-                "s": "abcdefghij************************"
-            },
-            "expected": "Error: pop from empty list"
-        },
-        {
-            "args": {
                 "s": "abcde*fghij*klmno*pqrst*uvwxy*z*a*b*c*d*e*f*g*h*i*j*k*l*m*n*o*p*q*r*s*t*u*v*w*x*y*z*a*b*c*d*e*f*g*h*i*j*k*l*m*n*o*p*q*r*s*t*u*v*w*x*y*z*a*b*c*d*e*f*g*h*i*j*k*l*m*n*o*p*q*r*s*t*u*v*w*x*y*z*a*b*c*d*e*f*g*h*i*j*k*l*m*n*o*p*q*r*s*t*u*v*w*x*y*z"
             },
             "expected": "abcdfghiklmnpqrsuvwxz"
@@ -195,12 +153,6 @@
                 "s": "aaa*bbb*ccc*ddd*eee*fff*ggg*hhh*iii*jjj*kkk*lll*mmm*nnn*ooo*ppp*qqq*rrr*sss*ttt*uuu*vvv*www*xxx*yyy*zzz*"
             },
             "expected": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz"
-        },
-        {
-            "args": {
-                "s": "*a*b*c*d*e*f*g*h*i*j*k*l*m*n*o*p*q*r*s*t*u*v*w*x*y*z*"
-            },
-            "expected": "Error: pop from empty list"
         },
         {
             "args": {
@@ -246,21 +198,9 @@
         },
         {
             "args": {
-                "s": "a*b*c*d*e*f*g*h*i*j*k*l*m*n*o*p*q*r*s*t*u*v*w*x*y*z**"
-            },
-            "expected": "Error: pop from empty list"
-        },
-        {
-            "args": {
                 "s": "abcdefghij*klmnopqrst*uvwxyz*zyxwvutsr*qp*on*m*l*k*j*i*h*g*f*e*d*c*b*a"
             },
             "expected": "abcdefghiklmnopqrsuvwxyzyxwvutsqoa"
-        },
-        {
-            "args": {
-                "s": "**a**b**c**d**e**f**g**h**i**j**k**l**m**n**o**p**q**r**s**t**u**v**w**x**y**z"
-            },
-            "expected": "Error: pop from empty list"
         },
         {
             "args": {
@@ -330,21 +270,9 @@
         },
         {
             "args": {
-                "s": "a**bc**def**ghij**klmno**pqrst**uvwxy**z"
-            },
-            "expected": "Error: pop from empty list"
-        },
-        {
-            "args": {
                 "s": "abcdefghijklmnopqrstuvwxyz*abcdefghijklmnopqrstuvwxyz*"
             },
             "expected": "abcdefghijklmnopqrstuvwxyabcdefghijklmnopqrstuvwxy"
-        },
-        {
-            "args": {
-                "s": "*a**b*c**d*e*f**g*h**i*j**k*l**m*n**o**p*q**r**s**t**u**v**w**x**y**z"
-            },
-            "expected": "Error: pop from empty list"
         },
         {
             "args": {
@@ -393,12 +321,6 @@
                 "s": "mnopqrstu*****vwxyz*****abcdefghi*****jklmno*****pqrst*****uvw*****xy*****z"
             },
             "expected": "mnopz"
-        },
-        {
-            "args": {
-                "s": "a**b**c**d**e**f**g**h**i**j**k**l**m**n**o**p**q**r**s**t**u**v**w**x**y**z"
-            },
-            "expected": "Error: pop from empty list"
         },
         {
             "args": {

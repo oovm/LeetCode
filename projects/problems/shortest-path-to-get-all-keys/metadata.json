@@ -198,12 +198,6 @@
         },
         {
             "args": {
-                "grid": ["@......a", "###.###", "#.......", "b......A", ".....B..", "........"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "grid": ["@.......", "......#.", "b.....A.", "....#B..", ".......c", "......C."]
             },
             "expected": -1
@@ -213,12 +207,6 @@
                 "grid": ["@abcdef", "###GHIJ", "KLMNO.", "PQRST.", "UVWXY.", "Z.....", "....AB", "CDEFGH"]
             },
             "expected": 6
-        },
-        {
-            "args": {
-                "grid": ["@.......", "......#.", ".....bA", "....#B.", ".......c", "......C.", "........"]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -277,45 +265,15 @@
         },
         {
             "args": {
-                "grid": ["@abcdef", "###..gh", "ijkl..m", "nopqr..", "stuvwxyz"]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "grid": ["@.....", ".#...B", "A...#.", ".c..#.", ".....d", "###.#", "..e.E"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
-                "grid": ["@.a..", "###.#", "b.A.B", "C#dE.", "f...G", "#H..i", "j...K", "L....", "M...", "#N.."]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "grid": ["@.aBc", "###D.", "E...F", "G#b.H", "....I"]
             },
             "expected": -1
         },
         {
             "args": {
-                "grid": ["@aA....", "......#", "bB.....", "......#", ".....c", ".....C"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "grid": ["@.a.B", "###.#", "cA.BC", "###d.", "....D"]
             },
             "expected": -1
-        },
-        {
-            "args": {
-                "grid": ["@abcde", "###f.", "AB.CD", "E....", "FGHIJ", "KLMNO", "PQRST", "UVWXY"]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -361,21 +319,9 @@
         },
         {
             "args": {
-                "grid": ["@abcABC", "###...", "...###", "D...d.", ".E...e"]
-            },
-            "expected": "Error: string index out of range"
-        },
-        {
-            "args": {
                 "grid": ["@.aB", "###C", "D#bE", "F...", ".G.H"]
             },
             "expected": -1
-        },
-        {
-            "args": {
-                "grid": ["@......", ".....a", ".....#", "b.....", ".....A", "#.....", ".....B"]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {
@@ -412,12 +358,6 @@
                 "grid": ["@.a..", "#.B..", "...cA", "d.B.c", "A.#.."]
             },
             "expected": -1
-        },
-        {
-            "args": {
-                "grid": ["@.....a", "#.....#", ".....b", "#.....#", ".....A", ".....B"]
-            },
-            "expected": "Error: string index out of range"
         },
         {
             "args": {

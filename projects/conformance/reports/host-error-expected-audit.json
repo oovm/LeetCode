@@ -1,0 +1,2763 @@
+{
+  "summary": {
+    "schemaVersion": 1,
+    "date": "2026-11-07",
+    "policy": "宿主异常文本或 Execution timed out 的 expected 不是答案：整题异常用例占比 >= 50% 判为题解未解出并 blocked；其余按生成时把异常当结果落盘，作废该条用例。",
+    "beforeCases": 29383,
+    "removedCases": 3878,
+    "afterCases": 25505,
+    "problems": 300,
+    "blockedCount": 19,
+    "cleanedCount": 281,
+    "protectedCount": 3,
+    "byKind": {
+      "index": 1397,
+      "recursion": 409,
+      "other-error": 1673,
+      "timeout": 432,
+      "shift": 4
+    }
+  },
+  "blocked": [
+    {
+      "id": "check-if-dfs-strings-are-palindromes",
+      "before": 95,
+      "removed": 56,
+      "after": 39,
+      "ratio": 0.5895,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 0,
+        "args": {
+          "parent": [
+            -1,
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "s": "abcdefg"
+        },
+        "expected": "Error: list index out of range"
+      }
+    },
+    {
+      "id": "clone-binary-tree-with-random-pointer",
+      "before": 9,
+      "removed": 8,
+      "after": 1,
+      "ratio": 0.8889,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 0,
+        "args": {
+          "root": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              3
+            ]
+          ]
+        },
+        "expected": "Error: unhashable type: 'list'"
+      }
+    },
+    {
+      "id": "construct-binary-tree-from-preorder-and-postorder-traversal",
+      "before": 79,
+      "removed": 50,
+      "after": 29,
+      "ratio": 0.6329,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 1,
+        "args": {
+          "preorder": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "postorder": [
+            4,
+            5,
+            2,
+            6,
+            7,
+            3,
+            8,
+            1
+          ]
+        },
+        "expected": "Error: list index out of range"
+      }
+    },
+    {
+      "id": "dice-roll-simulation",
+      "before": 136,
+      "removed": 95,
+      "after": 41,
+      "ratio": 0.6985,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 6,
+        "args": {
+          "n": 1000,
+          "rollMax": [
+            15,
+            15,
+            15,
+            15,
+            15,
+            15
+          ]
+        },
+        "expected": "Error: maximum recursion depth exceeded"
+      }
+    },
+    {
+      "id": "find-if-path-exists-in-graph",
+      "before": 64,
+      "removed": 60,
+      "after": 4,
+      "ratio": 0.9375,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 0,
+        "args": {
+          "n": 6,
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              4,
+              3
+            ]
+          ],
+          "source": 0,
+          "destination": 5
+        },
+        "expected": "Error: maximum recursion depth exceeded"
+      }
+    },
+    {
+      "id": "find-the-k-th-character-in-string-game-ii",
+      "before": 102,
+      "removed": 55,
+      "after": 47,
+      "ratio": 0.5392,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 1,
+        "args": {
+          "k": 987654321,
+          "operations": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        "expected": "Error: list index out of range"
+      }
+    },
+    {
+      "id": "find-the-number-of-k-even-arrays",
+      "before": 119,
+      "removed": 64,
+      "after": 55,
+      "ratio": 0.5378,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 0,
+        "args": {
+          "n": 750,
+          "m": 1000,
+          "k": 0
+        },
+        "expected": "Error: maximum recursion depth exceeded"
+      }
+    },
+    {
+      "id": "intersection-of-two-linked-lists",
+      "before": 129,
+      "removed": 119,
+      "after": 10,
+      "ratio": 0.9225,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 0,
+        "args": {
+          "headA": [
+            2,
+            6,
+            4
+          ],
+          "headB": [
+            1,
+            5
+          ],
+          "skipA": 3,
+          "skipB": 2
+        },
+        "expected": "Error: Solution.getIntersectionNode() got an unexpected keyword argument 'skipA'"
+      }
+    },
+    {
+      "id": "linked-list-cycle",
+      "before": 123,
+      "removed": 117,
+      "after": 6,
+      "ratio": 0.9512,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 0,
+        "args": {
+          "head": [
+            3,
+            2,
+            0,
+            -4
+          ],
+          "pos": 1
+        },
+        "expected": "Error: Solution.hasCycle() got an unexpected keyword argument 'pos'"
+      }
+    },
+    {
+      "id": "minimum-moves-to-spread-stones-over-grid",
+      "before": 112,
+      "removed": 73,
+      "after": 39,
+      "ratio": 0.6518,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 5,
+        "args": {
+          "grid": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": "Execution timed out"
+      }
+    },
+    {
+      "id": "minimum-path-cost-in-a-grid",
+      "before": 60,
+      "removed": 32,
+      "after": 28,
+      "ratio": 0.5333,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 2,
+        "args": {
+          "grid": [
+            [
+              10,
+              15
+            ],
+            [
+              20,
+              25
+            ],
+            [
+              30,
+              35
+            ]
+          ],
+          "moveCost": [
+            [
+              5,
+              7
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              8,
+              2
+            ],
+            [
+              6,
+              9
+            ]
+          ]
+        },
+        "expected": "Error: list index out of range"
+      }
+    },
+    {
+      "id": "number-of-unique-categories",
+      "before": 78,
+      "removed": 77,
+      "after": 1,
+      "ratio": 0.9872,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 0,
+        "args": {
+          "n": 6,
+          "categoryHandler": [
+            1,
+            1,
+            2,
+            2,
+            3,
+            3
+          ]
+        },
+        "expected": "Error: 'list' object has no attribute 'haveSameCategory'"
+      }
+    },
+    {
+      "id": "recover-binary-search-tree",
+      "before": 41,
+      "removed": 25,
+      "after": 16,
+      "ratio": 0.6098,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 3,
+        "args": {
+          "root": [
+            7,
+            3,
+            15,
+            1,
+            5,
+            9,
+            20
+          ]
+        },
+        "expected": "Error: 'NoneType' object has no attribute 'val'"
+      }
+    },
+    {
+      "id": "reverse-odd-levels-of-binary-tree",
+      "before": 33,
+      "removed": 17,
+      "after": 16,
+      "ratio": 0.5152,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 3,
+        "args": {
+          "root": [
+            6,
+            5,
+            4,
+            3,
+            2,
+            1,
+            0,
+            9,
+            8,
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1
+          ]
+        },
+        "expected": "Error: 'NoneType' object has no attribute 'left'"
+      }
+    },
+    {
+      "id": "shortest-matching-substring",
+      "before": 172,
+      "removed": 119,
+      "after": 53,
+      "ratio": 0.6919,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 0,
+        "args": {
+          "s": "ab",
+          "p": "a*b"
+        },
+        "expected": "Error: not enough values to unpack (expected 3, got 2)"
+      }
+    },
+    {
+      "id": "sort-an-array",
+      "before": 122,
+      "removed": 117,
+      "after": 5,
+      "ratio": 0.959,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 0,
+        "args": {
+          "nums": [
+            -4,
+            -2,
+            -3,
+            -1
+          ]
+        },
+        "expected": "Error: name 'randint' is not defined"
+      }
+    },
+    {
+      "id": "stone-game-iv",
+      "before": 66,
+      "removed": 42,
+      "after": 24,
+      "ratio": 0.6364,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 2,
+        "args": {
+          "n": 100000
+        },
+        "expected": "Error: maximum recursion depth exceeded"
+      }
+    },
+    {
+      "id": "ternary-expression-parser",
+      "before": 59,
+      "removed": 34,
+      "after": 25,
+      "ratio": 0.5763,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 3,
+        "args": {
+          "expression": "F?T?F?T?F?9:8:7:6:5"
+        },
+        "expected": "Error: list index out of range"
+      }
+    },
+    {
+      "id": "zuma-game",
+      "before": 330,
+      "removed": 329,
+      "after": 1,
+      "ratio": 0.997,
+      "blocked": true,
+      "repro": {
+        "caseIndex": 0,
+        "args": {
+          "board": "RRR",
+          "hand": "RRR"
+        },
+        "expected": "Error: name 're' is not defined"
+      }
+    }
+  ],
+  "cleaned": [
+    {
+      "id": "amount-of-new-area-painted-each-day",
+      "before": 107,
+      "removed": 2,
+      "after": 105,
+      "ratio": 0.0187,
+      "blocked": false
+    },
+    {
+      "id": "analyze-user-website-visit-pattern",
+      "before": 74,
+      "removed": 13,
+      "after": 61,
+      "ratio": 0.1757,
+      "blocked": false
+    },
+    {
+      "id": "apply-substitutions",
+      "before": 58,
+      "removed": 19,
+      "after": 39,
+      "ratio": 0.3276,
+      "blocked": false
+    },
+    {
+      "id": "arithmetic-subarrays",
+      "before": 146,
+      "removed": 17,
+      "after": 129,
+      "ratio": 0.1164,
+      "blocked": false
+    },
+    {
+      "id": "available-captures-for-rook",
+      "before": 60,
+      "removed": 2,
+      "after": 58,
+      "ratio": 0.0333,
+      "blocked": false
+    },
+    {
+      "id": "baseball-game",
+      "before": 83,
+      "removed": 7,
+      "after": 76,
+      "ratio": 0.0843,
+      "blocked": false
+    },
+    {
+      "id": "battleships-in-a-board",
+      "before": 102,
+      "removed": 1,
+      "after": 101,
+      "ratio": 0.0098,
+      "blocked": false
+    },
+    {
+      "id": "block-placement-queries",
+      "before": 226,
+      "removed": 95,
+      "after": 131,
+      "ratio": 0.4204,
+      "blocked": false
+    },
+    {
+      "id": "bricks-falling-when-hit",
+      "before": 157,
+      "removed": 2,
+      "after": 155,
+      "ratio": 0.0127,
+      "blocked": false
+    },
+    {
+      "id": "build-a-matrix-with-conditions",
+      "before": 86,
+      "removed": 1,
+      "after": 85,
+      "ratio": 0.0116,
+      "blocked": false
+    },
+    {
+      "id": "build-array-from-permutation",
+      "before": 82,
+      "removed": 1,
+      "after": 81,
+      "ratio": 0.0122,
+      "blocked": false
+    },
+    {
+      "id": "can-make-palindrome-from-substring",
+      "before": 109,
+      "removed": 16,
+      "after": 93,
+      "ratio": 0.1468,
+      "blocked": false
+    },
+    {
+      "id": "car-fleet",
+      "before": 125,
+      "removed": 1,
+      "after": 124,
+      "ratio": 0.008,
+      "blocked": false
+    },
+    {
+      "id": "car-fleet-ii",
+      "before": 97,
+      "removed": 2,
+      "after": 95,
+      "ratio": 0.0206,
+      "blocked": false
+    },
+    {
+      "id": "cat-and-mouse-ii",
+      "before": 64,
+      "removed": 7,
+      "after": 57,
+      "ratio": 0.1094,
+      "blocked": false
+    },
+    {
+      "id": "cells-with-odd-values-in-a-matrix",
+      "before": 79,
+      "removed": 4,
+      "after": 75,
+      "ratio": 0.0506,
+      "blocked": false
+    },
+    {
+      "id": "check-if-a-parentheses-string-can-be-valid",
+      "before": 126,
+      "removed": 45,
+      "after": 81,
+      "ratio": 0.3571,
+      "blocked": false
+    },
+    {
+      "id": "check-if-all-the-integers-in-a-range-are-covered",
+      "before": 106,
+      "removed": 1,
+      "after": 105,
+      "ratio": 0.0094,
+      "blocked": false
+    },
+    {
+      "id": "check-if-an-original-string-exists-given-two-encoded-strings",
+      "before": 213,
+      "removed": 18,
+      "after": 195,
+      "ratio": 0.0845,
+      "blocked": false
+    },
+    {
+      "id": "check-if-there-is-a-valid-path-in-a-grid",
+      "before": 78,
+      "removed": 1,
+      "after": 77,
+      "ratio": 0.0128,
+      "blocked": false
+    },
+    {
+      "id": "check-knight-tour-configuration",
+      "before": 65,
+      "removed": 11,
+      "after": 54,
+      "ratio": 0.1692,
+      "blocked": false
+    },
+    {
+      "id": "closest-equal-element-queries",
+      "before": 96,
+      "removed": 3,
+      "after": 93,
+      "ratio": 0.0313,
+      "blocked": false
+    },
+    {
+      "id": "closest-subsequence-sum",
+      "before": 100,
+      "removed": 2,
+      "after": 98,
+      "ratio": 0.02,
+      "blocked": false
+    },
+    {
+      "id": "combination-sum",
+      "before": 118,
+      "removed": 3,
+      "after": 115,
+      "ratio": 0.0254,
+      "blocked": false
+    },
+    {
+      "id": "construct-2d-grid-matching-graph-layout",
+      "before": 45,
+      "removed": 10,
+      "after": 35,
+      "ratio": 0.2222,
+      "blocked": false
+    },
+    {
+      "id": "construct-binary-tree-from-inorder-and-postorder-traversal",
+      "before": 73,
+      "removed": 31,
+      "after": 42,
+      "ratio": 0.4247,
+      "blocked": false
+    },
+    {
+      "id": "construct-binary-tree-from-preorder-and-inorder-traversal",
+      "before": 75,
+      "removed": 14,
+      "after": 61,
+      "ratio": 0.1867,
+      "blocked": false
+    },
+    {
+      "id": "construct-binary-tree-from-string",
+      "before": 113,
+      "removed": 3,
+      "after": 110,
+      "ratio": 0.0265,
+      "blocked": false
+    },
+    {
+      "id": "continuous-subarray-sum",
+      "before": 124,
+      "removed": 3,
+      "after": 121,
+      "ratio": 0.0242,
+      "blocked": false
+    },
+    {
+      "id": "count-all-possible-routes",
+      "before": 103,
+      "removed": 7,
+      "after": 96,
+      "ratio": 0.068,
+      "blocked": false
+    },
+    {
+      "id": "count-connected-components-in-lcm-graph",
+      "before": 100,
+      "removed": 9,
+      "after": 91,
+      "ratio": 0.09,
+      "blocked": false
+    },
+    {
+      "id": "count-different-palindromic-subsequences",
+      "before": 88,
+      "removed": 9,
+      "after": 79,
+      "ratio": 0.1023,
+      "blocked": false
+    },
+    {
+      "id": "count-good-triplets-in-an-array",
+      "before": 102,
+      "removed": 2,
+      "after": 100,
+      "ratio": 0.0196,
+      "blocked": false
+    },
+    {
+      "id": "count-number-of-maximum-bitwise-or-subsets",
+      "before": 115,
+      "removed": 2,
+      "after": 113,
+      "ratio": 0.0174,
+      "blocked": false
+    },
+    {
+      "id": "count-pairs-of-connectable-servers-in-a-weighted-tree-network",
+      "before": 93,
+      "removed": 1,
+      "after": 92,
+      "ratio": 0.0108,
+      "blocked": false
+    },
+    {
+      "id": "count-paths-that-can-form-a-palindrome-in-a-tree",
+      "before": 66,
+      "removed": 17,
+      "after": 49,
+      "ratio": 0.2576,
+      "blocked": false
+    },
+    {
+      "id": "count-subarrays-with-median-k",
+      "before": 81,
+      "removed": 2,
+      "after": 79,
+      "ratio": 0.0247,
+      "blocked": false
+    },
+    {
+      "id": "count-substrings-that-can-be-rearranged-to-contain-a-string-i",
+      "before": 107,
+      "removed": 1,
+      "after": 106,
+      "ratio": 0.0093,
+      "blocked": false
+    },
+    {
+      "id": "count-substrings-that-satisfy-k-constraint-ii",
+      "before": 92,
+      "removed": 20,
+      "after": 72,
+      "ratio": 0.2174,
+      "blocked": false
+    },
+    {
+      "id": "count-the-number-of-good-subarrays",
+      "before": 121,
+      "removed": 5,
+      "after": 116,
+      "ratio": 0.0413,
+      "blocked": false
+    },
+    {
+      "id": "count-the-number-of-k-big-indices",
+      "before": 105,
+      "removed": 20,
+      "after": 85,
+      "ratio": 0.1905,
+      "blocked": false
+    },
+    {
+      "id": "count-the-number-of-vowel-strings-in-range",
+      "before": 100,
+      "removed": 1,
+      "after": 99,
+      "ratio": 0.01,
+      "blocked": false
+    },
+    {
+      "id": "count-unguarded-cells-in-the-grid",
+      "before": 93,
+      "removed": 10,
+      "after": 83,
+      "ratio": 0.1075,
+      "blocked": false
+    },
+    {
+      "id": "count-unhappy-friends",
+      "before": 46,
+      "removed": 9,
+      "after": 37,
+      "ratio": 0.1957,
+      "blocked": false
+    },
+    {
+      "id": "count-unreachable-pairs-of-nodes-in-an-undirected-graph",
+      "before": 56,
+      "removed": 1,
+      "after": 55,
+      "ratio": 0.0179,
+      "blocked": false
+    },
+    {
+      "id": "count-visited-nodes-in-a-directed-graph",
+      "before": 96,
+      "removed": 5,
+      "after": 91,
+      "ratio": 0.0521,
+      "blocked": false
+    },
+    {
+      "id": "count-words-obtained-after-adding-a-letter",
+      "before": 70,
+      "removed": 2,
+      "after": 68,
+      "ratio": 0.0286,
+      "blocked": false
+    },
+    {
+      "id": "couples-holding-hands",
+      "before": 102,
+      "removed": 21,
+      "after": 81,
+      "ratio": 0.2059,
+      "blocked": false
+    },
+    {
+      "id": "cracking-the-safe",
+      "before": 22,
+      "removed": 3,
+      "after": 19,
+      "ratio": 0.1364,
+      "blocked": false
+    },
+    {
+      "id": "create-components-with-same-value",
+      "before": 53,
+      "removed": 4,
+      "after": 49,
+      "ratio": 0.0755,
+      "blocked": false
+    },
+    {
+      "id": "decoded-string-at-index",
+      "before": 114,
+      "removed": 13,
+      "after": 101,
+      "ratio": 0.114,
+      "blocked": false
+    },
+    {
+      "id": "decompress-run-length-encoded-list",
+      "before": 90,
+      "removed": 4,
+      "after": 86,
+      "ratio": 0.0444,
+      "blocked": false
+    },
+    {
+      "id": "delete-columns-to-make-sorted",
+      "before": 103,
+      "removed": 4,
+      "after": 99,
+      "ratio": 0.0388,
+      "blocked": false
+    },
+    {
+      "id": "delete-columns-to-make-sorted-ii",
+      "before": 210,
+      "removed": 5,
+      "after": 205,
+      "ratio": 0.0238,
+      "blocked": false
+    },
+    {
+      "id": "delete-columns-to-make-sorted-iii",
+      "before": 105,
+      "removed": 5,
+      "after": 100,
+      "ratio": 0.0476,
+      "blocked": false
+    },
+    {
+      "id": "delete-tree-nodes",
+      "before": 79,
+      "removed": 3,
+      "after": 76,
+      "ratio": 0.038,
+      "blocked": false
+    },
+    {
+      "id": "difference-between-maximum-and-minimum-price-sum",
+      "before": 60,
+      "removed": 2,
+      "after": 58,
+      "ratio": 0.0333,
+      "blocked": false
+    },
+    {
+      "id": "different-ways-to-add-parentheses",
+      "before": 217,
+      "removed": 28,
+      "after": 189,
+      "ratio": 0.129,
+      "blocked": false
+    },
+    {
+      "id": "disconnect-path-in-a-binary-matrix-by-at-most-one-flip",
+      "before": 83,
+      "removed": 2,
+      "after": 81,
+      "ratio": 0.0241,
+      "blocked": false
+    },
+    {
+      "id": "distance-between-bus-stops",
+      "before": 73,
+      "removed": 5,
+      "after": 68,
+      "ratio": 0.0685,
+      "blocked": false
+    },
+    {
+      "id": "distribute-repeating-integers",
+      "before": 65,
+      "removed": 3,
+      "after": 62,
+      "ratio": 0.0462,
+      "blocked": false
+    },
+    {
+      "id": "divide-an-array-into-subarrays-with-minimum-cost-ii",
+      "before": 200,
+      "removed": 7,
+      "after": 193,
+      "ratio": 0.035,
+      "blocked": false
+    },
+    {
+      "id": "divide-array-into-arrays-with-max-difference",
+      "before": 104,
+      "removed": 9,
+      "after": 95,
+      "ratio": 0.0865,
+      "blocked": false
+    },
+    {
+      "id": "earliest-second-to-mark-indices-i",
+      "before": 114,
+      "removed": 1,
+      "after": 113,
+      "ratio": 0.0088,
+      "blocked": false
+    },
+    {
+      "id": "element-appearing-more-than-25-in-sorted-array",
+      "before": 114,
+      "removed": 31,
+      "after": 83,
+      "ratio": 0.2719,
+      "blocked": false
+    },
+    {
+      "id": "equal-rational-numbers",
+      "before": 169,
+      "removed": 14,
+      "after": 155,
+      "ratio": 0.0828,
+      "blocked": false
+    },
+    {
+      "id": "equal-row-and-column-pairs",
+      "before": 77,
+      "removed": 13,
+      "after": 64,
+      "ratio": 0.1688,
+      "blocked": false
+    },
+    {
+      "id": "evaluate-boolean-binary-tree",
+      "before": 99,
+      "removed": 30,
+      "after": 69,
+      "ratio": 0.303,
+      "blocked": false
+    },
+    {
+      "id": "evaluate-reverse-polish-notation",
+      "before": 104,
+      "removed": 7,
+      "after": 97,
+      "ratio": 0.0673,
+      "blocked": false
+    },
+    {
+      "id": "find-all-duplicates-in-an-array",
+      "before": 96,
+      "removed": 35,
+      "after": 61,
+      "ratio": 0.3646,
+      "blocked": false
+    },
+    {
+      "id": "find-all-good-strings",
+      "before": 49,
+      "removed": 20,
+      "after": 29,
+      "ratio": 0.4082,
+      "blocked": false
+    },
+    {
+      "id": "find-all-possible-stable-binary-arrays-ii",
+      "before": 95,
+      "removed": 29,
+      "after": 66,
+      "ratio": 0.3053,
+      "blocked": false
+    },
+    {
+      "id": "find-anagram-mappings",
+      "before": 85,
+      "removed": 4,
+      "after": 81,
+      "ratio": 0.0471,
+      "blocked": false
+    },
+    {
+      "id": "find-array-given-subset-sums",
+      "before": 166,
+      "removed": 77,
+      "after": 89,
+      "ratio": 0.4639,
+      "blocked": false
+    },
+    {
+      "id": "find-building-where-alice-and-bob-can-meet",
+      "before": 112,
+      "removed": 1,
+      "after": 111,
+      "ratio": 0.0089,
+      "blocked": false
+    },
+    {
+      "id": "find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree",
+      "before": 56,
+      "removed": 1,
+      "after": 55,
+      "ratio": 0.0179,
+      "blocked": false
+    },
+    {
+      "id": "find-missing-and-repeated-values",
+      "before": 86,
+      "removed": 17,
+      "after": 69,
+      "ratio": 0.1977,
+      "blocked": false
+    },
+    {
+      "id": "find-missing-observations",
+      "before": 119,
+      "removed": 1,
+      "after": 118,
+      "ratio": 0.0084,
+      "blocked": false
+    },
+    {
+      "id": "find-number-of-coins-to-place-in-tree-nodes",
+      "before": 72,
+      "removed": 25,
+      "after": 47,
+      "ratio": 0.3472,
+      "blocked": false
+    },
+    {
+      "id": "find-substring-with-given-hash-value",
+      "before": 98,
+      "removed": 2,
+      "after": 96,
+      "ratio": 0.0204,
+      "blocked": false
+    },
+    {
+      "id": "find-subtree-sizes-after-changes",
+      "before": 101,
+      "removed": 40,
+      "after": 61,
+      "ratio": 0.396,
+      "blocked": false
+    },
+    {
+      "id": "find-the-closest-marked-node",
+      "before": 78,
+      "removed": 4,
+      "after": 74,
+      "ratio": 0.0513,
+      "blocked": false
+    },
+    {
+      "id": "find-the-index-of-permutation",
+      "before": 98,
+      "removed": 1,
+      "after": 97,
+      "ratio": 0.0102,
+      "blocked": false
+    },
+    {
+      "id": "find-the-k-sum-of-an-array",
+      "before": 106,
+      "removed": 1,
+      "after": 105,
+      "ratio": 0.0094,
+      "blocked": false
+    },
+    {
+      "id": "find-the-maximum-length-of-valid-subsequence-ii",
+      "before": 133,
+      "removed": 8,
+      "after": 125,
+      "ratio": 0.0602,
+      "blocked": false
+    },
+    {
+      "id": "find-the-maximum-sequence-value-of-array",
+      "before": 90,
+      "removed": 25,
+      "after": 65,
+      "ratio": 0.2778,
+      "blocked": false
+    },
+    {
+      "id": "find-the-number-of-subsequences-with-equal-gcd",
+      "before": 111,
+      "removed": 5,
+      "after": 106,
+      "ratio": 0.045,
+      "blocked": false
+    },
+    {
+      "id": "find-the-shortest-superstring",
+      "before": 103,
+      "removed": 7,
+      "after": 96,
+      "ratio": 0.068,
+      "blocked": false
+    },
+    {
+      "id": "finding-the-users-active-minutes",
+      "before": 109,
+      "removed": 1,
+      "after": 108,
+      "ratio": 0.0092,
+      "blocked": false
+    },
+    {
+      "id": "first-completely-painted-row-or-column",
+      "before": 72,
+      "removed": 1,
+      "after": 71,
+      "ratio": 0.0139,
+      "blocked": false
+    },
+    {
+      "id": "first-day-where-you-have-been-in-all-the-rooms",
+      "before": 115,
+      "removed": 5,
+      "after": 110,
+      "ratio": 0.0435,
+      "blocked": false
+    },
+    {
+      "id": "flip-game-ii",
+      "before": 151,
+      "removed": 14,
+      "after": 137,
+      "ratio": 0.0927,
+      "blocked": false
+    },
+    {
+      "id": "friends-of-appropriate-ages",
+      "before": 105,
+      "removed": 3,
+      "after": 102,
+      "ratio": 0.0286,
+      "blocked": false
+    },
+    {
+      "id": "fruits-into-baskets-ii",
+      "before": 109,
+      "removed": 2,
+      "after": 107,
+      "ratio": 0.0183,
+      "blocked": false
+    },
+    {
+      "id": "gcd-sort-of-an-array",
+      "before": 169,
+      "removed": 1,
+      "after": 168,
+      "ratio": 0.0059,
+      "blocked": false
+    },
+    {
+      "id": "generalized-abbreviation",
+      "before": 94,
+      "removed": 40,
+      "after": 54,
+      "ratio": 0.4255,
+      "blocked": false
+    },
+    {
+      "id": "get-biggest-three-rhombus-sums-in-a-grid",
+      "before": 119,
+      "removed": 1,
+      "after": 118,
+      "ratio": 0.0084,
+      "blocked": false
+    },
+    {
+      "id": "get-watched-videos-by-your-friends",
+      "before": 68,
+      "removed": 1,
+      "after": 67,
+      "ratio": 0.0147,
+      "blocked": false
+    },
+    {
+      "id": "graph-connectivity-with-threshold",
+      "before": 64,
+      "removed": 1,
+      "after": 63,
+      "ratio": 0.0156,
+      "blocked": false
+    },
+    {
+      "id": "group-shifted-strings",
+      "before": 88,
+      "removed": 1,
+      "after": 87,
+      "ratio": 0.0114,
+      "blocked": false
+    },
+    {
+      "id": "height-of-binary-tree-after-subtree-removal-queries",
+      "before": 30,
+      "removed": 8,
+      "after": 22,
+      "ratio": 0.2667,
+      "blocked": false
+    },
+    {
+      "id": "intersection-of-multiple-arrays",
+      "before": 96,
+      "removed": 3,
+      "after": 93,
+      "ratio": 0.0313,
+      "blocked": false
+    },
+    {
+      "id": "is-graph-bipartite",
+      "before": 105,
+      "removed": 2,
+      "after": 103,
+      "ratio": 0.019,
+      "blocked": false
+    },
+    {
+      "id": "jump-game-iii",
+      "before": 112,
+      "removed": 1,
+      "after": 111,
+      "ratio": 0.0089,
+      "blocked": false
+    },
+    {
+      "id": "jump-game-viii",
+      "before": 117,
+      "removed": 2,
+      "after": 115,
+      "ratio": 0.0171,
+      "blocked": false
+    },
+    {
+      "id": "k-similar-strings",
+      "before": 69,
+      "removed": 22,
+      "after": 47,
+      "ratio": 0.3188,
+      "blocked": false
+    },
+    {
+      "id": "k-th-smallest-prime-fraction",
+      "before": 61,
+      "removed": 10,
+      "after": 51,
+      "ratio": 0.1639,
+      "blocked": false
+    },
+    {
+      "id": "keys-and-rooms",
+      "before": 101,
+      "removed": 15,
+      "after": 86,
+      "ratio": 0.1485,
+      "blocked": false
+    },
+    {
+      "id": "kill-process",
+      "before": 68,
+      "removed": 2,
+      "after": 66,
+      "ratio": 0.0294,
+      "blocked": false
+    },
+    {
+      "id": "largest-color-value-in-a-directed-graph",
+      "before": 98,
+      "removed": 14,
+      "after": 84,
+      "ratio": 0.1429,
+      "blocked": false
+    },
+    {
+      "id": "largest-component-size-by-common-factor",
+      "before": 99,
+      "removed": 1,
+      "after": 98,
+      "ratio": 0.0101,
+      "blocked": false
+    },
+    {
+      "id": "largest-plus-sign",
+      "before": 92,
+      "removed": 1,
+      "after": 91,
+      "ratio": 0.0109,
+      "blocked": false
+    },
+    {
+      "id": "length-of-the-longest-increasing-path",
+      "before": 127,
+      "removed": 26,
+      "after": 101,
+      "ratio": 0.2047,
+      "blocked": false
+    },
+    {
+      "id": "letter-tile-possibilities",
+      "before": 82,
+      "removed": 8,
+      "after": 74,
+      "ratio": 0.0976,
+      "blocked": false
+    },
+    {
+      "id": "lexicographically-smallest-equivalent-string",
+      "before": 109,
+      "removed": 11,
+      "after": 98,
+      "ratio": 0.1009,
+      "blocked": false
+    },
+    {
+      "id": "longest-arithmetic-subsequence",
+      "before": 175,
+      "removed": 16,
+      "after": 159,
+      "ratio": 0.0914,
+      "blocked": false
+    },
+    {
+      "id": "longest-common-subsequence-between-sorted-arrays",
+      "before": 101,
+      "removed": 5,
+      "after": 96,
+      "ratio": 0.0495,
+      "blocked": false
+    },
+    {
+      "id": "longest-common-suffix-queries",
+      "before": 90,
+      "removed": 6,
+      "after": 84,
+      "ratio": 0.0667,
+      "blocked": false
+    },
+    {
+      "id": "longest-cycle-in-a-graph",
+      "before": 118,
+      "removed": 9,
+      "after": 109,
+      "ratio": 0.0763,
+      "blocked": false
+    },
+    {
+      "id": "longest-path-with-different-adjacent-characters",
+      "before": 73,
+      "removed": 24,
+      "after": 49,
+      "ratio": 0.3288,
+      "blocked": false
+    },
+    {
+      "id": "longest-special-path-ii",
+      "before": 60,
+      "removed": 19,
+      "after": 41,
+      "ratio": 0.3167,
+      "blocked": false
+    },
+    {
+      "id": "longest-subsequence-repeated-k-times",
+      "before": 92,
+      "removed": 3,
+      "after": 89,
+      "ratio": 0.0326,
+      "blocked": false
+    },
+    {
+      "id": "longest-substring-of-one-repeating-character",
+      "before": 89,
+      "removed": 9,
+      "after": 80,
+      "ratio": 0.1011,
+      "blocked": false
+    },
+    {
+      "id": "longest-unequal-adjacent-groups-subsequence-i",
+      "before": 209,
+      "removed": 2,
+      "after": 207,
+      "ratio": 0.0096,
+      "blocked": false
+    },
+    {
+      "id": "longest-word-with-all-prefixes",
+      "before": 116,
+      "removed": 1,
+      "after": 115,
+      "ratio": 0.0086,
+      "blocked": false
+    },
+    {
+      "id": "make-costs-of-paths-equal-in-a-binary-tree",
+      "before": 59,
+      "removed": 9,
+      "after": 50,
+      "ratio": 0.1525,
+      "blocked": false
+    },
+    {
+      "id": "make-the-xor-of-all-segments-equal-to-zero",
+      "before": 116,
+      "removed": 3,
+      "after": 113,
+      "ratio": 0.0259,
+      "blocked": false
+    },
+    {
+      "id": "making-a-large-island",
+      "before": 87,
+      "removed": 6,
+      "after": 81,
+      "ratio": 0.069,
+      "blocked": false
+    },
+    {
+      "id": "match-alphanumerical-pattern-in-matrix-i",
+      "before": 97,
+      "removed": 1,
+      "after": 96,
+      "ratio": 0.0103,
+      "blocked": false
+    },
+    {
+      "id": "maximize-active-section-with-trade-ii",
+      "before": 84,
+      "removed": 41,
+      "after": 43,
+      "ratio": 0.4881,
+      "blocked": false
+    },
+    {
+      "id": "maximize-subarrays-after-removing-one-conflicting-pair",
+      "before": 74,
+      "removed": 2,
+      "after": 72,
+      "ratio": 0.027,
+      "blocked": false
+    },
+    {
+      "id": "maximize-sum-of-weights-after-edge-removals",
+      "before": 76,
+      "removed": 11,
+      "after": 65,
+      "ratio": 0.1447,
+      "blocked": false
+    },
+    {
+      "id": "maximize-the-minimum-game-score",
+      "before": 97,
+      "removed": 2,
+      "after": 95,
+      "ratio": 0.0206,
+      "blocked": false
+    },
+    {
+      "id": "maximize-the-number-of-target-nodes-after-connecting-trees-i",
+      "before": 63,
+      "removed": 5,
+      "after": 58,
+      "ratio": 0.0794,
+      "blocked": false
+    },
+    {
+      "id": "maximize-the-number-of-target-nodes-after-connecting-trees-ii",
+      "before": 63,
+      "removed": 14,
+      "after": 49,
+      "ratio": 0.2222,
+      "blocked": false
+    },
+    {
+      "id": "maximize-value-of-function-in-a-ball-passing-game",
+      "before": 112,
+      "removed": 3,
+      "after": 109,
+      "ratio": 0.0268,
+      "blocked": false
+    },
+    {
+      "id": "maximum-coin-collection",
+      "before": 95,
+      "removed": 1,
+      "after": 94,
+      "ratio": 0.0105,
+      "blocked": false
+    },
+    {
+      "id": "maximum-consecutive-floors-without-special-floors",
+      "before": 94,
+      "removed": 1,
+      "after": 93,
+      "ratio": 0.0106,
+      "blocked": false
+    },
+    {
+      "id": "maximum-employees-to-be-invited-to-a-meeting",
+      "before": 130,
+      "removed": 3,
+      "after": 127,
+      "ratio": 0.0231,
+      "blocked": false
+    },
+    {
+      "id": "maximum-hamming-distances",
+      "before": 81,
+      "removed": 9,
+      "after": 72,
+      "ratio": 0.1111,
+      "blocked": false
+    },
+    {
+      "id": "maximum-number-of-achievable-transfer-requests",
+      "before": 78,
+      "removed": 7,
+      "after": 71,
+      "ratio": 0.0897,
+      "blocked": false
+    },
+    {
+      "id": "maximum-number-of-darts-inside-of-a-circular-dartboard",
+      "before": 132,
+      "removed": 2,
+      "after": 130,
+      "ratio": 0.0152,
+      "blocked": false
+    },
+    {
+      "id": "maximum-number-of-k-divisible-components",
+      "before": 79,
+      "removed": 1,
+      "after": 78,
+      "ratio": 0.0127,
+      "blocked": false
+    },
+    {
+      "id": "maximum-number-of-moves-to-kill-all-pawns",
+      "before": 103,
+      "removed": 6,
+      "after": 97,
+      "ratio": 0.0583,
+      "blocked": false
+    },
+    {
+      "id": "maximum-number-of-removable-characters",
+      "before": 100,
+      "removed": 18,
+      "after": 82,
+      "ratio": 0.18,
+      "blocked": false
+    },
+    {
+      "id": "maximum-path-quality-of-a-graph",
+      "before": 91,
+      "removed": 2,
+      "after": 89,
+      "ratio": 0.022,
+      "blocked": false
+    },
+    {
+      "id": "maximum-points-after-collecting-coins-from-all-nodes",
+      "before": 67,
+      "removed": 12,
+      "after": 55,
+      "ratio": 0.1791,
+      "blocked": false
+    },
+    {
+      "id": "maximum-points-after-enemy-battles",
+      "before": 105,
+      "removed": 1,
+      "after": 104,
+      "ratio": 0.0095,
+      "blocked": false
+    },
+    {
+      "id": "maximum-points-inside-the-square",
+      "before": 105,
+      "removed": 5,
+      "after": 100,
+      "ratio": 0.0476,
+      "blocked": false
+    },
+    {
+      "id": "maximum-points-tourist-can-earn",
+      "before": 55,
+      "removed": 3,
+      "after": 52,
+      "ratio": 0.0545,
+      "blocked": false
+    },
+    {
+      "id": "maximum-population-year",
+      "before": 92,
+      "removed": 1,
+      "after": 91,
+      "ratio": 0.0109,
+      "blocked": false
+    },
+    {
+      "id": "maximum-profitable-triplets-with-increasing-prices-i",
+      "before": 124,
+      "removed": 1,
+      "after": 123,
+      "ratio": 0.0081,
+      "blocked": false
+    },
+    {
+      "id": "maximum-score-after-applying-operations-on-a-tree",
+      "before": 53,
+      "removed": 6,
+      "after": 47,
+      "ratio": 0.1132,
+      "blocked": false
+    },
+    {
+      "id": "maximum-score-from-grid-operations",
+      "before": 78,
+      "removed": 3,
+      "after": 75,
+      "ratio": 0.0385,
+      "blocked": false
+    },
+    {
+      "id": "maximum-score-words-formed-by-letters",
+      "before": 77,
+      "removed": 1,
+      "after": 76,
+      "ratio": 0.013,
+      "blocked": false
+    },
+    {
+      "id": "maximum-segment-sum-after-removals",
+      "before": 98,
+      "removed": 8,
+      "after": 90,
+      "ratio": 0.0816,
+      "blocked": false
+    },
+    {
+      "id": "maximum-strength-of-a-group",
+      "before": 124,
+      "removed": 1,
+      "after": 123,
+      "ratio": 0.0081,
+      "blocked": false
+    },
+    {
+      "id": "maximum-subtree-of-the-same-color",
+      "before": 86,
+      "removed": 4,
+      "after": 82,
+      "ratio": 0.0465,
+      "blocked": false
+    },
+    {
+      "id": "maximum-sum-with-at-most-k-elements",
+      "before": 92,
+      "removed": 2,
+      "after": 90,
+      "ratio": 0.0217,
+      "blocked": false
+    },
+    {
+      "id": "maximum-vacation-days",
+      "before": 71,
+      "removed": 1,
+      "after": 70,
+      "ratio": 0.0141,
+      "blocked": false
+    },
+    {
+      "id": "maximum-value-sum-by-placing-three-rooks-i",
+      "before": 145,
+      "removed": 1,
+      "after": 144,
+      "ratio": 0.0069,
+      "blocked": false
+    },
+    {
+      "id": "maximum-xor-score-subarray-queries",
+      "before": 59,
+      "removed": 1,
+      "after": 58,
+      "ratio": 0.0169,
+      "blocked": false
+    },
+    {
+      "id": "minimized-maximum-of-products-distributed-to-any-store",
+      "before": 110,
+      "removed": 2,
+      "after": 108,
+      "ratio": 0.0182,
+      "blocked": false
+    },
+    {
+      "id": "minimum-absolute-difference-queries",
+      "before": 91,
+      "removed": 1,
+      "after": 90,
+      "ratio": 0.011,
+      "blocked": false
+    },
+    {
+      "id": "minimum-array-changes-to-make-differences-equal",
+      "before": 104,
+      "removed": 3,
+      "after": 101,
+      "ratio": 0.0288,
+      "blocked": false
+    },
+    {
+      "id": "minimum-cost-for-cutting-cake-i",
+      "before": 85,
+      "removed": 30,
+      "after": 55,
+      "ratio": 0.3529,
+      "blocked": false
+    },
+    {
+      "id": "minimum-cost-to-convert-string-ii",
+      "before": 93,
+      "removed": 2,
+      "after": 91,
+      "ratio": 0.0215,
+      "blocked": false
+    },
+    {
+      "id": "minimum-cost-to-divide-array-into-subarrays",
+      "before": 109,
+      "removed": 1,
+      "after": 108,
+      "ratio": 0.0092,
+      "blocked": false
+    },
+    {
+      "id": "minimum-distance-to-type-a-word-using-two-fingers",
+      "before": 451,
+      "removed": 1,
+      "after": 450,
+      "ratio": 0.0022,
+      "blocked": false
+    },
+    {
+      "id": "minimum-division-operations-to-make-array-non-decreasing",
+      "before": 117,
+      "removed": 1,
+      "after": 116,
+      "ratio": 0.0085,
+      "blocked": false
+    },
+    {
+      "id": "minimum-edge-reversals-so-every-node-is-reachable",
+      "before": 55,
+      "removed": 13,
+      "after": 42,
+      "ratio": 0.2364,
+      "blocked": false
+    },
+    {
+      "id": "minimum-edge-weight-equilibrium-queries-in-a-tree",
+      "before": 35,
+      "removed": 5,
+      "after": 30,
+      "ratio": 0.1429,
+      "blocked": false
+    },
+    {
+      "id": "minimum-falling-path-sum",
+      "before": 80,
+      "removed": 1,
+      "after": 79,
+      "ratio": 0.0125,
+      "blocked": false
+    },
+    {
+      "id": "minimum-falling-path-sum-ii",
+      "before": 86,
+      "removed": 3,
+      "after": 83,
+      "ratio": 0.0349,
+      "blocked": false
+    },
+    {
+      "id": "minimum-incompatibility",
+      "before": 98,
+      "removed": 7,
+      "after": 91,
+      "ratio": 0.0714,
+      "blocked": false
+    },
+    {
+      "id": "minimum-moves-to-make-array-complementary",
+      "before": 113,
+      "removed": 1,
+      "after": 112,
+      "ratio": 0.0088,
+      "blocked": false
+    },
+    {
+      "id": "minimum-moves-to-move-a-box-to-their-target-location",
+      "before": 83,
+      "removed": 1,
+      "after": 82,
+      "ratio": 0.012,
+      "blocked": false
+    },
+    {
+      "id": "minimum-number-game",
+      "before": 96,
+      "removed": 5,
+      "after": 91,
+      "ratio": 0.0521,
+      "blocked": false
+    },
+    {
+      "id": "minimum-number-of-flips-to-convert-binary-matrix-to-zero-matrix",
+      "before": 65,
+      "removed": 12,
+      "after": 53,
+      "ratio": 0.1846,
+      "blocked": false
+    },
+    {
+      "id": "minimum-number-of-operations-to-satisfy-conditions",
+      "before": 111,
+      "removed": 3,
+      "after": 108,
+      "ratio": 0.027,
+      "blocked": false
+    },
+    {
+      "id": "minimum-number-of-operations-to-sort-a-binary-tree-by-level",
+      "before": 64,
+      "removed": 1,
+      "after": 63,
+      "ratio": 0.0156,
+      "blocked": false
+    },
+    {
+      "id": "minimum-number-of-people-to-teach",
+      "before": 84,
+      "removed": 11,
+      "after": 73,
+      "ratio": 0.131,
+      "blocked": false
+    },
+    {
+      "id": "minimum-number-of-removals-to-make-mountain-array",
+      "before": 115,
+      "removed": 8,
+      "after": 107,
+      "ratio": 0.0696,
+      "blocked": false
+    },
+    {
+      "id": "minimum-number-of-taps-to-open-to-water-a-garden",
+      "before": 94,
+      "removed": 1,
+      "after": 93,
+      "ratio": 0.0106,
+      "blocked": false
+    },
+    {
+      "id": "minimum-operations-to-make-array-equal-to-target",
+      "before": 118,
+      "removed": 1,
+      "after": 117,
+      "ratio": 0.0085,
+      "blocked": false
+    },
+    {
+      "id": "minimum-operations-to-make-elements-within-k-subarrays-equal",
+      "before": 82,
+      "removed": 2,
+      "after": 80,
+      "ratio": 0.0244,
+      "blocked": false
+    },
+    {
+      "id": "minimum-operations-to-make-numbers-non-positive",
+      "before": 110,
+      "removed": 6,
+      "after": 104,
+      "ratio": 0.0545,
+      "blocked": false
+    },
+    {
+      "id": "minimum-processing-time",
+      "before": 87,
+      "removed": 2,
+      "after": 85,
+      "ratio": 0.023,
+      "blocked": false
+    },
+    {
+      "id": "minimum-score-after-removals-on-a-tree",
+      "before": 62,
+      "removed": 7,
+      "after": 55,
+      "ratio": 0.1129,
+      "blocked": false
+    },
+    {
+      "id": "minimum-swaps-to-arrange-a-binary-grid",
+      "before": 72,
+      "removed": 1,
+      "after": 71,
+      "ratio": 0.0139,
+      "blocked": false
+    },
+    {
+      "id": "minimum-time-takes-to-reach-destination-without-drowning",
+      "before": 89,
+      "removed": 3,
+      "after": 86,
+      "ratio": 0.0337,
+      "blocked": false
+    },
+    {
+      "id": "minimum-time-to-complete-all-tasks",
+      "before": 115,
+      "removed": 3,
+      "after": 112,
+      "ratio": 0.0261,
+      "blocked": false
+    },
+    {
+      "id": "minimum-time-to-finish-the-race",
+      "before": 115,
+      "removed": 15,
+      "after": 100,
+      "ratio": 0.1304,
+      "blocked": false
+    },
+    {
+      "id": "minimum-time-to-make-rope-colorful",
+      "before": 100,
+      "removed": 9,
+      "after": 91,
+      "ratio": 0.09,
+      "blocked": false
+    },
+    {
+      "id": "minimum-unique-word-abbreviation",
+      "before": 100,
+      "removed": 35,
+      "after": 65,
+      "ratio": 0.35,
+      "blocked": false
+    },
+    {
+      "id": "most-profitable-path-in-a-tree",
+      "before": 65,
+      "removed": 15,
+      "after": 50,
+      "ratio": 0.2308,
+      "blocked": false
+    },
+    {
+      "id": "movement-of-robots",
+      "before": 118,
+      "removed": 8,
+      "after": 110,
+      "ratio": 0.0678,
+      "blocked": false
+    },
+    {
+      "id": "new-21-game",
+      "before": 81,
+      "removed": 18,
+      "after": 63,
+      "ratio": 0.2222,
+      "blocked": false
+    },
+    {
+      "id": "non-decreasing-subsequences",
+      "before": 129,
+      "removed": 26,
+      "after": 103,
+      "ratio": 0.2016,
+      "blocked": false
+    },
+    {
+      "id": "number-of-black-blocks",
+      "before": 73,
+      "removed": 1,
+      "after": 72,
+      "ratio": 0.0137,
+      "blocked": false
+    },
+    {
+      "id": "number-of-good-paths",
+      "before": 83,
+      "removed": 1,
+      "after": 82,
+      "ratio": 0.012,
+      "blocked": false
+    },
+    {
+      "id": "number-of-great-partitions",
+      "before": 102,
+      "removed": 1,
+      "after": 101,
+      "ratio": 0.0098,
+      "blocked": false
+    },
+    {
+      "id": "number-of-nodes-in-the-sub-tree-with-the-same-label",
+      "before": 64,
+      "removed": 20,
+      "after": 44,
+      "ratio": 0.3125,
+      "blocked": false
+    },
+    {
+      "id": "number-of-paths-with-max-score",
+      "before": 108,
+      "removed": 13,
+      "after": 95,
+      "ratio": 0.1204,
+      "blocked": false
+    },
+    {
+      "id": "number-of-same-end-substrings",
+      "before": 81,
+      "removed": 19,
+      "after": 62,
+      "ratio": 0.2346,
+      "blocked": false
+    },
+    {
+      "id": "number-of-substrings-with-fixed-ratio",
+      "before": 101,
+      "removed": 4,
+      "after": 97,
+      "ratio": 0.0396,
+      "blocked": false
+    },
+    {
+      "id": "number-of-valid-words-for-each-puzzle",
+      "before": 71,
+      "removed": 1,
+      "after": 70,
+      "ratio": 0.0141,
+      "blocked": false
+    },
+    {
+      "id": "number-of-ways-of-cutting-a-pizza",
+      "before": 74,
+      "removed": 2,
+      "after": 72,
+      "ratio": 0.027,
+      "blocked": false
+    },
+    {
+      "id": "number-of-ways-to-form-a-target-string-given-a-dictionary",
+      "before": 167,
+      "removed": 19,
+      "after": 148,
+      "ratio": 0.1138,
+      "blocked": false
+    },
+    {
+      "id": "number-of-ways-to-stay-in-the-same-place-after-some-steps",
+      "before": 77,
+      "removed": 12,
+      "after": 65,
+      "ratio": 0.1558,
+      "blocked": false
+    },
+    {
+      "id": "number-of-ways-to-wear-different-hats-to-each-other",
+      "before": 84,
+      "removed": 1,
+      "after": 83,
+      "ratio": 0.0119,
+      "blocked": false
+    },
+    {
+      "id": "number-of-wonderful-substrings",
+      "before": 78,
+      "removed": 1,
+      "after": 77,
+      "ratio": 0.0128,
+      "blocked": false
+    },
+    {
+      "id": "paint-house-iii",
+      "before": 82,
+      "removed": 15,
+      "after": 67,
+      "ratio": 0.1829,
+      "blocked": false
+    },
+    {
+      "id": "paint-house-iv",
+      "before": 92,
+      "removed": 1,
+      "after": 91,
+      "ratio": 0.0109,
+      "blocked": false
+    },
+    {
+      "id": "palindrome-partitioning",
+      "before": 143,
+      "removed": 15,
+      "after": 128,
+      "ratio": 0.1049,
+      "blocked": false
+    },
+    {
+      "id": "palindrome-permutation-ii",
+      "before": 137,
+      "removed": 31,
+      "after": 106,
+      "ratio": 0.2263,
+      "blocked": false
+    },
+    {
+      "id": "palindrome-rearrangement-queries",
+      "before": 94,
+      "removed": 43,
+      "after": 51,
+      "ratio": 0.4574,
+      "blocked": false
+    },
+    {
+      "id": "parallel-courses-ii",
+      "before": 93,
+      "removed": 1,
+      "after": 92,
+      "ratio": 0.0108,
+      "blocked": false
+    },
+    {
+      "id": "parse-lisp-expression",
+      "before": 143,
+      "removed": 32,
+      "after": 111,
+      "ratio": 0.2238,
+      "blocked": false
+    },
+    {
+      "id": "partition-array-into-two-arrays-to-minimize-sum-difference",
+      "before": 90,
+      "removed": 2,
+      "after": 88,
+      "ratio": 0.0222,
+      "blocked": false
+    },
+    {
+      "id": "points-that-intersect-with-cars",
+      "before": 90,
+      "removed": 5,
+      "after": 85,
+      "ratio": 0.0556,
+      "blocked": false
+    },
+    {
+      "id": "powx-n",
+      "before": 85,
+      "removed": 2,
+      "after": 83,
+      "ratio": 0.0235,
+      "blocked": false
+    },
+    {
+      "id": "product-of-two-run-length-encoded-arrays",
+      "before": 104,
+      "removed": 5,
+      "after": 99,
+      "ratio": 0.0481,
+      "blocked": false
+    },
+    {
+      "id": "pyramid-transition-matrix",
+      "before": 81,
+      "removed": 8,
+      "after": 73,
+      "ratio": 0.0988,
+      "blocked": false
+    },
+    {
+      "id": "queries-on-a-permutation-with-key",
+      "before": 98,
+      "removed": 1,
+      "after": 97,
+      "ratio": 0.0102,
+      "blocked": false
+    },
+    {
+      "id": "range-addition",
+      "before": 115,
+      "removed": 5,
+      "after": 110,
+      "ratio": 0.0435,
+      "blocked": false
+    },
+    {
+      "id": "rearrange-array-elements-by-sign",
+      "before": 100,
+      "removed": 1,
+      "after": 99,
+      "ratio": 0.01,
+      "blocked": false
+    },
+    {
+      "id": "redundant-connection-ii",
+      "before": 96,
+      "removed": 2,
+      "after": 94,
+      "ratio": 0.0208,
+      "blocked": false
+    },
+    {
+      "id": "relocate-marbles",
+      "before": 101,
+      "removed": 4,
+      "after": 97,
+      "ratio": 0.0396,
+      "blocked": false
+    },
+    {
+      "id": "remove-max-number-of-edges-to-keep-graph-fully-traversable",
+      "before": 66,
+      "removed": 1,
+      "after": 65,
+      "ratio": 0.0152,
+      "blocked": false
+    },
+    {
+      "id": "remove-nth-node-from-end-of-list",
+      "before": 80,
+      "removed": 1,
+      "after": 79,
+      "ratio": 0.0125,
+      "blocked": false
+    },
+    {
+      "id": "removing-stars-from-a-string",
+      "before": 78,
+      "removed": 13,
+      "after": 65,
+      "ratio": 0.1667,
+      "blocked": false
+    },
+    {
+      "id": "restore-the-array-from-adjacent-pairs",
+      "before": 101,
+      "removed": 22,
+      "after": 79,
+      "ratio": 0.2178,
+      "blocked": false
+    },
+    {
+      "id": "reverse-substrings-between-each-pair-of-parentheses",
+      "before": 103,
+      "removed": 10,
+      "after": 93,
+      "ratio": 0.0971,
+      "blocked": false
+    },
+    {
+      "id": "robot-collisions",
+      "before": 143,
+      "removed": 5,
+      "after": 138,
+      "ratio": 0.035,
+      "blocked": false
+    },
+    {
+      "id": "scramble-string",
+      "before": 113,
+      "removed": 4,
+      "after": 109,
+      "ratio": 0.0354,
+      "blocked": false
+    },
+    {
+      "id": "search-suggestions-system",
+      "before": 112,
+      "removed": 3,
+      "after": 109,
+      "ratio": 0.0268,
+      "blocked": false
+    },
+    {
+      "id": "sell-diminishing-valued-colored-balls",
+      "before": 90,
+      "removed": 2,
+      "after": 88,
+      "ratio": 0.0222,
+      "blocked": false
+    },
+    {
+      "id": "semi-ordered-permutation",
+      "before": 101,
+      "removed": 2,
+      "after": 99,
+      "ratio": 0.0198,
+      "blocked": false
+    },
+    {
+      "id": "sequence-reconstruction",
+      "before": 86,
+      "removed": 3,
+      "after": 83,
+      "ratio": 0.0349,
+      "blocked": false
+    },
+    {
+      "id": "shifting-letters",
+      "before": 92,
+      "removed": 4,
+      "after": 88,
+      "ratio": 0.0435,
+      "blocked": false
+    },
+    {
+      "id": "shifting-letters-ii",
+      "before": 104,
+      "removed": 10,
+      "after": 94,
+      "ratio": 0.0962,
+      "blocked": false
+    },
+    {
+      "id": "shopping-offers",
+      "before": 92,
+      "removed": 2,
+      "after": 90,
+      "ratio": 0.0217,
+      "blocked": false
+    },
+    {
+      "id": "shortest-distance-after-road-addition-queries-ii",
+      "before": 72,
+      "removed": 35,
+      "after": 37,
+      "ratio": 0.4861,
+      "blocked": false
+    },
+    {
+      "id": "shortest-distance-to-target-color",
+      "before": 93,
+      "removed": 4,
+      "after": 89,
+      "ratio": 0.043,
+      "blocked": false
+    },
+    {
+      "id": "shortest-path-to-get-all-keys",
+      "before": 71,
+      "removed": 10,
+      "after": 61,
+      "ratio": 0.1408,
+      "blocked": false
+    },
+    {
+      "id": "shuffle-string",
+      "before": 87,
+      "removed": 26,
+      "after": 61,
+      "ratio": 0.2989,
+      "blocked": false
+    },
+    {
+      "id": "similar-string-groups",
+      "before": 62,
+      "removed": 5,
+      "after": 57,
+      "ratio": 0.0806,
+      "blocked": false
+    },
+    {
+      "id": "sliding-subarray-beauty",
+      "before": 109,
+      "removed": 3,
+      "after": 106,
+      "ratio": 0.0275,
+      "blocked": false
+    },
+    {
+      "id": "slowest-key",
+      "before": 72,
+      "removed": 34,
+      "after": 38,
+      "ratio": 0.4722,
+      "blocked": false
+    },
+    {
+      "id": "smallest-missing-genetic-value-in-each-subtree",
+      "before": 68,
+      "removed": 30,
+      "after": 38,
+      "ratio": 0.4412,
+      "blocked": false
+    },
+    {
+      "id": "smallest-string-with-swaps",
+      "before": 87,
+      "removed": 13,
+      "after": 74,
+      "ratio": 0.1494,
+      "blocked": false
+    },
+    {
+      "id": "snakes-and-ladders",
+      "before": 74,
+      "removed": 2,
+      "after": 72,
+      "ratio": 0.027,
+      "blocked": false
+    },
+    {
+      "id": "solve-the-equation",
+      "before": 273,
+      "removed": 20,
+      "after": 253,
+      "ratio": 0.0733,
+      "blocked": false
+    },
+    {
+      "id": "sort-array-by-moving-items-to-empty-space",
+      "before": 165,
+      "removed": 4,
+      "after": 161,
+      "ratio": 0.0242,
+      "blocked": false
+    },
+    {
+      "id": "sort-integers-by-the-power-value",
+      "before": 94,
+      "removed": 1,
+      "after": 93,
+      "ratio": 0.0106,
+      "blocked": false
+    },
+    {
+      "id": "sort-items-by-groups-respecting-dependencies",
+      "before": 76,
+      "removed": 4,
+      "after": 72,
+      "ratio": 0.0526,
+      "blocked": false
+    },
+    {
+      "id": "special-array-ii",
+      "before": 86,
+      "removed": 3,
+      "after": 83,
+      "ratio": 0.0349,
+      "blocked": false
+    },
+    {
+      "id": "spiral-matrix-iv",
+      "before": 104,
+      "removed": 4,
+      "after": 100,
+      "ratio": 0.0385,
+      "blocked": false
+    },
+    {
+      "id": "split-a-string-into-the-max-number-of-unique-substrings",
+      "before": 115,
+      "removed": 13,
+      "after": 102,
+      "ratio": 0.113,
+      "blocked": false
+    },
+    {
+      "id": "sudoku-solver",
+      "before": 28,
+      "removed": 5,
+      "after": 23,
+      "ratio": 0.1786,
+      "blocked": false
+    },
+    {
+      "id": "sum-of-distances-in-tree",
+      "before": 42,
+      "removed": 2,
+      "after": 40,
+      "ratio": 0.0476,
+      "blocked": false
+    },
+    {
+      "id": "sum-of-remoteness-of-all-cells",
+      "before": 100,
+      "removed": 2,
+      "after": 98,
+      "ratio": 0.02,
+      "blocked": false
+    },
+    {
+      "id": "super-ugly-number",
+      "before": 100,
+      "removed": 5,
+      "after": 95,
+      "ratio": 0.05,
+      "blocked": false
+    },
+    {
+      "id": "swim-in-rising-water",
+      "before": 65,
+      "removed": 32,
+      "after": 33,
+      "ratio": 0.4923,
+      "blocked": false
+    },
+    {
+      "id": "take-k-of-each-character-from-left-and-right",
+      "before": 131,
+      "removed": 2,
+      "after": 129,
+      "ratio": 0.0153,
+      "blocked": false
+    },
+    {
+      "id": "the-earliest-moment-when-everyone-become-friends",
+      "before": 90,
+      "removed": 1,
+      "after": 89,
+      "ratio": 0.0111,
+      "blocked": false
+    },
+    {
+      "id": "the-wording-game",
+      "before": 154,
+      "removed": 1,
+      "after": 153,
+      "ratio": 0.0065,
+      "blocked": false
+    },
+    {
+      "id": "time-taken-to-cross-the-door",
+      "before": 102,
+      "removed": 5,
+      "after": 97,
+      "ratio": 0.049,
+      "blocked": false
+    },
+    {
+      "id": "time-taken-to-mark-all-nodes",
+      "before": 64,
+      "removed": 10,
+      "after": 54,
+      "ratio": 0.1563,
+      "blocked": false
+    },
+    {
+      "id": "tree-of-coprimes",
+      "before": 41,
+      "removed": 10,
+      "after": 31,
+      "ratio": 0.2439,
+      "blocked": false
+    },
+    {
+      "id": "unique-email-addresses",
+      "before": 105,
+      "removed": 1,
+      "after": 104,
+      "ratio": 0.0095,
+      "blocked": false
+    },
+    {
+      "id": "unique-morse-code-words",
+      "before": 83,
+      "removed": 1,
+      "after": 82,
+      "ratio": 0.012,
+      "blocked": false
+    },
+    {
+      "id": "valid-sudoku",
+      "before": 20,
+      "removed": 1,
+      "after": 19,
+      "ratio": 0.05,
+      "blocked": false
+    },
+    {
+      "id": "winner-of-the-linked-list-game",
+      "before": 98,
+      "removed": 3,
+      "after": 95,
+      "ratio": 0.0306,
+      "blocked": false
+    },
+    {
+      "id": "word-abbreviation",
+      "before": 100,
+      "removed": 1,
+      "after": 99,
+      "ratio": 0.01,
+      "blocked": false
+    },
+    {
+      "id": "word-break-ii",
+      "before": 71,
+      "removed": 12,
+      "after": 59,
+      "ratio": 0.169,
+      "blocked": false
+    },
+    {
+      "id": "word-pattern-ii",
+      "before": 151,
+      "removed": 1,
+      "after": 150,
+      "ratio": 0.0066,
+      "blocked": false
+    },
+    {
+      "id": "word-search-ii",
+      "before": 84,
+      "removed": 1,
+      "after": 83,
+      "ratio": 0.0119,
+      "blocked": false
+    },
+    {
+      "id": "word-squares",
+      "before": 62,
+      "removed": 2,
+      "after": 60,
+      "ratio": 0.0323,
+      "blocked": false
+    },
+    {
+      "id": "xor-queries-of-a-subarray",
+      "before": 79,
+      "removed": 2,
+      "after": 77,
+      "ratio": 0.0253,
+      "blocked": false
+    }
+  ],
+  "protectedProblems": [
+    {
+      "id": "all-paths-from-source-to-target",
+      "total": 92,
+      "bad": 13
+    },
+    {
+      "id": "circular-permutation-in-binary-representation",
+      "total": 92,
+      "bad": 15
+    },
+    {
+      "id": "letter-case-permutation",
+      "total": 126,
+      "bad": 9
+    }
+  ]
+}

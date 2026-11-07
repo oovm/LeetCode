@@ -510,13 +510,6 @@
         },
         {
             "args": {
-                "fruits": [1, 2, 3, 4, 5],
-                "baskets": [5, 4, 3, 2, 1, 6, 7, 8, 9, 10]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "fruits": [250, 250, 250, 250],
                 "baskets": [250, 250, 250, 250, 250, 250, 250, 250, 250, 250]
             },
@@ -752,13 +745,6 @@
                 "baskets": [60, 70, 80, 90]
             },
             "expected": 0
-        },
-        {
-            "args": {
-                "fruits": [1, 2, 3, 4, 5],
-                "baskets": [5, 4, 3, 2, 1, 10, 10, 10, 10, 10]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {

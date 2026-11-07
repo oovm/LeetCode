@@ -22,22 +22,6 @@
         },
         {
             "args": {
-                "username": ["u1", "u2", "u3", "u4", "u5", "u1", "u2", "u3", "u4", "u5"],
-                "timestamp": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                "website": ["w1", "w2", "w3", "w4", "w5", "w1", "w2", "w3", "w4", "w5"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "username": ["alice", "bob", "alice", "bob"],
-                "timestamp": [1, 2, 3, 4],
-                "website": ["x", "y", "y", "x"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "username": ["alice", "alice", "alice", "bob", "bob", "bob"],
                 "timestamp": [1, 2, 3, 4, 5, 6],
                 "website": ["a", "b", "c", "a", "b", "c"]
@@ -511,35 +495,11 @@
         },
         {
             "args": {
-                "username": ["alice", "bob", "charlie", "david", "eve"],
-                "timestamp": [5, 15, 25, 35, 45],
-                "website": ["siteX", "siteY", "siteX", "siteZ", "siteX"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "username": ["user1", "user1", "user1", "user2", "user2", "user2", "user3", "user3", "user3", "user4", "user4", "user4"],
                 "timestamp": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 "website": ["siteA", "siteB", "siteC", "siteA", "siteB", "siteC", "siteA", "siteB", "siteC", "siteA", "siteB", "siteC"]
             },
             "expected": ["siteA", "siteB", "siteC"]
-        },
-        {
-            "args": {
-                "username": ["alice", "bob", "charlie", "david", "eve", "frank"],
-                "timestamp": [1, 2, 3, 4, 5, 6],
-                "website": ["home", "about", "career", "home", "about", "career"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "username": ["one", "two", "three", "four", "five", "one", "two", "three", "four", "five"],
-                "timestamp": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                "website": ["page1", "page2", "page3", "page4", "page5", "page1", "page2", "page3", "page4", "page5"]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -667,14 +627,6 @@
                 ]
             },
             "expected": ["explore", "explore", "explore"]
-        },
-        {
-            "args": {
-                "username": ["user1", "user2", "user3", "user4", "user5", "user1", "user2", "user3", "user4", "user5"],
-                "timestamp": [2, 2, 2, 2, 2, 3, 3, 3, 3, 3],
-                "website": ["web1", "web2", "web3", "web4", "web5", "web1", "web2", "web3", "web4", "web5"]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -822,43 +774,6 @@
         },
         {
             "args": {
-                "username": [
-                    "u1",
-                    "u1",
-                    "u2",
-                    "u2",
-                    "u3",
-                    "u3",
-                    "u4",
-                    "u4",
-                    "u5",
-                    "u5",
-                    "u6",
-                    "u6",
-                    "u7",
-                    "u7",
-                    "u8",
-                    "u8",
-                    "u9",
-                    "u9",
-                    "u10",
-                    "u10"
-                ],
-                "timestamp": [1, 11, 2, 12, 3, 13, 4, 14, 5, 15, 6, 16, 7, 17, 8, 18, 9, 19, 10, 20],
-                "website": ["a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "username": ["alice", "bob", "charlie", "dave", "eve", "frank"],
-                "timestamp": [1, 2, 3, 4, 5, 6],
-                "website": ["x", "y", "z", "x", "y", "z"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "username": ["amy", "amy", "amy", "amy", "amy", "amy"],
                 "timestamp": [1, 3, 5, 7, 9, 11],
                 "website": ["home", "about", "career", "home", "about", "career"]
@@ -934,56 +849,6 @@
                 "website": ["home", "home", "home", "about", "about", "about", "career", "career", "career", "home", "about", "career"]
             },
             "expected": ["about", "career", "career"]
-        },
-        {
-            "args": {
-                "username": [
-                    "alice",
-                    "bob",
-                    "charlie",
-                    "dave",
-                    "eve",
-                    "frank",
-                    "grace",
-                    "heidi",
-                    "ivan",
-                    "judy",
-                    "alice",
-                    "bob",
-                    "charlie",
-                    "dave",
-                    "eve",
-                    "frank",
-                    "grace",
-                    "heidi",
-                    "ivan",
-                    "judy"
-                ],
-                "timestamp": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-                "website": [
-                    "home",
-                    "home",
-                    "home",
-                    "home",
-                    "home",
-                    "home",
-                    "home",
-                    "home",
-                    "home",
-                    "home",
-                    "about",
-                    "about",
-                    "about",
-                    "about",
-                    "about",
-                    "about",
-                    "about",
-                    "about",
-                    "about",
-                    "about"
-                ]
-            },
-            "expected": "Error: list index out of range"
         },
         {
             "args": {
@@ -1071,30 +936,6 @@
         },
         {
             "args": {
-                "username": ["alice", "bob", "charlie", "david", "eve", "frank", "grace"],
-                "timestamp": [1, 2, 3, 4, 5, 6, 7],
-                "website": ["home", "about", "career", "home", "about", "career", "home"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "username": ["alice", "bob", "charlie", "david", "eve"],
-                "timestamp": [1, 2, 3, 4, 5],
-                "website": ["x", "y", "z", "x", "y"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "username": ["user1", "user2", "user3", "user4", "user5", "user6", "user7"],
-                "timestamp": [1, 2, 3, 4, 5, 6, 7],
-                "website": ["siteA", "siteB", "siteC", "siteA", "siteB", "siteC", "siteA"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "username": [
                     "user1",
                     "user1",
@@ -1134,30 +975,6 @@
                 ]
             },
             "expected": ["page1", "page2", "page4"]
-        },
-        {
-            "args": {
-                "username": [
-                    "user1",
-                    "user2",
-                    "user3",
-                    "user4",
-                    "user5",
-                    "user6",
-                    "user7",
-                    "user8",
-                    "user9",
-                    "user10",
-                    "user11",
-                    "user12",
-                    "user13",
-                    "user14",
-                    "user15"
-                ],
-                "timestamp": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-                "website": ["a", "a", "a", "b", "b", "b", "c", "c", "c", "a", "a", "a", "b", "b", "b"]
-            },
-            "expected": "Error: list index out of range"
         }
     ],
     "invoke": {

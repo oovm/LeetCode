@@ -230,14 +230,6 @@
         },
         {
             "args": {
-                "s": "010010100101001010010100101001",
-                "num1": 2,
-                "num3": 3
-            },
-            "expected": "Error: Solution.fixedRatio() got an unexpected keyword argument 'num3'"
-        },
-        {
-            "args": {
                 "s": "000000000000000000000000000000000000111111111111111111111111111111111111",
                 "num1": 3,
                 "num2": 1
@@ -494,14 +486,6 @@
         },
         {
             "args": {
-                "s": "01001001001001001001",
-                "num1": 2,
-                "num3": 3
-            },
-            "expected": "Error: Solution.fixedRatio() got an unexpected keyword argument 'num3'"
-        },
-        {
-            "args": {
                 "s": "1010101010101010101010101010",
                 "num1": 3,
                 "num2": 2
@@ -662,14 +646,6 @@
         },
         {
             "args": {
-                "s": "0101010101010101010101010101010101010101010101010101",
-                "num1": 2,
-                "num3": 3
-            },
-            "expected": "Error: Solution.fixedRatio() got an unexpected keyword argument 'num3'"
-        },
-        {
-            "args": {
                 "s": "010011010011010011",
                 "num1": 2,
                 "num2": 3
@@ -739,14 +715,6 @@
                 "num2": 3
             },
             "expected": 9
-        },
-        {
-            "args": {
-                "s": "00110011001100110011",
-                "num1": 2,
-                "num3": 3
-            },
-            "expected": "Error: Solution.fixedRatio() got an unexpected keyword argument 'num3'"
         },
         {
             "args": {

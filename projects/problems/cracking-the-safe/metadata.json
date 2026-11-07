@@ -83,13 +83,6 @@
         },
         {
             "args": {
-                "n": 4,
-                "k": 10
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "n": 1,
                 "k": 10
             },
@@ -122,20 +115,6 @@
                 "k": 5
             },
             "expected": "0044434333442342432332422322244134124143133123142132122141131121114403402401404303302301304203202201204103102101104003002001000"
-        },
-        {
-            "args": {
-                "n": 3,
-                "k": 10
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
-                "n": 4,
-                "k": 6
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {

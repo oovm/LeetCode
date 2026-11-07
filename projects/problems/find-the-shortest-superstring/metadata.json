@@ -151,43 +151,6 @@
         },
         {
             "args": {
-                "words": [
-                    "abcdefg",
-                    "bcdefgh",
-                    "cdefghi",
-                    "defghij",
-                    "efghijk",
-                    "fghijkl",
-                    "ghijklm",
-                    "hijklmn",
-                    "ijklmno",
-                    "jklmnop",
-                    "klmnopq",
-                    "lmnopqr",
-                    "mnopqrs",
-                    "nopqrst",
-                    "opqrstu",
-                    "pqrstuv",
-                    "qrstuvw",
-                    "rstuvwx",
-                    "stuvwxy",
-                    "tuvwxyz",
-                    "uvwxyzx",
-                    "vwxyzxy",
-                    "wxyzxyz",
-                    "xyzxyza",
-                    "yzxyzaa",
-                    "zxyzaab",
-                    "xyzaabc",
-                    "yzaabcd",
-                    "zaabcde",
-                    "aabcdef"
-                ]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "words": ["aaaa", "bbba", "abbb", "baaa"]
             },
             "expected": "abbbaaaa"
@@ -285,54 +248,6 @@
         },
         {
             "args": {
-                "words": [
-                    "concat",
-                    "oncata",
-                    "ncatat",
-                    "catati",
-                    "atatia",
-                    "tatiat",
-                    "atiata",
-                    "tiatap",
-                    "iatapr",
-                    "atapre",
-                    "taprep",
-                    "aprepr",
-                    "prepro",
-                    "epropr",
-                    "proprp",
-                    "roprps",
-                    "oprpsp",
-                    "prpspl",
-                    "rpsplc",
-                    "psplcb",
-                    "splcba",
-                    "plcbam",
-                    "lcbamk",
-                    "cbamkn",
-                    "bamkni",
-                    "amknio",
-                    "mknioj",
-                    "knioji",
-                    "niojij",
-                    "iojiji",
-                    "ojijih",
-                    "jijihg",
-                    "ijihgf",
-                    "ihgfge",
-                    "hgfgef",
-                    "gfgefe",
-                    "fgefee",
-                    "gefeef",
-                    "efeeef",
-                    "feeeee",
-                    "eeeeee"
-                ]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "words": ["overlap", "lapover", "lover", "verlap", "overla", "verlapo", "verlapov", "overlapov", "verlapove", "lapoverla"]
             },
             "expected": "loverlapoverlapo"
@@ -354,37 +269,6 @@
                 "words": ["aabbccdd", "bbccddaa", "ccddaabb", "ddaaaabb", "aaaabbbb", "bbbbaaaa"]
             },
             "expected": "ddaaaabbbbaaaabbccddaabb"
-        },
-        {
-            "args": {
-                "words": [
-                    "abc",
-                    "bcd",
-                    "cde",
-                    "def",
-                    "efg",
-                    "fgh",
-                    "ghi",
-                    "hij",
-                    "ijk",
-                    "jkl",
-                    "klm",
-                    "lmn",
-                    "mno",
-                    "nop",
-                    "opq",
-                    "pqr",
-                    "qrs",
-                    "rst",
-                    "stu",
-                    "tuv",
-                    "uvw",
-                    "vwx",
-                    "wxy",
-                    "xyz"
-                ]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -437,113 +321,15 @@
         },
         {
             "args": {
-                "words": [
-                    "aabbcc",
-                    "bbccdd",
-                    "ccddee",
-                    "ddeeff",
-                    "eeffgg",
-                    "ffgghh",
-                    "gghhii",
-                    "hhijji",
-                    "iijjkk",
-                    "jjkklm",
-                    "kklmno",
-                    "lmnopq",
-                    "mnopqr",
-                    "nopqrs",
-                    "opqrst",
-                    "pqrsst",
-                    "qrsttu",
-                    "rsttuu",
-                    "sttuuv",
-                    "ttuuvw",
-                    "tuuvwv",
-                    "uvwvwx",
-                    "vwvwyx",
-                    "wvwyxy",
-                    "vwyxyz",
-                    "wyxyza",
-                    "yxyzab",
-                    "xyzabc"
-                ]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "words": ["abcd", "cdab", "bcda", "dabc", "abcd", "cdab", "bcda", "dabc", "abcd", "cdab", "bcda", "dabc"]
             },
             "expected": "bcdabcd"
         },
         {
             "args": {
-                "words": [
-                    "xabc",
-                    "bcde",
-                    "cdef",
-                    "defg",
-                    "efgh",
-                    "fghi",
-                    "ghij",
-                    "hijk",
-                    "ijkl",
-                    "jklm",
-                    "klmn",
-                    "lmno",
-                    "mnop",
-                    "nopq",
-                    "opqr",
-                    "pqrt",
-                    "qrts",
-                    "rstu",
-                    "stuv",
-                    "tuvw",
-                    "uvwx",
-                    "vwxz"
-                ]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "words": ["abcdef", "defghi", "ghijkl", "jklmno", "mnopqr", "nopqrs"]
             },
             "expected": "abcdefghijklmnopqrs"
-        },
-        {
-            "args": {
-                "words": [
-                    "unique",
-                    "niques",
-                    "iquesu",
-                    "quesun",
-                    "esuniq",
-                    "suniqu",
-                    "uniqeu",
-                    "niqueu",
-                    "iqueun",
-                    "queuni",
-                    "ueuniq",
-                    "enique",
-                    "niqeuq",
-                    "iqeunu",
-                    "qeuniq",
-                    "euniqe",
-                    "uniqen",
-                    "niqueu",
-                    "iqueun",
-                    "queuni",
-                    "ueuniq",
-                    "enique",
-                    "niqeuq",
-                    "iqeunu",
-                    "qeuniq",
-                    "euniqe",
-                    "uniqen"
-                ]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -818,38 +604,6 @@
                 ]
             },
             "expected": "abcdefghijklmnopqrst"
-        },
-        {
-            "args": {
-                "words": [
-                    "ab",
-                    "bc",
-                    "cd",
-                    "de",
-                    "ef",
-                    "fg",
-                    "gh",
-                    "hi",
-                    "ij",
-                    "jk",
-                    "kl",
-                    "lm",
-                    "mn",
-                    "no",
-                    "op",
-                    "pq",
-                    "qr",
-                    "rs",
-                    "st",
-                    "tu",
-                    "uv",
-                    "vw",
-                    "wx",
-                    "xy",
-                    "yz"
-                ]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {

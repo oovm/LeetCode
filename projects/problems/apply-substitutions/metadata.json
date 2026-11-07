@@ -76,33 +76,6 @@
         },
         {
             "args": {
-                "replacements": [["A", "abc"], ["B", "def"], ["C", "ghi%a%b%"], ["D", "jkl%c%"], ["E", "mno%d%"]],
-                "text": "%A%_%B%_%C%_%D%_%E%"
-            },
-            "expected": "Error: 'a'"
-        },
-        {
-            "args": {
-                "replacements": [
-                    ["A", "abc"],
-                    ["B", "%C%def"],
-                    ["C", "ghi%J%"],
-                    ["D", "%K%lmn"],
-                    ["E", "opq%K%"],
-                    ["F", "rst%L%"],
-                    ["G", "uvw%F%"],
-                    ["H", "%G%xyz"],
-                    ["I", "%H%abc"],
-                    ["J", "%I%def"],
-                    ["K", "%J%ghi"],
-                    ["L", "%K%jkl"]
-                ],
-                "text": "%B%_%E%_%G%"
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "replacements": [
                     ["A", "xy%B%zy"],
                     ["B", "wv%C%vu"],
@@ -118,35 +91,6 @@
                 "text": "%A%_%B%_%C%_%D%_%E%_%F%_%G%_%H%_%I%_%J%"
             },
             "expected": "xywvutsrqponmllkjihgjilkmlnopqsrtuvuzy_wvutsrqponmllkjihgjilkmlnopqsrtuvu_utsrqponmllkjihgjilkmlnopqsrtu_srqponmllkjihgjilkmlnopqsr_qponmllkjihgjilkmlnopq_onmllkjihgjilkmlno_mllkjihgjilkml_lkjihgjilk_jihgji_hg"
-        },
-        {
-            "args": {
-                "replacements": [["F", "fgh"], ["G", "ijk"], ["H", "lmn%fgh%i%j%"], ["I", "opq%k%l%"], ["J", "rst%m%o%p%"]],
-                "text": "%F%_%G%_%H%_%I%_%J%"
-            },
-            "expected": "Error: 'fgh'"
-        },
-        {
-            "args": {
-                "replacements": [
-                    ["M", "%N%opq"],
-                    ["N", "rst"],
-                    ["O", "%P%uvw"],
-                    ["P", "%Q%xyz"],
-                    ["Q", "%R%abc"],
-                    ["R", "def%Q%"],
-                    ["S", "%R%ghi"],
-                    ["T", "%S%jkl"],
-                    ["U", "%T%mno"],
-                    ["V", "%U%pqr"],
-                    ["W", "%V%stu"],
-                    ["X", "%W%vwx"],
-                    ["Y", "%X%yz"],
-                    ["Z", "%Y%abc"]
-                ],
-                "text": "%M%_%O%_%P%_%Q%_%R%_%S%_%T%_%U%_%V%_%W%_%X%_%Y%_%Z%"
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         },
         {
             "args": {
@@ -179,61 +123,6 @@
         },
         {
             "args": {
-                "replacements": [
-                    ["P", "qr%s%t"],
-                    ["Q", "uv%w%x"],
-                    ["R", "yz%P%q"],
-                    ["S", "%R%r"],
-                    ["T", "st%u%v"],
-                    ["U", "wx%y%z"],
-                    ["V", "%V%%W%"],
-                    ["W", "%U%%X%"],
-                    ["X", "yz"]
-                ],
-                "text": "%S%_%T%_%U%_%V%_%W%"
-            },
-            "expected": "Error: 's'"
-        },
-        {
-            "args": {
-                "replacements": [["K", "klm"], ["L", "nop%klm%"], ["M", "qrs%l%k%"], ["N", "tuv%m%l%"], ["O", "wxy%o%tuv%n%"]],
-                "text": "%K%_%L%_%M%_%N%_%O%"
-            },
-            "expected": "Error: 'klm'"
-        },
-        {
-            "args": {
-                "replacements": [["T", "uvw"], ["U", "xyz%V%"], ["V", "%W%_%X%"], ["W", "pqr"], ["X", "stu%V%"], ["Y", "lmn%W%"]],
-                "text": "%U%_%V%_%X%_%Y%"
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
-                "replacements": [["Z", "%Y%_%Z%"], ["Y", "abc"], ["X", "def"], ["W", "%X%_%Y%"], ["V", "%W%_%X%"], ["U", "%V%_%W%"]],
-                "text": "%Z%"
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
-                "replacements": [
-                    ["R", "st%U%uv"],
-                    ["S", "vw%V%wx"],
-                    ["T", "xy%W%yz"],
-                    ["U", "za%X%ab"],
-                    ["V", "bc%Y%cd"],
-                    ["W", "de%Z%ef"],
-                    ["X", "fg%R%gh"],
-                    ["Y", "hi%S%ij"],
-                    ["Z", "jk%T%kl"]
-                ],
-                "text": "%R%_%S%_%T%_%U%_%V%_%W%_%X%_%Y%_%Z%"
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "replacements": [["H", "xyz%I%"], ["I", "uvw"], ["J", "%H%_%I%"], ["K", "lmn"], ["L", "opq%I%"], ["M", "rst%I%"]],
                 "text": "%J%_%K%_%L%_%M%"
             },
@@ -255,28 +144,6 @@
         },
         {
             "args": {
-                "replacements": [
-                    ["A", "xyz%L%"],
-                    ["B", "%M%uvw"],
-                    ["C", "%N%"],
-                    ["D", "opq"],
-                    ["E", "%A%%B%"],
-                    ["F", "%E%%C%"],
-                    ["G", "%F%%D%"],
-                    ["H", "%G%abc"],
-                    ["I", "%H%def"],
-                    ["J", "%I%ghi"],
-                    ["K", "%J%jkl"],
-                    ["L", "%K%mno"],
-                    ["M", "%L%pqr"],
-                    ["N", "%M%stu"]
-                ],
-                "text": "%E%_%F%_%G%"
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "replacements": [["A", "abc"], ["B", "def"], ["C", "%A%%B%"], ["D", "%C%%C%"]],
                 "text": "%A%_%B%_%C%_%D%"
             },
@@ -291,51 +158,10 @@
         },
         {
             "args": {
-                "replacements": [["G", "xyz"], ["H", "uvw%I%"], ["I", "%G%_%H%"], ["J", "lmn%I%"], ["K", "opq%J%"], ["L", "%K%_%I%"]],
-                "text": "%L%"
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
-                "replacements": [
-                    ["X", "abc%Y%z"],
-                    ["Y", "def%Z%w"],
-                    ["Z", "ghi%W%v"],
-                    ["W", "jkl%V%u"],
-                    ["V", "mno%U%t"],
-                    ["U", "pqr%s%r"],
-                    ["T", "stu%Q%q"],
-                    ["S", "vwx%P%p"],
-                    ["P", "xyz%O%o"],
-                    ["O", "123%n%m"],
-                    ["N", "456%l%k"],
-                    ["M", "789%j%i"]
-                ],
-                "text": "%X%_%Y%_%Z%_%W%_%V%_%U%_%T%_%S%_%P%_%O%_%N%_%M%"
-            },
-            "expected": "Error: 's'"
-        },
-        {
-            "args": {
-                "replacements": [["E", "e"], ["F", "f%e%"], ["G", "g%f%"], ["H", "h%g%"], ["I", "i%h%"]],
-                "text": "%E%_%F%_%G%_%H%_%I%"
-            },
-            "expected": "Error: 'e'"
-        },
-        {
-            "args": {
                 "replacements": [["L", "lmn"], ["M", "nop"], ["N", "qrs"], ["O", "%L%%M%"], ["P", "%O%%N%"], ["Q", "%P%%P%"]],
                 "text": "%L%_%M%_%N%_%O%_%P%_%Q%"
             },
             "expected": "lmn_nop_qrs_lmnnop_lmnnopqrs_lmnnopqrslmnnopqrs"
-        },
-        {
-            "args": {
-                "replacements": [["O", "opq"], ["P", "rst%opq%"], ["Q", "%P%%opq%"], ["R", "uvw"], ["S", "xyz%R%"], ["T", "123%S%"]],
-                "text": "%O%_%P%_%Q%_%R%_%S%_%T%"
-            },
-            "expected": "Error: 'opq'"
         },
         {
             "args": {
@@ -405,24 +231,10 @@
         },
         {
             "args": {
-                "replacements": [["J", "jkl"], ["K", "mno%jkl%"], ["L", "%K%%jkl%"], ["M", "pqr"], ["N", "stu%M%"]],
-                "text": "%J%_%K%_%L%_%M%_%N%"
-            },
-            "expected": "Error: 'jkl'"
-        },
-        {
-            "args": {
                 "replacements": [["M", "mnop"], ["N", "%O%%P%"], ["O", "qrst"], ["P", "%Q%%R%"], ["Q", "uvw"], ["R", "xyz"]],
                 "text": "%M%_%N%_%O%_%P%_%Q%_%R%"
             },
             "expected": "mnop_qrstuvwxyz_qrst_uvwxyz_uvw_xyz"
-        },
-        {
-            "args": {
-                "replacements": [["U", "uvw"], ["V", "xyz%uvw%"], ["W", "123%V%"], ["X", "456%X%"], ["Y", "789"], ["Z", "0%Y%"]],
-                "text": "%U%_%V%_%W%_%X%_%Y%_%Z%"
-            },
-            "expected": "Error: 'uvw'"
         },
         {
             "args": {
@@ -444,13 +256,6 @@
                 "text": "%C%_%D%_%Y%_%Z%"
             },
             "expected": "defghiabcdef_jkl_defghiabc_defghi"
-        },
-        {
-            "args": {
-                "replacements": [["A", "a"], ["B", "b%a%"], ["C", "c%b%"], ["D", "d%c%"]],
-                "text": "%A%_%B%_%C%_%D%"
-            },
-            "expected": "Error: 'a'"
         },
         {
             "args": {
@@ -529,35 +334,10 @@
         },
         {
             "args": {
-                "replacements": [
-                    ["M", "no%N%op"],
-                    ["N", "pq%M%qr"],
-                    ["O", "rs%N%su"],
-                    ["P", "tu%O%vw"],
-                    ["Q", "wx%P%xy"],
-                    ["R", "yz%Q%za"],
-                    ["S", "ab%R%bc"],
-                    ["T", "cd%S%de"],
-                    ["U", "ef%T%fg"],
-                    ["V", "gh%U%hi"]
-                ],
-                "text": "%M%_%N%_%O%_%P%_%Q%_%R%_%S%_%T%_%U%_%V%"
-            },
-            "expected": "Error: maximum recursion depth exceeded"
-        },
-        {
-            "args": {
                 "replacements": [["G", "ghi"], ["H", "%I%jkl"], ["I", "mnop"], ["J", "%G%%H%"], ["K", "qrst"], ["L", "%K%uvw"]],
                 "text": "%J%_%L%"
             },
             "expected": "ghimnopjkl_qrstuvw"
-        },
-        {
-            "args": {
-                "replacements": [["S", "%T%_%U%"], ["T", "uvw"], ["U", "xyz%V%"], ["V", "pqr%W%"], ["W", "stu%V%"], ["X", "%W%_%U%"]],
-                "text": "%S%"
-            },
-            "expected": "Error: maximum recursion depth exceeded"
         }
     ],
     "invoke": {

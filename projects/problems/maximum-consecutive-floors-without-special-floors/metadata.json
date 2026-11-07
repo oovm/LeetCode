@@ -55,14 +55,6 @@
         {
             "args": {
                 "bottom": 1,
-                "top": 1,
-                "special": []
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
-                "bottom": 1,
                 "top": 10,
                 "special": [2, 5, 8]
             },

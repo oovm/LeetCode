@@ -487,10 +487,6 @@
             "expected": [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
         },
         {
-            "args": {},
-            "expected": "Error: Solution.getCollisionTimes() missing 1 required positional argument: 'cars'"
-        },
-        {
             "args": {
                 "cars": [[1, 2], [3, 5], [5, 10], [7, 3], [9, 8], [11, 6], [13, 7], [15, 4]]
             },
@@ -519,10 +515,6 @@
                 "cars": [[1, 1], [10, 2], [20, 3], [30, 4], [40, 5], [50, 6], [60, 7], [70, 8], [80, 9], [90, 10]]
             },
             "expected": [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-        },
-        {
-            "args": {},
-            "expected": "Error: Solution.getCollisionTimes() missing 1 required positional argument: 'cars'"
         },
         {
             "args": {

@@ -279,13 +279,6 @@
         },
         {
             "args": {
-                "s1": "abcdefghij12345678901234567",
-                "s2": "abcdefghij12345678901234567"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "a1b2c3",
                 "s2": "abc123"
             },
@@ -328,13 +321,6 @@
         },
         {
             "args": {
-                "s1": "abcdefghij1234567890123456789012345678",
-                "s2": "abcdefghij1234567890123456789012345678"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "a1b2c3d4e5f6g7h8i9j10k11l12m13n14o15p16q17r18s19t20u21v22w23x24y25z26a1b1c1d1e1f1g1h1i1j1k1l1m1n1o1p1q1r1s1t1u1v1w1x1y1z1",
                 "s2": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz2"
             },
@@ -353,13 +339,6 @@
                 "s2": "1abcdefghijklmnopqrstuvwxyz"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "s1": "abcdefghij12345678901234567890123",
-                "s2": "abcdefghij12345678901234567890123"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -440,13 +419,6 @@
         },
         {
             "args": {
-                "s1": "11111111111111111111111111111111111111111111111111111111",
-                "s2": "100"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "a2b3c4d5e6f7g8h9i10",
                 "s2": "abcdefghi10"
             },
@@ -496,24 +468,10 @@
         },
         {
             "args": {
-                "s1": "abcdefghij1234567890123456789012345",
-                "s2": "abcdefghij1234567890123456789012345"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "123abc",
                 "s2": "321cba"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "s1": "abcdefghij12345678901234567890123456",
-                "s2": "abcdefghij12345678901234567890123456"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -545,13 +503,6 @@
         },
         {
             "args": {
-                "s1": "abcdefghij123456789012345678901234",
-                "s2": "abcdefghij123456789012345678901234"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "a2b3c4",
                 "s2": "aaabbbcccc"
             },
@@ -573,13 +524,6 @@
         },
         {
             "args": {
-                "s1": "a1b2c3d4e5f6g7h8i9j10k11l12m13n14o15p16q17r18s19t20u21v22w23x24y25z26",
-                "s2": "1234567891011121314151617181920212223242526"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "a2b3c",
                 "s2": "aabbccc"
             },
@@ -598,13 +542,6 @@
                 "s2": "a9"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "s1": "abcdefghij12345678901",
-                "s2": "abcdefghij12345678902"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -724,20 +661,6 @@
                 "s2": "zzzzzzzzz"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "s1": "abcdefghij123456789012345678901234567",
-                "s2": "abcdefghij123456789012345678901234567"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s1": "abcdefghij12345678902",
-                "s2": "abcdefghij12345678901"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -1000,24 +923,10 @@
         },
         {
             "args": {
-                "s1": "abcdefghij1234567890123456789012",
-                "s2": "abcdefghij1234567890123456789012"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "1a2b3c4d5e",
                 "s2": "11111"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "s1": "abcdefghij123456789012345678901",
-                "s2": "abcdefghij123456789012345678901"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -1371,20 +1280,6 @@
         },
         {
             "args": {
-                "s1": "abcdefghij123456789012345",
-                "s2": "abcdefghij123456789012345"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s1": "abcdefghij1234567890123456",
-                "s2": "abcdefghij1234567890123456"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s1": "a2b3c4d5e6f7g8h9i10j11",
                 "s2": "abcdefghij10jk11"
             },
@@ -1396,20 +1291,6 @@
                 "s2": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz12345678910111213141516171819202122232425261234567891011121314151617181920212223242526"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "s1": "abcdefghij12345678901234567890",
-                "s2": "abcdefghij12345678901234567890"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s1": "abcdefghij1234567890123456789",
-                "s2": "abcdefghij1234567890123456789"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -1487,13 +1368,6 @@
                 "s2": "aaaaaaaaaab"
             },
             "expected": false
-        },
-        {
-            "args": {
-                "s1": "abcdefghij123456789012345678",
-                "s2": "abcdefghij123456789012345678"
-            },
-            "expected": "Execution timed out"
         }
     ],
     "invoke": {

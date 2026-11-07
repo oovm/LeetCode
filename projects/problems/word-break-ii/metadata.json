@@ -92,13 +92,6 @@
         },
         {
             "args": {
-                "s": "ababababababababababababababababababababababababababababababababababababab",
-                "wordDict": ["ab", "aba", "bab", "baba"]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "thisproblemisverydifficult",
                 "wordDict": ["this", "problem", "is", "very", "difficult", "difficul", "icult"]
             },
@@ -160,13 +153,6 @@
                 "wordDict": ["word", "break", "problem", "wordbreak", "prob", "lem"]
             },
             "expected": ["word break prob lem", "word break problem", "wordbreak prob lem", "wordbreak problem"]
-        },
-        {
-            "args": {
-                "s": "abababababababababababababababababababababababababababababababab",
-                "wordDict": ["a", "ab", "bab", "aba", "baba", "abab", "babab", "bababa"]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -245,13 +231,6 @@
                 "abcdefg abcdefg abcdefg abcdefg abc defg",
                 "abcdefg abcdefg abcdefg abcdefg abcdefg"
             ]
-        },
-        {
-            "args": {
-                "s": "ababababababababababababababababababababababababababababababababababababab",
-                "wordDict": ["ab", "aba", "bab"]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -371,13 +350,6 @@
         },
         {
             "args": {
-                "s": "themanran",
-                "wordDict": ["the", "ran", "man", " Marathon"]
-            },
-            "expected": "Error: list index out of range"
-        },
-        {
-            "args": {
                 "s": "wordbreakproblem",
                 "wordDict": ["word", "break", "breakproblem", "problem", "wordbreak", "breakpro", "lem"]
             },
@@ -435,31 +407,6 @@
                 "supercal ifragilisticexpi ali docious",
                 "supercal ifragilisticexpi alidocious"
             ]
-        },
-        {
-            "args": {
-                "s": "abcdabcdabcdabcdabcdabcdabcd",
-                "wordDict": [
-                    "a",
-                    "b",
-                    "c",
-                    "d",
-                    "ab",
-                    "bc",
-                    "cd",
-                    "abc",
-                    "bcd",
-                    "abcd",
-                    "abdc",
-                    "abcdc",
-                    "abcde",
-                    "abcdabcd",
-                    "abcdabc",
-                    "abcdab",
-                    "abcdabcdabc"
-                ]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -801,13 +748,6 @@
                 "wordDict": ["back", "track", "ing", "backtrack", "backtracking", "tra", "ck", "bac", "king"]
             },
             "expected": ["back tra ck ing", "back track ing", "backtrack ing", "backtracking"]
-        },
-        {
-            "args": {
-                "s": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
-                "wordDict": ["a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa"]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -1346,13 +1286,6 @@
         },
         {
             "args": {
-                "s": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
-                "wordDict": ["a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa"]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "s": "abcdefgh",
                 "wordDict": ["ab", "abc", "abcd", "abcde", "abcdef", "abcdefg", "abcdefgh"]
             },
@@ -1371,13 +1304,6 @@
                 "wordDict": ["the", "long", "word", "that", "should", "break", "down", "thelon", "breakdo", "wordtha", "thatshoul", "ouldbreak"]
             },
             "expected": ["the long word that should break down"]
-        },
-        {
-            "args": {
-                "s": "aaaaaaaaaaaaaaaaaaaaaaab",
-                "wordDict": ["a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaaaaa", "b"]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -1445,20 +1371,6 @@
                 "wordDict": ["a", "quick", "brown", "fox", "quickbrown", "brownfox"]
             },
             "expected": ["a quick brown fox", "a quick brownfox", "a quickbrown fox"]
-        },
-        {
-            "args": {
-                "s": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
-                "wordDict": ["a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa"]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
-                "wordDict": ["a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa"]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -1548,20 +1460,6 @@
                 "wordbreakprob lem",
                 "wordbreakproblem"
             ]
-        },
-        {
-            "args": {
-                "s": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "wordDict": ["a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa"]
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "s": "abababababababababababababababababababababababababababababab",
-                "wordDict": ["a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "ab", "aba", "abab"]
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
