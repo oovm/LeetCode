@@ -49,7 +49,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G10 `DisjointSet` 分量聚合 | b | 3 处 × 重写 DSU 内部聚合 |
 | G11 `sorted_by` | **已恢复**（2026-11-07 实测）：`std.collection.sort` 的 `sorted_by<T>(items: ArrayList<T>, cmp): ArrayList<T>`（`3e02e7d`）已提供，8 题改用它后真跑 **767/767** 用例 PASS，另删除 4 处副本脚手架；残余 `[T]` 带比较器入口见 G11 小节 | `maximum-subsequence-score` / `maximum-number-of-events-that-can-be-attended` / `the-k-weakest-rows-in-a-matrix` / `find-subsequence-of-length-k-with-the-largest-sum` / `high-five` / `array-of-doubled-pairs` / `advantage-shuffle` / `the-k-strongest-values-in-an-array` / `meeting-rooms` / `remove-covered-intervals` / `minimum-moves-to-equal-array-elements-ii` / `merge-similar-items` |
 | G13 `utf8` 字典序比较 | **已恢复**（2026-11-07）：`Utf8Text` 的 `Comparable` 合同已提供，5 处消费者改用 `natural_order` 比较器；真跑 420/420 用例 PASS | `accounts-merge` / `reorder-data-in-log-files` / `top-k-frequent-words` / `find-smallest-letter-greater-than-target` / `phone-number-prefix` |
-| G16 `BTreeSet` / `BTreeMap` 界查询 | b | 3 处 × O(k) 物化 + 手写二分（其中 1 处为按秩查询；`nth` 已销案） |
+| G16 `BTreeSet` / `BTreeMap` 界查询 | **已恢复**（2026-11-07 实测）：`floor` / `ceiling` 与 `ceiling_key` 已提供，3 个消费者真跑 **466/466** 用例 PASS；220 同时对齐 `indexDiff` / `valueDiff` 形参名 | `contains-duplicate-iii` / `find-right-interval` / `sliding-window-median` |
 | G17 `char` 缺 `Hash` | **已恢复**（2026-11-07 实测）：`HashPrimitives.v:53` 的 `imply char: Hash` 已随 addon 生效，8 题以 `HashMap<char, i64>` / `DisjointSet<char>` 真跑 **778/778** 用例 PASS；另 3 题仍红但均非 `Hash` 阻塞（详见 G17 小节） | `custom-sort-string` / `find-words-that-can-be-formed-by-characters` / `longest-repeating-character-replacement` / `longest-substring-with-at-most-k-distinct-characters` / `word-subsets` / `permutation-in-string` / `sort-characters-by-frequency` / `task-scheduler` |
 | G22 整数位元查询 | b | 5 处 × 重复位运算 |
 | G25 `BitSet` 基数 / 复制 | **已恢复**（2026-11-07 实测）：`count` / `clone` 已随源码提供，6 个消费者真跑 **479/509** 用例 PASS；余 30 条由 `find-the-prefix-common-array-of-two-arrays` 语料 A/B 长度不一致中断（基线 A/B 同样复现） | `check-if-a-string-contains-all-binary-codes-of-size-k` / `maximum-product-of-word-lengths` / `maximum-length-of-a-concatenated-string-with-unique-characters` / `find-the-prefix-common-array-of-two-arrays` / `number-of-corner-rectangles` / `maximum-rows-covered-by-columns` |
@@ -1811,7 +1811,7 @@ imply Utf8Text: Comparable { ... }
 
 ### G16 `BTreeSet` / `BTreeMap` 缺序关系查询
 
-- 状态：**已提供（2026-11-06 源码复核）**。`BTreeSet.v` 现有 `floor(self, value: T) -> Option<T>`
+- 状态：**已恢复（2026-11-07 实测）**；源码面于 2026-11-06 复核已提供。`BTreeSet.v` 现有 `floor(self, value: T) -> Option<T>`
   与 `ceiling(self, value: T) -> Option<T>`；`BTreeMap.v` 现有 `floor_key` / `ceiling_key`
   与 `nth_key(rank: usize): Option<K>`。影响题的界查询与按秩查询均有直接入口。
 - 原判断（2026-11-04，现已过时）：容器只有「插入 / 存在性 / 删除 / 全量物化」，没有界查询。
@@ -1833,8 +1833,8 @@ micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value �
 - 影响题（3，`nth` 销案后）：`contains-duplicate-iii`（220，`solvers/valkyrie/solution.v:33-42`
   为 `window.to_list()` 快照 + 手写 `lower_bound`，语义是前驱/后继的值查找，即 `floor` / `ceiling`）、
   `find-right-interval`（436，`:26` 调用 `starts.ceiling_key(end)`，语义是「最小 >= 终点的键」）、
-  `sliding-window-median`（480，`:27/30/31` 调用 `counts.nth_key(size / 2)`，语义是**按秩取第 k 小**，
-  计数表必须保留重复值，`BTreeSet` 的去重语义不可替代）。
+  `sliding-window-median`（480，当前实现已改为坐标压缩 + 树状数组按秩（`fenwick_kth`），
+  不再调用 `nth_key`；`nth_key` 因此仍无自然消费者，保留入口、不计入本块摊派面）。
 - 不属 `nth` 影响面（全量物化即可，转观察）：`k-diff-pairs-in-an-array`（532，`:22` 起
   `distinct.to_list()` 后双指针扫描，实际无 `nth` 调用）、`rank-transform-of-an-array`
   （1331，`:15` 起 `distinct.to_list()` 后用 `⁅index⁆` 建名次表；这里是 `ArrayList` 的
@@ -1863,6 +1863,18 @@ micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value �
   `floor` / `ceiling` / `range` 是值查找语义，与 `Cardinal` 不重叠，独立保留。
 - 修复初判：**加 API**（底层节点已按序，查询不需新模型）。**实现前提是 G15 的 `Comparable`
   先落地，否则等于在无约束类型上裸调 `<`，和 `BTreeSet<T: Equal>` 那个不健全容器是同一个病。**
+- 消费者清理（2026-11-07，真构建 + 真跑）：
+  - `contains-duplicate-iii`（220）：删掉 `to_list()` 快照与手写 `lower_bound`，改为
+    `window.floor(value)` / `window.ceiling(value)` 两个方向的距离判定；构建通过，
+    **238/238** PASS。首次真跑暴露形参名与 metadata 键不一致
+    （`AbiSchemaError: args.index_diff: metadata.tests.args 缺少参数 "index_diff"`），
+    已把形参对齐为 `indexDiff` / `valueDiff`，不改 metadata（F5 同类问题在题侧闭环）。
+  - `find-right-interval`（436）：`starts.ceiling_key(end)` 已是源码入口，只清理过时注释；
+    构建通过，**113/113** PASS。
+  - `sliding-window-median`（480）：Fenwick 按秩实现保留，删去对 `nth_key` 的依赖叙述；
+    构建通过，**115/115** PASS。
+  - 结论：G16 值域界查询的 2 处真实绕路（220 前驱/后继、436 下界）全部收敛；
+    `nth_key` 暂无可复验消费者，按「已记、无自然调用点」保留。
 
 ### G17 `char` 缺 `Hash` impl
 
