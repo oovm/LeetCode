@@ -9,18 +9,40 @@ structure Player {
     age: i64
 }
 
-# [提案] 顺序合同缺失：分数升序、同分数年龄升序。
-imply Player: std::operator::Comparable {
-    infix `<`(self, other: Player): bool {
+# `Comparable: Equal` 是硬性前置：超 trait 的 evidence 是 fail-closed，不自动派生。
+imply Player: std::operator::Equal {
+    infix `==`(self, other: Player): bool {
         if self.score != other.score {
-            return self.score < other.score
+            return false
         }
-        return self.age < other.age
+        return self.age == other.age
+    }
+
+    infix `!=`(self, other: Player): bool {
+        return !(self == other)
     }
 }
 
-# 依赖 std C4（待落地 API）：`micro sort<T, C>(list: mut C) where C: Cardinal<Element = T> & Countable, T: Comparable`
-# 该入口尚未落地，`sort` / `sorted` 不是现成能力；本处按定稿签名书写，C4 落地前不计通过。
+# 顺序合同：分数升序、同分数年龄升序。
+imply Player: std::operator::Comparable {
+    micro compare(self, other: Self): Ordering {
+        if self.score < other.score {
+            return Less
+        }
+        if other.score < self.score {
+            return Greater
+        }
+        if self.age < other.age {
+            return Less
+        }
+        if other.age < self.age {
+            return Greater
+        }
+        return Equal
+    }
+}
+
+# `sort<T>(list) where T: Comparable` 已按类型合同派生比较器，单参入口直接取序。
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {

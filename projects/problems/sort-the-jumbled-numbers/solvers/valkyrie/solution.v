@@ -9,15 +9,31 @@ structure Jumbled {
     index: i64
 }
 
-# [提案] `std.operator::Comparable` 尚不存在（今日只有 `Equal` / `Identical` / `Ordinal` / `Cardinal`）。
-imply Jumbled: std::operator::Comparable {
-    infix `<`(self, other: Jumbled): bool {
-        return self.mapped < other.mapped
+# `Comparable: Equal` 是硬性前置：超 trait 的 evidence 是 fail-closed，不自动派生。
+imply Jumbled: std::operator::Equal {
+    infix `==`(self, other: Jumbled): bool {
+        return self.mapped == other.mapped
+    }
+
+    infix `!=`(self, other: Jumbled): bool {
+        return !(self == other)
     }
 }
 
-# 依赖 std C4（待落地 API）：`micro sort<T, C>(list: mut C) where C: Cardinal<Element = T> & Countable, T: Comparable`
-# 该入口尚未落地，`sort` / `sorted` 不是现成能力；本处按定稿签名书写，C4 落地前不计通过。
+# 顺序合同：映射值升序。映射值相等视为同序，由排序稳定性保持原下标次序。
+imply Jumbled: std::operator::Comparable {
+    micro compare(self, other: Self): Ordering {
+        if self.mapped < other.mapped {
+            return Less
+        }
+        if other.mapped < self.mapped {
+            return Greater
+        }
+        return Equal
+    }
+}
+
+# `sort<T>(list) where T: Comparable` 已按类型合同派生比较器，单参入口直接取序。
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {

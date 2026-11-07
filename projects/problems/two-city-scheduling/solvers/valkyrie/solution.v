@@ -9,23 +9,48 @@ structure CostRow {
     city_b: i64
 }
 
-# [提案] 顺序合同缺失：差价升序、再按两城成本兜底。
-imply CostRow: std::operator::Comparable {
-    infix `<`(self, other: CostRow): bool {
-        let self_gap: i64 = self.city_a - self.city_b
-        let other_gap: i64 = other.city_a - other.city_b
-        if self_gap != other_gap {
-            return self_gap < other_gap
-        }
+# `Comparable: Equal` 是硬性前置：超 trait 的 evidence 是 fail-closed，不自动派生。
+imply CostRow: std::operator::Equal {
+    infix `==`(self, other: CostRow): bool {
         if self.city_a != other.city_a {
-            return self.city_a < other.city_a
+            return false
         }
-        return self.city_b < other.city_b
+        return self.city_b == other.city_b
+    }
+
+    infix `!=`(self, other: CostRow): bool {
+        return !(self == other)
     }
 }
 
-# 依赖 std C4（待落地 API）：`micro sort<T, C>(list: mut C) where C: Cardinal<Element = T> & Countable, T: Comparable`
-# 该入口尚未落地，`sort` / `sorted` 不是现成能力；本处按定稿签名书写，C4 落地前不计通过。
+# 顺序合同：差价升序、再按两城成本兜底。
+imply CostRow: std::operator::Comparable {
+    micro compare(self, other: Self): Ordering {
+        let self_gap: i64 = self.city_a - self.city_b
+        let other_gap: i64 = other.city_a - other.city_b
+        if self_gap < other_gap {
+            return Less
+        }
+        if other_gap < self_gap {
+            return Greater
+        }
+        if self.city_a < other.city_a {
+            return Less
+        }
+        if other.city_a < self.city_a {
+            return Greater
+        }
+        if self.city_b < other.city_b {
+            return Less
+        }
+        if other.city_b < self.city_b {
+            return Greater
+        }
+        return Equal
+    }
+}
+
+# `sort<T>(list) where T: Comparable` 已按类型合同派生比较器，单参入口直接取序。
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {

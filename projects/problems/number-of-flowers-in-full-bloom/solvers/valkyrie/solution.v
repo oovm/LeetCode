@@ -9,18 +9,40 @@ structure Flower {
     end: i64
 }
 
-# [提案] `std.operator::Comparable` 尚不存在（今日只有 `Equal` / `Identical` / `Ordinal` / `Cardinal`）。
-imply Flower: std::operator::Comparable {
-    infix `<`(self, other: Flower): bool {
+# `Comparable: Equal` 是硬性前置：超 trait 的 evidence 是 fail-closed，不自动派生。
+imply Flower: std::operator::Equal {
+    infix `==`(self, other: Flower): bool {
         if self.start != other.start {
-            return self.start < other.start
+            return false
         }
-        return self.end < other.end
+        return self.end == other.end
+    }
+
+    infix `!=`(self, other: Flower): bool {
+        return !(self == other)
     }
 }
 
-# 依赖 std C4（待落地 API）：`micro sort<T, C>(list: mut C) where C: Cardinal<Element = T> & Countable, T: Comparable`
-# 该入口尚未落地，`sort` / `sorted` 不是现成能力；本处按定稿签名书写，C4 落地前不计通过。
+# 顺序合同：起点升序、同起点结束日升序。
+imply Flower: std::operator::Comparable {
+    micro compare(self, other: Self): Ordering {
+        if self.start < other.start {
+            return Less
+        }
+        if other.start < self.start {
+            return Greater
+        }
+        if self.end < other.end {
+            return Less
+        }
+        if other.end < self.end {
+            return Greater
+        }
+        return Equal
+    }
+}
+
+# `sort<T>(list) where T: Comparable` 已按类型合同派生比较器，单参入口直接取序。
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {

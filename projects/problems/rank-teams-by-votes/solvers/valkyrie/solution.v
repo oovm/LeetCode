@@ -10,22 +10,51 @@ structure Team {
     ranks: ArrayList<i64>
 }
 
-# [提案] `std.operator::Comparable` 尚不存在（今日只有 `Equal` / `Identical` / `Ordinal` / `Cardinal`）。
-imply Team: std::operator::Comparable {
-    infix `<`(self, other: Team): bool {
+# `Comparable: Equal` 是硬性前置：超 trait 的 evidence 是 fail-closed，不自动派生。
+imply Team: std::operator::Equal {
+    infix `==`(self, other: Team): bool {
+        if self.letter != other.letter {
+            return false
+        }
         let mut index: usize = 0
         while index < self.ranks.length() {
             if self.ranks⁅index⁆ != other.ranks⁅index⁆ {
-                return self.ranks⁅index⁆ > other.ranks⁅index⁆
+                return false
             }
             index = index + 1
         }
-        return self.letter < other.letter
+        return true
+    }
+
+    infix `!=`(self, other: Team): bool {
+        return !(self == other)
     }
 }
 
-# 依赖 std C4（待落地 API）：`micro sort<T, C>(list: mut C) where C: Cardinal<Element = T> & Countable, T: Comparable`
-# 该入口尚未落地，`sort` / `sorted` 不是现成能力；本处按定稿签名书写，C4 落地前不计通过。
+# 顺序合同：第 1 名票数降序、第 2 名票数降序、……、最后按字母升序。
+imply Team: std::operator::Comparable {
+    micro compare(self, other: Self): Ordering {
+        let mut index: usize = 0
+        while index < self.ranks.length() {
+            if other.ranks⁅index⁆ < self.ranks⁅index⁆ {
+                return Less
+            }
+            if self.ranks⁅index⁆ < other.ranks⁅index⁆ {
+                return Greater
+            }
+            index = index + 1
+        }
+        if self.letter < other.letter {
+            return Less
+        }
+        if other.letter < self.letter {
+            return Greater
+        }
+        return Equal
+    }
+}
+
+# `sort<T>(list) where T: Comparable` 已按类型合同派生比较器，单参入口直接取序。
 micro order_items<T>(items: ArrayList<T>): unit
     where T: Equal & Comparable
 {

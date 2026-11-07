@@ -2,16 +2,34 @@ namespace leetcode.maximum_number_of_eaten_apples;
 
 using std.collection;
 
-# 题内触发点：G25 —— 果实按到期日进入 `BinaryHeap`，
-# 顺序来自结构体 `Fruit` 的 `Comparable` 派生（`imply` + `infix <`）。
+# 题内触发点：G25 / G31 —— 果实按到期日进入 `BinaryHeap`，
+# 顺序来自结构体 `Fruit` 的 `Comparable` 合同（`imply` + `compare`）。
 structure Fruit {
     day: i64
     count: i64
 }
 
+# `Comparable: Equal` 是硬性前置：超 trait 的 evidence 是 fail-closed，不自动派生。
+imply Fruit: std::operator::Equal {
+    infix `==`(self, other: Fruit): bool {
+        return self.day == other.day
+    }
+
+    infix `!=`(self, other: Fruit): bool {
+        return !(self == other)
+    }
+}
+
+# `compare` 是三态全序合同唯一必实现成员；`<` / `>` 等是默认体。
 imply Fruit: std::operator::Comparable {
-    infix `<`(self, other: Fruit): bool {
-        return self.day < other.day
+    micro compare(self, other: Self): Ordering {
+        if self.day < other.day {
+            return Less
+        }
+        if other.day < self.day {
+            return Greater
+        }
+        return Equal
     }
 }
 

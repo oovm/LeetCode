@@ -29,20 +29,26 @@ imply IslandShape: std::operator::Equal {
     }
 }
 
-# [提案] 顺序合同缺失：按相对坐标序列字典序比较。
+# 顺序合同：按相对坐标序列字典序比较。
 imply IslandShape: std::operator::Comparable {
-    infix `<`(self, other: IslandShape): bool {
+    micro compare(self, other: Self): Ordering {
         let mut index: usize = 0
         while index < self.cells.length() && index < other.cells.length() {
             if self.cells⁅index⁆ < other.cells⁅index⁆ {
-                return true
+                return Less
             }
-            if self.cells⁅index⁆ > other.cells⁅index⁆ {
-                return false
+            if other.cells⁅index⁆ < self.cells⁅index⁆ {
+                return Greater
             }
             index = index + 1
         }
-        return self.cells.length() < other.cells.length()
+        if self.cells.length() < other.cells.length() {
+            return Less
+        }
+        if other.cells.length() < self.cells.length() {
+            return Greater
+        }
+        return Equal
     }
 }
 
