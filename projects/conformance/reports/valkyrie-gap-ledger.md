@@ -2825,6 +2825,31 @@ Easy 133 题实测 30 题有缺陷、Medium 37 题实测 8 题有缺陷，该「
 `count-the-number-of-special-characters-i` 的失败是实现缺陷而非语料：非字母字符参与
 `1 << (code - 65)` 位运算产生伪重叠，已改为只对 `A-Z` / `a-z` 置位。
 
+### 自动化覆盖新发现（2026-11-07，R34 批次）
+
+R34 26 题在新增三通道断言（Python + TypeScript + Valkyrie wasm）后，V lane 26/26 通过；
+TypeScript lane 暴露 3 题实现缺陷与 2 题语料缺陷。
+
+实现缺陷（非语料，已修且 TS 转绿）：
+
+- `largest-unique-number`：`best` 初值 `-1`，全负唯一值时永不更新，`tests[26]` 期望
+  `-10` 实测 `-1`；改为 `null` 哨兵后与 Python/V 一致。
+- `two-out-of-three`：结果按 `Map` 插入序返回，`tests[9]` 期望升序 `[2,3]` 实测 `[3,2]`；
+  改为升序排序。
+- `min-max-game`：`i < nums.length / 2` 对上取整后越界读 `nums[2*i+1]`，`tests[13]`
+  产出 `NaN`（harness 归一为 `null`）；改为 `Math.floor(nums.length / 2)`。
+  该用例长度为 9，违反题面「长度是 2 的幂」约束，按语料缺陷只标注不改用例。
+
+语料缺陷（只标注，不改用例与期望）：
+
+| 形态 | 题 | 坐标与复现 | 数量 |
+| --- | --- | --- | --- |
+| 期望与题面约束矛盾（矩阵取值 7..16 却期望 `true`） | `check-if-every-row-and-column-contains-all-numbers` | `tests[16]`：10x10 矩阵值 7..16，题面要求每行每列含 `1..n`；TS 按题面返回 `false`，Python/V 仅查重返回 `true` | 1 |
+| 输入越官方约束（`nums[i] <= 100`） | `two-out-of-three` | `tests[60]`：`nums2=[50,100,125,150]`、`nums3=[100,150,200,25]`；期望只含 `1..100` 的 `[25,50,100]`，TS 返回 `[25,50,100,150]` | 1 |
+
+上述 2 题在 `projects/conformance/coverage/verified-problems.json` 中以 `blocked`
+登记 TypeScript lane 与用例坐标；断言要求该失败仍然复现，修复后测试会提示复核清单。
+
 ### 大整数精度扫描（全库，2026-11-04 实测）
 
 - 范围：全部 2842 个 `projects/problems/*/metadata.json`（2869 目录 − 27 个无 metadata），

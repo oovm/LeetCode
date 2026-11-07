@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "batches": [
+    {
+      "id": "r34-2026-11-06",
+      "note": "R34 纯整数 26 题：2026-11-06 整组复跑 2599 条用例全部通过，本文件把它固化为自动化判题断言。",
+      "blocked": [
+        {
+          "id": "check-if-every-row-and-column-contains-all-numbers",
+          "lane": "typescript",
+          "caseIndex": 16,
+          "reason": "用例 #16 的 10x10 矩阵取值为 7..16，违反题面「每行每列包含 1..n」约束；期望 true 与官方语义矛盾，TS 实现按题面返回 false。保留用例不改期望，登记为语料缺陷。"
+        },
+        {
+          "id": "two-out-of-three",
+          "lane": "typescript",
+          "caseIndex": 60,
+          "reason": "用例 #60 的 nums2/nums3 含 150、200，超出官方约束 1..100；期望只保留 1..100 内的值（Python/V 按 1..100 枚举），TS 按无约束集合返回 150。保留用例不改期望，登记为语料缺陷。"
+        }
+      ],
+      "problems": [
+        "toeplitz-matrix",
+        "lucky-numbers-in-a-matrix",
+        "check-if-every-row-and-column-contains-all-numbers",
+        "determine-whether-matrix-can-be-obtained-by-rotation",
+        "check-if-matrix-is-x-matrix",
+        "matrix-similarity-after-cyclic-shifts",
+        "largest-unique-number",
+        "divide-array-into-equal-pairs",
+        "number-of-beautiful-pairs",
+        "count-pairs-that-form-a-complete-day-i",
+        "find-the-xor-of-numbers-which-appear-twice",
+        "two-out-of-three",
+        "longest-strictly-increasing-or-strictly-decreasing-subarray",
+        "longest-even-odd-subarray-with-threshold",
+        "shortest-subarray-with-or-at-least-k-i",
+        "find-subarrays-with-equal-sum",
+        "count-partitions-with-even-sum-difference",
+        "minimum-difference-between-highest-and-lowest-of-k-scores",
+        "longest-subsequence-with-limited-sum",
+        "kth-missing-positive-number",
+        "maximum-product-difference-between-two-pairs",
+        "determine-the-winner-of-a-bowling-game",
+        "min-max-game",
+        "minimum-total-operations",
+        "minimum-operations-to-make-array-values-equal-to-k",
+        "minimum-number-of-operations-to-make-elements-in-array-distinct"
+      ]
+    }
+  ]
+}

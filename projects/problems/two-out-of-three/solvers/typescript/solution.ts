@@ -5,6 +5,6 @@ export class Solution {
         for (const set of sets) {
             for (const v of set) count.set(v, (count.get(v) ?? 0) + 1);
         }
-        return [...count.entries()].filter(([, c]) => c >= 2).map(([v]) => v);
+        return [...count.entries()].filter(([, c]) => c >= 2).map(([v]) => v).sort((a, b) => a - b);
     }
 }

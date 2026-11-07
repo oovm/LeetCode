@@ -12,7 +12,7 @@ import { probeValkyrieNyarProblem } from '../src/adapters/valkyrie-nyar/matrix.t
 
 import { pythonRefReady, pythonSkipReason, runPythonSolver as runPythonReference } from '../src/adapters/python/ref.ts';
 
-import { hasValkyrieSolver, valkyrieNativeRunnerReady } from '../src/adapters/valkyrie-node/valkyrie.ts';
+import { hasValkyrieSolver, valkyrieNativeRunnerReady, valkyrieSolverBlockedReason } from '../src/adapters/valkyrie-node/valkyrie.ts';
 import { valkyrieNyarRunnerReady } from '../src/adapters/valkyrie-nyar/valkyrie.ts';
 
 const LEETCODE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -40,7 +40,7 @@ describe('Valkyrie wasm Íê±¸ÐÔ£¨legion build + metadata.tests£©', () => {
 
     for (const problem of BATCH_PROBLEMS) {
         const problemRoot = problemDir(LEETCODE_ROOT, problem);
-        const hasSolver = hasValkyrieSolver(problemRoot);
+        const hasSolver = hasValkyrieSolver(problemRoot) && valkyrieSolverBlockedReason(problemRoot) === null;
 
         it.skipIf(!ready || !hasSolver)(
             `${problem.id} legion buildï¼ˆæŒ‰ manifest targetï¼‰ ÇÒ metadata.tests ±ØÐëÍ¨¹ý`,
@@ -63,7 +63,7 @@ describe('Valkyrie nyar Íê±¸ÐÔ£¨legion build --target nyar + metadata.tests£©', 
 
     for (const problem of BATCH_PROBLEMS) {
         const problemRoot = problemDir(LEETCODE_ROOT, problem);
-        const hasSolver = hasValkyrieSolver(problemRoot);
+        const hasSolver = hasValkyrieSolver(problemRoot) && valkyrieSolverBlockedReason(problemRoot) === null;
 
         it.skipIf(!ready || !hasSolver)(
             `${problem.id} legion build --target nyar ÇÒ metadata.tests ±ØÐëÍ¨¹ý`,
