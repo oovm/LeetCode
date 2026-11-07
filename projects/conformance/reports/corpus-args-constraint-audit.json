@@ -1,0 +1,1324 @@
+{
+  "generatedAt": "2026-11-07T05:43:33.608Z",
+  "baseline": "git HEAD",
+  "note": "按 HEAD 原始语料套用题面约束；repaired 为就地修正，quarantined 为作废用例。",
+  "problems": [
+    {
+      "id": "toeplitz-matrix",
+      "totalBefore": 84,
+      "totalAfter": 84,
+      "violations": []
+    },
+    {
+      "id": "lucky-numbers-in-a-matrix",
+      "totalBefore": 87,
+      "totalAfter": 60,
+      "violations": [
+        {
+          "index": 0,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 4,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 7,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 14,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 22,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 24,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 27,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 28,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 30,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 32,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 35,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 38,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 43,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 44,
+          "reason": "args.matrix[3][0]=100001 越界，要求 1..100000",
+          "action": "quarantined"
+        },
+        {
+          "index": 51,
+          "reason": "args.matrix[4][4]=0 越界，要求 1..100000",
+          "action": "quarantined"
+        },
+        {
+          "index": 52,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 53,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 55,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 58,
+          "reason": "args.matrix[3][2]=0 越界，要求 1..100000",
+          "action": "quarantined"
+        },
+        {
+          "index": 59,
+          "reason": "args.matrix[2][4]=0 越界，要求 1..100000",
+          "action": "quarantined"
+        },
+        {
+          "index": 62,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 68,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 71,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 73,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 83,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        },
+        {
+          "index": 84,
+          "reason": "args.matrix[0][4]=0 越界，要求 1..100000",
+          "action": "quarantined"
+        },
+        {
+          "index": 86,
+          "reason": "args.matrix 元素不唯一",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "check-if-every-row-and-column-contains-all-numbers",
+      "totalBefore": 57,
+      "totalAfter": 52,
+      "violations": [
+        {
+          "index": 1,
+          "reason": "args.matrix[0][0]=5 越界，要求 1..4",
+          "action": "quarantined"
+        },
+        {
+          "index": 11,
+          "reason": "args.matrix[0].length=3 与行数 4 不一致",
+          "action": "quarantined"
+        },
+        {
+          "index": 16,
+          "reason": "args.matrix[0][4]=11 越界，要求 1..10",
+          "action": "repaired"
+        },
+        {
+          "index": 35,
+          "reason": "args.matrix[0].length=100 与行数 1 不一致",
+          "action": "quarantined"
+        },
+        {
+          "index": 40,
+          "reason": "args.matrix[0].length=3 与行数 4 不一致",
+          "action": "quarantined"
+        },
+        {
+          "index": 47,
+          "reason": "args.matrix[0][0]=9 越界，要求 1..5",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "determine-whether-matrix-can-be-obtained-by-rotation",
+      "totalBefore": 79,
+      "totalAfter": 79,
+      "violations": []
+    },
+    {
+      "id": "check-if-matrix-is-x-matrix",
+      "totalBefore": 70,
+      "totalAfter": 70,
+      "violations": []
+    },
+    {
+      "id": "matrix-similarity-after-cyclic-shifts",
+      "totalBefore": 99,
+      "totalAfter": 86,
+      "violations": [
+        {
+          "index": 3,
+          "reason": "args.mat[0][2]=30 越界，要求 1..25",
+          "action": "quarantined"
+        },
+        {
+          "index": 12,
+          "reason": "args.k=100 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 21,
+          "reason": "args.mat[2][1]=26 越界，要求 1..25",
+          "action": "quarantined"
+        },
+        {
+          "index": 27,
+          "reason": "args.mat[1][4]=0 越界，要求 1..25",
+          "action": "quarantined"
+        },
+        {
+          "index": 48,
+          "reason": "args.mat[1][2]=30 越界，要求 1..25",
+          "action": "quarantined"
+        },
+        {
+          "index": 52,
+          "reason": "args.mat[2][1]=0 越界，要求 1..25",
+          "action": "quarantined"
+        },
+        {
+          "index": 72,
+          "reason": "args.k=100 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 73,
+          "reason": "args.mat[3][4]=26 越界，要求 1..25",
+          "action": "quarantined"
+        },
+        {
+          "index": 80,
+          "reason": "args.mat[0][2]=30 越界，要求 1..25",
+          "action": "quarantined"
+        },
+        {
+          "index": 82,
+          "reason": "args.mat[0][2]=30 越界，要求 1..25",
+          "action": "quarantined"
+        },
+        {
+          "index": 89,
+          "reason": "args.k=100 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 95,
+          "reason": "args.mat[1][4]=0 越界，要求 1..25",
+          "action": "quarantined"
+        },
+        {
+          "index": 98,
+          "reason": "args.k=100 越界，要求 1..50",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "largest-unique-number",
+      "totalBefore": 89,
+      "totalAfter": 86,
+      "violations": [
+        {
+          "index": 21,
+          "reason": "args.nums[9]=1011 越界，要求 0..1000",
+          "action": "quarantined"
+        },
+        {
+          "index": 26,
+          "reason": "args.nums[9]=-1 越界，要求 0..1000",
+          "action": "quarantined"
+        },
+        {
+          "index": 78,
+          "reason": "args.nums[19]=1001 越界，要求 0..1000",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "divide-array-into-equal-pairs",
+      "totalBefore": 91,
+      "totalAfter": 83,
+      "violations": [
+        {
+          "index": 29,
+          "reason": "args.nums[22]=505 越界，要求 1..500",
+          "action": "quarantined"
+        },
+        {
+          "index": 33,
+          "reason": "args.nums.length 必须为偶数",
+          "action": "quarantined"
+        },
+        {
+          "index": 41,
+          "reason": "args.nums[18]=0 越界，要求 1..500",
+          "action": "quarantined"
+        },
+        {
+          "index": 58,
+          "reason": "args.nums.length 必须为偶数",
+          "action": "quarantined"
+        },
+        {
+          "index": 60,
+          "reason": "args.nums[10]=600 越界，要求 1..500",
+          "action": "quarantined"
+        },
+        {
+          "index": 68,
+          "reason": "args.nums.length 必须为偶数",
+          "action": "quarantined"
+        },
+        {
+          "index": 76,
+          "reason": "args.nums.length 必须为偶数",
+          "action": "quarantined"
+        },
+        {
+          "index": 83,
+          "reason": "args.nums[4]=789 越界，要求 1..500",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "number-of-beautiful-pairs",
+      "totalBefore": 102,
+      "totalAfter": 66,
+      "violations": [
+        {
+          "index": 0,
+          "reason": "args.nums[0]=100 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 5,
+          "reason": "args.nums[2]=90 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 12,
+          "reason": "args.nums[0]=10 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 18,
+          "reason": "args.nums[2]=3210 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 21,
+          "reason": "args.nums[7]=210 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 23,
+          "reason": "args.nums[3]=40 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 26,
+          "reason": "args.nums[2]=3210 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 30,
+          "reason": "args.nums[3]=20 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 31,
+          "reason": "args.nums[0]=12345 越界，要求 1..9999",
+          "action": "quarantined"
+        },
+        {
+          "index": 32,
+          "reason": "args.nums[9]=10 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 35,
+          "reason": "args.nums[0]=12345 越界，要求 1..9999",
+          "action": "quarantined"
+        },
+        {
+          "index": 39,
+          "reason": "args.nums[4]=90 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 44,
+          "reason": "args.nums[9]=1010 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 45,
+          "reason": "args.nums[3]=11213 越界，要求 1..9999",
+          "action": "quarantined"
+        },
+        {
+          "index": 46,
+          "reason": "args.nums[1]=50 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 47,
+          "reason": "args.nums[9]=90 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 50,
+          "reason": "args.nums[4]=10 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 53,
+          "reason": "args.nums[0]=10101 越界，要求 1..9999",
+          "action": "quarantined"
+        },
+        {
+          "index": 54,
+          "reason": "args.nums[8]=90 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 55,
+          "reason": "args.nums[7]=890 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 58,
+          "reason": "args.nums[2]=3210 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 64,
+          "reason": "args.nums[0]=10 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 69,
+          "reason": "args.nums[6]=890 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 71,
+          "reason": "args.nums[9]=10 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 72,
+          "reason": "args.nums[2]=3210 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 76,
+          "reason": "args.nums[9]=30 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 77,
+          "reason": "args.nums[6]=3210 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 81,
+          "reason": "args.nums[8]=10 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 85,
+          "reason": "args.nums[0]=13579 越界，要求 1..9999",
+          "action": "quarantined"
+        },
+        {
+          "index": 87,
+          "reason": "args.nums[0]=13579 越界，要求 1..9999",
+          "action": "quarantined"
+        },
+        {
+          "index": 88,
+          "reason": "args.nums[2]=3210 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 93,
+          "reason": "args.nums[0]=111222 越界，要求 1..9999",
+          "action": "quarantined"
+        },
+        {
+          "index": 96,
+          "reason": "args.nums[4]=60 必须是 10 的倍数以外",
+          "action": "quarantined"
+        },
+        {
+          "index": 97,
+          "reason": "args.nums[0]=12345 越界，要求 1..9999",
+          "action": "quarantined"
+        },
+        {
+          "index": 98,
+          "reason": "args.nums[0]=11111 越界，要求 1..9999",
+          "action": "quarantined"
+        },
+        {
+          "index": 101,
+          "reason": "args.nums[2]=8910 必须是 10 的倍数以外",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "count-pairs-that-form-a-complete-day-i",
+      "totalBefore": 83,
+      "totalAfter": 83,
+      "violations": []
+    },
+    {
+      "id": "find-the-xor-of-numbers-which-appear-twice",
+      "totalBefore": 120,
+      "totalAfter": 80,
+      "violations": [
+        {
+          "index": 6,
+          "reason": "args.nums 中 5 出现 4 次，题面要求至多两次",
+          "action": "quarantined"
+        },
+        {
+          "index": 12,
+          "reason": "args.nums.length=51 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 14,
+          "reason": "args.nums 中 3 出现 6 次，题面要求至多两次",
+          "action": "quarantined"
+        },
+        {
+          "index": 16,
+          "reason": "args.nums.length=51 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 21,
+          "reason": "args.nums[4]=55 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 31,
+          "reason": "args.nums.length=65 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 34,
+          "reason": "args.nums.length=55 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 36,
+          "reason": "args.nums[10]=60 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 39,
+          "reason": "args.nums.length=70 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 45,
+          "reason": "args.nums 中 5 出现 5 次，题面要求至多两次",
+          "action": "quarantined"
+        },
+        {
+          "index": 46,
+          "reason": "args.nums.length=72 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 49,
+          "reason": "args.nums.length=100 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 51,
+          "reason": "args.nums[4]=56 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 53,
+          "reason": "args.nums 中 3 出现 45 次，题面要求至多两次",
+          "action": "quarantined"
+        },
+        {
+          "index": 55,
+          "reason": "args.nums[16]=51 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 61,
+          "reason": "args.nums 中 35 出现 3 次，题面要求至多两次",
+          "action": "quarantined"
+        },
+        {
+          "index": 62,
+          "reason": "args.nums.length=60 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 64,
+          "reason": "args.nums.length=62 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 67,
+          "reason": "args.nums 中 3 出现 43 次，题面要求至多两次",
+          "action": "quarantined"
+        },
+        {
+          "index": 69,
+          "reason": "args.nums.length=52 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 70,
+          "reason": "args.nums.length=52 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 71,
+          "reason": "args.nums[3]=52 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 75,
+          "reason": "args.nums.length=60 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 78,
+          "reason": "args.nums.length=98 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 80,
+          "reason": "args.nums[20]=55 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 81,
+          "reason": "args.nums.length=66 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 82,
+          "reason": "args.nums[8]=53 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 85,
+          "reason": "args.nums 中 5 出现 3 次，题面要求至多两次",
+          "action": "quarantined"
+        },
+        {
+          "index": 89,
+          "reason": "args.nums[17]=51 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 92,
+          "reason": "args.nums.length=51 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 93,
+          "reason": "args.nums.length=60 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 99,
+          "reason": "args.nums.length=60 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 101,
+          "reason": "args.nums[34]=51 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 104,
+          "reason": "args.nums[4]=55 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 105,
+          "reason": "args.nums[14]=56 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 111,
+          "reason": "args.nums[6]=60 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 116,
+          "reason": "args.nums[3]=60 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 117,
+          "reason": "args.nums.length=60 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 118,
+          "reason": "args.nums.length=60 越界，要求 1..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 119,
+          "reason": "args.nums.length=56 越界，要求 1..50",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "two-out-of-three",
+      "totalBefore": 100,
+      "totalAfter": 97,
+      "violations": [
+        {
+          "index": 60,
+          "reason": "args.nums2[2]=125 越界，要求 1..100",
+          "action": "repaired"
+        },
+        {
+          "index": 77,
+          "reason": "args.nums3[2]=125 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 80,
+          "reason": "args.nums2[9]=108 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 95,
+          "reason": "args.nums3[4]=111 越界，要求 1..100",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "longest-strictly-increasing-or-strictly-decreasing-subarray",
+      "totalBefore": 139,
+      "totalAfter": 138,
+      "violations": [
+        {
+          "index": 128,
+          "reason": "args.nums[9]=0 越界，要求 1..50",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "longest-even-odd-subarray-with-threshold",
+      "totalBefore": 124,
+      "totalAfter": 121,
+      "violations": [
+        {
+          "index": 43,
+          "reason": "args.nums[5]=0 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 72,
+          "reason": "args.nums[8]=0 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 81,
+          "reason": "args.nums[7]=0 越界，要求 1..100",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "shortest-subarray-with-or-at-least-k-i",
+      "totalBefore": 109,
+      "totalAfter": 73,
+      "violations": [
+        {
+          "index": 10,
+          "reason": "args.k=100 越界，要求 0..63",
+          "action": "quarantined"
+        },
+        {
+          "index": 14,
+          "reason": "args.k=70 越界，要求 0..63",
+          "action": "quarantined"
+        },
+        {
+          "index": 22,
+          "reason": "args.nums[2]=63 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 28,
+          "reason": "args.nums[2]=75 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 29,
+          "reason": "args.nums[6]=64 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 32,
+          "reason": "args.nums[6]=56 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 34,
+          "reason": "args.nums[0]=4095 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 39,
+          "reason": "args.nums[3]=51 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 40,
+          "reason": "args.k=80 越界，要求 0..63",
+          "action": "quarantined"
+        },
+        {
+          "index": 43,
+          "reason": "args.nums[5]=96 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 45,
+          "reason": "args.nums[6]=64 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 49,
+          "reason": "args.k=120 越界，要求 0..63",
+          "action": "quarantined"
+        },
+        {
+          "index": 50,
+          "reason": "args.nums[5]=63 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 52,
+          "reason": "args.nums[6]=64 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 53,
+          "reason": "args.nums[6]=64 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 61,
+          "reason": "args.nums[5]=60 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 66,
+          "reason": "args.nums[0]=63 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 68,
+          "reason": "args.nums[5]=63 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 70,
+          "reason": "args.nums[1]=66 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 71,
+          "reason": "args.nums[5]=63 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 72,
+          "reason": "args.nums[0]=128 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 77,
+          "reason": "args.nums[6]=64 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 79,
+          "reason": "args.nums[6]=64 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 80,
+          "reason": "args.nums[5]=63 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 81,
+          "reason": "args.nums[3]=56 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 83,
+          "reason": "args.nums[9]=55 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 86,
+          "reason": "args.nums[6]=64 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 87,
+          "reason": "args.nums[3]=54 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 88,
+          "reason": "args.nums[6]=56 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 89,
+          "reason": "args.k=70 越界，要求 0..63",
+          "action": "quarantined"
+        },
+        {
+          "index": 90,
+          "reason": "args.k=1023 越界，要求 0..63",
+          "action": "quarantined"
+        },
+        {
+          "index": 91,
+          "reason": "args.nums[5]=63 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 93,
+          "reason": "args.nums[7]=56 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 96,
+          "reason": "args.nums[6]=64 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 102,
+          "reason": "args.nums[2]=64 越界，要求 0..50",
+          "action": "quarantined"
+        },
+        {
+          "index": 104,
+          "reason": "args.nums[0]=63 越界，要求 0..50",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "find-subarrays-with-equal-sum",
+      "totalBefore": 119,
+      "totalAfter": 119,
+      "violations": []
+    },
+    {
+      "id": "count-partitions-with-even-sum-difference",
+      "totalBefore": 92,
+      "totalAfter": 77,
+      "violations": [
+        {
+          "index": 11,
+          "reason": "args.nums[9]=101 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 13,
+          "reason": "args.nums[14]=105 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 14,
+          "reason": "args.nums[3]=109 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 15,
+          "reason": "args.nums[1]=200 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 16,
+          "reason": "args.nums[0]=101 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 24,
+          "reason": "args.nums[4]=101 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 30,
+          "reason": "args.nums.length=101 越界，要求 2..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 39,
+          "reason": "args.nums[2]=101 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 43,
+          "reason": "args.nums[24]=101 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 51,
+          "reason": "args.nums[2]=101 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 70,
+          "reason": "args.nums[11]=144 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 75,
+          "reason": "args.nums[0]=101 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 81,
+          "reason": "args.nums[7]=128 越界，要求 1..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 86,
+          "reason": "args.nums.length=106 越界，要求 2..100",
+          "action": "quarantined"
+        },
+        {
+          "index": 90,
+          "reason": "args.nums[10]=110 越界，要求 1..100",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "minimum-difference-between-highest-and-lowest-of-k-scores",
+      "totalBefore": 95,
+      "totalAfter": 89,
+      "violations": [
+        {
+          "index": 47,
+          "reason": "args.nums[5]=222222 越界，要求 0..100000",
+          "action": "quarantined"
+        },
+        {
+          "index": 59,
+          "reason": "args.nums[11]=-10 越界，要求 0..100000",
+          "action": "quarantined"
+        },
+        {
+          "index": 69,
+          "reason": "args.nums[5]=1000000 越界，要求 0..100000",
+          "action": "quarantined"
+        },
+        {
+          "index": 83,
+          "reason": "args.nums[7]=-5 越界，要求 0..100000",
+          "action": "quarantined"
+        },
+        {
+          "index": 85,
+          "reason": "args.nums[6]=1000000 越界，要求 0..100000",
+          "action": "quarantined"
+        },
+        {
+          "index": 93,
+          "reason": "args.nums[6]=1000000 越界，要求 0..100000",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "longest-subsequence-with-limited-sum",
+      "totalBefore": 108,
+      "totalAfter": 98,
+      "violations": [
+        {
+          "index": 26,
+          "reason": "args.queries[19]=1048575 越界，要求 1..1000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 30,
+          "reason": "args.nums[31]=0 越界，要求 1..1000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 39,
+          "reason": "args.queries[6]=0 越界，要求 1..1000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 41,
+          "reason": "args.queries[1]=1999998 越界，要求 1..1000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 48,
+          "reason": "args.queries[0]=0 越界，要求 1..1000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 68,
+          "reason": "args.nums[0]=987654321 越界，要求 1..1000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 77,
+          "reason": "args.queries[4]=10000000 越界，要求 1..1000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 82,
+          "reason": "args.queries[19]=1048575 越界，要求 1..1000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 89,
+          "reason": "args.queries[0]=5000000 越界，要求 1..1000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 96,
+          "reason": "args.queries[1]=1500000 越界，要求 1..1000000",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "kth-missing-positive-number",
+      "totalBefore": 109,
+      "totalAfter": 108,
+      "violations": [
+        {
+          "index": 64,
+          "reason": "args.arr[14]=1597 越界，要求 1..1000",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "maximum-product-difference-between-two-pairs",
+      "totalBefore": 98,
+      "totalAfter": 95,
+      "violations": [
+        {
+          "index": 5,
+          "reason": "args.nums[9]=0 越界，要求 1..10000",
+          "action": "quarantined"
+        },
+        {
+          "index": 84,
+          "reason": "args.nums[3]=12000 越界，要求 1..10000",
+          "action": "quarantined"
+        },
+        {
+          "index": 91,
+          "reason": "args.nums[4]=12500 越界，要求 1..10000",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "determine-the-winner-of-a-bowling-game",
+      "totalBefore": 93,
+      "totalAfter": 92,
+      "violations": [
+        {
+          "index": 82,
+          "reason": "args.player1 与 args.player2 长度不一致",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "min-max-game",
+      "totalBefore": 93,
+      "totalAfter": 80,
+      "violations": [
+        {
+          "index": 13,
+          "reason": "args.nums.length=9 不是 2 的幂",
+          "action": "quarantined"
+        },
+        {
+          "index": 22,
+          "reason": "args.nums.length=100 不是 2 的幂",
+          "action": "quarantined"
+        },
+        {
+          "index": 28,
+          "reason": "args.nums.length=25 不是 2 的幂",
+          "action": "quarantined"
+        },
+        {
+          "index": 33,
+          "reason": "args.nums[9]=0 越界，要求 1..1000000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 38,
+          "reason": "args.nums[5]=0 越界，要求 1..1000000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 44,
+          "reason": "args.nums[7]=0 越界，要求 1..1000000000",
+          "action": "quarantined"
+        },
+        {
+          "index": 53,
+          "reason": "args.nums.length=65 不是 2 的幂",
+          "action": "quarantined"
+        },
+        {
+          "index": 55,
+          "reason": "args.nums.length=41 不是 2 的幂",
+          "action": "quarantined"
+        },
+        {
+          "index": 65,
+          "reason": "args.nums.length=40 不是 2 的幂",
+          "action": "quarantined"
+        },
+        {
+          "index": 82,
+          "reason": "args.nums.length=55 不是 2 的幂",
+          "action": "quarantined"
+        },
+        {
+          "index": 83,
+          "reason": "args.nums.length=31 不是 2 的幂",
+          "action": "quarantined"
+        },
+        {
+          "index": 86,
+          "reason": "args.nums.length=33 不是 2 的幂",
+          "action": "quarantined"
+        },
+        {
+          "index": 90,
+          "reason": "args.nums[30]=0 越界，要求 1..1000000000",
+          "action": "quarantined"
+        }
+      ]
+    },
+    {
+      "id": "minimum-total-operations",
+      "totalBefore": 123,
+      "totalAfter": 123,
+      "violations": []
+    },
+    {
+      "id": "minimum-operations-to-make-array-values-equal-to-k",
+      "totalBefore": 120,
+      "totalAfter": 120,
+      "violations": []
+    },
+    {
+      "id": "minimum-number-of-operations-to-make-elements-in-array-distinct",
+      "totalBefore": 116,
+      "totalAfter": 115,
+      "violations": [
+        {
+          "index": 78,
+          "reason": "args.nums[9]=0 越界，要求 1..100",
+          "action": "quarantined"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalBefore": 2599,
+    "totalAfter": 2374,
+    "totalViolations": 227,
+    "totalRepaired": 2,
+    "totalQuarantined": 225
+  }
+}
