@@ -5,8 +5,8 @@ using std.collection;
 # 身高降序、同身高 k 升序，再逐个按 k 插入：高个子先就位，矮个子插到第 k 个高个子前面即定局。
 # 题内触发点: G11 —— 排序入口只收 `ArrayList<T>`，`Array<[i64]>`（二维定长）没有 `sorted_by`；
 # 这里对 `ArrayList<ArrayList<i64>>` 排序，比较器逐字段比较，不依赖 `Array` 的排序面。
-# 顺带确认 `ArrayList.insert(ordinal, value)` 的语义是「先位置、后元素」，与 TS `splice(k, 0, p)` 同向
-# （观察 2 记录的参数语义清单第 2 条）。
+# 顺带确认 `ArrayList.insert(ordinal, value)` 是 1 基序数：`ordinal == 0` 直接返回，
+# 题面 k（0 基）必须映射为 `k + 1` 才能插到第 k 个高个子前面。
 micro compare_people(a: ArrayList<i64>, b: ArrayList<i64>) -> i32 {
     let height_a: i64 = a⁅0⁆
     let height_b: i64 = b⁅0⁆
@@ -44,7 +44,12 @@ micro reconstruct_queue(people: ArrayList<ArrayList<i64>>) -> ArrayList<ArrayLis
     while i < ordered.length() {
         let person: ArrayList<i64> = ordered⁅i⁆
         let at: usize = person⁅1⁆ as usize
-        result.insert(at, person)
+        if at >= result.length() {
+            result.push(person)
+        }
+        else {
+            result.insert(at + 1, person)
+        }
         i = i + 1
     }
     return result
