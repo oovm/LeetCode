@@ -52,7 +52,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G16 `BTreeSet` / `BTreeMap` 界查询 | b | 3 处 × O(k) 物化 + 手写二分（其中 1 处为按秩查询；`nth` 已销案） |
 | G17 `char` 缺 `Hash` | **已恢复**（2026-11-07 实测）：`HashPrimitives.v:53` 的 `imply char: Hash` 已随 addon 生效，8 题以 `HashMap<char, i64>` / `DisjointSet<char>` 真跑 **778/778** 用例 PASS；另 3 题仍红但均非 `Hash` 阻塞（详见 G17 小节） | `custom-sort-string` / `find-words-that-can-be-formed-by-characters` / `longest-repeating-character-replacement` / `longest-substring-with-at-most-k-distinct-characters` / `word-subsets` / `permutation-in-string` / `sort-characters-by-frequency` / `task-scheduler` |
 | G22 整数位元查询 | b | 5 处 × 重复位运算 |
-| G25 `BitSet` 基数 / 复制 | b | 4 处 × 手写 O(bits) 计数，丢掉位并行 |
+| G25 `BitSet` 基数 / 复制 | **已恢复**（2026-11-07 实测）：`count` / `clone` 已随源码提供，6 个消费者真跑 **479/509** 用例 PASS；余 30 条由 `find-the-prefix-common-array-of-two-arrays` 语料 A/B 长度不一致中断（基线 A/B 同样复现） | `check-if-a-string-contains-all-binary-codes-of-size-k` / `maximum-product-of-word-lengths` / `maximum-length-of-a-concatenated-string-with-unique-characters` / `find-the-prefix-common-array-of-two-arrays` / `number-of-corner-rectangles` / `maximum-rows-covered-by-columns` |
 | G26 序关系无可用合同 | b | 14 处 × 同一套序逻辑 |
 | G28 `BinaryHeap` 的 `Comparable` 义务传播 | c | 13 处调用点（5 处裸 `i64`、1 处自定义元素、7 处按提案入口写） |
 
@@ -2083,7 +2083,7 @@ micro to_sorted_list(self) -> ArrayList<T> where T: Comparable
 
 ### G25 `BitSet` 没有基数 / 规模 / 迭代 / 复制入口
 
-- 状态：**已提供（2026-11-06 源码复核）**。`std/source/collection/BitSet.v` 现有
+- 状态：**已恢复（2026-11-07 实测）**；源码面于 2026-11-06 复核已提供。`std/source/collection/BitSet.v` 现有
   `count(self): usize`（置位数）、`bit_length(self): usize`、`length(self): usize`、
   `clone(self): Self`、`iter(self) -> BitSetIterator` 与 `into_iterator(self)`，
   以及原有的 `new` / `with_capacity` / `set` / `clear_bit` / `get` / `toggle` /
@@ -2150,6 +2150,25 @@ imply BitSet: Equal
   均不改变存储形态。
 - 与观察 1 的关系：`BitSet` 同样游离在「类型 × {Equal, Hash}」矩阵之外；本条只记 `Equal`，
   `Hash` 对位集意义有限，不单列。
+- 消费者清理（2026-11-07，真构建 + 真跑）：
+  - `check-if-a-string-contains-all-binary-codes-of-size-k`（1461）：删掉外部 `found` 计数器，改为
+    `codes.count() == universe`；构建通过，**102/102** PASS。
+  - `maximum-product-of-word-lengths`（318）：`disjoint` 从 26 次逐位 `get` 改为
+    `left.clone()` → `intersect(right)` → `is_empty()`；构建通过，**67/67** PASS。
+  - `maximum-length-of-a-concatenated-string-with-unique-characters`（1239）：
+    `clone` + `union` + `count` 理想形态保留，删除「待补 API」注释；构建通过，**87/87** PASS。
+  - `find-the-prefix-common-array-of-two-arrays`（2657）：`clone` + `intersect` + `count` 保留，
+    构建通过；真跑 **42/72** 后在 `tests[42]` 触发 `RuntimeError: unreachable`——该用例
+    `A.length=32`、`B.length=30`、`expected.length=30`，题面要求两侧等长，解按 `A.length` 索引
+    `B` 越界。`HEAD` 基线 A/B 独立构建后同样停在 `tests[42]`，不是本块引入；`tests[45]`
+    （`A=50`/`B=46`）是同类语料缺陷。不删用例、不改语料，按缺陷坐标保留。
+  - `number-of-corner-rectangles`（750）：`intersect` + `count` 保留；构建通过，**82/82** PASS。
+  - `maximum-rows-covered-by-columns`（2397）：清理时发现覆盖判定差集方向反了——原
+    `chosen - row` 判的是「选中列都在该行为 1」，题面要求「该行的 1 都在选中列」，即
+    `row - chosen`。改为 `rows[r].clone()` 后 `difference(chosen)`；构建通过，**99/99** PASS
+    （修复前同一产物在 `tests[2]` 报 `expected "0", got "3"`）。
+  - 结论：`count` / `clone` 的 4 处绕路调用点全部收敛；本条源码侧「已提供」与消费者侧「已实测」
+    两者齐备，残余仅 `[u64]` / `[bool]` 互转与 `Equal` / `Hash`（仍无自然调用点）。
 
 ### G26 自定义类型的序关系没有可用合同（`Comparable` 缺失 + 排序入口不按合同取序）
 
