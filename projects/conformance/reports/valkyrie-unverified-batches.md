@@ -1118,6 +1118,12 @@
 | `check-if-a-string-is-an-acronym-of-words` | `isAcronym` | `bool` | `utf8` Cardinal 取 `char` 等值比较（不进哈希 / 有序） |
 | `shortest-completing-word` | `shortestCompletingWord` | `utf8` | **G17 新实例**（`HashMap<char, i64>` 牌照频次 + `to_lower`） |
 
+- 2026-11-07 复跑（`char: Hash` 生效后）：`shortest-completing-word` 编译运行通过，1/85 PASS，
+  首败 `tests[1]: expected null, got "these"`（语义失败，非 G17）。
+  `find-resultant-array-after-removing-anagrams` 构建失败
+  `unresolved call \`infix ==\` in remove_anagrams`（`solution.v:38`，`MultiSet<char>` 无 `equals`，G24）。
+  本批其余 6 题本轮未复跑。
+
 ## 批次 R6-2026-11-04（理想解滚动批次 6，8 题，写完未构建）
 
 - 范围：此前 `solution.v` 为阻塞标记（`# blocked: std.collection 数组参数读取`）或空文件的 8 题；

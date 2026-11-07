@@ -39,7 +39,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 
 ## 缺口与观察分级（2026-11-04 重判）
 
-真缺口（9）：G2 / G3 / G10 / G16 / G17 / G22 / G25 / G26 / G28。
+真缺口（8）：G2 / G3 / G10 / G16 / G22 / G25 / G26 / G28。
 
 | 编号 | 判据 | 摊派面 |
 | --- | --- | --- |
@@ -50,7 +50,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G11 `sorted_by` | **已恢复**（2026-11-07 实测）：`std.collection.sort` 的 `sorted_by<T>(items: ArrayList<T>, cmp): ArrayList<T>`（`3e02e7d`）已提供，8 题改用它后真跑 **767/767** 用例 PASS，另删除 4 处副本脚手架；残余 `[T]` 带比较器入口见 G11 小节 | `maximum-subsequence-score` / `maximum-number-of-events-that-can-be-attended` / `the-k-weakest-rows-in-a-matrix` / `find-subsequence-of-length-k-with-the-largest-sum` / `high-five` / `array-of-doubled-pairs` / `advantage-shuffle` / `the-k-strongest-values-in-an-array` / `meeting-rooms` / `remove-covered-intervals` / `minimum-moves-to-equal-array-elements-ii` / `merge-similar-items` |
 | G13 `utf8` 字典序比较 | **已恢复**（2026-11-07）：`Utf8Text` 的 `Comparable` 合同已提供，5 处消费者改用 `natural_order` 比较器；真跑 420/420 用例 PASS | `accounts-merge` / `reorder-data-in-log-files` / `top-k-frequent-words` / `find-smallest-letter-greater-than-target` / `phone-number-prefix` |
 | G16 `BTreeSet` / `BTreeMap` 界查询 | b | 3 处 × O(k) 物化 + 手写二分（其中 1 处为按秩查询；`nth` 已销案） |
-| G17 `char` 缺 `Hash` | b | 7 处 × 每次调用点换键型 |
+| G17 `char` 缺 `Hash` | **已恢复**（2026-11-07 实测）：`HashPrimitives.v:53` 的 `imply char: Hash` 已随 addon 生效，8 题以 `HashMap<char, i64>` / `DisjointSet<char>` 真跑 **778/778** 用例 PASS；另 3 题仍红但均非 `Hash` 阻塞（详见 G17 小节） | `custom-sort-string` / `find-words-that-can-be-formed-by-characters` / `longest-repeating-character-replacement` / `longest-substring-with-at-most-k-distinct-characters` / `word-subsets` / `permutation-in-string` / `sort-characters-by-frequency` / `task-scheduler` |
 | G22 整数位元查询 | b | 5 处 × 重复位运算 |
 | G25 `BitSet` 基数 / 复制 | b | 4 处 × 手写 O(bits) 计数，丢掉位并行 |
 | G26 序关系无可用合同 | b | 14 处 × 同一套序逻辑 |
@@ -774,7 +774,7 @@ $n
   `eliminate-maximum-number-of-monsters`（1921，`Monster` 按 `dist / speed` 交叉相乘）。
   `sort.v` 的执行路径是 `a.compare(b)` + `match Ordering`，而 `Ordering.Less` / `Greater` / `Equal`
   当前不可达（Q10 裸 `Equal` 撞名；Q11 已复核为旧 addon 测量误判，非语言缺口），故不写「只实现 `infix <`」的绕过形态。
-- `char: Hash`（G17）：`task-scheduler`（621）的 `HashMap<char, i64>` 任务频次表。
+- `char: Hash`（G17，2026-11-07 已恢复）：`task-scheduler`（621）的 `HashMap<char, i64>` 任务频次表。
 - `sort(list)`（**已落地**，`ArrayList<T>` 形态）：`reveal-cards-in-increasing-order`（950）、
   `minimum-increment-to-make-array-unique`（945）、`eliminate-maximum-number-of-monsters`（1921）
   直接调用，不再计入未实现特性依赖。
@@ -822,7 +822,7 @@ $n
 | `sort(list)` | `micro sort<T>(mut list: ArrayList<T>) where T: std::operator::Comparable` | 有（`sort.v` 已落地，稳定归并） | 950 / 945 / 1921 |
 | `sorted_by(list, cmp)` | `micro sorted_by<T>(items: ArrayList<T>, compare: micro(T, T) -> i32): ArrayList<T>` | 有（`3e02e7d`，返回新序列） | 2542 / 1353（另 R22 的 954 / 870） |
 | `Comparable` 派生 | `imply X: std::operator::Comparable { micro compare(self, other: X): std::operator::Ordering }` | **阻塞**（Q10 裸 `Equal` 撞名；Q11 已复核） | 1705 / 1921 |
-| `char: Hash` | `imply char: std::hash::Hash`（`HashMap<char, V>` 可建） | **无**（G17） | 621（另 R22 的 424 / 340） |
+| `char: Hash` | `imply char: std::hash::Hash`（`HashMap<char, V>` 可建） | 有（`HashPrimitives.v:53`，2026-11-07 复跑） | 621（另 R22 的 424 / 340） |
 
 ### 依赖未实现特性的调用点（R23）
 
@@ -856,7 +856,7 @@ $n
   `std/source/operator/comparable_primitives.v`，入口与 `where` 约束均已齐备，
   只等 addon 重建后复跑验证。
   **归集见下方「汇聚组」**，工具链刷新后一次性复跑。
-- `HashMap<char, i64>`（G17，`char` 无 `Hash`）：`longest-repeating-character-replacement`（424）、
+- `HashMap<char, i64>`（G17，2026-11-07 已恢复）：`longest-repeating-character-replacement`（424）、
   `longest-substring-with-at-most-k-distinct-characters`（340）。
   **归集见下方「汇聚组」**，`char: Hash` 落地后一次性复跑。
 - 其余面只用源码已有签名：`HashMap::new` / `contains_key` / `get` / `insert` / `keys` / `remove`、
@@ -1215,7 +1215,7 @@ G13（`[utf8]` 无 `<`，2026-11-07 已恢复）、G15（无 `Comparable` 合同
 按 2026-11-04 重判（判据看绕路性质）：G8（无向图建模）已降为观察——真实调用点就是双写
 `add_edge`，属「换构造、零重复」。真正绕不过去的是 G2（浮点返回值合同）与 G3（wasm JS glue 的
 `ArrayList` ABI）：绕路会改变返回类型或跨不过 ABI 边界。这条决定下一轮 std 的修复顺序：
-1) 先补真缺口里有合同骨架的一档（G26 序关系 → G17 的 impl 缺项、G16 的有界查询，G13 已于 2026-11-07 恢复）；
+1) 先补真缺口里有合同骨架的一档（G26 序关系、G16 的有界查询，G13 / G17 已于 2026-11-07 恢复）；
 2) 再补其余真缺口 API（G10 / G22 / G25）；
 3) 观察档（G8 / G12 / G14 / G15 / G18–G21 / G23 / G24 / G27）随修复窗口顺带处理，不单独排期。
 理由：真缺口是「每个调用点都在重复付成本」，优先修；观察档都有零重复的等价 API。
@@ -1855,9 +1855,17 @@ micro floor_key(self, value: K) -> Option<K>     # BTreeMap，最大 <= value �
 
 ### G17 `char` 缺 `Hash` impl
 
-- 状态：**已落地（2026-11-04，2026-11-06 复核仍在）**。`std/source/collection/hashed/HashPrimitives.v:53` 已有
-  `imply char: Hash`（`micro hash(self) -> usize { return self as usize }`）。
-  本条目保留历史与影响面，仅用于 addon 重建后批量复跑，不再算未实现特性依赖。
+- 状态：**已恢复（2026-11-07 实测）**。`std/source/collection/hashed/HashPrimitives.v:53` 的
+  `imply char: Hash`（`micro hash(self) -> usize { return self as usize }`）已随 addon 生效。
+  2026-11-07 复跑 `HashMap<char, i64>` / `DisjointSet<char>` 消费者 8 题，合计 **778/778** 用例 PASS：
+  `custom-sort-string` 117、`find-words-that-can-be-formed-by-characters` 134、
+  `longest-repeating-character-replacement` 105、
+  `longest-substring-with-at-most-k-distinct-characters` 118、`word-subsets` 69、
+  `permutation-in-string` 95、`sort-characters-by-frequency` 54、`task-scheduler` 86。
+  同批 3 题仍红，均与 `char: Hash` 无关：`shortest-completing-word` 1/85（首败
+  `tests[1]: expected null, got "these"`，语义）、`satisfiability-of-equality-equations` 0/83
+  （首败 `tests[0]: expected false, got true`，语义）、`find-resultant-array-after-removing-anagrams`
+  构建失败 `unresolved call infix ==`（`solution.v:38`，`MultiSet<char>` 无 `equals`，G24）。
 - 原状态（R22 / R24 记账时的静态核对）：未提供（**std 缺口**；2026-11-04 核对
   `std/source/text/char.v` 与 `std/source/collection/hashed/hash.v` 时尚未有实现）
 - 定性：**该有但当时没有**。`char` 只定义了 `==` / `!=`，没有 `Hash`，于是不能作
@@ -1884,8 +1892,9 @@ imply char: Hash {
   `longest-substring-with-at-most-k-distinct-characters`（340），均为 `HashMap<char, i64>`。
 - 不对称点：`utf8`、`i8`–`u64`、`f32` / `f64` 都有 `Hash`；`char` 有 `Ordinal`（可转 `u32`）
   却没有派生 `Hash`，因此「码位可排序」与「码位可哈希」只实现了一半。
-- 判定：**真缺口**（判据 b：7 处 × 每次调用点换键型 `utf8` / `as u32`）。
-- 修复初判：**加 API**（补一个 impl，语义与 `Ordinal` 一致）。
+- 判定：**已恢复**（2026-11-07）。原判真缺口（判据 b：7 处 × 每次调用点换键型 `utf8` / `as u32`）；
+  `char: Hash` 落地后调用点直接以 `char` 为键，8 题 778/778 真跑通过。
+- 修复落地：**加 API**（补一个 impl，语义与 `Ordinal` 一致）。
 - 本批验证情况（R25，2026-11-04）：`Hash` 已补（`HashPrimitives.v:53`），上面 9 处调用点
   不必再换键型；本批 `task-scheduler`（621）的 `HashMap<char, i64>` 与 R22 的 424 / 340
   一并转入「阻塞解除」复跑组，只等 addon 重建。`char` 的 `Comparable` 仍缺，归 G15 / G26。
