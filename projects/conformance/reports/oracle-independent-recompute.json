@@ -1,0 +1,143 @@
+{
+  "generatedAt": "2026-11-07T05:24:26.432Z",
+  "selfCheck": {
+    "ok": true,
+    "failures": []
+  },
+  "problems": [
+    {
+      "id": "count-the-number-of-arrays-with-k-matching-adjacent-elements",
+      "source": "reference-generated",
+      "method": "组合恒等式 + n<=6 暴力自检",
+      "total": 158,
+      "matched": 158,
+      "mismatched": [],
+      "orderMatches": null
+    },
+    {
+      "id": "maximize-number-of-nice-divisors",
+      "source": "reference-generated",
+      "method": "整数拆分精确 DP（p<=60）+ 周期 3 公式（p>60）",
+      "total": 80,
+      "matched": 80,
+      "mismatched": [],
+      "orderMatches": null
+    },
+    {
+      "id": "student-attendance-record-ii",
+      "source": "reference-generated",
+      "method": "6 状态线性 DP + n<=8 暴力自检",
+      "total": 41,
+      "matched": 41,
+      "mismatched": [],
+      "orderMatches": null
+    },
+    {
+      "id": "number-of-ways-to-reach-a-position-after-exactly-k-steps",
+      "source": "reference-generated",
+      "method": "二项式闭式 + k<=12 暴力自检",
+      "total": 91,
+      "matched": 91,
+      "mismatched": [],
+      "orderMatches": null
+    },
+    {
+      "id": "handshakes-that-dont-cross",
+      "source": "reference-generated",
+      "method": "Catalan 闭式 C(2m,m)/(m+1) + m<=10 递推自检",
+      "total": 39,
+      "matched": 39,
+      "mismatched": [],
+      "orderMatches": null
+    },
+    {
+      "id": "number-of-strings-which-can-be-rearranged-to-contain-substring",
+      "source": "reference-generated",
+      "method": "按 e 计数容斥求和 + n<=6 暴力自检",
+      "total": 31,
+      "matched": 31,
+      "mismatched": [],
+      "orderMatches": null
+    },
+    {
+      "id": "closest-fair-integer",
+      "source": "reference-generated",
+      "method": "逐位构造最小 >= n 的偶数位、奇偶各半数字",
+      "total": 70,
+      "matched": 70,
+      "mismatched": [],
+      "orderMatches": null,
+      "maxGap": 900001112
+    },
+    {
+      "id": "subsets",
+      "source": "derived-recompute",
+      "method": "位掩码枚举全部子集，按集合（排序后）比较",
+      "total": 93,
+      "matched": 93,
+      "mismatched": [],
+      "orderMatches": false
+    },
+    {
+      "id": "hamming-distance",
+      "source": "derived-recompute",
+      "method": "异或逐位计数",
+      "total": 88,
+      "matched": 88,
+      "mismatched": [],
+      "orderMatches": null
+    },
+    {
+      "id": "binary-number-with-alternating-bits",
+      "source": "derived-recompute",
+      "method": "二进制串相邻位检查",
+      "total": 72,
+      "matched": 72,
+      "mismatched": [],
+      "orderMatches": null
+    },
+    {
+      "id": "reverse-bits",
+      "source": "derived-recompute",
+      "method": "32 位二进制串反转",
+      "total": 24,
+      "matched": 24,
+      "mismatched": [],
+      "orderMatches": null
+    },
+    {
+      "id": "sum-of-square-numbers",
+      "source": "derived-recompute",
+      "method": "枚举 a 后整数平方根判定",
+      "total": 53,
+      "matched": 53,
+      "mismatched": [],
+      "orderMatches": null
+    },
+    {
+      "id": "monotone-increasing-digits",
+      "source": "derived-recompute",
+      "method": "首位下降枚举候选（保留前缀 + 降一位 + 补 9）+ 全 9 兜底",
+      "total": 111,
+      "matched": 111,
+      "mismatched": [],
+      "orderMatches": null
+    },
+    {
+      "id": "sum-of-number-and-its-reverse",
+      "source": "derived-recompute",
+      "method": "按定义枚举 k 并用算术反转",
+      "total": 180,
+      "matched": 180,
+      "mismatched": [],
+      "orderMatches": null
+    }
+  ],
+  "summary": {
+    "problems": 14,
+    "totalCases": 1131,
+    "matched": 1131,
+    "mismatched": 0,
+    "selfCheckOk": true
+  }
+}
