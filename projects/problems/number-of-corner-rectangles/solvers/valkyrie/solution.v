@@ -3,8 +3,7 @@ namespace leetcode.solution
 using std.collection
 
 # 题内触发点: G25 —— 列数最多 200，超出 i64 掩码，每行必须用一个 `BitSet(cols)`。
-# 两行求「同为 1 的列」= `intersect` 后取 `count`；本解按理想形态调用源码尚不存在的基数入口：
-#   [待补 API] micro count(self) -> usize        # 交集结果的置位数（G25）
+# 两行求「同为 1 的列」= `intersect` 后取 `count`（G25 已提供，见缺口账本）。
 # 交集的左操作数每对行都重建一次，因此不触发 `clone`；重建成本 O(列数)，对本批规模可接受。
 micro row_bits(row: ArrayList<i64>, cols: usize) -> BitSet {
     let mut bits: BitSet = BitSet::with_capacity(cols)

@@ -3,9 +3,7 @@ namespace leetcode.solution
 using std.collection
 
 # 题内触发点: G25 —— 每个词一个 `BitSet(26)` 字母集，搜索时按「复制当前并集 + 合并 + 取基数」判定重叠。
-# 本解按理想形态调用两处源码尚不存在的入口，标「待补 API」，不退回逐位 `get` 的绕路写法：
-#   [待补 API] micro clone(self) -> BitSet        # 复制位集，供分支互不干扰
-#   [待补 API] micro count(self) -> usize         # 置位数，供并集长度与重叠判定
+# 依赖 `std.collection.BitSet` 的 `clone()` 与 `count()`（G25 已提供，见缺口账本）：
 # 现有 `union(mut self, other: BitSet)` 会把右侧值并入自身，故每次合并必须先复制两侧。
 micro search(words: ArrayList<BitSet>, sizes: ArrayList<i64>, start: usize, current: BitSet, current_size: i64) -> i64 {
     let mut best: i64 = current_size

@@ -2,7 +2,7 @@ namespace leetcode.solution
 
 using std.collection
 
-# 题内触发点: `BitSet(2^k)` 记录所有长度为 k 的子串码值；置位数只能外部累计（G25 无 `count`）。
+# 题内触发点: `BitSet(2^k)` 记录所有长度为 k 的子串码值；置位数直接由 `count()` 给出（G25）。
 class Solution {
     [export(case: "camelCase")]
     micro hasAllCodes(s: utf8, k: i64) -> bool {
@@ -18,7 +18,6 @@ class Solution {
         if length < width {
             return false
         }
-        let mut found: usize = 0
         let mut start: usize = 0
         while start + width <= length {
             let mut value: usize = 0
@@ -28,15 +27,9 @@ class Solution {
                 value = value * 2 + ((code - 48) as usize)
                 offset = offset + 1
             }
-            if !codes.get(value) {
-                codes.set(value)
-                found = found + 1
-            }
+            codes.set(value)
             start = start + 1
         }
-        if found == universe {
-            return true
-        }
-        return false
+        return codes.count() == universe
     }
 }

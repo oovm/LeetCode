@@ -2,9 +2,8 @@ namespace leetcode.solution
 
 using std.collection
 
-# 题内触发点: G25 —— 列集合用 `BitSet` 表示，逐行判断「选中的列是否都被该行的 1 覆盖」。
-# 判定用差集：`chosen - row` 为空则整行被覆盖；差集会改写左操作数，故每行先复制：
-#   [待补 API] micro clone(self) -> BitSet        # 每行判定前复制选中的列集合（G25）
+# 题内触发点: G25 —— 列集合用 `BitSet` 表示，逐行判断「该行的 1 是否都被选中列覆盖」。
+# 判定用差集：`row - chosen` 为空则该行被覆盖；差集会改写左操作数，故每行先 `clone()`（G25 已提供）。
 # `difference(mut self, other)` / `is_empty()` 为现有入口。
 micro row_bits(row: ArrayList<i64>) -> BitSet {
     let width: usize = row.length()
@@ -25,8 +24,9 @@ micro probe(rows: ArrayList<BitSet>, row_count: usize, width: usize, num_select:
         let mut covered: i64 = 0
         let mut r: usize = 0
         while r < row_count {
-            let mut extra: BitSet = chosen.clone()
-            extra.difference(rows⁅r⁆)
+            # 覆盖要求「该行所有 1 所在列都被选中」，即 row \ chosen 为空；方向不能反过来。
+            let mut extra: BitSet = rows⁅r⁆.clone()
+            extra.difference(chosen)
             if extra.is_empty() {
                 covered = covered + 1
             }

@@ -2,8 +2,7 @@ namespace leetcode.solution
 
 using std.collection
 
-# 题内触发点: 每个单词一个 `BitSet(26)` 字母集；两两不相交靠 `get` 逐位判定，
-# 因为 BitSet 没有 `clone`，无法复制后 `intersect` 再检查（G25）。
+# 题内触发点: 每个单词一个 `BitSet(26)` 字母集；两两不相交靠复制后 `intersect` 再判空（G25）。
 micro letters_of(word: utf8) -> BitSet {
     let letters: BitSet = BitSet::with_capacity(26)
     let mut index: usize = 0
@@ -16,14 +15,10 @@ micro letters_of(word: utf8) -> BitSet {
 }
 
 micro disjoint(left: BitSet, right: BitSet) -> bool {
-    let mut letter: usize = 0
-    while letter < 26 {
-        if left.get(letter) && right.get(letter) {
-            return false
-        }
-        letter = letter + 1
-    }
-    return true
+    # `intersect` 改写左操作数，故先复制；字母集只有一个 word，复制与判定都是 O(1)。
+    let mut probe: BitSet = left.clone()
+    probe.intersect(right)
+    return probe.is_empty()
 }
 
 class Solution {
