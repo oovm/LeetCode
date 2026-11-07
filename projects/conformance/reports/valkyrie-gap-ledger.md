@@ -2019,6 +2019,13 @@ micro prepend(mut self, value: char): unit
 - 影响题（5，均已写、均以手写循环表达）：`number-of-1-bits`（191，模 2 循环计 1）、
   `hamming-distance`（461，异或后逐位计数）、`minimum-bit-flips-to-convert-number`（2220，
   异或后计 1）、`reverse-bits`（190，逐位搬运）、`binary-gap`（868，扫描连续 0 段）。
+- 消费者清理（2026-11-07，`leetcode.v` 提交 `638bda250`，`.wt-std` 构建 + pin 产物真跑）：
+  `number-of-1-bits` 139/139 PASS、`hamming-distance` 88/88 PASS、
+  `minimum-bit-flips-to-convert-number` 85/85 PASS、`binary-gap` 61/61 PASS。
+  `binary-gap` 的语料期望是「两个 1 的位置差」（连续 1 记 1，非 0），改写以
+  `count_ones` + `trailing_zeros` 保留该语义，基线解同口径 61/61 A/B 一致。
+  `reverse-bits`（190）未清理：位序反转没有对应入口，`count_ones` / `trailing_zeros` 无法表达，
+  仍是手写逐位搬运；残余 API 需求与 `i128` / `u128` 查询并列。
 - 不对称点：位运算算子齐全但位元查询为零；`BitSet` 在容器层有 `get` / `set`，标量层却没有
   等价的「数 1 的个数」。这与 G20 同族（标量数值能力面只做了算子、没做归约），但作用对象是
   位而不是数值大小，故单列。
