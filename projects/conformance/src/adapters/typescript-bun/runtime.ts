@@ -4,8 +4,9 @@
  */
 import { pathToFileURL } from 'node:url';
 
+import { compareModeForExecution } from '../../domain/compare-mode.ts';
 import { inferIntegerArgKeys } from '../../domain/integer-args.ts';
-import { loadProblemMetadata, requireInvoke } from '../../domain/metadata.ts';
+import { loadProblemMetadata, problemIdFromDir, requireInvoke } from '../../domain/metadata.ts';
 import { assertTsCase, makeTsCandidate, tsSolverPath } from '../typescript-node/ref.ts';
 
 function median(values: number[]): number {
@@ -25,24 +26,26 @@ async function loadTsCandidate(problemRoot: string) {
     const entry = requireInvoke(metadata, 'typescript');
     const mod = (await import(pathToFileURL(tsSolverPath(problemRoot)).href)) as Record<string, unknown>;
     const candidate = makeTsCandidate(entry, mod);
-    return { tests: metadata.tests, candidate };
+    return { id: problemIdFromDir(problemRoot), tests: metadata.tests, candidate };
 }
 
 export async function runBunSolverOnce(problemRoot: string): Promise<void> {
-    const { tests, candidate } = await loadTsCandidate(problemRoot);
+    const { id, tests, candidate } = await loadTsCandidate(problemRoot);
     const integerKeys = inferIntegerArgKeys(tests);
+    const mode = compareModeForExecution(id);
     for (const [index, case_] of tests.entries()) {
-        assertTsCase(index, case_, candidate, integerKeys);
+        assertTsCase(index, case_, candidate, integerKeys, mode);
     }
 }
 
 export async function benchBunSolverInProcess(problemRoot: string, iterations: number, warmup: number): Promise<number> {
-    const { tests, candidate } = await loadTsCandidate(problemRoot);
+    const { id, tests, candidate } = await loadTsCandidate(problemRoot);
     const integerKeys = inferIntegerArgKeys(tests);
+    const mode = compareModeForExecution(id);
 
     const runAll = () => {
         for (const [index, case_] of tests.entries()) {
-            assertTsCase(index, case_, candidate, integerKeys);
+            assertTsCase(index, case_, candidate, integerKeys, mode);
         }
     };
 

@@ -32,6 +32,8 @@ import {
 } from '../src/adapters/valkyrie-node/ref.ts';
 import { valkyrieProjectDir } from '../src/catalog/index.ts';
 import { assertRejectsTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
+import { compareModeForExecution, formatValue, resultsMatch } from '../src/domain/compare-mode.ts';
+import { problemIdFromDir } from '../src/domain/metadata.ts';
 import { isOperationSequenceCase, operationStepPath } from '../src/domain/operation-sequence.ts';
 import type { OperationSequenceCase } from '../src/domain/problem.ts';
 import { normalizeResultByAbiType, preserveI64Precision } from '../src/isolated/v-shared.ts';
@@ -317,6 +319,7 @@ async function main(): Promise<number> {
     }
 
     const { tests, invoke } = loadMetadata(problemDir);
+    const compareMode = compareModeForExecution(problemIdFromDir(problemDir));
     const entry = requireValkyrieInvokeEntry(invoke);
     const blocked = wasmInvokeBlockedReason(artifacts.entry.legionWasm, entry);
     if (blocked) {
@@ -381,8 +384,10 @@ async function main(): Promise<number> {
                 const returns = abi?.lookup.exportSchema.returns;
                 const actual = returns ? normalizeResultByAbiType(actualRaw, returns) : actualRaw;
                 const expected = returns ? normalizeResultByAbiType(expectedRaw, returns) : expectedRaw;
-                if (JSON.stringify(actual) !== JSON.stringify(expected)) {
-                    throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+                if (!resultsMatch(actual, expected, compareMode)) {
+                    throw new Error(
+                        `tests[${index}]: expected ${formatValue(expected)}, got ${formatValue(actual)}（compareMode=${compareMode}）`,
+                    );
                 }
             }
             pass += 1;

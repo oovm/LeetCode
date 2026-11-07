@@ -1,3 +1,4 @@
+import { type CompareMode, formatValue, resultsMatch } from './compare-mode.ts';
 import { compareIntegerResult, integerResultText, isUnsafeIntegerLiteralString } from './integer-literal.ts';
 
 /** `void` 解返回 `undefined`；metadata 用 `null` 表示无返回值断言。 */
@@ -36,8 +37,15 @@ function compareWithBigint(actual: unknown, expected: unknown): boolean {
 /**
  * metadata 中 `expected: "Error: ..."` 表示应抛出异常且消息匹配。
  * `label` 覆盖报错前缀：操作序列的每步用 `tests[i].step[j] (op)`，便于定位到步。
+ * `mode` 为题面允许的比较模式；非 `strict` 时按规范化形态比较，值语义不变。
  */
-export function assertTestCase(index: number, expected: unknown, run: () => unknown, label?: string): void {
+export function assertTestCase(
+    index: number,
+    expected: unknown,
+    run: () => unknown,
+    label?: string,
+    mode: CompareMode = 'strict',
+): void {
     const prefix = label ?? `tests[${index}]`;
     if (typeof expected === 'string' && expected.startsWith('Error:')) {
         try {
@@ -53,6 +61,14 @@ export function assertTestCase(index: number, expected: unknown, run: () => unkn
     }
     const actual = normalizeTsTestResult(run());
     const normalized = normalizeTsTestResult(expected);
+    // 题面允许任意顺序/集合比较时，先按规范化形态比较；不在非 strict 模式里做整数特判，
+    // 规范化键已把整数（数值 / bigint / 超安全整数字符串）统一为精确十进制文本。
+    if (mode !== 'strict') {
+        if (resultsMatch(actual, normalized, mode)) {
+            return;
+        }
+        throw new Error(`${prefix}: expected ${formatValue(normalized)}, got ${formatValue(actual)}（compareMode=${mode}）`);
+    }
     // 整数新表示：expected 为超安全整数的十进制字符串且 actual 为数值/bigint 时按十进制文本比较，
     // 避免 `"72057594037927940"`（精确字符串）与对应数值因类型不同而误判失败。
     // 只认超安全整数（生成器侧只转换这类），actual 为字符串（如 `"Fizz"`）时走下方结构比较。

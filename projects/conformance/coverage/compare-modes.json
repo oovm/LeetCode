@@ -1,0 +1,530 @@
+{
+    "schemaVersion": 1,
+    "note": "题面允许多个合法答案或任意顺序时的用例比较模式。strict = JSON 精确相等（含整数精确文本）；unordered-1d = 顶层列表按元素排序后比较；unordered-2d = 内层元素先排序，外层再排序；outer-only = 外层任意顺序、内层顺序保持；nested-1d = 外层结构固定，各内层列表分别排序；validator-required = 多合法解，禁止规范化比较，必须题面语义校验。",
+    "modes": {
+        "4sum": {
+            "mode": "unordered-2d",
+            "evidence": "You may return the answer in any order."
+        },
+        "accounts-merge": {
+            "mode": "outer-only",
+            "evidence": "The accounts themselves can be returned in any order."
+        },
+        "advantage-shuffle": {
+            "mode": "validator-required",
+            "evidence": "题面允许返回任意合法重排"
+        },
+        "all-divisions-with-the-highest-score-of-a-binary-array": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "all-paths-from-source-to-target": {
+            "mode": "outer-only",
+            "evidence": "Given a directed acyclic graph (DAG) of n nodes labeled from 0 to n - 1, find all possible paths from node 0 to node n - 1 and return them in any order."
+        },
+        "ambiguous-coordinates": {
+            "mode": "unordered-1d",
+            "evidence": "The final answer list can be returned in any order."
+        },
+        "average-height-of-buildings-in-each-segment": {
+            "mode": "outer-only",
+            "evidence": "You may return the array in any order."
+        },
+        "binary-tree-paths": {
+            "mode": "unordered-1d",
+            "evidence": "Given the root of a binary tree, return all root-to-leaf paths in any order."
+        },
+        "binary-watch": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "check-if-every-row-and-column-contains-all-numbers": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "check-if-matrix-is-x-matrix": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "closest-binary-search-tree-value-ii": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "closest-divisors": {
+            "mode": "unordered-1d",
+            "evidence": "Return the two integers in any order."
+        },
+        "combination-sum": {
+            "mode": "unordered-2d",
+            "evidence": "You may return the combinations in any order."
+        },
+        "combination-sum-iii": {
+            "mode": "unordered-2d",
+            "evidence": "The list must not contain the same combination twice, and the combinations may be returned in any order."
+        },
+        "combinations": {
+            "mode": "unordered-2d",
+            "evidence": "You may return the answer in any order."
+        },
+        "count-pairs-that-form-a-complete-day-i": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "count-partitions-with-even-sum-difference": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "course-schedule-ii": {
+            "mode": "validator-required",
+            "evidence": "题面允许返回任意合法拓扑序"
+        },
+        "critical-connections-in-a-network": {
+            "mode": "unordered-2d",
+            "evidence": "Return all critical connections in the network in any order."
+        },
+        "delete-duplicate-folders-in-system": {
+            "mode": "outer-only",
+            "evidence": "The paths may be returned in any order."
+        },
+        "describe-the-painting": {
+            "mode": "outer-only",
+            "evidence": "You may return the segments in any order."
+        },
+        "determine-the-winner-of-a-bowling-game": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "determine-whether-matrix-can-be-obtained-by-rotation": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "di-string-match": {
+            "mode": "validator-required",
+            "evidence": "题面允许返回任意满足 DI 串的排列"
+        },
+        "different-ways-to-add-parentheses": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "divide-array-into-equal-pairs": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "erect-the-fence": {
+            "mode": "validator-required",
+            "evidence": "任意合法凸包起点与绕行方向，排序会破坏多边形顺序"
+        },
+        "factor-combinations": {
+            "mode": "unordered-2d",
+            "evidence": "You may return the answer in any order."
+        },
+        "fair-candy-swap": {
+            "mode": "validator-required",
+            "evidence": "题面允许返回任意满足交换后等和的答案"
+        },
+        "find-all-anagrams-in-a-string": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "find-all-groups-of-farmland": {
+            "mode": "outer-only",
+            "evidence": "You may return the answer in any order."
+        },
+        "find-all-lonely-numbers-in-the-array": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "find-all-people-with-secret": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "find-all-possible-recipes-from-given-supplies": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "find-all-the-lonely-nodes": {
+            "mode": "unordered-1d",
+            "evidence": "Return the list in any order."
+        },
+        "find-and-replace-pattern": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "find-common-characters": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree": {
+            "mode": "nested-1d",
+            "evidence": "Note that you can return the indices of the edges in any order."
+        },
+        "find-duplicate-file-in-system": {
+            "mode": "outer-only",
+            "evidence": "You may return the answer in any order."
+        },
+        "find-indices-of-stable-mountains": {
+            "mode": "unordered-1d",
+            "evidence": "Return an array containing the indices of all stable mountains in any order."
+        },
+        "find-indices-with-index-and-value-difference-i": {
+            "mode": "validator-required",
+            "evidence": "题面允许返回任意满足条件的下标对"
+        },
+        "find-indices-with-index-and-value-difference-ii": {
+            "mode": "validator-required",
+            "evidence": "题面允许返回任意满足条件的下标对"
+        },
+        "find-missing-observations": {
+            "mode": "validator-required",
+            "evidence": "题面允许返回任意合法缺失观测数组"
+        },
+        "find-mode-in-binary-search-tree": {
+            "mode": "unordered-1d",
+            "evidence": "If the tree has more than one mode, return them in any order."
+        },
+        "find-n-unique-integers-sum-up-to-zero": {
+            "mode": "validator-required",
+            "evidence": "题面允许返回任意合法整数集合"
+        },
+        "find-original-array-from-doubled-array": {
+            "mode": "unordered-1d",
+            "evidence": "The elements in original may be returned in any order."
+        },
+        "find-servers-that-handled-most-number-of-requests": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the IDs in any order."
+        },
+        "find-subarrays-with-equal-sum": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "find-the-difference-of-two-arrays": {
+            "mode": "nested-1d",
+            "evidence": "Note that the integers in the lists may be returned in any order."
+        },
+        "find-the-peaks": {
+            "mode": "unordered-1d",
+            "evidence": "Return an array that consists of indices of peaks in the given array in any order."
+        },
+        "find-the-xor-of-numbers-which-appear-twice": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "find-unique-binary-string": {
+            "mode": "validator-required",
+            "evidence": "题面允许返回任意未出现的 n 位二进制串"
+        },
+        "find-words-containing-character": {
+            "mode": "unordered-1d",
+            "evidence": "Note that the returned array may be in any order."
+        },
+        "flip-binary-tree-to-match-preorder-traversal": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "flip-game": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "frequencies-of-shortest-supersequences": {
+            "mode": "outer-only",
+            "evidence": "You may return the frequency arrays in any order."
+        },
+        "generalized-abbreviation": {
+            "mode": "unordered-1d",
+            "evidence": "Return the answer in any order."
+        },
+        "generate-binary-strings-without-adjacent-zeros": {
+            "mode": "unordered-1d",
+            "evidence": "Return all valid strings with length n, in any order."
+        },
+        "gray-code": {
+            "mode": "validator-required",
+            "evidence": "题面允许任意合法 Gray 码序列，相邻只差一位是序列属性，排序会破坏合法性"
+        },
+        "group-anagrams": {
+            "mode": "unordered-2d",
+            "evidence": "You can return the answer in any order."
+        },
+        "group-shifted-strings": {
+            "mode": "unordered-2d",
+            "evidence": "You may return the answer in any order."
+        },
+        "high-access-employees": {
+            "mode": "unordered-1d",
+            "evidence": "Return a list that contains the names of high-access employees with any order you want."
+        },
+        "intersection-of-two-arrays": {
+            "mode": "unordered-1d",
+            "evidence": "Each element in the result must be unique and you may return the result in any order."
+        },
+        "intersection-of-two-arrays-ii": {
+            "mode": "unordered-1d",
+            "evidence": "结果中每个元素的出现次数，应等于该元素在两个数组中出现次数的**较小值**；输出顺序任意。"
+        },
+        "invalid-transactions": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "k-closest-points-to-origin": {
+            "mode": "outer-only",
+            "evidence": "You may return the answer in any order."
+        },
+        "kill-process": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "kth-missing-positive-number": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "largest-multiple-of-three": {
+            "mode": "strict",
+            "evidence": "“in any order”修饰给定数字的拼接方式，输出是唯一的字符串"
+        },
+        "largest-unique-number": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "letter-case-permutation": {
+            "mode": "unordered-1d",
+            "evidence": "Return the output in any order."
+        },
+        "letter-combinations-of-a-phone-number": {
+            "mode": "unordered-1d",
+            "evidence": "答案可以按任意顺序返回。"
+        },
+        "linked-list-frequency": {
+            "mode": "unordered-1d",
+            "evidence": "Given the head of a linked list containing k distinct elements, return the head to a linked list of length k containing the frequency of each distinct element in the given linked list in any order."
+        },
+        "longest-even-odd-subarray-with-threshold": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "longest-strictly-increasing-or-strictly-decreasing-subarray": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "longest-subsequence-with-limited-sum": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "lucky-numbers-in-a-matrix": {
+            "mode": "unordered-1d",
+            "evidence": "Given an m x n matrix of distinct numbers, return all lucky numbers in the matrix in any order."
+        },
+        "matrix-cells-in-distance-order": {
+            "mode": "validator-required",
+            "evidence": "任意满足距离递增条件的顺序都合法，排序会掩盖违反距离条件的输出"
+        },
+        "matrix-similarity-after-cyclic-shifts": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "maximum-number-of-non-overlapping-substrings": {
+            "mode": "unordered-1d",
+            "evidence": "Notice that you can return the substrings in any order."
+        },
+        "maximum-product-difference-between-two-pairs": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "maximum-split-of-positive-even-integers": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the integers in any order."
+        },
+        "min-max-game": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "minimum-difference-between-highest-and-lowest-of-k-scores": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "minimum-height-trees": {
+            "mode": "unordered-1d",
+            "evidence": "You can return the answer in any order."
+        },
+        "minimum-index-sum-of-two-lists": {
+            "mode": "unordered-1d",
+            "evidence": "Return the answer in any order."
+        },
+        "minimum-number-of-operations-to-make-elements-in-array-distinct": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "minimum-number-of-vertices-to-reach-all-nodes": {
+            "mode": "unordered-1d",
+            "evidence": "Notice that you can return the vertices in any order."
+        },
+        "minimum-operations-to-make-array-values-equal-to-k": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "minimum-total-operations": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "modify-graph-edge-weights": {
+            "mode": "outer-only",
+            "evidence": "Return an array containing all edges (even unmodified ones) in any order if it is possible to make the shortest distance from source to destination equal to target, or an empty array if it's impossible."
+        },
+        "most-frequent-subtree-sum": {
+            "mode": "unordered-1d",
+            "evidence": "If there is a tie, return all the values with the highest frequency in any order."
+        },
+        "most-popular-video-creator": {
+            "mode": "outer-only",
+            "evidence": "The answer can be returned in any order."
+        },
+        "n-queens": {
+            "mode": "outer-only",
+            "evidence": "You may return the answer in any order."
+        },
+        "non-decreasing-subsequences": {
+            "mode": "outer-only",
+            "evidence": "You may return the answer in any order."
+        },
+        "number-of-beautiful-pairs": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "numbers-with-same-consecutive-differences": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "palindrome-permutation-ii": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "permutations": {
+            "mode": "unordered-2d",
+            "evidence": "You can return the answer in any order."
+        },
+        "permutations-ii": {
+            "mode": "unordered-2d",
+            "evidence": "Given a collection of numbers, nums, that might contain duplicates, return all possible unique permutations in any order."
+        },
+        "powerful-integers": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "queens-that-can-attack-the-king": {
+            "mode": "outer-only",
+            "evidence": "You may return the answer in any order."
+        },
+        "remove-element": {
+            "mode": "strict",
+            "evidence": "输出是前 k 个非目标元素的数量，数组其余内容不参与判题"
+        },
+        "remove-methods-from-project": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "remove-sub-folders-from-the-filesystem": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "repeated-dna-sequences": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "restore-ip-addresses": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the valid IP addresses in any order."
+        },
+        "restore-the-array-from-adjacent-pairs": {
+            "mode": "validator-required",
+            "evidence": "可能有多组合法原数组，排序会破坏相邻关系"
+        },
+        "shortest-subarray-with-or-at-least-k-i": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "simplified-fractions": {
+            "mode": "unordered-1d",
+            "evidence": "You can return the answer in any order."
+        },
+        "single-number-iii": {
+            "mode": "unordered-1d",
+            "evidence": "You can return the answer in any order."
+        },
+        "smallest-sufficient-team": {
+            "mode": "validator-required",
+            "evidence": "最小充分团队可能不唯一，排序只能消除顺序差异"
+        },
+        "sort-characters-by-frequency": {
+            "mode": "validator-required",
+            "evidence": "频次相同时字符顺序自由，排序无法判定“按频次降序”这一约束"
+        },
+        "string-matching-in-an-array": {
+            "mode": "unordered-1d",
+            "evidence": "You can return the answer in any order."
+        },
+        "strobogrammatic-number-ii": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "subdomain-visit-count": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "subsets": {
+            "mode": "unordered-2d",
+            "evidence": "Return the solution in any order."
+        },
+        "subsets-ii": {
+            "mode": "unordered-2d",
+            "evidence": "Return the solution in any order."
+        },
+        "substring-with-concatenation-of-all-words": {
+            "mode": "unordered-1d",
+            "evidence": "You can return the answer in any order."
+        },
+        "the-k-strongest-values-in-an-array": {
+            "mode": "unordered-1d",
+            "evidence": "return the answer in any arbitrary order."
+        },
+        "the-two-sneaky-numbers-of-digitville": {
+            "mode": "unordered-1d",
+            "evidence": "Return an array of size two containing the two numbers (in any order), so peace can return to Digitville."
+        },
+        "toeplitz-matrix": {
+            "mode": "strict",
+            "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
+        },
+        "top-k-frequent-elements": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "two-out-of-three": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the values in any order."
+        },
+        "two-sum": {
+            "mode": "unordered-1d",
+            "evidence": "你可以按任意顺序返回答案。"
+        },
+        "uncommon-words-from-two-sentences": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        },
+        "web-crawler-multithreaded": {
+            "mode": "unordered-1d",
+            "evidence": "Return all URLs obtained by your web crawler in any order."
+        },
+        "word-break-ii": {
+            "mode": "unordered-1d",
+            "evidence": "Return all such possible sentences in any order."
+        },
+        "word-squares": {
+            "mode": "outer-only",
+            "evidence": "You can return the answer in any order."
+        },
+        "word-subsets": {
+            "mode": "unordered-1d",
+            "evidence": "You may return the answer in any order."
+        }
+    }
+}

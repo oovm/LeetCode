@@ -13,6 +13,7 @@ import { pathToFileURL } from 'node:url';
 
 import { bunExecutable } from '../adapters/typescript-bun/bridge.ts';
 import { assertTestCase, normalizeTsTestResult } from '../domain/assert.ts';
+import { compareModeForExecution, formatValue, resultsMatch, type CompareMode } from '../domain/compare-mode.ts';
 import { coerceIntegerArgs, inferIntegerArgKeys } from '../domain/integer-args.ts';
 import { compareIntegerResult } from '../domain/integer-literal.ts';
 import {
@@ -363,6 +364,7 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
         let passed = 0;
         let firstFailureIndex: number | null = null;
         let firstFailure: string | null = null;
+        const compareMode = compareModeForExecution(meta.id);
         for (const outcome of done.results) {
             const entry = partitioned.executable[outcome.index]!;
             const expectedRaw = normalizeTsTestResult(entry.expected);
@@ -374,11 +376,11 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
                     }
                     assertScriptOperationOutcome(outcome, operationCase);
                 } else if (options.lane === 'valkyrie-wasm') {
-                    assertValkyrieOutcome(outcome, expectedRaw, returnsAbi);
+                    assertValkyrieOutcome(outcome, expectedRaw, returnsAbi, compareMode);
                 } else if (options.lane.startsWith('valkyrie')) {
-                    assertNumericTextOutcome(outcome, expectedRaw);
+                    assertNumericTextOutcome(outcome, expectedRaw, compareMode);
                 } else {
-                    assertScriptOutcome(outcome, expectedRaw);
+                    assertScriptOutcome(outcome, expectedRaw, compareMode);
                 }
                 passed += 1;
             } catch (err) {
@@ -434,7 +436,7 @@ function managedLaneFor(lane: JudgeLane): 'jvm' | 'clr' | undefined {
 }
 
 /** TS/Python lane：解法异常与 `Error:` 期望按既有 `assertTestCase` 口径比对。 */
-function assertScriptOutcome(outcome: CaseOutcome, expected: unknown): void {
+function assertScriptOutcome(outcome: CaseOutcome, expected: unknown, mode: CompareMode): void {
     if (!outcome.ok) {
         if (typeof expected === 'string' && expected.startsWith('Error:')) {
             const actual = `Error: ${outcome.error}`;
@@ -446,7 +448,7 @@ function assertScriptOutcome(outcome: CaseOutcome, expected: unknown): void {
         throw new Error(`tests[${outcome.index}]: 解法抛错 ${outcome.error}`);
     }
     const value = decodeValue(outcome.value, `tests[${outcome.index}].result`);
-    assertTestCase(outcome.index, expected, () => value);
+    assertTestCase(outcome.index, expected, () => value, undefined, mode);
 }
 
 /** TS/Python lane 的设计类用例：实例已由子进程构造并按操作序列逐步调用，这里逐步断言。 */
@@ -458,8 +460,8 @@ function assertScriptOperationOutcome(outcome: CaseOutcome, operationCase: Opera
     assertOperationSequence(outcome.index, operationCase.args, operationCase.expected, value);
 }
 
-/** valkyrie lane（wasm）：按 ABI 返回类型把期望值同样规整为十进制文本后结构比较（对齐 `run_v_solver.ts`）。 */
-function assertValkyrieOutcome(outcome: CaseOutcome, expected: unknown, returnsAbi: WasmAbiType | null): void {
+/** valkyrie lane（wasm）：按 ABI 返回类型把期望值同样规整为十进制文本后比较（对齐 `run_v_solver.ts`）。 */
+function assertValkyrieOutcome(outcome: CaseOutcome, expected: unknown, returnsAbi: WasmAbiType | null, mode: CompareMode): void {
     if (!outcome.ok) {
         if (typeof expected === 'string' && expected.startsWith('Error:')) {
             const actual = `Error: ${outcome.error}`;
@@ -472,8 +474,10 @@ function assertValkyrieOutcome(outcome: CaseOutcome, expected: unknown, returnsA
     }
     const actual = decodeValue(outcome.value, `tests[${outcome.index}].result`);
     const normalizedExpected = returnsAbi ? normalizeResultByAbiType(expected, returnsAbi) : expected;
-    if (JSON.stringify(actual) !== JSON.stringify(normalizedExpected)) {
-        throw new Error(`tests[${outcome.index}]: expected ${JSON.stringify(normalizedExpected)}, got ${JSON.stringify(actual)}`);
+    if (!resultsMatch(actual, normalizedExpected, mode)) {
+        throw new Error(
+            `tests[${outcome.index}]: expected ${formatValue(normalizedExpected)}, got ${formatValue(actual)}（compareMode=${mode}）`,
+        );
     }
 }
 
@@ -481,7 +485,7 @@ function assertValkyrieOutcome(outcome: CaseOutcome, expected: unknown, returnsA
  * valkyrie ovm/jvm/clr lane：整数结果两侧规整为精确十进制文本比较
  * （对齐 `run_nyar_solver.ts` 与 `managed-runner.ts` 口径），其余形态按结构比较。
  */
-function assertNumericTextOutcome(outcome: CaseOutcome, expected: unknown): void {
+function assertNumericTextOutcome(outcome: CaseOutcome, expected: unknown, mode: CompareMode): void {
     if (!outcome.ok) {
         if (typeof expected === 'string' && expected.startsWith('Error:')) {
             const actual = `Error: ${outcome.error}`;
@@ -493,6 +497,14 @@ function assertNumericTextOutcome(outcome: CaseOutcome, expected: unknown): void
         throw new Error(`tests[${outcome.index}]: 解法抛错 ${outcome.error}`);
     }
     const actual = decodeValue(outcome.value, `tests[${outcome.index}].result`);
+    if (mode !== 'strict') {
+        if (resultsMatch(actual, expected, mode)) {
+            return;
+        }
+        throw new Error(
+            `tests[${outcome.index}]: expected ${formatValue(expected)}, got ${formatValue(actual)}（compareMode=${mode}）`,
+        );
+    }
     const cmp = compareIntegerResult(actual, expected);
     if (cmp === true) {
         return;

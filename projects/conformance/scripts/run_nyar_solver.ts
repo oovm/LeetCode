@@ -17,6 +17,8 @@ import {
     type SolverCaseStats,
 } from '../src/adapters/shared/solver-case-stats.ts';
 import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
+import { compareModeForExecution, formatValue, resultsMatch } from '../src/domain/compare-mode.ts';
+import { problemIdFromDir } from '../src/domain/metadata.ts';
 import { valkyrieProjectDir } from '../src/catalog/index.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
 import {
@@ -161,6 +163,8 @@ async function main(): Promise<number> {
     }
 
     const { tests, invoke } = loadMetadata(problemDir);
+    const problemId = problemIdFromDir(problemDir);
+    const compareMode = compareModeForExecution(problemId);
     const entry = invoke.valkyrie ?? invoke.typescript;
     if (!entry) {
         throw new Error('metadata.invoke 缺失');
@@ -186,8 +190,14 @@ async function main(): Promise<number> {
             } else {
                 const actual = normalizeTsTestResult(runNyarExport(artifacts.nyarPath, exportName, case_.args));
                 const expected = normalizeTsTestResult(case_.expected);
-                // 超安全整数的十进制字符串 expected 与数值 actual 按十进制文本比较。
-                if (isUnsafeIntegerLiteralString(expected) && (typeof actual === 'number' || typeof actual === 'bigint')) {
+                // 题面允许任意顺序/集合比较时，按规范化形态比较；否则保持精确比较（含整数文本特判）。
+                if (compareMode !== 'strict') {
+                    if (!resultsMatch(actual, expected, compareMode)) {
+                        throw new Error(
+                            `tests[${index}]: expected ${formatValue(expected)}, got ${formatValue(actual)}（compareMode=${compareMode}）`,
+                        );
+                    }
+                } else if (isUnsafeIntegerLiteralString(expected) && (typeof actual === 'number' || typeof actual === 'bigint')) {
                     const cmp = compareIntegerResult(actual, expected);
                     if (cmp !== true) {
                         throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);

@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest';
 
 import { runPythonReference } from '../src/adapters/python/ref.ts';
 import { hasReadyTsSolver, runTsReference } from '../src/adapters/typescript-node/ref.ts';
+import { requireArgsConstraint, validateTestArgs } from '../src/domain/args-constraints.ts';
+import { requireCompareMode } from '../src/domain/compare-mode.ts';
 import { probeValkyrieProblem } from '../src/adapters/valkyrie-node/matrix.ts';
 import { PROBLEMS, legionProjectDir, problemDir } from '../src/catalog/index.ts';
 import { loadProblemMetadata, requireInvoke } from '../src/domain/metadata.ts';
@@ -86,6 +88,22 @@ describe('题库覆盖清单', () => {
         expect(missing, missing.join('\n')).toEqual([]);
     });
 
+    it('每题显式登记比较模式', () => {
+        const missing: string[] = [];
+
+        for (const batch of manifest.batches) {
+            for (const problem of batch.problems) {
+                try {
+                    requireCompareMode(problem.id);
+                } catch (error) {
+                    missing.push(`${batch.id} / ${problem.id}: ${String(error)}`);
+                }
+            }
+        }
+
+        expect(missing, missing.join('\n')).toEqual([]);
+    });
+
     it('清单内每题都有解、参考解、用例与判题入口', () => {
         const missing: string[] = [];
 
@@ -140,6 +158,19 @@ for (const { problem: entry, batch } of entries) {
                 return;
             }
 
+            // 题面约束前置：args 本身不合法时，三通道一致没有意义。
+            const root = problemDir(LEETCODE_ROOT, problem);
+            const metadata = loadProblemMetadata(root);
+            const argsConstraint = requireArgsConstraint(id);
+            const argViolations: string[] = [];
+            metadata.tests.forEach((test, index) => {
+                const issue = validateTestArgs(argsConstraint, test.args as Record<string, unknown>);
+                if (issue) {
+                    argViolations.push(`${id} tests[${index}]: ${issue}`);
+                }
+            });
+            expect(argViolations, argViolations.join('\n')).toEqual([]);
+
             const python = runPythonReference(problem);
             expect(python.ok, `python 参照解失败：${python.stderr}`).toBe(true);
 
@@ -155,11 +186,11 @@ for (const { problem: entry, batch } of entries) {
                 expect(typescript.ok, `typescript 参照解失败：${typescript.stderr}`).toBe(true);
             }
 
-            const root = problemDir(LEETCODE_ROOT, problem);
             const row = await probeValkyrieProblem(problem, legionProjectDir(LEETCODE_ROOT, problem));
 
             expect(row.buildStatus, row.buildError ?? `V 构建失败：${root}`).toBe(0);
-            expect(row.testStatus, row.testError ?? 'legion test 失败').toBe(0);
+            // `legion test` status 不作为绿判据：项目没有 test/ 目录时它同样返回 0。
+            // 绿必须拿到真实执行计数：全量 metadata.tests 真实执行且全部通过。
             expect(row.manifestFresh, row.manifestError ?? 'execution manifest 已过期').toBe(true);
             expect(row.runtimeOk, row.runtimeError ?? 'metadata.tests 未执行').toBe(true);
             expect(row.testCaseTotal, 'metadata.tests 用例数为 0').toBeGreaterThan(0);

@@ -61,13 +61,84 @@ def _infer_int_keys(tests: list[dict[str, Any]]) -> set[str]:
     return keys
 
 
-def _compare(actual: Any, expected: Any) -> bool:
+def _compare(actual: Any, expected: Any, mode: str = "strict") -> bool:
+    # 题面允许任意顺序/集合比较时，按规范化形态比较；值语义不变。
+    if mode != "strict":
+        return _canonical_form(actual, mode) == _canonical_form(expected, mode)
     # expected 为超安全整数字符串、actual 为 int（非 bool）时按十进制还原比较。
     if _is_unsafe_int_string(expected) and isinstance(actual, int) and not isinstance(actual, bool):
         return actual == int(expected)
     if isinstance(expected, list) and isinstance(actual, list):
         return len(actual) == len(expected) and all(_compare(a, e) for a, e in zip(actual, expected))
     return actual == expected
+
+
+_COMPARE_MODES_PATH = Path(__file__).resolve().parent.parent / "coverage" / "compare-modes.json"
+_COMPARE_MODES: dict[str, str] | None = None
+
+
+def _compare_modes() -> dict[str, str]:
+    global _COMPARE_MODES
+    if _COMPARE_MODES is None:
+        data = json.loads(_COMPARE_MODES_PATH.read_text(encoding="utf-8"))
+        _COMPARE_MODES = {key: value["mode"] for key, value in data["modes"].items()}
+    return _COMPARE_MODES
+
+
+def _compare_mode(problem_id: str) -> str:
+    mode = _compare_modes().get(problem_id, "strict")
+    if mode == "validator-required":
+        raise ValueError(
+            f"多解题 {problem_id} 需要题面语义校验，禁止 JSON/规范化比较（coverage/compare-modes.json）",
+        )
+    return mode
+
+
+def _canonical_key(value: Any) -> str:
+    # 整数（数值 / 超安全整数字符串）统一为精确十进制文本，字符串保持原样。
+    if isinstance(value, bool):
+        return f"b:{1 if value else 0}"
+    if _is_unsafe_int_string(value):
+        return f"i:{int(value)}"
+    if isinstance(value, int):
+        return f"i:{value}"
+    if isinstance(value, float):
+        return f"n:{value!r}"
+    if value is None:
+        return "null"
+    if isinstance(value, str):
+        return f"s:{json.dumps(value, ensure_ascii=False)}"
+    if isinstance(value, list):
+        return "a:[" + ",".join(_canonical_key(item) for item in value) + "]"
+    if isinstance(value, dict):
+        return "o:" + json.dumps(value, sort_keys=True, ensure_ascii=False)
+    return f"{type(value).__name__}:{value!r}"
+
+
+def _sorted_keys(items: list[Any]) -> list[str]:
+    return sorted(_canonical_key(item) for item in items)
+
+
+def _canonical_form(value: Any, mode: str) -> str:
+    if not isinstance(value, list):
+        return "scalar:" + _canonical_key(value)
+    if mode == "unordered-1d":
+        return "a1:[" + "|".join(_sorted_keys(value)) + "]"
+    if mode == "unordered-2d":
+        rows = [
+            "row:[" + "|".join(_sorted_keys(row)) + "]" if isinstance(row, list) else "scalar:" + _canonical_key(row)
+            for row in value
+        ]
+        return "a2:[" + "|".join(sorted(rows)) + "]"
+    if mode == "outer-only":
+        return "a1:[" + "|".join(sorted(_canonical_key(item) for item in value)) + "]"
+    if mode == "nested-1d":
+        rows = [
+            "row:[" + "|".join(_sorted_keys(row)) + "]" if isinstance(row, list) else _canonical_key(row)
+            for row in value
+        ]
+        return "a1p:[" + "|".join(rows) + "]"
+    raise ValueError(f"未知比较模式 {mode}")
 
 
 def slug_to_python_project(slug: str) -> str:
@@ -142,7 +213,7 @@ def _assert_operation_sequence(index: int, operations: list[str], expected: Any,
             )
 
 
-def run_check(candidate: Callable[..., Any], tests: list[dict[str, Any]]) -> None:
+def run_check(candidate: Callable[..., Any], tests: list[dict[str, Any]], mode: str = "strict") -> None:
     int_keys = _infer_int_keys(tests)
     for index, case in enumerate(tests):
         args = case.get("args")
@@ -173,11 +244,11 @@ def run_check(candidate: Callable[..., Any], tests: list[dict[str, Any]]) -> Non
             )
         if is_operation_sequence_args(coerced_args):
             _assert_operation_sequence(index, coerced_args["operations"], expected, actual)
-        elif not _compare(actual, expected):
+        elif not _compare(actual, expected, mode):
             raise AssertionError(f"tests[{index}]: expected {expected!r}, got {actual!r}, args={args!r}")
 
 
-def load_solver_context(problem_dir: Path) -> tuple[Callable[..., Any], list[dict[str, Any]]]:
+def load_solver_context(problem_dir: Path) -> tuple[Callable[..., Any], list[dict[str, Any]], str]:
     python_dir = problem_dir / "solvers" / "python"
     if not (python_dir / "pyproject.toml").is_file():
         raise FileNotFoundError(f"missing solvers/python/pyproject.toml under {problem_dir}")
@@ -200,12 +271,12 @@ def load_solver_context(problem_dir: Path) -> tuple[Callable[..., Any], list[dic
     namespace: dict[str, Any] = {"__name__": "__main__"}
     exec(source, namespace)  # noqa: S102
     candidate = resolve_candidate(entry_point, namespace)
-    return candidate, tests
+    return candidate, tests, _compare_mode(slug)
 
 
 def run_solver(problem_dir: Path) -> None:
-    candidate, tests = load_solver_context(problem_dir)
-    run_check(candidate, tests)
+    candidate, tests, mode = load_solver_context(problem_dir)
+    run_check(candidate, tests, mode)
 
 
 def median_ms(values: list[float]) -> float:
@@ -220,10 +291,10 @@ def median_ms(values: list[float]) -> float:
 
 def bench_solver(problem_dir: Path, iterations: int, warmup: int) -> float:
     """单 Python 进程内加载题解后只计 metadata.tests 循环（对齐 TS in-process）。"""
-    candidate, tests = load_solver_context(problem_dir)
+    candidate, tests, mode = load_solver_context(problem_dir)
 
     def run_all() -> None:
-        run_check(candidate, tests)
+        run_check(candidate, tests, mode)
 
     for _ in range(warmup):
         run_all()

@@ -7,8 +7,9 @@ import { median } from '@nyar/valkyrie';
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir } from '../../catalog/index.ts';
 import { assertTestCase, normalizeTsTestResult } from '../../domain/assert.ts';
+import { compareModeForExecution, type CompareMode } from '../../domain/compare-mode.ts';
 import { coerceIntegerArgs as coerceTsArgs, inferIntegerArgKeys } from '../../domain/integer-args.ts';
-import { loadProblemMetadata, requireInvoke } from '../../domain/metadata.ts';
+import { loadProblemMetadata, problemIdFromDir, requireInvoke } from '../../domain/metadata.ts';
 import {
     assertOperationSequence,
     isOperationSequenceArgs,
@@ -83,14 +84,20 @@ export function makeTsCandidate(entryPoint: string, mod: Record<string, unknown>
 }
 
 /** 单调用用例外层直接断言；设计类用例按构造 + 逐操作逐步断言。 */
-export function assertTsCase(index: number, case_: TestCase, candidate: (args: Record<string, unknown>) => unknown, integerKeys: ReadonlySet<string>): void {
+export function assertTsCase(
+    index: number,
+    case_: TestCase,
+    candidate: (args: Record<string, unknown>) => unknown,
+    integerKeys: ReadonlySet<string>,
+    mode: CompareMode = 'strict',
+): void {
     if (isOperationSequenceCase(case_)) {
         const args = case_.args as unknown as Record<string, unknown>;
         const actual = candidate(coerceTsArgs(args, integerKeys));
         assertOperationSequence(index, case_.args, case_.expected, actual);
         return;
     }
-    assertTestCase(index, case_.expected, () => candidate(coerceTsArgs(case_.args, integerKeys)));
+    assertTestCase(index, case_.expected, () => candidate(coerceTsArgs(case_.args, integerKeys)), undefined, mode);
 }
 
 async function loadTsCandidate(problemRoot: string) {
@@ -98,15 +105,16 @@ async function loadTsCandidate(problemRoot: string) {
     const entry = requireInvoke(metadata, 'typescript');
     const mod = (await import(pathToFileURL(tsSolverPath(problemRoot)).href)) as Record<string, unknown>;
     const candidate = makeTsCandidate(entry, mod);
-    return { tests: metadata.tests, candidate };
+    return { id: problemIdFromDir(problemRoot), tests: metadata.tests, candidate };
 }
 
 /** ????? metadata.tests?? */
 export async function runTsSolverOnce(problemRoot: string, _problemId?: string): Promise<void> {
-    const { tests, candidate } = await loadTsCandidate(problemRoot);
+    const { id, tests, candidate } = await loadTsCandidate(problemRoot);
     const integerKeys = inferIntegerArgKeys(tests);
+    const mode = compareModeForExecution(id);
     for (const [index, case_] of tests.entries()) {
-        assertTsCase(index, case_, candidate, integerKeys);
+        assertTsCase(index, case_, candidate, integerKeys, mode);
     }
 }
 
@@ -114,12 +122,13 @@ export async function runTsSolverOnce(problemRoot: string, _problemId?: string):
  * ??????????????? metadata.tests ??????????????????????? Node/tsx????
  */
 export async function benchTsSolverInProcess(problemRoot: string, iterations: number, warmup: number): Promise<number> {
-    const { tests, candidate } = await loadTsCandidate(problemRoot);
+    const { id, tests, candidate } = await loadTsCandidate(problemRoot);
     const integerKeys = inferIntegerArgKeys(tests);
+    const mode = compareModeForExecution(id);
 
     const runAll = () => {
         for (const [index, case_] of tests.entries()) {
-            assertTsCase(index, case_, candidate, integerKeys);
+            assertTsCase(index, case_, candidate, integerKeys, mode);
         }
     };
 

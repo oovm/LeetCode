@@ -57,7 +57,7 @@ def dumps_compact(value: Any) -> str:
 def _worker(payload: tuple[str, int, dict[str, Any], list[str]]) -> dict[str, Any]:
     """子进程：加载题解并执行单条用例，返回精度安全结果。"""
     problem_dir, index, args, int_keys = payload
-    candidate, _tests = rps.load_solver_context(Path(problem_dir))
+    candidate, _tests, _mode = rps.load_solver_context(Path(problem_dir))
     coerced = {
         key: rps._coerce_int_args(value) if key in int_keys else value for key, value in args.items()
     }

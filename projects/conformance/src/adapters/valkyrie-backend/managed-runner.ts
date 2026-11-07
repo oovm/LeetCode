@@ -12,7 +12,9 @@
 
 import { spawnSync } from 'node:child_process';
 
+import { compareModeForExecution, resultsMatch } from '../../domain/compare-mode.ts';
 import { coerceIntegerArgument, compareIntegerResult, I64_MAX, I64_MIN } from '../../domain/integer-literal.ts';
+import { problemIdFromDir } from '../../domain/metadata.ts';
 import { emptySolverCaseStats, extractTestFailureIndex, type SolverCaseStats } from '../shared/solver-case-stats.ts';
 import { loadMetadata, requireValkyrieInvokeEntry, resolveWasmExportSymbol, type TestCase } from '../valkyrie-node/ref.ts';
 import { findManagedAbiEntry, ManagedAbiError, type ManagedAbiContract, type ManagedAbiEntry, type ManagedContrastLane } from './managed-abi.ts';
@@ -165,6 +167,7 @@ export function runManagedReference(
 ): ManagedRunOutcome {
     try {
         const { tests, invoke } = loadMetadata(problemRoot);
+        const compareMode = compareModeForExecution(problemIdFromDir(problemRoot));
         const invokeEntry = requireValkyrieInvokeEntry(invoke);
         const entry = findManagedAbiEntry(contract, resolveWasmExportSymbol(invokeEntry));
         if (!SUPPORTED_PARAMETER_TYPES.has(entry.return_type) && entry.return_type !== 'void') {
@@ -206,10 +209,14 @@ export function runManagedReference(
             const actual = parseManagedReturnValue(launched.stdout, entry.return_type);
             const expected = testCase.expected ?? null;
             // 整数返回按十进制文本比较（expected 可能是字符串新表示或数值）；其余按结构比较。
+            // 题面允许任意顺序/集合比较时按规范化形态比较，值语义不变。
             const isIntegerReturn = entry.return_type === 'i64' || entry.return_type === 'i32';
-            const matches = isIntegerReturn
-                ? compareIntegerResult(actual, expected) ?? JSON.stringify(actual) === JSON.stringify(expected)
-                : JSON.stringify(actual) === JSON.stringify(expected);
+            const matches =
+                compareMode !== 'strict'
+                    ? resultsMatch(actual, expected, compareMode)
+                    : isIntegerReturn
+                      ? compareIntegerResult(actual, expected) ?? JSON.stringify(actual) === JSON.stringify(expected)
+                      : JSON.stringify(actual) === JSON.stringify(expected);
             if (!matches) {
                 throw new ManagedAbiError(
                     `tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}（${launched.command}）`,
