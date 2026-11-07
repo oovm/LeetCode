@@ -2,30 +2,10 @@ namespace leetcode.accounts_merge;
 
 using std.collection;
 
-# 字典序比较：std 的 utf8 没有 compare，Comparable 也尚未落地（G13/G15），
-# 按 UTF-8 字节逐字节比较（等长前缀后短者小）。
+# `merge_sort` 的比较器入口；`utf8` 的字典序已由 `Utf8Text` 的 `Comparable` 合同提供，
+# 这里只把 `Ordering` 交给 `natural_order` 转成 `i32`，不再手写逐字节比较。
 micro compare_text(left: utf8, right: utf8) -> i32 {
-    let left_length: usize = left.byte_length()
-    let right_length: usize = right.byte_length()
-    let mut offset: usize = 0
-    while offset < left_length && offset < right_length {
-        let left_byte: u32 = left.byte_at(offset) as u32
-        let right_byte: u32 = right.byte_at(offset) as u32
-        if left_byte < right_byte {
-            return -1
-        }
-        if left_byte > right_byte {
-            return 1
-        }
-        offset = offset + 1
-    }
-    if left_length < right_length {
-        return -1
-    }
-    if left_length > right_length {
-        return 1
-    }
-    return 0
+    return natural_order(left, right)
 }
 
 # 同一邮箱把账户并成一组；组内邮箱去重排序，名字取并查集根账户。
@@ -123,7 +103,7 @@ micro accounts_merge(accounts: ArrayList<ArrayList<utf8>>) -> ArrayList<ArrayLis
             }
             index = index + 1
         }
-        # 没有返回新序列的 `sorted_by`（G11），组内邮箱副本就地 `merge_sort`。
+        # 组内邮箱副本就地 `merge_sort`，比较器走 `Utf8Text` 的 `Comparable` 合同（`natural_order`）。
         merge_sort(emails, compare_text)
         let first: ArrayList<utf8> = accounts⁅representative as usize⁆
         let mut entry: ArrayList<utf8> = ArrayList::new(emails.length() + 1)

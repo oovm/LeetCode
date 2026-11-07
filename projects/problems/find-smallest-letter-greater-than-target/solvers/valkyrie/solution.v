@@ -1,9 +1,7 @@
 namespace leetcode.find_smallest_letter_greater_than_target;
 
 # 上界二分：找第一个严格大于 target 的位置，越界则回绕到 0。
-# 题内触发点: G13 / G15 —— 理想写法直接对 `utf8` 写 `<=`，
-# 这要求字典序比较合同（`Comparable` 或 `Utf8Text.compare`）；std 目前只有 `equals` / `not_equals`，
-# 因此本题按理想写法保留比较算子，不在题内手写逐字节 compare。
+# `utf8` 的 `<=` 由 `Utf8Text` 的 `Comparable` 合同派生，直接比较即可。
 [export(case: "camelCase")]
 micro next_greatest_letter(letters: [utf8], target: utf8) -> utf8 {
     let count: usize = letters.length()

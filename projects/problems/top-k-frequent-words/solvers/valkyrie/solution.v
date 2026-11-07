@@ -2,43 +2,10 @@ namespace leetcode.top_k_frequent_words;
 
 using std.collection;
 
-# `utf8` 的字典序比较器（std 的 `utf8` 虽有 `Comparable`，但跨闭包消费点尚未验证）。
+# `utf8` 的字典序由 `Utf8Text` 的 `Comparable` 合同提供，
+# 这里只把 `Ordering` 经 `natural_order` 转成 `i32`。
 micro compare_text(left: utf8, right: utf8) -> i32 {
-    let left_length: usize = left.length()
-    let right_length: usize = right.length()
-    let mut index: usize = 0
-    while index < left_length && index < right_length {
-        let left_code: u32 = left⁅index⁆ as u32
-        let right_code: u32 = right⁅index⁆ as u32
-        if left_code < right_code {
-            return -1
-        }
-        if left_code > right_code {
-            return 1
-        }
-        index = index + 1
-    }
-    if left_length < right_length {
-        return -1
-    }
-    if left_length > right_length {
-        return 1
-    }
-    return 0
-}
-
-micro equal_text(left: utf8, right: utf8) -> bool {
-    if left.length() != right.length() {
-        return false
-    }
-    let mut index: usize = 0
-    while index < left.length() {
-        if (left⁅index⁆ as u32) != (right⁅index⁆ as u32) {
-            return false
-        }
-        index = index + 1
-    }
-    return true
+    return natural_order(left, right)
 }
 
 # 临时绕过（复核于 addon `25132ccf`，2026-11-05）：真写法是 `HashMap<utf8, i64>` 计数 +
@@ -79,7 +46,7 @@ micro top_k_frequent(words: ArrayList<utf8>, k: i64) -> ArrayList<utf8> {
         let mut slot: usize = 0
         let mut found: bool = false
         while slot < distinct.length() {
-            if equal_text(distinct⁅slot⁆, word) {
+            if distinct⁅slot⁆ == word {
                 counts⁅slot⁆ = counts⁅slot⁆ + 1
                 found = true
             }

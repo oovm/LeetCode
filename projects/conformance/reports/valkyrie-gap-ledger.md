@@ -39,7 +39,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 
 ## 缺口与观察分级（2026-11-04 重判）
 
-真缺口（11）：G2 / G3 / G10 / G11 / G13 / G16 / G17 / G22 / G25 / G26 / G28。
+真缺口（10）：G2 / G3 / G10 / G11 / G16 / G17 / G22 / G25 / G26 / G28。
 
 | 编号 | 判据 | 摊派面 |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G9 二分图判定 | **已恢复**（2026-11-07）：`std.math.graph_theory.bipartition` 已提供，两题改用 std 入口；真跑 179/181 用例 PASS（余 2 条为 F6 语料宿主异常文本） | `valkyrie.v` 提交 `59a4acad`；消费者 `is-graph-bipartite` / `possible-bipartition` |
 | G10 `DisjointSet` 分量聚合 | b | 3 处 × 重写 DSU 内部聚合 |
 | G11 `sorted_by` | b | 21 处 × 副本 + `merge_sort`（R28 后 +3） |
-| G13 `utf8` 字典序比较 | b | 5 处 × 约 10 行比较脚手架 |
+| G13 `utf8` 字典序比较 | **已恢复**（2026-11-07）：`Utf8Text` 的 `Comparable` 合同已提供，5 处消费者改用 `natural_order` 比较器；真跑 420/420 用例 PASS | `accounts-merge` / `reorder-data-in-log-files` / `top-k-frequent-words` / `find-smallest-letter-greater-than-target` / `phone-number-prefix` |
 | G16 `BTreeSet` / `BTreeMap` 界查询 | b | 3 处 × O(k) 物化 + 手写二分（其中 1 处为按秩查询；`nth` 已销案） |
 | G17 `char` 缺 `Hash` | b | 7 处 × 每次调用点换键型 |
 | G22 整数位元查询 | b | 5 处 × 重复位运算 |
@@ -1180,11 +1180,11 @@ foreach ($slug in $slugs) {
 
 ### 观察 1：trait 实现面按需堆，没有「类型 × 核心 trait」矩阵
 
-G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 `Hash`）、G24（`MultiSet`
+G13（`[utf8]` 无 `<`，2026-11-07 已恢复）、G15（无 `Comparable` 合同）、G17（`char` 无 `Hash`）、G24（`MultiSet`
 无 `Equal`）四条合起来指向同一件事：每个类型只零散实现了 `{Equal, Comparable, Hash}` 的任意
 子集，没有任何机制声明「这个类型实现了哪些核心 trait」。现状：
 - `i64`：`Equal` + `Hash` + 裸 `<`（无 `Comparable` 合同）
-- `utf8`：`Equal` + `Hash`（无 `<`，无 `Comparable`）
+- `utf8`：`Equal` + `Hash` + `Comparable`（G13，2026-11-07 已补）
 - `char`：`Equal`（无 `Hash`，无 `<`）
 - `MultiSet<T>`：无 `Equal`、无 `Hash`
 后果：判断「这个类型能不能作键 / 能不能排序」只能靠试错（写一遍、看编译器报错），而不是查一份
@@ -1218,7 +1218,7 @@ G13（`[utf8]` 无 `<`）、G15（无 `Comparable` 合同）、G17（`char` 无 
 按 2026-11-04 重判（判据看绕路性质）：G8（无向图建模）已降为观察——真实调用点就是双写
 `add_edge`，属「换构造、零重复」。真正绕不过去的是 G2（浮点返回值合同）与 G3（wasm JS glue 的
 `ArrayList` ABI）：绕路会改变返回类型或跨不过 ABI 边界。这条决定下一轮 std 的修复顺序：
-1) 先补真缺口里有合同骨架的一档（G26 序关系 → G13 / G17 的 impl 缺项、G16 的有界查询）；
+1) 先补真缺口里有合同骨架的一档（G26 序关系 → G17 的 impl 缺项、G16 的有界查询，G13 已于 2026-11-07 恢复）；
 2) 再补其余真缺口 API（G10 / G11 / G22 / G25）；
 3) 观察档（G8 / G12 / G14 / G15 / G18–G21 / G23 / G24 / G27）随修复窗口顺带处理，不单独排期。
 理由：真缺口是「每个调用点都在重复付成本」，优先修；观察档都有零重复的等价 API。
@@ -1704,9 +1704,14 @@ micro new(capacity: usize): Self        # 新增，直传容量
 
 ### G13 `utf8` 缺字典序比较
 
-- 状态：**已提供（2026-11-06 源码复核）**。`std/source/text/Utf8Text.v` 现有
-  `compare(self, other: Self): std::operator::Ordering`，按码位（与 UTF-8 字节序一致）。
-  返回 `Ordering` 而非 `i32`，与 `sort` 的 `natural_order` 同一转换点，调用点改用匹配即可。
+- 状态：**已恢复（2026-11-07 实测）**。`std/source/text/Utf8Text.v` 的
+  `compare(self, other: Self): std::operator::Ordering` 按 UTF-8 字节序比较（与码位序一致），
+  消费者通过 `std.collection.natural_order` 转成 `i32` 比较器。5 题全部构建通过并真跑：
+  `accounts-merge` 85/85、`reorder-data-in-log-files` 53/53、`top-k-frequent-words` 92/92、
+  `find-smallest-letter-greater-than-target` 93/93、`phone-number-prefix` 97/97（合计 420/420）。
+  反例：比较器第二参数改成 `i64` 后 `sorted_by` 报
+  `error[valkyrie.hir.unresolved_call]` 的结构化失败，不静默接受。
+- 原状态（2026-11-06 源码复核）：`compare` 已提供，但 5 处消费者仍手写逐字节比较或绕开排序。
 - 原判断（2026-11-04，现已过时）：`utf8` 只有 `equals` / `not_equals`。
 
 - 影响题（5）：`reorder-data-in-log-files`（937，题内 `compare_text`）、

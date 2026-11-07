@@ -2,27 +2,10 @@ namespace leetcode.reorder_data_in_log_files;
 
 using std.collection;
 
-# 字典序比较：std 的 utf8 只有相等判定，没有比较入口，这里按需实现。
+# `merge_sort` / `sorted_by` 的比较器入口；`utf8` 的字典序由 `Utf8Text` 的
+# `Comparable` 合同提供，这里只把 `Ordering` 经 `natural_order` 转成 `i32`。
 micro compare_text(left: utf8, right: utf8) -> i32 {
-    let mut i: usize = 0
-    while i < left.length() && i < right.length() {
-        let a: u32 = left⁅i⁆ as u32
-        let b: u32 = right⁅i⁆ as u32
-        if a < b {
-            return -1
-        }
-        if a > b {
-            return 1
-        }
-        i = i + 1
-    }
-    if left.length() < right.length() {
-        return -1
-    }
-    if left.length() > right.length() {
-        return 1
-    }
-    return 0
+    return natural_order(left, right)
 }
 
 # `index_of(utf8)` 内部走 u8 相等合同（本批 addon 未绑定 `__u8_eq` host provider），
