@@ -1,0 +1,1955 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-07T09:23:06.619Z",
+  "scope": {
+    "total": 1161,
+    "definition": "V canonical：存在非空 `solvers/valkyrie/solution.v` 且无阻塞标记的题目"
+  },
+  "toolchain": {
+    "path": "E:\\victory 胜利女神\\nyar-vm.rs\\projects\\nyar.ts\\platforms\\valkyrie-win32-x64\\lib\\valkyrie.win32-x64-msvc.node",
+    "bytes": 36288000,
+    "sha256": "19ab115a412bd2d27a3a03d6b1b2644aa1bd1590ee507ceb0032049c89e7ecbe",
+    "mtime": "2026-11-06T23:37:30.643Z",
+    "caveat": "本次为本地工具链实测，二进制可能包含兄弟仓未提交改动，不等同发布 pin 复验"
+  },
+  "policy": {
+    "pass": "build 成功 + manifest 新鲜 + executed_pass === testCaseTotal > 0",
+    "disjoint": "wasm 与 ovm 各自独立探测；一个 target 的通过数不能替代另一个",
+    "skipped": "skipped 不抵扣分母、不计入 pass",
+    "blocked": "题解缺失 / target 计划失败 / 子进程崩溃（含 napi panic）单列",
+    "stalenyar": "ovm 构建前只清除输出目录内的旧 `.nyar` 文件（当前产物身份为 `.odin`，旧 `.nyar` 会让 `legion build` 拒绝重建）"
+  },
+  "targets": {
+    "wasm": {
+      "total": 1161,
+      "attempted": 200,
+      "pass": 172,
+      "fail": 27,
+      "blocked": 0,
+      "unverified": 1,
+      "missing": 961,
+      "caseTotal": 15598,
+      "executedPass": 14614,
+      "executedFail": 13,
+      "blockedCases": 0,
+      "notRunCases": 969,
+      "skippedCases": 2,
+      "categoryCounts": {
+        "assert-mismatch": 9,
+        "test-data": 2,
+        "build-failure": 11,
+        "skipped-not-pass": 1,
+        "runtime-crash": 1,
+        "validator-required": 1,
+        "entry-contract": 1,
+        "order-only-mismatch": 2
+      },
+      "byReason": [
+        {
+          "status": "fail",
+          "reason": "Error: tests[4]: expected \"aba\", got \"bab\"（compareMode=strict）",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "AbiSchemaError: args.num_rows: metadata.tests.args 缺少参数 \"num_rows\"",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `height.get` in max_area: 3 candidate(s) share the name, but none matches the argument types\n  --> solution.v:13:25\n   |\n13 |         let left: i64 = height.get(l + 1).unwrap()\r\n   |                         ^^^^^^^^^^^^^^^^^\n   = 1 more site with the same root cause: solution.v:14:26\n\nerror[valkyrie.hir.unresolved_call]: unresolved call `<fn value>.unwrap` in max_area: receiver type is unknown, so member `unwrap` cannot be resolved; 1 candidate(s) share the name\n  --> solution.v:13:25\n   |\n13 |         let left: i64 = height.get(l + 1).unwrap()\r\n   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^\n   = 1 more site with the same root cause: solution.v:14:26\n\nerror: aborting due to 4 previous errors",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[3]: expected [\"w\",\"x\",\"y\",\"z\"], got [\"z\",\"{\",\"|\",\"}\"]（compareMode=unordered-1d）",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>` in mergeTwoLists: no callable with this name is in scope\n  --> solution.v:8:16\n  |\n8 |         return option_none::<ArrayList<i64>>()\n  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "executed_pass=117/119（skipped=2）",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: <--- Last few GCs --->\r\n\r\n[39816:000002D08874A000]    48085 ms: Scavenge (interleaved) 4062.3 (4079.4) -> 4052.9 (4114.6) MB, pooled: 0 MB, 22.76 / 0.00 ms  (average mu = 0.283, current mu = 0.245) allocation failure; \r\n[39816:000002D08874A000]    51093 ms: Mark-Compact (reduce) 4053.1 (4114.6) -> 4052.2 (4054.4) MB, pooled: 0 MB, 2836.92 / 0.00 ms  (+ 2.3 ms in 3 steps since start of marking, biggest step 2.2 ms, walltime since start of marking 2848 ms) (average mu = 0.\r\nFATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory\r\n----- Native stack trace -----\r\n\r\n 1: 00007FF77EFB3D9F node::OnFatalError+1343\r\n 2: 00007FF77DBFDCB7 v8::Function::NewInstance+423\r\n 3: 00007FF77D9FE4F7 uv_udp_get_send_queue_count+54423\r\n 4: 00007FF77DA02204 uv_udp_get_send_queue_count+70052\r\n 5: 00007FF77DA1116C v8::internal::StrongRootAllocatorBase::deallocate_impl+16604\r\n 6: 00007FF77DA109AB v8::internal::StrongRootAllocatorBase::deallocate_impl+14619\r\n 7: 00007FF77F2E24AD node::AsyncResource::CallbackScope::CallbackScope+2184429\r\n 8: 00007FF77D9FBFC0 uv_udp_get_send_queue_count+44896\r\n 9: 00007FF77DA7FDA9 v8::Unlocker::~Unlocker+9273\r\n10: 00007FF77D5F35D8 v8::CodeEvent::GetFunctionName+131144\r\n11: 000002D0C0EF75FA",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): compile pipeline rejected module `leetcode-merge-intervals` (valkyrie.mir.diagnostic_rejected): MIR lowering unresolved callable identity `construct missing HIR callable contract`",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[90]: expected [\"All  the  world’s  a\",\"stage,  And  all the\",\"men and women merely\",\"players.            \"], got [\"All  the world’s a\",\"stage,  And  all the\",\"men and women merely\",\"players.            \"]（compareMode=strict）",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>` in deleteDuplicates: no callable with this name is in scope\n  --> solution.v:8:16\n  |\n8 |         return option_none::<ArrayList<i64>>()\n  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: 多解题 gray-code 需要题面语义校验，禁止 JSON/规范化比较（题面允许任意合法 Gray 码序列，相邻只差一位是序列属性，排序会破坏合法性）",
+          "count": 1
+        },
+        {
+          "status": "unverified",
+          "reason": "ValkyrieEntryContractError: Valkyrie entry contract failure：metadata.invoke.valkyrie 缺失，禁止回退到 metadata.invoke.typescript",
+          "count": 1
+        }
+      ],
+      "failures": [
+        {
+          "id": "longest-palindromic-substring",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[4]: expected \"aba\", got \"bab\"（compareMode=strict）",
+          "caseTotal": 124,
+          "executedPass": 4,
+          "executedFail": 1
+        },
+        {
+          "id": "zigzag-conversion",
+          "status": "fail",
+          "category": "test-data",
+          "reason": "AbiSchemaError: args.num_rows: metadata.tests.args 缺少参数 \"num_rows\"",
+          "caseTotal": 104,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "container-with-most-water",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `height.get` in max_area: 3 candidate(s) share the name, but none matches the argument types\n  --> solution.v:13:25\n   |\n13 |         let left: i64 = height.get(l + 1).unwrap()\r\n   |                         ^^^^^^^^^^^^^^^^^\n   = 1 more site with the same root cause: solution.v:14:26\n\nerror[valkyrie.hir.unresolved_call]: unresolved call `<fn value>.unwrap` in max_area: receiver type is unknown, so member `unwrap` cannot be resolved; 1 candidate(s) share the name\n  --> solution.v:13:25\n   |\n13 |         let left: i64 = height.get(l + 1).unwrap()\r\n   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^\n   = 1 more site with the same root cause: solution.v:14:26\n\nerror: aborting due to 4 previous errors",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "letter-combinations-of-a-phone-number",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[3]: expected [\"w\",\"x\",\"y\",\"z\"], got [\"z\",\"{\",\"|\",\"}\"]（compareMode=unordered-1d）",
+          "caseTotal": 76,
+          "executedPass": 3,
+          "executedFail": 1
+        },
+        {
+          "id": "merge-two-sorted-lists",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>` in mergeTwoLists: no callable with this name is in scope\n  --> solution.v:8:16\n  |\n8 |         return option_none::<ArrayList<i64>>()\n  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "search-insert-position",
+          "status": "fail",
+          "category": "skipped-not-pass",
+          "reason": "executed_pass=117/119（skipped=2）",
+          "caseTotal": 119,
+          "executedPass": 117,
+          "executedFail": 0
+        },
+        {
+          "id": "combination-sum",
+          "status": "fail",
+          "category": "runtime-crash",
+          "reason": "Error: <--- Last few GCs --->\r\n\r\n[39816:000002D08874A000]    48085 ms: Scavenge (interleaved) 4062.3 (4079.4) -> 4052.9 (4114.6) MB, pooled: 0 MB, 22.76 / 0.00 ms  (average mu = 0.283, current mu = 0.245) allocation failure; \r\n[39816:000002D08874A000]    51093 ms: Mark-Compact (reduce) 4053.1 (4114.6) -> 4052.2 (4054.4) MB, pooled: 0 MB, 2836.92 / 0.00 ms  (+ 2.3 ms in 3 steps since start of marking, biggest step 2.2 ms, walltime since start of marking 2848 ms) (average mu = 0.\r\nFATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory\r\n----- Native stack trace -----\r\n\r\n 1: 00007FF77EFB3D9F node::OnFatalError+1343\r\n 2: 00007FF77DBFDCB7 v8::Function::NewInstance+423\r\n 3: 00007FF77D9FE4F7 uv_udp_get_send_queue_count+54423\r\n 4: 00007FF77DA02204 uv_udp_get_send_queue_count+70052\r\n 5: 00007FF77DA1116C v8::internal::StrongRootAllocatorBase::deallocate_impl+16604\r\n 6: 00007FF77DA109AB v8::internal::StrongRootAllocatorBase::deallocate_impl+14619\r\n 7: 00007FF77F2E24AD node::AsyncResource::CallbackScope::CallbackScope+2184429\r\n 8: 00007FF77D9FBFC0 uv_udp_get_send_queue_count+44896\r\n 9: 00007FF77DA7FDA9 v8::Unlocker::~Unlocker+9273\r\n10: 00007FF77D5F35D8 v8::CodeEvent::GetFunctionName+131144\r\n11: 000002D0C0EF75FA",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "merge-intervals",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): compile pipeline rejected module `leetcode-merge-intervals` (valkyrie.mir.diagnostic_rejected): MIR lowering unresolved callable identity `construct missing HIR callable contract`",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "text-justification",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[90]: expected [\"All  the  world’s  a\",\"stage,  And  all the\",\"men and women merely\",\"players.            \"], got [\"All  the world’s a\",\"stage,  And  all the\",\"men and women merely\",\"players.            \"]（compareMode=strict）",
+          "caseTotal": 102,
+          "executedPass": 90,
+          "executedFail": 1
+        },
+        {
+          "id": "remove-duplicates-from-sorted-list",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>` in deleteDuplicates: no callable with this name is in scope\n  --> solution.v:8:16\n  |\n8 |         return option_none::<ArrayList<i64>>()\n  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "gray-code",
+          "status": "fail",
+          "category": "validator-required",
+          "reason": "Error: 多解题 gray-code 需要题面语义校验，禁止 JSON/规范化比较（题面允许任意合法 Gray 码序列，相邻只差一位是序列属性，排序会破坏合法性）",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "longest-consecutive-sequence",
+          "status": "unverified",
+          "category": "entry-contract",
+          "reason": "ValkyrieEntryContractError: Valkyrie entry contract failure：metadata.invoke.valkyrie 缺失，禁止回退到 metadata.invoke.typescript",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "max-points-on-a-line",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[95]: expected \"14\", got \"10\"（compareMode=strict）",
+          "caseTotal": 108,
+          "executedPass": 95,
+          "executedFail": 1
+        },
+        {
+          "id": "two-sum-ii-input-array-is-sorted",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[29]: expected null, got []（compareMode=strict）",
+          "caseTotal": 89,
+          "executedPass": 29,
+          "executedFail": 1
+        },
+        {
+          "id": "excel-sheet-column-title",
+          "status": "fail",
+          "category": "test-data",
+          "reason": "AbiSchemaError: args.column_number: metadata.tests.args 缺少参数 \"column_number\"",
+          "caseTotal": 38,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "largest-number",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): compile pipeline rejected module `leetcode-largest-number` (SMIR007): Semantic MIR 合同失败: function=leetcode.largest_number::largestNumber, location=block 7 terminator, detail=return operand type differs from function return type (actual=Utf8, expected=Nominal { declaration: ItemId(65), arguments: [], primitive_identity: None })",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "remove-linked-list-elements",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>` in removeElements: no callable with this name is in scope\n  --> solution.v:16:16\n   |\n16 |         return option_none::<ArrayList<i64>>()\n   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "isomorphic-strings",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[53]: expected true, got false（compareMode=strict）",
+          "caseTotal": 131,
+          "executedPass": 53,
+          "executedFail": 1
+        },
+        {
+          "id": "reverse-linked-list",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>` in reverseList: no callable with this name is in scope\n  --> solution.v:8:16\n  |\n8 |         return option_none::<ArrayList<i64>>()\n  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "sliding-window-maximum",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[3]: expected [\"9\",\"8\",\"7\",\"6\",\"5\",\"4\"], got [\"9\",\"9\",\"8\",\"7\",\"6\",\"5\"]（compareMode=strict）",
+          "caseTotal": 104,
+          "executedPass": 3,
+          "executedFail": 1
+        },
+        {
+          "id": "different-ways-to-add-parentheses",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[2]: expected [], got [\"9159\",\"9165\"]（compareMode=unordered-1d）",
+          "caseTotal": 189,
+          "executedPass": 2,
+          "executedFail": 1
+        },
+        {
+          "id": "rearrange-string-k-distance-apart",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): compile pipeline rejected module `leetcode-rearrange-string-k-distance-apart` (SMIR007): Semantic MIR 合同失败: function=leetcode.rearrange_string_k_distance_apart::rearrangeString, location=block 22 terminator, detail=return operand type differs from function return type (actual=Utf8, expected=Nominal { declaration: ItemId(60), arguments: [], primitive_identity: None })",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "find-k-pairs-with-smallest-sums",
+          "status": "fail",
+          "category": "order-only-mismatch",
+          "reason": "Error: tests[0]: expected [[\"1\",\"3\"],[\"2\",\"3\"]], got [[\"2\",\"3\"],[\"1\",\"3\"]]（compareMode=strict）",
+          "caseTotal": 102,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "decode-string",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): compile pipeline rejected module `leetcode-decode-string` (CAN054): sum 物理 payload 类型未完成实例化: Nominal declaration `ItemId(54)` 需要平台 NyarType::Nominal，禁止降级为 Named 短名 (at DecodedPart::Plain)",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "convert-a-number-to-hexadecimal",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[22]: expected \"\", got \"10000000000\"（compareMode=strict）",
+          "caseTotal": 60,
+          "executedPass": 22,
+          "executedFail": 1
+        },
+        {
+          "id": "third-maximum-number",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): compile pipeline rejected module `leetcode-third-maximum-number` (SMIR007): Semantic MIR 合同失败: function=leetcode.third_maximum_number::equals_opt, location=block 4 terminator, detail=return operand type differs from function return type (actual=Unit, expected=Boolean)",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "non-overlapping-intervals",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target wasm32-unknown-unknown-wasm failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `sort` in order_items: candidate is bound, but `where` evidence rejected the concrete substitution, so the instance never closed\n  --> solution.v:48:5\n   |\n48 |     sort(items)\n   |     ^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "find-all-duplicates-in-an-array",
+          "status": "fail",
+          "category": "order-only-mismatch",
+          "reason": "Error: tests[5]: expected [\"5\",\"6\",\"9\"], got [\"9\",\"5\",\"6\"]（compareMode=strict）",
+          "caseTotal": 61,
+          "executedPass": 5,
+          "executedFail": 1
+        }
+      ]
+    },
+    "ovm": {
+      "total": 1161,
+      "attempted": 200,
+      "pass": 34,
+      "fail": 131,
+      "blocked": 1,
+      "unverified": 34,
+      "missing": 961,
+      "caseTotal": 13278,
+      "executedPass": 2332,
+      "executedFail": 118,
+      "blockedCases": 0,
+      "notRunCases": 10828,
+      "skippedCases": 0,
+      "categoryCounts": {
+        "runtime-crash": 2,
+        "abi-contract": 117,
+        "build-failure": 11,
+        "timeout": 4,
+        "runtime-pending": 30,
+        "validator-required": 1,
+        "assert-mismatch": 1
+      },
+      "byReason": [
+        {
+          "status": "fail",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "count": 62
+        },
+        {
+          "status": "unverified",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "count": 30
+        },
+        {
+          "status": "fail",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "count": 14
+        },
+        {
+          "status": "unverified",
+          "reason": "子进程超时 180000ms",
+          "count": 4
+        },
+        {
+          "status": "fail",
+          "reason": "Error: run entry `longestPalindrome`: type mismatch: expected object, got string",
+          "count": 2
+        },
+        {
+          "status": "blocked",
+          "reason": "子进程崩溃（3221226505）：note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace | thread '<unnamed>' panicked at ffis\\valkyrie-napi\\src\\product_api.rs:181:25: | legion build thread panicked: Any { .. }",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: run entry `lengthOfLongestSubstring`: type mismatch: expected object, got string",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: run entry `convert`: type mismatch: expected object, got string",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: run entry `myAtoi`: type mismatch: expected object, got string",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `height.get` in max_area: 3 candidate(s) share the name, but none matches the argument types\n  --> solution.v:13:25\n   |\n13 |         let left: i64 = height.get(l + 1).unwrap()\r\n   |                         ^^^^^^^^^^^^^^^^^\n   = 1 more site with the same root cause: solution.v:14:26\n\nerror[valkyrie.hir.unresolved_call]: unresolved call `<fn value>.unwrap` in max_area: receiver type is unknown, so member `unwrap` cannot be resolved; 1 candidate(s) share the name\n  --> solution.v:13:25\n   |\n13 |         let left: i64 = height.get(l + 1).unwrap()\r\n   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^\n   = 1 more site with the same root cause: solution.v:14:26\n\nerror: aborting due to 4 previous errors",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: run entry `romanToInt`: type mismatch: expected object, got string",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: run entry `letterCombinations`: type mismatch: expected object, got string",
+          "count": 1
+        }
+      ],
+      "failures": [
+        {
+          "id": "two-sum",
+          "status": "blocked",
+          "category": "runtime-crash",
+          "reason": "子进程崩溃（3221226505）：note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace | thread '<unnamed>' (43996) panicked at ffis\\valkyrie-napi\\src\\product_api.rs:181:25: | legion build thread panicked: Any { .. }",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "add-two-numbers",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 59,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "longest-substring-without-repeating-characters",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `lengthOfLongestSubstring`: type mismatch: expected object, got string",
+          "caseTotal": 36,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "longest-palindromic-substring",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `longestPalindrome`: type mismatch: expected object, got string",
+          "caseTotal": 124,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "zigzag-conversion",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `convert`: type mismatch: expected object, got string",
+          "caseTotal": 104,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "string-to-integer-atoi",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `myAtoi`: type mismatch: expected object, got string",
+          "caseTotal": 185,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "container-with-most-water",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `height.get` in max_area: 3 candidate(s) share the name, but none matches the argument types\n  --> solution.v:13:25\n   |\n13 |         let left: i64 = height.get(l + 1).unwrap()\r\n   |                         ^^^^^^^^^^^^^^^^^\n   = 1 more site with the same root cause: solution.v:14:26\n\nerror[valkyrie.hir.unresolved_call]: unresolved call `<fn value>.unwrap` in max_area: receiver type is unknown, so member `unwrap` cannot be resolved; 1 candidate(s) share the name\n  --> solution.v:13:25\n   |\n13 |         let left: i64 = height.get(l + 1).unwrap()\r\n   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^\n   = 1 more site with the same root cause: solution.v:14:26\n\nerror: aborting due to 4 previous errors",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "integer-to-roman",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 77,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "roman-to-integer",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `romanToInt`: type mismatch: expected object, got string",
+          "caseTotal": 94,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "longest-common-prefix",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 148,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "3sum",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 104,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "letter-combinations-of-a-phone-number",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `letterCombinations`: type mismatch: expected object, got string",
+          "caseTotal": 76,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "valid-parentheses",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `isValid`: type mismatch: expected object, got string",
+          "caseTotal": 148,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "merge-two-sorted-lists",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>` in mergeTwoLists: no callable with this name is in scope\n  --> solution.v:8:16\n  |\n8 |         return option_none::<ArrayList<i64>>()\n  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "generate-parentheses",
+          "status": "unverified",
+          "category": "timeout",
+          "reason": "子进程超时 180000ms",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "remove-duplicates-from-sorted-array",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 127,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "remove-element",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 112,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "find-the-index-of-the-first-occurrence-in-a-string",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `strStr`: type mismatch: expected object, got string",
+          "caseTotal": 144,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "substring-with-concatenation-of-all-words",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 94,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "next-permutation",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "find-first-and-last-position-of-element-in-sorted-array",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 137,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "search-insert-position",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "valid-sudoku",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 19,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "count-and-say",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `countAndSay`: type mismatch: expected object, got string",
+          "caseTotal": 28,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "combination-sum",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 115,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "first-missing-positive",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 126,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "trapping-rain-water",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "multiply-strings",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `multiply`: type mismatch: expected object, got i64",
+          "caseTotal": 72,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "jump-game-ii",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "rotate-image",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "group-anagrams",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 69,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "n-queens",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 9,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "maximum-subarray",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "spiral-matrix",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 53,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "jump-game",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "merge-intervals",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): compile pipeline rejected module `leetcode-merge-intervals` (valkyrie.mir.diagnostic_rejected): MIR lowering unresolved callable identity `construct missing HIR callable contract`",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "length-of-last-word",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `lengthOfLastWord`: type mismatch: expected object, got string",
+          "caseTotal": 48,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "spiral-matrix-ii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 20,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "minimum-path-sum",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 77,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "plus-one",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 77,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "add-binary",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `addBinary`: type mismatch: expected object, got string",
+          "caseTotal": 86,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "text-justification",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 102,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "simplify-path",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `simplifyPath`: type mismatch: expected object, got string",
+          "caseTotal": 198,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "set-matrix-zeroes",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "sort-colors",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "combinations",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 60,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "subsets",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 93,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "remove-duplicates-from-sorted-array-ii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 128,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "remove-duplicates-from-sorted-list",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>` in deleteDuplicates: no callable with this name is in scope\n  --> solution.v:8:16\n  |\n8 |         return option_none::<ArrayList<i64>>()\n  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "merge-sorted-array",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "gray-code",
+          "status": "fail",
+          "category": "validator-required",
+          "reason": "Error: 多解题 gray-code 需要题面语义校验，禁止 JSON/规范化比较（题面允许任意合法 Gray 码序列，相邻只差一位是序列属性，排序会破坏合法性）",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "restore-ip-addresses",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `restoreIpAddresses`: type mismatch: expected object, got string",
+          "caseTotal": 143,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "binary-tree-inorder-traversal",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 24,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "same-tree",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "symmetric-tree",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "maximum-depth-of-binary-tree",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "balanced-binary-tree",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "minimum-depth-of-binary-tree",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "pascals-triangle",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 16,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "pascals-triangle-ii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 20,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "triangle",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 88,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "best-time-to-buy-and-sell-stock",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 99,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "best-time-to-buy-and-sell-stock-ii",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "valid-palindrome",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `isPalindrome`: type mismatch: expected object, got string",
+          "caseTotal": 21,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "word-ladder",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 13,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "longest-consecutive-sequence",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 138,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "single-number",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 108,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "single-number-ii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 86,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "word-break",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 87,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "binary-tree-preorder-traversal",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 12,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "binary-tree-postorder-traversal",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 20,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "max-points-on-a-line",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 108,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "reverse-words-in-a-string",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `reverseWords`: type mismatch: expected object, got string",
+          "caseTotal": 44,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "maximum-product-subarray",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 91,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "find-minimum-in-rotated-sorted-array",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 87,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "missing-ranges",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 127,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "maximum-gap",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 127,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "two-sum-ii-input-array-is-sorted",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 89,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "excel-sheet-column-title",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 38,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "majority-element",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 45,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "excel-sheet-column-number",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `titleToNumber`: type mismatch: expected object, got string",
+          "caseTotal": 201,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "largest-number",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): compile pipeline rejected module `leetcode-largest-number` (SMIR007): Semantic MIR 合同失败: function=leetcode.largest_number::largestNumber, location=block 7 terminator, detail=return operand type differs from function return type (actual=Utf8, expected=Nominal { declaration: ItemId(77), arguments: [], primitive_identity: None })",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "reverse-words-in-a-string-ii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 59,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "repeated-dna-sequences",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `findRepeatedDnaSequences`: type mismatch: expected object, got string",
+          "caseTotal": 137,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "rotate-array",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 118,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "house-robber",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 117,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "remove-linked-list-elements",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>` in removeElements: no callable with this name is in scope\n  --> solution.v:16:16\n   |\n16 |         return option_none::<ArrayList<i64>>()\n   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "count-primes",
+          "status": "unverified",
+          "category": "timeout",
+          "reason": "子进程超时 180000ms",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "isomorphic-strings",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `isIsomorphic`: type mismatch: expected object, got string",
+          "caseTotal": 131,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "reverse-linked-list",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `<fn value>` in reverseList: no callable with this name is in scope\n  --> solution.v:8:16\n  |\n8 |         return option_none::<ArrayList<i64>>()\n  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "house-robber-ii",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "kth-largest-element-in-an-array",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 78,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "combination-sum-iii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 62,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "contains-duplicate",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 94,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "contains-duplicate-ii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 106,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "contains-duplicate-iii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 238,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "count-complete-tree-nodes",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "basic-calculator-ii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `calculate`: type mismatch: expected object, got string",
+          "caseTotal": 171,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "summary-ranges",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 120,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "palindrome-linked-list",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "sliding-window-maximum",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 104,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "different-ways-to-add-parentheses",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `diffWaysToCompute`: type mismatch: expected object, got string",
+          "caseTotal": 189,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "valid-anagram",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `isAnagram`: type mismatch: expected object, got string",
+          "caseTotal": 107,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "shortest-word-distance",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "strobogrammatic-number",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `isStrobogrammatic`: type mismatch: expected object, got string",
+          "caseTotal": 180,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "meeting-rooms",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 101,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "meeting-rooms-ii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 107,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "factor-combinations",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 58,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "verify-preorder-sequence-in-binary-search-tree",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 97,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "binary-tree-paths",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 14,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "single-number-iii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 50,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "palindrome-permutation",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `canPermutePalindrome`: type mismatch: expected object, got string",
+          "caseTotal": 105,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "palindrome-permutation-ii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `generatePalindromes`: type mismatch: expected object, got string",
+          "caseTotal": 106,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "missing-number",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "closest-binary-search-tree-value",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "paint-fence",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[7]: expected \"8544194047146303810\", got 8544194047146303000",
+          "caseTotal": 103,
+          "executedPass": 7,
+          "executedFail": 1
+        },
+        {
+          "id": "move-zeroes",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "find-the-duplicate-number",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "word-pattern",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `wordPattern`: type mismatch: expected object, got string",
+          "caseTotal": 147,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "flip-game",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `generatePossibleNextMoves`: type mismatch: expected object, got string",
+          "caseTotal": 129,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "bulls-and-cows",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `getHint`: type mismatch: expected object, got string",
+          "caseTotal": 115,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "longest-increasing-subsequence",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 134,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "number-of-islands-ii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 81,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "minimum-height-trees",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 65,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "burst-balloons",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 96,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "maximum-product-of-word-lengths",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 67,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "generalized-abbreviation",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `generateAbbreviations`: type mismatch: expected object, got string",
+          "caseTotal": 54,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "coin-change",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 127,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "counting-bits",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 50,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "longest-substring-with-at-most-k-distinct-characters",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `lengthOfLongestSubstringKDistinct`: type mismatch: expected object, got string",
+          "caseTotal": 118,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "reverse-string",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "reverse-vowels-of-a-string",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `reverseVowels`: type mismatch: expected object, got string",
+          "caseTotal": 38,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "top-k-frequent-elements",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 34,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "intersection-of-two-arrays",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 124,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "intersection-of-two-arrays-ii",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 137,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "android-unlock-patterns",
+          "status": "unverified",
+          "category": "timeout",
+          "reason": "子进程超时 180000ms",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "rearrange-string-k-distance-apart",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): compile pipeline rejected module `leetcode-rearrange-string-k-distance-apart` (SMIR007): Semantic MIR 合同失败: function=leetcode.rearrange_string_k_distance_apart::rearrangeString, location=block 22 terminator, detail=return operand type differs from function return type (actual=Utf8, expected=Nominal { declaration: ItemId(72), arguments: [], primitive_identity: None })",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "sum-of-two-integers",
+          "status": "fail",
+          "category": "runtime-crash",
+          "reason": "Error: thread '<unnamed>' (35172) panicked at runtimes\\odin-vm\\src\\host.rs:520:41:\nattempt to multiply with overflow\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "find-k-pairs-with-smallest-sums",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 102,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "guess-number-higher-or-lower-ii",
+          "status": "unverified",
+          "category": "timeout",
+          "reason": "子进程超时 180000ms",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "kth-smallest-element-in-a-sorted-matrix",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "ransom-note",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `canConstruct`: type mismatch: expected object, got string",
+          "caseTotal": 142,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "lexicographical-numbers",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 68,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "first-unique-character-in-a-string",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `firstUniqChar`: type mismatch: expected object, got string",
+          "caseTotal": 91,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "find-the-difference",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `findTheDifference`: type mismatch: expected object, got string",
+          "caseTotal": 85,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "is-subsequence",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `isSubsequence`: type mismatch: expected object, got string",
+          "caseTotal": 69,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "utf-8-validation",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "decode-string",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): compile pipeline rejected module `leetcode-decode-string` (CAN054): sum 物理 payload 类型未完成实例化: Nominal declaration `ItemId(65)` 需要平台 NyarType::Nominal，禁止降级为 Named 短名 (at DecodedPart::Plain)",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "binary-watch",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 12,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "sum-of-left-leaves",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "convert-a-number-to-hexadecimal",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 60,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "queue-reconstruction-by-height",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 101,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "valid-word-abbreviation",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `validWordAbbreviation`: type mismatch: expected object, got string",
+          "caseTotal": 234,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "longest-palindrome",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `longestPalindrome`: type mismatch: expected object, got string",
+          "caseTotal": 68,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "fizz-buzz",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: serialize result: unsupported feature: JSON object export type/layout contract",
+          "caseTotal": 56,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "arithmetic-slices",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "third-maximum-number",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): compile pipeline rejected module `leetcode-third-maximum-number` (SMIR007): Semantic MIR 合同失败: function=leetcode.third_maximum_number::equals_opt, location=block 4 terminator, detail=return operand type differs from function return type (actual=Unit, expected=Boolean)",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "add-strings",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `addStrings`: type mismatch: expected object, got string",
+          "caseTotal": 95,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "maximum-xor-of-two-numbers-in-an-array",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 102,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "valid-word-square",
+          "status": "unverified",
+          "category": "runtime-pending",
+          "reason": "`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "longest-repeating-character-replacement",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `characterReplacement`: type mismatch: expected object, got string",
+          "caseTotal": 105,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "number-of-segments-in-a-string",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `countSegments`: type mismatch: expected object, got string",
+          "caseTotal": 38,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "non-overlapping-intervals",
+          "status": "fail",
+          "category": "build-failure",
+          "reason": "legion build --target ovm-unknown-unknown-managed failed (napi:legionBuild): error[valkyrie.hir.unresolved_call]: unresolved call `sort` in order_items: candidate is bound, but `where` evidence rejected the concrete substitution, so the instance never closed\n  --> solution.v:48:5\n   |\n48 |     sort(items)\n   |     ^^^^^^^^^^^\n\nerror: aborting due to 1 previous error",
+          "caseTotal": 0,
+          "executedPass": 0,
+          "executedFail": 0
+        },
+        {
+          "id": "find-right-interval",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 113,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "find-all-anagrams-in-a-string",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: run entry `findAnagrams`: type mismatch: expected object, got string",
+          "caseTotal": 102,
+          "executedPass": 0,
+          "executedFail": 1
+        },
+        {
+          "id": "find-all-duplicates-in-an-array",
+          "status": "fail",
+          "category": "abi-contract",
+          "reason": "Error: parse args-json: unsupported feature: JSON array export type/layout contract",
+          "caseTotal": 61,
+          "executedPass": 0,
+          "executedFail": 1
+        }
+      ]
+    }
+  },
+  "crossTarget": {
+    "compared": 200,
+    "bothPass": 34,
+    "wasmOnlyPass": 138,
+    "ovmOnlyPass": 0,
+    "neitherPass": 28,
+    "notCompared": 961
+  }
+}

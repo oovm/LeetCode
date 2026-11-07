@@ -20,6 +20,14 @@
   `期望签名（[提案]，源码尚不存在）`；真实 API 另按源码签名书写，两者不得混排。
   写解法时以源码为准，不以本账本的愿望为准（见观察 4 / 观察 5）。
 
+## 判题基线（2026-11-07 实测）
+
+- 分母 1161 题（V canonical；TS lane 取同一集合）。
+- TypeScript（[typescript-lane-baseline.md](./typescript-lane-baseline.md)）：Node 973 通过 / 186 失败 / 0 blocked / 2 未验证；Bun 972 / 185 / 0 / 4。空 `solution.ts` 123 题显式失败，未计通过。
+- Valkyrie 双 target（[valkyrie-dual-target-baseline.md](./valkyrie-dual-target-baseline.md)，前 200 题实测，其余 961 题未跑）：wasm 172 通过 / 27 失败 / 0 blocked / 1 未验证；ovm 34 / 131 / 1 / 34。两 target 都过 34，仅 wasm 过 138，仅 ovm 过 0。
+- ovm 主导失败是 ABI 合同（117）：`parse args-json` / `serialize result` 的 JSON 数组/对象导出合同未落地，不是题解算错。
+- 口径：`skipped` 不抵扣分母、不计入 pass；空跑、缺 `export class Solution`、超时、runtime pending 单列，不并入通过。
+
 G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归位与此后新增编号的唯一判据）：
 
 判据看绕路的**性质**，不看「能不能绕」——任何缺失都能靠调用点手写绕过去。

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** ¼ÓÔØ solvers/typescript/<project>/solution.ts ²¢Ö´ÐÐ metadata.tests¡£ */
+/** åŠ è½½ solvers/typescript/<project>/solution.ts å¹¶æ‰§è¡Œ metadata.testsã€‚ */
 import { benchTsSolverInProcess, runTsSolverOnce } from '../src/adapters/typescript-node/ref.ts';
 import { TYPESCRIPT_BENCH_PARAMS } from '../src/planning/bench-params.ts';
 
@@ -19,7 +19,8 @@ async function main(): Promise<number> {
         return 0;
     }
 
-    await runTsSolverOnce(problemDir);
+    const stats = await runTsSolverOnce(problemDir);
+    console.log(JSON.stringify({ caseTotal: stats.caseTotal, executed: stats.executed }));
     return 0;
 }
 

@@ -108,14 +108,15 @@ async function loadTsCandidate(problemRoot: string) {
     return { id: problemIdFromDir(problemRoot), tests: metadata.tests, candidate };
 }
 
-/** ????? metadata.tests?? */
-export async function runTsSolverOnce(problemRoot: string, _problemId?: string): Promise<void> {
+/** 返回真实执行计数，供基线区分「全部断言通过」与「空跑也退 0」。 */
+export async function runTsSolverOnce(problemRoot: string, _problemId?: string): Promise<{ caseTotal: number; executed: number }> {
     const { id, tests, candidate } = await loadTsCandidate(problemRoot);
     const integerKeys = inferIntegerArgKeys(tests);
     const mode = compareModeForExecution(id);
     for (const [index, case_] of tests.entries()) {
         assertTsCase(index, case_, candidate, integerKeys, mode);
     }
+    return { caseTotal: tests.length, executed: tests.length };
 }
 
 /**

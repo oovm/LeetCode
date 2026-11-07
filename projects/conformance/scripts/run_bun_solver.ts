@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-/** ÔÚ Bun ½ø³ÌÄÚ¼ÓÔØ solvers/typescript/solution.ts ²¢Ö´ÐÐ metadata.tests¡£ */
+/** åœ¨ Bun è¿›ç¨‹å†…åŠ è½½ solvers/typescript/solution.ts å¹¶æ‰§è¡Œ metadata.testsã€‚ */
 import { BUN_BENCH_PARAMS } from '../src/planning/bench-params.ts';
 import { benchBunSolverInProcess, runBunSolverOnce } from '../src/adapters/typescript-bun/runtime.ts';
 
@@ -44,7 +44,8 @@ async function main(): Promise<number> {
         return 0;
     }
 
-    await runBunSolverOnce(problemDir);
+    const stats = await runBunSolverOnce(problemDir);
+    console.log(JSON.stringify({ caseTotal: stats.caseTotal, executed: stats.executed }));
     return 0;
 }
 

@@ -1,0 +1,3218 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-07T09:23:06.574Z",
+  "scope": {
+    "total": 1161,
+    "definition": "V canonical：存在非空 `solvers/valkyrie/solution.v` 且无阻塞标记的题目，TS lane 取同一集合以便与 V 对比"
+  },
+  "policy": {
+    "pass": "只有 runner 退出 0 且报告 caseTotal === executed > 0 才记通过",
+    "emptyRun": "空 solution.ts / 缺 `export class Solution` 显式记 fail",
+    "skipped": "skipped 不抵扣分母、不计入 pass",
+    "unverified": "超时 / 子进程崩溃 / 无结构化执行计数单列，不并入 pass"
+  },
+  "channels": {
+    "node": {
+      "total": 1161,
+      "attempted": 1161,
+      "pass": 973,
+      "fail": 186,
+      "blocked": 0,
+      "unverified": 2,
+      "missing": 0,
+      "caseTotal": 108192,
+      "executed": 94120,
+      "passedCases": 92820,
+      "categoryCounts": {
+        "pass": 973,
+        "empty-solver": 123,
+        "assert-mismatch": 51,
+        "load-error": 5,
+        "validator-required": 4,
+        "order-only-mismatch": 3,
+        "timeout": 2
+      },
+      "orderOnlyMismatch": [
+        "find-all-duplicates-in-an-array",
+        "sort-array-by-parity",
+        "sort-array-by-parity-ii"
+      ],
+      "byReason": [
+        {
+          "status": "fail",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "count": 123
+        },
+        {
+          "status": "unverified",
+          "reason": "超时 60000ms，未拿到执行计数",
+          "count": 2
+        },
+        {
+          "status": "fail",
+          "reason": "TypeError: Cannot mix BigInt and other types, use explicit conversions",
+          "count": 2
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[1]: expected [0,3], got [-1,-1]",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "RangeError: Invalid string length",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: 多解题 gray-code 需要题面语义校验，禁止 JSON/规范化比较（题面允许任意合法 Gray 码序列，相邻只差一位是序列属性，排序会破坏合法性）",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[95]: expected 14, got 10",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[2]: expected [], got [null,null]（compareMode=unordered-1d）",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[21]: expected \"a\", got \"a[b\"",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[5]: expected [5,6,9], got [9,5,6]",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: 多解题 sort-characters-by-frequency 需要题面语义校验，禁止 JSON/规范化比较（频次相同时字符顺序自由，排序无法判定“按频次降序”这一约束）",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[0]: expected 475, got 958",
+          "count": 1
+        }
+      ],
+      "failures": [
+        {
+          "id": "divide-two-integers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 135,
+          "executed": 0
+        },
+        {
+          "id": "find-first-and-last-position-of-element-in-sorted-array",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[1]: expected [0,3], got [-1,-1]",
+          "caseTotal": 137,
+          "executed": 2
+        },
+        {
+          "id": "combination-sum",
+          "status": "fail",
+          "category": "load-error",
+          "reason": "RangeError: Invalid string length",
+          "caseTotal": 115,
+          "executed": 0
+        },
+        {
+          "id": "gray-code",
+          "status": "fail",
+          "category": "validator-required",
+          "reason": "Error: 多解题 gray-code 需要题面语义校验，禁止 JSON/规范化比较（题面允许任意合法 Gray 码序列，相邻只差一位是序列属性，排序会破坏合法性）",
+          "caseTotal": 16,
+          "executed": 0
+        },
+        {
+          "id": "pascals-triangle",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 16,
+          "executed": 0
+        },
+        {
+          "id": "pascals-triangle-ii",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 20,
+          "executed": 0
+        },
+        {
+          "id": "max-points-on-a-line",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[95]: expected 14, got 10",
+          "caseTotal": 108,
+          "executed": 96
+        },
+        {
+          "id": "factorial-trailing-zeroes",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 71,
+          "executed": 0
+        },
+        {
+          "id": "reverse-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 24,
+          "executed": 0
+        },
+        {
+          "id": "number-of-1-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 139,
+          "executed": 0
+        },
+        {
+          "id": "bitwise-and-of-numbers-range",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 97,
+          "executed": 0
+        },
+        {
+          "id": "power-of-two",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 97,
+          "executed": 0
+        },
+        {
+          "id": "number-of-digit-one",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 76,
+          "executed": 0
+        },
+        {
+          "id": "different-ways-to-add-parentheses",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[2]: expected [], got [null,null]（compareMode=unordered-1d）",
+          "caseTotal": 189,
+          "executed": 3
+        },
+        {
+          "id": "add-digits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 51,
+          "executed": 0
+        },
+        {
+          "id": "ugly-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 74,
+          "executed": 0
+        },
+        {
+          "id": "nim-game",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 114,
+          "executed": 0
+        },
+        {
+          "id": "flip-game",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 129,
+          "executed": 0
+        },
+        {
+          "id": "bulb-switcher",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 85,
+          "executed": 0
+        },
+        {
+          "id": "power-of-three",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 99,
+          "executed": 0
+        },
+        {
+          "id": "counting-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 50,
+          "executed": 0
+        },
+        {
+          "id": "power-of-four",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 55,
+          "executed": 0
+        },
+        {
+          "id": "integer-break",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 30,
+          "executed": 0
+        },
+        {
+          "id": "intersection-of-two-arrays",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 124,
+          "executed": 0
+        },
+        {
+          "id": "count-numbers-with-unique-digits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 11,
+          "executed": 0
+        },
+        {
+          "id": "sum-of-two-integers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 80,
+          "executed": 0
+        },
+        {
+          "id": "decode-string",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[21]: expected \"a\", got \"a[b\"",
+          "caseTotal": 144,
+          "executed": 22
+        },
+        {
+          "id": "integer-replacement",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 37,
+          "executed": 0
+        },
+        {
+          "id": "nth-digit",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 50,
+          "executed": 0
+        },
+        {
+          "id": "binary-watch",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 12,
+          "executed": 0
+        },
+        {
+          "id": "convert-a-number-to-hexadecimal",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 60,
+          "executed": 0
+        },
+        {
+          "id": "fizz-buzz",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 56,
+          "executed": 0
+        },
+        {
+          "id": "arranging-coins",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 54,
+          "executed": 0
+        },
+        {
+          "id": "find-all-duplicates-in-an-array",
+          "status": "fail",
+          "category": "order-only-mismatch",
+          "reason": "Error: tests[5]: expected [5,6,9], got [9,5,6]",
+          "caseTotal": 61,
+          "executed": 6
+        },
+        {
+          "id": "sort-characters-by-frequency",
+          "status": "fail",
+          "category": "validator-required",
+          "reason": "Error: 多解题 sort-characters-by-frequency 需要题面语义校验，禁止 JSON/规范化比较（频次相同时字符顺序自由，排序无法判定“按频次降序”这一约束）",
+          "caseTotal": 54,
+          "executed": 0
+        },
+        {
+          "id": "hamming-distance",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 88,
+          "executed": 0
+        },
+        {
+          "id": "number-complement",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 44,
+          "executed": 0
+        },
+        {
+          "id": "largest-palindrome-product",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 475, got 958",
+          "caseTotal": 8,
+          "executed": 1
+        },
+        {
+          "id": "construct-the-rectangle",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 74,
+          "executed": 0
+        },
+        {
+          "id": "base-7",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 47,
+          "executed": 0
+        },
+        {
+          "id": "perfect-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 67,
+          "executed": 0
+        },
+        {
+          "id": "fibonacci-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 17,
+          "executed": 0
+        },
+        {
+          "id": "detect-capital",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 401,
+          "executed": 0
+        },
+        {
+          "id": "student-attendance-record-i",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 181,
+          "executed": 0
+        },
+        {
+          "id": "optimal-division",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[7]: expected 10, got \"10\"",
+          "caseTotal": 114,
+          "executed": 8
+        },
+        {
+          "id": "non-negative-integers-without-consecutive-ones",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 34, got 21",
+          "caseTotal": 26,
+          "executed": 1
+        },
+        {
+          "id": "construct-string-from-binary-tree",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[3]: expected 1, got \"1\"",
+          "caseTotal": 7,
+          "executed": 4
+        },
+        {
+          "id": "minimum-factorization",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[1]: expected 25, got 52",
+          "caseTotal": 52,
+          "executed": 2
+        },
+        {
+          "id": "sum-of-square-numbers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 53,
+          "executed": 0
+        },
+        {
+          "id": "2-keys-keyboard",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 65,
+          "executed": 0
+        },
+        {
+          "id": "binary-number-with-alternating-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 72,
+          "executed": 0
+        },
+        {
+          "id": "to-lower-case",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 41,
+          "executed": 0
+        },
+        {
+          "id": "accounts-merge",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[55]: expected [[\"Alice\",\"alice1@example.com\",\"alice2@example.com\",\"bob1@example.com\"],[\"Bob\",\"bob2@example.com\",\"bob3@example.com\",\"charlie1@example.com\"],[\"Alice\",\"alice3@example.com\"]], got [[\"Alice\",\"alice1@example.com\",\"alice2@example.com\",\"bob1@example.com\"],[\"Charlie\",\"bob2@example.com\",\"bob3@example.com\",\"charlie1@example.com\"],[\"Alice\",\"alice3@example.com\"]]（compareMode=outer-only）",
+          "caseTotal": 85,
+          "executed": 56
+        },
+        {
+          "id": "monotone-increasing-digits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 111,
+          "executed": 0
+        },
+        {
+          "id": "open-the-lock",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[37]: expected 6, got -1",
+          "caseTotal": 110,
+          "executed": 38
+        },
+        {
+          "id": "reach-a-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 70,
+          "executed": 0
+        },
+        {
+          "id": "prime-number-of-set-bits-in-binary-representation",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 79,
+          "executed": 0
+        },
+        {
+          "id": "jewels-and-stones",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 103,
+          "executed": 0
+        },
+        {
+          "id": "letter-case-permutation",
+          "status": "unverified",
+          "category": "timeout",
+          "reason": "超时 60000ms，未拿到执行计数",
+          "caseTotal": 126,
+          "executed": 0
+        },
+        {
+          "id": "escape-the-ghosts",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[4]: expected true, got false",
+          "caseTotal": 138,
+          "executed": 5
+        },
+        {
+          "id": "domino-and-tromino-tiling",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 5, got 2",
+          "caseTotal": 30,
+          "executed": 1
+        },
+        {
+          "id": "shortest-distance-to-a-character",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 118,
+          "executed": 0
+        },
+        {
+          "id": "consecutive-numbers-sum",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 53,
+          "executed": 0
+        },
+        {
+          "id": "positions-of-large-groups",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 54,
+          "executed": 0
+        },
+        {
+          "id": "find-and-replace-in-string",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[15]: expected 12345, got \"12345\"",
+          "caseTotal": 96,
+          "executed": 16
+        },
+        {
+          "id": "mirror-reflection",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 84,
+          "executed": 0
+        },
+        {
+          "id": "shortest-path-to-get-all-keys",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[16]: expected -1, got 8",
+          "caseTotal": 61,
+          "executed": 17
+        },
+        {
+          "id": "binary-gap",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 61,
+          "executed": 0
+        },
+        {
+          "id": "advantage-shuffle",
+          "status": "fail",
+          "category": "validator-required",
+          "reason": "Error: 多解题 advantage-shuffle 需要题面语义校验，禁止 JSON/规范化比较（题面允许返回任意合法重排）",
+          "caseTotal": 99,
+          "executed": 0
+        },
+        {
+          "id": "uncommon-words-from-two-sentences",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 130,
+          "executed": 0
+        },
+        {
+          "id": "surface-area-of-3d-shapes",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[9]: expected 204, got null",
+          "caseTotal": 78,
+          "executed": 10
+        },
+        {
+          "id": "sort-array-by-parity",
+          "status": "fail",
+          "category": "order-only-mismatch",
+          "reason": "Error: tests[0]: expected [0,8,6,4,2,9,7,5,3,1], got [2,4,6,8,0,1,3,5,7,9]",
+          "caseTotal": 98,
+          "executed": 1
+        },
+        {
+          "id": "word-subsets",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected [\"cccbb\"], got []（compareMode=unordered-1d）",
+          "caseTotal": 69,
+          "executed": 1
+        },
+        {
+          "id": "sort-array-by-parity-ii",
+          "status": "fail",
+          "category": "order-only-mismatch",
+          "reason": "Error: tests[14]: expected [4,3,2,1,6,5], got [2,1,4,3,6,5]",
+          "caseTotal": 74,
+          "executed": 15
+        },
+        {
+          "id": "minimum-falling-path-sum",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[10]: expected 0, got 101",
+          "caseTotal": 79,
+          "executed": 11
+        },
+        {
+          "id": "di-string-match",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 157,
+          "executed": 0
+        },
+        {
+          "id": "satisfiability-of-equality-equations",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[52]: expected true, got false",
+          "caseTotal": 83,
+          "executed": 53
+        },
+        {
+          "id": "clumsy-factorial",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 38,
+          "executed": 0
+        },
+        {
+          "id": "minimum-domino-rotations-for-equal-row",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[87]: expected 1, got 0",
+          "caseTotal": 112,
+          "executed": 88
+        },
+        {
+          "id": "complement-of-base-10-integer",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 37,
+          "executed": 0
+        },
+        {
+          "id": "numbers-with-repeated-digits",
+          "status": "fail",
+          "category": "load-error",
+          "reason": "TypeError: Cannot mix BigInt and other types, use explicit conversions",
+          "caseTotal": 59,
+          "executed": 0
+        },
+        {
+          "id": "smallest-integer-divisible-by-k",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 90,
+          "executed": 0
+        },
+        {
+          "id": "divisor-game",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 51,
+          "executed": 0
+        },
+        {
+          "id": "matrix-cells-in-distance-order",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 77,
+          "executed": 0
+        },
+        {
+          "id": "occurrences-after-bigram",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 101,
+          "executed": 0
+        },
+        {
+          "id": "brace-expansion",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[3]: expected [\"ab{c\",\"ab{ce}\",\"ad\",\"ade}\"], got [\"abc\",\"abd\",\"ae\"]",
+          "caseTotal": 100,
+          "executed": 4
+        },
+        {
+          "id": "duplicate-zeros",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected null, got [8,4,5,0,0,0,0,0]",
+          "caseTotal": 96,
+          "executed": 1
+        },
+        {
+          "id": "distribute-candies-to-people",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 88,
+          "executed": 0
+        },
+        {
+          "id": "parsing-a-boolean-expression",
+          "status": "fail",
+          "category": "load-error",
+          "reason": "RangeError: Maximum call stack size exceeded",
+          "caseTotal": 130,
+          "executed": 0
+        },
+        {
+          "id": "defanging-an-ip-address",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 48,
+          "executed": 0
+        },
+        {
+          "id": "number-of-days-in-a-month",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 33,
+          "executed": 0
+        },
+        {
+          "id": "armstrong-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 56,
+          "executed": 0
+        },
+        {
+          "id": "n-th-tribonacci-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 18,
+          "executed": 0
+        },
+        {
+          "id": "day-of-the-year",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 119,
+          "executed": 0
+        },
+        {
+          "id": "find-words-that-can-be-formed-by-characters",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[14]: expected 4, got 7",
+          "caseTotal": 134,
+          "executed": 15
+        },
+        {
+          "id": "day-of-the-week",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 19,
+          "executed": 0
+        },
+        {
+          "id": "find-smallest-common-element-in-all-rows",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 90,
+          "executed": 0
+        },
+        {
+          "id": "split-a-string-in-balanced-strings",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 118,
+          "executed": 0
+        },
+        {
+          "id": "count-square-submatrices-with-all-ones",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 67,
+          "executed": 0
+        },
+        {
+          "id": "subtract-the-product-and-sum-of-digits-of-an-integer",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 55,
+          "executed": 0
+        },
+        {
+          "id": "find-n-unique-integers-sum-up-to-zero",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 60,
+          "executed": 0
+        },
+        {
+          "id": "xor-queries-of-a-subarray",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[49]: expected [592308591,3569715250,1518674357,720695493,410388572,2036495916,1513070403,123456789,4040404040,1616595204,585955217,381688791,992719227,3904238684,405970720,517479555,1291834588], got [592308591,-725252046,1518674357,720695493,410388572,2036495916,1513070403,123456789,-254563256,1616595204,585955217,381688791,992719227,-390728612,405970720,517479555,1291834588]",
+          "caseTotal": 77,
+          "executed": 50
+        },
+        {
+          "id": "convert-integer-to-the-sum-of-two-no-zero-integers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 115,
+          "executed": 0
+        },
+        {
+          "id": "minimum-flips-to-make-a-or-b-equal-to-c",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 92,
+          "executed": 0
+        },
+        {
+          "id": "number-of-steps-to-reduce-a-number-to-zero",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 59,
+          "executed": 0
+        },
+        {
+          "id": "rank-teams-by-votes",
+          "status": "fail",
+          "category": "load-error",
+          "reason": "TypeError: Cannot read properties of undefined (reading '0')",
+          "caseTotal": 73,
+          "executed": 0
+        },
+        {
+          "id": "number-of-steps-to-reduce-a-number-in-binary-representation-to-one",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 101,
+          "executed": 0
+        },
+        {
+          "id": "diagonal-traverse-ii",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected [1], got [[1]]",
+          "caseTotal": 70,
+          "executed": 1
+        },
+        {
+          "id": "make-two-arrays-equal-by-reversing-subarrays",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[112]: expected false, got true",
+          "caseTotal": 122,
+          "executed": 113
+        },
+        {
+          "id": "xor-operation-in-an-array",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 92,
+          "executed": 0
+        },
+        {
+          "id": "count-submatrices-with-all-ones",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 90,
+          "executed": 0
+        },
+        {
+          "id": "water-bottles",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 73,
+          "executed": 0
+        },
+        {
+          "id": "count-odd-numbers-in-an-interval-range",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 93,
+          "executed": 0
+        },
+        {
+          "id": "maximum-number-of-coins-you-can-get",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 32, got 36",
+          "caseTotal": 99,
+          "executed": 1
+        },
+        {
+          "id": "sum-of-all-odd-length-subarrays",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 8760, got 5460",
+          "caseTotal": 104,
+          "executed": 1
+        },
+        {
+          "id": "crawler-log-folder",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[5]: expected 4, got 5",
+          "caseTotal": 87,
+          "executed": 6
+        },
+        {
+          "id": "count-of-matches-in-tournament",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 60,
+          "executed": 0
+        },
+        {
+          "id": "calculate-money-in-leetcode-bank",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 50,
+          "executed": 0
+        },
+        {
+          "id": "decode-xored-array",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 97,
+          "executed": 0
+        },
+        {
+          "id": "find-kth-largest-xor-coordinate-value",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[61]: expected 0, got null",
+          "caseTotal": 87,
+          "executed": 62
+        },
+        {
+          "id": "maximum-number-of-events-that-can-be-attended-ii",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[45]: expected 50, got 250",
+          "caseTotal": 108,
+          "executed": 46
+        },
+        {
+          "id": "sum-of-digits-in-base-k",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 87,
+          "executed": 0
+        },
+        {
+          "id": "distinct-numbers-in-each-subarray",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 108,
+          "executed": 0
+        },
+        {
+          "id": "largest-magic-square",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 80,
+          "executed": 0
+        },
+        {
+          "id": "kth-smallest-subarray-sum",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[12]: expected 16, got 15",
+          "caseTotal": 88,
+          "executed": 13
+        },
+        {
+          "id": "count-square-sum-triples",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 23,
+          "executed": 0
+        },
+        {
+          "id": "concatenation-of-array",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 71,
+          "executed": 0
+        },
+        {
+          "id": "find-greatest-common-divisor-of-array",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 117,
+          "executed": 0
+        },
+        {
+          "id": "count-number-of-pairs-with-absolute-difference-k",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[2]: expected 6, got 12",
+          "caseTotal": 106,
+          "executed": 3
+        },
+        {
+          "id": "final-value-of-variable-after-performing-operations",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 88,
+          "executed": 0
+        },
+        {
+          "id": "maximum-difference-between-increasing-elements",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 118,
+          "executed": 0
+        },
+        {
+          "id": "k-radius-subarray-averages",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 94,
+          "executed": 0
+        },
+        {
+          "id": "find-first-palindromic-string-in-the-array",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[74]: expected 12321, got \"12321\"",
+          "caseTotal": 104,
+          "executed": 75
+        },
+        {
+          "id": "a-number-after-a-double-reversal",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 66,
+          "executed": 0
+        },
+        {
+          "id": "divide-a-string-into-groups-of-size-k",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 110,
+          "executed": 0
+        },
+        {
+          "id": "minimum-moves-to-reach-target-score",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 140,
+          "executed": 0
+        },
+        {
+          "id": "minimum-cost-to-set-cooking-time",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[7]: expected 3, got 6",
+          "caseTotal": 116,
+          "executed": 8
+        },
+        {
+          "id": "count-operations-to-obtain-zero",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 78,
+          "executed": 0
+        },
+        {
+          "id": "count-integers-with-even-digit-sum",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 34,
+          "executed": 0
+        },
+        {
+          "id": "counting-words-with-a-given-prefix",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 153,
+          "executed": 0
+        },
+        {
+          "id": "sort-the-jumbled-numbers",
+          "status": "fail",
+          "category": "load-error",
+          "reason": "TypeError: Cannot mix BigInt and other types, use explicit conversions",
+          "caseTotal": 110,
+          "executed": 0
+        },
+        {
+          "id": "cells-in-a-range-on-an-excel-sheet",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 93,
+          "executed": 0
+        },
+        {
+          "id": "minimum-bit-flips-to-convert-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 85,
+          "executed": 0
+        },
+        {
+          "id": "add-two-integers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 59,
+          "executed": 0
+        },
+        {
+          "id": "calculate-digit-sum-of-a-string",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[90]: expected \"25252525252525253000\", got \"25252525252525252521\"",
+          "caseTotal": 101,
+          "executed": 91
+        },
+        {
+          "id": "count-asterisks",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 106,
+          "executed": 0
+        },
+        {
+          "id": "smallest-even-multiple",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 91,
+          "executed": 0
+        },
+        {
+          "id": "closest-fair-integer",
+          "status": "unverified",
+          "category": "timeout",
+          "reason": "超时 60000ms，未拿到执行计数",
+          "caseTotal": 70,
+          "executed": 0
+        },
+        {
+          "id": "number-of-common-factors",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 107,
+          "executed": 0
+        },
+        {
+          "id": "find-the-original-array-of-prefix-xor",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[34]: expected [42,126,252,504,1008,2016,4032,8064,16128,32256,64512,129024,258048,516096,1032192,2064384,4128768,8257536,16515072,33030144,66060288,132120576,264241152,528482304,1056964608,2113929216,4227858432,8455716864,16911433728,33822867456,67645734912,135291469824,270582939648,541165879296,1082331758592,2164663517184,4329327034368], got [42,126,252,504,1008,2016,4032,8064,16128,32256,64512,129024,2",
+          "caseTotal": 98,
+          "executed": 35
+        },
+        {
+          "id": "minimum-addition-to-make-integer-beautiful",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[32]: expected 6543211, got 6543200",
+          "caseTotal": 103,
+          "executed": 33
+        },
+        {
+          "id": "number-of-distinct-averages",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 1, got 9",
+          "caseTotal": 113,
+          "executed": 1
+        },
+        {
+          "id": "convert-the-temperature",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 39,
+          "executed": 0
+        },
+        {
+          "id": "find-the-pivot-integer",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 52,
+          "executed": 0
+        },
+        {
+          "id": "count-the-digits-that-divide-a-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 77,
+          "executed": 0
+        },
+        {
+          "id": "alternating-digit-sum",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 57,
+          "executed": 0
+        },
+        {
+          "id": "count-total-number-of-colored-cells",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 37,
+          "executed": 0
+        },
+        {
+          "id": "pass-the-pillow",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 94,
+          "executed": 0
+        },
+        {
+          "id": "distribute-money-to-maximum-children",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 47,
+          "executed": 0
+        },
+        {
+          "id": "number-of-even-and-odd-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 62,
+          "executed": 0
+        },
+        {
+          "id": "k-items-with-the-maximum-sum",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 105,
+          "executed": 0
+        },
+        {
+          "id": "calculate-delayed-arrival-time",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 31,
+          "executed": 0
+        },
+        {
+          "id": "sum-multiples",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 38,
+          "executed": 0
+        },
+        {
+          "id": "find-the-prefix-common-array-of-two-arrays",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[42]: expected [0,0,0,1,2,2,2,3,3,5,5,7,8,8,9,10,11,12,14,16,18,19,19,20,22,24,25,26,27,29], got [0,0,0,1,2,2,2,3,3,5,5,7,8,8,9,10,11,12,14,16,18,19,19,20,22,24,25,26,27,29,30,30]",
+          "caseTotal": 72,
+          "executed": 43
+        },
+        {
+          "id": "find-the-losers-of-the-circular-game",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 73,
+          "executed": 0
+        },
+        {
+          "id": "difference-of-number-of-distinct-values-on-diagonals",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 91,
+          "executed": 0
+        },
+        {
+          "id": "neither-minimum-nor-maximum",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[7]: expected 3, got 4",
+          "caseTotal": 94,
+          "executed": 8
+        },
+        {
+          "id": "find-the-maximum-achievable-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 82,
+          "executed": 0
+        },
+        {
+          "id": "account-balance-after-rounded-purchase",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 54,
+          "executed": 0
+        },
+        {
+          "id": "find-the-minimum-possible-sum-of-a-beautiful-array",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[1]: expected 7500, got 7600",
+          "caseTotal": 91,
+          "executed": 2
+        },
+        {
+          "id": "smallest-number-with-given-digit-product",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[1]: expected -1, got 0",
+          "caseTotal": 41,
+          "executed": 2
+        },
+        {
+          "id": "divisible-and-non-divisible-sums-difference",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 93,
+          "executed": 0
+        },
+        {
+          "id": "find-indices-with-index-and-value-difference-i",
+          "status": "fail",
+          "category": "validator-required",
+          "reason": "Error: 多解题 find-indices-with-index-and-value-difference-i 需要题面语义校验，禁止 JSON/规范化比较（题面允许返回任意满足条件的下标对）",
+          "caseTotal": 137,
+          "executed": 0
+        },
+        {
+          "id": "construct-product-matrix",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 82,
+          "executed": 0
+        },
+        {
+          "id": "maximum-xor-product",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[58]: expected 532600269, got 27435821",
+          "caseTotal": 74,
+          "executed": 59
+        },
+        {
+          "id": "minimum-number-of-operations-to-make-array-xor-equal-to-k",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[75]: expected 28, got 0",
+          "caseTotal": 115,
+          "executed": 76
+        },
+        {
+          "id": "harshad-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 53,
+          "executed": 0
+        },
+        {
+          "id": "maximum-number-that-makes-result-of-bitwise-and-zero",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[20]: expected \"576460752303423487\", got 576460752303423500",
+          "caseTotal": 86,
+          "executed": 21
+        },
+        {
+          "id": "minimum-array-end",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[28]: expected \"107374182399999999\", got 107374182400000000",
+          "caseTotal": 106,
+          "executed": 29
+        },
+        {
+          "id": "number-of-bit-changes-to-make-two-integers-equal",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 91,
+          "executed": 0
+        },
+        {
+          "id": "find-the-key-of-the-numbers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 96,
+          "executed": 0
+        },
+        {
+          "id": "the-two-sneaky-numbers-of-digitville",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[19]: expected [10,9,8,7,6,5,4,3,2,0], got [1,2,3,4,5,6,7,8,9,10,0,1]（compareMode=unordered-1d）",
+          "caseTotal": 74,
+          "executed": 20
+        },
+        {
+          "id": "maximum-sized-array",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[19]: expected 1330, got 7513",
+          "caseTotal": 69,
+          "executed": 20
+        },
+        {
+          "id": "stone-removal-game",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 29,
+          "executed": 0
+        },
+        {
+          "id": "smallest-number-with-all-set-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 56,
+          "executed": 0
+        },
+        {
+          "id": "zigzag-grid-traversal-with-skip",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[3]: expected [5,7,12,10,13,15], got [5,7,11,9,13,15]",
+          "caseTotal": 71,
+          "executed": 4
+        },
+        {
+          "id": "manhattan-distances-of-all-arrangements-of-pieces",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "TransformError: Transform failed with 1 error: | E:\\victory 胜利女神\\leetcode.v\\projects\\problems\\manhattan-distances-of-all-arrangements-of-pieces\\solvers\\typescript\\solution.ts:19:96: ERROR: Expected \";\" but found \")\"",
+          "caseTotal": 89,
+          "executed": 0
+        },
+        {
+          "id": "sort-matrix-by-diagonals",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 79,
+          "executed": 0
+        }
+      ]
+    },
+    "bun": {
+      "total": 1161,
+      "attempted": 1161,
+      "pass": 972,
+      "fail": 185,
+      "blocked": 0,
+      "unverified": 4,
+      "missing": 0,
+      "caseTotal": 108192,
+      "executed": 94025,
+      "passedCases": 92725,
+      "categoryCounts": {
+        "pass": 972,
+        "empty-solver": 123,
+        "assert-mismatch": 51,
+        "timeout": 4,
+        "validator-required": 4,
+        "load-error": 4,
+        "order-only-mismatch": 3
+      },
+      "orderOnlyMismatch": [
+        "find-all-duplicates-in-an-array",
+        "sort-array-by-parity",
+        "sort-array-by-parity-ii"
+      ],
+      "byReason": [
+        {
+          "status": "fail",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "count": 123
+        },
+        {
+          "status": "unverified",
+          "reason": "超时 60000ms，未拿到执行计数",
+          "count": 4
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[1]: expected [0,3], got [-1,-1]",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: 多解题 gray-code 需要题面语义校验，禁止 JSON/规范化比较（题面允许任意合法 Gray 码序列，相邻只差一位是序列属性，排序会破坏合法性）",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[95]: expected 14, got 10",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[2]: expected [], got [null,null]（compareMode=unordered-1d）",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[21]: expected \"a\", got \"a[b\"",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[5]: expected [5,6,9], got [9,5,6]",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: 多解题 sort-characters-by-frequency 需要题面语义校验，禁止 JSON/规范化比较（频次相同时字符顺序自由，排序无法判定“按频次降序”这一约束）",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[0]: expected 475, got 958",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[7]: expected 10, got \"10\"",
+          "count": 1
+        },
+        {
+          "status": "fail",
+          "reason": "Error: tests[0]: expected 34, got 21",
+          "count": 1
+        }
+      ],
+      "failures": [
+        {
+          "id": "divide-two-integers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 135,
+          "executed": 0
+        },
+        {
+          "id": "find-first-and-last-position-of-element-in-sorted-array",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[1]: expected [0,3], got [-1,-1]",
+          "caseTotal": 137,
+          "executed": 2
+        },
+        {
+          "id": "combination-sum",
+          "status": "unverified",
+          "category": "timeout",
+          "reason": "超时 60000ms，未拿到执行计数",
+          "caseTotal": 115,
+          "executed": 0
+        },
+        {
+          "id": "gray-code",
+          "status": "fail",
+          "category": "validator-required",
+          "reason": "Error: 多解题 gray-code 需要题面语义校验，禁止 JSON/规范化比较（题面允许任意合法 Gray 码序列，相邻只差一位是序列属性，排序会破坏合法性）",
+          "caseTotal": 16,
+          "executed": 0
+        },
+        {
+          "id": "pascals-triangle",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 16,
+          "executed": 0
+        },
+        {
+          "id": "pascals-triangle-ii",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 20,
+          "executed": 0
+        },
+        {
+          "id": "max-points-on-a-line",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[95]: expected 14, got 10",
+          "caseTotal": 108,
+          "executed": 96
+        },
+        {
+          "id": "factorial-trailing-zeroes",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 71,
+          "executed": 0
+        },
+        {
+          "id": "reverse-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 24,
+          "executed": 0
+        },
+        {
+          "id": "number-of-1-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 139,
+          "executed": 0
+        },
+        {
+          "id": "bitwise-and-of-numbers-range",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 97,
+          "executed": 0
+        },
+        {
+          "id": "power-of-two",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 97,
+          "executed": 0
+        },
+        {
+          "id": "number-of-digit-one",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 76,
+          "executed": 0
+        },
+        {
+          "id": "different-ways-to-add-parentheses",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[2]: expected [], got [null,null]（compareMode=unordered-1d）",
+          "caseTotal": 189,
+          "executed": 3
+        },
+        {
+          "id": "add-digits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 51,
+          "executed": 0
+        },
+        {
+          "id": "ugly-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 74,
+          "executed": 0
+        },
+        {
+          "id": "nim-game",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 114,
+          "executed": 0
+        },
+        {
+          "id": "flip-game",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 129,
+          "executed": 0
+        },
+        {
+          "id": "bulb-switcher",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 85,
+          "executed": 0
+        },
+        {
+          "id": "power-of-three",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 99,
+          "executed": 0
+        },
+        {
+          "id": "counting-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 50,
+          "executed": 0
+        },
+        {
+          "id": "power-of-four",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 55,
+          "executed": 0
+        },
+        {
+          "id": "integer-break",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 30,
+          "executed": 0
+        },
+        {
+          "id": "intersection-of-two-arrays",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 124,
+          "executed": 0
+        },
+        {
+          "id": "count-numbers-with-unique-digits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 11,
+          "executed": 0
+        },
+        {
+          "id": "sum-of-two-integers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 80,
+          "executed": 0
+        },
+        {
+          "id": "decode-string",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[21]: expected \"a\", got \"a[b\"",
+          "caseTotal": 144,
+          "executed": 22
+        },
+        {
+          "id": "integer-replacement",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 37,
+          "executed": 0
+        },
+        {
+          "id": "nth-digit",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 50,
+          "executed": 0
+        },
+        {
+          "id": "binary-watch",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 12,
+          "executed": 0
+        },
+        {
+          "id": "convert-a-number-to-hexadecimal",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 60,
+          "executed": 0
+        },
+        {
+          "id": "fizz-buzz",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 56,
+          "executed": 0
+        },
+        {
+          "id": "arranging-coins",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 54,
+          "executed": 0
+        },
+        {
+          "id": "find-all-duplicates-in-an-array",
+          "status": "fail",
+          "category": "order-only-mismatch",
+          "reason": "Error: tests[5]: expected [5,6,9], got [9,5,6]",
+          "caseTotal": 61,
+          "executed": 6
+        },
+        {
+          "id": "sort-characters-by-frequency",
+          "status": "fail",
+          "category": "validator-required",
+          "reason": "Error: 多解题 sort-characters-by-frequency 需要题面语义校验，禁止 JSON/规范化比较（频次相同时字符顺序自由，排序无法判定“按频次降序”这一约束）",
+          "caseTotal": 54,
+          "executed": 0
+        },
+        {
+          "id": "hamming-distance",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 88,
+          "executed": 0
+        },
+        {
+          "id": "number-complement",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 44,
+          "executed": 0
+        },
+        {
+          "id": "largest-palindrome-product",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 475, got 958",
+          "caseTotal": 8,
+          "executed": 1
+        },
+        {
+          "id": "construct-the-rectangle",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 74,
+          "executed": 0
+        },
+        {
+          "id": "base-7",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 47,
+          "executed": 0
+        },
+        {
+          "id": "perfect-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 67,
+          "executed": 0
+        },
+        {
+          "id": "fibonacci-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 17,
+          "executed": 0
+        },
+        {
+          "id": "detect-capital",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 401,
+          "executed": 0
+        },
+        {
+          "id": "student-attendance-record-i",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 181,
+          "executed": 0
+        },
+        {
+          "id": "optimal-division",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[7]: expected 10, got \"10\"",
+          "caseTotal": 114,
+          "executed": 8
+        },
+        {
+          "id": "non-negative-integers-without-consecutive-ones",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 34, got 21",
+          "caseTotal": 26,
+          "executed": 1
+        },
+        {
+          "id": "construct-string-from-binary-tree",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[3]: expected 1, got \"1\"",
+          "caseTotal": 7,
+          "executed": 4
+        },
+        {
+          "id": "minimum-factorization",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[1]: expected 25, got 52",
+          "caseTotal": 52,
+          "executed": 2
+        },
+        {
+          "id": "sum-of-square-numbers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 53,
+          "executed": 0
+        },
+        {
+          "id": "2-keys-keyboard",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 65,
+          "executed": 0
+        },
+        {
+          "id": "binary-number-with-alternating-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 72,
+          "executed": 0
+        },
+        {
+          "id": "to-lower-case",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 41,
+          "executed": 0
+        },
+        {
+          "id": "accounts-merge",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[55]: expected [[\"Alice\",\"alice1@example.com\",\"alice2@example.com\",\"bob1@example.com\"],[\"Bob\",\"bob2@example.com\",\"bob3@example.com\",\"charlie1@example.com\"],[\"Alice\",\"alice3@example.com\"]], got [[\"Alice\",\"alice1@example.com\",\"alice2@example.com\",\"bob1@example.com\"],[\"Charlie\",\"bob2@example.com\",\"bob3@example.com\",\"charlie1@example.com\"],[\"Alice\",\"alice3@example.com\"]]（compareMode=outer-only）",
+          "caseTotal": 85,
+          "executed": 56
+        },
+        {
+          "id": "monotone-increasing-digits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 111,
+          "executed": 0
+        },
+        {
+          "id": "open-the-lock",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[37]: expected 6, got -1",
+          "caseTotal": 110,
+          "executed": 38
+        },
+        {
+          "id": "reach-a-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 70,
+          "executed": 0
+        },
+        {
+          "id": "prime-number-of-set-bits-in-binary-representation",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 79,
+          "executed": 0
+        },
+        {
+          "id": "jewels-and-stones",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 103,
+          "executed": 0
+        },
+        {
+          "id": "letter-case-permutation",
+          "status": "unverified",
+          "category": "timeout",
+          "reason": "超时 60000ms，未拿到执行计数",
+          "caseTotal": 126,
+          "executed": 0
+        },
+        {
+          "id": "escape-the-ghosts",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[4]: expected true, got false",
+          "caseTotal": 138,
+          "executed": 5
+        },
+        {
+          "id": "domino-and-tromino-tiling",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 5, got 2",
+          "caseTotal": 30,
+          "executed": 1
+        },
+        {
+          "id": "shortest-distance-to-a-character",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 118,
+          "executed": 0
+        },
+        {
+          "id": "consecutive-numbers-sum",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 53,
+          "executed": 0
+        },
+        {
+          "id": "positions-of-large-groups",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 54,
+          "executed": 0
+        },
+        {
+          "id": "find-and-replace-in-string",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[15]: expected 12345, got \"12345\"",
+          "caseTotal": 96,
+          "executed": 16
+        },
+        {
+          "id": "mirror-reflection",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 84,
+          "executed": 0
+        },
+        {
+          "id": "shortest-path-to-get-all-keys",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[16]: expected -1, got 8",
+          "caseTotal": 61,
+          "executed": 17
+        },
+        {
+          "id": "binary-gap",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 61,
+          "executed": 0
+        },
+        {
+          "id": "advantage-shuffle",
+          "status": "fail",
+          "category": "validator-required",
+          "reason": "Error: 多解题 advantage-shuffle 需要题面语义校验，禁止 JSON/规范化比较（题面允许返回任意合法重排）",
+          "caseTotal": 99,
+          "executed": 0
+        },
+        {
+          "id": "uncommon-words-from-two-sentences",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 130,
+          "executed": 0
+        },
+        {
+          "id": "surface-area-of-3d-shapes",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[9]: expected 204, got null",
+          "caseTotal": 78,
+          "executed": 10
+        },
+        {
+          "id": "sort-array-by-parity",
+          "status": "fail",
+          "category": "order-only-mismatch",
+          "reason": "Error: tests[0]: expected [0,8,6,4,2,9,7,5,3,1], got [2,4,6,8,0,1,3,5,7,9]",
+          "caseTotal": 98,
+          "executed": 1
+        },
+        {
+          "id": "word-subsets",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected [\"cccbb\"], got []（compareMode=unordered-1d）",
+          "caseTotal": 69,
+          "executed": 1
+        },
+        {
+          "id": "sort-array-by-parity-ii",
+          "status": "fail",
+          "category": "order-only-mismatch",
+          "reason": "Error: tests[14]: expected [4,3,2,1,6,5], got [2,1,4,3,6,5]",
+          "caseTotal": 74,
+          "executed": 15
+        },
+        {
+          "id": "minimum-falling-path-sum",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[10]: expected 0, got 101",
+          "caseTotal": 79,
+          "executed": 11
+        },
+        {
+          "id": "di-string-match",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 157,
+          "executed": 0
+        },
+        {
+          "id": "satisfiability-of-equality-equations",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[52]: expected true, got false",
+          "caseTotal": 83,
+          "executed": 53
+        },
+        {
+          "id": "clumsy-factorial",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 38,
+          "executed": 0
+        },
+        {
+          "id": "minimum-domino-rotations-for-equal-row",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[87]: expected 1, got 0",
+          "caseTotal": 112,
+          "executed": 88
+        },
+        {
+          "id": "complement-of-base-10-integer",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 37,
+          "executed": 0
+        },
+        {
+          "id": "numbers-with-repeated-digits",
+          "status": "fail",
+          "category": "load-error",
+          "reason": "TypeError: Invalid mix of BigInt and other type in subtraction.",
+          "caseTotal": 59,
+          "executed": 0
+        },
+        {
+          "id": "smallest-integer-divisible-by-k",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 90,
+          "executed": 0
+        },
+        {
+          "id": "divisor-game",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 51,
+          "executed": 0
+        },
+        {
+          "id": "matrix-cells-in-distance-order",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 77,
+          "executed": 0
+        },
+        {
+          "id": "occurrences-after-bigram",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 101,
+          "executed": 0
+        },
+        {
+          "id": "brace-expansion",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[3]: expected [\"ab{c\",\"ab{ce}\",\"ad\",\"ade}\"], got [\"abc\",\"abd\",\"ae\"]",
+          "caseTotal": 100,
+          "executed": 4
+        },
+        {
+          "id": "duplicate-zeros",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected null, got [8,4,5,0,0,0,0,0]",
+          "caseTotal": 96,
+          "executed": 1
+        },
+        {
+          "id": "distribute-candies-to-people",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 88,
+          "executed": 0
+        },
+        {
+          "id": "parsing-a-boolean-expression",
+          "status": "fail",
+          "category": "load-error",
+          "reason": "RangeError: Maximum call stack size exceeded.",
+          "caseTotal": 130,
+          "executed": 0
+        },
+        {
+          "id": "defanging-an-ip-address",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 48,
+          "executed": 0
+        },
+        {
+          "id": "number-of-days-in-a-month",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 33,
+          "executed": 0
+        },
+        {
+          "id": "armstrong-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 56,
+          "executed": 0
+        },
+        {
+          "id": "n-th-tribonacci-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 18,
+          "executed": 0
+        },
+        {
+          "id": "day-of-the-year",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 119,
+          "executed": 0
+        },
+        {
+          "id": "find-words-that-can-be-formed-by-characters",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[14]: expected 4, got 7",
+          "caseTotal": 134,
+          "executed": 15
+        },
+        {
+          "id": "day-of-the-week",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 19,
+          "executed": 0
+        },
+        {
+          "id": "find-smallest-common-element-in-all-rows",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 90,
+          "executed": 0
+        },
+        {
+          "id": "split-a-string-in-balanced-strings",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 118,
+          "executed": 0
+        },
+        {
+          "id": "count-square-submatrices-with-all-ones",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 67,
+          "executed": 0
+        },
+        {
+          "id": "subtract-the-product-and-sum-of-digits-of-an-integer",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 55,
+          "executed": 0
+        },
+        {
+          "id": "find-n-unique-integers-sum-up-to-zero",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 60,
+          "executed": 0
+        },
+        {
+          "id": "xor-queries-of-a-subarray",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[49]: expected [592308591,3569715250,1518674357,720695493,410388572,2036495916,1513070403,123456789,4040404040,1616595204,585955217,381688791,992719227,3904238684,405970720,517479555,1291834588], got [592308591,-725252046,1518674357,720695493,410388572,2036495916,1513070403,123456789,-254563256,1616595204,585955217,381688791,992719227,-390728612,405970720,517479555,1291834588]",
+          "caseTotal": 77,
+          "executed": 50
+        },
+        {
+          "id": "convert-integer-to-the-sum-of-two-no-zero-integers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 115,
+          "executed": 0
+        },
+        {
+          "id": "minimum-flips-to-make-a-or-b-equal-to-c",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 92,
+          "executed": 0
+        },
+        {
+          "id": "number-of-steps-to-reduce-a-number-to-zero",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 59,
+          "executed": 0
+        },
+        {
+          "id": "rank-teams-by-votes",
+          "status": "fail",
+          "category": "load-error",
+          "reason": "TypeError: Cannot access property of undefined or null",
+          "caseTotal": 73,
+          "executed": 0
+        },
+        {
+          "id": "number-of-steps-to-reduce-a-number-in-binary-representation-to-one",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 101,
+          "executed": 0
+        },
+        {
+          "id": "diagonal-traverse-ii",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected [1], got [[1]]",
+          "caseTotal": 70,
+          "executed": 1
+        },
+        {
+          "id": "make-two-arrays-equal-by-reversing-subarrays",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[112]: expected false, got true",
+          "caseTotal": 122,
+          "executed": 113
+        },
+        {
+          "id": "xor-operation-in-an-array",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 92,
+          "executed": 0
+        },
+        {
+          "id": "count-submatrices-with-all-ones",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 90,
+          "executed": 0
+        },
+        {
+          "id": "water-bottles",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 73,
+          "executed": 0
+        },
+        {
+          "id": "count-odd-numbers-in-an-interval-range",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 93,
+          "executed": 0
+        },
+        {
+          "id": "maximum-number-of-coins-you-can-get",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 32, got 36",
+          "caseTotal": 99,
+          "executed": 1
+        },
+        {
+          "id": "sum-of-all-odd-length-subarrays",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 8760, got 5460",
+          "caseTotal": 104,
+          "executed": 1
+        },
+        {
+          "id": "crawler-log-folder",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[5]: expected 4, got 5",
+          "caseTotal": 87,
+          "executed": 6
+        },
+        {
+          "id": "count-of-matches-in-tournament",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 60,
+          "executed": 0
+        },
+        {
+          "id": "calculate-money-in-leetcode-bank",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 50,
+          "executed": 0
+        },
+        {
+          "id": "decode-xored-array",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 97,
+          "executed": 0
+        },
+        {
+          "id": "find-kth-largest-xor-coordinate-value",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[61]: expected 0, got null",
+          "caseTotal": 87,
+          "executed": 62
+        },
+        {
+          "id": "maximum-number-of-events-that-can-be-attended-ii",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[45]: expected 50, got 250",
+          "caseTotal": 108,
+          "executed": 46
+        },
+        {
+          "id": "sum-of-digits-in-base-k",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 87,
+          "executed": 0
+        },
+        {
+          "id": "distinct-numbers-in-each-subarray",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 108,
+          "executed": 0
+        },
+        {
+          "id": "largest-magic-square",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 80,
+          "executed": 0
+        },
+        {
+          "id": "kth-smallest-subarray-sum",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[12]: expected 16, got 15",
+          "caseTotal": 88,
+          "executed": 13
+        },
+        {
+          "id": "count-square-sum-triples",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 23,
+          "executed": 0
+        },
+        {
+          "id": "concatenation-of-array",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 71,
+          "executed": 0
+        },
+        {
+          "id": "find-greatest-common-divisor-of-array",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 117,
+          "executed": 0
+        },
+        {
+          "id": "count-number-of-pairs-with-absolute-difference-k",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[2]: expected 6, got 12",
+          "caseTotal": 106,
+          "executed": 3
+        },
+        {
+          "id": "final-value-of-variable-after-performing-operations",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 88,
+          "executed": 0
+        },
+        {
+          "id": "maximum-difference-between-increasing-elements",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 118,
+          "executed": 0
+        },
+        {
+          "id": "next-greater-numerically-balanced-number",
+          "status": "unverified",
+          "category": "timeout",
+          "reason": "超时 60000ms，未拿到执行计数",
+          "caseTotal": 95,
+          "executed": 0
+        },
+        {
+          "id": "k-radius-subarray-averages",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 94,
+          "executed": 0
+        },
+        {
+          "id": "find-first-palindromic-string-in-the-array",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[74]: expected 12321, got \"12321\"",
+          "caseTotal": 104,
+          "executed": 75
+        },
+        {
+          "id": "a-number-after-a-double-reversal",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 66,
+          "executed": 0
+        },
+        {
+          "id": "divide-a-string-into-groups-of-size-k",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 110,
+          "executed": 0
+        },
+        {
+          "id": "minimum-moves-to-reach-target-score",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 140,
+          "executed": 0
+        },
+        {
+          "id": "minimum-cost-to-set-cooking-time",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[7]: expected 3, got 6",
+          "caseTotal": 116,
+          "executed": 8
+        },
+        {
+          "id": "count-operations-to-obtain-zero",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 78,
+          "executed": 0
+        },
+        {
+          "id": "count-integers-with-even-digit-sum",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 34,
+          "executed": 0
+        },
+        {
+          "id": "counting-words-with-a-given-prefix",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 153,
+          "executed": 0
+        },
+        {
+          "id": "sort-the-jumbled-numbers",
+          "status": "fail",
+          "category": "load-error",
+          "reason": "TypeError: Invalid mix of BigInt and other type in remainder.",
+          "caseTotal": 110,
+          "executed": 0
+        },
+        {
+          "id": "cells-in-a-range-on-an-excel-sheet",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 93,
+          "executed": 0
+        },
+        {
+          "id": "minimum-bit-flips-to-convert-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 85,
+          "executed": 0
+        },
+        {
+          "id": "add-two-integers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 59,
+          "executed": 0
+        },
+        {
+          "id": "calculate-digit-sum-of-a-string",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[90]: expected \"25252525252525253000\", got \"25252525252525252521\"",
+          "caseTotal": 101,
+          "executed": 91
+        },
+        {
+          "id": "count-asterisks",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 106,
+          "executed": 0
+        },
+        {
+          "id": "smallest-even-multiple",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 91,
+          "executed": 0
+        },
+        {
+          "id": "closest-fair-integer",
+          "status": "unverified",
+          "category": "timeout",
+          "reason": "超时 60000ms，未拿到执行计数",
+          "caseTotal": 70,
+          "executed": 0
+        },
+        {
+          "id": "number-of-common-factors",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 107,
+          "executed": 0
+        },
+        {
+          "id": "find-the-original-array-of-prefix-xor",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[34]: expected [42,126,252,504,1008,2016,4032,8064,16128,32256,64512,129024,258048,516096,1032192,2064384,4128768,8257536,16515072,33030144,66060288,132120576,264241152,528482304,1056964608,2113929216,4227858432,8455716864,16911433728,33822867456,67645734912,135291469824,270582939648,541165879296,1082331758592,2164663517184,4329327034368], got [42,126,252,504,1008,2016,4032,8064,16128,32256,64512,129024,2",
+          "caseTotal": 98,
+          "executed": 35
+        },
+        {
+          "id": "minimum-addition-to-make-integer-beautiful",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[32]: expected 6543211, got 6543200",
+          "caseTotal": 103,
+          "executed": 33
+        },
+        {
+          "id": "number-of-distinct-averages",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[0]: expected 1, got 9",
+          "caseTotal": 113,
+          "executed": 1
+        },
+        {
+          "id": "convert-the-temperature",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 39,
+          "executed": 0
+        },
+        {
+          "id": "find-the-pivot-integer",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 52,
+          "executed": 0
+        },
+        {
+          "id": "count-the-digits-that-divide-a-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 77,
+          "executed": 0
+        },
+        {
+          "id": "alternating-digit-sum",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 57,
+          "executed": 0
+        },
+        {
+          "id": "count-total-number-of-colored-cells",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 37,
+          "executed": 0
+        },
+        {
+          "id": "pass-the-pillow",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 94,
+          "executed": 0
+        },
+        {
+          "id": "distribute-money-to-maximum-children",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 47,
+          "executed": 0
+        },
+        {
+          "id": "number-of-even-and-odd-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 62,
+          "executed": 0
+        },
+        {
+          "id": "k-items-with-the-maximum-sum",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 105,
+          "executed": 0
+        },
+        {
+          "id": "calculate-delayed-arrival-time",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 31,
+          "executed": 0
+        },
+        {
+          "id": "sum-multiples",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 38,
+          "executed": 0
+        },
+        {
+          "id": "find-the-prefix-common-array-of-two-arrays",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[42]: expected [0,0,0,1,2,2,2,3,3,5,5,7,8,8,9,10,11,12,14,16,18,19,19,20,22,24,25,26,27,29], got [0,0,0,1,2,2,2,3,3,5,5,7,8,8,9,10,11,12,14,16,18,19,19,20,22,24,25,26,27,29,30,30]",
+          "caseTotal": 72,
+          "executed": 43
+        },
+        {
+          "id": "find-the-losers-of-the-circular-game",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 73,
+          "executed": 0
+        },
+        {
+          "id": "difference-of-number-of-distinct-values-on-diagonals",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 91,
+          "executed": 0
+        },
+        {
+          "id": "neither-minimum-nor-maximum",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[7]: expected 3, got 4",
+          "caseTotal": 94,
+          "executed": 8
+        },
+        {
+          "id": "find-the-maximum-achievable-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 82,
+          "executed": 0
+        },
+        {
+          "id": "account-balance-after-rounded-purchase",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 54,
+          "executed": 0
+        },
+        {
+          "id": "find-the-minimum-possible-sum-of-a-beautiful-array",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[1]: expected 7500, got 7600",
+          "caseTotal": 91,
+          "executed": 2
+        },
+        {
+          "id": "smallest-number-with-given-digit-product",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[1]: expected -1, got 0",
+          "caseTotal": 41,
+          "executed": 2
+        },
+        {
+          "id": "divisible-and-non-divisible-sums-difference",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 93,
+          "executed": 0
+        },
+        {
+          "id": "find-indices-with-index-and-value-difference-i",
+          "status": "fail",
+          "category": "validator-required",
+          "reason": "Error: 多解题 find-indices-with-index-and-value-difference-i 需要题面语义校验，禁止 JSON/规范化比较（题面允许返回任意满足条件的下标对）",
+          "caseTotal": 137,
+          "executed": 0
+        },
+        {
+          "id": "construct-product-matrix",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 82,
+          "executed": 0
+        },
+        {
+          "id": "maximum-xor-product",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[58]: expected 532600269, got 27435821",
+          "caseTotal": 74,
+          "executed": 59
+        },
+        {
+          "id": "minimum-number-of-operations-to-make-array-xor-equal-to-k",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[75]: expected 28, got 0",
+          "caseTotal": 115,
+          "executed": 76
+        },
+        {
+          "id": "harshad-number",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 53,
+          "executed": 0
+        },
+        {
+          "id": "maximum-number-that-makes-result-of-bitwise-and-zero",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[20]: expected \"576460752303423487\", got 576460752303423500",
+          "caseTotal": 86,
+          "executed": 21
+        },
+        {
+          "id": "minimum-array-end",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[28]: expected \"107374182399999999\", got 107374182400000000",
+          "caseTotal": 106,
+          "executed": 29
+        },
+        {
+          "id": "number-of-bit-changes-to-make-two-integers-equal",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 91,
+          "executed": 0
+        },
+        {
+          "id": "find-the-key-of-the-numbers",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 96,
+          "executed": 0
+        },
+        {
+          "id": "the-two-sneaky-numbers-of-digitville",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[19]: expected [10,9,8,7,6,5,4,3,2,0], got [1,2,3,4,5,6,7,8,9,10,0,1]（compareMode=unordered-1d）",
+          "caseTotal": 74,
+          "executed": 20
+        },
+        {
+          "id": "maximum-sized-array",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[19]: expected 1330, got 7513",
+          "caseTotal": 69,
+          "executed": 20
+        },
+        {
+          "id": "stone-removal-game",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 29,
+          "executed": 0
+        },
+        {
+          "id": "smallest-number-with-all-set-bits",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 56,
+          "executed": 0
+        },
+        {
+          "id": "zigzag-grid-traversal-with-skip",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "Error: tests[3]: expected [5,7,12,10,13,15], got [5,7,11,9,13,15]",
+          "caseTotal": 71,
+          "executed": 4
+        },
+        {
+          "id": "manhattan-distances-of-all-arrangements-of-pieces",
+          "status": "fail",
+          "category": "assert-mismatch",
+          "reason": "AggregateError: 2 errors building \"E:\\victory 胜利女神\\leetcode.v\\projects\\problems\\manhattan-distances-of-all-arrangements-of-pieces\\solvers\\typescript\\solution.ts\"",
+          "caseTotal": 89,
+          "executed": 0
+        },
+        {
+          "id": "sort-matrix-by-diagonals",
+          "status": "fail",
+          "category": "empty-solver",
+          "reason": "solution.ts 为空（空跑不判通过）",
+          "caseTotal": 79,
+          "executed": 0
+        }
+      ]
+    }
+  },
+  "crossChannel": {
+    "bothPass": 972,
+    "nodeOnlyPass": 1,
+    "bunOnlyPass": 0,
+    "neitherPass": 188
+  }
+}

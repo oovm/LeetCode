@@ -58,7 +58,7 @@ export function resolveNyarBuildArtifacts(problem: ProblemDefinition): NyarVmArt
     };
 }
 
-/** 列出 OVM 产物的 `.nyar` 导出。 */
+/** 列出 OVM 产物的导出符号。 */
 export function listNyarExports(nyarPath: string): string[] {
     if (!valkyrieNyarRunnerReady()) {
         return [];
@@ -76,12 +76,12 @@ export function nyarInvokeBlockedReason(nyarPath: string, invokeEntry?: string):
     }
     const exports = listNyarExports(nyarPath);
     if (exports.length === 0) {
-        return '`.nyar` 没有可导出符号，确认 legion build --target ovm 是否成功';
+        return 'OVM 产物没有可导出符号，确认 legion build --target ovm 是否成功';
     }
     if (invokeEntry) {
         const expected = resolveWasmExportSymbol(invokeEntry);
         if (!exports.includes(expected)) {
-            return `.nyar 里找不到 metadata.invoke 对应的 export "${expected}"（已有: ${exports.join(', ') || '(none)'}）`;
+            return `OVM 产物里找不到 metadata.invoke 对应的 export "${expected}"（已有: ${exports.join(', ') || '(none)'}）`;
         }
     }
     return null;

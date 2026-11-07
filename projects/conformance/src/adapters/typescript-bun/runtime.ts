@@ -29,13 +29,14 @@ async function loadTsCandidate(problemRoot: string) {
     return { id: problemIdFromDir(problemRoot), tests: metadata.tests, candidate };
 }
 
-export async function runBunSolverOnce(problemRoot: string): Promise<void> {
+export async function runBunSolverOnce(problemRoot: string): Promise<{ caseTotal: number; executed: number }> {
     const { id, tests, candidate } = await loadTsCandidate(problemRoot);
     const integerKeys = inferIntegerArgKeys(tests);
     const mode = compareModeForExecution(id);
     for (const [index, case_] of tests.entries()) {
         assertTsCase(index, case_, candidate, integerKeys, mode);
     }
+    return { caseTotal: tests.length, executed: tests.length };
 }
 
 export async function benchBunSolverInProcess(problemRoot: string, iterations: number, warmup: number): Promise<number> {
