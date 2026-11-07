@@ -3709,3 +3709,84 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
 | `rearrange-string-k-distance-apart`（canonical，104 用例） | **104/104 PASS** |
 | 反例 `g32-negative-cross`：`-> utf16` 返回 `Utf8` 字面量 | SMIR007 结构化失败（跨编码不归一） |
 | 反例 `g32-negative-nominal`：`-> Wrapper` 返回 `""` | SMIR007 结构化失败（非文本名义不归一） |
+
+## WASM 未捕获 `raise` 结构化实测（2026-11-07，编译器 `96ff2f3b`）
+
+**根因**：`PerformEffect { effect: Raise }` 在 wasm 后端被无条件编码为 `unreachable`；`std::types::panic`
+（`raise message`）因此从宿主看只是裸 `RuntimeError: unreachable`，panic 文本完全丢失。这是编译器内部
+假设（「未捕获 raise 等价 trap」）在宿主边界上的错误呈现，不是题内实现错误。
+
+**修复**：Node 轨合成宿主导入 `env::host_raise: [i32] -> []`；`Raise` 的 payload 是文本时先
+`emit_operand_coerced(..., i32)` 发射真实句柄并调用宿主抛 `Error`，`unreachable` 仅作永不返回的兜底。
+WASI 轨与非文本 payload（结构化 effect 值没有文本 ABI）维持原合同。
+
+| 证据 | 修前 | 修后 |
+| --- | --- | --- |
+| 最小复现 `.wt-std/.cache/bounds-unreachable`：`ArrayList` 读/写越界、空表、`[i64]` 读/写、负下标、常量/运行期文本 payload，共 13 条 | 5 条核心输入全部 `RuntimeError: unreachable` | 13 条全部结构化：`Error: Cardinal ⁅ ⁆ 越界：offset 超出元素个数` 或 `Error: literal panic payload`；正常输入返回原值 |
+| `rank-teams-by-votes` canonical 73 用例（`.wt-std/.cache/raise-consumers/...`） | `tests[0..2]` 通过，`tests[3]` = `RuntimeError: unreachable` | `tests[0..2]` 通过，`tests[3]` = `Error: Cardinal ⁅ ⁆ 越界：offset 超出元素个数` |
+| 既有合同测试 | — | `lowering_backends_wasm_mir_raise_trap_tests` 2/2、`lowering_backends_wasm_mir_host_string_boundary_tests` 15/15 |
+
+`tests[3]` 输入 `votes=["A","B","C","D","E"]` 违反「同一字母集合的排列」约束：`slot_of` 未命中返回 `-1`，
+`-1 as usize` 变成巨大下标。该用例仍是非法语料，期望值不动；本次只修运行时呈现。
+
+## 语料独立真值核验（2026-11-07）
+
+铁律：只采用独立于实现（暴力枚举 / 精确有理数 / 数学推导）的真值，不用实现输出修期望。
+
+### 已确认并修正：`maximum-number-of-events-that-can-be-attended-ii` `tests[45]`
+
+- 原始输入：`events=[[1,10,5],[2,9,10],[3,8,15],[4,7,20],[5,6,25],[6,5,30],[7,4,35],[8,3,40],[9,2,45],[10,1,50]]`，`k=5`
+- 错误期望：`200`
+- 正确期望：`50`（已改）
+- 验证方法：Python + `Fraction` 暴力枚举全部 `size<=5` 子集（637 组），按区间语义
+  （事件跨度取 `[min(start,end), max(start,end)]`，非重叠要求 `end < next.start`）判定。结果：
+  全部区间都含公共日 `[5,6]`（两两重叠），最多选 1 个事件，最优为 `50`。
+- 为什么 200 是错的：200 = 前 5 大 value 之和（50+45+40+35+30），恰是把 `[6,5]`/`[7,4]`/…/`[10,1]`
+  这些 `end < start` 的畸形区间当成「按原始顺序可串接」得到的伪真值；原始顺序 DP 会判它们互不重叠。
+  区间语义下该串接不成立。
+
+### 只登记不改数据：整数数组里的 `62.5`
+
+| 题 | 用例 | 输入 | 独立真值 | 结论 |
+| --- | --- | --- | --- | --- |
+| `check-if-n-and-its-double-exist` | `tests[83]` | `arr=[1000,-500,250,-125,62.5,31.25]` | `true`（`-125 = 2*(-62.5)`、`62.5 = 2*31.25`，`Fraction` 精确枚举） | 期望正确；输入违反「整数数组」约束，`i64` ABI 无法承载 |
+| 同上 | `tests[119]` | `arr=[1000,500,250,125,62.5]` | `true`（`1000 = 2*500`，且 `125 = 2*62.5`） | 同上 |
+| `minimum-operations-to-halve-array-sum` | `tests[17]` | `nums=[1000,500,250,125,62.5,31.25]` | `3`（精确有理数模拟：每次折半最大元素至总和 ≤ 原和一半） | 期望正确；输入违反整数约束 |
+| 同上 | `tests[60]` | `nums=[10000000,5000000,2500000,1250000,625000,312500,156250,78125,39062.5,19531.25]` | `3`（同法） | 同上 |
+| 同上 | `tests[77]` | `nums=[5000000,2500000,1250000,625000,312500,156250,78125,39062.5,19531.25,9765.625]` | `3`（同法） | 同上 |
+
+结论：这不是期望值错误，是语料类型越界（`62.5` 不属于整数数组）。不修改用例、不改期望；需语料再生。
+
+### 只登记不改数据：`count-unreachable-pairs-of-nodes-in-an-undirected-graph` `tests[50]`
+
+- 原始输入：`n=15`，`edges` 末项为单端点 `[14]`（其余为二元组）
+- 现期望：`Error: not enough values to unpack (expected 2, got 1)`
+- 独立结论：题面要求 `edges[i]` 为二元组；单端点输入没有合法真值。现期望是 Python 参考实现的
+  内部解包文本，不具备跨实现语义。
+- 处理：只登记坐标 `metadata.tests[50].args.edges[-1]`，不删用例、不改期望；若后续统一错误语料，
+  应换成与实现无关的契约错误文本（需先立合同，不能以本实现输出为准）。
+
+### 只登记不改数据：`sort-the-jumbled-numbers` `tests[55]` 超出 `i64`
+
+- 原始输入：`mapping=[0..9]`，`nums=[9876543210, "102030405060708100", "98765432109876540000"]`
+- 现期望：与输入同序（恒等映射下数值升序：`9.876e9 < 1.020e17 < 9.877e19`）
+- 独立结论：期望的顺序在数学上正确；但第三项 `98765432109876540000 ≈ 9.88e19 > i64::MAX`，
+  超出 `i64` ABI，无法作为 `i64` 参数送达。
+- 处理：只登记 `metadata.tests[55].args.nums[2]`；不修改用例与期望。
+
+### `Execution timed out` 占位语料：方案（未执行）
+
+扫描结果：39 个 `metadata.json`（另 1 个 `generalized-abbreviation.cases.ts`）共 472 处
+`"expected": "Execution timed out"`。这不是错期望，而是「没有期望」。
+
+方案对比：
+
+| 方案 | 做法 | 优点 | 代价 |
+| --- | --- | --- | --- |
+| A 标记 skip | 给 472 条加显式 `skip`/`skipReason`，runner 排除 | 语义最明确 | 大范围改语料；需 schema + runner 改动 |
+| B 保留但排除统计（推荐） | 不改语料；`loadMetadata`/统计层识别该哨兵值为 `skipped`，不计入 pass/fail 分母，报告单列 | 零语料改动、可审计、可逐题替换 | 需 runner 统计口径改动 |
+| C 补真期望 | 每题用独立参考实现（暴力/DP/精确算术）算出真值 | 质量最高 | 成本高，需逐题验证；风险是把参考实现 bug 写成期望 |
+| D 删除 | — | — | **禁止** |
+
+建议：先执行 B（保留哨兵、统计为 skipped、账本登记 472 条坐标），再按题目优先级用 C 逐步替换；
+每次替换必须附独立真值来源。任何阶段都不删除用例。
