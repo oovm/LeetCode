@@ -46,7 +46,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G2 浮点返回值合同 | c | 返回类型即题面合同，绕路必须改返回类型（1227 / 1344） |
 | G3 wasm JS glue 的 `ArrayList` ABI | c | ABI 边界由题面固定，题解改不了结构（36 题） |
 | G9 二分图判定 | **已恢复**（2026-11-07）：`std.math.graph_theory.bipartition` 已提供，两题改用 std 入口；真跑 179/181 用例 PASS（余 2 条为 F6 语料宿主异常文本） | `valkyrie.v` 提交 `59a4acad`；消费者 `is-graph-bipartite` / `possible-bipartition` |
-| G10 `DisjointSet` 分量聚合 | b | 3 处 × 重写 DSU 内部聚合 |
+| G10 `DisjointSet` 分量聚合 | **已恢复**（2026-11-07 实测）：`std.collection.DisjointSet.group_size_table` 提供一次遍历拿全部分量规模的入口，复杂度 O(元素数) 次 `find_root`，语义等价于逐根 `group_sizes`；3 处消费者改用后真跑（见 G10 小节） | `valkyrie.v` 提交 `c47e3e1`；消费者 `count-unreachable-pairs-of-nodes-in-an-undirected-graph` / `count-the-number-of-complete-components` / `largest-component-size-by-common-factor` |
 | G11 `sorted_by` | **已恢复**（2026-11-07 实测）：`std.collection.sort` 的 `sorted_by<T>(items: ArrayList<T>, cmp): ArrayList<T>`（`3e02e7d`）已提供，8 题改用它后真跑 **767/767** 用例 PASS，另删除 4 处副本脚手架；残余 `[T]` 带比较器入口见 G11 小节 | `maximum-subsequence-score` / `maximum-number-of-events-that-can-be-attended` / `the-k-weakest-rows-in-a-matrix` / `find-subsequence-of-length-k-with-the-largest-sum` / `high-five` / `array-of-doubled-pairs` / `advantage-shuffle` / `the-k-strongest-values-in-an-array` / `meeting-rooms` / `remove-covered-intervals` / `minimum-moves-to-equal-array-elements-ii` / `merge-similar-items` |
 | G13 `utf8` 字典序比较 | **已恢复**（2026-11-07）：`Utf8Text` 的 `Comparable` 合同已提供，5 处消费者改用 `natural_order` 比较器；真跑 420/420 用例 PASS | `accounts-merge` / `reorder-data-in-log-files` / `top-k-frequent-words` / `find-smallest-letter-greater-than-target` / `phone-number-prefix` |
 | G16 `BTreeSet` / `BTreeMap` 界查询 | **已恢复**（2026-11-07 实测）：`floor` / `ceiling` 与 `ceiling_key` 已提供，3 个消费者真跑 **466/466** 用例 PASS；220 同时对齐 `indexDiff` / `valueDiff` 形参名 | `contains-duplicate-iii` / `find-right-interval` / `sliding-window-median` |
@@ -3646,3 +3646,30 @@ TypeScript lane 18 题整题通过，6 题首错为语料缺陷。V lane 仍 **�
   只读诊断结论：1193 个被比较用例中 989 一致、185 条 origin 为超时占位、19 条输入缩小、0 条原真实期望被替换。
 - `find-the-prefix-common-array-of-two-arrays`（2657）：语料 `A` 长 32、`B` 长 30，题面要求等长；
   只登记坐标（`metadata.tests` 的 A/B 长度不一致），不删用例、不改期望。
+
+## G10 `DisjointSet.group_size_table` 实测（2026-11-07）
+
+`valkyrie.v` 提交 `c47e3e1`（`dev`，`origin/dev` HEAD 一致）。入口签名：
+
+`micro group_size_table(mut self): HashMap<T, usize> where T: Equal & Hash`
+
+实现只遍历一遍 `_parent` 键，对每个元素调用 `find_root`（含路径压缩）并在哈希表累计，
+无「分量数 × 元素数」的重复扫描。
+
+规模证据（真跑，n=1e5，链式 `union` 后单分量，`.cache/g10-probe`，wasm + `callExport`，
+3 次预热 + 15 次取中位数）：
+
+| 入口 | 结果 | min | median | max |
+| --- | --- | --- | --- | --- |
+| `prepare`（建表 + 100k 次 add/union） | 100000 | 262.73ms | 263.03ms | 413.49ms |
+| `prepareAndAggregate`（同前置 + `group_size_table`） | 1 | 386.39ms | 387.34ms | 505.74ms |
+
+整表聚合增量约 **124ms**（约 1.2µs/元素），量级 0.1s；与建集合成本同阶，未出现二次扫描。
+
+消费者复跑（副本 `.wt-std/.cache/g10-consumers/<slug>`，`.wt-std` 构建）：
+
+| 题 | 结果 | 备注 |
+| --- | --- | --- |
+| `count-the-number-of-complete-components` | 69/69 | 该题 `metadata.invoke` 只有 python/typescript，缺 `valkyrie`；用 `callExport` 逐用例真跑（不伪造 metadata） |
+| `largest-component-size-by-common-factor` | 98/99 | 同上缺 `valkyrie` invoke；唯一红为 `tests[69]` 期望 `Execution timed out`（超时占位语料） |
+| `count-unreachable-pairs-of-nodes-in-an-undirected-graph` | 50/56 执行通过 | canonical harness：`tests[50]` 期望 Python 宿主异常文本 `not enough values to unpack`，实际输入含单端点边 `[14]` 触发越界；余 5 条未执行。非法语料坐标 `metadata.tests[50].args.edges`，不删用例 |
