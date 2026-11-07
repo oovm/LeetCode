@@ -47,6 +47,407 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
   2) 摊派面可观（行数或调用点数至少一项不低）。
 - 例：G23（`gcd` / `lcm`）只有 1 处调用点，继续观察——即使 `math` 模块已有其它整数函数，1 处也不构成模块内空洞。
 
+## 编译器 / 运行时缺口工单（2026-11-07，双 target 基线导出）
+
+本节把双 target 基线（前 200 题）的非题解缺口拆成可直接转给编译器 / 运行时侧的工单：一个根因一条，
+每条给「一句判据 / 语言构造 / 期望语义 / 当前报错 / 最小复现 / 逐题坐标」。坐标格式为
+`题 id · lane · target · entry · solution.v:入口行`；同题两 target 都红时两行都记，不合并成一句。
+
+口径与快照：
+- 快照 native `platforms/valkyrie-win32-x64/lib/valkyrie.win32-x64-msvc.node`（sha256 `19ab115a412bd2d27a3a03d6b1b2644aa1bd1590ee507ceb0032049c89e7ecbe`，mtime 2026-11-07 07:37 +0800）。
+  该快照晚于 `dcb49a6a`（2026-11-07 04:14）、早于 `358a56ee` / `49566a9a`（11:22）与 `15ec9858`（11:55）；
+  因此标「待复跑」的条目只是快照上的诊断，需用当前 toolchain 复跑后才能判定是否仍开，不在本台账里重复开单。
+- 前 200 题去重后 **166 题**非通过：编译器 / 运行时侧 **163**、判题管线 **1**（`multiply-strings` 把字符串实参数值化）、
+  判据侧 **1**（`gray-code` 多解校验）、语料侧 **1**（`paint-fence` 的 `expected` 已是 F7 S 类坏语料）。117 条 ovm ABI 中
+  116 归编译器边界合同、1 归判题管线；不靠改题解绕、不改判据。
+- 统一最小复现入口（在 `leetcode.v` 仓根执行；`--lane ovm` 前脚本只清同目录旧 `.nyar`）：
+  `node --import tsx projects/conformance/scripts/run_v_dual_target_baseline.ts --one-id <id> --lane <wasm|ovm>`
+
+### X1 ovm 的 JSON 数组实参未落地（62 题）
+
+- 一句判据：ovm 入口必须把 `metadata.tests.args` 里的 JSON 数组按元素构造为 `ArrayList<T>`（嵌套时逐层构造）后传入 VM，不得以 `unsupported feature: JSON array export type/layout contract` 拒绝。
+- 语言构造：`micro f(xs: ArrayList<i64>)`、`ArrayList<ArrayList<i64>>` 形参；调用边界是题面固定合同。
+- 期望语义：与 wasm lane 相同——数组实参按元素顺序与长度进 VM；空数组、嵌套数组同样可传。
+- 当前报错：`Error: parse args-json: unsupported feature: JSON array export type/layout contract`（0 用例执行）。
+- 最小复现：`--one-id add-two-numbers --lane ovm`（59 用例全部未执行）。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| 3sum | ovm | ovm-unknown-unknown-managed | `threeSum` | 15 |
+| add-two-numbers | ovm | ovm-unknown-unknown-managed | `addTwoNumbers` | 6 |
+| best-time-to-buy-and-sell-stock | ovm | ovm-unknown-unknown-managed | `maxProfit` | 4 |
+| binary-tree-inorder-traversal | ovm | ovm-unknown-unknown-managed | `inorderTraversal` | 12 |
+| binary-tree-paths | ovm | ovm-unknown-unknown-managed | `binaryTreePaths` | 34 |
+| binary-tree-postorder-traversal | ovm | ovm-unknown-unknown-managed | `postorderTraversal` | 12 |
+| binary-tree-preorder-traversal | ovm | ovm-unknown-unknown-managed | `preorderTraversal` | 12 |
+| burst-balloons | ovm | ovm-unknown-unknown-managed | `maxCoins` | 7 |
+| coin-change | ovm | ovm-unknown-unknown-managed | `Solution().coinChange` | 4 |
+| combination-sum | ovm | ovm-unknown-unknown-managed | `combinationSum` | 28 |
+| contains-duplicate | ovm | ovm-unknown-unknown-managed | `containsDuplicate` | 3 |
+| contains-duplicate-ii | ovm | ovm-unknown-unknown-managed | `containsNearbyDuplicate` | 3 |
+| contains-duplicate-iii | ovm | ovm-unknown-unknown-managed | `containsNearbyAlmostDuplicate` | 7 |
+| find-all-duplicates-in-an-array | ovm | ovm-unknown-unknown-managed | `findDuplicates` | 7 |
+| find-first-and-last-position-of-element-in-sorted-array | ovm | ovm-unknown-unknown-managed | `searchRange` | 35 |
+| find-k-pairs-with-smallest-sums | ovm | ovm-unknown-unknown-managed | `kSmallestPairs` | 9 |
+| find-minimum-in-rotated-sorted-array | ovm | ovm-unknown-unknown-managed | `findMin` | 5 |
+| find-right-interval | ovm | ovm-unknown-unknown-managed | `findRightInterval` | 8 |
+| first-missing-positive | ovm | ovm-unknown-unknown-managed | `firstMissingPositive` | 4 |
+| group-anagrams | ovm | ovm-unknown-unknown-managed | `groupAnagrams` | 59 |
+| house-robber | ovm | ovm-unknown-unknown-managed | `Solution().rob` | 5 |
+| intersection-of-two-arrays | ovm | ovm-unknown-unknown-managed | `intersection` | 3 |
+| intersection-of-two-arrays-ii | ovm | ovm-unknown-unknown-managed | `intersect` | 3 |
+| kth-largest-element-in-an-array | ovm | ovm-unknown-unknown-managed | `kthLargest` | 37 |
+| longest-common-prefix | ovm | ovm-unknown-unknown-managed | `longestCommonPrefix` | 19 |
+| longest-consecutive-sequence | ovm | ovm-unknown-unknown-managed | `(缺失)` | 4 |
+| longest-increasing-subsequence | ovm | ovm-unknown-unknown-managed | `Solution().lengthOfLIS` | 4 |
+| majority-element | ovm | ovm-unknown-unknown-managed | `majorityElement` | 4 |
+| max-points-on-a-line | ovm | ovm-unknown-unknown-managed | `maxPoints` | 25 |
+| maximum-gap | ovm | ovm-unknown-unknown-managed | `maximumGap` | 7 |
+| maximum-product-of-word-lengths | ovm | ovm-unknown-unknown-managed | `maxProduct` | 25 |
+| maximum-product-subarray | ovm | ovm-unknown-unknown-managed | `Solution().maxProduct` | 5 |
+| maximum-xor-of-two-numbers-in-an-array | ovm | ovm-unknown-unknown-managed | `Solution().findMaximumXOR` | 5 |
+| meeting-rooms | ovm | ovm-unknown-unknown-managed | `canAttendMeetings` | 18 |
+| meeting-rooms-ii | ovm | ovm-unknown-unknown-managed | `minMeetingRooms` | 7 |
+| minimum-height-trees | ovm | ovm-unknown-unknown-managed | `findMinHeightTrees` | 6 |
+| minimum-path-sum | ovm | ovm-unknown-unknown-managed | `Solution().minPathSum` | 4 |
+| missing-ranges | ovm | ovm-unknown-unknown-managed | `findMissingRanges` | 4 |
+| number-of-islands-ii | ovm | ovm-unknown-unknown-managed | `numIslands2` | 8 |
+| plus-one | ovm | ovm-unknown-unknown-managed | `plusOne` | 3 |
+| queue-reconstruction-by-height | ovm | ovm-unknown-unknown-managed | `reconstructQueue` | 30 |
+| remove-duplicates-from-sorted-array | ovm | ovm-unknown-unknown-managed | `removeDuplicates` | 3 |
+| remove-duplicates-from-sorted-array-ii | ovm | ovm-unknown-unknown-managed | `removeDuplicates` | 7 |
+| remove-element | ovm | ovm-unknown-unknown-managed | `removeElement` | 3 |
+| reverse-words-in-a-string-ii | ovm | ovm-unknown-unknown-managed | `reverseWords` | 8 |
+| rotate-array | ovm | ovm-unknown-unknown-managed | `rotate` | 19 |
+| single-number | ovm | ovm-unknown-unknown-managed | `singleNumber` | 4 |
+| single-number-ii | ovm | ovm-unknown-unknown-managed | `Solution().singleNumber` | 5 |
+| single-number-iii | ovm | ovm-unknown-unknown-managed | `Solution().singleNumber` | 5 |
+| sliding-window-maximum | ovm | ovm-unknown-unknown-managed | `maxSlidingWindow` | 6 |
+| spiral-matrix | ovm | ovm-unknown-unknown-managed | `spiralOrder` | 5 |
+| subsets | ovm | ovm-unknown-unknown-managed | `subsets` | 20 |
+| substring-with-concatenation-of-all-words | ovm | ovm-unknown-unknown-managed | `findSubstring` | 9 |
+| summary-ranges | ovm | ovm-unknown-unknown-managed | `summaryRanges` | 13 |
+| text-justification | ovm | ovm-unknown-unknown-managed | `fullJustify` | 16 |
+| top-k-frequent-elements | ovm | ovm-unknown-unknown-managed | `topKFrequent` | 8 |
+| triangle | ovm | ovm-unknown-unknown-managed | `Solution().minimumTotal` | 4 |
+| two-sum-ii-input-array-is-sorted | ovm | ovm-unknown-unknown-managed | `twoSum` | 3 |
+| valid-sudoku | ovm | ovm-unknown-unknown-managed | `isValidSudoku` | 18 |
+| verify-preorder-sequence-in-binary-search-tree | ovm | ovm-unknown-unknown-managed | `verifyPreorder` | 8 |
+| word-break | ovm | ovm-unknown-unknown-managed | `wordBreak` | 19 |
+| word-ladder | ovm | ovm-unknown-unknown-managed | `ladderLength` | 22 |
+
+### X2 ovm 的聚合返回值序列化未落地（14 题）
+
+- 一句判据：ovm 入口必须把 `utf8` 与 `ArrayList<T>`（含嵌套）返回值序列化成 JSON 字符串 / 数组，不得以 `JSON object export type/layout contract` 拒绝。
+- 语言构造：`-> utf8`、`-> ArrayList<i64>`、`-> ArrayList<ArrayList<i64>>`、`-> ArrayList<utf8>`。
+- 期望语义：返回值按 `metadata.tests[].expected` 的 JSON 形态可比；字符串是字符串，数组按元素序输出。
+- 当前报错：`Error: serialize result: unsupported feature: JSON object export type/layout contract`（0 用例执行）。
+- 最小复现：`--one-id pascals-triangle --lane ovm`（16 用例全部未执行）。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| binary-watch | ovm | ovm-unknown-unknown-managed | `readBinaryWatch` | 14 |
+| combination-sum-iii | ovm | ovm-unknown-unknown-managed | `combinationSum3` | 30 |
+| combinations | ovm | ovm-unknown-unknown-managed | `combine` | 23 |
+| convert-a-number-to-hexadecimal | ovm | ovm-unknown-unknown-managed | `Solution().toHex` | 10 |
+| counting-bits | ovm | ovm-unknown-unknown-managed | `Solution().countBits` | 3 |
+| excel-sheet-column-title | ovm | ovm-unknown-unknown-managed | `Solution().convertToTitle` | 3 |
+| factor-combinations | ovm | ovm-unknown-unknown-managed | `getFactors` | 27 |
+| fizz-buzz | ovm | ovm-unknown-unknown-managed | `Solution().fizzBuzz` | 3 |
+| integer-to-roman | ovm | ovm-unknown-unknown-managed | `intToRoman` | 42 |
+| lexicographical-numbers | ovm | ovm-unknown-unknown-managed | `lexicalOrder` | 3 |
+| n-queens | ovm | ovm-unknown-unknown-managed | `solveNQueens` | 57 |
+| pascals-triangle | ovm | ovm-unknown-unknown-managed | `generate` | 4 |
+| pascals-triangle-ii | ovm | ovm-unknown-unknown-managed | `getRow` | 4 |
+| spiral-matrix-ii | ovm | ovm-unknown-unknown-managed | `Solution().generateMatrix` | 4 |
+
+### X3 ovm 的 `utf8` 形参未按字符串物化（40 题）
+
+- 一句判据：ovm 入口的 `utf8` 形参必须接受宿主字符串并按文本载体进 VM；调用边界不得报 `expected object, got string`。
+- 语言构造：`micro f(s: utf8)`、`micro f(s: utf8, t: utf8)`。
+- 期望语义：与 wasm lane 一致，字符串实参原样进入 VM，不做对象包装、不做数值化。
+- 当前报错：`Error: run entry <entry>: type mismatch: expected object, got string`（0 用例执行）。
+- 最小复现：`--one-id longest-palindromic-substring --lane ovm`（124 用例全部未执行）。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| add-binary | ovm | ovm-unknown-unknown-managed | `Solution().addBinary` | 14 |
+| add-strings | ovm | ovm-unknown-unknown-managed | `addStrings` | 4 |
+| basic-calculator-ii | ovm | ovm-unknown-unknown-managed | `calculate` | 7 |
+| bulls-and-cows | ovm | ovm-unknown-unknown-managed | `getHint` | 7 |
+| count-and-say | ovm | ovm-unknown-unknown-managed | `countAndSay` | 8 |
+| different-ways-to-add-parentheses | ovm | ovm-unknown-unknown-managed | `diffWaysToCompute` | 67 |
+| excel-sheet-column-number | ovm | ovm-unknown-unknown-managed | `Solution().titleToNumber` | 3 |
+| find-all-anagrams-in-a-string | ovm | ovm-unknown-unknown-managed | `findAnagrams` | 9 |
+| find-the-difference | ovm | ovm-unknown-unknown-managed | `findTheDifference` | 4 |
+| find-the-index-of-the-first-occurrence-in-a-string | ovm | ovm-unknown-unknown-managed | `strStr` | 27 |
+| first-unique-character-in-a-string | ovm | ovm-unknown-unknown-managed | `Solution().firstUniqChar` | 3 |
+| flip-game | ovm | ovm-unknown-unknown-managed | `generatePossibleNextMoves` | 4 |
+| generalized-abbreviation | ovm | ovm-unknown-unknown-managed | `generateAbbreviations` | 33 |
+| is-subsequence | ovm | ovm-unknown-unknown-managed | `isSubsequence` | 3 |
+| isomorphic-strings | ovm | ovm-unknown-unknown-managed | `isIsomorphic` | 4 |
+| length-of-last-word | ovm | ovm-unknown-unknown-managed | `Solution().lengthOfLastWord` | 3 |
+| letter-combinations-of-a-phone-number | ovm | ovm-unknown-unknown-managed | `letterCombinations` | 44 |
+| longest-palindrome | ovm | ovm-unknown-unknown-managed | `longestPalindrome` | 4 |
+| longest-palindromic-substring | ovm | ovm-unknown-unknown-managed | `longestPalindrome` | 3 |
+| longest-repeating-character-replacement | ovm | ovm-unknown-unknown-managed | `characterReplacement` | 7 |
+| longest-substring-with-at-most-k-distinct-characters | ovm | ovm-unknown-unknown-managed | `lengthOfLongestSubstringKDistinct` | 7 |
+| longest-substring-without-repeating-characters | ovm | ovm-unknown-unknown-managed | `lengthOfLongestSubstring` | 3 |
+| number-of-segments-in-a-string | ovm | ovm-unknown-unknown-managed | `countSegments` | 9 |
+| palindrome-permutation | ovm | ovm-unknown-unknown-managed | `canPermutePalindrome` | 4 |
+| palindrome-permutation-ii | ovm | ovm-unknown-unknown-managed | `generatePalindromes` | 59 |
+| ransom-note | ovm | ovm-unknown-unknown-managed | `canConstruct` | 4 |
+| repeated-dna-sequences | ovm | ovm-unknown-unknown-managed | `findRepeatedDnaSequences` | 20 |
+| restore-ip-addresses | ovm | ovm-unknown-unknown-managed | `restoreIpAddresses` | 25 |
+| reverse-vowels-of-a-string | ovm | ovm-unknown-unknown-managed | `reverseVowels` | 8 |
+| reverse-words-in-a-string | ovm | ovm-unknown-unknown-managed | `reverseWords` | 6 |
+| roman-to-integer | ovm | ovm-unknown-unknown-managed | `romanToInt` | 26 |
+| simplify-path | ovm | ovm-unknown-unknown-managed | `simplifyPath` | 8 |
+| string-to-integer-atoi | ovm | ovm-unknown-unknown-managed | `myAtoi` | 3 |
+| strobogrammatic-number | ovm | ovm-unknown-unknown-managed | `isStrobogrammatic` | 18 |
+| valid-anagram | ovm | ovm-unknown-unknown-managed | `isAnagram` | 4 |
+| valid-palindrome | ovm | ovm-unknown-unknown-managed | `isPalindrome` | 3 |
+| valid-parentheses | ovm | ovm-unknown-unknown-managed | `Solution().isValid` | 68 |
+| valid-word-abbreviation | ovm | ovm-unknown-unknown-managed | `validWordAbbreviation` | 4 |
+| word-pattern | ovm | ovm-unknown-unknown-managed | `wordPattern` | 4 |
+| zigzag-conversion | ovm | ovm-unknown-unknown-managed | `convert` | 3 |
+
+### X4 字符串数字实参被 runner 数值化（1 题，判题管线）
+
+- 一句判据：题面声明为字符串的参数必须原样传字符串，runner 不得把 `"0"` / `"999999999999999999"` 按数值解析后传给 `utf8` 形参。
+- 语言构造：`micro multiply(num1: utf8, num2: utf8) -> utf8`。
+- 期望语义：`metadata.tests[0].args` 两个 18 位数字串原样进入 VM，全程按字符串做大整数。
+- 当前报错：`Error: run entry multiply: type mismatch: expected object, got i64`（0 用例执行）。
+- 最小复现：`--one-id multiply-strings --lane ovm`。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| multiply-strings | ovm | ovm-unknown-unknown-managed | `multiply` | 11 |
+
+- 归口：判题管线（本线）；不是编译器 ABI 缺口，故不计入 164。
+
+### X5 `option_none::<T>()` 退化成 `<fn value>`（4 题 × 2 target）
+
+- 一句判据：泛型自由函数以 turbofish 实参调用时必须解析为有 callable identity 的实例；HIR 不得把 `option_none::<ArrayList<i64>>()` 退化成 `<fn value>`。
+- 语言构造：`return option_none::<ArrayList<i64>>()`，函数返回 `Option<ArrayList<i64>>`（题面空链表即 `null`）。
+- 期望语义：返回 `None`，调用边界序列化为 `null`；与 wasm lane 的 `merge-two-sorted-lists` 80/80 一致。
+- 当前报错：`error[valkyrie.hir.unresolved_call]: unresolved call <fn value> ...: no callable with this name is in scope`。
+- 最小复现：`--one-id merge-two-sorted-lists --lane ovm`。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| merge-two-sorted-lists | wasm | wasm32-unknown-unknown-wasm | `mergeTwoLists` | 5 |
+| merge-two-sorted-lists | ovm | ovm-unknown-unknown-managed | `mergeTwoLists` | 5 |
+| remove-duplicates-from-sorted-list | wasm | wasm32-unknown-unknown-wasm | `deleteDuplicates` | 5 |
+| remove-duplicates-from-sorted-list | ovm | ovm-unknown-unknown-managed | `deleteDuplicates` | 5 |
+| remove-linked-list-elements | wasm | wasm32-unknown-unknown-wasm | `removeElements` | 5 |
+| remove-linked-list-elements | ovm | ovm-unknown-unknown-managed | `removeElements` | 5 |
+| reverse-linked-list | wasm | wasm32-unknown-unknown-wasm | `reverseList` | 5 |
+| reverse-linked-list | ovm | ovm-unknown-unknown-managed | `reverseList` | 5 |
+
+### X6 `ArrayList.get` 多候选无法按实参消解（1 题 × 2 target）
+
+- 一句判据：`ArrayList.get(usize) -> Option<T>` 必须按实参类型唯一选中；缺候选时不得把接收者类型降为未知并连带 `unwrap` 失败。
+- 语言构造：`let left: i64 = height.get(l + 1).unwrap()`。
+- 期望语义：`get` 返回 `Option<i64>`，`unwrap` 可解析；缺省下标写法应可用 `height⁅l⁆`（题解当前写成 1-based，属调用点写法，不是本工单要迎合的目标）。
+- 当前报错：`unresolved call height.get ... 3 candidate(s) share the name, but none matches the argument types`；随后 `<fn value>.unwrap` 接收者未知。
+- 最小复现：`--one-id container-with-most-water --lane ovm`。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| container-with-most-water | wasm | wasm32-unknown-unknown-wasm | `maxArea` | 3 |
+| container-with-most-water | ovm | ovm-unknown-unknown-managed | `maxArea` | 3 |
+
+### X7 `match` 分支 `return bool` 被合流成 Unit（1 题 × 2 target）
+
+- 一句判据：`match` 各分支以 `return bool` 结束时，MIR 合流后的函数返回类型必须是 Boolean，不得是 Unit（SMIR007）。
+- 语言构造：`match value { case Some(x): return x == num; case None: return false }`。
+- 期望语义：`equals_opt` 返回 `bool`；`Some` 分支比较、`None` 分支 `false`，与题面一致。
+- 当前报错：`SMIR007 ... function=leetcode.third_maximum_number::equals_opt, location=block 4 terminator, detail=return operand type differs from function return type (actual=Unit, expected=Boolean)`。
+- 最小复现：`--one-id third-maximum-number --lane ovm`。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| third-maximum-number | wasm | wasm32-unknown-unknown-wasm | `thirdMax` | 12 |
+| third-maximum-number | ovm | ovm-unknown-unknown-managed | `thirdMax` | 12 |
+
+### X8 和类型 case payload 的 nominal 未完成实例化（CAN054，1 题 × 2 target）
+
+- 一句判据：和类型 case payload 的 nominal 声明必须完成实例化并保留为平台 `NyarType::Nominal`，不得降级为 Named 短名。
+- 语言构造：`DecodedPart` 的 `Plain` case 承载 nominal payload（`sum` 物理 payload）。
+- 期望语义：`decodeString` 构建和值并按 case 读取 payload，与 wasm 语义一致。
+- 当前报错：`CAN054: sum 物理 payload 类型未完成实例化: Nominal declaration ItemId(54) 需要平台 NyarType::Nominal，禁止降级为 Named 短名 (at DecodedPart::Plain)`。
+- 最小复现：`--one-id decode-string --lane ovm`。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| decode-string | wasm | wasm32-unknown-unknown-wasm | `decodeString` | 89 |
+| decode-string | ovm | ovm-unknown-unknown-managed | `decodeString` | 89 |
+
+### X9 `construct` 缺 HIR callable contract（G31，待复跑，1 题 × 2 target）
+
+- 一句判据：单态化 `where` 证据必须按程序闭包的全模块视图结算；`construct` 必须有 HIR callable contract，MIR 不得留 `call.instance=None`。
+- 语言构造：用户 `imply` + 结构体构造 `Interval { start, end }`。
+- 期望语义：与 wasm lane 的 91/91 一致。
+- 当前报错：`MIR lowering unresolved callable identity construct missing HIR callable contract`。
+- 待复跑理由：快照早于 `358a56ee` / `49566a9a`；用当前 toolchain 复跑 `--one-id merge-intervals --lane wasm`，仍红再按新工单重开。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| merge-intervals | wasm | wasm32-unknown-unknown-wasm | `merge` | 46 |
+| merge-intervals | ovm | ovm-unknown-unknown-managed | `merge` | 46 |
+
+### X10 `utf8` 返回对不上名义别名（G32，待复跑，2 题 × 2 target）
+
+- 一句判据：`utf8` 文本值必须能对上 `utf8` 名义别名返回（文本编码与名义别名归一），SMIR007 不得把 `Utf8` 与 `Nominal` 判为不同类型。
+- 语言构造：`micro largest_number(nums: ArrayList<i64>) -> utf8`、`micro rearrange_string(s: utf8, k: i64) -> utf8`。
+- 期望语义：与 wasm lane 的 `largest-number` / `rearrange-string-k-distance-apart` 一致。
+- 当前报错：`SMIR007 ... detail=return operand type differs from function return type (actual=Utf8, expected=Nominal { declaration: ItemId(...) })`。
+- 待复跑理由：快照早于 `15ec9858`；用当前 toolchain 复跑两题，仍红再重开。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| largest-number | wasm | wasm32-unknown-unknown-wasm | `largestNumber` | 58 |
+| largest-number | ovm | ovm-unknown-unknown-managed | `largestNumber` | 58 |
+| rearrange-string-k-distance-apart | wasm | wasm32-unknown-unknown-wasm | `rearrangeString` | 9 |
+| rearrange-string-k-distance-apart | ovm | ovm-unknown-unknown-managed | `rearrangeString` | 9 |
+
+### X11 泛型包装里的 `sort(items)` 证据不闭合（G31 / G26，待复跑，1 题 × 2 target）
+
+- 一句判据：泛型包装函数中的 `sort(items)` 必须按调用方模块的 `imply` 证据闭合实例，不得报 `where evidence rejected the concrete substitution`。
+- 语言构造：`micro order_items<T>(items: ArrayList<T>): unit where T: Equal & Comparable { sort(items) }`，`T = Interval`。
+- 期望语义：按 `Interval` 的 `Comparable` 合同排序；与 wasm lane 一致。
+- 当前报错：`unresolved call sort in order_items: candidate is bound, but where evidence rejected the concrete substitution, so the instance never closed`。
+- 待复跑理由：快照早于 `358a56ee`；复跑 `--one-id non-overlapping-intervals --lane wasm`，仍红再重开。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| non-overlapping-intervals | wasm | wasm32-unknown-unknown-wasm | `eraseOverlapIntervals` | 52 |
+| non-overlapping-intervals | ovm | ovm-unknown-unknown-managed | `eraseOverlapIntervals` | 52 |
+
+### X12 ovm 产物没有可导出符号（30 题）
+
+- 一句判据：`buildStatus=0` 且 execution manifest 新鲜时，ovm 产物必须导出 `metadata.invoke.valkyrie` 指向的入口；不得出现「`.nyar` 没有可导出符号」。
+- 语言构造：`[export(case: "camelCase")] micro <entry>(...)`，含返回 `unit` 的原地修改题与返回值题。
+- 期望语义：入口符号可被 runner 调起并执行 `metadata.tests`。
+- 当前报错：`.nyar 没有可导出符号，确认 legion build --target ovm 是否成功`（build=0、manifest fresh、0 用例执行）。
+- 最小复现：`--one-id next-permutation --lane ovm`。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| arithmetic-slices | ovm | ovm-unknown-unknown-managed | `Solution().numberOfArithmeticSlices` | 4 |
+| balanced-binary-tree | ovm | ovm-unknown-unknown-managed | `isBalanced` | 29 |
+| best-time-to-buy-and-sell-stock-ii | ovm | ovm-unknown-unknown-managed | `maxProfit` | 3 |
+| closest-binary-search-tree-value | ovm | ovm-unknown-unknown-managed | `closestValue` | 5 |
+| count-complete-tree-nodes | ovm | ovm-unknown-unknown-managed | `countNodes` | 4 |
+| find-the-duplicate-number | ovm | ovm-unknown-unknown-managed | `findDuplicate` | 7 |
+| house-robber-ii | ovm | ovm-unknown-unknown-managed | `Solution().rob` | 25 |
+| jump-game | ovm | ovm-unknown-unknown-managed | `Solution().canJump` | 4 |
+| jump-game-ii | ovm | ovm-unknown-unknown-managed | `Solution().jump` | 4 |
+| kth-smallest-element-in-a-sorted-matrix | ovm | ovm-unknown-unknown-managed | `kthSmallest` | 22 |
+| maximum-depth-of-binary-tree | ovm | ovm-unknown-unknown-managed | `maxDepth` | 15 |
+| maximum-subarray | ovm | ovm-unknown-unknown-managed | `maxSubArray` | 3 |
+| merge-sorted-array | ovm | ovm-unknown-unknown-managed | `merge` | 14 |
+| minimum-depth-of-binary-tree | ovm | ovm-unknown-unknown-managed | `minDepth` | 21 |
+| missing-number | ovm | ovm-unknown-unknown-managed | `missingNumber` | 3 |
+| move-zeroes | ovm | ovm-unknown-unknown-managed | `moveZeroes` | 3 |
+| next-permutation | ovm | ovm-unknown-unknown-managed | `nextPermutation` | 3 |
+| palindrome-linked-list | ovm | ovm-unknown-unknown-managed | `isPalindrome` | 4 |
+| reverse-string | ovm | ovm-unknown-unknown-managed | `reverseString` | 3 |
+| rotate-image | ovm | ovm-unknown-unknown-managed | `rotate` | 11 |
+| same-tree | ovm | ovm-unknown-unknown-managed | `isSameTree` | 22 |
+| search-insert-position | ovm | ovm-unknown-unknown-managed | `Solution().searchInsert` | 3 |
+| set-matrix-zeroes | ovm | ovm-unknown-unknown-managed | `setZeroes` | 5 |
+| shortest-word-distance | ovm | ovm-unknown-unknown-managed | `shortestDistance` | 4 |
+| sort-colors | ovm | ovm-unknown-unknown-managed | `sortColors` | 11 |
+| sum-of-left-leaves | ovm | ovm-unknown-unknown-managed | `sumOfLeftLeaves` | 20 |
+| symmetric-tree | ovm | ovm-unknown-unknown-managed | `isSymmetric` | 22 |
+| trapping-rain-water | ovm | ovm-unknown-unknown-managed | `trap` | 6 |
+| utf-8-validation | ovm | ovm-unknown-unknown-managed | `validUtf8` | 3 |
+| valid-word-square | ovm | ovm-unknown-unknown-managed | `validWordSquare` | 4 |
+
+### X13 ovm 执行 180s 超时（4 题）
+
+- 一句判据：同一题解在 wasm lane 已全用例通过时，ovm 执行必须在可用时限内完成；180s 超时记为 ovm 执行侧性能缺口，不是题解错。
+- 语言构造：递归 / 回溯 / 计数循环（`generateParenthesis`、`countPrimes`、`numberOfPatterns`、`getMoneyAmount`）。
+- 期望语义：wasm 实测 8/8、33/33、38/38、28/28 通过；ovm 应给出同样的执行计数。
+- 当前报错：`子进程超时 180000ms`。
+- 最小复现：`--one-id generate-parentheses --lane ovm`（wasm 对照 `--lane wasm` 8/8）。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| android-unlock-patterns | ovm | (target 未记录) | `numberOfPatterns` | 68 |
+| count-primes | ovm | (target 未记录) | `countPrimes` | 3 |
+| generate-parentheses | ovm | (target 未记录) | `generateParenthesis` | 20 |
+| guess-number-higher-or-lower-ii | ovm | (target 未记录) | `getMoneyAmount` | 3 |
+
+### X14 ovm 构建触发 napi panic（1 题）
+
+- 一句判据：`legion build --target ovm` 不得 panic；构建失败必须以结构化诊断返回，不能把子进程带崩。
+- 语言构造：能通过 wasm lane 的完整入口模块（`twoSum`）。
+- 期望语义：与 wasm lane 80/80 一致，ovm 至少产出可调用入口或返回定位明确的错误。
+- 当前报错：`thread '<unnamed>' panicked at ffis\valkyrie-napi\src\product_api.rs:181:25: legion build thread panicked`（进程 0xC0000409）。
+- 最小复现：`--one-id two-sum --lane ovm`（wasm 对照 80/80 通过）。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| two-sum | ovm | (target 未记录) | `twoSum` | 3 |
+
+### X15 ovm 的 `i64` 乘法溢出 panic（1 题）
+
+- 一句判据：`i64` 乘法溢出必须按二补码回绕（或按题面 32 位语义显式定义），不得在 ovm 宿主侧 panic。
+- 语言构造：`let carry: i64 = x.bit_and(y) * 2`。
+- 期望语义：与 wasm lane 80/80 一致；`getSum` 用位运算实现加法，不依赖溢出异常。
+- 当前报错：`panicked at runtimes\odin-vm\src\host.rs:520:41: attempt to multiply with overflow`。
+- 最小复现：`--one-id sum-of-two-integers --lane ovm`（wasm 对照 80/80 通过）。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| sum-of-two-integers | ovm | ovm-unknown-unknown-managed | `Solution().getSum` | 3 |
+
+### 不计入编译器工单的失败（对账用，17 条现象）
+
+以下条目已在本节之外，只列坐标与归属，避免被 163 的编译器口径吞掉；其中顺序类
+`find-all-duplicates-in-an-array`（以及未进前 200 的 `sort-array-by-parity` /
+`sort-array-by-parity-ii`）仍按比较方式缺陷处理，不改题解迎合顺序。
+
+| 题 id | lane | 现象 | 归属 |
+| --- | --- | --- | --- |
+| `gray-code` | wasm + ovm | 多解题需要题面语义校验，禁止 JSON / 规范化比较 | 判据线 |
+| `longest-consecutive-sequence` | wasm | `metadata.invoke.valkyrie` 缺失 | metadata 线 |
+| `zigzag-conversion` | wasm | `AbiSchemaError: args.num_rows` 与 `tests.args` 参数名不一致 | metadata 线 |
+| `excel-sheet-column-title` | wasm | `AbiSchemaError: args.column_number` 与 `tests.args` 参数名不一致 | metadata 线 |
+| `search-insert-position` | wasm | `executed_pass=117/119（skipped=2）`；skipped 不计 pass | 判据 / 语料线 |
+| `combination-sum` | wasm | runner JS heap OOM（`Last few GCs`） | runner |
+| `longest-palindromic-substring` | wasm | `"aba"` vs `"bab"`，多解 strict 比较 | 判据线 |
+| `letter-combinations-of-a-phone-number` | wasm | `letter_start(9)` 返回 122（应为 119），产出 `z{|}` | 题解线（solution.v:27） |
+| `text-justification` | wasm | 期望 / 实得文本不可见差异（strict） | 语料线 |
+| `max-points-on-a-line` | wasm | 95/108，数值差 | 题解线 |
+| `two-sum-ii-input-array-is-sorted` | wasm | `expected null, got []` | 语料线 |
+| `isomorphic-strings` | wasm | 53/131，布尔差 | 题解线 |
+| `sliding-window-maximum` | wasm | 3/104，窗口结果差 | 题解线 |
+| `different-ways-to-add-parentheses` | wasm | `expected [], got ["9159","9165"]` | 语料线 |
+| `find-k-pairs-with-smallest-sums` | wasm | 顺序不同（strict） | 判据线 |
+| `convert-a-number-to-hexadecimal` | wasm | 22/60，`expected ""` vs 长串 | 题解线 |
+| `paint-fence` | ovm | `expected "8544194047146303810"` vs `8544194047146303000`；存的是未取模计数再被 double 抹平，属 F7 的 S 类坏语料 | 语料线（非 i64 精度缺口） |
+
+对账：163（编译器 / 运行时工单）+ 1（X4 判题管线）+ 1（`gray-code` 判据）+ 1（`paint-fence` 语料）= 166 题去重非通过。
+
 ## 缺口与观察分级（2026-11-04 重判）
 
 真缺口（8）：G2 / G3 / G10 / G16 / G22 / G25 / G26 / G28。
