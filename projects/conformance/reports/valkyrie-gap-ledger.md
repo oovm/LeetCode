@@ -1565,21 +1565,22 @@ micro probe(m: HashMap<i64, i64>, flag: bool, flag2: bool, a: i64, b: i64) -> bo
 
 ### G8 `DirectedGraph<N>` 缺无向边写入
 
-- 状态：未提供（std API 缺口，**不阻断构建**；2026-11-04 静态核对 `std/source/collection/graph/DirectedGraph.v`）
-- 定性：**该有但没有**。无向关系没有一等写入入口，`add_edge` 只表达单向，无向边只能由调用方
-  双写两条反向边；`has_edge(a, b)` 也不保证 `has_edge(b, a)`，无向性完全靠调用约定维持。
-- 期望签名（[提案]，源码尚不存在）：
+- 状态：**已提供**（2026-11-07，`valkyrie.v` 提交 `57e784a`，隔离探针 2/2 PASS）。
+  定级仍为**观察**（判据 a：一行转发两次 `add_edge`，不随调用点膨胀），不占真缺口名额。
+- 现有签名（源码为准，返回 `unit`，与 `GraphMatrix` / `WeightedGraph` 同名入口同形）：
 
 ```v
 # std/source/collection/graph/DirectedGraph.v（与 add_edge 同形）
-micro add_undirected_edge(mut self, from: N, to: N): bool
+micro add_undirected_edge(mut self, a: N, b: N): unit
+    where N: Equal & Hash
 ```
 
-- 影响题（4，调用点均为「同一关系双写 add_edge」）：`is-graph-bipartite`（785）、
+- 影响题（4，调用点仍为「同一关系双写 `add_edge`」；改用它属可选清理）：`is-graph-bipartite`（785）、
   `maximal-network-rank`（1615）、`possible-bipartition`（886）、`find-center-of-star-graph`（1791）。
+  消费者改用该入口需主工作树 std 先同步到 `57e784a`，本轮不动主工作树。
 - 不对称点：`std.math.graph_theory.GraphMatrix.add_undirected_edge`（`matrix.v` L49-L52）、
   `WeightedGraph.add_undirected_edge`（`weighted.v` L124-L129）均存在（类型名是 `GraphMatrix`，
-  此前记为 `MatrixGraph` 属笔误）；`DirectedGraph` 只有 `add_edge` / `add_node`。
+  此前记为 `MatrixGraph` 属笔误）；`DirectedGraph` 已补同名入口（`57e784a`）。
   两处「无向边」实现均只是两次 `add_edge` 转发，只命名了约定，不建立合同。
 - 判定：**观察**（判据 a：双写两条 `add_edge`，一行，不随调用点膨胀）。
 - 修复初判：**加 API**（一行转发两次 `add_edge`）。更根本的是建模问题，见本节末尾「建模提示」。
