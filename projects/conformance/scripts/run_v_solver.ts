@@ -105,6 +105,41 @@ function emitStats(stats: SolverCaseStats): void {
     console.log(formatSolverResultLine(stats));
 }
 
+/** 没有可执行期望的哨兵语料；与 `Execution timed out` 占位语料同义。 */
+const NO_EXECUTABLE_EXPECTATION = 'Execution timed out';
+
+function isNoExecutableExpectation(testCase: { expected: unknown }): boolean {
+    return typeof testCase.expected === 'string' && testCase.expected === NO_EXECUTABLE_EXPECTATION;
+}
+
+/** 整数 ABI 参数收到非整数：输入送不进去，不是实现失败。 */
+function isUnrepresentableIntegerArgumentMessage(message: string): boolean {
+    return message.includes('需要整数实参，实际为非整数数值');
+}
+
+/** 预检实参能否按 ABI 类型送达；只有非整数送 `i64` 这一种情况返回 true。 */
+function hasUnrepresentableIntegerArgument(
+    testCase: { args: Record<string, unknown> },
+    abi: { schema: LibraryInvokeSchema; lookup: AbiLookup } | null,
+): boolean {
+    if (!abi) {
+        return false;
+    }
+    try {
+        orderArgsBySchema(abi.lookup.exportSchema, testCase.args).map((value, index) => {
+            const param = abi.lookup.exportSchema.params[index];
+            return param ? preserveI64Precision(param.type, value, `args.${param.name}`) : value;
+        });
+        return false;
+    } catch (err) {
+        if (isUnrepresentableIntegerArgumentMessage(String(err))) {
+            return true;
+        }
+        // 其他实参错误留给正常执行路径按用例失败统计，避免预检改变失败口径。
+        return false;
+    }
+}
+
 /** 按 schema 的 `index` 升序取参数；操作入口剥掉常驻的实例句柄首参。 */
 function orderedParameters(schema: AbiExport, skipInstance: boolean, label: string): AbiParameter[] {
     const params = [...schema.params].sort((left, right) => left.index - right.index);
@@ -149,6 +184,8 @@ async function runOperationSequenceCases(
     entry: string,
     abi: { schema: LibraryInvokeSchema; lookup: AbiLookup },
     tests: OperationSequenceCase[],
+    rawTotal: number,
+    skipped: number,
 ): Promise<number> {
     const callExport = host.callExport;
     if (typeof callExport !== 'function') {
@@ -206,11 +243,12 @@ async function runOperationSequenceCases(
             const infrastructureBlocked = isBlockedSolverMessage(message);
             emitStats({
                 ok: false,
-                testCaseTotal: tests.length,
+                testCaseTotal: rawTotal,
                 executed_pass: pass,
                 executed_fail: infrastructureBlocked ? 0 : 1,
-                blocked: infrastructureBlocked ? tests.length - pass : 0,
-                not_run: infrastructureBlocked ? 0 : tests.length - pass - 1,
+                blocked: infrastructureBlocked ? rawTotal - skipped - pass : 0,
+                not_run: infrastructureBlocked ? 0 : rawTotal - skipped - pass - 1,
+                skipped,
                 firstFailureIndex: extractTestFailureIndex(message) ?? index,
                 firstFailure: message,
             });
@@ -221,11 +259,12 @@ async function runOperationSequenceCases(
 
     emitStats({
         ok: true,
-        testCaseTotal: tests.length,
+        testCaseTotal: rawTotal,
         executed_pass: pass,
         executed_fail: 0,
         blocked: 0,
         not_run: 0,
+        skipped,
         firstFailureIndex: null,
         firstFailure: null,
     });
@@ -296,17 +335,39 @@ async function main(): Promise<number> {
     // host.callExport 存在则走 ABI marshal/unmarshal；只暴露 invokeLeetCode 时 abi 参数可省
     const needsAbi = typeof host.callExport === 'function';
 
+    // ── 无期望语料：哨兵与非整数实参不进 pass/fail 分母 ──────────────────────
+    const skippedApriori = tests.filter(isNoExecutableExpectation).length;
+    const rawTotal = tests.length;
+    const executableCases = tests
+        .map((testCase, index) => ({ testCase, index }))
+        .filter(({ testCase }) => !isNoExecutableExpectation(testCase));
+
     // 设计类题目：构造一次实例句柄 + 逐操作调用，逐步断言。
-    const sequenceCases = tests.filter((test) => isOperationSequenceCase(test));
+    const sequenceCases = executableCases.filter(
+        (item): item is { testCase: OperationSequenceCase; index: number } => isOperationSequenceCase(item.testCase),
+    );
     if (sequenceCases.length > 0) {
-        if (sequenceCases.length !== tests.length) {
+        if (sequenceCases.length !== executableCases.length) {
             throw new Error('同一道题混用了单入口用例与操作序列用例，无法判定执行模型');
         }
-        return await runOperationSequenceCases(host, entry, abi, sequenceCases);
+        return await runOperationSequenceCases(host, entry, abi, sequenceCases.map(({ testCase }) => testCase), rawTotal, skippedApriori);
     }
 
     let pass = 0;
-    for (const [index, case_] of tests.entries()) {
+    // 送不进 ABI 的实参也预先计入 skipped：即使中途因其他用例失败中止，skipped 仍是全量。
+    const unrepresentableIndices = new Set<number>();
+    if (needsAbi) {
+        for (const { testCase, index } of executableCases) {
+            if (hasUnrepresentableIntegerArgument(testCase, abi)) {
+                unrepresentableIndices.add(index);
+            }
+        }
+    }
+    const skipped = skippedApriori + unrepresentableIndices.size;
+    for (const { testCase: case_, index } of executableCases) {
+        if (unrepresentableIndices.has(index)) {
+            continue;
+        }
         try {
             if (typeof case_.expected === 'string' && case_.expected.startsWith('Error:')) {
                 await assertRejectsTestCase(index, case_.expected, () =>
@@ -330,11 +391,12 @@ async function main(): Promise<number> {
             const infrastructureBlocked = isBlockedSolverMessage(message);
             emitStats({
                 ok: false,
-                testCaseTotal: tests.length,
+                testCaseTotal: rawTotal,
                 executed_pass: pass,
                 executed_fail: infrastructureBlocked ? 0 : 1,
-                blocked: infrastructureBlocked ? tests.length - pass : 0,
-                not_run: infrastructureBlocked ? 0 : tests.length - pass - 1,
+                blocked: infrastructureBlocked ? rawTotal - skipped - pass : 0,
+                not_run: infrastructureBlocked ? 0 : rawTotal - skipped - pass - 1,
+                skipped,
                 firstFailureIndex: extractTestFailureIndex(message) ?? index,
                 firstFailure: message,
             });
@@ -345,11 +407,12 @@ async function main(): Promise<number> {
 
     emitStats({
         ok: true,
-        testCaseTotal: tests.length,
+        testCaseTotal: rawTotal,
         executed_pass: pass,
         executed_fail: 0,
         blocked: 0,
         not_run: 0,
+        skipped,
         firstFailureIndex: null,
         firstFailure: null,
     });
@@ -365,6 +428,7 @@ main().catch((err) => {
         executed_fail: 0,
         blocked: 0,
         not_run: 0,
+        skipped: 0,
         firstFailureIndex: extractTestFailureIndex(message),
         firstFailure: message,
     });

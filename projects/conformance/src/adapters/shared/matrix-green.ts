@@ -9,6 +9,8 @@ export type MatrixGreenFlags = {
     executed_fail: number;
     blocked: number;
     not_run: number;
+    /** 没有可执行期望、已从分母排除的用例数。 */
+    skipped?: number;
 };
 
 /** 绿：能编、`legion test` 通过、manifest 新鲜且 `metadata.tests` 全量真实执行通过。 */
@@ -18,7 +20,7 @@ export function isMatrixRowGreen(row: MatrixGreenFlags): boolean {
         && row.manifestFresh
         && row.runtimeOk
         && row.testCaseTotal > 0
-        && row.executed_pass === row.testCaseTotal
+        && row.executed_pass + (row.skipped ?? 0) === row.testCaseTotal
         && row.executed_fail === 0
         && row.blocked === 0
         && row.not_run === 0;

@@ -86,6 +86,8 @@ export type LaneMatrixSummary = {
     executed_fail: number;
     blocked: number;
     not_run: number;
+    /** 没有可执行期望、已从 `casePassRate` 分母排除的用例数。 */
+    skipped: number;
     /** 从 `testCaseTotal` 与四字段中剔除的隔离用例数。 */
     quarantinedCases: number;
     problemPassRate: number;
@@ -132,6 +134,7 @@ function summarizeLane(rows: ValkyrieLaneRow[], denominator: number, baselineRow
     const executedFail = rows.reduce((sum, row) => sum + row.executed_fail, 0);
     const blocked = rows.reduce((sum, row) => sum + row.blocked, 0);
     const notRun = rows.reduce((sum, row) => sum + row.not_run, 0);
+    const skipped = rows.reduce((sum, row) => sum + (row.skipped ?? 0), 0);
     const rate = (count: number, denom = denominator) => (denom === 0 ? 0 : count / denom);
     return {
         denominator,
@@ -148,11 +151,12 @@ function summarizeLane(rows: ValkyrieLaneRow[], denominator: number, baselineRow
         executed_fail: executedFail,
         blocked,
         not_run: notRun,
+        skipped,
         quarantinedCases: baselineTotal - testCaseTotal,
         problemPassRate: rate(green),
         buildPassRate: rate(buildPass),
         runtimePassRate: rate(runtimePass),
-        casePassRate: rate(executedPass, testCaseTotal),
+        casePassRate: rate(executedPass, testCaseTotal - skipped),
         greenRate: rate(green),
     };
 }

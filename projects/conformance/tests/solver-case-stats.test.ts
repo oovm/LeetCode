@@ -17,11 +17,29 @@ describe('solver case stats marker', () => {
             executed_fail: 0,
             blocked: 0,
             not_run: 0,
+            skipped: 0,
             firstFailureIndex: null,
             firstFailure: null,
         };
         const parsed = parseSolverResultLine(`noise\n${formatSolverResultLine(stats)}\n`);
         expect(parsed).toEqual(stats);
+    });
+
+    it('parses skipped count separately from pass/fail', () => {
+        const stats = {
+            ok: true,
+            testCaseTotal: 3,
+            executed_pass: 0,
+            executed_fail: 0,
+            blocked: 0,
+            not_run: 2,
+            skipped: 1,
+            firstFailureIndex: null,
+            firstFailure: null,
+        };
+        expect(parseSolverResultLine(formatSolverResultLine(stats))?.skipped).toBe(1);
+        const legacy = formatSolverResultLine({ ...stats, skipped: undefined });
+        expect(parseSolverResultLine(legacy)?.skipped).toBe(0);
     });
 
     it('parses first failure index from error text', () => {

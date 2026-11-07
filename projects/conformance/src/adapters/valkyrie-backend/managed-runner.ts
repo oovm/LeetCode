@@ -102,6 +102,14 @@ function parseManagedReturnValue(stdout: string, returnType: string): unknown {
     }
 }
 
+/** 没有可执行期望的哨兵语料。 */
+const NO_EXECUTABLE_EXPECTATION = 'Execution timed out';
+
+/** 整数形参收到非整数：输入送不进去，不是实现失败。 */
+function isUnrepresentableIntegerValue(value: unknown, type: string): boolean {
+    return (type === 'i64' || type === 'i32') && typeof value === 'number' && !Number.isInteger(value);
+}
+
 /** 每个用例的 argv：managed ABI 没有形参名，按 metadata 键序供货，个数与类型必须完全匹配。 */
 function buildCaseArguments(testCase: TestCase, entry: ManagedAbiEntry, index: number): string[] {
     const values = Object.values(testCase.args);
@@ -164,9 +172,21 @@ export function runManagedReference(
         }
 
         let pass = 0;
+        let skipped = 0;
         let firstCommand: string | null = null;
         let exitStatus: number | null = null;
         for (const [index, testCase] of tests.entries()) {
+            if (NO_EXECUTABLE_EXPECTATION === testCase.expected) {
+                skipped += 1;
+                continue;
+            }
+            const values = Object.values(testCase.args);
+            if (
+                entry.parameter_types.some((type, position) => isUnrepresentableIntegerValue(values[position], type))
+            ) {
+                skipped += 1;
+                continue;
+            }
             if (typeof testCase.expected === 'string' && testCase.expected.startsWith('Error:')) {
                 throw new ManagedAbiError(`tests[${index}] 期待抛出异常，managed 标量 launcher 不支持该断言`);
             }
@@ -211,6 +231,7 @@ export function runManagedReference(
                 executed_fail: 0,
                 blocked: 0,
                 not_run: 0,
+                skipped,
                 firstFailureIndex: null,
                 firstFailure: null,
             },

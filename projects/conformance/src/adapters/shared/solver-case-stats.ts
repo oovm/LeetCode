@@ -1,7 +1,12 @@
 /** `run_*_solver` 在 stdout 末行写出的结构化用例结果前缀。 */
 export const SOLVER_RESULT_MARKER = 'VALKYRIE_SOLVER_RESULT ';
 
-/** 用例结果四分类；四者之和恒等于 `testCaseTotal`。 */
+/**
+ * 用例结果四分类；`executed_pass + executed_fail + blocked + not_run === testCaseTotal - skipped`。
+ *
+ * `skipped` 是「没有可执行期望」的语料：`Execution timed out` 哨兵，以及整数 ABI 送不进去的
+ * 非整数实参。它们不进 pass/fail 分母，单独计数，不能悄悄变成通过率的一部分。
+ */
 export type SolverCaseStats = {
     ok: boolean;
     testCaseTotal: number;
@@ -11,6 +16,8 @@ export type SolverCaseStats = {
     blocked: number;
     /** 因更早用例中止而从未执行，不是失败。 */
     not_run: number;
+    /** 没有可执行期望、已从 pass/fail 分母排除的用例数。 */
+    skipped?: number;
     firstFailureIndex: number | null;
     firstFailure: string | null;
 };
@@ -23,6 +30,7 @@ export function emptySolverCaseStats(error: string | null = null): SolverCaseSta
         executed_fail: 0,
         blocked: 0,
         not_run: 0,
+        skipped: 0,
         firstFailureIndex: null,
         firstFailure: error,
     };
@@ -77,6 +85,7 @@ export function parseSolverResultLine(text: string): SolverCaseStats | null {
                 executed_fail: payload.executed_fail,
                 blocked: payload.blocked,
                 not_run: payload.not_run,
+                skipped: typeof payload.skipped === 'number' ? payload.skipped : 0,
                 firstFailureIndex: payload.firstFailureIndex ?? null,
                 firstFailure: payload.firstFailure ?? null,
             };

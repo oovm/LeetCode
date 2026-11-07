@@ -85,6 +85,8 @@ export type ValkyrieBackendMatrixRow = {
     executed_fail: number;
     blocked: number;
     not_run: number;
+    /** 没有可执行期望、已从 pass/fail 分母排除的用例数。 */
+    skipped?: number;
     firstFailureIndex: number | null;
     firstFailure: string | null;
     solverNote: string | null;
@@ -101,6 +103,7 @@ function withCaseStats(row: ValkyrieBackendMatrixRowNoGreen, stats: SolverCaseSt
         executed_fail: stats.executed_fail,
         blocked: stats.blocked,
         not_run: stats.not_run,
+        skipped: stats.skipped ?? 0,
         firstFailureIndex: stats.firstFailureIndex,
         firstFailure: stats.firstFailure,
         green: false,
@@ -139,6 +142,7 @@ function baseRow(problem: ProblemDefinition): ValkyrieBackendMatrixRowNoGreen {
         executed_fail: 0,
         blocked: 0,
         not_run: 0,
+        skipped: 0,
         firstFailureIndex: null,
         firstFailure: null,
         solverNote: null,

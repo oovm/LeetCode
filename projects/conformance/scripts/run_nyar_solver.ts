@@ -112,6 +112,13 @@ function emitStats(stats: SolverCaseStats): void {
     console.log(formatSolverResultLine(stats));
 }
 
+/** 没有可执行期望的哨兵语料；不计入 pass/fail 分母。 */
+const NO_EXECUTABLE_EXPECTATION = 'Execution timed out';
+
+function isNoExecutableExpectation(testCase: { expected: unknown }): boolean {
+    return typeof testCase.expected === 'string' && testCase.expected === NO_EXECUTABLE_EXPECTATION;
+}
+
 async function main(): Promise<number> {
     const problemDir = process.argv[2];
     if (!problemDir) {
@@ -164,8 +171,13 @@ async function main(): Promise<number> {
         throw new Error(blocked);
     }
 
+    const skipped = tests.filter(isNoExecutableExpectation).length;
+    const executableCases = tests
+        .map((testCase, index) => ({ testCase, index }))
+        .filter(({ testCase }) => !isNoExecutableExpectation(testCase));
+
     let pass = 0;
-    for (const [index, case_] of tests.entries()) {
+    for (const { testCase: case_, index } of executableCases) {
         try {
             if (typeof case_.expected === 'string' && case_.expected.startsWith('Error:')) {
                 assertTestCase(index, case_.expected, () => {
@@ -193,8 +205,9 @@ async function main(): Promise<number> {
                 testCaseTotal: tests.length,
                 executed_pass: pass,
                 executed_fail: infrastructureBlocked ? 0 : 1,
-                blocked: infrastructureBlocked ? tests.length - pass : 0,
-                not_run: infrastructureBlocked ? 0 : tests.length - pass - 1,
+                blocked: infrastructureBlocked ? tests.length - skipped - pass : 0,
+                not_run: infrastructureBlocked ? 0 : tests.length - skipped - pass - 1,
+                skipped,
                 firstFailureIndex: extractTestFailureIndex(message) ?? index,
                 firstFailure: message,
             });
@@ -210,6 +223,7 @@ async function main(): Promise<number> {
         executed_fail: 0,
         blocked: 0,
         not_run: 0,
+        skipped,
         firstFailureIndex: null,
         firstFailure: null,
     });
@@ -225,6 +239,7 @@ main().catch((err) => {
         executed_fail: 0,
         blocked: 0,
         not_run: 0,
+        skipped: 0,
         firstFailureIndex: extractTestFailureIndex(message),
         firstFailure: message,
     });

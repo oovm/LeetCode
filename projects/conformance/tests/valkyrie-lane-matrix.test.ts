@@ -219,6 +219,16 @@ describe('valkyrie lane matrix report', () => {
         expect(report.complete).toBe(false);
     });
 
+    it('excludes skipped cases from the case pass-rate denominator', () => {
+        const report = buildValkyrieLaneMatrixReport(
+            [entry('two-sum', { wasm: { ...greenWasm('two-sum'), testCaseTotal: 4, executed_pass: 3, skipped: 1 } })],
+            { corpusIds: ['two-sum'] },
+        );
+        expect(report.summary.wasm.skipped).toBe(1);
+        expect(report.summary.wasm.executed_pass).toBe(3);
+        expect(report.summary.wasm.casePassRate).toBe(1);
+    });
+
     it('excludes quarantined cases from the case denominator without claiming a re-judge', () => {
         const quarantine: LaneQuarantine = {
             source: 'test-list.json',

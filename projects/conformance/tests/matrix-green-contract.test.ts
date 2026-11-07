@@ -114,4 +114,11 @@ describe('Valkyrie lane 矩阵绿门禁', () => {
     it('blocked cases cannot be green even when no case failed', () => {
         expect(isValkyrieGreen(baseNodeRow({ testCaseTotal: 3, executed_pass: 0, executed_fail: 0, blocked: 3 }))).toBe(false);
     });
+
+    it('skipped cases are excluded from the green denominator', () => {
+        const row = baseNodeRow({ testCaseTotal: 4, executed_pass: 3, skipped: 1 });
+        expect(isValkyrieGreen(row)).toBe(true);
+        expect(isMatrixRowGreen(row)).toBe(true);
+        expect(isValkyrieGreen(baseNodeRow({ testCaseTotal: 4, executed_pass: 2, not_run: 1, skipped: 1 }))).toBe(false);
+    });
 });
