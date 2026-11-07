@@ -39,7 +39,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 
 ## 缺口与观察分级（2026-11-04 重判）
 
-真缺口（10）：G2 / G3 / G10 / G11 / G16 / G17 / G22 / G25 / G26 / G28。
+真缺口（9）：G2 / G3 / G10 / G16 / G17 / G22 / G25 / G26 / G28。
 
 | 编号 | 判据 | 摊派面 |
 | --- | --- | --- |
@@ -47,7 +47,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | G3 wasm JS glue 的 `ArrayList` ABI | c | ABI 边界由题面固定，题解改不了结构（36 题） |
 | G9 二分图判定 | **已恢复**（2026-11-07）：`std.math.graph_theory.bipartition` 已提供，两题改用 std 入口；真跑 179/181 用例 PASS（余 2 条为 F6 语料宿主异常文本） | `valkyrie.v` 提交 `59a4acad`；消费者 `is-graph-bipartite` / `possible-bipartition` |
 | G10 `DisjointSet` 分量聚合 | b | 3 处 × 重写 DSU 内部聚合 |
-| G11 `sorted_by` | b | 21 处 × 副本 + `merge_sort`（R28 后 +3） |
+| G11 `sorted_by` | **已恢复**（2026-11-07 实测）：`std.collection.sort` 的 `sorted_by<T>(items: ArrayList<T>, cmp): ArrayList<T>`（`3e02e7d`）已提供，8 题改用它后真跑 **767/767** 用例 PASS，另删除 4 处副本脚手架；残余 `[T]` 带比较器入口见 G11 小节 | `maximum-subsequence-score` / `maximum-number-of-events-that-can-be-attended` / `the-k-weakest-rows-in-a-matrix` / `find-subsequence-of-length-k-with-the-largest-sum` / `high-five` / `array-of-doubled-pairs` / `advantage-shuffle` / `the-k-strongest-values-in-an-array` / `meeting-rooms` / `remove-covered-intervals` / `minimum-moves-to-equal-array-elements-ii` / `merge-similar-items` |
 | G13 `utf8` 字典序比较 | **已恢复**（2026-11-07）：`Utf8Text` 的 `Comparable` 合同已提供，5 处消费者改用 `natural_order` 比较器；真跑 420/420 用例 PASS | `accounts-merge` / `reorder-data-in-log-files` / `top-k-frequent-words` / `find-smallest-letter-greater-than-target` / `phone-number-prefix` |
 | G16 `BTreeSet` / `BTreeMap` 界查询 | b | 3 处 × O(k) 物化 + 手写二分（其中 1 处为按秩查询；`nth` 已销案） |
 | G17 `char` 缺 `Hash` | b | 7 处 × 每次调用点换键型 |
@@ -767,7 +767,7 @@ $n
   本批 **4 题**：`maximum-product-after-k-increments`（2233）、`maximum-subsequence-score`
   （2542）、`minimum-cost-to-connect-sticks`（1167）、`maximum-number-of-events-that-can-be-attended`
   （1353）。按 i64 最小堆形态书写，未临时造替代结构。
-- `sorted_by(list, cmp)`（G11 提案，源码无此入口）：`maximum-subsequence-score`（2542，按 `nums2`
+- `sorted_by(list, cmp)`（G11，2026-11-07 已提供）：`maximum-subsequence-score`（2542，按 `nums2`
   降序且比较器捕获 `nums2`）、`maximum-number-of-events-that-can-be-attended`（1353，按开始日升序），
   **2 题 2 处**。
 - `Comparable` / `<=>` 派生（**阻塞**）：`maximum-number-of-eaten-apples`（1705，`Fruit` 按到期日）、
@@ -820,7 +820,7 @@ $n
 | `ArrayList::get` | `micro get(self, index: isize): Option<T>`（1-based ordinal） | 有 | 1-based 取值处 |
 | `ArrayList::set` | `micro set(mut self, index: isize, value: T): unit`（1-based ordinal） | 有 | 739 / 907 / 1856 / 950 / 945 |
 | `sort(list)` | `micro sort<T>(mut list: ArrayList<T>) where T: std::operator::Comparable` | 有（`sort.v` 已落地，稳定归并） | 950 / 945 / 1921 |
-| `sorted_by(list, cmp)` | `micro sorted_by<T>(list: mut ArrayList<T>, compare: micro(T, T) -> i32): unit` | **无**（G11 提案） | 2542 / 1353（另 R22 的 954 / 870） |
+| `sorted_by(list, cmp)` | `micro sorted_by<T>(items: ArrayList<T>, compare: micro(T, T) -> i32): ArrayList<T>` | 有（`3e02e7d`，返回新序列） | 2542 / 1353（另 R22 的 954 / 870） |
 | `Comparable` 派生 | `imply X: std::operator::Comparable { micro compare(self, other: X): std::operator::Ordering }` | **阻塞**（Q10 裸 `Equal` 撞名；Q11 已复核） | 1705 / 1921 |
 | `char: Hash` | `imply char: std::hash::Hash`（`HashMap<char, V>` 可建） | **无**（G17） | 621（另 R22 的 424 / 340） |
 
@@ -834,7 +834,7 @@ $n
   `valid-triangle-number`（611）、`minimize-maximum-pair-sum-in-array`（1877）、
   `divide-players-into-teams-of-equal-skill`（2491）、`maximum-matching-of-players-with-trainers`
   （2410，两处：球员表与教练表各一次）。
-- `sorted_by(list, cmp)`（G11 提案，源码无此入口）：`the-k-strongest-values-in-an-array`（1471，
+- `sorted_by(list, cmp)`（G11，2026-11-07 已提供）：`the-k-strongest-values-in-an-array`（1471，
   按「与中位数距离降序、值降序」排序）；比较器捕获外层 `median`（闭包捕获，待验证，见观察 8）。
 - 其余面只用源码已有签名：`HashMap<i64, i64>`（974 / 1248 的余数 / 奇偶前缀频次表）、
   `Deque<i64>`（962 的单调递减下标栈）、`ArrayList` 构造 / `push` / `length` / `set`、与 `i64` 算术。
@@ -842,7 +842,7 @@ $n
 
 ### 依赖未实现特性的调用点（R22）
 
-- `sorted_by(list, cmp)`（G11 提案，源码无此入口）：`array-of-doubled-pairs`（954，按绝对值排序）、
+- `sorted_by(list, cmp)`（G11，2026-11-07 已提供）：`array-of-doubled-pairs`（954，按绝对值排序）、
   `advantage-shuffle`（870，按 `nums2` 的值排序索引）；870 的比较器还捕获外层 `nums2`
   （闭包捕获，待验证，见观察 8）。
 - `sort(list)` 单参入口（**已落地**：`valkyrie.v` `projects/std/source/collection/sort.v`，
@@ -1055,25 +1055,22 @@ HIR 层证据是通的。真机制是 OVM 后端把 `Cast` 静默跳过（`_ => 
 **本组仍未复验**：上述六题证据证明的是 `sort(ArrayList<i64>)` 路径，自定义 `Comparable`
 结构体 + `<=>` 派生尚未在同一 addon 副本上真跑；按纪律记「未复验」，不记「已修」。
 
-**阻塞于 `sorted_by(list, cmp)`（G11 提案）**（7 题，R22 + R24 + R28 产出）
+**阻塞于 `sorted_by(list, cmp)`（G11，2026-11-07 已恢复）**（7 题，R22 + R24 + R28 产出）
 
 | 题号 | slug | 入口 | 状态 |
 | --- | --- | --- | --- |
-| 954 | `array-of-doubled-pairs` | `canReorderDoubled` | `authored-unverified` |
-| 870 | `advantage-shuffle` | `advantageCount` | `authored-unverified`（同时依赖 `sort(list)`） |
-| 2542 | `maximum-subsequence-score` | `maxScore` | `authored-unverified`（比较器捕获 `nums2`） |
-| 1353 | `maximum-number-of-events-that-can-be-attended` | `maxEvents` | `authored-unverified` |
-| 1337 | `the-k-weakest-rows-in-a-matrix` | `kWeakestRows` | `authored-unverified`（比较器捕获 `strength`） |
-| 2099 | `find-subsequence-of-length-k-with-the-largest-sum` | `maxSubsequence` | `authored-unverified`（比较器捕获 `nums`） |
-| 1086 | `high-five` | `highFive` | `authored-unverified`（分组内降序比较器） |
+| 954 | `array-of-doubled-pairs` | `canReorderDoubled` | 复跑通过 112/112（2026-11-07） |
+| 870 | `advantage-shuffle` | `advantageCount` | 复跑通过 99/99（2026-11-07） |
+| 2542 | `maximum-subsequence-score` | `maxScore` | 复跑通过 114/114（2026-11-07） |
+| 1353 | `maximum-number-of-events-that-can-be-attended` | `maxEvents` | 复跑通过 93/93（2026-11-07） |
+| 1337 | `the-k-weakest-rows-in-a-matrix` | `kWeakestRows` | 复跑通过 80/80（2026-11-07） |
+| 2099 | `find-subsequence-of-length-k-with-the-largest-sum` | `maxSubsequence` | 复跑通过 99/99（2026-11-07） |
+| 1086 | `high-five` | `highFive` | 复跑通过 79/79（2026-11-07） |
 
-同组判据：`sorted_by(list, cmp)` 源码无此入口（G11 提案）。`sort(list)` 已落地但不能接受
-比较器，因此需要自定义序的排序仍走本组。R28 三题的调用点是
-`the-k-weakest-rows-in-a-matrix/solution.v`（`order = sorted_by(order, ...)`）、
-`find-subsequence-of-length-k-with-the-largest-sum/solution.v`（同形态）、
-`high-five/solution.v`（分组 `bucket = sorted_by(bucket, ...)`）。此外 `sort.v` 的
-`merge_sort` 当前是 `private` 三参实现，不能作为公共比较器排序入口。入口落地后按本组
-slug 一次性复跑。
+同组判据：`sorted_by<T>(items: ArrayList<T>, cmp: micro(T, T) -> i32): ArrayList<T>` 已由
+`3e02e7d` 提供（返回新序列，入参不改动），上表 7 题合计 **676/676** 用例 PASS；R23 的
+`the-k-strongest-values-in-an-array`（1471）同批复跑 **91/91** PASS。
+`sort.v` 的 `merge_sort` 已是非私有入口，比较器排序不再依赖题内手写实现。
 
 **阻塞于 G2 浮点返回值合同**（1 题，R25 产出）
 
@@ -1219,7 +1216,7 @@ G13（`[utf8]` 无 `<`，2026-11-07 已恢复）、G15（无 `Comparable` 合同
 `add_edge`，属「换构造、零重复」。真正绕不过去的是 G2（浮点返回值合同）与 G3（wasm JS glue 的
 `ArrayList` ABI）：绕路会改变返回类型或跨不过 ABI 边界。这条决定下一轮 std 的修复顺序：
 1) 先补真缺口里有合同骨架的一档（G26 序关系 → G17 的 impl 缺项、G16 的有界查询，G13 已于 2026-11-07 恢复）；
-2) 再补其余真缺口 API（G10 / G11 / G22 / G25）；
+2) 再补其余真缺口 API（G10 / G22 / G25）；
 3) 观察档（G8 / G12 / G14 / G15 / G18–G21 / G23 / G24 / G27）随修复窗口顺带处理，不单独排期。
 理由：真缺口是「每个调用点都在重复付成本」，优先修；观察档都有零重复的等价 API。
 
@@ -1230,7 +1227,7 @@ G13（`[utf8]` 无 `<`，2026-11-07 已恢复）、G15（无 `Comparable` 合同
 
 | 调用 | 实际 std | 文件 |
 | --- | --- | --- |
-| `sorted_by(list, cmp)` ×9 | 只有 `quick_sort` / `merge_sort`（就地，`sort.v`） | `accounts-merge`、`custom-sort-string`、`group-anagrams`、`height-checker`、`largest-perimeter-triangle`、`meeting-rooms`、`queue-reconstruction-by-height`、`smallest-string-with-swaps`、`top-k-frequent-words` |
+| `sorted_by(list, cmp)` ×9 | 已提供（2026-11-07，`sorted_by` 返回新序列） | `accounts-merge`、`custom-sort-string`、`group-anagrams`、`height-checker`、`largest-perimeter-triangle`、`meeting-rooms`、`queue-reconstruction-by-height`、`smallest-string-with-swaps`、`top-k-frequent-words` |
 | `BTreeSet.floor` / `ceiling` | 不存在（G16 提案） | `contains-duplicate-iii` |
 | `utf8.compare` | 不存在（G13 提案；`Utf8Text` 只有 `equals`） | `accounts-merge`（`compare_text`） |
 | `HashSet::new(capacity)` | 已提供（G12，2026-11-06） | `accounts-merge` |
@@ -1626,12 +1623,16 @@ micro bipartition<N>(graph: std.collection.DirectedGraph<N>) -> Option<HashMap<N
 - 判定：**真缺口**（判据 b：3 处 × 重写 DSU 内部聚合，缺失被摊派给每个调用点）。
 - 修复初判：**加 API**（`group_sizes` 一次遍历即可，且与路径压缩共用）。
 
-### G11 `std.collection.sort` 只有就地排序，缺返回新序列的 `sorted_by`
+### G11 `std.collection.sort` 缺返回新序列的 `sorted_by`
 
-- 状态：**部分已提供（2026-11-06 源码复核）**。`std/source/collection/sort.v` 现有
-  `sorted_by<T>(items: ArrayList<T>, cmp: micro(T, T) -> i32): ArrayList<T>`（返回新序列，不再要求调用方自建副本），
+- 状态：**已恢复（2026-11-07 实测）**。`std/source/collection/sort.v` 现有
+  `sorted_by<T>(items: ArrayList<T>, cmp: micro(T, T) -> i32): ArrayList<T>`（`3e02e7d`，返回新序列，不再要求调用方自建副本），
   另有公开 `merge_sort<T>(mut list: ArrayList<T>, cmp)` / `quick_sort<T>(mut list: ArrayList<T>, cmp)` 与
   `sort<T>(mut values: [T])`（固定数组按自然序就地排序）。
+  - 2026-11-07 复跑：8 题合计 **767/767** 用例 PASS（2542 114、1353 93、1337 80、2099 99、1086 79、954 112、870 99、1471 91）。
+  - 2026-11-07 消费者清理：删除 4 处「副本 + 就地排序」脚手架（`meeting-rooms` 101/101、
+    `remove-covered-intervals` 111/111、`minimum-moves-to-equal-array-elements-ii` 79/79、
+    `merge-similar-items` 100/100，改前改后同口径）。
 - 残余缺口（2026-11-06 登记，**待排期，本轮不纳入**）：`[T]` **没有带比较器的排序入口**。
   `sort.v` 现有比较器入口全部收 `ArrayList`（`merge_sort` `:106`、`quick_sort` `:231`、`sorted_by` `:143`）；
   `[T]` 侧只有自然序 `sort`（`:116`），没有 `merge_sort` / `quick_sort` / `sorted_by` 的 `[T]` 重载。
@@ -1650,16 +1651,15 @@ micro bipartition<N>(graph: std.collection.DirectedGraph<N>) -> Option<HashMap<N
   `merge-similar-items`（2363）、`minimum-moves-to-equal-array-elements-ii`（462）。
   R22 追加 2 处：`array-of-doubled-pairs`（954，`sorted_by(arr, cmp_abs)`）、
   `advantage-shuffle`（870，`sorted_by(order, 比较 nums2 的内联比较器)`）。
-- 现状入口（2026-11-05 复核）：`sort.v:82` 的 `sort<T>(mut list: ArrayList<T>)` 只有一个参数，
-  不接受比较器；`:94` 的 `merge_sort<T>(mut list, left: usize, right: usize)` 是 `private`
-  三参实现，只能从模块内调用，不能作公共比较器入口。因此 `sorted_by(list, cmp)` 仍是提案，
-  调用点只能「先自建副本 + 再调 `sort`」或退回题内手写排序。
+- 现状入口（2026-11-05 复核时的状态，**现已过时**：`sorted_by` 已由 `3e02e7d` 提供、公开
+  `merge_sort` 已由 `a01804a` 提供，比较器排序可直接调用公共入口）。
 - 不对称点：`ArrayList` 有 **7 个**排序函数（`quick_sort` / `quick_sort_range` / `partition` / `swap` /
   `merge_sort` / `merge_sort_range` / `merge`；此前记为 6 个，漏了 `merge`），`Array<T>` 为 **0 个**
-  排序入口；没有任何一个返回新序列。另：std 测试目录下无 `quick_sort` / `merge_sort` 用例，
+  排序入口；此前没有任何一个返回新序列（`sorted_by` 已于 `3e02e7d` 补齐）。另：std 测试目录下无 `quick_sort` / `merge_sort` 用例，
   「就地改容器」目前只有源码证据（`class` 是引用类型，`swap` 经 `list.set` 写穿）。
-- 判定：**真缺口**（判据 b：18 处 × 副本 + `merge_sort`，每题重复同一套两行与一次分配）。
-- 修复初判：**加 API**（在副本上调 `merge_sort` 的薄封装）。
+- 判定：**已恢复**（2026-11-07）。原判真缺口（判据 b：18 处 × 副本 + `merge_sort`）；
+  `sorted_by` 落地后调用点改用返回新序列入口，其中 8 题 767/767 真跑通过。
+- 修复落地：**加 API**（`sorted_by`，在副本上调 `merge_sort` 的薄封装）。
 
 ### G12 `HashSet::new()` 无容量参数
 
