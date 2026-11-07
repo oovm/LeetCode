@@ -5,7 +5,7 @@ namespace leetcode.merge_two_sorted_lists;
 [export(case: "camelCase")]
 micro mergeTwoLists(list1: ArrayList<i64>, list2: ArrayList<i64>) -> Option<ArrayList<i64>> {
     if list1.length() + list2.length() == 0 {
-        return option_none::<ArrayList<i64>>()
+        return None
     }
     let mut result: ArrayList<i64> = ArrayList::new(list1.length() + list2.length())
     let mut i: usize = 0

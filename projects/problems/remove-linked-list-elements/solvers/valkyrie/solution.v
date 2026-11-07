@@ -13,7 +13,7 @@ micro removeElements(head: ArrayList<i64>, val: i64) -> Option<ArrayList<i64>> {
         i = i + 1
     }
     if result.length() == 0 {
-        return option_none::<ArrayList<i64>>()
+        return None
     }
     return Some(result)
 }

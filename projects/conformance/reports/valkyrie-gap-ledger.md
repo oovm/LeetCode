@@ -27,6 +27,7 @@
 - Valkyrie 双 target（[valkyrie-dual-target-baseline.md](./valkyrie-dual-target-baseline.md)，前 200 题实测，其余 961 题未跑）：wasm 172 通过 / 27 失败 / 0 blocked / 1 未验证；ovm 34 / 131 / 1 / 34。两 target 都过 34，仅 wasm 过 138，仅 ovm 过 0。
 - ovm 主导失败是 ABI 合同（117）：`parse args-json` / `serialize result` 的 JSON 数组/对象导出合同未落地，不是题解算错。
 - 口径：`skipped` 不抵扣分母、不计入 pass；空跑、缺 `export class Solution`、超时、runtime pending 单列，不并入通过。
+- 注意：4 道链表题（`merge-two-sorted-lists` / `remove-duplicates-from-sorted-list` / `remove-linked-list-elements` / `reverse-linked-list`）的基线构建失败来自旧 `option_none` API（`valkyrie.v` `98ad51d` 已删除）。这批数字是在旧 API 上算出的，4 题已改 `None`，需复跑；不计入编译器缺陷（详见 X5 撤单与 X16）。
 
 G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归位与此后新增编号的唯一判据）：
 
@@ -57,9 +58,10 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 - 快照 native `platforms/valkyrie-win32-x64/lib/valkyrie.win32-x64-msvc.node`（sha256 `19ab115a412bd2d27a3a03d6b1b2644aa1bd1590ee507ceb0032049c89e7ecbe`，mtime 2026-11-07 07:37 +0800）。
   该快照晚于 `dcb49a6a`（2026-11-07 04:14）、早于 `358a56ee` / `49566a9a`（11:22）与 `15ec9858`（11:55）；
   因此标「待复跑」的条目只是快照上的诊断，需用当前 toolchain 复跑后才能判定是否仍开，不在本台账里重复开单。
-- 前 200 题去重后 **166 题**非通过：编译器 / 运行时侧 **163**、判题管线 **1**（`multiply-strings` 把字符串实参数值化）、
-  判据侧 **1**（`gray-code` 多解校验）、语料侧 **1**（`paint-fence` 的 `expected` 已是 F7 S 类坏语料）。117 条 ovm ABI 中
-  116 归编译器边界合同、1 归判题管线；不靠改题解绕、不改判据。
+- 前 200 题去重后 **166 题**非通过：编译器 / 运行时侧 **163**（含 X16 的 4 条 `Option` 返回合同；X5 的 4 条旧 API 漂移已撤单，不计）、
+  判题管线 **1**（`multiply-strings` 把字符串实参数值化）、判据侧 **1**（`gray-code` 多解校验）、
+  语料侧 **1**（`paint-fence` 的 `expected` 已是 F7 S 类坏语料）。117 条 ovm ABI 中
+  116 归编译器边界合同、1 归判题管线；X1–X3 保持等实现，不在题解线找绕法。
 - 统一最小复现入口（在 `leetcode.v` 仓根执行；`--lane ovm` 前脚本只清同目录旧 `.nyar`）：
   `node --import tsx projects/conformance/scripts/run_v_dual_target_baseline.ts --one-id <id> --lane <wasm|ovm>`
 
@@ -70,6 +72,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 - 期望语义：与 wasm lane 相同——数组实参按元素顺序与长度进 VM；空数组、嵌套数组同样可传。
 - 当前报错：`Error: parse args-json: unsupported feature: JSON array export type/layout contract`（0 用例执行）。
 - 最小复现：`--one-id add-two-numbers --lane ovm`（59 用例全部未执行）。
+- 状态：等实现（编译器线按合同修，不在题解线找绕法）。
 - 坐标：
 
 | 题 id | lane | target | entry | solution.v:入口 |
@@ -144,6 +147,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 - 期望语义：返回值按 `metadata.tests[].expected` 的 JSON 形态可比；字符串是字符串，数组按元素序输出。
 - 当前报错：`Error: serialize result: unsupported feature: JSON object export type/layout contract`（0 用例执行）。
 - 最小复现：`--one-id pascals-triangle --lane ovm`（16 用例全部未执行）。
+- 状态：等实现（编译器线按合同修，不在题解线找绕法）。
 - 坐标：
 
 | 题 id | lane | target | entry | solution.v:入口 |
@@ -170,6 +174,7 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 - 期望语义：与 wasm lane 一致，字符串实参原样进入 VM，不做对象包装、不做数值化。
 - 当前报错：`Error: run entry <entry>: type mismatch: expected object, got string`（0 用例执行）。
 - 最小复现：`--one-id longest-palindromic-substring --lane ovm`（124 用例全部未执行）。
+- 状态：等实现（编译器线按合同修，不在题解线找绕法）。
 - 坐标：
 
 | 题 id | lane | target | entry | solution.v:入口 |
@@ -228,16 +233,14 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | --- | --- | --- | --- | --- |
 | multiply-strings | ovm | ovm-unknown-unknown-managed | `multiply` | 11 |
 
-- 归口：判题管线（本线）；不是编译器 ABI 缺口，故不计入 164。
+- 归口：判题管线（本线）；不是编译器 ABI 缺口，故不计入 163。
 
-### X5 `option_none::<T>()` 退化成 `<fn value>`（4 题 × 2 target）
+### X5 撤单：`option_none::<T>()` 是消费者 API 漂移，不是编译器缺陷
 
-- 一句判据：泛型自由函数以 turbofish 实参调用时必须解析为有 callable identity 的实例；HIR 不得把 `option_none::<ArrayList<i64>>()` 退化成 `<fn value>`。
-- 语言构造：`return option_none::<ArrayList<i64>>()`，函数返回 `Option<ArrayList<i64>>`（题面空链表即 `null`）。
-- 期望语义：返回 `None`，调用边界序列化为 `null`；与 wasm lane 的 `merge-two-sorted-lists` 80/80 一致。
-- 当前报错：`error[valkyrie.hir.unresolved_call]: unresolved call <fn value> ...: no callable with this name is in scope`。
-- 最小复现：`--one-id merge-two-sorted-lists --lane ovm`。
-- 坐标：
+- 撤单理由：`valkyrie.v` 在 11-03 的 `98ad51d` 已删掉 `option_none` helper，`projects/std/source/types/Option.v` 只剩 `Some<T>` / `None`。这 4 题的 solution 是在删除之后写的，仍在按 `valkyrie.rs` 旧夹具库的 `option_none` 调；它们依赖的是 `valkyrie.v/projects/std`，不是旧夹具。
+- 处置：4 题已按理想写法改为 `return None`，不再写 `option_none::<T>()`。
+- 复跑结果（2026-11-07，native 快照）：4 题 wasm 均 `buildStatus=0`、manifest fresh，但首个用例返回 `got {}`，暴露另一个 wasm 边界缺口（转 X16）；ovm 仍先卡 X1 的数组实参合同。原基线数字仍按旧 API 算出，这 4 题需随 X16 修复后复跑，不能沿用旧结论。
+- 坐标（历史坐标，保留回溯；不再作为编译器工单）：
 
 | 题 id | lane | target | entry | solution.v:入口 |
 | --- | --- | --- | --- | --- |
@@ -419,6 +422,23 @@ G 编号定级规则（2026-11-04 重判，替代上一版；作为 G1–G27 归
 | 题 id | lane | target | entry | solution.v:入口 |
 | --- | --- | --- | --- | --- |
 | sum-of-two-integers | ovm | ovm-unknown-unknown-managed | `Solution().getSum` | 3 |
+
+### X16 wasm 的 `Option<T>` 返回未按 payload 物化（4 题）
+
+- 一句判据：入口返回 `Option<ArrayList<i64>>` 时，`Some` 必须在宿主边界物化为 payload 的 JSON 数组、`None` 物化为 `null`；不得把 `Some` 序列化成 `{}`。
+- 语言构造：`micro f(xs: ArrayList<i64>) -> Option<ArrayList<i64>>`，分支 `return Some(result)` / `return None`。
+- 期望语义：`metadata.tests` 期望是数组；空链表是 `null`；与 TS lane 的同一题一致。
+- 当前报错：`Error: tests[0]: expected [1,1,1,1,1,1], got {}（compareMode=strict）`（build=0、manifest fresh；4 题同形态）。
+- 最小复现：`--one-id merge-two-sorted-lists --lane wasm`。
+- 状态：等实现（编译器宿主边界修 payload 物化；题解已用理想写法 `None` / `Some`，不再改题解迎合）。
+- 坐标：
+
+| 题 id | lane | target | entry | solution.v:入口 |
+| --- | --- | --- | --- | --- |
+| merge-two-sorted-lists | wasm | wasm32-unknown-unknown-wasm | `mergeTwoLists` | 5 |
+| remove-duplicates-from-sorted-list | wasm | wasm32-unknown-unknown-wasm | `deleteDuplicates` | 5 |
+| remove-linked-list-elements | wasm | wasm32-unknown-unknown-wasm | `removeElements` | 5 |
+| reverse-linked-list | wasm | wasm32-unknown-unknown-wasm | `reverseList` | 5 |
 
 ### 不计入编译器工单的失败（对账用，17 条现象）
 

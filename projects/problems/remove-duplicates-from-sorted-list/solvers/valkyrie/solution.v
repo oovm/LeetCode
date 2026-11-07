@@ -5,7 +5,7 @@ namespace leetcode.remove_duplicates_from_sorted_list;
 [export(case: "camelCase")]
 micro deleteDuplicates(head: ArrayList<i64>) -> Option<ArrayList<i64>> {
     if head.length() == 0 {
-        return option_none::<ArrayList<i64>>()
+        return None
     }
     let mut result: ArrayList<i64> = ArrayList::new(head.length())
     let mut i: usize = 0
