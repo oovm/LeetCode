@@ -78,4 +78,3 @@
 - `testCaseTotal > 0 && executed_pass === testCaseTotal && fail/blocked/not_run === 0`。
 - `skipped` 是未执行用例，不抵扣分母。
 - 未溯源（`untraced`）的 expected 不得计入绿。
-
