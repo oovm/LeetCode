@@ -299,20 +299,22 @@ L20 3 条，合计 55 条。L19、L21 已由临时探针证实但未入库场景
   `scenes/result-fold`（`fold`）、`scenes/result-match`（`match`）
 - 证据：`布局 `std.diagnostic.Diagnostic` 合同冲突`
 - 补充坐标：`scenes/custom-error-chain` 四例（三层 `unite` 错误链，位置构造器 `Parse(1)` / `Range(2)` / `Io(3)`）
-  在 `c19AB115A / s9016ae49` 下同样命中本条布局冲突。临时探针（已删除）另确认：`unite` 变体的正确构造写法是
-  位置构造器；写成结构体字面量 `Range { code: 2 }` 会报 `unresolved constructor`，属探针写法问题，不记为缺口。
-- 对照：`scenes/result-plain`（`Result<i64, i64>` + `fold`）通过，因此触发条件在
-  「自定义联合作为 `Result` 的失败载荷」，不是 `Result` 本身。
-- 触发面补充（临时探针已删除）：`Result<Expr, i64>`（自定义递归 `unite` 在**成功载荷**位、错误位是标量）
-  同样命中本条布局冲突，见 `_probe-local-fine` 形态（`match` 外无 `Fine(局部)`，仅 `Result<Expr, i64>`
-  的构造与消费）。因此本条的实测范围是「`Result` 任一侧载荷是用户自定义 `unite`」，
-  不是只限失败载荷；是否同一 link 阶段根因待编译器线确认。
+  在 `c19AB115A / s9016ae49` 下同样命中本条布局冲突。临时探针（已删除）另确认：`unite` 变体的位置构造器可过 HIR；
+  写成结构体字面量 `Range { code: 2 }` 会报 `unresolved constructor`，该形态已独立登记为 L19，不再按「探针写法问题」排除。
+- 触发条件（实测范围已扩大）：`Result` **任一侧**载荷是用户自定义 `unite` 即命中，不是只限失败载荷。
+  - 失败载荷位：`Result<i64, <自定义 unite>>`（`scenes/result-errors`、`scenes/result-fold`、`scenes/result-match`、`scenes/custom-error-chain`）。
+  - 成功载荷位：`Result<Expr, i64>`（`Expr` 是自定义 `unite`，错误位是标量）同样命中，见
+    `_probe-local-fine` 形态（`match` 外无 `Fine(局部)`，仅 `Result<Expr, i64>` 的构造与消费）。
+  - 对照：`scenes/result-plain`（`Result<i64, i64>`）通过，因此触发点在「自定义联合出现在 `Result` 的任一载荷位」，
+    不是 `Result` 本身，也不是「失败位」这一位置属性。
 - 根因：`LayoutId` 是模块本地编号。依赖模块与 consumer 各自为同一 declaration 产出一份
   布局，字段里的 `Nominal { layout }` 带着各自的本地编号；链接合并直接按原始编号比较
   形状，把「同一声明、同形状」误判成合同冲突。修复在 link 阶段按 declaration 身份合并，
   并先把依赖侧本地 `LayoutId` 重映射到合并身份再核对合同（真实尺寸/对齐差异仍失败闭合）。
+  成功载荷位与失败载荷位共用同一条 link 合并路径，因此两者同根因，不另立条目。
 - 状态：未验证。原「已关闭」以及「25 过 → 35 过」的数字都没有记录 rev，撤回；
   本次 `c19AB115A / s9016ae49` 下 `result-errors`、`result-fold`、`result-match` 四例仍红。
+  成功载荷位的独立探针同样只作形状证据，未记录 rev。
 
 ### L8 `EnumerateIterator::next` 用匿名元组构造具名字段元组
 
