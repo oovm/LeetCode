@@ -16,48 +16,64 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：38 场景 / 81 用例，52 过、29 红（构建拒绝 25、运行断言失败 4）。
+当前：38 场景 / 81 用例，52 过、29 红（构建拒绝 25、运行断言失败 4）。这些数字与全表状态只对下面这套工具链成立。
 
-| 场景 | 用例 | 状态 | 覆盖点 |
-| --- | --- | --- | --- |
-| `text-indexing` | 7 | 6 过 / 1 红（运行值错） | 码位长度、BMP 与星平面字符、按码位切片、Cardinal 取字符、`index_of`、`split` |
-| `generic-iteration` | 2 | 过 | 泛型容器 + `micro(T) -> i64` 权重函数、`ArrayList<ArrayList<i64>>` |
-| `iterator-pipeline` | 2 | 红（构建拒绝） | `filter` 后 `map` 再 `collect`、适配器后接 `fold` |
-| `iterator-map-collect` | 1 | 红（构建拒绝） | 单个 `map` 适配器后接 `collect` |
-| `iterator-terminal` | 3 | 红（构建拒绝） | 适配器后接 `fold` / `any` / `all`、`enumerate().count()` |
-| `higher-order` | 2 | 过 | 命名函数作为比较器与一元函数值 |
-| `sorting-comparison` | 2 | 过 | `sort` 类型合同入口、`quick_sort` 显式比较器 |
-| `type-ordering` | 2 | 红（构建拒绝） | `structure` + `imply Equal/Comparable` 后 `sort`、稳定性 |
-| `type-ordering-player` | 1 | 红（构建拒绝） | 同上，用仓库既有 solver 的 `Player` 写法复核 |
-| `bit-operations` | 6 | 过 | `bit_and` / `bit_or` / `bit_xor`、`count_ones`、`leading_zeros` / `trailing_zeros`、移位、异或交换 |
-| `pattern-matching` | 1 | 红（构建拒绝） | 扁平带载荷 `unite`（零元/单字段/双字段）与 `match` |
-| `option-match` | 1 | 红（构建拒绝） | `Option` 的 `Some` / `None` 匹配（`None` 分支为空） |
-| `option-match-nonempty` | 1 | 红（构建拒绝） | 对照：`None` 分支非空，排除空块因素 |
-| `recursive-union` | 2 | 红（构建拒绝） | 递归带载荷 `unite`（`Expr`）与递归求值 |
-| `result-errors` | 2 | 红（构建拒绝） | `Result<i64, <自定义 unite>>` 的 `unwrap_or` / `unwrap_or_else` |
-| `result-fold` | 1 | 红（构建拒绝） | 同上，`fold` 两个方向处理函数 |
-| `result-match` | 1 | 红（构建拒绝） | `Result` / `Option` 三态匹配 |
-| `result-plain` | 1 | 过 | 对照：`Result<i64, i64>` 的 `fold` |
-| `result-utf8-payload` | 1 | 红（构建拒绝） | `Result<i64, utf8>` 的构造与 `fold` |
-| `integer-boundaries` | 6 | 5 过 / 1 红（运行值错） | i64 边界位模式、i64→i32 截断、除法向零截断、i32 边界提升、加法越界 |
-| `struct-literal` | 1 | 过 | 具名字段结构体字面量 |
-| `lru-cache` | 2 | 过 | `HashMap<i64, i64>` 槽位 + 平行数组双向链表、`⁅i⁆` 读与 `set_cardinal` 写、容量淘汰 |
-| `union-find` | 2 | 过 | 父指针 + 按深度合并 + 两遍路径压缩、`mut` 结构体跨辅助函数传递 |
-| `trie` | 2 | 过 | `utf8` 字符迭代建 Trie、`节点 × 26` 扁平子表、前缀计数与精确计数 |
-| `min-heap-kth` | 2 | 过 | 数组最小堆的 `sift_up` / `sift_down`、大小为 k 的堆求第 k 大 |
-| `interval-merge` | 2 | 过 | `structure` 区间 + `quick_sort` 显式比较器 + 相邻区间合并 |
-| `segment-tree` | 2 | 过 | 递归 `mut` 结构体建树、区间求和查询、单点更新 |
-| `kmp` | 2 | 过 | 码位序列上的前缀函数、首次出现下标、重叠出现计数 |
-| `topological-sort` | 2 | 过 | `ArrayList<ArrayList<i64>>` 邻接表原地追加、Kahn 队列、有环返回 -1 |
-| `dijkstra` | 2 | 红（构建拒绝） | `BinaryHeap<Frontier>` + `new_by` 比较器、弛豫与陈旧项跳过（L11） |
-| `backtracking-in-place` | 2 | 过 | 棋盘原位标记与撤销、递归 `mut` 结构体、N 皇后计数 |
-| `memoized-dp` | 2 | 过 | `HashMap` 记忆化的递归斐波那契与网格路径 |
-| `big-int` | 2 | 过 | 十进制串逐位加减、进位/借位、超 i64 量级结果的位数与数位和 |
-| `iterator-long-chain` | 2 | 红（构建拒绝） | `filter` / `map` / `skip` / `take` / `filter` / `fold` 长链与简单 Lambda（L12） |
-| `closure-capture` | 2 | 过 | 闭包按值捕获形参与局部变量后逃逸、函数值可重复调用 |
-| `recursive-unite-tree` | 2 | 红（构建拒绝） | 双载荷递归 `unite Node`、递归求和与深度（L14） |
-| `generic-constraints` | 3 | 1 过 / 2 红（运行值错） | `Comparable` / `Equal` 约束跨两层泛型传递（L13） |
-| `higher-order-returning` | 2 | 过 | 返回函数的高阶函数、闭包捕获函数值、组合与重复 |
+### 状态出处
+
+| 角色 | 本次取值 | 证据 |
+| --- | --- | --- |
+| 编译器原生 binding | `@nyar/valkyrie` `0.0.22` 的 `valkyrie.win32-x64-msvc.node`，sha256 `19AB115A412BD2D27A3A03D6B1B2644AA1BD1590EE507CEB0032049C89E7ECBE`，短标识 `c19AB115A` | 文件 mtime `2026-11-07 07:37:30 (+08)`。原生产物未内嵌源码 rev |
+| 编译器源码边界 | 构建时刻之前最后一条提交 `350d49c3`（2026-11-07 05:46:58），之后第一条 `d7c65e6b`（07:37:59），实际 rev 落在这两者之间，无法自证。**`nyar-vm.rs` 当前 HEAD `d4ad6ce4`（2026-11-08 16:20:26）晚于该 binding，不能当作本次编译器 rev** | `git log --before/--after` 与 binding mtime |
+| 标准库 | `valkyrie.v@9016ae49e609131d876745710dd9b5cb6522856b`，短标识 `s9016ae49` | `git rev-parse HEAD`，`std` 子目录无改动 |
+| 装配与运行器 | `@nyar/valkyrie` JS 层 dist 重建于 `2026-11-08 16:14:56`，探针运行器 `scripts/run_v_scenes.ts` | dist 文件 mtime |
+| 本次运行 | `pnpm --filter @leetcode/conformance scenes`，输出 `scenes: 38, cases: 81, pass: 52, fail: 29`，退出码 `1`（有红） | 终端输出，2026-11-08 |
+
+口径：
+
+- 全表每行状态都带 `rev` 列（`c19AB115A` / `s9016ae49`），表示该结论只在上述 binding 与 std 组合下成立。
+- 历史状态若没有同时记录编译器 binding 与 std rev，一律记为「未验证」，不得作为已关闭依据。`8596d3daa` 记下的 10 条「已关闭」即属此类。
+- 更换 binding 或 std rev 后必须整表重跑再改状态，不能沿用旧结论。
+
+| 场景 | 用例 | 状态 | rev | 覆盖点 |
+| --- | --- | --- | --- | --- |
+| `text-indexing` | 7 | 6 过 / 1 红（运行值错） | c19AB115A / s9016ae49 | 码位长度、BMP 与星平面字符、按码位切片、Cardinal 取字符、`index_of`、`split` |
+| `generic-iteration` | 2 | 过 | c19AB115A / s9016ae49 | 泛型容器 + `micro(T) -> i64` 权重函数、`ArrayList<ArrayList<i64>>` |
+| `iterator-pipeline` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | `filter` 后 `map` 再 `collect`、适配器后接 `fold` |
+| `iterator-map-collect` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | 单个 `map` 适配器后接 `collect` |
+| `iterator-terminal` | 3 | 红（构建拒绝） | c19AB115A / s9016ae49 | 适配器后接 `fold` / `any` / `all`、`enumerate().count()` |
+| `higher-order` | 2 | 过 | c19AB115A / s9016ae49 | 命名函数作为比较器与一元函数值 |
+| `sorting-comparison` | 2 | 过 | c19AB115A / s9016ae49 | `sort` 类型合同入口、`quick_sort` 显式比较器 |
+| `type-ordering` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | `structure` + `imply Equal/Comparable` 后 `sort`、稳定性 |
+| `type-ordering-player` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | 同上，用仓库既有 solver 的 `Player` 写法复核 |
+| `bit-operations` | 6 | 过 | c19AB115A / s9016ae49 | `bit_and` / `bit_or` / `bit_xor`、`count_ones`、`leading_zeros` / `trailing_zeros`、移位、异或交换 |
+| `pattern-matching` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | 扁平带载荷 `unite`（零元/单字段/双字段）与 `match` |
+| `option-match` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | `Option` 的 `Some` / `None` 匹配（`None` 分支为空） |
+| `option-match-nonempty` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | 对照：`None` 分支非空，排除空块因素 |
+| `recursive-union` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | 递归带载荷 `unite`（`Expr`）与递归求值 |
+| `result-errors` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | `Result<i64, <自定义 unite>>` 的 `unwrap_or` / `unwrap_or_else` |
+| `result-fold` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | 同上，`fold` 两个方向处理函数 |
+| `result-match` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | `Result` / `Option` 三态匹配 |
+| `result-plain` | 1 | 过 | c19AB115A / s9016ae49 | 对照：`Result<i64, i64>` 的 `fold` |
+| `result-utf8-payload` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | `Result<i64, utf8>` 的构造与 `fold` |
+| `integer-boundaries` | 6 | 5 过 / 1 红（运行值错） | c19AB115A / s9016ae49 | i64 边界位模式、i64→i32 截断、除法向零截断、i32 边界提升、加法越界 |
+| `struct-literal` | 1 | 过 | c19AB115A / s9016ae49 | 具名字段结构体字面量 |
+| `lru-cache` | 2 | 过 | c19AB115A / s9016ae49 | `HashMap<i64, i64>` 槽位 + 平行数组双向链表、`⁅i⁆` 读与 `set_cardinal` 写、容量淘汰 |
+| `union-find` | 2 | 过 | c19AB115A / s9016ae49 | 父指针 + 按深度合并 + 两遍路径压缩、`mut` 结构体跨辅助函数传递 |
+| `trie` | 2 | 过 | c19AB115A / s9016ae49 | `utf8` 字符迭代建 Trie、`节点 × 26` 扁平子表、前缀计数与精确计数 |
+| `min-heap-kth` | 2 | 过 | c19AB115A / s9016ae49 | 数组最小堆的 `sift_up` / `sift_down`、大小为 k 的堆求第 k 大 |
+| `interval-merge` | 2 | 过 | c19AB115A / s9016ae49 | `structure` 区间 + `quick_sort` 显式比较器 + 相邻区间合并 |
+| `segment-tree` | 2 | 过 | c19AB115A / s9016ae49 | 递归 `mut` 结构体建树、区间求和查询、单点更新 |
+| `kmp` | 2 | 过 | c19AB115A / s9016ae49 | 码位序列上的前缀函数、首次出现下标、重叠出现计数 |
+| `topological-sort` | 2 | 过 | c19AB115A / s9016ae49 | `ArrayList<ArrayList<i64>>` 邻接表原地追加、Kahn 队列、有环返回 -1 |
+| `dijkstra` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | `BinaryHeap<Frontier>` + `new_by` 比较器、弛豫与陈旧项跳过（L11） |
+| `backtracking-in-place` | 2 | 过 | c19AB115A / s9016ae49 | 棋盘原位标记与撤销、递归 `mut` 结构体、N 皇后计数 |
+| `memoized-dp` | 2 | 过 | c19AB115A / s9016ae49 | `HashMap` 记忆化的递归斐波那契与网格路径 |
+| `big-int` | 2 | 过 | c19AB115A / s9016ae49 | 十进制串逐位加减、进位/借位、超 i64 量级结果的位数与数位和 |
+| `iterator-long-chain` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | `filter` / `map` / `skip` / `take` / `filter` / `fold` 长链与简单 Lambda（L12） |
+| `closure-capture` | 2 | 过 | c19AB115A / s9016ae49 | 闭包按值捕获形参与局部变量后逃逸、函数值可重复调用 |
+| `recursive-unite-tree` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | 双载荷递归 `unite Node`、递归求和与深度（L14） |
+| `generic-constraints` | 3 | 1 过 / 2 红（运行值错） | c19AB115A / s9016ae49 | `Comparable` / `Equal` 约束跨两层泛型传递（L13） |
+| `higher-order-returning` | 2 | 过 | c19AB115A / s9016ae49 | 返回函数的高阶函数、闭包捕获函数值、组合与重复 |
 
 ## 对账：46 用例 → 当前 81 用例
 
@@ -82,8 +98,16 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
   带布局身份合并的编译器，当前工作区链接到的编译器没有该行为。需要按仓归属到 `nyar-vm.rs` 的
   link 阶段确认，探针仓不做任何消除红点的改动。
 - 同样，L2 标题里的「CAN010 已关闭」在当前工具链不成立：`scenes/option-match` 与
-  `scenes/option-match-nonempty` 现在都报 CAN010 构建拒绝。L1–L10 正文与标题保持原样，
-  状态以本节和场景表为准。
+  `scenes/option-match-nonempty` 现在都报 CAN010 构建拒绝。L1–L10 的诊断与坐标保持原样，
+  状态行按下一节的口径统一处理。
+
+### 状态降级：没有 rev 的「已关闭」一律改判「未验证」
+
+- `8596d3daa` 记录过 10 条「已关闭」（CAN015、CAN054、`construct missing HIR callable contract`、
+  `Diagnostic` 布局冲突四类），但没有记录当时的编译器 binding 与 std rev。按本账新增口径，
+  它们一律改判「未验证」，不得再作为已关闭引用；本次 `c19AB115A / s9016ae49` 重跑这 10 条全部复红。
+- L2 标题里的「CAN010 已关闭」同样没有 rev 依据，改判未验证；本次两个 `option-match` 场景仍停在 CAN010。
+- L3 / L4 / L5 / L7 正文的「状态」行已同步改为「未验证」，原有诊断与坐标保留不改。
 
 ### 29 条红与 L 条目的对应
 
@@ -92,9 +116,9 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `iterator-pipeline::iteratorPipelineTotal` | 1 | L1 | `unresolved call` `<fn value>.collect` |
 | `iterator-pipeline::iteratorFoldTotal` | 1 | L1 | 同上 |
 | `iterator-map-collect::mapCollectTotal` | 1 | L1 | 同上 |
-| `iterator-terminal::foldSum` | 1 | L1 | 同上 |
-| `iterator-terminal::anyAll` | 1 | L1 | 同上 |
-| `iterator-terminal::enumerateCount` | 1 | L8 | `EnumerateIterator::next` 匿名元组与具名元组不兼容 |
+| `iterator-terminal::foldSum` | 1 | L8（构建拒绝，L1 被掩盖） | `EnumerateIterator::next` 匿名元组与具名元组不兼容 |
+| `iterator-terminal::anyAll` | 1 | L8（同上） | 同上 |
+| `iterator-terminal::enumerateCount` | 1 | L8 | 同上 |
 | `option-match::optionMatch` | 1 | L2 | CAN010 终结符操作数不是 SSA 值 |
 | `option-match-nonempty::optionMatchNonempty` | 1 | L2 | CAN010 |
 | `pattern-matching::flatUnion` | 1 | L3 | CAN015 `TerminatorUseBeforeDefinition` |
@@ -114,13 +138,17 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `dijkstra::dijkstraUnreachable` | 1 | L11 | 同上 |
 | `iterator-long-chain::longChainTotal` | 1 | L12 | 简单 Lambda `x => ...` 解析失败 |
 | `iterator-long-chain::longChainCount` | 1 | L12 | 同上 |
-| `generic-constraints::largestValue` | 1 | L13 | 泛型内 `Ordering` 匹配不生效（运行值错） |
+| `generic-constraints::largestValue` | 1 | L13 | 块形 `match` 分支赋值被丢弃（运行值错） |
 | `generic-constraints::largestOfRows` | 1 | L13 | 同上 |
 | `recursive-unite-tree::treeSum` | 1 | L14 | SMIR007 return 操作数 Unit vs i64 |
 | `recursive-unite-tree::treeDepth` | 1 | L14 | 同上 |
 
-按条目汇总：L1 5 条、L2 2 条、L3 1 条、L4 2 条、L5 3 条、L6 1 条、L7 4 条、L8 1 条、L9 1 条、
+按条目汇总：L1 3 条、L2 2 条、L3 1 条、L4 2 条、L5 3 条、L6 1 条、L7 4 条、L8 3 条、L9 1 条、
 L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
+
+说明：`iterator-terminal` 是模块级构建失败，`EnumerateIterator::next` 的元组类型不匹配先拒绝
+整个模块，三个用例都无法进入用例级判定，因此 `foldSum` / `anyAll` 不再单独归因 L1。L1 仍由
+`iterator-pipeline` 与 `iterator-map-collect` 的 3 条独立证明，不因本次修正而消失。
 
 ## 缺口
 
@@ -137,14 +165,18 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
   （`text-indexing` 的 `indexOfChar` 与 `higher-order` 的 `optionChain` 即证）。
 - 缺口本质：接收者是「调用结果」时，方法解析把它当成 fn value，没有先物化调用结果。
 
-### L2 `Option` 匹配：CAN010 已关闭，剩余运行值与 nonempty 的 CAN015
+### L2 CAN010：`Option` 匹配的终结符操作数不是 SSA 值
 
 - 分类：编译器（canonical MIR）
-- 最小复现：`scenes/option-match-nonempty/scene.v` 的 `optionMatchNonempty`
-- 证据：`scenes/option-match` 构建已通过，但 `optionMatch` 实得 `0`（期望 `42`）；
-  `scenes/option-match-nonempty` 转为 `(CAN015): TerminatorUseBeforeDefinition`。
-- 说明：原 CAN010 已随布局身份合并关闭；剩余失败是 `Option` 匹配的运行值错误与
-  nonempty 的 CAN015，二者仍按独立根因记录。
+- 最小复现：`scenes/option-match/scene.v` 的 `optionMatch` 与
+  `scenes/option-match-nonempty/scene.v` 的 `optionMatchNonempty`（两者只差 `None` 分支是否为空）
+- 证据：本次 `c19AB115A / s9016ae49` 两个场景都报 `(CAN010): 终结符操作数不是 SSA 值`，
+  构建阶段即拒绝，尚未进入运行值比对
+- 历史状态：正文曾记「CAN010 已关闭、`option-match` 构建通过但实得 `0`、nonempty 转 CAN015」，
+  但这些结论都没有记录编译器 binding 与 std rev，按本账口径改判「未验证」，不构成关闭依据
+- 与 L13 的关系（假设，未证实）：两个场景都在块形 `match` 分支里对外层 `mut` 变量赋值；
+  即使 CAN010 修复，按 L13 的观测它们也可能继续返回 `0`。后续复核应先修 L13 再判 L2，
+  不能只把「构建变绿」当作关闭条件
 
 ### L3 CAN015：扁平带载荷联合的 match 触发 use-before-def
 
@@ -152,8 +184,8 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
 - 最小复现：`scenes/pattern-matching/scene.v` 的 `flatUnion`
   （`unite Command { Stop / Move { steps } / Jump { left, right } }`）
 - 证据：`(CAN015): canonical MIR 校验失败: TerminatorUseBeforeDefinition { function: ItemInstanceId(7), value: MirValueId(17) }`
-- 状态：已关闭。当前编译器上 `flatUnion` 通过；根因与 L7 同属跨模块聚合布局身份，
-  随布局合并按声明身份重映射本地 `LayoutId` 一并消除。
+- 状态：未验证。原「已关闭」没有记录编译器 binding 与 std rev，按本账口径不构成关闭依据；
+  本次 `c19AB115A / s9016ae49` 重跑仍报同一 CAN015。
 
 ### L4 CAN054：递归带载荷联合的物理 payload 未实例化
 
@@ -161,7 +193,7 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
 - 最小复现：`scenes/recursive-union/scene.v`（`unite Expr` 的 `Neg { inner: Expr }` 等递归载荷）
 - 证据：`(CAN054): sum 物理 payload 类型未完成实例化: Nominal declaration `ItemId(10)` 需要平台 NyarType::Nominal，禁止降级为 Named 短名 (at Expr::Neg)`
 - 影响：递归数据结构（表达式树、链表、树节点）整体不可用。
-- 状态：已关闭。当前编译器上 `evalNegated` / `evalNested` 两条均通过。
+- 状态：未验证。原「已关闭」没有 rev 依据，撤回；本次 `c19AB115A / s9016ae49` 仍报 CAN054。
 
 ### L5 MIR lowering `construct missing HIR callable contract`
 
@@ -172,8 +204,8 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
 - 说明：`scenes/struct-literal` 证明结构体字面量本身可用；同一写法出现在
   `projects/problems/best-team-with-no-conflicts/solvers/valkyrie/solution.v`，
   该题 V 解当前应同样红，需编译器线确认是否回归。
-- 状态：已关闭。`sortRankChecksum` 与 `sortPlayerChecksum` 当前均通过；
-  与 L7 同属跨模块布局身份，布局合并修复后不再报 `construct missing HIR callable contract`。
+- 状态：未验证。原「已关闭」与「布局合并修复」归因均未记录 rev，撤回；
+  本次 `c19AB115A / s9016ae49` 仍报 `construct missing HIR callable contract`。
 
 ### L6 SMIR006：`Result<i64, utf8>` 的 sum 构造合同不一致
 
@@ -194,9 +226,8 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
   布局，字段里的 `Nominal { layout }` 带着各自的本地编号；链接合并直接按原始编号比较
   形状，把「同一声明、同形状」误判成合同冲突。修复在 link 阶段按 declaration 身份合并，
   并先把依赖侧本地 `LayoutId` 重映射到合并身份再核对合同（真实尺寸/对齐差异仍失败闭合）。
-- 状态：已关闭。`result-errors`、`result-fold`、`result-match` 三个场景当前全绿；
-  全量场景同时转绿 `pattern-matching`、`recursive-union`、`type-ordering`、
-  `type-ordering-player`，合计 25 过 → 35 过（46 用例）。
+- 状态：未验证。原「已关闭」以及「25 过 → 35 过」的数字都没有记录 rev，撤回；
+  本次 `c19AB115A / s9016ae49` 下 `result-errors`、`result-fold`、`result-match` 四例仍红。
 
 ### L8 `EnumerateIterator::next` 用匿名元组构造具名字段元组
 
@@ -228,30 +259,61 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
 - 证据：`(CAN058)` 聚合实例 `std.collection.BinaryHeap` 无法按已冻结声明生成实例级布局
 - 坐标补充：`valkyrie.v/projects/std/source/collection/BinaryHeap.v` 的 `class BinaryHeap<T>` 与 `new_by`
 - 说明：同一场景里的图结构、`Edge` / `Frontier` 结构体与 `BinaryHeap::push` 调用都不单独报错，失败点是
-  `BinaryHeap<Frontier>` 这个泛型实例本身。按理想写法应保留 `BinaryHeap`，不改为手写堆来绕开。
+  `BinaryHeap<Frontier>` 这个泛型实例本身。
+- 处理：按理想写法保留该条目，场景继续使用 `BinaryHeap::new_by`，未改成手写堆或有序数组绕开。
 
 ### L12 简单 Lambda `x => expr` 解析失败
 
 - 分类：编译器（前端 parser）
-- 最小复现：`let shifted: micro(i64) -> i64 = x => x + 1`，报
-  `error[valkyrie.frontend.parse.syntax]: 此处需要表达式`
+- 复核结论：**保留，不撤回**。`x => expr` 是语言文档正式承认的语法，不是写错的探针。
+- 依据（两处独立文档坐标）：
+  - `valkyrie.v/documentation/pages/zh-hans/language/expressions.md:151-154`，
+    `### 2. 简单 Lambda — x => expr`，示例 `items.filter(x => x > 0)`
+  - `valkyrie.v/documentation/pages/zh-hans/language/language.md:169`，
+    同一示例 `items.filter(x => x > 0)                # Lambda`
+- 最小复现（独立场景，排除管道与适配器因素）：
+  `let f: micro(i64) -> i64 = x => x + 1`，报
+  `error[valkyrie.frontend.parse.syntax]: 此处需要表达式`，
+  本次 `c19AB115A / s9016ae49` 复测一致
 - 坐标：`scenes/iterator-long-chain/scene.v` 的 `long_chain_total` / `long_chain_count`
   （`filter(x => x % 2 == 1)` 等）；完整 Lambda `micro(x: i64) -> i64 { ... }` 在
   `scenes/closure-capture/scene.v` 与 `scenes/higher-order-returning/scene.v` 均可解析并通过
-- 说明：`x => expr` 是 `documentation/pages/zh-hans/language/expressions.md` 记载的简单 Lambda 形态，
-  现网没有一处实际使用。与 L1 无关，L1 是适配器结果上的扩展方法解析，本条目失败在解析阶段。
+- 旁证：`valkyrie.v/projects/**/*.v` 现网没有一处 `=>` Lambda 实际使用，`rusty-valkyrie` 源码里
+  也没有 `=>` 的语法产生式（仅 asgard 渲染层把它当字符串处理）。文档与实现不一致，缺口在实现侧。
+- 与 L1 的关系：无关。L1 是适配器结果上的扩展方法解析，本条目失败在前端解析阶段。
 
-### L13 泛型函数内 `Ordering` 的 `match` 分支不生效
+### L13 块形 `match` 分支对外层 `mut` 变量的赋值被丢弃
 
-- 分类：编译器（泛型单态化 / match 派发）
-- 最小复现：`micro largest<T>(items: ArrayList<T>) -> T where T: std::operator::Comparable`
-  内 `match current.compare(best) { case Greater: { best = current } ... }`，对 `[2, 9, 4, 7]`
-  返回首元素 2 而不是 9
-- 对照：同一泛型函数把 `match` 换成 `current.compare(best).to_code()` 后返回 9，
-  同一 `compare` 在非泛型函数里 `match` 也正常。失败点是泛型上下文里的 `Ordering` 匹配
+- 分类：编译器（match lowering / 块形分支写回）
+- 复核结论：**不是泛型特有问题，也不是误用 `compare` 返回码**。根因是块形 `match` 分支里对外层
+  `mut` 变量的赋值不生效；`compare` 本身与 std 返回约定都正确。
+- `compare` 契约核对：`valkyrie.v/projects/std/source/operator/comparable.v` 声明
+  `compare(self, other: Self): Ordering`，要求返回 `Less` / `Equal` / `Greater`；`to_code` 只是
+  全库唯一的 -1/0/1 编码出口，不是比较结果本身。场景用 `match` 消费 `Ordering` 与 std 自身
+  （`to_code` / `is_ordered`）的裸变体 match 写法一致，不存在误用返回码。
+- 最小复现（本次 `c19AB115A / s9016ae49` 的 10 例对照探针，跑完即删除，未入库）：
+
+  | 探针 | 形态 | 期望 | 实得 |
+  | --- | --- | --- | --- |
+  | `nonGenericAssign` | 非泛型 + 块形 `match` + 赋值 | 9 | 2（红） |
+  | `genericDirect` | 泛型 + 直接匹配调用结果 + 赋值 | 9 | 2（红） |
+  | `genericBound` | 泛型 + 先绑定 `Ordering` 再块形匹配 + 赋值 | 9 | 2（红） |
+  | `literalMatch` | 字面量 `Ordering` + 块形 `match` + 赋值 | 1 | 0（红） |
+  | `unionAssignMatch` | `unite` + 块形 `match` + 赋值 | 1 | 0（红） |
+  | `genericOperator` | 泛型 + `>` 派生算子 | 9 | 9（过） |
+  | `compareCode` | `compare(...).to_code()` | 1 | 1（过） |
+  | `valueFormMatch` | 值形 `match`（无块、无赋值） | 1 | 1（过） |
+  | `blockReturnMatch` | 块形 `match` + `return` | 1 | 1（过） |
+  | `unionValueMatch` | `unite` 值形 `match` | 1 | 1（过） |
+
+- 结论：赋值型块形分支（`case X: { target = ... }`）被丢弃，与泛型、`compare`、`unite` 还是
+  `enums` 都无关；值形分支和 `return` 型分支正常。疑似分支块被当成独立作用域，赋值只落在
+  分支内副本，没有回写外层 `mut` 变量（这是对观测结果的解释，非已证实根因）。
 - 坐标：`scenes/generic-constraints/scene.v` 的 `largest` / `largest_of_rows`；
-  对照分支见同文件 `contains_in_rows`（`Equal` 约束，通过）
-- 附带：`case Ordering.Greater:` 限定写法会报 `Missing match arm body`，所以目前只有裸变体名可写
+  同文件 `contains_in_rows`（`Equal` 约束）通过，因为它只做 `if` 判定，不写 match 分支赋值。
+- 附带：`case Ordering.Greater:` 限定写法报 `Missing match arm body`，目前只能写裸变体名。
+- 与 L2 的关系（假设，未证实）：`option-match` 历史症状是「匹配 `Some` 却返回 `0`」，形态与
+  「块形分支赋值丢失」一致；但该场景当前停在 CAN010 构建拒绝，无法用运行值验证，暂不合并条目。
 
 ### L14 递归 unite 的 `match` 分支提前 `return` 触发 SMIR007
 
