@@ -1,0 +1,11 @@
+{
+    "id": "text-index-boundaries",
+    "cases": [
+        { "export": "emptyLength", "expected": 0, "note": "空串零码位" },
+        { "export": "emptyIndexOf", "expected": 0, "note": "空模式返回 0" },
+        { "export": "singleByteSlice", "expected": 97, "note": "单字节 `a`" },
+        { "export": "astralSliceChar", "expected": 120, "note": "星平面后取到 `x`" },
+        { "export": "astralLength", "expected": 3, "note": "两个星平面字符加一个 ASCII" },
+        { "export": "overlapMatches", "expected": 3, "note": "下标 0、1、2 三处重叠" }
+    ]
+}

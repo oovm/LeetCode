@@ -1,0 +1,7 @@
+{
+    "id": "matrix-rotation",
+    "cases": [
+        { "export": "rotatedChecksum", "expected": 630741852, "note": "顺时针旋转后的行优先编码" },
+        { "export": "rotatedDiagonals", "expected": 180, "note": "主对角 16、副对角 20，编码 16 * 10 + 20" }
+    ]
+}

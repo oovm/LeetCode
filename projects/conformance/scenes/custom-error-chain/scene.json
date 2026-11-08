@@ -1,0 +1,9 @@
+{
+    "id": "custom-error-chain",
+    "cases": [
+        { "export": "chainSuccess", "expected": 25, "note": "三层全过" },
+        { "export": "chainParseFail", "expected": -1, "note": "Parse 码 1" },
+        { "export": "chainRangeFail", "expected": -2, "note": "Range 码 2" },
+        { "export": "chainIoFail", "expected": -3, "note": "Io 码 3" }
+    ]
+}

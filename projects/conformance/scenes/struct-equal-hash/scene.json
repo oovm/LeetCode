@@ -1,0 +1,9 @@
+{
+    "id": "struct-equal-hash",
+    "cases": [
+        { "export": "pointMapLookup", "expected": 10, "note": "自定义 Equal/Hash 键命中原值" },
+        { "export": "pointMapReplace", "expected": 111, "note": "旧值 10 加新值 11" },
+        { "export": "pointSetSize", "expected": 3, "note": "重复点按相等去重" },
+        { "export": "pointSetContains", "expected": 1, "note": "命中为真、缺失为假" }
+    ]
+}

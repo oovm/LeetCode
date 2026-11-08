@@ -1,0 +1,8 @@
+{
+    "id": "bit-subset-enumeration",
+    "cases": [
+        { "export": "subsetSumTotal", "expected": 560, "note": "35 * 16" },
+        { "export": "subsetPopcountTotal", "expected": 80, "note": "5 * 16" },
+        { "export": "subsetCount", "expected": 32, "note": "2 的 5 次方" }
+    ]
+}

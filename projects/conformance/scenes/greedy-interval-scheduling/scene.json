@@ -1,0 +1,8 @@
+{
+    "id": "greedy-interval-scheduling",
+    "cases": [
+        { "export": "maxMeetingCount", "expected": 3, "note": "最多三个不重叠会议" },
+        { "export": "scheduledSpan", "expected": 6, "note": "跨度 3 + 2 + 1" },
+        { "export": "chosenEndsCode", "expected": 479, "note": "结束时间 4、7、9" }
+    ]
+}
