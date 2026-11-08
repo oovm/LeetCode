@@ -16,7 +16,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：52 场景 / 122 用例，78 过、44 红（构建拒绝 40、运行断言失败 4）。这些数字与全表状态只对下面这套工具链成立。
+当前：58 场景 / 141 用例，90 过、51 红（构建拒绝 46、运行断言失败 5）。这些数字与全表状态只对下面这套工具链成立。
 
 ### 状态出处
 
@@ -26,7 +26,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | 编译器源码边界 | 构建时刻之前最后一条提交 `350d49c3`（2026-11-07 05:46:58），之后第一条 `d7c65e6b`（07:37:59），实际 rev 落在这两者之间，无法自证。**`nyar-vm.rs` 当前 HEAD `d4ad6ce4`（2026-11-08 16:20:26）晚于该 binding，不能当作本次编译器 rev** | `git log --before/--after` 与 binding mtime |
 | 标准库 | `valkyrie.v@9016ae49e609131d876745710dd9b5cb6522856b`，短标识 `s9016ae49` | `git rev-parse HEAD`，`std` 子目录无改动 |
 | 装配与运行器 | `@nyar/valkyrie` JS 层 dist 重建于 `2026-11-08 16:14:56`，探针运行器 `scripts/run_v_scenes.ts` | dist 文件 mtime |
-| 本次运行 | `pnpm --filter @leetcode/conformance scenes`，输出 `scenes: 52, cases: 122, pass: 78, fail: 44`，退出码 `1`（有红） | 终端输出，2026-11-08 |
+| 本次运行 | `pnpm --filter @leetcode/conformance scenes`，输出 `scenes: 58, cases: 141, pass: 90, fail: 51`，退出码 `1`（有红） | 终端输出，2026-11-08 |
 
 口径：
 
@@ -95,8 +95,14 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `matrix-rotation` | 2 | 过 | c19AB115A / s9016ae49 | `ArrayList<ArrayList<i64>>` 二维矩阵、原地顺时针旋转、对角线 |
 | `greedy-interval-scheduling` | 3 | 过 | c19AB115A / s9016ae49 | 区间结构体 + 显式结束时间比较器 + 贪心不相交选择 |
 | `bit-subset-enumeration` | 3 | 过 | c19AB115A / s9016ae49 | `bit_and` 掩码枚举子集、`count_ones` 汇总、移位计数 |
+| `graph-scc-cycle` | 3 | 过 | c19AB115A / s9016ae49 | Kosaraju 正反两遍扫描求强连通分量数、Kahn 剩余节点判环、无环对照 |
+| `string-ordering` | 4 | 3 过 / 1 红（运行值错） | c19AB115A / s9016ae49 | 按码位字典序比较、Unicode 排序位次与码位和（星平面校验和属 L9） |
+| `monotonic-stack-window` | 3 | 红（构建拒绝） | c19AB115A / s9016ae49 | 单调递减栈求下一个更大元素、单调队列滑动窗口最大值、直方图最大矩形（L20） |
+| `prefix-sum-binary-search` | 3 | 过 | c19AB115A / s9016ae49 | 前缀和区间和、下界二分、前缀和二分最少项数 |
+| `bitmap-bloom` | 3 | 过 | c19AB115A / s9016ae49 | i64 位图置位/清零/查询/异或翻转、popcount、布隆式双哈希成员判定 |
+| `recursive-descent-parser` | 3 | 红（构建拒绝） | c19AB115A / s9016ae49 | 手写词法与递归下降表达式求值、递归 `unite` AST（L4） |
 
-## 对账：46 用例 → 当前 122 用例
+## 对账：46 用例 → 当前 141 用例
 
 上一批口径：21 场景 / 46 用例，25 过、21 红（构建拒绝 19、运行断言失败 2）。
 第一批新增 6 场景 / 12 用例，全过。第二批新增 6 场景 / 12 用例，10 过、2 红
@@ -106,12 +112,14 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 `result-propagation` 4 例属 L16，`enum-variant-argument` 1 例属 L17）。
 第五批新增 6 场景 / 22 用例，14 过、8 红（`struct-equal-hash` 4 例属 L18，
 `custom-error-chain` 4 例属 L7）。
-累计 25 + 12 + 10 + 5 + 12 + 14 = 78 过。
+第六批新增 6 场景 / 19 用例，12 过、7 红（`string-ordering` 1 例属 L9，
+`monotonic-stack-window` 3 例属 L20，`recursive-descent-parser` 3 例属 L4）。
+累计 25 + 12 + 10 + 5 + 12 + 14 + 12 = 90 过。
 当前全量重跑（`pnpm --filter @leetcode/conformance scenes`）：
-**52 场景 / 122 用例，78 过、44 红（构建拒绝 40、运行断言失败 4）**。
+**58 场景 / 141 用例，90 过、51 红（构建拒绝 46、运行断言失败 5）**。
 
-- **没有红翻绿用例**，五批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
-  第三批再 +5 = 52，第四批再 +12 = 64，第五批再 +14 = 78。
+- **没有红翻绿用例**，六批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
+  第三批再 +5 = 52，第四批再 +12 = 64，第五批再 +14 = 78，第六批再 +12 = 90。
 - 之前回报的「45 过 / 11 红」是账目错误，不作数。它沿用了 `8596d3daa` 记下的「35 过 / 11 红」口径，
   又漏算了本批新增：35 + 12 应为 47，我误写成 45。两处都错，本账以当前重跑为准。
 - `8596d3daa` 记为已关闭的 10 个用例在当前工具链上仍按原诊断失败，因此重新计红：
@@ -134,7 +142,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 - L2 标题里的「CAN010 已关闭」同样没有 rev 依据，改判未验证；本次两个 `option-match` 场景仍停在 CAN010。
 - L3 / L4 / L5 / L7 正文的「状态」行已同步改为「未验证」，原有诊断与坐标保留不改。
 
-### 44 条红与 L 条目的对应
+### 51 条红与 L 条目的对应
 
 | 场景::用例 | 数量 | L 条目 | 现行诊断 |
 | --- | --- | --- | --- |
@@ -182,9 +190,17 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `custom-error-chain::chainParseFail` | 1 | L7 | 同上 |
 | `custom-error-chain::chainRangeFail` | 1 | L7 | 同上 |
 | `custom-error-chain::chainIoFail` | 1 | L7 | 同上 |
+| `string-ordering::sortedCodePointSum` | 1 | L9 | 星平面字符截断到 16 位（运行值错，83507 vs 149043） |
+| `monotonic-stack-window::nextGreaterSum` | 1 | L20 | SMIR007 `jump arity differs from target block parameters` |
+| `monotonic-stack-window::windowMaxSum` | 1 | L20 | 同上（模块级构建失败，未进入用例级判定） |
+| `monotonic-stack-window::histogramLargest` | 1 | L20 | 同上 |
+| `recursive-descent-parser::evaluatePrecedence` | 1 | L4 | CAN054 递归 payload 未实例化（`at Expr::Negate`） |
+| `recursive-descent-parser::evaluateParenNegate` | 1 | L4 | 同上 |
+| `recursive-descent-parser::evaluateIntegerDivision` | 1 | L4 | 同上 |
 
-按条目汇总：L1 3 条、L2 2 条、L3 1 条、L4 2 条、L5 3 条、L6 1 条、L7 8 条、L8 3 条、L9 1 条、
-L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 条、L17 1 条、L18 4 条，合计 44 条。
+按条目汇总：L1 3 条、L2 2 条、L3 1 条、L4 5 条、L5 3 条、L6 1 条、L7 8 条、L8 3 条、L9 2 条、
+L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 条、L17 1 条、L18 4 条、
+L20 3 条，合计 51 条。L19 已由临时探针证实但未入库场景，暂不计红。
 
 说明：`iterator-terminal` 是模块级构建失败，`EnumerateIterator::next` 的元组类型不匹配先拒绝
 整个模块，三个用例都无法进入用例级判定，因此 `foldSum` / `anyAll` 不再单独归因 L1。L1 仍由
@@ -233,6 +249,9 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 �
 - 最小复现：`scenes/recursive-union/scene.v`（`unite Expr` 的 `Neg { inner: Expr }` 等递归载荷）
 - 证据：`(CAN054): sum 物理 payload 类型未完成实例化: Nominal declaration `ItemId(10)` 需要平台 NyarType::Nominal，禁止降级为 Named 短名 (at Expr::Neg)`
 - 影响：递归数据结构（表达式树、链表、树节点）整体不可用。
+- 同根：`scenes/recursive-descent-parser/scene.v` 的 `unite Expr`（`Negate { operand: Expr }` /
+  `Binary { op, left, right: Expr }`）报同一 CAN054：`sum 物理 payload 类型未完成实例化:
+  Nominal declaration ItemId(308) … (at Expr::Negate)`，三个用例均在构建阶段被拒。
 - 状态：未验证。原「已关闭」没有 rev 依据，撤回；本次 `c19AB115A / s9016ae49` 仍报 CAN054。
 
 ### L5 MIR lowering `construct missing HIR callable contract`
@@ -286,6 +305,9 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 �
 - 最小复现：`scenes/text-indexing/scene.v` 的 `astralChecksum`（`"🙂"` 经 `loop ch in text` 后 `ch as u32`）
 - 证据：期望 `128578`（U+1F642），实得 `63042`（`0xF642`，只保留低 16 位）
 - 影响：任何非 BMP 文本的长度、字符比较、哈希都会失真。
+- 同根：`scenes/string-ordering/scene.v` 的 `sorted_code_point_sum` 期望 `149043`
+  （`97 + 122 + 233 + 20013 + 128578`），实得 `83507`，差值恰为 `65536`（`0x10000`），
+  即 `🙂` 的码位仍被截成 `0xF642`。
 
 ### L10 i64 加法越界静默回绕
 
@@ -426,6 +448,44 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 �
   因此缺口在「自定义 trait 实现到容器泛型实例的 witness 物化」，不是 `imply` 写法本身。
 - 影响：自定义类型不能作为 `HashMap` / `HashSet` 键，用户态值对象只能退回标量键间接寻址。
 - 场景保留为回归锁：修复后四例应转绿，不得为变绿把 `Point` 拆成标量键。
+
+### L19 同包用户自定义 `unite` 变体不能按具名字段构造
+
+- 分类：编译器（HIR 构造器解析，`valkyrie.hir.unresolved_constructor`）
+- 文档与语料：`valkyrie.v/documentation/pages/zh-hans/language/declarations.md` 写明
+  「每个变体使用 record-style 字段定义。构造与匹配**还可**使用紧凑语法 `Some(x)` / `case Some(x)`」，
+  即具名字段构造是变体的主写法、位置构造是补充；std 源码同样以具名字段构造变体，
+  如 `projects/std/source/text/char.v` 的 `Some { value: ... }`。
+- 最小复现（临时探针已删除，未入库）：同包内声明
+  `unite Code { [constructor] Span { code: i64 } }`，构造 `let value: Code = Span { code: 2 }`
+- 证据：`valkyrie.hir.unresolved_constructor`（`Span`）构建拒绝；同一变体的位置构造 `Span(2)` 可通过 HIR。
+- 对照：
+  - 去掉 `[constructor]`、只留 record-style 字段：复红；
+  - 补 `[tag(0)]` + `[tag(1, default)]` 变体形状：复红；
+  - 导入 std：`Option` 写 `Some { value: 2 }`、`Result<i64,i64>` 写 `Fine { value: 2 }` 均构建通过并返回值正确；
+  - 导入 `std.data::DataSource` 写 `Text { text, digest }` 复红，但 `Text` 同时是 `std.text` 的公开名，
+    该例可能是名字冲突而非本条，不作为本缺口证据。
+  因此缺口在「同包用户自定义 `unite` 的具名字段构造器未注册」，不是 record-style 声明写法、也不是 std 导入本身。
+- 影响：用户态变体只能用位置构造器，字段顺序一变就要全量改调用点，record-style 声明退化为无意义文档。
+- 待办：未入库场景；编译器线修复后应补一个回归场景，锁 `Span { code: 2 }` 与 `Span(2)` 等价。
+
+### L20 嵌套循环的 `if/else` 分支改写集合与循环标志触发 SMIR007
+
+- 分类：编译器（SMIR 跳转参数）
+- 最小复现（临时探针已删除，未入库）：外层 `while` 内嵌内层 `while shrinking && stack.length() > 0`，
+  体内 `if top <= current { stack.pop() } else { shrinking = false }`
+- 证据：`(SMIR007): jump arity differs from target block parameters`，
+  坐标 `scenes/monotonic-stack-window/scene.v` 的 `next_greater_sum`，block 11 terminator。
+  同一模块级构建失败同时覆盖 `window_max_sum` 与 `largest_rectangle`，三个用例均未进入运行值比对。
+- 对照（临时探针，均已删除）：
+  - 同样嵌套结构，把 `if/else` 拆成两个并列 `if`：通过；
+  - 内层条件改读标量（`counter > 0`）且分支只改标量：通过；
+  - 内层 while 提到顶层（不嵌套），保留 `if/else` 与 `pop`：通过；
+  - 单层 while 内 `if/else` 各自回写外层 `mut` 标量：通过；
+  - 内层条件只读 `stack.length()`、循环体内无 `if/else`：通过。
+  因此触发条件是「**嵌套**循环 + 内层条件同时读集合长度与循环标志 + 分支一侧改写集合、另一侧改标志」。
+- 影响：单调栈 / 单调队列的标准写法被拒，只有拆成并列 `if` 才构建；这是为编译器让路，不应写进场景。
+- 场景保留为回归锁：修复后三例应转绿，不得为变绿把 `if/else` 改写成并列 `if`。
 
 ## 第一批（数据结构）观察
 
