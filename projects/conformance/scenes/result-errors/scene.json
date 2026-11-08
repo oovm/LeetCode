@@ -1,0 +1,7 @@
+{
+    "id": "result-errors",
+    "cases": [
+        { "export": "safeDivFine", "expected": 5, "note": "20 / 4" },
+        { "export": "unwrapOrElse", "expected": -3, "note": "失败分支处理函数" }
+    ]
+}

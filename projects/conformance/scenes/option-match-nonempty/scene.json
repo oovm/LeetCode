@@ -1,0 +1,4 @@
+{
+    "id": "option-match-nonempty",
+    "cases": [{ "export": "optionMatchNonempty", "expected": 42, "note": "4 有值 * 10 + 2 个 Some" }]
+}

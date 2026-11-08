@@ -1,0 +1,7 @@
+{
+    "id": "iterator-pipeline",
+    "cases": [
+        { "export": "iteratorPipelineTotal", "expected": -60, "note": "偶数的负值再乘 3" },
+        { "export": "iteratorFoldTotal", "expected": 36, "note": "1..8 求和" }
+    ]
+}

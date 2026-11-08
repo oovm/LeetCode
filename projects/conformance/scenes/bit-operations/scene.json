@@ -1,0 +1,11 @@
+{
+    "id": "bit-operations",
+    "cases": [
+        { "export": "maskCombine", "expected": 42, "note": "(240 & 15 | 128) ^ 170" },
+        { "export": "popcount", "expected": 72, "note": "8 + 64" },
+        { "export": "zeroCounts", "expected": 66, "note": "3 + 63" },
+        { "export": "shiftRoundTrip", "expected": 1048576, "note": "2^20" },
+        { "export": "xorSwap", "expected": 53, "note": "5 与 3" },
+        { "export": "popcountRange", "expected": 13, "note": "1..8 的位计数" }
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "id": "result-utf8-payload",
+    "cases": [{ "export": "resultFoldUtf8", "expected": 41, "note": "-1 + 42" }]
+}

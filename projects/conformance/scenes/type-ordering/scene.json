@@ -1,0 +1,7 @@
+{
+    "id": "type-ordering",
+    "cases": [
+        { "export": "sortRankChecksum", "expected": 123, "note": "key 1,2,3" },
+        { "export": "stableSerialOrder", "expected": 201, "note": "serial 2,0,1" }
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "id": "result-fold",
+    "cases": [{ "export": "resultFold", "expected": 35, "note": "-7 + 42" }]
+}

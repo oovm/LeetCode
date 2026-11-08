@@ -1,0 +1,7 @@
+{
+    "id": "sorting-comparison",
+    "cases": [
+        { "export": "sortI64Checksum", "expected": 145, "note": "1,4,5 拼成 145" },
+        { "export": "quicksortMagnitude", "expected": 77, "note": "1,-2,-3 顺序累乘编码" }
+    ]
+}

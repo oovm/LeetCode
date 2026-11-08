@@ -1,0 +1,8 @@
+{
+    "id": "iterator-terminal",
+    "cases": [
+        { "export": "foldSum", "expected": 6, "note": "1+2+3" },
+        { "export": "anyAll", "expected": 1, "note": "any 正数成立且 all 奇数不成立" },
+        { "export": "enumerateCount", "expected": 8, "note": "元素个数" }
+    ]
+}

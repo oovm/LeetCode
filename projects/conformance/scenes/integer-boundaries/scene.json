@@ -1,0 +1,11 @@
+{
+    "id": "integer-boundaries",
+    "cases": [
+        { "export": "i64MaxLowBit", "expected": 1, "note": "最大值最低位" },
+        { "export": "i64MinPopcount", "expected": 1, "note": "最小值只有一个 1" },
+        { "export": "i32Truncation", "expected": 0, "note": "2^32 截断为 0" },
+        { "export": "divisionTruncation", "expected": -31, "note": "-3 * 10 + (-1)" },
+        { "export": "i32Bounds", "expected": -1, "note": "MAX + MIN" },
+        { "export": "overflowTrap", "expected": "trap", "note": "越界必须可观察" }
+    ]
+}

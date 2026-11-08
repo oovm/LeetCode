@@ -1,0 +1,12 @@
+{
+    "id": "text-indexing",
+    "cases": [
+        { "export": "asciiChecksum", "expected": 294, "note": "97 + 98 + 99" },
+        { "export": "bmpChecksum", "expected": 20343, "note": "97 + 233 + 20013" },
+        { "export": "astralChecksum", "expected": 128578, "note": "U+1F642" },
+        { "export": "sliceChecksum", "expected": 341, "note": "é + l" },
+        { "export": "cardinalChar", "expected": 20013, "note": "第 3 个码位" },
+        { "export": "indexOfChar", "expected": 2, "note": "码位下标而非字节下标" },
+        { "export": "splitCount", "expected": 3, "note": "三段" }
+    ]
+}

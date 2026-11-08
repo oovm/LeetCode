@@ -1,0 +1,4 @@
+{
+    "id": "result-plain",
+    "cases": [{ "export": "resultFoldScalar", "expected": 35, "note": "-7 + 42" }]
+}

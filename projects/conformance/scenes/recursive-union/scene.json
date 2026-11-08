@@ -1,0 +1,7 @@
+{
+    "id": "recursive-union",
+    "cases": [
+        { "export": "evalNegated", "expected": -1, "note": "2 + (-3)" },
+        { "export": "evalNested", "expected": 10, "note": "(1+2)+(3+4)" }
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "id": "result-match",
+    "cases": [{ "export": "triState", "expected": 111, "note": "100 + 10 + 1" }]
+}

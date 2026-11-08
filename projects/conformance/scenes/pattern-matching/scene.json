@@ -1,0 +1,4 @@
+{
+    "id": "pattern-matching",
+    "cases": [{ "export": "flatUnion", "expected": 55, "note": "5 * 10 + (2+3)" }]
+}

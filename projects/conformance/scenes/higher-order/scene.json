@@ -1,0 +1,7 @@
+{
+    "id": "higher-order",
+    "cases": [
+        { "export": "quickSortDescChecksum", "expected": 321, "note": "3,2,1 拼成 321" },
+        { "export": "optionChain", "expected": 3, "note": "12 -> 6 -> 3" }
+    ]
+}

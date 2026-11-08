@@ -1,0 +1,4 @@
+{
+    "id": "struct-literal",
+    "cases": [{ "export": "constructPoint", "expected": 23, "note": "2*10 + 3" }]
+}

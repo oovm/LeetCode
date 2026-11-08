@@ -1,0 +1,4 @@
+{
+    "id": "type-ordering-player",
+    "cases": [{ "export": "sortPlayerChecksum", "expected": 123, "note": "score 1,2,3" }]
+}

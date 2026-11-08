@@ -1,0 +1,4 @@
+{
+    "id": "iterator-map-collect",
+    "cases": [{ "export": "mapCollectTotal", "expected": -36, "note": "1..8 取负求和" }]
+}
