@@ -1,0 +1,8 @@
+{
+    "id": "generic-constraints",
+    "cases": [
+        { "export": "largestValue", "expected": 9, "note": "[2, 9, 4, 7] 最大值" },
+        { "export": "largestOfRows", "expected": 9, "note": "三层泛型嵌套后的最大值" },
+        { "export": "nestedContains", "expected": 1, "note": "Equal 约束的两层传递" }
+    ]
+}

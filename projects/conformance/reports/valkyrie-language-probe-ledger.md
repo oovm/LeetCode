@@ -16,7 +16,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：33 场景 / 70 用例，47 过、23 红（构建拒绝 21、运行断言失败 2）。
+当前：38 场景 / 81 用例，52 过、29 红（构建拒绝 25、运行断言失败 4）。
 
 | 场景 | 用例 | 状态 | 覆盖点 |
 | --- | --- | --- | --- |
@@ -53,16 +53,24 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `backtracking-in-place` | 2 | 过 | 棋盘原位标记与撤销、递归 `mut` 结构体、N 皇后计数 |
 | `memoized-dp` | 2 | 过 | `HashMap` 记忆化的递归斐波那契与网格路径 |
 | `big-int` | 2 | 过 | 十进制串逐位加减、进位/借位、超 i64 量级结果的位数与数位和 |
+| `iterator-long-chain` | 2 | 红（构建拒绝） | `filter` / `map` / `skip` / `take` / `filter` / `fold` 长链与简单 Lambda（L12） |
+| `closure-capture` | 2 | 过 | 闭包按值捕获形参与局部变量后逃逸、函数值可重复调用 |
+| `recursive-unite-tree` | 2 | 红（构建拒绝） | 双载荷递归 `unite Node`、递归求和与深度（L14） |
+| `generic-constraints` | 3 | 1 过 / 2 红（运行值错） | `Comparable` / `Equal` 约束跨两层泛型传递（L13） |
+| `higher-order-returning` | 2 | 过 | 返回函数的高阶函数、闭包捕获函数值、组合与重复 |
 
-## 对账：46 用例 → 当前 70 用例
+## 对账：46 用例 → 当前 81 用例
 
 上一批口径：21 场景 / 46 用例，25 过、21 红（构建拒绝 19、运行断言失败 2）。
 第一批新增 6 场景 / 12 用例，全过。第二批新增 6 场景 / 12 用例，10 过、2 红
-（`scenes/dijkstra` 两例，属新增的 L11）。累计 25 + 12 + 10 = 47 过。
+（`scenes/dijkstra` 两例，属 L11）。第三批新增 5 场景 / 11 用例，5 过、6 红
+（`iterator-long-chain` 2 例属 L12，`generic-constraints` 2 例属 L13，`recursive-unite-tree` 2 例属 L14）。
+累计 25 + 12 + 10 + 5 = 52 过。
 当前全量重跑（`pnpm --filter @leetcode/conformance scenes`）：
-**33 场景 / 70 用例，47 过、23 红（构建拒绝 21、运行断言失败 2）**。
+**38 场景 / 81 用例，52 过、29 红（构建拒绝 25、运行断言失败 4）**。
 
-- **没有红翻绿用例**，两批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47。
+- **没有红翻绿用例**，三批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
+  第三批再 +5 = 52。
 - 之前回报的「45 过 / 11 红」是账目错误，不作数。它沿用了 `8596d3daa` 记下的「35 过 / 11 红」口径，
   又漏算了本批新增：35 + 12 应为 47，我误写成 45。两处都错，本账以当前重跑为准。
 - `8596d3daa` 记为已关闭的 10 个用例在当前工具链上仍按原诊断失败，因此重新计红：
@@ -77,7 +85,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
   `scenes/option-match-nonempty` 现在都报 CAN010 构建拒绝。L1–L10 正文与标题保持原样，
   状态以本节和场景表为准。
 
-### 23 条红与 L 条目的对应
+### 29 条红与 L 条目的对应
 
 | 场景::用例 | 数量 | L 条目 | 现行诊断 |
 | --- | --- | --- | --- |
@@ -104,9 +112,15 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `integer-boundaries::overflowTrap` | 1 | L10 | i64 加法越界静默回绕 |
 | `dijkstra::dijkstraDistances` | 1 | L11 | CAN058 `BinaryHeap` 聚合实例布局 |
 | `dijkstra::dijkstraUnreachable` | 1 | L11 | 同上 |
+| `iterator-long-chain::longChainTotal` | 1 | L12 | 简单 Lambda `x => ...` 解析失败 |
+| `iterator-long-chain::longChainCount` | 1 | L12 | 同上 |
+| `generic-constraints::largestValue` | 1 | L13 | 泛型内 `Ordering` 匹配不生效（运行值错） |
+| `generic-constraints::largestOfRows` | 1 | L13 | 同上 |
+| `recursive-unite-tree::treeSum` | 1 | L14 | SMIR007 return 操作数 Unit vs i64 |
+| `recursive-unite-tree::treeDepth` | 1 | L14 | 同上 |
 
 按条目汇总：L1 5 条、L2 2 条、L3 1 条、L4 2 条、L5 3 条、L6 1 条、L7 4 条、L8 1 条、L9 1 条、
-L10 1 条、L11 2 条，合计 23 条。
+L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
 
 ## 缺口
 
@@ -215,6 +229,39 @@ L10 1 条、L11 2 条，合计 23 条。
 - 坐标补充：`valkyrie.v/projects/std/source/collection/BinaryHeap.v` 的 `class BinaryHeap<T>` 与 `new_by`
 - 说明：同一场景里的图结构、`Edge` / `Frontier` 结构体与 `BinaryHeap::push` 调用都不单独报错，失败点是
   `BinaryHeap<Frontier>` 这个泛型实例本身。按理想写法应保留 `BinaryHeap`，不改为手写堆来绕开。
+
+### L12 简单 Lambda `x => expr` 解析失败
+
+- 分类：编译器（前端 parser）
+- 最小复现：`let shifted: micro(i64) -> i64 = x => x + 1`，报
+  `error[valkyrie.frontend.parse.syntax]: 此处需要表达式`
+- 坐标：`scenes/iterator-long-chain/scene.v` 的 `long_chain_total` / `long_chain_count`
+  （`filter(x => x % 2 == 1)` 等）；完整 Lambda `micro(x: i64) -> i64 { ... }` 在
+  `scenes/closure-capture/scene.v` 与 `scenes/higher-order-returning/scene.v` 均可解析并通过
+- 说明：`x => expr` 是 `documentation/pages/zh-hans/language/expressions.md` 记载的简单 Lambda 形态，
+  现网没有一处实际使用。与 L1 无关，L1 是适配器结果上的扩展方法解析，本条目失败在解析阶段。
+
+### L13 泛型函数内 `Ordering` 的 `match` 分支不生效
+
+- 分类：编译器（泛型单态化 / match 派发）
+- 最小复现：`micro largest<T>(items: ArrayList<T>) -> T where T: std::operator::Comparable`
+  内 `match current.compare(best) { case Greater: { best = current } ... }`，对 `[2, 9, 4, 7]`
+  返回首元素 2 而不是 9
+- 对照：同一泛型函数把 `match` 换成 `current.compare(best).to_code()` 后返回 9，
+  同一 `compare` 在非泛型函数里 `match` 也正常。失败点是泛型上下文里的 `Ordering` 匹配
+- 坐标：`scenes/generic-constraints/scene.v` 的 `largest` / `largest_of_rows`；
+  对照分支见同文件 `contains_in_rows`（`Equal` 约束，通过）
+- 附带：`case Ordering.Greater:` 限定写法会报 `Missing match arm body`，所以目前只有裸变体名可写
+
+### L14 递归 unite 的 `match` 分支提前 `return` 触发 SMIR007
+
+- 分类：编译器（SMIR 生成 / 返回类型）
+- 最小复现：`scenes/recursive-unite-tree/scene.v` 的 `tree_sum`：`unite Node` 的三个
+  `[constructor]` 变体分别为空载荷、`value: i64`、`left: Node` + `right: Node`，三个 `case` 分支各自 `return`
+- 证据：`(SMIR007): function=probe.recursive_unite_tree::tree_sum, location=block 5 terminator,
+  detail=return operand type differs from function return type (actual=Unit, expected=Integer64)`
+- 与既有条目关系：与 L4 同属递归 payload，但 L4 停在 CAN054，本条目已通过 CAN 并停在 SMIR，
+  阶段不同，独立编号。`scenes/recursive-union` 的同一形态仍停在 CAN054（L4）
 
 ## 第一批（数据结构）观察
 

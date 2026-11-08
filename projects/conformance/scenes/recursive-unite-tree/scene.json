@@ -1,0 +1,7 @@
+{
+    "id": "recursive-unite-tree",
+    "cases": [
+        { "export": "treeSum", "expected": 6, "note": "1 + 2 + 3" },
+        { "export": "treeDepth", "expected": 3, "note": "Branch / Branch / Leaf" }
+    ]
+}

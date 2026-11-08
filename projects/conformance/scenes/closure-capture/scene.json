@@ -1,0 +1,7 @@
+{
+    "id": "closure-capture",
+    "cases": [
+        { "export": "closureCaptureSum", "expected": 17, "note": "5 * 2 + 7" },
+        { "export": "localCapture", "expected": 15, "note": "10 + 5" }
+    ]
+}

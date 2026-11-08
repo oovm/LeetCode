@@ -1,0 +1,7 @@
+{
+    "id": "higher-order-returning",
+    "cases": [
+        { "export": "composedValue", "expected": 25, "note": "(4 + 1)^2" },
+        { "export": "twiceValue", "expected": 5, "note": "increment 两次作用于 3" }
+    ]
+}

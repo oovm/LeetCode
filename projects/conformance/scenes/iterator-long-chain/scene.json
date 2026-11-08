@@ -1,0 +1,7 @@
+{
+    "id": "iterator-long-chain",
+    "cases": [
+        { "export": "longChainTotal", "expected": 81, "note": "21 + 27 + 33" },
+        { "export": "longChainCount", "expected": 4, "note": "2..24 中被 3 整除的有 4 个" }
+    ]
+}
