@@ -16,7 +16,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：58 场景 / 141 用例，90 过、51 红（构建拒绝 46、运行断言失败 5）。这些数字与全表状态只对下面这套工具链成立。
+当前：64 场景 / 161 用例，106 过、55 红（构建拒绝 50、运行断言失败 5）。这些数字与全表状态只对下面这套工具链成立。
 
 ### 状态出处
 
@@ -26,7 +26,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | 编译器源码边界 | 构建时刻之前最后一条提交 `350d49c3`（2026-11-07 05:46:58），之后第一条 `d7c65e6b`（07:37:59），实际 rev 落在这两者之间，无法自证。**`nyar-vm.rs` 当前 HEAD `d4ad6ce4`（2026-11-08 16:20:26）晚于该 binding，不能当作本次编译器 rev** | `git log --before/--after` 与 binding mtime |
 | 标准库 | `valkyrie.v@9016ae49e609131d876745710dd9b5cb6522856b`，短标识 `s9016ae49` | `git rev-parse HEAD`，`std` 子目录无改动 |
 | 装配与运行器 | `@nyar/valkyrie` JS 层 dist 重建于 `2026-11-08 16:14:56`，探针运行器 `scripts/run_v_scenes.ts` | dist 文件 mtime |
-| 本次运行 | `pnpm --filter @leetcode/conformance scenes`，输出 `scenes: 58, cases: 141, pass: 90, fail: 51`，退出码 `1`（有红） | 终端输出，2026-11-08 |
+| 本次运行 | `pnpm --filter @leetcode/conformance scenes`，输出 `scenes: 64, cases: 161, pass: 106, fail: 55`，退出码 `1`（有红） | 终端输出，2026-11-08 |
 
 口径：
 
@@ -43,7 +43,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 | 场景 | 用例 | 状态 | rev | 覆盖点 |
 | --- | --- | --- | --- | --- |
-| `text-indexing` | 7 | 6 过 / 1 红（运行值错） | c19AB115A / s9016ae49 | 码位长度、BMP 与星平面字符、按码位切片、Cardinal 取字符、`index_of`、`split` |
+| `text-indexing` | 7 | 6 过 / 1 红（运行值错，待新 pin 复验） | c19AB115A / s9016ae49 | 码位长度、BMP 与星平面字符、按码位切片、Cardinal 取字符、`index_of`、`split` |
 | `generic-iteration` | 2 | 过 | c19AB115A / s9016ae49 | 泛型容器 + `micro(T) -> i64` 权重函数、`ArrayList<ArrayList<i64>>` |
 | `iterator-pipeline` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | `filter` 后 `map` 再 `collect`、适配器后接 `fold` |
 | `iterator-map-collect` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | 单个 `map` 适配器后接 `collect` |
@@ -96,13 +96,19 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `greedy-interval-scheduling` | 3 | 过 | c19AB115A / s9016ae49 | 区间结构体 + 显式结束时间比较器 + 贪心不相交选择 |
 | `bit-subset-enumeration` | 3 | 过 | c19AB115A / s9016ae49 | `bit_and` 掩码枚举子集、`count_ones` 汇总、移位计数 |
 | `graph-scc-cycle` | 3 | 过 | c19AB115A / s9016ae49 | Kosaraju 正反两遍扫描求强连通分量数、Kahn 剩余节点判环、无环对照 |
-| `string-ordering` | 4 | 3 过 / 1 红（运行值错） | c19AB115A / s9016ae49 | 按码位字典序比较、Unicode 排序位次与码位和（星平面校验和属 L9） |
+| `string-ordering` | 4 | 3 过 / 1 红（运行值错，待新 pin 复验） | c19AB115A / s9016ae49 | 按码位字典序比较、Unicode 排序位次与码位和（星平面校验和属 L9，修复晚于本 pin） |
 | `monotonic-stack-window` | 3 | 红（构建拒绝） | c19AB115A / s9016ae49 | 单调递减栈求下一个更大元素、单调队列滑动窗口最大值、直方图最大矩形（L20） |
 | `prefix-sum-binary-search` | 3 | 过 | c19AB115A / s9016ae49 | 前缀和区间和、下界二分、前缀和二分最少项数 |
 | `bitmap-bloom` | 3 | 过 | c19AB115A / s9016ae49 | i64 位图置位/清零/查询/异或翻转、popcount、布隆式双哈希成员判定 |
 | `recursive-descent-parser` | 3 | 红（构建拒绝） | c19AB115A / s9016ae49 | 手写词法与递归下降表达式求值、递归 `unite` AST（L4） |
+| `hash-dedup` | 4 | 过 | c19AB115A / s9016ae49 | 自定义键 `imply Equal/Hash` + 手写 8 桶注册表、`quick_sort` 后相邻 `==` 去重 |
+| `union-find-weighted` | 3 | 过 | c19AB115A / s9016ae49 | 带权并查集：递归 `find_root` 压缩偏移、按分量大小合并、`distance` |
+| `heap-kway-merge` | 3 | 过 | c19AB115A / s9016ae49 | 手写最小堆 `push` / `sink` / `pop`、两堆拼接后自底向上堆化、k 路归并 |
+| `kmp-automaton` | 3 | 过 | c19AB115A / s9016ae49 | 前缀函数、两字母表自动机状态转移、`patternPeriod` |
+| `dp-interval-knapsack` | 3 | 过 | c19AB115A / s9016ae49 | 区间 DP（矩阵链）、01 背包倒序容量、无限背包正序容量 |
+| `mini-interpreter` | 4 | 红（构建拒绝） | c19AB115A / s9016ae49 | 词法 + 递归下降 + 求值 + 错误链，叠加递归 `unite` / `Result` 传播 / 迭代器链（L1，探针另见 L21、L7） |
 
-## 对账：46 用例 → 当前 141 用例
+## 对账：46 用例 → 当前 161 用例
 
 上一批口径：21 场景 / 46 用例，25 过、21 红（构建拒绝 19、运行断言失败 2）。
 第一批新增 6 场景 / 12 用例，全过。第二批新增 6 场景 / 12 用例，10 过、2 红
@@ -114,12 +120,20 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 `custom-error-chain` 4 例属 L7）。
 第六批新增 6 场景 / 19 用例，12 过、7 红（`string-ordering` 1 例属 L9，
 `monotonic-stack-window` 3 例属 L20，`recursive-descent-parser` 3 例属 L4）。
-累计 25 + 12 + 10 + 5 + 12 + 14 + 12 = 90 过。
+第七批新增 6 场景 / 20 用例，16 过、4 红（`mini-interpreter` 4 例属 L1，构建在首个错误处停止）。
+累计 25 + 12 + 10 + 5 + 12 + 14 + 12 + 16 = 106 过。
 当前全量重跑（`pnpm --filter @leetcode/conformance scenes`）：
-**58 场景 / 141 用例，90 过、51 红（构建拒绝 46、运行断言失败 5）**。
+**64 场景 / 161 用例，106 过、55 红（构建拒绝 50、运行断言失败 5）**。
 
-- **没有红翻绿用例**，六批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
-  第三批再 +5 = 52，第四批再 +12 = 64，第五批再 +14 = 78，第六批再 +12 = 90。
+- **没有红翻绿用例**，七批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
+  第三批再 +5 = 52，第四批再 +12 = 64，第五批再 +14 = 78，第六批再 +12 = 90，第七批再 +16 = 106。
+- 第七批的 4 条红全部来自 `mini-interpreter` 的模块级构建失败，构建停在首个错误（L1 的 `.collect`）。
+  去掉迭代器出口后的临时探针（已删除）显示后续还有两层阻塞：`match` 绑定载荷进 `Fine` 触发 L21，
+  以及 `Result<Expr, <自定义 unite>>` 撞 L7 布局冲突。因此该场景的 4 条红只按首个错误归 L1，
+  后续层的结论来自探针，不计入用例级红。
+- L9 的两条红（`text-indexing::astralChecksum`、`string-ordering::sortedCodePointSum`）是**过期钉子**，
+  不是回归：本 pin 的 std 为 `9016ae49`，星平面修复在更晚的 `246eeb0`，一律标「待新 pin 复验」。
+  更换 binding 或 std rev 后必须整表重跑再改状态，不得据此改场景。
 - 之前回报的「45 过 / 11 红」是账目错误，不作数。它沿用了 `8596d3daa` 记下的「35 过 / 11 红」口径，
   又漏算了本批新增：35 + 12 应为 47，我误写成 45。两处都错，本账以当前重跑为准。
 - `8596d3daa` 记为已关闭的 10 个用例在当前工具链上仍按原诊断失败，因此重新计红：
@@ -142,7 +156,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 - L2 标题里的「CAN010 已关闭」同样没有 rev 依据，改判未验证；本次两个 `option-match` 场景仍停在 CAN010。
 - L3 / L4 / L5 / L7 正文的「状态」行已同步改为「未验证」，原有诊断与坐标保留不改。
 
-### 51 条红与 L 条目的对应
+### 55 条红与 L 条目的对应
 
 | 场景::用例 | 数量 | L 条目 | 现行诊断 |
 | --- | --- | --- | --- |
@@ -165,7 +179,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `result-fold::resultFold` | 1 | L7 | 同上 |
 | `result-match::triState` | 1 | L7 | 同上 |
 | `result-utf8-payload::resultFoldUtf8` | 1 | L6 | SMIR006 sum 构造合同不一致 |
-| `text-indexing::astralChecksum` | 1 | L9 | 星平面字符截断到 16 位 |
+| `text-indexing::astralChecksum` | 1 | L9 | 星平面字符截断到 16 位（待新 pin 复验，修复在 `246eeb0`） |
 | `integer-boundaries::overflowTrap` | 1 | L10 | i64 加法越界静默回绕 |
 | `dijkstra::dijkstraDistances` | 1 | L11 | CAN058 `BinaryHeap` 聚合实例布局 |
 | `dijkstra::dijkstraUnreachable` | 1 | L11 | 同上 |
@@ -190,17 +204,21 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `custom-error-chain::chainParseFail` | 1 | L7 | 同上 |
 | `custom-error-chain::chainRangeFail` | 1 | L7 | 同上 |
 | `custom-error-chain::chainIoFail` | 1 | L7 | 同上 |
-| `string-ordering::sortedCodePointSum` | 1 | L9 | 星平面字符截断到 16 位（运行值错，83507 vs 149043） |
+| `string-ordering::sortedCodePointSum` | 1 | L9 | 星平面字符截断到 16 位（运行值错，83507 vs 149043，待新 pin 复验） |
 | `monotonic-stack-window::nextGreaterSum` | 1 | L20 | SMIR007 `jump arity differs from target block parameters` |
 | `monotonic-stack-window::windowMaxSum` | 1 | L20 | 同上（模块级构建失败，未进入用例级判定） |
 | `monotonic-stack-window::histogramLargest` | 1 | L20 | 同上 |
 | `recursive-descent-parser::evaluatePrecedence` | 1 | L4 | CAN054 递归 payload 未实例化（`at Expr::Negate`） |
 | `recursive-descent-parser::evaluateParenNegate` | 1 | L4 | 同上 |
 | `recursive-descent-parser::evaluateIntegerDivision` | 1 | L4 | 同上 |
+| `mini-interpreter::evaluatePrecedence` | 1 | L1 | `unresolved call` `<fn value>.collect`（探针另见 L21、L7） |
+| `mini-interpreter::evaluateNested` | 1 | L1 | 同上（模块级构建失败，未进入用例级判定） |
+| `mini-interpreter::divisionByZeroCode` | 1 | L1 | 同上 |
+| `mini-interpreter::iteratorTokenTotal` | 1 | L1 | 同上 |
 
-按条目汇总：L1 3 条、L2 2 条、L3 1 条、L4 5 条、L5 3 条、L6 1 条、L7 8 条、L8 3 条、L9 2 条、
+按条目汇总：L1 7 条、L2 2 条、L3 1 条、L4 5 条、L5 3 条、L6 1 条、L7 8 条、L8 3 条、L9 2 条、
 L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 条、L17 1 条、L18 4 条、
-L20 3 条，合计 51 条。L19 已由临时探针证实但未入库场景，暂不计红。
+L20 3 条，合计 55 条。L19、L21 已由临时探针证实但未入库场景，暂不计红。
 
 说明：`iterator-terminal` 是模块级构建失败，`EnumerateIterator::next` 的元组类型不匹配先拒绝
 整个模块，三个用例都无法进入用例级判定，因此 `foldSum` / `anyAll` 不再单独归因 L1。L1 仍由
@@ -216,8 +234,9 @@ L20 3 条，合计 51 条。L19 已由临时探针证实但未入库场景，暂
 - 证据：
   ``unresolved call `<fn value>.collect` in map_collect_total: no method candidate named `collect` exists for receiver type `Nominal(ItemId(29))<i64, i64, Nominal(ItemId(27))<i64>>` ``
 - 同根：`scenes/iterator-pipeline/scene.v` 的 `iteratorPipelineTotal`（`filter` + `map` 链）、
-  `scenes/iterator-terminal/scene.v` 的 `foldSum`（`<fn value>.fold`）、以及文本场景最初的
-  `text.index_of("中").map_or(...)`。同一代码改成先绑定局部变量再调方法即可通过
+  `scenes/iterator-terminal/scene.v` 的 `foldSum`（`<fn value>.fold`）、`scenes/mini-interpreter/scene.v`
+  的 `iterator_token_total`（`tokens.into_iterator().map(token_value).collect()`，模块级首个错误）、
+  以及文本场景最初的 `text.index_of("中").map_or(...)`。同一代码改成先绑定局部变量再调方法即可通过
   （`text-indexing` 的 `indexOfChar` 与 `higher-order` 的 `optionChain` 即证）。
 - 缺口本质：接收者是「调用结果」时，方法解析把它当成 fn value，没有先物化调用结果。
 
@@ -284,6 +303,10 @@ L20 3 条，合计 51 条。L19 已由临时探针证实但未入库场景，暂
   位置构造器；写成结构体字面量 `Range { code: 2 }` 会报 `unresolved constructor`，属探针写法问题，不记为缺口。
 - 对照：`scenes/result-plain`（`Result<i64, i64>` + `fold`）通过，因此触发条件在
   「自定义联合作为 `Result` 的失败载荷」，不是 `Result` 本身。
+- 触发面补充（临时探针已删除）：`Result<Expr, i64>`（自定义递归 `unite` 在**成功载荷**位、错误位是标量）
+  同样命中本条布局冲突，见 `_probe-local-fine` 形态（`match` 外无 `Fine(局部)`，仅 `Result<Expr, i64>`
+  的构造与消费）。因此本条的实测范围是「`Result` 任一侧载荷是用户自定义 `unite`」，
+  不是只限失败载荷；是否同一 link 阶段根因待编译器线确认。
 - 根因：`LayoutId` 是模块本地编号。依赖模块与 consumer 各自为同一 declaration 产出一份
   布局，字段里的 `Nominal { layout }` 带着各自的本地编号；链接合并直接按原始编号比较
   形状，把「同一声明、同形状」误判成合同冲突。修复在 link 阶段按 declaration 身份合并，
@@ -308,6 +331,9 @@ L20 3 条，合计 51 条。L19 已由临时探针证实但未入库场景，暂
 - 同根：`scenes/string-ordering/scene.v` 的 `sorted_code_point_sum` 期望 `149043`
   （`97 + 122 + 233 + 20013 + 128578`），实得 `83507`，差值恰为 `65536`（`0x10000`），
   即 `🙂` 的码位仍被截成 `0xF642`。
+- 状态更正：**待新 pin 复验，不是回归，也不据此改场景**。本仓钉住的 std 是 `9016ae49`，
+  星平面截断的修复在更晚的 `246eeb0`（`🐛 Keep astral code points intact in `char` decoding`），
+  本 pin 早于修复。更换 binding 或 std rev 后整表重跑再改状态；在此之前不得把这两条红归因于编译器回归。
 
 ### L10 i64 加法越界静默回绕
 
@@ -486,6 +512,28 @@ L20 3 条，合计 51 条。L19 已由临时探针证实但未入库场景，暂
   因此触发条件是「**嵌套**循环 + 内层条件同时读集合长度与循环标志 + 分支一侧改写集合、另一侧改标志」。
 - 影响：单调栈 / 单调队列的标准写法被拒，只有拆成并列 `if` 才构建；这是为编译器让路，不应写进场景。
 - 场景保留为回归锁：修复后三例应转绿，不得为变绿把 `if/else` 改写成并列 `if`。
+
+### L21 `match` 分支绑定进 `Fine` 时泛型载荷类型未收敛
+
+- 分类：编译器（类型检查 / 泛型变体构造的类型统一）
+- 最小复现（临时探针，已删除；形态取自 `scenes/mini-interpreter`）：函数返回类型声明为
+  `Result<Expr, i64>`，`let value: Expr = match input { case Fine(inner): inner case Fail(code): return Fail(code) }`
+  之后 `return Fine(value)`
+- 证据：
+  `` `return` value type `Nominal(ItemId(20))<T[Some(GenericBinderId { owner: ItemId(20), ordinal: 0 })], i64>` is incompatible with the function return type `Nominal(ItemId(20))<Nominal(ItemId(34)), i64>` in function `pass_through` ``
+  `scenes/mini-interpreter` 的 `parse_expression` 是同形态（`ItemId(82)` 为 `Result`、`ItemId(381)` 为 `Expr`、
+  `ItemId(385)` 为 `CalcError`），报同一句类型不兼容
+- 对照（同批临时探针，均已删除）：
+  - `return Fine(expr)`，`expr` 是形参：通过类型检查；
+  - `let value: Expr = expr` / `let value: Expr = make_literal()` 后 `Fine(value)`：通过类型检查
+    （随后停在本条外的 L7 布局冲突）；
+  - `match input { case Fine(inner): Fine(inner) case Fail(code): Fail(code) }` 直接作为 return 表达式：通过类型检查；
+  - `Result<i64, 自定义 unite>` 与 `Result<i64, i64>` 的 `Fine` / `Fail` 直接构造：通过类型检查。
+  因此触发点是「`match` 结果先绑定到局部变量，再作为 `Fine` 实参」，而不是 `Fine`、`Result` 或自定义错误类型本身。
+- 解释（未证实）：`match` 表达式的结果类型保留了未解泛型 binder，局部变量注解 `Expr` 没有把该 binder
+  收敛到 `Expr`，于是 `Fine(value)` 仍按 `Result<T<binder>, i64>` 构造。属类型检查侧问题，待编译器线确认。
+- 影响：`Result` 作为解析器/求值器返回类型时，任何「先从 `match` 取成功值、再重新包成 `Fine`」的写法都不可编译。
+- 后续：`scenes/mini-interpreter` 的 4 条红当前只按首个错误归 L1；解掉 L1 后应先复验 L21，再看 L7。
 
 ## 第一批（数据结构）观察
 
