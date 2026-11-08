@@ -16,7 +16,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：64 场景 / 161 用例，106 过、55 红（构建拒绝 50、运行断言失败 5）。这些数字与全表状态只对下面这套工具链成立。
+当前：73 场景 / 199 用例，112 过、87 红（构建拒绝 84、运行断言失败 3）。这些数字与全表状态只对下面这套工具链成立。
 
 ### 状态出处
 
@@ -26,7 +26,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | 编译器源码边界 | 构建时刻之前最后一条提交 `350d49c3`（2026-11-07 05:46:58），之后第一条 `d7c65e6b`（07:37:59），实际 rev 落在这两者之间，无法自证。**`nyar-vm.rs` 当前 HEAD `d4ad6ce4`（2026-11-08 16:20:26）晚于该 binding，不能当作本次编译器 rev** | `git log --before/--after` 与 binding mtime |
 | 标准库 | `valkyrie.v@9016ae49e609131d876745710dd9b5cb6522856b`，短标识 `s9016ae49` | `git rev-parse HEAD`，`std` 子目录无改动 |
 | 装配与运行器 | `@nyar/valkyrie` JS 层 dist 重建于 `2026-11-08 16:14:56`，探针运行器 `scripts/run_v_scenes.ts` | dist 文件 mtime |
-| 本次运行 | `pnpm --filter @leetcode/conformance scenes`，输出 `scenes: 64, cases: 161, pass: 106, fail: 55`，退出码 `1`（有红） | 终端输出，2026-11-08 |
+| 本次运行 | `pnpm --filter @leetcode/conformance scenes`，输出 `scenes: 73, cases: 199, pass: 112, fail: 87`，退出码 `1`（有红） | 终端输出，2026-11-09 |
 
 口径：
 
@@ -43,7 +43,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 | 场景 | 用例 | 状态 | rev | 覆盖点 |
 | --- | --- | --- | --- | --- |
-| `text-indexing` | 7 | 6 过 / 1 红（运行值错，待新 pin 复验） | c19AB115A / s9016ae49 | 码位长度、BMP 与星平面字符、按码位切片、Cardinal 取字符、`index_of`、`split` |
+| `text-indexing` | 7 | 过（第八批重跑，`astralChecksum` 转绿，见 L9） | c19AB115A / s9016ae49 | 码位长度、BMP 与星平面字符、按码位切片、Cardinal 取字符、`index_of`、`split` |
 | `generic-iteration` | 2 | 过 | c19AB115A / s9016ae49 | 泛型容器 + `micro(T) -> i64` 权重函数、`ArrayList<ArrayList<i64>>` |
 | `iterator-pipeline` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | `filter` 后 `map` 再 `collect`、适配器后接 `fold` |
 | `iterator-map-collect` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | 单个 `map` 适配器后接 `collect` |
@@ -96,7 +96,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `greedy-interval-scheduling` | 3 | 过 | c19AB115A / s9016ae49 | 区间结构体 + 显式结束时间比较器 + 贪心不相交选择 |
 | `bit-subset-enumeration` | 3 | 过 | c19AB115A / s9016ae49 | `bit_and` 掩码枚举子集、`count_ones` 汇总、移位计数 |
 | `graph-scc-cycle` | 3 | 过 | c19AB115A / s9016ae49 | Kosaraju 正反两遍扫描求强连通分量数、Kahn 剩余节点判环、无环对照 |
-| `string-ordering` | 4 | 3 过 / 1 红（运行值错，待新 pin 复验） | c19AB115A / s9016ae49 | 按码位字典序比较、Unicode 排序位次与码位和（星平面校验和属 L9，修复晚于本 pin） |
+| `string-ordering` | 4 | 过（第八批重跑，`sortedCodePointSum` 转绿，见 L9） | c19AB115A / s9016ae49 | 按码位字典序比较、Unicode 排序位次与码位和 |
 | `monotonic-stack-window` | 3 | 红（构建拒绝） | c19AB115A / s9016ae49 | 单调递减栈求下一个更大元素、单调队列滑动窗口最大值、直方图最大矩形（L20） |
 | `prefix-sum-binary-search` | 3 | 过 | c19AB115A / s9016ae49 | 前缀和区间和、下界二分、前缀和二分最少项数 |
 | `bitmap-bloom` | 3 | 过 | c19AB115A / s9016ae49 | i64 位图置位/清零/查询/异或翻转、popcount、布隆式双哈希成员判定 |
@@ -107,8 +107,17 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `kmp-automaton` | 3 | 过 | c19AB115A / s9016ae49 | 前缀函数、两字母表自动机状态转移、`patternPeriod` |
 | `dp-interval-knapsack` | 3 | 过 | c19AB115A / s9016ae49 | 区间 DP（矩阵链）、01 背包倒序容量、无限背包正序容量 |
 | `mini-interpreter` | 4 | 红（构建拒绝） | c19AB115A / s9016ae49 | 词法 + 递归下降 + 求值 + 错误链，叠加递归 `unite` / `Result` 传播 / 迭代器链（L1，探针另见 L21、L7） |
+| `csv-tsv-parser` | 6 | 红（构建拒绝） | c19AB115A / s9016ae49 | 手写 CSV/TSV：引号字段、双引号转义、空字段、CRLF、未闭合与字段中途引号错误链（L7） |
+| `json-roundtrip` | 5 | 红（构建拒绝） | c19AB115A / s9016ae49 | 递归 `unite Json` 与递归下降解析、转义写回、`null` 往返、畸形输入错误链（L21） |
+| `regex-nfa` | 6 | 红（构建拒绝） | c19AB115A / s9016ae49 | Thompson NFA：字面、`.`、`*`、epsilon 闭包、多起点扫描、悬挂闭包错误链（L21） |
+| `config-table-report` | 6 | 红（构建拒绝） | c19AB115A / s9016ae49 | 键值配置解析、右对齐表格、i64 与 f64 Display 往返（L24） |
+| `float32-display` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | `f32` Display（1.5）（L24） |
+| `state-machine-dispatch` | 4 | 过 | c19AB115A / s9016ae49 | `enums` 状态机 + `unite` 命令分发 + FIFO 事件队列 |
+| `numeric-roundtrip` | 7 | 红（构建拒绝） | c19AB115A / s9016ae49 | 整数解析/显示往返、MIN/MAX、溢出探针、f64 位重解释与负零（L26，位重解释另见 L25） |
+| `string-escape-quote` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | 字符串 `\"` 转义（L22） |
+| `enum-equality` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | 用户 `enums` 的 `==`（L23） |
 
-## 对账：46 用例 → 当前 161 用例
+## 对账：46 用例 → 当前 199 用例
 
 上一批口径：21 场景 / 46 用例，25 过、21 红（构建拒绝 19、运行断言失败 2）。
 第一批新增 6 场景 / 12 用例，全过。第二批新增 6 场景 / 12 用例，10 过、2 红
@@ -121,19 +130,27 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 第六批新增 6 场景 / 19 用例，12 过、7 红（`string-ordering` 1 例属 L9，
 `monotonic-stack-window` 3 例属 L20，`recursive-descent-parser` 3 例属 L4）。
 第七批新增 6 场景 / 20 用例，16 过、4 红（`mini-interpreter` 4 例属 L1，构建在首个错误处停止）。
-累计 25 + 12 + 10 + 5 + 12 + 14 + 12 + 16 = 106 过。
+第八批新增 9 场景 / 38 用例，4 过、34 红（`state-machine-dispatch` 4 例全过；
+`csv-tsv-parser` 6 例归 L7，`json-roundtrip` 5 例与 `regex-nfa` 6 例归 L21，
+`config-table-report` 6 例与 `float32-display` 1 例归 L24，`numeric-roundtrip` 7 例归 L26，
+`string-escape-quote` 1 例归 L22，`enum-equality` 2 例归 L23）。
+累计 25 + 12 + 10 + 5 + 12 + 14 + 12 + 16 + 4 = 110 过。
+另有两例既有运行断言红在本批重跑中转绿（`text-indexing::astralChecksum`、
+`string-ordering::sortedCodePointSum`），见下方「红点观测变化」与 L9。
 当前全量重跑（`pnpm --filter @leetcode/conformance scenes`）：
-**64 场景 / 161 用例，106 过、55 红（构建拒绝 50、运行断言失败 5）**。
+**73 场景 / 199 用例，112 过、87 红（构建拒绝 84、运行断言失败 3）**。
 
-- **没有红翻绿用例**，七批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
+- **前七批没有红翻绿用例**，新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
   第三批再 +5 = 52，第四批再 +12 = 64，第五批再 +14 = 78，第六批再 +12 = 90，第七批再 +16 = 106。
+  第八批新增 4 过，另有 2 例既有红转绿，累计 106 + 4 + 2 = 112（见下一条）。
 - 第七批的 4 条红全部来自 `mini-interpreter` 的模块级构建失败，构建停在首个错误（L1 的 `.collect`）。
   去掉迭代器出口后的临时探针（已删除）显示后续还有两层阻塞：`match` 绑定载荷进 `Fine` 触发 L21，
   以及 `Result<Expr, <自定义 unite>>` 撞 L7 布局冲突。因此该场景的 4 条红只按首个错误归 L1，
   后续层的结论来自探针，不计入用例级红。
-- L9 的两条红（`text-indexing::astralChecksum`、`string-ordering::sortedCodePointSum`）是**过期钉子**，
-  不是回归：本 pin 的 std 为 `9016ae49`，星平面修复在更晚的 `246eeb0`，一律标「待新 pin 复验」。
-  更换 binding 或 std rev 后必须整表重跑再改状态，不得据此改场景。
+- **红点观测变化（第八批）**：`text-indexing::astralChecksum` 与 `string-ordering::sortedCodePointSum`
+  在同一 binding sha256 与 std `9016ae49` 下重跑转绿。先前判定「修复在更晚的 `246eeb0`」因此不再成立，
+  但也没有证据表明工具链被替换过。按口径记为「当前 pin 复跑通过，待独立复验」：
+  不据此关闭 L9、不改场景、不把这次变化归因于编译器修复。整表重跑后这两条已移出红表。
 - 之前回报的「45 过 / 11 红」是账目错误，不作数。它沿用了 `8596d3daa` 记下的「35 过 / 11 红」口径，
   又漏算了本批新增：35 + 12 应为 47，我误写成 45。两处都错，本账以当前重跑为准。
 - `8596d3daa` 记为已关闭的 10 个用例在当前工具链上仍按原诊断失败，因此重新计红：
@@ -156,7 +173,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 - L2 标题里的「CAN010 已关闭」同样没有 rev 依据，改判未验证；本次两个 `option-match` 场景仍停在 CAN010。
 - L3 / L4 / L5 / L7 正文的「状态」行已同步改为「未验证」，原有诊断与坐标保留不改。
 
-### 55 条红与 L 条目的对应
+### 87 条红与 L 条目的对应
 
 | 场景::用例 | 数量 | L 条目 | 现行诊断 |
 | --- | --- | --- | --- |
@@ -179,7 +196,6 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `result-fold::resultFold` | 1 | L7 | 同上 |
 | `result-match::triState` | 1 | L7 | 同上 |
 | `result-utf8-payload::resultFoldUtf8` | 1 | L6 | SMIR006 sum 构造合同不一致 |
-| `text-indexing::astralChecksum` | 1 | L9 | 星平面字符截断到 16 位（待新 pin 复验，修复在 `246eeb0`） |
 | `integer-boundaries::overflowTrap` | 1 | L10 | i64 加法越界静默回绕 |
 | `dijkstra::dijkstraDistances` | 1 | L11 | CAN058 `BinaryHeap` 聚合实例布局 |
 | `dijkstra::dijkstraUnreachable` | 1 | L11 | 同上 |
@@ -204,7 +220,6 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `custom-error-chain::chainParseFail` | 1 | L7 | 同上 |
 | `custom-error-chain::chainRangeFail` | 1 | L7 | 同上 |
 | `custom-error-chain::chainIoFail` | 1 | L7 | 同上 |
-| `string-ordering::sortedCodePointSum` | 1 | L9 | 星平面字符截断到 16 位（运行值错，83507 vs 149043，待新 pin 复验） |
 | `monotonic-stack-window::nextGreaterSum` | 1 | L20 | SMIR007 `jump arity differs from target block parameters` |
 | `monotonic-stack-window::windowMaxSum` | 1 | L20 | 同上（模块级构建失败，未进入用例级判定） |
 | `monotonic-stack-window::histogramLargest` | 1 | L20 | 同上 |
@@ -215,10 +230,45 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `mini-interpreter::evaluateNested` | 1 | L1 | 同上（模块级构建失败，未进入用例级判定） |
 | `mini-interpreter::divisionByZeroCode` | 1 | L1 | 同上 |
 | `mini-interpreter::iteratorTokenTotal` | 1 | L1 | 同上 |
+| `csv-tsv-parser::csvFieldCount` | 1 | L7 | 布局 `std.diagnostic.Diagnostic` 合同冲突 |
+| `csv-tsv-parser::csvQuotedCommaChecksum` | 1 | L7 | 同上 |
+| `csv-tsv-parser::csvEscapedQuoteChecksum` | 1 | L7 | 同上 |
+| `csv-tsv-parser::csvCrLfFieldCount` | 1 | L7 | 同上 |
+| `csv-tsv-parser::csvUnterminatedCode` | 1 | L7 | 同上 |
+| `csv-tsv-parser::csvUnexpectedQuoteCode` | 1 | L7 | 同上 |
+| `json-roundtrip::jsonArrayLength` | 1 | L21 | `parse_array` 返回类型带 `T[GenericBinderId]` |
+| `json-roundtrip::jsonRoundTripChecksum` | 1 | L21 | 同上（模块级构建失败，未进入用例级判定） |
+| `json-roundtrip::jsonEscapedChecksum` | 1 | L21 | 同上 |
+| `json-roundtrip::jsonMalformedCode` | 1 | L21 | 同上 |
+| `json-roundtrip::jsonNullChecksum` | 1 | L21 | 同上 |
+| `regex-nfa::nfaLiteralMatch` | 1 | L21 | `compile_rest` 返回类型带 `T[GenericBinderId]` |
+| `regex-nfa::nfaStarMatch` | 1 | L21 | 同上（模块级构建失败，未进入用例级判定） |
+| `regex-nfa::nfaDotMatch` | 1 | L21 | 同上 |
+| `regex-nfa::nfaNoMatch` | 1 | L21 | 同上 |
+| `regex-nfa::nfaScanCount` | 1 | L21 | 同上 |
+| `regex-nfa::nfaDanglingCode` | 1 | L21 | 同上 |
+| `config-table-report::configEntryCount` | 1 | L24 | `display_float64` SMIR007 拖垮模块 |
+| `config-table-report::configValueSum` | 1 | L24 | 同上（模块级构建失败，未进入用例级判定） |
+| `config-table-report::configTableChecksum` | 1 | L24 | 同上 |
+| `config-table-report::configFirstLineWidth` | 1 | L24 | 同上 |
+| `config-table-report::integerFormatChecksum` | 1 | L24 | 同上 |
+| `config-table-report::float64FormatChecksum` | 1 | L24 | `std.text::display_float64` 返回类型 `Utf8` vs `Nominal ItemId(86)` |
+| `float32-display::float32DisplayChecksum` | 1 | L24 | `std.text::display_float32` 返回类型 `Utf8` vs `Nominal ItemId(85)` |
+| `numeric-roundtrip::integerRoundTripChecksum` | 1 | L26 | MIR lowering unresolved callable identity（`f64`） |
+| `numeric-roundtrip::integerMinRoundTripChecksum` | 1 | L26 | 同上（模块级构建失败，未进入用例级判定） |
+| `numeric-roundtrip::integerMaxFormatChecksum` | 1 | L26 | 同上 |
+| `numeric-roundtrip::integerBadDigitCode` | 1 | L26 | 同上 |
+| `numeric-roundtrip::integerOverflowProbe` | 1 | L26 | 同上 |
+| `numeric-roundtrip::float64BitsRoundTrip` | 1 | L26 | 同上（解 L26 后另见 L25） |
+| `numeric-roundtrip::negativeZeroBits` | 1 | L26 | `-zero` 触发 MIR lowering 未解析 `f64` |
+| `string-escape-quote::escapedQuoteLength` | 1 | L22 | `unterminated quoted literal` |
+| `enum-equality::sameEnumEqual` | 1 | L23 | `unresolved call` `infix ==`：4 个候选均不匹配 |
+| `enum-equality::differentEnumEqual` | 1 | L23 | 同上（模块级构建失败，未进入用例级判定） |
 
-按条目汇总：L1 7 条、L2 2 条、L3 1 条、L4 5 条、L5 3 条、L6 1 条、L7 8 条、L8 3 条、L9 2 条、
+按条目汇总：L1 7 条、L2 2 条、L3 1 条、L4 5 条、L5 3 条、L6 1 条、L7 14 条、L8 3 条、
 L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 条、L17 1 条、L18 4 条、
-L20 3 条，合计 55 条。L19、L21 已由临时探针证实但未入库场景，暂不计红。
+L20 3 条、L21 11 条、L22 1 条、L23 2 条、L24 7 条、L26 7 条，合计 87 条。
+L9 在当前 pin 复跑已无红。L19、L25 只有探针证据，不计红。
 
 说明：`iterator-terminal` 是模块级构建失败，`EnumerateIterator::next` 的元组类型不匹配先拒绝
 整个模块，三个用例都无法进入用例级判定，因此 `foldSum` / `anyAll` 不再单独归因 L1。L1 仍由
@@ -335,9 +385,11 @@ L20 3 条，合计 55 条。L19、L21 已由临时探针证实但未入库场景
 - 同根：`scenes/string-ordering/scene.v` 的 `sorted_code_point_sum` 期望 `149043`
   （`97 + 122 + 233 + 20013 + 128578`），实得 `83507`，差值恰为 `65536`（`0x10000`），
   即 `🙂` 的码位仍被截成 `0xF642`。
-- 状态更正：**待新 pin 复验，不是回归，也不据此改场景**。本仓钉住的 std 是 `9016ae49`，
-  星平面截断的修复在更晚的 `246eeb0`（`🐛 Keep astral code points intact in `char` decoding`），
-  本 pin 早于修复。更换 binding 或 std rev 后整表重跑再改状态；在此之前不得把这两条红归因于编译器回归。
+- 状态更正：**待独立复验，不据此改场景**。本仓钉住的 std 是 `9016ae49`；先前判断「星平面修复在更晚的
+  `246eeb0`（`🐛 Keep astral code points intact in `char` decoding`），本 pin 早于修复」。
+- 第八批全量重跑：`c19AB115A / s9016ae49` 未变，但上述两例均 PASS（期望值与场景源码均未改）。
+  这与「本 pin 早于修复」的判断冲突，原因未定位（可能是先前运行受缓存或装配产物影响）。
+  记为「当前 pin 复跑通过，待独立复验」，不作为关闭依据，也不据此删除 L9。
 
 ### L10 i64 加法越界静默回绕
 
@@ -557,6 +609,84 @@ L20 3 条，合计 55 条。L19、L21 已由临时探针证实但未入库场景
   收敛到 `Expr`，于是 `Fine(value)` 仍按 `Result<T<binder>, i64>` 构造。属类型检查侧问题，待编译器线确认。
 - 影响：`Result` 作为解析器/求值器返回类型时，任何「先从 `match` 取成功值、再重新包成 `Fine`」的写法都不可编译。
 - 后续：`scenes/mini-interpreter` 的 4 条红当前只按首个错误归 L1；解掉 L1 后应先复验 L21，再看 L7。
+- 第八批复现：`scenes/json-roundtrip`（`parse_array`）与 `scenes/regex-nfa`（`compile_rest`）都是同一形态 ——
+  `match` 取出 `Fine` 载荷后作为 `Fine` 实参，返回类型残留 `T[Some(GenericBinderId ...)]`。
+  两场景源码保持理想写法，作为本条回归锁。
+
+### L22 字符串字面量中的 `\"` 转义未生效
+
+- 分类：编译器（词法，`valkyrie.frontend.parse.syntax`）
+- 文档：`valkyrie.v/documentation/pages/zh-hans/language/lexical-structure.md:191` 写明
+  「`\n`、`\t`、`\"` 这类转义序列在普通字符串中生效」。
+- 最小复现：`scenes/string-escape-quote/scene.v` 的 `escaped_quote_length`：
+  `let text: utf8 = "a\"b"`，期望长度 3
+- 证据：`error[valkyrie.frontend.parse.syntax]: unterminated quoted literal: opening run of 1 `"` requires a closing run of 1`
+- 对照（临时探针，已删除）：`\n` / `\t` / `\\` 在普通字符串中均可用，只有 `\"` 失败。
+- 影响：需要内嵌双引号的 CSV / JSON 文本只能改用 `Utf8Builder` 逐字符拼装，
+  字符串字面量表达力与文档承诺不一致。
+- 场景保留为回归锁：修复后应恢复 `"a\"b"` 字面量写法。
+
+### L23 用户 `enums` 缺少 `==` / `!=` 实现
+
+- 分类：编译器（`valkyrie.hir.unresolved_call`）
+- 最小复现：`scenes/enum-equality/scene.v` 的 `same_enum_equal`：`enums Phase { Alpha Beta }` 后
+  `if left == right`
+- 证据：``unresolved call `infix ==` in same_enum_equal: 4 candidate(s) share the name, but none matches the argument types``
+- 对照（临时探针，已删除）：`!=` 同样无匹配（`6 candidate(s)`）。std 现网 `enums` 判定全部走 `match`，
+  如 `valkyrie.v/projects/std/source/operator/comparable.v` 的 `Ordering` 手写 4 × 4 嵌套 `match` 后
+  由 `imply` 提供 `==` / `!=`。
+- 待决：本场景未写 `imply`，隐含期望是「无载荷 `enums` 默认结构相等」。需产品确认该期望是否成立：
+  若结论是「必须手写 `imply`」，本条改记为文档缺口，并在 `enums` 文档写明无默认相等。
+- 影响：状态码比较只能改写为 `match` 或先映射到数值，`enums` 不能直接作为相等判定键。
+
+### L24 `std.text` 浮点 Display 在 wasm 目标触发 SMIR007
+
+- 分类：标准库（`std.text::display_float64` / `display_float32`），在 SMIR 合同校验处失败
+- 最小复现：`scenes/float32-display` 的 `f32::from_bits(0x3fc00000 as u32).display()`；
+  `scenes/config-table-report` 的 `float64FormatChecksum` 对 `0.1f64` 与 `1234.5678f64` 调 `.display()`
+- 证据：
+  ``(SMIR007): Semantic MIR 合同失败: function=std.text::display_float64, location=block 4 terminator, detail=return operand type differs from function return type (actual=Utf8, expected=Nominal { declaration: ItemId(86), arguments: [], primitive_identity: None })``
+  `display_float32` 同形态，`declaration: ItemId(85)`。两次运行的 ItemId 相差 1（87/86 与 86/85），
+  属不同模块的实例编号，不是两种缺陷。
+- 坐标：`valkyrie.v/projects/std/source/text/float_display.v` 的 `display_float64`（412 行起）与
+  `display_float32`（456 行起）
+- 对照：`i64` 的 `.display()` 路径在其它场景通过（如 `big-int`、`integer-boundaries`），
+  因此不是 `display` 方法本身，而是浮点 Display 的返回类型在 MIR 里退化成裸 `Utf8`。
+- 影响：f32 / f64 的 Display 往返无法在 wasm 目标验证。`config-table-report` 的四个整数用例
+  与两个浮点用例同属一个模块，模块级构建失败后均未进入用例级判定。
+
+### L25 `f64::to_bits` 在 wasm 后端缺少 `i64.reinterpret_f64` 助记符
+
+- 分类：编译器（wasm 后端 operator 绑定）
+- 最小复现（临时探针，已删除）：`let value: f64 = f64::from_bits(0x3ff0000000000000); value.to_bits() as i64`
+- 证据：``WASM `wasm_operator` 绑定缺少可编码助记符 `i64.reinterpret_f64`: callee=ItemInstanceId(7) function=std::to_bits``
+- 对照：同一探针里 `f64::from_bits` 通过类型检查与 lowering，只有 `to_bits` 在编码阶段失败。
+- 影响：`scenes/numeric-roundtrip` 的 `float64BitsRoundTrip` 与 `negativeZeroBits` 依赖该路径，
+  但当前该场景先被 L26 挡住，本批未取得位模式实测值。
+- 后续：解 L26 后应立即复验本条，再补一条入库场景锁 `0x3ff0000000000000` 往返。
+
+### L26 一元负号作用于 `f64` 触发 MIR lowering 未解析调用身份
+
+- 分类：编译器（MIR lowering）
+- 最小复现（临时探针，已删除）：`let zero: f64 = 0.0f64; let value: f64 = -zero`
+- 证据：``(valkyrie.mir.diagnostic_rejected): MIR lowering unresolved callable identity `f64``
+- 场景坐标：`scenes/numeric-roundtrip/scene.v` 的 `negative_zero_bits`。该错误发生在 lowerring 阶段，
+  早于 L25 的 `to_bits` 编码，因此整个模块的七个用例都在构建期失败。
+- 对照：`i64` 的一元负号与减法在 `big-int` / `integer-boundaries` 通过；`0.0f64` 字面量与
+  `f64` 类型注解本身可用。
+- 影响：负零与浮点取负只能改写为位模式操作，而位模式路径又被 L25 挡住，浮点位重解释当前完全不可达。
+  `scenes/numeric-roundtrip` 的整数往返与溢出探针也因同模块失败而未取得实测值；溢出语义继续沿用
+  L10 的既有观察，本批不作新判定。
+
+### L27 wasm 后端没有 `f32` 原语目标合同
+
+- 分类：编译器（后端私有计划）
+- 最小复现（临时探针，已删除）：`let value: f32 = f32::from_bits(0x3fc00000 as u32); value.to_bits() as i64`
+- 证据：`后端私有计划生产失败: primitive 尚无目标合同: Float { bits: 32 }`
+- 关系：与 L24 不同层。L24 是 `std.text::display_float32` 的返回类型在 MIR 处不一致，
+  本条是 wasm 目标侧没有 `f32` 的 primitive 计划。即使 L24 修好，`f32` 值进入 wasm 计算仍会撞本条。
+- 影响：`f32` 目前只能作为类型注记出现，不能进入 wasm 目标的可执行路径。
+- 待决：是否计划让 wasm 目标直接支持 `f32`，或统一要求用户侧以 `f64` 计算。本批不预设结论。
 
 ## 第一批（数据结构）观察
 
