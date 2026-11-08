@@ -16,7 +16,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：38 场景 / 81 用例，52 过、29 红（构建拒绝 25、运行断言失败 4）。这些数字与全表状态只对下面这套工具链成立。
+当前：46 场景 / 100 用例，64 过、36 红（构建拒绝 32、运行断言失败 4）。这些数字与全表状态只对下面这套工具链成立。
 
 ### 状态出处
 
@@ -26,13 +26,20 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | 编译器源码边界 | 构建时刻之前最后一条提交 `350d49c3`（2026-11-07 05:46:58），之后第一条 `d7c65e6b`（07:37:59），实际 rev 落在这两者之间，无法自证。**`nyar-vm.rs` 当前 HEAD `d4ad6ce4`（2026-11-08 16:20:26）晚于该 binding，不能当作本次编译器 rev** | `git log --before/--after` 与 binding mtime |
 | 标准库 | `valkyrie.v@9016ae49e609131d876745710dd9b5cb6522856b`，短标识 `s9016ae49` | `git rev-parse HEAD`，`std` 子目录无改动 |
 | 装配与运行器 | `@nyar/valkyrie` JS 层 dist 重建于 `2026-11-08 16:14:56`，探针运行器 `scripts/run_v_scenes.ts` | dist 文件 mtime |
-| 本次运行 | `pnpm --filter @leetcode/conformance scenes`，输出 `scenes: 38, cases: 81, pass: 52, fail: 29`，退出码 `1`（有红） | 终端输出，2026-11-08 |
+| 本次运行 | `pnpm --filter @leetcode/conformance scenes`，输出 `scenes: 46, cases: 100, pass: 64, fail: 36`，退出码 `1`（有红） | 终端输出，2026-11-08 |
 
 口径：
 
 - 全表每行状态都带 `rev` 列（`c19AB115A` / `s9016ae49`），表示该结论只在上述 binding 与 std 组合下成立。
 - 历史状态若没有同时记录编译器 binding 与 std rev，一律记为「未验证」，不得作为已关闭依据。`8596d3daa` 记下的 10 条「已关闭」即属此类。
 - 更换 binding 或 std rev 后必须整表重跑再改状态，不能沿用旧结论。
+- **可复现性**：原生 binding 不自报 rev，`.node` 里也没有嵌入 git 哈希，编译器源码 rev 只能给未知区间
+  `(350d49c3, d7c65e6b)`。因此任何跨运行比较只有在 **binding sha256 与 std rev 完全一致**时才可比；
+  否则一律标注「不可比」，不得把红翻绿或绿翻红归因于某次编译器修复。
+- 源码构建可行性：`Cargo.lock` 锁定的 Oak 依赖在本地 cargo 缓存中已存在
+  （`oak.rs-4b2f523b24aa45b8/180d238`），理论上可离线重建 binding；但重建会覆盖共享的
+  `platforms/valkyrie-win32-x64/lib/*.node`，本次未执行。要做到完全可复现，需在独立 target 下构建，
+  并把新 binding 的 sha256 追加进本表。
 
 | 场景 | 用例 | 状态 | rev | 覆盖点 |
 | --- | --- | --- | --- | --- |
@@ -74,19 +81,29 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `recursive-unite-tree` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | 双载荷递归 `unite Node`、递归求和与深度（L14） |
 | `generic-constraints` | 3 | 1 过 / 2 红（运行值错） | c19AB115A / s9016ae49 | `Comparable` / `Equal` 约束跨两层泛型传递（L13） |
 | `higher-order-returning` | 2 | 过 | c19AB115A / s9016ae49 | 返回函数的高阶函数、闭包捕获函数值、组合与重复 |
+| `enum-state-machine` | 2 | 过 | c19AB115A / s9016ae49 | 用户态 `enums` 相位机、值形 `match` 推进与状态码 |
+| `trait-required-call` | 2 | 过 | c19AB115A / s9016ae49 | `structure` + `imply` 实现 trait 必实现成员后按方法调用（L15 对照） |
+| `trait-default-impl` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | trait 默认体成员在实现体上按方法调用（L15） |
+| `mutual-recursion` | 2 | 过 | c19AB115A / s9016ae49 | Hofstadter Female / Male 互递归 |
+| `utf8-word-count` | 2 | 过 | c19AB115A / s9016ae49 | `utf8` 作 `HashMap` 键、`split_whitespace` 词频与去重 |
+| `string-algorithms` | 4 | 过 | c19AB115A / s9016ae49 | 中心扩展最长回文（ASCII/BMP）、一维压缩表的编辑距离 |
+| `result-propagation` | 4 | 红（构建拒绝） | c19AB115A / s9016ae49 | 两层 `Result` 传播 + 早退（L16） |
+| `enum-variant-argument` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | `enums` 裸变体直接作为构造器实参（L17） |
 
-## 对账：46 用例 → 当前 81 用例
+## 对账：46 用例 → 当前 100 用例
 
 上一批口径：21 场景 / 46 用例，25 过、21 红（构建拒绝 19、运行断言失败 2）。
 第一批新增 6 场景 / 12 用例，全过。第二批新增 6 场景 / 12 用例，10 过、2 红
 （`scenes/dijkstra` 两例，属 L11）。第三批新增 5 场景 / 11 用例，5 过、6 红
 （`iterator-long-chain` 2 例属 L12，`generic-constraints` 2 例属 L13，`recursive-unite-tree` 2 例属 L14）。
-累计 25 + 12 + 10 + 5 = 52 过。
+第四批新增 8 场景 / 19 用例，12 过、7 红（`trait-default-impl` 2 例属 L15，
+`result-propagation` 4 例属 L16，`enum-variant-argument` 1 例属 L17）。
+累计 25 + 12 + 10 + 5 + 12 = 64 过。
 当前全量重跑（`pnpm --filter @leetcode/conformance scenes`）：
-**38 场景 / 81 用例，52 过、29 红（构建拒绝 25、运行断言失败 4）**。
+**46 场景 / 100 用例，64 过、36 红（构建拒绝 32、运行断言失败 4）**。
 
-- **没有红翻绿用例**，三批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
-  第三批再 +5 = 52。
+- **没有红翻绿用例**，四批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
+  第三批再 +5 = 52，第四批再 +12 = 64。
 - 之前回报的「45 过 / 11 红」是账目错误，不作数。它沿用了 `8596d3daa` 记下的「35 过 / 11 红」口径，
   又漏算了本批新增：35 + 12 应为 47，我误写成 45。两处都错，本账以当前重跑为准。
 - `8596d3daa` 记为已关闭的 10 个用例在当前工具链上仍按原诊断失败，因此重新计红：
@@ -109,7 +126,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 - L2 标题里的「CAN010 已关闭」同样没有 rev 依据，改判未验证；本次两个 `option-match` 场景仍停在 CAN010。
 - L3 / L4 / L5 / L7 正文的「状态」行已同步改为「未验证」，原有诊断与坐标保留不改。
 
-### 29 条红与 L 条目的对应
+### 36 条红与 L 条目的对应
 
 | 场景::用例 | 数量 | L 条目 | 现行诊断 |
 | --- | --- | --- | --- |
@@ -142,9 +159,16 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `generic-constraints::largestOfRows` | 1 | L13 | 同上 |
 | `recursive-unite-tree::treeSum` | 1 | L14 | SMIR007 return 操作数 Unit vs i64 |
 | `recursive-unite-tree::treeDepth` | 1 | L14 | 同上 |
+| `trait-default-impl::simpleTotal` | 1 | L15 | `unresolved call sample.total` 无方法候选 |
+| `trait-default-impl::weightedTotal` | 1 | L15 | 同上 |
+| `result-propagation::chainSuccess` | 1 | L16 | CAN010 终结符操作数不是 SSA 值 |
+| `result-propagation::chainDivisionByZero` | 1 | L16 | 同上 |
+| `result-propagation::chainNestedFail` | 1 | L16 | 同上 |
+| `result-propagation::chainNegativeInput` | 1 | L16 | 同上 |
+| `enum-variant-argument::inlineVariant` | 1 | L17 | `unresolved call Fail` 作用域内无同名可调用 |
 
 按条目汇总：L1 3 条、L2 2 条、L3 1 条、L4 2 条、L5 3 条、L6 1 条、L7 4 条、L8 3 条、L9 1 条、
-L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
+L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 条、L17 1 条，合计 36 条。
 
 说明：`iterator-terminal` 是模块级构建失败，`EnumerateIterator::next` 的元组类型不匹配先拒绝
 整个模块，三个用例都无法进入用例级判定，因此 `foldSum` / `anyAll` 不再单独归因 L1。L1 仍由
@@ -314,6 +338,8 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
 - 附带：`case Ordering.Greater:` 限定写法报 `Missing match arm body`，目前只能写裸变体名。
 - 与 L2 的关系（假设，未证实）：`option-match` 历史症状是「匹配 `Some` 却返回 `0`」，形态与
   「块形分支赋值丢失」一致；但该场景当前停在 CAN010 构建拒绝，无法用运行值验证，暂不合并条目。
+- 归属：本条目已转编译器线（`nyar-vm.rs`）。`scenes/generic-constraints` 保留为**回归锁**：
+  修复后 `largestValue` / `largestOfRows` 应转绿，且不得为了变绿改动场景写法。
 
 ### L14 递归 unite 的 `match` 分支提前 `return` 触发 SMIR007
 
@@ -327,6 +353,44 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
 - 附带解析缺口：位置载荷写法 `unite Node { Empty Leaf(i64) Branch(Node, Node) }` 会报
   `Unexpected expression kind: Type`。本场景改用 `[constructor]` + 具名字段后才通过解析，
   随后停在 SMIR007。位置载荷递归 `unite` 目前不可写，建议在后续批次里单独确认是否值得编号。
+
+### L15 trait 默认体成员不能在实现体上按方法调用
+
+- 分类：编译器（trait 成员解析 / `valkyrie.hir.unresolved_call`）
+- 最小复现：`scenes/trait-default-impl/scene.v` 的 `simple_total` / `weighted_total`：
+  `trait Scorer { micro base(self): i64  micro bonus(self): i64 { ... }  micro total(self): i64 { ... } }`，
+  `imply Simple: Scorer` 只实现必实现成员 `base`，默认体 `bonus` / `total` 未在实现体重写，
+  随后调用 `sample.total()`
+- 证据：``unresolved call `sample.total` in simple_total: no method candidate named `total` exists for receiver type `Nominal(ItemId(3))` ``
+- 对照：`scenes/trait-required-call`（同样的 `structure` + `imply`，只调用必实现成员 `base`）2 例全过，
+  说明 `imply` 本身与必实现成员注册正常，失败点是默认体成员未进入实现体的方法集合。
+- 影响：trait 默认方法（含跨成员调用 `self.base()`）整体不可用，迫使每个实现体重复默认逻辑。
+- 场景保留为回归锁：修复后两例应转绿，不得为变绿把 `total` 展开到每个实现体。
+
+### L16 两层 `Result` 传播 + 早退触发 CAN010
+
+- 分类：编译器（canonical MIR）
+- 最小复现：`scenes/result-propagation/scene.v` 的 `checked_chain`：
+  外层块形 `match checked_div(a, b)`，`Fine` 分支内再套一层块形 `match checked_div(first, c)`，
+  四个分支各自 `return Fine(...)` / `return Fail(...)`，函数尾部另有兜底 `return Fail(3)`
+- 证据：`(CAN010): 终结符操作数不是 SSA 值`，构建阶段拒绝，四个用例均未进入运行值比对
+- 与 L2 的关系：诊断同为 CAN010，但触发形态不同。L2 是 `Option` 匹配分支对外层 `mut` 变量赋值，
+  本条是嵌套块形 `match` + 分支 `return` + `Result` 构造，故独立编号。两者是否同一 canonical MIR
+  缺陷，需编译器线在修复时确认；在确认前不合并条目，也不因其中一条修复就改判另一条。
+- 对照：单层 `match` 的 `scenes/result-plain`（`Result<i64, i64>` + `fold`）通过，
+  说明 `Result` 本身与标量错误载荷可用，失败点在嵌套传播形态。
+
+### L17 `enums` 裸变体不能直接作为调用实参
+
+- 分类：编译器（HIR 调用解析 / 变体构造器作用域）
+- 最小复现：`scenes/enum-variant-argument/scene.v` 的 `inline_variant`：
+  `let outcome: Result<i64, MathError> = Fail(DivisionByZero)`
+- 证据：``unresolved call `Fail` in inline_variant: no callable with this name is in scope``
+- 对照（临时探针已删除，未入库）：同一模块改成先绑定
+  `let error: MathError = DivisionByZero`，再 `let outcome: Result<i64, MathError> = Fail(error)`，
+  构建通过。因此缺口在「裸变体表达式直接作实参」，不是 `Result`/`enums` 或 `Fail` 本身。
+- 与 L15 的关系：都是 unresolved call，但 L15 是接收者方法集合缺失，本条是调用实参位置的变体构造，
+  归因不同，不合并。
 
 ## 第一批（数据结构）观察
 
