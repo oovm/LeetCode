@@ -1,0 +1,7 @@
+{
+    "id": "memoized-dp",
+    "cases": [
+        { "export": "memoizedFibonacci", "expected": 1548008755920, "note": "fib(60)" },
+        { "export": "memoizedGridPaths", "expected": 35345263800, "note": "20 × 20 网格路径数" }
+    ]
+}

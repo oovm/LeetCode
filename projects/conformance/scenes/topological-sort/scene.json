@@ -1,0 +1,7 @@
+{
+    "id": "topological-sort",
+    "cases": [
+        { "export": "topologicalOrderCode", "expected": 51234, "note": "队列顺序 0,5,1,2,3,4" },
+        { "export": "topologicalCycleDetected", "expected": -1, "note": "有环必须返回 -1" }
+    ]
+}

@@ -1,0 +1,7 @@
+{
+    "id": "kmp",
+    "cases": [
+        { "export": "kmpFirstIndex", "expected": 6, "note": "abcaby 首次出现在下标 6" },
+        { "export": "kmpOccurrenceCount", "expected": 4, "note": "aaaaa 中重叠的 aa 共 4 处" }
+    ]
+}

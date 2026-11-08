@@ -1,0 +1,7 @@
+{
+    "id": "backtracking-in-place",
+    "cases": [
+        { "export": "nQueensCount", "expected": 92, "note": "8 皇后 92 解" },
+        { "export": "nQueensSmallCount", "expected": 4, "note": "6 皇后 4 解" }
+    ]
+}

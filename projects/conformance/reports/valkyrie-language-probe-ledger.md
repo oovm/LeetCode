@@ -16,7 +16,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：27 场景 / 58 用例，37 过、21 红（构建拒绝 19、运行断言失败 2）。
+当前：33 场景 / 70 用例，47 过、23 红（构建拒绝 21、运行断言失败 2）。
 
 | 场景 | 用例 | 状态 | 覆盖点 |
 | --- | --- | --- | --- |
@@ -47,14 +47,22 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `min-heap-kth` | 2 | 过 | 数组最小堆的 `sift_up` / `sift_down`、大小为 k 的堆求第 k 大 |
 | `interval-merge` | 2 | 过 | `structure` 区间 + `quick_sort` 显式比较器 + 相邻区间合并 |
 | `segment-tree` | 2 | 过 | 递归 `mut` 结构体建树、区间求和查询、单点更新 |
+| `kmp` | 2 | 过 | 码位序列上的前缀函数、首次出现下标、重叠出现计数 |
+| `topological-sort` | 2 | 过 | `ArrayList<ArrayList<i64>>` 邻接表原地追加、Kahn 队列、有环返回 -1 |
+| `dijkstra` | 2 | 红（构建拒绝） | `BinaryHeap<Frontier>` + `new_by` 比较器、弛豫与陈旧项跳过（L11） |
+| `backtracking-in-place` | 2 | 过 | 棋盘原位标记与撤销、递归 `mut` 结构体、N 皇后计数 |
+| `memoized-dp` | 2 | 过 | `HashMap` 记忆化的递归斐波那契与网格路径 |
+| `big-int` | 2 | 过 | 十进制串逐位加减、进位/借位、超 i64 量级结果的位数与数位和 |
 
-## 对账：46 用例 → 58 用例
+## 对账：46 用例 → 当前 70 用例
 
 上一批口径：21 场景 / 46 用例，25 过、21 红（构建拒绝 19、运行断言失败 2）。
-本批新增 6 场景 / 12 用例，全过。当前全量重跑（`pnpm --filter @leetcode/conformance scenes`）：
-**27 场景 / 58 用例，37 过、21 红（构建拒绝 19、运行断言失败 2）**。
+第一批新增 6 场景 / 12 用例，全过。第二批新增 6 场景 / 12 用例，10 过、2 红
+（`scenes/dijkstra` 两例，属新增的 L11）。累计 25 + 12 + 10 = 47 过。
+当前全量重跑（`pnpm --filter @leetcode/conformance scenes`）：
+**33 场景 / 70 用例，47 过、23 红（构建拒绝 21、运行断言失败 2）**。
 
-- **没有红翻绿用例**。25 + 12 = 37，与当前重跑一致。
+- **没有红翻绿用例**，两批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47。
 - 之前回报的「45 过 / 11 红」是账目错误，不作数。它沿用了 `8596d3daa` 记下的「35 过 / 11 红」口径，
   又漏算了本批新增：35 + 12 应为 47，我误写成 45。两处都错，本账以当前重跑为准。
 - `8596d3daa` 记为已关闭的 10 个用例在当前工具链上仍按原诊断失败，因此重新计红：
@@ -69,7 +77,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
   `scenes/option-match-nonempty` 现在都报 CAN010 构建拒绝。L1–L10 正文与标题保持原样，
   状态以本节和场景表为准。
 
-### 21 条红与 L 条目的对应
+### 23 条红与 L 条目的对应
 
 | 场景::用例 | 数量 | L 条目 | 现行诊断 |
 | --- | --- | --- | --- |
@@ -94,9 +102,11 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `result-utf8-payload::resultFoldUtf8` | 1 | L6 | SMIR006 sum 构造合同不一致 |
 | `text-indexing::astralChecksum` | 1 | L9 | 星平面字符截断到 16 位 |
 | `integer-boundaries::overflowTrap` | 1 | L10 | i64 加法越界静默回绕 |
+| `dijkstra::dijkstraDistances` | 1 | L11 | CAN058 `BinaryHeap` 聚合实例布局 |
+| `dijkstra::dijkstraUnreachable` | 1 | L11 | 同上 |
 
-按条目汇总：L1 5 条、L2 2 条、L3 1 条、L4 2 条、L5 3 条、L6 1 条、L7 4 条、L8 1 条、L9 1 条、L10 1 条，
-合计 21 条。
+按条目汇总：L1 5 条、L2 2 条、L3 1 条、L4 2 条、L5 3 条、L6 1 条、L7 4 条、L8 1 条、L9 1 条、
+L10 1 条、L11 2 条，合计 23 条。
 
 ## 缺口
 
@@ -195,6 +205,16 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 - 最小复现：`scenes/integer-boundaries/scene.v` 的 `overflowTrap`（`9223372036854775807 + 1`）
 - 证据：期望可观察拒绝，实得 `-9223372036854775808`
 - 说明：若语言合同是「溢出 panic / 可检测」，这里应为 trap；若是 wrapping 语义，则合同需明示。
+
+### L11 `BinaryHeap` 泛型实例无法生成实例级布局
+
+- 分类：编译器（canonical / 聚合实例布局）
+- 最小复现：`scenes/dijkstra/scene.v` 的 `dijkstra`：
+  `let mut frontier: BinaryHeap<Frontier> = BinaryHeap::new_by(cmp_frontier)`
+- 证据：`(CAN058)` 聚合实例 `std.collection.BinaryHeap` 无法按已冻结声明生成实例级布局
+- 坐标补充：`valkyrie.v/projects/std/source/collection/BinaryHeap.v` 的 `class BinaryHeap<T>` 与 `new_by`
+- 说明：同一场景里的图结构、`Edge` / `Frontier` 结构体与 `BinaryHeap::push` 调用都不单独报错，失败点是
+  `BinaryHeap<Frontier>` 这个泛型实例本身。按理想写法应保留 `BinaryHeap`，不改为手写堆来绕开。
 
 ## 第一批（数据结构）观察
 

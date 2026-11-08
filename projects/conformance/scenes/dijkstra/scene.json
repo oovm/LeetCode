@@ -1,0 +1,7 @@
+{
+    "id": "dijkstra",
+    "cases": [
+        { "export": "dijkstraDistances", "expected": 7413, "note": "距离 3 / 1 / 4 / 7" },
+        { "export": "dijkstraUnreachable", "expected": -1, "note": "节点 5 不可达" }
+    ]
+}

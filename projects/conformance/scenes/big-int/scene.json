@@ -1,0 +1,7 @@
+{
+    "id": "big-int",
+    "cases": [
+        { "export": "bigAddReport", "expected": 2118, "note": "21 位，和为 18" },
+        { "export": "bigSubtractReport", "expected": 2180, "note": "20 位，和为 180" }
+    ]
+}
