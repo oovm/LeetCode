@@ -1,0 +1,7 @@
+{
+    "id": "interval-merge",
+    "cases": [
+        { "export": "mergedIntervalCount", "expected": 3, "note": "[1,6] [8,10] [15,18]" },
+        { "export": "mergedTotalLength", "expected": 10, "note": "5 + 2 + 3" }
+    ]
+}

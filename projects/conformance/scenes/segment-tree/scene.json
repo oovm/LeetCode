@@ -1,0 +1,7 @@
+{
+    "id": "segment-tree",
+    "cases": [
+        { "export": "segmentRangeSum", "expected": 370, "note": "总和 35，[2,4] 区间和 20" },
+        { "export": "segmentPointUpdate", "expected": 38, "note": "下标 3 由 7 改为 10" }
+    ]
+}

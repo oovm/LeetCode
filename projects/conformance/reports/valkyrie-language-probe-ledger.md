@@ -16,7 +16,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：21 场景 / 46 用例，35 过、11 红（构建拒绝 8、运行断言失败 3）。
+当前：27 场景 / 58 用例，45 过、11 红（构建拒绝 8、运行断言失败 3）。
 
 | 场景 | 用例 | 状态 | 覆盖点 |
 | --- | --- | --- | --- |
@@ -41,6 +41,12 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `result-utf8-payload` | 1 | 红（构建拒绝） | `Result<i64, utf8>` 的构造与 `fold` |
 | `integer-boundaries` | 6 | 5 过 / 1 红（运行值错） | i64 边界位模式、i64→i32 截断、除法向零截断、i32 边界提升、加法越界 |
 | `struct-literal` | 1 | 过 | 具名字段结构体字面量 |
+| `lru-cache` | 2 | 过 | `HashMap<i64, i64>` 槽位 + 平行数组双向链表、`⁅i⁆` 读与 `set_cardinal` 写、容量淘汰 |
+| `union-find` | 2 | 过 | 父指针 + 按深度合并 + 两遍路径压缩、`mut` 结构体跨辅助函数传递 |
+| `trie` | 2 | 过 | `utf8` 字符迭代建 Trie、`节点 × 26` 扁平子表、前缀计数与精确计数 |
+| `min-heap-kth` | 2 | 过 | 数组最小堆的 `sift_up` / `sift_down`、大小为 k 的堆求第 k 大 |
+| `interval-merge` | 2 | 过 | `structure` 区间 + `quick_sort` 显式比较器 + 相邻区间合并 |
+| `segment-tree` | 2 | 过 | 递归 `mut` 结构体建树、区间求和查询、单点更新 |
 
 ## 缺口
 
@@ -139,3 +145,14 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 - 最小复现：`scenes/integer-boundaries/scene.v` 的 `overflowTrap`（`9223372036854775807 + 1`）
 - 证据：期望可观察拒绝，实得 `-9223372036854775808`
 - 说明：若语言合同是「溢出 panic / 可检测」，这里应为 trap；若是 wrapping 语义，则合同需明示。
+
+## 第一批（数据结构）观察
+
+本批 6 个场景 12 个用例全过，未新增缺口。以下两点曾疑似缺口，核对标准库源码后确认是既有 API 合同，
+本账不为其新增 L 编号，以免将来重报：
+
+- `ArrayList.at(usize)` 与 `get(isize)` 是 **1 基序数**，`at(0)` 越界结构化失败、`get(0)` 返回 `None`。
+  0 基随机访问走 `⁅i⁆` 与 `set_cardinal`，`scenes/lru-cache` 即用该路径。
+  坐标：`valkyrie.v/projects/std/source/collection/ArrayList.v` 的 `micro at` / `micro get`。
+- `HashMap::new()` 不是零参构造，签名是 `HashMap::new(capacity: usize)`，本批场景均按容量构造。
+  坐标：`valkyrie.v/projects/std/source/collection/hashed/HashMap.v`。

@@ -1,0 +1,7 @@
+{
+    "id": "trie",
+    "cases": [
+        { "export": "triePrefixCount", "expected": 3, "note": "car / cart / carbon 都经过 ca" },
+        { "export": "trieExactCount", "expected": 3, "note": "cat 插入 3 次" }
+    ]
+}

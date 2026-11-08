@@ -1,0 +1,7 @@
+{
+    "id": "min-heap-kth",
+    "cases": [
+        { "export": "heapSortChecksum", "expected": 123589, "note": "逐个弹出得到 1 2 3 5 8 9" },
+        { "export": "kthLargestValue", "expected": 5, "note": "数组中第 2 大是 5" }
+    ]
+}

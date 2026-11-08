@@ -1,0 +1,7 @@
+{
+    "id": "union-find",
+    "cases": [
+        { "export": "unionFindComponents", "expected": 2, "note": "两条链合并后剩 2 个分量" },
+        { "export": "unionFindCompressed", "expected": 21, "note": "根 1，压缩后 2 与 3 的父指针都是 1" }
+    ]
+}

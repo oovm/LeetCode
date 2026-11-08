@@ -1,0 +1,7 @@
+{
+    "id": "lru-cache",
+    "cases": [
+        { "export": "lruEvicted", "expected": -1, "note": "容量 2 时 2 被淘汰" },
+        { "export": "lruSurvivors", "expected": 31, "note": "3 与 1 都在" }
+    ]
+}
