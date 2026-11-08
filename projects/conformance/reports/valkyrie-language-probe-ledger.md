@@ -16,7 +16,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：46 场景 / 100 用例，64 过、36 红（构建拒绝 32、运行断言失败 4）。这些数字与全表状态只对下面这套工具链成立。
+当前：52 场景 / 122 用例，78 过、44 红（构建拒绝 40、运行断言失败 4）。这些数字与全表状态只对下面这套工具链成立。
 
 ### 状态出处
 
@@ -26,7 +26,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | 编译器源码边界 | 构建时刻之前最后一条提交 `350d49c3`（2026-11-07 05:46:58），之后第一条 `d7c65e6b`（07:37:59），实际 rev 落在这两者之间，无法自证。**`nyar-vm.rs` 当前 HEAD `d4ad6ce4`（2026-11-08 16:20:26）晚于该 binding，不能当作本次编译器 rev** | `git log --before/--after` 与 binding mtime |
 | 标准库 | `valkyrie.v@9016ae49e609131d876745710dd9b5cb6522856b`，短标识 `s9016ae49` | `git rev-parse HEAD`，`std` 子目录无改动 |
 | 装配与运行器 | `@nyar/valkyrie` JS 层 dist 重建于 `2026-11-08 16:14:56`，探针运行器 `scripts/run_v_scenes.ts` | dist 文件 mtime |
-| 本次运行 | `pnpm --filter @leetcode/conformance scenes`，输出 `scenes: 46, cases: 100, pass: 64, fail: 36`，退出码 `1`（有红） | 终端输出，2026-11-08 |
+| 本次运行 | `pnpm --filter @leetcode/conformance scenes`，输出 `scenes: 52, cases: 122, pass: 78, fail: 44`，退出码 `1`（有红） | 终端输出，2026-11-08 |
 
 口径：
 
@@ -89,8 +89,14 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `string-algorithms` | 4 | 过 | c19AB115A / s9016ae49 | 中心扩展最长回文（ASCII/BMP）、一维压缩表的编辑距离 |
 | `result-propagation` | 4 | 红（构建拒绝） | c19AB115A / s9016ae49 | 两层 `Result` 传播 + 早退（L16） |
 | `enum-variant-argument` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | `enums` 裸变体直接作为构造器实参（L17） |
+| `struct-equal-hash` | 4 | 红（构建拒绝） | c19AB115A / s9016ae49 | 自定义 `imply Equal` / `Hash` 的 `structure` 作 `HashMap` / `HashSet` 键（L18） |
+| `custom-error-chain` | 4 | 红（构建拒绝） | c19AB115A / s9016ae49 | 三层自定义 `unite` 错误链、位置构造器与 `Result` 传播（L7） |
+| `text-index-boundaries` | 6 | 过 | c19AB115A / s9016ae49 | 空串、空模式、单字节、星平面切片边界、`index_of` 重叠匹配 |
+| `matrix-rotation` | 2 | 过 | c19AB115A / s9016ae49 | `ArrayList<ArrayList<i64>>` 二维矩阵、原地顺时针旋转、对角线 |
+| `greedy-interval-scheduling` | 3 | 过 | c19AB115A / s9016ae49 | 区间结构体 + 显式结束时间比较器 + 贪心不相交选择 |
+| `bit-subset-enumeration` | 3 | 过 | c19AB115A / s9016ae49 | `bit_and` 掩码枚举子集、`count_ones` 汇总、移位计数 |
 
-## 对账：46 用例 → 当前 100 用例
+## 对账：46 用例 → 当前 122 用例
 
 上一批口径：21 场景 / 46 用例，25 过、21 红（构建拒绝 19、运行断言失败 2）。
 第一批新增 6 场景 / 12 用例，全过。第二批新增 6 场景 / 12 用例，10 过、2 红
@@ -98,12 +104,14 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 （`iterator-long-chain` 2 例属 L12，`generic-constraints` 2 例属 L13，`recursive-unite-tree` 2 例属 L14）。
 第四批新增 8 场景 / 19 用例，12 过、7 红（`trait-default-impl` 2 例属 L15，
 `result-propagation` 4 例属 L16，`enum-variant-argument` 1 例属 L17）。
-累计 25 + 12 + 10 + 5 + 12 = 64 过。
+第五批新增 6 场景 / 22 用例，14 过、8 红（`struct-equal-hash` 4 例属 L18，
+`custom-error-chain` 4 例属 L7）。
+累计 25 + 12 + 10 + 5 + 12 + 14 = 78 过。
 当前全量重跑（`pnpm --filter @leetcode/conformance scenes`）：
-**46 场景 / 100 用例，64 过、36 红（构建拒绝 32、运行断言失败 4）**。
+**52 场景 / 122 用例，78 过、44 红（构建拒绝 40、运行断言失败 4）**。
 
-- **没有红翻绿用例**，四批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
-  第三批再 +5 = 52，第四批再 +12 = 64。
+- **没有红翻绿用例**，五批新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
+  第三批再 +5 = 52，第四批再 +12 = 64，第五批再 +14 = 78。
 - 之前回报的「45 过 / 11 红」是账目错误，不作数。它沿用了 `8596d3daa` 记下的「35 过 / 11 红」口径，
   又漏算了本批新增：35 + 12 应为 47，我误写成 45。两处都错，本账以当前重跑为准。
 - `8596d3daa` 记为已关闭的 10 个用例在当前工具链上仍按原诊断失败，因此重新计红：
@@ -126,7 +134,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 - L2 标题里的「CAN010 已关闭」同样没有 rev 依据，改判未验证；本次两个 `option-match` 场景仍停在 CAN010。
 - L3 / L4 / L5 / L7 正文的「状态」行已同步改为「未验证」，原有诊断与坐标保留不改。
 
-### 36 条红与 L 条目的对应
+### 44 条红与 L 条目的对应
 
 | 场景::用例 | 数量 | L 条目 | 现行诊断 |
 | --- | --- | --- | --- |
@@ -166,9 +174,17 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `result-propagation::chainNestedFail` | 1 | L16 | 同上 |
 | `result-propagation::chainNegativeInput` | 1 | L16 | 同上 |
 | `enum-variant-argument::inlineVariant` | 1 | L17 | `unresolved call Fail` 作用域内无同名可调用 |
+| `struct-equal-hash::pointMapLookup` | 1 | L18 | trait witness 缺少实例 |
+| `struct-equal-hash::pointMapReplace` | 1 | L18 | 同上 |
+| `struct-equal-hash::pointSetSize` | 1 | L18 | 同上 |
+| `struct-equal-hash::pointSetContains` | 1 | L18 | 同上 |
+| `custom-error-chain::chainSuccess` | 1 | L7 | 布局 `std.diagnostic.Diagnostic` 合同冲突 |
+| `custom-error-chain::chainParseFail` | 1 | L7 | 同上 |
+| `custom-error-chain::chainRangeFail` | 1 | L7 | 同上 |
+| `custom-error-chain::chainIoFail` | 1 | L7 | 同上 |
 
-按条目汇总：L1 3 条、L2 2 条、L3 1 条、L4 2 条、L5 3 条、L6 1 条、L7 4 条、L8 3 条、L9 1 条、
-L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 条、L17 1 条，合计 36 条。
+按条目汇总：L1 3 条、L2 2 条、L3 1 条、L4 2 条、L5 3 条、L6 1 条、L7 8 条、L8 3 条、L9 1 条、
+L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 条、L17 1 条、L18 4 条，合计 44 条。
 
 说明：`iterator-terminal` 是模块级构建失败，`EnumerateIterator::next` 的元组类型不匹配先拒绝
 整个模块，三个用例都无法进入用例级判定，因此 `foldSum` / `anyAll` 不再单独归因 L1。L1 仍由
@@ -244,6 +260,9 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 �
   `scenes/result-errors`（`unwrap_or` / `unwrap_or_else`）、
   `scenes/result-fold`（`fold`）、`scenes/result-match`（`match`）
 - 证据：`布局 `std.diagnostic.Diagnostic` 合同冲突`
+- 补充坐标：`scenes/custom-error-chain` 四例（三层 `unite` 错误链，位置构造器 `Parse(1)` / `Range(2)` / `Io(3)`）
+  在 `c19AB115A / s9016ae49` 下同样命中本条布局冲突。临时探针（已删除）另确认：`unite` 变体的正确构造写法是
+  位置构造器；写成结构体字面量 `Range { code: 2 }` 会报 `unresolved constructor`，属探针写法问题，不记为缺口。
 - 对照：`scenes/result-plain`（`Result<i64, i64>` + `fold`）通过，因此触发条件在
   「自定义联合作为 `Result` 的失败载荷」，不是 `Result` 本身。
 - 根因：`LayoutId` 是模块本地编号。依赖模块与 consumer 各自为同一 declaration 产出一份
@@ -391,6 +410,22 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 �
   构建通过。因此缺口在「裸变体表达式直接作实参」，不是 `Result`/`enums` 或 `Fail` 本身。
 - 与 L15 的关系：都是 unresolved call，但 L15 是接收者方法集合缺失，本条是调用实参位置的变体构造，
   归因不同，不合并。
+
+### L18 自定义 `Equal` / `Hash` 类型不能实例化哈希容器
+
+- 分类：编译器（trait witness 实例化 / 后端私有计划）
+- 最小复现：`scenes/struct-equal-hash/scene.v` 的 `point_map_lookup` 与 `point_set_size`：
+  `structure Point` 同时 `imply Point: std::operator::Equal`（`==` / `!=`）与
+  `imply Point: std::collection::Hash`（`hash`），随后使用 `HashMap<Point, i64>` / `HashSet<Point>`
+- 证据：`后端私有计划生产失败: trait witness 缺少 declaration=ItemId(153) self_type=TypeId(18) 的实例: trait=ItemId(65)`
+- 对照（临时探针已删除，未入库）：
+  - 同一 `Point` 直接调用 `a == b` 与 `p.hash()`，构建通过并返回值正确；
+  - 单独使用 `HashMap<Point, i64>` 复红；
+  - 单独使用 `HashSet<Point>` 复红；
+  - `HashMap<i64, i64>` 的 `lru-cache` / `memoized-dp` 通过。
+  因此缺口在「自定义 trait 实现到容器泛型实例的 witness 物化」，不是 `imply` 写法本身。
+- 影响：自定义类型不能作为 `HashMap` / `HashSet` 键，用户态值对象只能退回标量键间接寻址。
+- 场景保留为回归锁：修复后四例应转绿，不得为变绿把 `Point` 拆成标量键。
 
 ## 第一批（数据结构）观察
 
