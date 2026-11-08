@@ -1,0 +1,8 @@
+{
+    "id": "prefix-sum-binary-search",
+    "cases": [
+        { "export": "rangeSum", "expected": 19, "note": "prefix[6]-prefix[2]" },
+        { "export": "lowerBoundIndex", "expected": 3, "note": "7 的位次" },
+        { "export": "prefixReachLength", "expected": 4, "note": "前 4 项和为 10" }
+    ]
+}

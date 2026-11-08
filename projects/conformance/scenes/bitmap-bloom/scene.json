@@ -1,0 +1,8 @@
+{
+    "id": "bitmap-bloom",
+    "cases": [
+        { "export": "bitmapSetTest", "expected": 6304, "note": "命中校验 63、popcount 4" },
+        { "export": "bitmapToggle", "expected": 1, "note": "清零与异或翻转后仅剩 62 号位" },
+        { "export": "bloomMembership", "expected": 6, "note": "apple 4 + banana 2，grape 不命中" }
+    ]
+}

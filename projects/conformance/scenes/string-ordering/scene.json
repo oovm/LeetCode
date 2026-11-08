@@ -1,0 +1,9 @@
+{
+    "id": "string-ordering",
+    "cases": [
+        { "export": "prefixCompare", "expected": -1, "note": "短前缀在前" },
+        { "export": "unicodeCompare", "expected": -1, "note": "é(U+00E9) < 中(U+4E2D)" },
+        { "export": "sortedUnicodePosition", "expected": 2, "note": "a,z,é,中,🙂 的 0 基位次" },
+        { "export": "sortedCodePointSum", "expected": 149043, "note": "97+122+233+20013+128578" }
+    ]
+}

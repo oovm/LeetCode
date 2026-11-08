@@ -1,0 +1,8 @@
+{
+    "id": "recursive-descent-parser",
+    "cases": [
+        { "export": "evaluatePrecedence", "expected": 7, "note": "1+2*3" },
+        { "export": "evaluateParenNegate", "expected": 13, "note": "(1+2)*3 - -4" },
+        { "export": "evaluateIntegerDivision", "expected": 3, "note": "10/3 向零截断" }
+    ]
+}
