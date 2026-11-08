@@ -1,0 +1,7 @@
+{
+    "id": "struct-value-semantics",
+    "cases": [
+        { "export": "assignmentSharing", "expected": 99, "note": "实测：赋值后改写 b 使 a.x 同步变 9（共享存储）；语义未冻结，只记录不判定" },
+        { "export": "helperMutationVisible", "expected": 12, "note": "mut 形参改写对调用方可见：4 + 5 + 3 = 12" }
+    ]
+}

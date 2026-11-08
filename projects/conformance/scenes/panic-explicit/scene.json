@@ -1,0 +1,1 @@
+{ "id": "panic-explicit", "cases": [{ "export": "explicitPanic", "expected": "trap", "note": "显式 panic 应可观察拒绝" }] }

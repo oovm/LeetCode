@@ -1,0 +1,9 @@
+{
+    "id": "text-split-once",
+    "cases": [
+        { "export": "splitOnceParts", "expected": 11, "note": "head / tail 内容" },
+        { "export": "splitOnceKeepsRest", "expected": 31, "note": "只切第一处，tail 长度 3 且含 '=' 于下标 1" },
+        { "export": "splitOnceMissing", "expected": -1, "note": "无分隔符返回 None" },
+        { "export": "splitWhitespaceCount", "expected": 14, "note": "三段长度 5 + 4 + 5" }
+    ]
+}

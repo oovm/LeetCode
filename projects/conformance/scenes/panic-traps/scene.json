@@ -1,0 +1,8 @@
+{
+    "id": "panic-traps",
+    "cases": [
+        { "export": "divisionByZero", "expected": "trap", "note": "除零必须可观察拒绝" },
+        { "export": "unwrapNone", "expected": "trap", "note": "None 上 unwrap 必须可观察拒绝" },
+        { "export": "unwrapSome", "expected": 42, "note": "对照：Some 上 unwrap 正常返回" }
+    ]
+}

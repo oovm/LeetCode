@@ -1,0 +1,8 @@
+{
+    "id": "char-classification",
+    "cases": [
+        { "export": "classCounts", "expected": 2352, "note": "数字 2、字母 3、字母数字 5、元音 2" },
+        { "export": "nonAsciiClasses", "expected": 10, "note": "é 不算 ASCII 字母，只有 '3' 计入" },
+        { "export": "charFromCode", "expected": 1, "note": "char::from(65) 等于 \"A\" 的首字符" }
+    ]
+}

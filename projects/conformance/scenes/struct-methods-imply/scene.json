@@ -1,0 +1,8 @@
+{
+    "id": "struct-methods-imply",
+    "cases": [
+        { "export": "counterAverage", "expected": 43, "note": "均值 4、步数 3" },
+        { "export": "counterMutationVisible", "expected": 30, "note": "mut 方法改写字段" },
+        { "export": "nestedFieldUpdate", "expected": 80, "note": "嵌套字段改写前 7 后 10：7 * 10 + 10 = 80" }
+    ]
+}

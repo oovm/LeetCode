@@ -1,0 +1,9 @@
+{
+    "id": "text-case-transforms",
+    "cases": [
+        { "export": "upperChecksum", "expected": 372, "note": "HELLO 码位和" },
+        { "export": "lowerChecksum", "expected": 532, "note": "hello 码位和" },
+        { "export": "replaceKeepsShape", "expected": 51, "note": "替换后长度 5、首字符 a" },
+        { "export": "affixChecks", "expected": 111, "note": "前缀、包含、后缀三项成立" }
+    ]
+}
