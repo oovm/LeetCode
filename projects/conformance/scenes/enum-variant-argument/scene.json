@@ -1,0 +1,6 @@
+{
+    "id": "enum-variant-argument",
+    "cases": [
+        { "export": "inlineVariant", "expected": -1, "note": "`enums` 裸变体直接作为构造器实参" }
+    ]
+}

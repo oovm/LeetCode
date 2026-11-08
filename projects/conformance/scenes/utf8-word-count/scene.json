@@ -1,0 +1,7 @@
+{
+    "id": "utf8-word-count",
+    "cases": [
+        { "export": "topWordCount", "expected": 302, "note": "`the` 与 `quick` 的词频编码" },
+        { "export": "distinctWords", "expected": 3, "note": "去重后的词数" }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "id": "string-algorithms",
+    "cases": [
+        { "export": "longestPalindromeAscii", "expected": 6, "note": "`abaxyzzyxf` 的最长回文长度" },
+        { "export": "longestPalindromeBmp", "expected": 5, "note": "BMP 码位上回文与切片一致" },
+        { "export": "editDistanceKitten", "expected": 3, "note": "`kitten` → `sitting`" },
+        { "export": "editDistanceLawn", "expected": 2, "note": "`flaw` → `lawn`" }
+    ]
+}

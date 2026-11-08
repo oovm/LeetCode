@@ -1,0 +1,7 @@
+{
+    "id": "enum-state-machine",
+    "cases": [
+        { "export": "phaseCycleCode", "expected": 107, "note": "七次推进后的相位码与步数" },
+        { "export": "phaseStepsCode", "expected": 30, "note": "回到 Idle 所需步数" }
+    ]
+}

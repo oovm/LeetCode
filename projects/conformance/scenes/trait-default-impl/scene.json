@@ -1,0 +1,7 @@
+{
+    "id": "trait-default-impl",
+    "cases": [
+        { "export": "simpleTotal", "expected": 21, "note": "trait 默认体 + 自定义结构实现" },
+        { "export": "weightedTotal", "expected": 18, "note": "覆盖默认体 `bonus` 的实现" }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "id": "result-propagation",
+    "cases": [
+        { "export": "chainSuccess", "expected": 10, "note": "两层 `Fine` 传播后的结果" },
+        { "export": "chainDivisionByZero", "expected": -1, "note": "外层的 `Fail` 早退" },
+        { "export": "chainNestedFail", "expected": -1, "note": "内层的 `Fail` 回传" },
+        { "export": "chainNegativeInput", "expected": -2, "note": "另一种错误码的传播" }
+    ]
+}

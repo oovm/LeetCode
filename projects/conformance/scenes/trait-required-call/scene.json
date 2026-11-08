@@ -1,0 +1,7 @@
+{
+    "id": "trait-required-call",
+    "cases": [
+        { "export": "simpleBase", "expected": 20, "note": "结构体实现 trait 必实现成员后按方法调用" },
+        { "export": "weightedBase", "expected": 15, "note": "同上，换一个实现体" }
+    ]
+}

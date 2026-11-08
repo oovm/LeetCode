@@ -1,0 +1,7 @@
+{
+    "id": "mutual-recursion",
+    "cases": [
+        { "export": "hofstadterTenCode", "expected": 66, "note": "F(10) 与 M(10) 的编码" },
+        { "export": "hofstadterSevenCode", "expected": 45, "note": "F(7) 与 M(7) 的编码" }
+    ]
+}
