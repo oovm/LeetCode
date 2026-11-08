@@ -16,7 +16,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：27 场景 / 58 用例，45 过、11 红（构建拒绝 8、运行断言失败 3）。
+当前：27 场景 / 58 用例，37 过、21 红（构建拒绝 19、运行断言失败 2）。
 
 | 场景 | 用例 | 状态 | 覆盖点 |
 | --- | --- | --- | --- |
@@ -27,16 +27,16 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `iterator-terminal` | 3 | 红（构建拒绝） | 适配器后接 `fold` / `any` / `all`、`enumerate().count()` |
 | `higher-order` | 2 | 过 | 命名函数作为比较器与一元函数值 |
 | `sorting-comparison` | 2 | 过 | `sort` 类型合同入口、`quick_sort` 显式比较器 |
-| `type-ordering` | 2 | 过 | `structure` + `imply Equal/Comparable` 后 `sort`、稳定性 |
-| `type-ordering-player` | 1 | 过 | 同上，用仓库既有 solver 的 `Player` 写法复核 |
+| `type-ordering` | 2 | 红（构建拒绝） | `structure` + `imply Equal/Comparable` 后 `sort`、稳定性 |
+| `type-ordering-player` | 1 | 红（构建拒绝） | 同上，用仓库既有 solver 的 `Player` 写法复核 |
 | `bit-operations` | 6 | 过 | `bit_and` / `bit_or` / `bit_xor`、`count_ones`、`leading_zeros` / `trailing_zeros`、移位、异或交换 |
-| `pattern-matching` | 1 | 过 | 扁平带载荷 `unite`（零元/单字段/双字段）与 `match` |
-| `option-match` | 1 | 红（运行值错） | `Option` 的 `Some` / `None` 匹配（`None` 分支为空） |
+| `pattern-matching` | 1 | 红（构建拒绝） | 扁平带载荷 `unite`（零元/单字段/双字段）与 `match` |
+| `option-match` | 1 | 红（构建拒绝） | `Option` 的 `Some` / `None` 匹配（`None` 分支为空） |
 | `option-match-nonempty` | 1 | 红（构建拒绝） | 对照：`None` 分支非空，排除空块因素 |
-| `recursive-union` | 2 | 过 | 递归带载荷 `unite`（`Expr`）与递归求值 |
-| `result-errors` | 2 | 过 | `Result<i64, <自定义 unite>>` 的 `unwrap_or` / `unwrap_or_else` |
-| `result-fold` | 1 | 过 | 同上，`fold` 两个方向处理函数 |
-| `result-match` | 1 | 过 | `Result` / `Option` 三态匹配 |
+| `recursive-union` | 2 | 红（构建拒绝） | 递归带载荷 `unite`（`Expr`）与递归求值 |
+| `result-errors` | 2 | 红（构建拒绝） | `Result<i64, <自定义 unite>>` 的 `unwrap_or` / `unwrap_or_else` |
+| `result-fold` | 1 | 红（构建拒绝） | 同上，`fold` 两个方向处理函数 |
+| `result-match` | 1 | 红（构建拒绝） | `Result` / `Option` 三态匹配 |
 | `result-plain` | 1 | 过 | 对照：`Result<i64, i64>` 的 `fold` |
 | `result-utf8-payload` | 1 | 红（构建拒绝） | `Result<i64, utf8>` 的构造与 `fold` |
 | `integer-boundaries` | 6 | 5 过 / 1 红（运行值错） | i64 边界位模式、i64→i32 截断、除法向零截断、i32 边界提升、加法越界 |
@@ -47,6 +47,56 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `min-heap-kth` | 2 | 过 | 数组最小堆的 `sift_up` / `sift_down`、大小为 k 的堆求第 k 大 |
 | `interval-merge` | 2 | 过 | `structure` 区间 + `quick_sort` 显式比较器 + 相邻区间合并 |
 | `segment-tree` | 2 | 过 | 递归 `mut` 结构体建树、区间求和查询、单点更新 |
+
+## 对账：46 用例 → 58 用例
+
+上一批口径：21 场景 / 46 用例，25 过、21 红（构建拒绝 19、运行断言失败 2）。
+本批新增 6 场景 / 12 用例，全过。当前全量重跑（`pnpm --filter @leetcode/conformance scenes`）：
+**27 场景 / 58 用例，37 过、21 红（构建拒绝 19、运行断言失败 2）**。
+
+- **没有红翻绿用例**。25 + 12 = 37，与当前重跑一致。
+- 之前回报的「45 过 / 11 红」是账目错误，不作数。它沿用了 `8596d3daa` 记下的「35 过 / 11 红」口径，
+  又漏算了本批新增：35 + 12 应为 47，我误写成 45。两处都错，本账以当前重跑为准。
+- `8596d3daa` 记为已关闭的 10 个用例在当前工具链上仍按原诊断失败，因此重新计红：
+  `scenes/pattern-matching` 仍报 CAN015，`scenes/recursive-union` 仍报 CAN054，
+  `scenes/type-ordering` 与 `scenes/type-ordering-player` 仍报
+  `construct missing HIR callable contract`，`scenes/result-errors` / `result-fold` / `result-match`
+  仍报布局 `std.diagnostic.Diagnostic` 合同冲突。
+  这 10 条不属于本批新增，也不存在可归因的「编译器修复」：看起来 `8596d3daa` 那次运行用的是
+  带布局身份合并的编译器，当前工作区链接到的编译器没有该行为。需要按仓归属到 `nyar-vm.rs` 的
+  link 阶段确认，探针仓不做任何消除红点的改动。
+- 同样，L2 标题里的「CAN010 已关闭」在当前工具链不成立：`scenes/option-match` 与
+  `scenes/option-match-nonempty` 现在都报 CAN010 构建拒绝。L1–L10 正文与标题保持原样，
+  状态以本节和场景表为准。
+
+### 21 条红与 L 条目的对应
+
+| 场景::用例 | 数量 | L 条目 | 现行诊断 |
+| --- | --- | --- | --- |
+| `iterator-pipeline::iteratorPipelineTotal` | 1 | L1 | `unresolved call` `<fn value>.collect` |
+| `iterator-pipeline::iteratorFoldTotal` | 1 | L1 | 同上 |
+| `iterator-map-collect::mapCollectTotal` | 1 | L1 | 同上 |
+| `iterator-terminal::foldSum` | 1 | L1 | 同上 |
+| `iterator-terminal::anyAll` | 1 | L1 | 同上 |
+| `iterator-terminal::enumerateCount` | 1 | L8 | `EnumerateIterator::next` 匿名元组与具名元组不兼容 |
+| `option-match::optionMatch` | 1 | L2 | CAN010 终结符操作数不是 SSA 值 |
+| `option-match-nonempty::optionMatchNonempty` | 1 | L2 | CAN010 |
+| `pattern-matching::flatUnion` | 1 | L3 | CAN015 `TerminatorUseBeforeDefinition` |
+| `recursive-union::evalNegated` | 1 | L4 | CAN054 递归 payload 未实例化 |
+| `recursive-union::evalNested` | 1 | L4 | CAN054 |
+| `type-ordering::sortRankChecksum` | 1 | L5 | `construct missing HIR callable contract` |
+| `type-ordering::stableSerialOrder` | 1 | L5 | 同上 |
+| `type-ordering-player::sortPlayerChecksum` | 1 | L5 | 同上 |
+| `result-errors::safeDivFine` | 1 | L7 | 布局 `std.diagnostic.Diagnostic` 合同冲突 |
+| `result-errors::unwrapOrElse` | 1 | L7 | 同上 |
+| `result-fold::resultFold` | 1 | L7 | 同上 |
+| `result-match::triState` | 1 | L7 | 同上 |
+| `result-utf8-payload::resultFoldUtf8` | 1 | L6 | SMIR006 sum 构造合同不一致 |
+| `text-indexing::astralChecksum` | 1 | L9 | 星平面字符截断到 16 位 |
+| `integer-boundaries::overflowTrap` | 1 | L10 | i64 加法越界静默回绕 |
+
+按条目汇总：L1 5 条、L2 2 条、L3 1 条、L4 2 条、L5 3 条、L6 1 条、L7 4 条、L8 1 条、L9 1 条、L10 1 条，
+合计 21 条。
 
 ## 缺口
 
