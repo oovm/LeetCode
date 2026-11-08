@@ -262,6 +262,9 @@ L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条，合计 29 条。
   detail=return operand type differs from function return type (actual=Unit, expected=Integer64)`
 - 与既有条目关系：与 L4 同属递归 payload，但 L4 停在 CAN054，本条目已通过 CAN 并停在 SMIR，
   阶段不同，独立编号。`scenes/recursive-union` 的同一形态仍停在 CAN054（L4）
+- 附带解析缺口：位置载荷写法 `unite Node { Empty Leaf(i64) Branch(Node, Node) }` 会报
+  `Unexpected expression kind: Type`。本场景改用 `[constructor]` + 具名字段后才通过解析，
+  随后停在 SMIR007。位置载荷递归 `unite` 目前不可写，建议在后续批次里单独确认是否值得编号。
 
 ## 第一批（数据结构）观察
 
