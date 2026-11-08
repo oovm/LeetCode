@@ -282,8 +282,10 @@ L20 3 条，合计 55 条。L19、L21 已由临时探针证实但未入库场景
 - 说明：`scenes/struct-literal` 证明结构体字面量本身可用；同一写法出现在
   `projects/problems/best-team-with-no-conflicts/solvers/valkyrie/solution.v`，
   该题 V 解当前应同样红，需编译器线确认是否回归。
-- 状态：未验证。原「已关闭」与「布局合并修复」归因均未记录 rev，撤回；
-  本次 `c19AB115A / s9016ae49` 仍报 `construct missing HIR callable contract`。
+- 状态：**已验证关闭**（编译器 rev `eedcf673`，2026-11-09）。按该 rev 从 `wt/legion-text-carrier` 重建
+  `valkyrie-napi` 并经 `VALKYRIE_NATIVE` 绑定复跑这两场景 3 例，`3/3 PASS`；同一命令换回 2026-11-07 的平台 addon
+  （早于修复 `4a2ddafa`）为 `0/3` 全红。因此修复确为 `4a2ddafa` 的「按 declaration 身份合并布局、重映射本地
+  `LayoutId`」。此前 `c19AB115A / s9016ae49` 的复红记录保留为旧工具链证据，不覆盖。
 
 ### L6 SMIR006：`Result<i64, utf8>` 的 sum 构造合同不一致
 
@@ -460,6 +462,15 @@ L20 3 条，合计 55 条。L19、L21 已由临时探针证实但未入库场景
   构建通过。因此缺口在「裸变体表达式直接作实参」，不是 `Result`/`enums` 或 `Fail` 本身。
 - 与 L15 的关系：都是 unresolved call，但 L15 是接收者方法集合缺失，本条是调用实参位置的变体构造，
   归因不同，不合并。
+- 修复（编译器 `eedcf673`，父 `2be0cdc0`，已推 `origin/dev`）：`hir/overload/resolve_call/resolve.rs`
+  的实参遍历改用 `resolve_argument_expr`，对裸变体做「去掉外层期望类型」重试并改写成带 `resolved` 的
+  `Construct`，不再把 `Variable` 留给下游。重试只对实参位置开启，普通表达式位置行为不变
+  （`case None: return None` 等既有 fail-open 形态不受影响）。
+- 回归锁：`bare_variant_argument_gets_constructor_identity`
+  （`rusty-valkyrie/tests/frontend/hir/variant_auto_constructor_call_tests.rs`），断言 `Bad` 与
+  `DivisionByZero` 均带 resolved 调用。
+- 端到端复核（2026-11-09，编译器 `eedcf673`）：用该 rev 重建的 addon 跑本场景，
+  `enum-variant-argument::inlineVariant` PASS（`1/1`）。
 
 ### L18 自定义 `Equal` / `Hash` 类型不能实例化哈希容器
 
@@ -493,9 +504,19 @@ L20 3 条，合计 55 条。L19、L21 已由临时探针证实但未入库场景
   - 导入 std：`Option` 写 `Some { value: 2 }`、`Result<i64,i64>` 写 `Fine { value: 2 }` 均构建通过并返回值正确；
   - 导入 `std.data::DataSource` 写 `Text { text, digest }` 复红，但 `Text` 同时是 `std.text` 的公开名，
     该例可能是名字冲突而非本条，不作为本缺口证据。
-  因此缺口在「同包用户自定义 `unite` 的具名字段构造器未注册」，不是 record-style 声明写法、也不是 std 导入本身。
+  据此怀疑缺口在「同包用户自定义 `unite` 的具名字段构造器未注册」，而非 record-style 声明写法或 std 导入本身；该判定待下条复核。
 - 影响：用户态变体只能用位置构造器，字段顺序一变就要全量改调用点，record-style 声明退化为无意义文档。
+- 复核（2026-11-09，父 rev `2be0cdc0`，修复 rev `eedcf673`）：上述最小复现
+  （`unite Code { [constructor] Span { code: i64 } }` + `let value: Code = Span { code: 2 }`）在无 std 同名冲突的
+  frontend fixture 中**通过**（`same_package_unite_named_construction_with_annotation_resolves`），未复现
+  `unresolved_constructor`。`Span` 同时是 `std::diagnostic` 的公开 `structure Span`，与本条已排除的 `Text`
+  属同一类同名冲突，因此现有证据不足以支撑「同包用户自定义 `unite` 的具名字段构造器未注册」。
+- 状态：待探针复核。拿到探针 rev/场景后，在带 std 导入的包内用非冲突变体名复跑；复现成立前不改判，
+  也不删 `hir/lowering/contract_validation.rs:390-398` 的 fail-closed 门禁、不删 `hir/lowering/expr_lowering.rs:597`
+  的 `resolved: None` 占位（两者同属闭合段，需先让「已解析但无身份」在类型上不可构造）。
 - 待办：未入库场景；编译器线修复后应补一个回归场景，锁 `Span { code: 2 }` 与 `Span(2)` 等价。
+  具名构造的 `FieldInit.field_id` 已在 `resolve_expr_calls_at` 按声明身份回填
+  （新增 `AggregateFieldIndex::fields_by_declaration`），回归断言 `field_id: Some(_)`。
 
 ### L20 嵌套循环的 `if/else` 分支改写集合与循环标志触发 SMIR007
 
