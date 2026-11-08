@@ -1,0 +1,6 @@
+{
+    "id": "float32-display",
+    "cases": [
+        { "export": "float32DisplayChecksum", "expected": 148, "note": "f32 Display 1.5" }
+    ]
+}

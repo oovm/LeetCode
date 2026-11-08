@@ -1,0 +1,11 @@
+{
+    "id": "config-table-report",
+    "cases": [
+        { "export": "configEntryCount", "expected": 3, "note": "注释与空行跳过" },
+        { "export": "configValueSum", "expected": 356, "note": "1 + 22 + 333" },
+        { "export": "configTableChecksum", "expected": 2191, "note": "右对齐三行表格" },
+        { "export": "configFirstLineWidth", "expected": 11, "note": "a + 7 空格 + : 1" },
+        { "export": "integerFormatChecksum", "expected": 477, "note": "i64 Display" },
+        { "export": "float64FormatChecksum", "expected": 609, "note": "f64 Display 0.1 与 1234.5678" }
+    ]
+}

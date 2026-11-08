@@ -1,0 +1,7 @@
+{
+    "id": "enum-equality",
+    "cases": [
+        { "export": "sameEnumEqual", "expected": 1, "note": "同变体相等" },
+        { "export": "differentEnumEqual", "expected": 0, "note": "不同变体不等" }
+    ]
+}

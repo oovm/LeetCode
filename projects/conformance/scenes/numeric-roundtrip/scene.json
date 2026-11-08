@@ -1,0 +1,12 @@
+{
+    "id": "numeric-roundtrip",
+    "cases": [
+        { "export": "integerRoundTripChecksum", "expected": 477, "note": "123456789" },
+        { "export": "integerMinRoundTripChecksum", "expected": 1046, "note": "MIN 往返" },
+        { "export": "integerMaxFormatChecksum", "expected": 1000, "note": "MAX 显示" },
+        { "export": "integerBadDigitCode", "expected": -2, "note": "12x 位置 2" },
+        { "export": "integerOverflowProbe", "expected": -9223372036854775808, "note": "实测 MAX+1，语义未冻结，只记录" },
+        { "export": "float64BitsRoundTrip", "expected": 4607182418800017408, "note": "0x3ff0000000000000" },
+        { "export": "negativeZeroBits", "expected": -9223372036854775808, "note": "0x8000000000000000" }
+    ]
+}

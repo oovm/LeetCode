@@ -1,0 +1,10 @@
+{
+    "id": "json-roundtrip",
+    "cases": [
+        { "export": "jsonArrayLength", "expected": 3, "note": "[1,2,3]" },
+        { "export": "jsonRoundTripChecksum", "expected": 1514, "note": "对象含数组与布尔" },
+        { "export": "jsonEscapedChecksum", "expected": 420, "note": "引号与反斜杠转义" },
+        { "export": "jsonMalformedCode", "expected": -1, "note": "未闭合数组走错误链" },
+        { "export": "jsonNullChecksum", "expected": 443, "note": "null 往返" }
+    ]
+}

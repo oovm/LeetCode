@@ -1,0 +1,6 @@
+{
+    "id": "string-escape-quote",
+    "cases": [
+        { "export": "escapedQuoteLength", "expected": 3, "note": "a\"b 三码位" }
+    ]
+}

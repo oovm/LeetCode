@@ -1,0 +1,11 @@
+{
+    "id": "regex-nfa",
+    "cases": [
+        { "export": "nfaLiteralMatch", "expected": 1, "note": "abc in xabcx" },
+        { "export": "nfaStarMatch", "expected": 1, "note": "ab*c 匹配 ac" },
+        { "export": "nfaDotMatch", "expected": 1, "note": "a.c 匹配 abc" },
+        { "export": "nfaNoMatch", "expected": 0, "note": "abc 不匹配 abd" },
+        { "export": "nfaScanCount", "expected": 3, "note": "a* 在 aa 上三个起点" },
+        { "export": "nfaDanglingCode", "expected": -1, "note": "悬挂闭包错误链" }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "id": "csv-tsv-parser",
+    "cases": [
+        { "export": "csvFieldCount", "expected": 4, "note": "a,b,,c 含空字段" },
+        { "export": "csvQuotedCommaChecksum", "expected": 407, "note": "引号内逗号不分割" },
+        { "export": "csvEscapedQuoteChecksum", "expected": 963, "note": "he said \"hi\"" },
+        { "export": "csvCrLfFieldCount", "expected": 4, "note": "CRLF 行界" },
+        { "export": "csvUnterminatedCode", "expected": -1, "note": "未闭合引号走错误链" },
+        { "export": "csvUnexpectedQuoteCode", "expected": -2, "note": "字段中途引号" }
+    ]
+}

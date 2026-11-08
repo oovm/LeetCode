@@ -1,0 +1,9 @@
+{
+    "id": "state-machine-dispatch",
+    "cases": [
+        { "export": "fsmFinalStateCode", "expected": 3, "note": "生命周期落 Done" },
+        { "export": "fsmTransitionCount", "expected": 4, "note": "六事件中四次真实转移" },
+        { "export": "commandResultValue", "expected": 9, "note": "分发器含 Reset" },
+        { "export": "eventQueueDrained", "expected": 4, "note": "FIFO 出队条数" }
+    ]
+}
