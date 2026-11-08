@@ -1,0 +1,8 @@
+{
+    "id": "kmp-automaton",
+    "cases": [
+        { "export": "automatonMatchCount", "expected": 3, "note": "aba 在 abababa 的重叠出现" },
+        { "export": "automatonFirstIndex", "expected": 0, "note": "首次出现" },
+        { "export": "patternPeriod", "expected": 2, "note": "3 - pi[2]" }
+    ]
+}

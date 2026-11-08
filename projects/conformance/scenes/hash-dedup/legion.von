@@ -1,0 +1,13 @@
+{
+    name: "probe-hash-dedup",
+    version: "0.1.0",
+    artifact: "library",
+    dependencies: {
+        std: {
+            version: "workspace"
+        }
+    },
+    build: [
+        { target: "wasm" }
+    ]
+}

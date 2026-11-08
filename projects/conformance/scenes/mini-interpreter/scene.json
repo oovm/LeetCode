@@ -1,0 +1,9 @@
+{
+    "id": "mini-interpreter",
+    "cases": [
+        { "export": "evaluatePrecedence", "expected": 9, "note": "(1+2)*3" },
+        { "export": "evaluateNested", "expected": 7, "note": "1+2*3" },
+        { "export": "divisionByZeroCode", "expected": -1, "note": "10/(5-5) → DivisionByZero" },
+        { "export": "iteratorTokenTotal", "expected": 6, "note": "词元 value 经 map/collect 汇总" }
+    ]
+}

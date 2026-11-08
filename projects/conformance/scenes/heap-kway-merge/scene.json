@@ -1,0 +1,8 @@
+{
+    "id": "heap-kway-merge",
+    "cases": [
+        { "export": "kwayMergeChecksum", "expected": 123456789, "note": "1..9 顺序拼接" },
+        { "export": "kwayMergeLast", "expected": 9, "note": "归并末尾" },
+        { "export": "meldHeapsThird", "expected": 3, "note": "两堆合并后第三小" }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "id": "hash-dedup",
+    "cases": [
+        { "export": "bucketUniqueCount", "expected": 4, "note": "(1,2) 重复一次" },
+        { "export": "bucketLookup", "expected": 1, "note": "命中与未命中区分" },
+        { "export": "sortedUniqueCount", "expected": 4, "note": "排序后相邻去重" },
+        { "export": "sortedUniqueChecksum", "expected": 79, "note": "12+13+22+32" }
+    ]
+}

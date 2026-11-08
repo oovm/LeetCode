@@ -1,0 +1,8 @@
+{
+    "id": "dp-interval-knapsack",
+    "cases": [
+        { "export": "matrixChainCost", "expected": 18000, "note": "10*20*30 + 10*30*40" },
+        { "export": "knapsack01Best", "expected": 5, "note": "容量 4 只能取重量 3" },
+        { "export": "knapsackUnboundedBest", "expected": 6, "note": "两件重量 2，价值 3+3" }
+    ]
+}
