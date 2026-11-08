@@ -16,7 +16,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：73 场景 / 199 用例，112 过、87 红（构建拒绝 84、运行断言失败 3）。这些数字与全表状态只对下面这套工具链成立。
+当前：81 场景 / 235 用例，127 过、108 红（构建拒绝 105、运行断言失败 3）。这些数字与全表状态只对下面这套工具链成立。
 
 ### 状态出处
 
@@ -116,8 +116,16 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `numeric-roundtrip` | 7 | 红（构建拒绝） | c19AB115A / s9016ae49 | 整数解析/显示往返、MIN/MAX、溢出探针、f64 位重解释与负零（L26，位重解释另见 L25） |
 | `string-escape-quote` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | 字符串 `\"` 转义（L22） |
 | `enum-equality` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | 用户 `enums` 的 `==`（L23） |
+| `integer-narrow-casts` | 6 | 过 | c19AB115A / s9016ae49 | `i8` / `u8` / `i16` / `u16` / `u32` 截断与符号扩展、负值按模取低字节 |
+| `integer-shift-widths` | 6 | 5 过 / 1 红（运行值错） | c19AB115A / s9016ae49 | 算术与逻辑右移、`i8` 移位饱和与越界归零、`1 << 62`、`1 << 64` 实测 |
+| `integer-division-signs` | 5 | 红（构建拒绝） | c19AB115A / s9016ae49 | 商向零截断、余数随被除数、`u32` 无符号除法、`i32` MIN / -1 探针（L28） |
+| `container-linked-list` | 3 | 红（构建拒绝） | c19AB115A / s9016ae49 | 双端建表、两端出队、长度与 `contains`（L32，std 源码自身不可编译） |
+| `container-deque-stack-queue` | 3 | 过 | c19AB115A / s9016ae49 | `Deque` 两端进出、`Stack` 后进先出、`Queue` 先进先出与排空 |
+| `container-ring-buffer` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | 容量边界拒绝、尾指针回绕（L33） |
+| `option-map-chain` | 6 | 红（构建拒绝） | c19AB115A / s9016ae49 | `Option::map` / `and_then` / `filter` 组合子（L29，守卫匹配触发 CAN015） |
+| `option-alternatives` | 5 | 红（构建拒绝） | c19AB115A / s9016ae49 | `or_else` / `unwrap_or_else` / `flatten` 与嵌套 `Option` 构造（L30、L31） |
 
-## 对账：46 用例 → 当前 199 用例
+## 对账：46 用例 → 当前 235 用例
 
 上一批口径：21 场景 / 46 用例，25 过、21 红（构建拒绝 19、运行断言失败 2）。
 第一批新增 6 场景 / 12 用例，全过。第二批新增 6 场景 / 12 用例，10 过、2 红
@@ -134,15 +142,24 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 `csv-tsv-parser` 6 例归 L7，`json-roundtrip` 5 例与 `regex-nfa` 6 例归 L21，
 `config-table-report` 6 例与 `float32-display` 1 例归 L24，`numeric-roundtrip` 7 例归 L26，
 `string-escape-quote` 1 例归 L22，`enum-equality` 2 例归 L23）。
-累计 25 + 12 + 10 + 5 + 12 + 14 + 12 + 16 + 4 = 110 过。
+第九批新增 8 场景 / 36 用例，15 过、21 红（`integer-narrow-casts` 6 例与
+`integer-shift-widths` 6 例全过、`container-deque-stack-queue` 3 例全过；
+`integer-division-signs` 5 例归 L28，`container-linked-list` 3 例归 L32，
+`container-ring-buffer` 2 例归 L33，`option-map-chain` 6 例归 L29，`option-alternatives` 5 例归 L31）。
+累计 25 + 12 + 10 + 5 + 12 + 14 + 12 + 16 + 4 + 15 = 125 过。
 另有两例既有运行断言红在本批重跑中转绿（`text-indexing::astralChecksum`、
 `string-ordering::sortedCodePointSum`），见下方「红点观测变化」与 L9。
-当前全量重跑（`pnpm --filter @leetcode/conformance scenes`）：
-**73 场景 / 199 用例，112 过、87 红（构建拒绝 84、运行断言失败 3）**。
+当前口径（第八批全量重跑 + 第九批批内重跑）：
+**81 场景 / 235 用例，127 过、108 红（构建拒绝 105、运行断言失败 3）**。
 
 - **前七批没有红翻绿用例**，新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
   第三批再 +5 = 52，第四批再 +12 = 64，第五批再 +14 = 78，第六批再 +12 = 90，第七批再 +16 = 106。
-  第八批新增 4 过，另有 2 例既有红转绿，累计 106 + 4 + 2 = 112（见下一条）。
+  第八批新增 4 过，另有 2 例既有红转绿，累计 106 + 4 + 2 = 112；第九批再 +15 = 127。
+- **第九批只跑了本批 8 个场景**（`scenes <8 个 id>`），没有重跑全表；上一批 73 场景的状态沿用第八批
+  全量结果。第九批没有改动任何既有场景源码或期望值，因此沿用成立；下次全量重跑时需复核。
+- 第九批唯一的运行值错来自自己写错的期望值：`integer-shift-widths::shiftLeftInRange` 的 `1 << 62`
+  初版在 `scene.json` 里写成 JSON 数值，超过 `2^53` 被 `JSON.parse` 截成 `4611686018427388000`。
+  改成十进制字符串后复跑通过，不是编译器缺陷，也不入库为缺口。
 - 第七批的 4 条红全部来自 `mini-interpreter` 的模块级构建失败，构建停在首个错误（L1 的 `.collect`）。
   去掉迭代器出口后的临时探针（已删除）显示后续还有两层阻塞：`match` 绑定载荷进 `Fine` 触发 L21，
   以及 `Result<Expr, <自定义 unite>>` 撞 L7 布局冲突。因此该场景的 4 条红只按首个错误归 L1，
@@ -173,7 +190,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 - L2 标题里的「CAN010 已关闭」同样没有 rev 依据，改判未验证；本次两个 `option-match` 场景仍停在 CAN010。
 - L3 / L4 / L5 / L7 正文的「状态」行已同步改为「未验证」，原有诊断与坐标保留不改。
 
-### 87 条红与 L 条目的对应
+### 108 条红与 L 条目的对应
 
 | 场景::用例 | 数量 | L 条目 | 现行诊断 |
 | --- | --- | --- | --- |
@@ -264,11 +281,33 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `string-escape-quote::escapedQuoteLength` | 1 | L22 | `unterminated quoted literal` |
 | `enum-equality::sameEnumEqual` | 1 | L23 | `unresolved call` `infix ==`：4 个候选均不匹配 |
 | `enum-equality::differentEnumEqual` | 1 | L23 | 同上（模块级构建失败，未进入用例级判定） |
+| `integer-division-signs::truncationTowardZero` | 1 | L28 | `let` 初始化 `i32` vs `i64`（`i32` / `i64` 除法并存） |
+| `integer-division-signs::negativeBothSigns` | 1 | L28 | 同上（模块级构建失败，未进入用例级判定） |
+| `integer-division-signs::negativeRemainder` | 1 | L28 | 同上 |
+| `integer-division-signs::unsignedDivision` | 1 | L28 | 同上 |
+| `integer-division-signs::i32MinDivMinusOneProbe` | 1 | L28 | 同上；MIN / -1 溢出行为尚无实测值 |
+| `container-linked-list::linkedListFrontBack` | 1 | L32 | `unresolved constructor LinkedListNode`（std 源码） |
+| `container-linked-list::linkedListMembership` | 1 | L32 | 同上（模块级构建失败，未进入用例级判定） |
+| `container-linked-list::linkedListDrainOrder` | 1 | L32 | 同上 |
+| `container-ring-buffer::ringBufferBounds` | 1 | L33 | `unresolved call data.push`：`T.default` 不可解析 |
+| `container-ring-buffer::ringBufferWrapAround` | 1 | L33 | 同上（模块级构建失败，未进入用例级判定） |
+| `option-map-chain::optionMapSquare` | 1 | L29 | CAN015 `UseBeforeDefinition`（`filter` 的守卫匹配拖垮模块） |
+| `option-map-chain::optionMapNone` | 1 | L29 | 同上（单独探针已验证 `map` 可用） |
+| `option-map-chain::optionAndThenChain` | 1 | L29 | 同上（单独探针已验证 `and_then` 可用） |
+| `option-map-chain::optionAndThenMiss` | 1 | L29 | 同上 |
+| `option-map-chain::optionFilterKeeps` | 1 | L29 | 守卫匹配 `case Some(value) if predicate(value):` |
+| `option-map-chain::optionFilterDrops` | 1 | L29 | 同上 |
+| `option-alternatives::optionOrElseRecovers` | 1 | L31 | `unresolved call Some`（`Some(None)` 拖垮模块） |
+| `option-alternatives::optionOrElseSkips` | 1 | L31 | 同上（单独探针已验证 `or_else` 可用） |
+| `option-alternatives::optionFlattenInner` | 1 | L31 | 同上；解 L31 后另见 L30 |
+| `option-alternatives::optionFlattenMissing` | 1 | L31 | `Some(None)` 内层类型无法推断 |
+| `option-alternatives::optionUnwrapOrElse` | 1 | L31 | 同上（单独探针已验证 `unwrap_or_else` 可用） |
 
 按条目汇总：L1 7 条、L2 2 条、L3 1 条、L4 5 条、L5 3 条、L6 1 条、L7 14 条、L8 3 条、
 L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 条、L17 1 条、L18 4 条、
-L20 3 条、L21 11 条、L22 1 条、L23 2 条、L24 7 条、L26 7 条，合计 87 条。
-L9 在当前 pin 复跑已无红。L19、L25 只有探针证据，不计红。
+L20 3 条、L21 11 条、L22 1 条、L23 2 条、L24 7 条、L26 7 条、L28 5 条、L29 6 条、L31 5 条、
+L32 3 条、L33 2 条，合计 108 条。
+L9 在当前 pin 复跑已无红。L19、L25、L27、L30 只有探针证据，不计红。
 
 说明：`iterator-terminal` 是模块级构建失败，`EnumerateIterator::next` 的元组类型不匹配先拒绝
 整个模块，三个用例都无法进入用例级判定，因此 `foldSum` / `anyAll` 不再单独归因 L1。L1 仍由
@@ -687,6 +726,92 @@ L9 在当前 pin 复跑已无红。L19、L25 只有探针证据，不计红。
   本条是 wasm 目标侧没有 `f32` 的 primitive 计划。即使 L24 修好，`f32` 值进入 wasm 计算仍会撞本条。
 - 影响：`f32` 目前只能作为类型注记出现，不能进入 wasm 目标的可执行路径。
 - 待决：是否计划让 wasm 目标直接支持 `f32`，或统一要求用户侧以 `f64` 计算。本批不预设结论。
+
+### L28 同一模块内 `i32` 与 `i64` 的除法/取余并存触发 `let` 初始化类型不兼容
+
+- 分类：编译器（operator 实例解析 / 类型检查）
+- 最小复现（临时探针，已删除）：
+  `micro a() -> i64 { let q: i32 = 7 / (0 - 2); return q as i64 }` 与
+  `micro b() -> i64 { let q: i64 = 7 / (0 - 2); return q }` 同模块
+- 证据：`` `let` initializer type `i32` is incompatible with the declared type `i64` ``。
+  该句没有行列坐标，报错指不到具体函数。
+- 对照（同批临时探针，均已删除）：
+  - 只保留 `i64` 除法或只保留 `i32` 除法：通过；
+  - `i64` 除法 + `u32` 除法：通过；
+  - `u32` 除法 + `i32` MIN / -1：通过；
+  - `i32` 除法 + `i64` 除法：失败；`i32` 取余 + `i64` 取余：同样失败；
+  - 把 `-1`、`-2` 提成形参或局部变量不改变结论。
+  因此触发点是「**同一模块内同时出现 `i32` 与 `i64` 宽的 `/` 或 `%`**」，
+  与 MIN 边界值、写不写字面量表达式无关。
+- 影响：`scenes/integer-division-signs` 的五个用例全部停在构建期。该场景保留为回归锁，
+  不为变绿把 `i32` 用例删掉或改宽到 `i64`。
+- 连带：`i32` MIN / -1 的溢出行为本批**未取得实测值**（探针只过了构建，未运行就删除）。
+  待 L28 修复后按 `scenes/integer-division-signs` 的 `i32MinDivMinusOneProbe` 重新观测。
+
+### L29 `match` 分支带守卫时触发 CAN015 use-before-def
+
+- 分类：编译器（canonical MIR 校验）
+- 最小复现（临时探针，已删除）：
+  `let value: Option<i64> = Some(6)` 后
+  `match value { case Some(inner) if inner % 2 == 0: inner else: -1 }`
+- 证据：``(CAN015): canonical MIR 校验失败: UseBeforeDefinition { function: ItemInstanceId(29), value: MirValueId(4) }``
+  三次探针的 `ItemInstanceId` 不同（29 / 33 / 34），`value` 恒为守卫读取的那个位置。
+- 对照（同批探针，均已删除）：同样形状去掉守卫 `case Some(inner): inner` 通过；
+  `Option::map` / `and_then` / `or_else` / `unwrap_or_else` 全部通过。
+- 影响：`valkyrie.v/projects/std/source/types/Option.v` 的 `filter` 正是用守卫实现
+  （`case Some(value) if predicate(value):`），所以 `Option::filter` 在 wasm 目标上不可用；
+  `scenes/option-map-chain` 的三个 `filter` 用例与另外三个 `map` / `and_then` 用例同属一个模块，
+  模块级构建失败后六个用例都未进入用例级判定。场景保留为回归锁。
+
+### L30 `Option::flatten` 在 SMIR 合同处返回泛型 `T` 而非实例化类型
+
+- 分类：标准库（`std.types::Option::flatten`），在 SMIR 合同校验处失败
+- 最小复现（临时探针，已删除）：
+  `let inner: Option<i64> = Some(5 as i64); let nested: Option<Option<i64>> = Some(inner); nested.flatten()`
+- 证据：`function=std::flatten#9, location=block 4 terminator, detail=return operand type differs from function return type (actual=Nominal { ItemId(3)<T[GenericBinderId{ owner: ItemId(3), ordinal: 0 }]> }, expected=Nominal { ItemId(3)<Integer64{ signed: true }> })`
+- 对照：`map` / `and_then` / `or_else` / `unwrap_or_else` 在同类嵌套结构上通过；
+  把内层换成 `None`（`let inner: Option<i64> = None`）仍报同一句，说明与内层取值无关。
+- 解释（未证实）：`flatten` 的 `case Some(value): value` 分支直接把 `Option<T>` 的载荷当返回值，
+  该分支的返回操作数保留了未实例化的 binder，MIR 合同拿它和实例化后的返回类型比对。
+- 影响：`scenes/option-alternatives` 的 `optionFlattenInner` / `optionFlattenMissing` 不可达；
+  `or_else` 与 `unwrap_or_else` 的用例同模块被拖红，但单独探针已证明二者可用。
+
+### L31 嵌套 `Option` 构造不按声明注解收敛内层类型
+
+- 分类：编译器（整数字面量默认类型 / 泛型构造实参推断）
+- 最小复现（临时探针，已删除）：
+  - `let nested: Option<Option<i64>> = Some(Some(5))`
+  - `let nested: Option<Option<i64>> = Some(None)`
+- 证据：
+  - 前者：`` `let` initializer type `Nominal(ItemId(3))<Nominal(ItemId(3))<i32>>` is incompatible with the declared type `Nominal(ItemId(3))<Nominal(ItemId(3))<i64>>` ``；
+  - 后者：``unresolved call `Some` in option_flatten_missing: 1 candidate(s) share the name, but none matches the argument types``。
+- 对照：`Some(Some(5 as i64))` 越过本条（随后停在 L30）；单层 `Some(5)` 按注解收敛为 `Option<i64>` 正常
+  （`scenes/higher-order`、`scenes/option-alternatives` 的其它用例都依赖该路径）。
+- 影响：`scenes/option-alternatives` 的五个用例全部不可达。场景保留理想写法，不改写成 `5 as i64`。
+
+### L32 std `LinkedList` 源码自身不可编译：`LinkedListNode` 构造未解析
+
+- 分类：标准库（`class` 具名字段构造），失败于 `valkyrie.hir.unresolved_constructor`
+- 坐标：`valkyrie.v/projects/std/source/collection/LinkedList.v:36`、`:55`（`push_front` / `push_back` 各两处）
+- 证据：``error[valkyrie.hir.unresolved_constructor]: unresolved constructor `LinkedListNode` in push_front
+  --> source/collection/LinkedList.v:36:39``，共 4 处同根因
+- 描述：`class LinkedListNode<T>` 声明之后，`let node: LinkedListNode<T> = LinkedListNode { value: ..., next: ..., prev: ... }`
+  这个具名构造没有解析到任何构造函数，`<T>` 显式实参也没帮上。
+- 影响：`scenes/container-linked-list` 的三个用例全部构建失败。`Deque` / `Stack` / `Queue`
+  只依赖 `ArrayList`，同批三用例全过，说明不是「std 容器整体不可用」，而是 `class` 具名构造这一层。
+- 待决：这是 std 源码缺陷还是 `class` 构造能力缺口，需编译器线确认；本账不预设。
+
+### L33 无界泛型 `T.default` 在 `RingBuffer::new` 里不可解析
+
+- 分类：标准库（泛型默认值），失败于 `valkyrie.hir.unresolved_call`
+- 坐标：`valkyrie.v/projects/std/source/collection/RingBuffer.v:17` 的 `data.push(T.default)`
+- 证据：``error[valkyrie.hir.unresolved_call]: unresolved call `data.push` in new: 1 candidate(s) share the name,
+  but none matches the argument types``，共 2 处同根因
+- 描述：`RingBuffer<T>` 的 `new(capacity)` 用 `T.default` 预填 `ArrayList<T>`；
+  `T` 没有任何 bound，`T.default` 解析不出具体类型，于是 `ArrayList::push` 的实参类型也不成立。
+- 影响：`scenes/container-ring-buffer` 的两个用例构建失败。
+- 待决：`T.default` 是否需要显式 bound（如 `Default` 类约束）才能用，属产品或 std 合同问题。
+  本条只记「当前写法不可编译」，不判定哪一侧该改。
 
 ## 第一批（数据结构）观察
 
