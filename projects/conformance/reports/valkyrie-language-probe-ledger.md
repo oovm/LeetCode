@@ -16,7 +16,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 
 ## 场景与用例
 
-当前：81 场景 / 235 用例，127 过、108 红（构建拒绝 105、运行断言失败 3）。这些数字与全表状态只对下面这套工具链成立。
+当前：88 场景 / 255 用例，144 过、111 红（构建拒绝 106、运行断言失败 5）。这些数字与全表状态只对下面这套工具链成立。
 
 ### 状态出处
 
@@ -124,8 +124,15 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `container-ring-buffer` | 2 | 红（构建拒绝） | c19AB115A / s9016ae49 | 容量边界拒绝、尾指针回绕（L33） |
 | `option-map-chain` | 6 | 红（构建拒绝） | c19AB115A / s9016ae49 | `Option::map` / `and_then` / `filter` 组合子（L29，守卫匹配触发 CAN015） |
 | `option-alternatives` | 5 | 红（构建拒绝） | c19AB115A / s9016ae49 | `or_else` / `unwrap_or_else` / `flatten` 与嵌套 `Option` 构造（L30、L31） |
+| `text-case-transforms` | 4 | 2 过 / 2 红（运行值错） | c19AB115A / s9016ae49 | `to_upper` / `to_lower`（L34）、`replace` 形状、`starts_with` / `ends_with` / `contains` |
+| `text-split-once` | 4 | 过 | c19AB115A / s9016ae49 | `split_once` 的 `head` / `tail`、无分隔符返回 `None`、`split_whitespace` 段长 |
+| `char-classification` | 3 | 过 | c19AB115A / s9016ae49 | `is_ascii_digit` / `is_ascii_alpha` / `is_ascii_alphanumeric` / `is_ascii_vowel` 计数、非 ASCII 对照、`char::from` |
+| `struct-methods-imply` | 3 | 过 | c19AB115A / s9016ae49 | `structure` + `imply` 的 `Self` 构造、`mut self` 方法改写、嵌套结构体字段读写 |
+| `struct-value-semantics` | 2 | 过 | c19AB115A / s9016ae49 | 赋值共享存储实测、`mut` 形参改写对调用方可见 |
+| `panic-traps` | 3 | 过 | c19AB115A / s9016ae49 | 除零与 `None.unwrap()` 可观察拒绝、`Some.unwrap()` 正常返回 |
+| `panic-explicit` | 1 | 红（构建拒绝） | c19AB115A / s9016ae49 | `panic` 的发散类型（L35） |
 
-## 对账：46 用例 → 当前 235 用例
+## 对账：46 用例 → 当前 255 用例
 
 上一批口径：21 场景 / 46 用例，25 过、21 红（构建拒绝 19、运行断言失败 2）。
 第一批新增 6 场景 / 12 用例，全过。第二批新增 6 场景 / 12 用例，10 过、2 红
@@ -147,19 +154,36 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 `integer-division-signs` 5 例归 L28，`container-linked-list` 3 例归 L32，
 `container-ring-buffer` 2 例归 L33，`option-map-chain` 6 例归 L29，`option-alternatives` 5 例归 L31）。
 累计 25 + 12 + 10 + 5 + 12 + 14 + 12 + 16 + 4 + 15 = 125 过。
+第十批新增 7 场景 / 20 用例，17 过、3 红（`text-split-once` 4 例、`char-classification` 3 例、
+`struct-methods-imply` 3 例、`struct-value-semantics` 2 例、`panic-traps` 3 例全过，
+`text-case-transforms` 另 2 例过；`text-case-transforms` 的 `upperChecksum` / `lowerChecksum` 归 L34，
+`panic-explicit` 1 例归 L35）。
 另有两例既有运行断言红在本批重跑中转绿（`text-indexing::astralChecksum`、
 `string-ordering::sortedCodePointSum`），见下方「红点观测变化」与 L9。
-当前口径（第八批全量重跑 + 第九批批内重跑）：
-**81 场景 / 235 用例，127 过、108 红（构建拒绝 105、运行断言失败 3）**。
+当前口径（第八批全量重跑 + 第九、十批批内重跑）：
+**88 场景 / 255 用例，144 过、111 红（构建拒绝 106、运行断言失败 5）**。
 
 - **前七批没有红翻绿用例**，新增都只做加法：第一批后 25 + 12 = 37，第二批再 +10 = 47，
   第三批再 +5 = 52，第四批再 +12 = 64，第五批再 +14 = 78，第六批再 +12 = 90，第七批再 +16 = 106。
-  第八批新增 4 过，另有 2 例既有红转绿，累计 106 + 4 + 2 = 112；第九批再 +15 = 127。
-- **第九批只跑了本批 8 个场景**（`scenes <8 个 id>`），没有重跑全表；上一批 73 场景的状态沿用第八批
-  全量结果。第九批没有改动任何既有场景源码或期望值，因此沿用成立；下次全量重跑时需复核。
+  第八批新增 4 过，另有 2 例既有红转绿，累计 106 + 4 + 2 = 112；第九批再 +15 = 127；第十批再 +17 = 144。
+- **第九、十批只跑了批内场景**（`scenes <本批 id>`），没有重跑全表；上一批场景的状态沿用第八批
+  全量结果。两批都没有改动任何既有场景源码或期望值，因此沿用成立；下次全量重跑时需复核。
 - 第九批唯一的运行值错来自自己写错的期望值：`integer-shift-widths::shiftLeftInRange` 的 `1 << 62`
   初版在 `scene.json` 里写成 JSON 数值，超过 `2^53` 被 `JSON.parse` 截成 `4611686018427388000`。
   改成十进制字符串后复跑通过，不是编译器缺陷，也不入库为缺口。
+- 第十批有一处同类笔误：`struct-methods-imply::nestedFieldUpdate` 初版期望写成 710，
+  实际表达式是 `before * 10 + width` = 7 * 10 + 10 = 80，改成 80 后通过。同属场景自身错误，不入账。
+
+### 第十批实测的语义（未冻结，只记录）
+
+- **结构体赋值共享存储**：`let a: Point = ...` 后 `let mut b: Point = a; b.x = 9`，
+  读 `a.x` 得到 9（`scenes/struct-value-semantics::assignmentSharing` 实测 99）。
+  语义未冻结，本账不判定是值复制还是引用共享，只记录当前行为。
+- **`mut` 形参改写对调用方可见**：`shift_x(mut point: Point, delta)` 连续两次改写同一实参后
+  调用方读到累计值（4 + 5 + 3 = 12）。这与 `scenes/union-find`、`scenes/segment-tree`
+  既有用法一致，按已成立语义计。
+- **陷阱语义成立**：`10 / 0` 与 `None.unwrap()` 都按 `expected: "trap"` 可观察拒绝，
+  `Some(42).unwrap()` 正常返回 42。因此 `panic` 的失败（L35）是表达式类型问题，不是 trap 机制缺失。
 - 第七批的 4 条红全部来自 `mini-interpreter` 的模块级构建失败，构建停在首个错误（L1 的 `.collect`）。
   去掉迭代器出口后的临时探针（已删除）显示后续还有两层阻塞：`match` 绑定载荷进 `Fine` 触发 L21，
   以及 `Result<Expr, <自定义 unite>>` 撞 L7 布局冲突。因此该场景的 4 条红只按首个错误归 L1，
@@ -190,7 +214,7 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 - L2 标题里的「CAN010 已关闭」同样没有 rev 依据，改判未验证；本次两个 `option-match` 场景仍停在 CAN010。
 - L3 / L4 / L5 / L7 正文的「状态」行已同步改为「未验证」，原有诊断与坐标保留不改。
 
-### 108 条红与 L 条目的对应
+### 111 条红与 L 条目的对应
 
 | 场景::用例 | 数量 | L 条目 | 现行诊断 |
 | --- | --- | --- | --- |
@@ -302,11 +326,14 @@ pnpm --filter @leetcode/conformance scenes text-indexing # 指定场景
 | `option-alternatives::optionFlattenInner` | 1 | L31 | 同上；解 L31 后另见 L30 |
 | `option-alternatives::optionFlattenMissing` | 1 | L31 | `Some(None)` 内层类型无法推断 |
 | `option-alternatives::optionUnwrapOrElse` | 1 | L31 | 同上（单独探针已验证 `unwrap_or_else` 可用） |
+| `text-case-transforms::upperChecksum` | 1 | L34 | `to_upper` 返回原文，实测码位和 500 |
+| `text-case-transforms::lowerChecksum` | 1 | L34 | `to_lower` 返回原文，实测码位和 500 |
+| `panic-explicit::explicitPanic` | 1 | L35 | `panic` 的 return 操作数是 `Unit`，与 `i64` 不符 |
 
 按条目汇总：L1 7 条、L2 2 条、L3 1 条、L4 5 条、L5 3 条、L6 1 条、L7 14 条、L8 3 条、
 L10 1 条、L11 2 条、L12 2 条、L13 2 条、L14 2 条、L15 2 条、L16 4 条、L17 1 条、L18 4 条、
 L20 3 条、L21 11 条、L22 1 条、L23 2 条、L24 7 条、L26 7 条、L28 5 条、L29 6 条、L31 5 条、
-L32 3 条、L33 2 条，合计 108 条。
+L32 3 条、L33 2 条、L34 2 条、L35 1 条，合计 111 条。
 L9 在当前 pin 复跑已无红。L19、L25、L27、L30 只有探针证据，不计红。
 
 说明：`iterator-terminal` 是模块级构建失败，`EnumerateIterator::next` 的元组类型不匹配先拒绝
@@ -812,6 +839,32 @@ L9 在当前 pin 复跑已无红。L19、L25、L27、L30 只有探针证据，�
 - 影响：`scenes/container-ring-buffer` 的两个用例构建失败。
 - 待决：`T.default` 是否需要显式 bound（如 `Default` 类约束）才能用，属产品或 std 合同问题。
   本条只记「当前写法不可编译」，不判定哪一侧该改。
+
+### L34 `std.text::to_upper` / `to_lower` 在 wasm 目标是恒等实现
+
+- 分类：标准库（`[host_contract]` 函数缺少 wasm 侧实现）
+- 坐标：`valkyrie.v/projects/std/source/text/Utf8Text.v:236`（`to_lower`）、`:241`（`to_upper`），
+  两者函数体都是 `return self`，且带 `[host_contract]` 标注
+- 证据：运行时实测——`"Hello".to_upper()` 与 `"Hello".to_lower()` 的码位和都是 500，
+  与原文 `"Hello"` 的码位和一致；期望分别是 `"HELLO"` 的 372 与 `"hello"` 的 532。
+  构建成功，所以这是**运行期语义缺口**，不是构建拒绝。
+- 对照：同文件 `replace` / `split_once` / `split_whitespace` / `starts_with` / `ends_with`
+  在本批全部按文档语义通过。
+- 影响：`scenes/text-case-transforms` 的 `upperChecksum` / `lowerChecksum` 两条运行断言红。
+- 说明：`[host_contract]` 的宿主侧（node binding）是否有真实现，本批没验证；wasm 目标上确定是恒等。
+
+### L35 `panic` 不产生发散类型，在 `-> i64` 函数里报 return 操作数类型不符
+
+- 分类：编译器（`panic` 的返回类型 / 控制流发散）
+- 最小复现（`scenes/panic-explicit`）：
+  `micro explicit_panic() -> i64 { panic("probe panic") }`
+- 证据：``(SMIR007): function=probe.panic_explicit::explicit_panic, location=block 0 terminator,
+  detail=return operand type differs from function return type (actual=Unit, expected=Integer64 { signed: true })``
+- 描述：`panic` 目前被当成普通 `unit` 表达式，`block 0` 的终结符拿 `Unit` 去满足 `i64` 返回；
+  没有把 `panic` 路径标成不可达。
+- 对照：同一批里 `10 / 0` 与 `None.unwrap()` 都能可观察拒绝（`expected: "trap"` 通过），
+  说明陷阱机制本身可用，缺的是 `panic` 表达式的类型与发散标记。
+- 影响：`scenes/panic-explicit` 唯一用例构建拒绝。
 
 ## 第一批（数据结构）观察
 
