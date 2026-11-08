@@ -1,0 +1,7 @@
+{
+    "id": "container-ring-buffer",
+    "cases": [
+        { "export": "ringBufferBounds", "expected": 31, "note": "容量边界：三次成功一次拒绝" },
+        { "export": "ringBufferWrapAround", "expected": 1234, "note": "尾指针回绕后排空顺序" }
+    ]
+}

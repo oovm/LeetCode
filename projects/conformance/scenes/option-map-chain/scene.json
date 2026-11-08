@@ -1,0 +1,11 @@
+{
+    "id": "option-map-chain",
+    "cases": [
+        { "export": "optionMapSquare", "expected": 9, "note": "Some 映射" },
+        { "export": "optionMapNone", "expected": -1, "note": "None 映射保持缺失" },
+        { "export": "optionAndThenChain", "expected": 5, "note": "两次减半" },
+        { "export": "optionAndThenMiss", "expected": -1, "note": "奇数链路提前缺失" },
+        { "export": "optionFilterKeeps", "expected": 7, "note": "过滤保留" },
+        { "export": "optionFilterDrops", "expected": -1, "note": "过滤丢弃" }
+    ]
+}

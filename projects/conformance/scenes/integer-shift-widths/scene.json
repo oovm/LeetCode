@@ -1,0 +1,11 @@
+{
+    "id": "integer-shift-widths",
+    "cases": [
+        { "export": "arithmeticRightShift", "expected": -2, "note": "负数算术右移" },
+        { "export": "unsignedRightShift", "expected": 1, "note": "u64 逻辑右移" },
+        { "export": "i8ShiftRightSaturation", "expected": -1, "note": "i8 右移符号填充" },
+        { "export": "i8ShiftBeyondWidth", "expected": 0, "note": "i8 移位达位宽归零" },
+        { "export": "shiftLeftInRange", "expected": "4611686018427387904", "note": "1 << 62" },
+        { "export": "shiftAtWidthProbe", "expected": 1, "note": "实测记录：i64 左移 64 位，不判定语义" }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "id": "integer-division-signs",
+    "cases": [
+        { "export": "truncationTowardZero", "expected": -29, "note": "正数除以负数" },
+        { "export": "negativeBothSigns", "expected": 29, "note": "双负数相除" },
+        { "export": "negativeRemainder", "expected": -1, "note": "负数取余符号" },
+        { "export": "unsignedDivision", "expected": 1431655765, "note": "u32 无符号除法" },
+        { "export": "i32MinDivMinusOneProbe", "expected": "trap", "note": "实测记录：溢出是否可观察拒绝，不判定语义" }
+    ]
+}

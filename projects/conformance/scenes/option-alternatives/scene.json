@@ -1,0 +1,10 @@
+{
+    "id": "option-alternatives",
+    "cases": [
+        { "export": "optionOrElseRecovers", "expected": 7, "note": "None 走替代" },
+        { "export": "optionOrElseSkips", "expected": 5, "note": "Some 不触发替代" },
+        { "export": "optionFlattenInner", "expected": 5, "note": "嵌套 Some 摊平" },
+        { "export": "optionFlattenMissing", "expected": -1, "note": "内层 None 摊平" },
+        { "export": "optionUnwrapOrElse", "expected": 12, "note": "惰性默认值" }
+    ]
+}

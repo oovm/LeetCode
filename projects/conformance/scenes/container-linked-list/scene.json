@@ -1,0 +1,8 @@
+{
+    "id": "container-linked-list",
+    "cases": [
+        { "export": "linkedListFrontBack", "expected": 31, "note": "两端出队与头查看" },
+        { "export": "linkedListMembership", "expected": 41, "note": "长度与 contains 判定" },
+        { "export": "linkedListDrainOrder", "expected": 123, "note": "头部连续出队顺序" }
+    ]
+}

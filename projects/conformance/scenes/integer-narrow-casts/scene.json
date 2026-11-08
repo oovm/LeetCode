@@ -1,0 +1,11 @@
+{
+    "id": "integer-narrow-casts",
+    "cases": [
+        { "export": "i8WrappingTruncation", "expected": 44, "note": "i64 300 低 8 位" },
+        { "export": "i8SignExtension", "expected": -1, "note": "窄化后符号扩展" },
+        { "export": "u8UnsignedWrap", "expected": 255, "note": "负数按模 256 截断" },
+        { "export": "u16WrappingTruncation", "expected": 4464, "note": "i64 70000 低 16 位" },
+        { "export": "i16WrappingTruncation", "expected": 32767, "note": "-32769 回绕" },
+        { "export": "u32WidenToI64", "expected": 4294967295, "note": "无符号加宽保值" }
+    ]
+}

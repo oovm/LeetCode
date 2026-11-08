@@ -1,0 +1,8 @@
+{
+    "id": "container-deque-stack-queue",
+    "cases": [
+        { "export": "dequeBothEnds", "expected": 21, "note": "双端队列两端进出" },
+        { "export": "stackLifo", "expected": 3242, "note": "栈后进先出与长度" },
+        { "export": "queueFifo", "expected": 1239, "note": "队列先进先出与排空求和" }
+    ]
+}
