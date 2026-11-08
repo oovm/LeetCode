@@ -3,6 +3,7 @@ import { join } from 'node:path';
 
 import { integerResultText, isUnsafeIntegerLiteralString } from './integer-literal.ts';
 import { CONFORMANCE_ROOT } from './paths.ts';
+import { hasSemanticValidator, validateSemantic } from './semantic-validators.ts';
 
 /**
  * 用例结果比较模式。`strict` 为 JSON 精确相等（整数按精确十进制文本），其余模式只放宽
@@ -136,14 +137,23 @@ export function canonicalForm(value: unknown, mode: CompareMode): string {
     throw new Error(`未知比较模式 ${String(mode)}`);
 }
 
+/** `validator-required` 需要题面语义校验器，必须携带题目 id 与原始实参。 */
+export type MatchContext = { problemId: string; args: Record<string, unknown> };
+
 /** 按模式比较实际值与期望值。`strict` 保持既有 JSON 精确相等语义。 */
-export function resultsMatch(actual: unknown, expected: unknown, mode: CompareMode): boolean {
+export function resultsMatch(actual: unknown, expected: unknown, mode: CompareMode, context?: MatchContext): boolean {
     if (mode === 'strict') {
         try {
             return JSON.stringify(actual) === JSON.stringify(expected);
         } catch {
             return false;
         }
+    }
+    if (mode === 'validator-required') {
+        if (!context) {
+            throw new Error('validator-required 模式缺少题面语义校验所需的 problemId/args');
+        }
+        return validateSemantic(context.problemId, actual, expected, context.args) === null;
     }
     return canonicalForm(actual, mode) === canonicalForm(expected, mode);
 }
@@ -163,10 +173,10 @@ export function validatorRequiredMessage(problemId: string): string {
     return `多解题 ${problemId} 需要题面语义校验，禁止 JSON/规范化比较（${entry?.evidence ?? '未登记证据'}）`;
 }
 
-/** 执行期入口：多合法解题目直接拒绝，不静默退回严格比较。 */
+/** 执行期入口：多合法解题目必须命中语义校验器，否则直接拒绝，不静默退回严格比较。 */
 export function compareModeForExecution(problemId: string): CompareMode {
     const mode = compareModeFor(problemId);
-    if (mode === 'validator-required') {
+    if (mode === 'validator-required' && !hasSemanticValidator(problemId)) {
         throw new Error(validatorRequiredMessage(problemId));
     }
     return mode;

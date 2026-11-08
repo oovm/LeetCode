@@ -126,6 +126,10 @@
             "mode": "unordered-1d",
             "evidence": "You may return the answer in any order."
         },
+        "find-all-duplicates-in-an-array": {
+            "mode": "unordered-1d",
+            "evidence": "Return all the integers that appear twice in the array in any order."
+        },
         "find-all-groups-of-farmland": {
             "mode": "outer-only",
             "evidence": "You may return the answer in any order."
@@ -453,6 +457,14 @@
         "smallest-sufficient-team": {
             "mode": "validator-required",
             "evidence": "最小充分团队可能不唯一，排序只能消除顺序差异"
+        },
+        "sort-array-by-parity": {
+            "mode": "validator-required",
+            "evidence": "偶数必须全部排在奇数之前，元素相对顺序自由，排序会破坏“偶前奇后”约束"
+        },
+        "sort-array-by-parity-ii": {
+            "mode": "validator-required",
+            "evidence": "偶数下标放偶数、奇数下标放奇数，同奇偶元素顺序自由，排序会破坏下标约束"
         },
         "sort-characters-by-frequency": {
             "mode": "validator-required",

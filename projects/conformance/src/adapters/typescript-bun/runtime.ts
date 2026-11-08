@@ -34,7 +34,7 @@ export async function runBunSolverOnce(problemRoot: string): Promise<{ caseTotal
     const integerKeys = inferIntegerArgKeys(tests);
     const mode = compareModeForExecution(id);
     for (const [index, case_] of tests.entries()) {
-        assertTsCase(index, case_, candidate, integerKeys, mode);
+        assertTsCase(index, case_, candidate, integerKeys, mode, id);
     }
     return { caseTotal: tests.length, executed: tests.length };
 }
@@ -46,7 +46,7 @@ export async function benchBunSolverInProcess(problemRoot: string, iterations: n
 
     const runAll = () => {
         for (const [index, case_] of tests.entries()) {
-            assertTsCase(index, case_, candidate, integerKeys, mode);
+            assertTsCase(index, case_, candidate, integerKeys, mode, id);
         }
     };
 

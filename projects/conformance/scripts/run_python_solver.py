@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from python_design_sequence import invoke_case, is_operation_sequence_args, operation_step_path
+import semantic_validators
 
 # 十进制字符串还原走原生 int（任意精度）：放开默认 4300 位上限，
 # 覆盖大整数答案（如 4500 位数字串）的精确解析。
@@ -61,8 +62,18 @@ def _infer_int_keys(tests: list[dict[str, Any]]) -> set[str]:
     return keys
 
 
-def _compare(actual: Any, expected: Any, mode: str = "strict") -> bool:
-    # 题面允许任意顺序/集合比较时，按规范化形态比较；值语义不变。
+def _compare(
+    actual: Any,
+    expected: Any,
+    mode: str = "strict",
+    problem_id: str = "",
+    args: dict[str, Any] | None = None,
+) -> bool:
+    # 题面允许多合法解时按题面语义校验，不做 JSON/规范化比较；其余非 strict 模式按规范化形态比较。
+    if mode == "validator-required":
+        if args is None:
+            raise ValueError("validator-required 模式缺少题面语义校验所需的 problemId/args")
+        return semantic_validators.validate_semantic(problem_id, actual, args) is None
     if mode != "strict":
         return _canonical_form(actual, mode) == _canonical_form(expected, mode)
     # expected 为超安全整数字符串、actual 为 int（非 bool）时按十进制还原比较。
@@ -87,7 +98,7 @@ def _compare_modes() -> dict[str, str]:
 
 def _compare_mode(problem_id: str) -> str:
     mode = _compare_modes().get(problem_id, "strict")
-    if mode == "validator-required":
+    if mode == "validator-required" and not semantic_validators.has_semantic_validator(problem_id):
         raise ValueError(
             f"多解题 {problem_id} 需要题面语义校验，禁止 JSON/规范化比较（coverage/compare-modes.json）",
         )
@@ -213,7 +224,12 @@ def _assert_operation_sequence(index: int, operations: list[str], expected: Any,
             )
 
 
-def run_check(candidate: Callable[..., Any], tests: list[dict[str, Any]], mode: str = "strict") -> None:
+def run_check(
+    candidate: Callable[..., Any],
+    tests: list[dict[str, Any]],
+    mode: str = "strict",
+    problem_id: str = "",
+) -> None:
     int_keys = _infer_int_keys(tests)
     for index, case in enumerate(tests):
         args = case.get("args")
@@ -244,11 +260,13 @@ def run_check(candidate: Callable[..., Any], tests: list[dict[str, Any]], mode: 
             )
         if is_operation_sequence_args(coerced_args):
             _assert_operation_sequence(index, coerced_args["operations"], expected, actual)
-        elif not _compare(actual, expected, mode):
+        elif not _compare(actual, expected, mode, problem_id, case["args"]):
             raise AssertionError(f"tests[{index}]: expected {expected!r}, got {actual!r}, args={args!r}")
 
 
-def load_solver_context(problem_dir: Path) -> tuple[Callable[..., Any], list[dict[str, Any]], str]:
+def load_solver_context(
+    problem_dir: Path,
+) -> tuple[Callable[..., Any], list[dict[str, Any]], str, str]:
     python_dir = problem_dir / "solvers" / "python"
     if not (python_dir / "pyproject.toml").is_file():
         raise FileNotFoundError(f"missing solvers/python/pyproject.toml under {problem_dir}")
@@ -271,12 +289,12 @@ def load_solver_context(problem_dir: Path) -> tuple[Callable[..., Any], list[dic
     namespace: dict[str, Any] = {"__name__": "__main__"}
     exec(source, namespace)  # noqa: S102
     candidate = resolve_candidate(entry_point, namespace)
-    return candidate, tests, _compare_mode(slug)
+    return candidate, tests, _compare_mode(slug), slug
 
 
 def run_solver(problem_dir: Path) -> None:
-    candidate, tests, mode = load_solver_context(problem_dir)
-    run_check(candidate, tests, mode)
+    candidate, tests, mode, problem_id = load_solver_context(problem_dir)
+    run_check(candidate, tests, mode, problem_id)
 
 
 def median_ms(values: list[float]) -> float:
@@ -291,10 +309,10 @@ def median_ms(values: list[float]) -> float:
 
 def bench_solver(problem_dir: Path, iterations: int, warmup: int) -> float:
     """单 Python 进程内加载题解后只计 metadata.tests 循环（对齐 TS in-process）。"""
-    candidate, tests, mode = load_solver_context(problem_dir)
+    candidate, tests, mode, problem_id = load_solver_context(problem_dir)
 
     def run_all() -> None:
-        run_check(candidate, tests, mode)
+        run_check(candidate, tests, mode, problem_id)
 
     for _ in range(warmup):
         run_all()

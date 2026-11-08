@@ -323,7 +323,8 @@ async function main(): Promise<number> {
     }
 
     const { tests, invoke } = loadMetadata(problemDir);
-    const compareMode = compareModeForExecution(problemIdFromDir(problemDir));
+    const problemId = problemIdFromDir(problemDir);
+    const compareMode = compareModeForExecution(problemId);
     const entry = requireValkyrieInvokeEntry(invoke);
     const blocked = wasmInvokeBlockedReason(artifacts.entry.legionWasm, entry);
     if (blocked) {
@@ -388,7 +389,7 @@ async function main(): Promise<number> {
                 const returns = abi?.lookup.exportSchema.returns;
                 const actual = returns ? normalizeResultByAbiType(actualRaw, returns) : actualRaw;
                 const expected = returns ? normalizeResultByAbiType(expectedRaw, returns) : expectedRaw;
-                if (!resultsMatch(actual, expected, compareMode)) {
+                if (!resultsMatch(actual, expected, compareMode, { problemId, args: case_.args })) {
                     throw new Error(
                         `tests[${index}]: expected ${formatValue(expected)}, got ${formatValue(actual)}（compareMode=${compareMode}）`,
                     );

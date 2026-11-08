@@ -52,9 +52,80 @@ describe('多解比较模式', () => {
         expect(requireCompareMode('gray-code')).toBe('validator-required');
     });
 
-    it('多合法解题目在执行期直接拒绝，不静默退回严格比较', () => {
-        expect(() => compareModeForExecution('gray-code')).toThrow(/需要题面语义校验/);
+    it('多合法解题目必须命中语义校验器，缺失校验器时才拒绝', () => {
+        expect(compareModeForExecution('gray-code')).toBe('validator-required');
+        expect(compareModeForExecution('sort-array-by-parity')).toBe('validator-required');
         expect(() => resultsMatch([1], [1], 'validator-required')).toThrow(/题面语义校验/);
+    });
+
+    it('语义校验器按题面判定解是否合法', () => {
+        const grayCodeArgs = { n: 2 };
+        expect(resultsMatch([0, 1, 3, 2], [], 'validator-required', { problemId: 'gray-code', args: grayCodeArgs })).toBe(true);
+        expect(resultsMatch([0, 1, 2, 3], [], 'validator-required', { problemId: 'gray-code', args: grayCodeArgs })).toBe(false);
+
+        expect(
+            resultsMatch([4, 2, 3, 1], [], 'validator-required', {
+                problemId: 'sort-array-by-parity',
+                args: { nums: [3, 4, 1, 2] },
+            }),
+        ).toBe(true);
+        expect(
+            resultsMatch([3, 4, 1, 2], [], 'validator-required', {
+                problemId: 'sort-array-by-parity',
+                args: { nums: [3, 4, 1, 2] },
+            }),
+        ).toBe(false);
+
+        expect(
+            resultsMatch([4, 5, 2, 1], [], 'validator-required', {
+                problemId: 'sort-array-by-parity-ii',
+                args: { nums: [4, 1, 2, 5] },
+            }),
+        ).toBe(true);
+        expect(
+            resultsMatch([4, 2, 5, 1], [], 'validator-required', {
+                problemId: 'sort-array-by-parity-ii',
+                args: { nums: [4, 1, 2, 5] },
+            }),
+        ).toBe(false);
+
+        expect(
+            resultsMatch([1, 3, 2, -6], [], 'validator-required', {
+                problemId: 'find-n-unique-integers-sum-up-to-zero',
+                args: { n: 4 },
+            }),
+        ).toBe(true);
+        expect(
+            resultsMatch([1, 1, -2], [], 'validator-required', {
+                problemId: 'find-n-unique-integers-sum-up-to-zero',
+                args: { n: 3 },
+            }),
+        ).toBe(false);
+
+        const advantageArgs = { nums1: [2, 7, 11, 15], nums2: [1, 10, 4, 11] };
+        expect(resultsMatch([1, 4, 10, 11], [], 'validator-required', { problemId: 'advantage-shuffle', args: advantageArgs })).toBe(true);
+        expect(resultsMatch([2, 7, 11, 15], [], 'validator-required', { problemId: 'advantage-shuffle', args: advantageArgs })).toBe(false);
+    });
+
+    it('无解用例的语义校验器接受空答案', () => {
+        expect(
+            resultsMatch(null, null, 'validator-required', {
+                problemId: 'fair-candy-swap',
+                args: { aliceSizes: [3, 7], bobSizes: [1, 9] },
+            }),
+        ).toBe(true);
+        expect(
+            resultsMatch([], [], 'validator-required', {
+                problemId: 'find-missing-observations',
+                args: { rolls: [1, 3, 5], mean: 2, n: 2 },
+            }),
+        ).toBe(true);
+        expect(
+            resultsMatch([1, 1], [], 'validator-required', {
+                problemId: 'find-missing-observations',
+                args: { rolls: [1, 3, 5], mean: 2, n: 2 },
+            }),
+        ).toBe(false);
     });
 
     it('assertTestCase 按传入模式比较', () => {

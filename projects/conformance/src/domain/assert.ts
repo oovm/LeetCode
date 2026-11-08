@@ -1,4 +1,4 @@
-import { type CompareMode, formatValue, resultsMatch } from './compare-mode.ts';
+import { type CompareMode, type MatchContext, formatValue, resultsMatch } from './compare-mode.ts';
 import { compareIntegerResult, integerResultText, isUnsafeIntegerLiteralString } from './integer-literal.ts';
 
 /** `void` 解返回 `undefined`；metadata 用 `null` 表示无返回值断言。 */
@@ -45,6 +45,7 @@ export function assertTestCase(
     run: () => unknown,
     label?: string,
     mode: CompareMode = 'strict',
+    context?: MatchContext,
 ): void {
     const prefix = label ?? `tests[${index}]`;
     if (typeof expected === 'string' && expected.startsWith('Error:')) {
@@ -64,7 +65,7 @@ export function assertTestCase(
     // 题面允许任意顺序/集合比较时，先按规范化形态比较；不在非 strict 模式里做整数特判，
     // 规范化键已把整数（数值 / bigint / 超安全整数字符串）统一为精确十进制文本。
     if (mode !== 'strict') {
-        if (resultsMatch(actual, normalized, mode)) {
+        if (resultsMatch(actual, normalized, mode, context)) {
             return;
         }
         throw new Error(`${prefix}: expected ${formatValue(normalized)}, got ${formatValue(actual)}（compareMode=${mode}）`);

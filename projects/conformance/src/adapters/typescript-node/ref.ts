@@ -90,6 +90,7 @@ export function assertTsCase(
     candidate: (args: Record<string, unknown>) => unknown,
     integerKeys: ReadonlySet<string>,
     mode: CompareMode = 'strict',
+    problemId = '',
 ): void {
     if (isOperationSequenceCase(case_)) {
         const args = case_.args as unknown as Record<string, unknown>;
@@ -97,7 +98,10 @@ export function assertTsCase(
         assertOperationSequence(index, case_.args, case_.expected, actual);
         return;
     }
-    assertTestCase(index, case_.expected, () => candidate(coerceTsArgs(case_.args, integerKeys)), undefined, mode);
+    assertTestCase(index, case_.expected, () => candidate(coerceTsArgs(case_.args, integerKeys)), undefined, mode, {
+        problemId,
+        args: case_.args,
+    });
 }
 
 async function loadTsCandidate(problemRoot: string) {
@@ -114,7 +118,7 @@ export async function runTsSolverOnce(problemRoot: string, _problemId?: string):
     const integerKeys = inferIntegerArgKeys(tests);
     const mode = compareModeForExecution(id);
     for (const [index, case_] of tests.entries()) {
-        assertTsCase(index, case_, candidate, integerKeys, mode);
+        assertTsCase(index, case_, candidate, integerKeys, mode, id);
     }
     return { caseTotal: tests.length, executed: tests.length };
 }
@@ -129,7 +133,7 @@ export async function benchTsSolverInProcess(problemRoot: string, iterations: nu
 
     const runAll = () => {
         for (const [index, case_] of tests.entries()) {
-            assertTsCase(index, case_, candidate, integerKeys, mode);
+            assertTsCase(index, case_, candidate, integerKeys, mode, id);
         }
     };
 

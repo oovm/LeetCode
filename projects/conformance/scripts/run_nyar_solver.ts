@@ -192,7 +192,7 @@ async function main(): Promise<number> {
                 const expected = normalizeTsTestResult(case_.expected);
                 // 题面允许任意顺序/集合比较时，按规范化形态比较；否则保持精确比较（含整数文本特判）。
                 if (compareMode !== 'strict') {
-                    if (!resultsMatch(actual, expected, compareMode)) {
+                    if (!resultsMatch(actual, expected, compareMode, { problemId, args: case_.args })) {
                         throw new Error(
                             `tests[${index}]: expected ${formatValue(expected)}, got ${formatValue(actual)}（compareMode=${compareMode}）`,
                         );

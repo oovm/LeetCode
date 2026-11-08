@@ -167,7 +167,8 @@ export function runManagedReference(
 ): ManagedRunOutcome {
     try {
         const { tests, invoke } = loadMetadata(problemRoot);
-        const compareMode = compareModeForExecution(problemIdFromDir(problemRoot));
+        const problemId = problemIdFromDir(problemRoot);
+        const compareMode = compareModeForExecution(problemId);
         const invokeEntry = requireValkyrieInvokeEntry(invoke);
         const entry = findManagedAbiEntry(contract, resolveWasmExportSymbol(invokeEntry));
         if (!SUPPORTED_PARAMETER_TYPES.has(entry.return_type) && entry.return_type !== 'void') {
@@ -214,7 +215,7 @@ export function runManagedReference(
             const isIntegerReturn = entry.return_type === 'i64' || entry.return_type === 'i32';
             const matches =
                 compareMode !== 'strict'
-                    ? resultsMatch(actual, expected, compareMode)
+                    ? resultsMatch(actual, expected, compareMode, { problemId, args: testCase.args })
                     : isIntegerReturn
                       ? compareIntegerResult(actual, expected) ?? JSON.stringify(actual) === JSON.stringify(expected)
                       : JSON.stringify(actual) === JSON.stringify(expected);
