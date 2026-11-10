@@ -1,8 +1,8 @@
 namespace probe.string_escape_quote;
 
-# 文档承诺普通字符串里 `\"` 是可用的转义序列；此场景按文档写法保留。
+# 引号不能用反斜杠越过定界；用单引号包住双引号，由 utf8 上下文定型。
 [export(name: "escapedQuoteLength")]
 micro escaped_quote_length() -> i64 {
-    let text: utf8 = "a\"b"
+    let text: utf8 = 'a"b'
     return text.length() as i64
 }

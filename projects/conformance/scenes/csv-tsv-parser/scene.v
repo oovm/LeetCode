@@ -97,39 +97,6 @@ micro field_checksum(field: utf8) -> i64 {
     return total
 }
 
-# 测试输入按字符拼装：本 pin 的普通字符串不支持 `\"` 转义（见 L22 场景）。
-micro quoted_field(text: utf8) -> utf8 {
-    let mut buffer: Utf8Builder = Utf8Builder::new(16)
-    buffer.append('"')
-    buffer.append(text)
-    buffer.append('"')
-    return buffer.build()
-}
-
-micro doubled_quotes(text: utf8) -> utf8 {
-    let mut buffer: Utf8Builder = Utf8Builder::new(24)
-    buffer.append('"')
-    loop current in text {
-        if (((current as u32) as i64) == 34) {
-            buffer.append('"')
-            buffer.append('"')
-        } else {
-            buffer.append(current)
-        }
-    }
-    buffer.append('"')
-    return buffer.build()
-}
-
-micro quoted_content() -> utf8 {
-    let mut buffer: Utf8Builder = Utf8Builder::new(16)
-    buffer.append("he said ")
-    buffer.append('"')
-    buffer.append("hi")
-    buffer.append('"')
-    return buffer.build()
-}
-
 # "a,b,,c"：4 个字段，其中第 3 个为空。
 [export(name: "csvFieldCount")]
 micro csv_field_count() -> i64 {
@@ -140,10 +107,10 @@ micro csv_field_count() -> i64 {
     }
 }
 
-# "\"x,y\",z"：引号内逗号不分割，两字段校验和 285 + 122。
+# 输入为 '"x,y",z'：引号内逗号不分割，两字段校验和 285 + 122。
 [export(name: "csvQuotedCommaChecksum")]
 micro csv_quoted_comma_checksum() -> i64 {
-    let input: utf8 = quoted_field("x,y") + ",z"
+    let input: utf8 = '"x,y",z'
     let parsed: Result<ArrayList<utf8>, CsvError> = parse_csv(input)
     return match parsed {
         case Fine(fields):
@@ -158,10 +125,10 @@ micro csv_quoted_comma_checksum() -> i64 {
     }
 }
 
-# "he said \"\"hi\"\"" 展开为 `he said "hi"`，首字段校验和 963。
+# CSV 的双写引号展开为单个引号，首字段 he said "hi" 的校验和 963。
 [export(name: "csvEscapedQuoteChecksum")]
 micro csv_escaped_quote_checksum() -> i64 {
-    let input: utf8 = doubled_quotes(quoted_content()) + ",2"
+    let input: utf8 = '"he said ""hi""",2'
     let parsed: Result<ArrayList<utf8>, CsvError> = parse_csv(input)
     return match parsed {
         case Fine(fields): field_checksum(fields⁅0⁆)
@@ -182,11 +149,7 @@ micro csv_crlf_field_count() -> i64 {
 # 引号未闭合：走错误链返回 -1。
 [export(name: "csvUnterminatedCode")]
 micro csv_unterminated_code() -> i64 {
-    let mut builder: Utf8Builder = Utf8Builder::new(8)
-    builder.append("a,")
-    builder.append('"')
-    builder.append("b")
-    let input: utf8 = builder.build()
+    let input: utf8 = 'a,"b'
     let parsed: Result<ArrayList<utf8>, CsvError> = parse_csv(input)
     return match parsed {
         case Fine(fields): fields.length() as i64
@@ -197,11 +160,7 @@ micro csv_unterminated_code() -> i64 {
 # 字段中途出现引号：UnexpectedQuote，返回 -2。
 [export(name: "csvUnexpectedQuoteCode")]
 micro csv_unexpected_quote_code() -> i64 {
-    let mut builder: Utf8Builder = Utf8Builder::new(8)
-    builder.append("a")
-    builder.append('"')
-    builder.append("b")
-    let input: utf8 = builder.build()
+    let input: utf8 = 'a"b'
     let parsed: Result<ArrayList<utf8>, CsvError> = parse_csv(input)
     return match parsed {
         case Fine(fields): fields.length() as i64

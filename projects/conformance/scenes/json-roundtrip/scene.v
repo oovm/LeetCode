@@ -380,41 +380,13 @@ micro text_checksum(text: utf8) -> i64 {
     return total
 }
 
-# 测试输入按字符拼装：本 pin 的普通字符串不支持 `\"` 转义（见 L22 场景）。
+# V 原样文本只负责承载 JSON，JSON 内部的引号和反斜杠由 JSON 解析器解释。
 micro json_sample_text() -> utf8 {
-    let mut buffer: Utf8Builder = Utf8Builder::new(32)
-    buffer.append('{')
-    buffer.append('"')
-    buffer.append('a')
-    buffer.append('"')
-    buffer.append(':')
-    buffer.append('[')
-    buffer.append('1')
-    buffer.append(',')
-    buffer.append('2')
-    buffer.append(']')
-    buffer.append(',')
-    buffer.append('"')
-    buffer.append('b')
-    buffer.append('"')
-    buffer.append(':')
-    buffer.append("true")
-    buffer.append('}')
-    return buffer.build()
+    return r'{"a":[1,2],"b":true}'
 }
 
 micro json_escaped_text() -> utf8 {
-    let mut buffer: Utf8Builder = Utf8Builder::new(16)
-    buffer.append('"')
-    buffer.append('a')
-    buffer.append('\\')
-    buffer.append('"')
-    buffer.append('b')
-    buffer.append('\\')
-    buffer.append('\\')
-    buffer.append('c')
-    buffer.append('"')
-    return buffer.build()
+    return r'"a\"b\\c"'
 }
 
 # "[1,2,3]" 解析后数组长度 3。
