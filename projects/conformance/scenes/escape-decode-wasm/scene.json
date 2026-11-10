@@ -1,0 +1,10 @@
+{
+    "id": "escape-decode-wasm",
+    "cases": [
+        { "export": "inputLength", "expected": 10, "note": "a,b\\r\\nc,d\\r\\n 码点数" },
+        { "export": "crCode", "expected": 13, "note": "\\r 码位" },
+        { "export": "lfCode", "expected": 10, "note": "\\n 码位" },
+        { "export": "fieldCount", "expected": 4, "note": "CRLF 行界字段数（复现 csvCrLfFieldCount）" },
+        { "export": "totalChecksum", "expected": 394, "note": "四字段 a,b,c,d 码位和" }
+    ]
+}
