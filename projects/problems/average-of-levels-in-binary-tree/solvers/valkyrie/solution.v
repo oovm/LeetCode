@@ -1,5 +1,40 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: averageOfLevels 需要 按层序数组遍历 root 分层求均值
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.average_of_levels_in_binary_tree;
+
+using std.collection;
+
+# 堆式下标递归：按层累计和与个数，逐层输出均值。
+# 题内触发点: averageOfLevels 返回 `ArrayList<f64>`（非整数均值）。`i64 as f64` 精确转换
+# 归 G2（2026-11-07 已恢复，本条按当前 pin 待复验）；`ArrayList<f64>` 返回值 demarshal 归 G3。
+micro walk(root: ArrayList<i64>, index: usize, depth: usize, mut sums: ArrayList<f64>, mut counts: ArrayList<i64>) -> unit {
+    if index >= root.length() {
+        return
+    }
+    while sums.length() <= depth {
+        sums.push(0)
+        counts.push(0)
+    }
+    sums⁅depth⁆ = sums⁅depth⁆ + (root⁅index⁆ as f64)
+    counts⁅depth⁆ = counts⁅depth⁆ + 1
+    walk(root, 2 * index + 1, depth + 1, sums, counts)
+    walk(root, 2 * index + 2, depth + 1, sums, counts)
+}
+
+[export(case: "camelCase")]
+micro averageOfLevels(root: ArrayList<i64>) -> ArrayList<f64> {
+    let mut sums: ArrayList<f64> = ArrayList::new(0)
+    let mut counts: ArrayList<i64> = ArrayList::new(0)
+    walk(root, 0, 0, sums, counts)
+    let mut answer: ArrayList<f64> = ArrayList::new(sums.length())
+    let mut index: usize = 0
+    while index < sums.length() {
+        answer.push(sums⁅index⁆ / (counts⁅index⁆ as f64))
+        index = index + 1
+    }
+    return answer
+}
+
+class Solution {
+    micro averageOfLevels(self, root: ArrayList<i64>): ArrayList<f64> {
+        return averageOfLevels(root)
+    }
+}

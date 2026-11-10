@@ -882,6 +882,7 @@
     ],
     "invoke": {
         "python": "Solution().isPrefixString",
-        "typescript": "Solution().isPrefixString"
+        "typescript": "Solution().isPrefixString",
+        "valkyrie": "isPrefixString"
     }
 }

@@ -881,6 +881,7 @@
     ],
     "invoke": {
         "python": "Solution().construct2DArray",
-        "typescript": "Solution().construct2DArray"
+        "typescript": "Solution().construct2DArray",
+        "valkyrie": "construct2DArray"
     }
 }

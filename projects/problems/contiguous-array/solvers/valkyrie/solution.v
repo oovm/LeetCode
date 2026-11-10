@@ -1,5 +1,36 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: findMaxLength 需要 读取 nums 前缀差哈希最长段
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.contiguous_array;
+
+using std.collection;
+
+# 把 0 视作 -1 求前缀平衡：同一平衡值首次出现下标缓存，跨度即等长 0/1 子数组。
+[export(case: "camelCase")]
+micro findMaxLength(nums: ArrayList<i64>) -> i64 {
+    let mut firstSeen: HashMap<i64, i64> = HashMap::new(0)
+    firstSeen.insert(0, -1)
+    let mut balance: i64 = 0
+    let mut best: i64 = 0
+    let mut index: usize = 0
+    while index < nums.length() {
+        if nums⁅index⁆ == 1 {
+            balance = balance + 1
+        } else {
+            balance = balance - 1
+        }
+        if firstSeen.contains_key(balance) {
+            let span: i64 = index as i64 - firstSeen.get(balance).unwrap()
+            if span > best {
+                best = span
+            }
+        } else {
+            firstSeen.insert(balance, index as i64)
+        }
+        index = index + 1
+    }
+    return best
+}
+
+class Solution {
+    micro findMaxLength(self, nums: ArrayList<i64>): i64 {
+        return findMaxLength(nums)
+    }
+}

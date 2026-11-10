@@ -184,6 +184,7 @@
     ],
     "invoke": {
         "python": "Solution().averageOfLevels",
-        "typescript": "Solution().averageOfLevels"
+        "typescript": "Solution().averageOfLevels",
+        "valkyrie": "averageOfLevels"
     }
 }

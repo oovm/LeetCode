@@ -1,5 +1,35 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: distanceBetweenBusStops 需要 读取 distance 求双向路径较短值
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.distance_between_bus_stops;
+
+using std.collection;
+using std.math;
+
+# 环形路线：顺时针弧长与总长之差的较小者即答案。
+[export(case: "camelCase")]
+micro distanceBetweenBusStops(distance: ArrayList<i64>, start: i64, destination: i64) -> i64 {
+    let mut a: usize = 0
+    let mut b: usize = 0
+    if start < destination {
+        a = start as usize
+        b = destination as usize
+    } else {
+        a = destination as usize
+        b = start as usize
+    }
+    let mut forward: i64 = 0
+    let mut total: i64 = 0
+    let mut index: usize = 0
+    while index < distance.length() {
+        total = total + distance⁅index⁆
+        if index >= a && index < b {
+            forward = forward + distance⁅index⁆
+        }
+        index = index + 1
+    }
+    return min(forward, total - forward)
+}
+
+class Solution {
+    micro distanceBetweenBusStops(self, distance: ArrayList<i64>, start: i64, destination: i64): i64 {
+        return distanceBetweenBusStops(distance, start, destination)
+    }
+}

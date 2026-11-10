@@ -861,6 +861,7 @@
     ],
     "invoke": {
         "python": "Solution().vowelStrings",
-        "typescript": "Solution().vowelStrings"
+        "typescript": "Solution().vowelStrings",
+        "valkyrie": "vowelStrings"
     }
 }

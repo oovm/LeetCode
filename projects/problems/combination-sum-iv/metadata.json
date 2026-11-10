@@ -819,6 +819,7 @@
     ],
     "invoke": {
         "python": "Solution().combinationSum4",
-        "typescript": "Solution().combinationSum4"
+        "typescript": "Solution().combinationSum4",
+        "valkyrie": "combinationSum4"
     }
 }

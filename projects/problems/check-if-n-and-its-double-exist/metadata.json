@@ -889,6 +889,7 @@
     ],
     "invoke": {
         "python": "Solution().checkIfExist",
-        "typescript": "Solution().checkIfExist"
+        "typescript": "Solution().checkIfExist",
+        "valkyrie": "checkIfExist"
     }
 }

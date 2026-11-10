@@ -757,6 +757,7 @@
     ],
     "invoke": {
         "python": "Solution().checkStraightLine",
-        "typescript": "Solution().checkStraightLine"
+        "typescript": "Solution().checkStraightLine",
+        "valkyrie": "checkStraightLine"
     }
 }

@@ -1,5 +1,33 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: minDeletionSize 需要 读取 strs 逐列检查有序
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.delete_columns_to_make_sorted;
+
+using std.collection;
+
+# 逐列检查：只要出现上一行字符大于下一行字符，该列必须删除。
+[export(case: "camelCase")]
+micro minDeletionSize(strs: ArrayList<utf8>) -> i64 {
+    let rows: usize = strs.length()
+    let columns: usize = strs⁅0⁆.length()
+    let mut removed: i64 = 0
+    let mut column: usize = 0
+    while column < columns {
+        let mut row: usize = 1
+        let mut unsorted: bool = false
+        while row < rows && !unsorted {
+            if (strs⁅row⁆⁅column⁆ as u32) < (strs⁅row - 1⁆⁅column⁆ as u32) {
+                unsorted = true
+            }
+            row = row + 1
+        }
+        if unsorted {
+            removed = removed + 1
+        }
+        column = column + 1
+    }
+    return removed
+}
+
+class Solution {
+    micro minDeletionSize(self, strs: ArrayList<utf8>): i64 {
+        return minDeletionSize(strs)
+    }
+}

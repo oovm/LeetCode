@@ -87,6 +87,7 @@
     ],
     "invoke": {
         "python": "Solution().isCousins",
-        "typescript": "Solution().isCousins"
+        "typescript": "Solution().isCousins",
+        "valkyrie": "isCousins"
     }
 }

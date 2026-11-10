@@ -757,6 +757,7 @@
     ],
     "invoke": {
         "python": "Solution().evalRPN",
-        "typescript": "Solution().evalRPN"
+        "typescript": "Solution().evalRPN",
+        "valkyrie": "evalRPN"
     }
 }

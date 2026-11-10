@@ -43,6 +43,7 @@
     ],
     "invoke": {
         "python": "Solution().rightSideView",
-        "typescript": "Solution().rightSideView"
+        "typescript": "Solution().rightSideView",
+        "valkyrie": "rightSideView"
     }
 }

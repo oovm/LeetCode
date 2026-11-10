@@ -824,6 +824,7 @@
     ],
     "invoke": {
         "python": "Solution().maxKilledEnemies",
-        "typescript": "Solution().maxKilledEnemies"
+        "typescript": "Solution().maxKilledEnemies",
+        "valkyrie": "maxKilledEnemies"
     }
 }

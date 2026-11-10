@@ -1,5 +1,25 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: checkIfExist 需要 读取 arr 查找互为两倍
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.check_if_n_and_its_double_exist;
+
+using std.collection;
+
+# 一次遍历：当前值的二倍或（偶数时）一半已在 seen 中即成立。
+[export(case: "camelCase")]
+micro checkIfExist(arr: ArrayList<i64>) -> bool {
+    let mut seen: HashSet<i64> = HashSet::new()
+    loop value in arr {
+        if seen.contains(2 * value) {
+            return true
+        }
+        if value % 2 == 0 && seen.contains(value / 2) {
+            return true
+        }
+        seen.insert(value)
+    }
+    return false
+}
+
+class Solution {
+    micro checkIfExist(self, arr: ArrayList<i64>): bool {
+        return checkIfExist(arr)
+    }
+}

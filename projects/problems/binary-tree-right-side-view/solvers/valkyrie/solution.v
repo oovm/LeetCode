@@ -1,5 +1,28 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: rightSideView 需要 层序数组读取 root 右视图
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.binary_tree_right_side_view;
+
+using std.collection;
+
+# 堆式下标 DFS，先右后左：每层第一次到达的节点即右视图。
+micro dfs(root: ArrayList<i64>, index: usize, depth: usize, mut answer: ArrayList<i64>) -> unit {
+    if index >= root.length() {
+        return
+    }
+    if depth == answer.length() {
+        answer.push(root⁅index⁆)
+    }
+    dfs(root, 2 * index + 2, depth + 1, answer)
+    dfs(root, 2 * index + 1, depth + 1, answer)
+}
+
+[export(case: "camelCase")]
+micro rightSideView(root: ArrayList<i64>) -> ArrayList<i64> {
+    let mut answer: ArrayList<i64> = ArrayList::new(0)
+    dfs(root, 0, 0, answer)
+    return answer
+}
+
+class Solution {
+    micro rightSideView(self, root: ArrayList<i64>): ArrayList<i64> {
+        return rightSideView(root)
+    }
+}

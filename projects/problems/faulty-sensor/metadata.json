@@ -882,6 +882,7 @@
     ],
     "invoke": {
         "python": "Solution().badSensor",
-        "typescript": "Solution().badSensor"
+        "typescript": "Solution().badSensor",
+        "valkyrie": "badSensor"
     }
 }

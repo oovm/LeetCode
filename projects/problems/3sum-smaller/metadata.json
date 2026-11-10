@@ -735,6 +735,7 @@
     ],
     "invoke": {
         "python": "Solution().threeSumSmaller",
-        "typescript": "Solution().threeSumSmaller"
+        "typescript": "Solution().threeSumSmaller",
+        "valkyrie": "threeSumSmaller"
     }
 }

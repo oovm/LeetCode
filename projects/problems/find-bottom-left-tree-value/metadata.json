@@ -79,6 +79,7 @@
     ],
     "invoke": {
         "python": "Solution().findBottomLeftValue",
-        "typescript": "Solution().findBottomLeftValue"
+        "typescript": "Solution().findBottomLeftValue",
+        "valkyrie": "findBottomLeftValue"
     }
 }

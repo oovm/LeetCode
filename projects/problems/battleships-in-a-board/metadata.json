@@ -984,6 +984,7 @@
     ],
     "invoke": {
         "python": "Solution().countBattleships",
-        "typescript": "Solution().countBattleships"
+        "typescript": "Solution().countBattleships",
+        "valkyrie": "countBattleships"
     }
 }

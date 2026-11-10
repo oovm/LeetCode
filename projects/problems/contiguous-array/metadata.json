@@ -723,6 +723,7 @@
     ],
     "invoke": {
         "python": "Solution().findMaxLength",
-        "typescript": "Solution().findMaxLength"
+        "typescript": "Solution().findMaxLength",
+        "valkyrie": "findMaxLength"
     }
 }

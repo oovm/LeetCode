@@ -712,6 +712,7 @@
     "invoke": {
         "python": "Solution().threeSumClosest",
         "typescript": "Solution().threeSumClosest",
+        "valkyrie": "threeSumClosest",
         "wolframSxo": "threeSumClosest",
         "matlabSxo": "threeSumClosest"
     }

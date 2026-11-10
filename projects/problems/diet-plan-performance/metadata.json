@@ -858,6 +858,7 @@
     ],
     "invoke": {
         "python": "Solution().dietPlanPerformance",
-        "typescript": "Solution().dietPlanPerformance"
+        "typescript": "Solution().dietPlanPerformance",
+        "valkyrie": "dietPlanPerformance"
     }
 }

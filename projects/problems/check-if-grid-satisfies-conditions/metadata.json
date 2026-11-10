@@ -708,6 +708,7 @@
     ],
     "invoke": {
         "python": "Solution().satisfiesConditions",
-        "typescript": "Solution().satisfiesConditions"
+        "typescript": "Solution().satisfiesConditions",
+        "valkyrie": "satisfiesConditions"
     }
 }

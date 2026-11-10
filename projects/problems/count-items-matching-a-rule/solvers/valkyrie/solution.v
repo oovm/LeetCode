@@ -1,5 +1,27 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: countMatches 需要 读取 items 按 ruleKey/ruleValue 过滤计数
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.count_items_matching_a_rule;
+
+using std.collection;
+
+# ruleKey 映射到槽位 0/1/2，统计对应槽位等于 ruleValue 的条目数。
+[export(case: "camelCase")]
+micro countMatches(items: ArrayList<ArrayList<utf8>>, ruleKey: utf8, ruleValue: utf8) -> i64 {
+    let mut slot: usize = 0
+    if ruleKey == "color" {
+        slot = 1
+    } else if ruleKey == "name" {
+        slot = 2
+    }
+    let mut count: i64 = 0
+    loop item in items {
+        if item⁅slot⁆ == ruleValue {
+            count = count + 1
+        }
+    }
+    return count
+}
+
+class Solution {
+    micro countMatches(self, items: ArrayList<ArrayList<utf8>>, ruleKey: utf8, ruleValue: utf8): i64 {
+        return countMatches(items, ruleKey, ruleValue)
+    }
+}
