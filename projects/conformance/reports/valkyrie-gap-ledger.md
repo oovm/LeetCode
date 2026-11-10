@@ -2941,6 +2941,36 @@ micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countabl
   越界字符串 `"67553994410557440"` 且 expected 与参照输出矛盾（实参损坏），删除 1 条
   （60 → 59），删除后 Python / TS 双绿。
 
+### 未命中面（R38 批次，2026-11-10，新编号 0 条）
+
+- **本批口径**：R38-A 全部理想写法、写完未构建；下列「够用」均指**源码面存在**，
+  构建证据待后续窗口复验。
+- **数字 slug namespace 先例扩展**：`01-matrix` → `leetcode.one_one_matrix`，
+  与 `three_sum_*` / `two_keys_keyboard` 拼写先例一致；静态自查加显式映射，不改目录名。
+- **`HashMap<utf8, i64>` 触发点复验**：`group-shifted-strings` 规范键作 `utf8` 键，
+  题内标 `# 题内触发点:` 命中 std::hash#445（与 `unique-email-addresses` /
+  `sentence-similarity-ii` 同停点），不新开编号。
+- **`ArrayList<char>` 首次进题解**：`shuffle-string` 用 `ArrayList<char>` 作落位缓冲、
+  `Utf8Builder::append(char)` 收尾拼接；`char` 进容器属源码面（`char` 为普通类型），
+  构建证据待复验。
+- **`ArrayList<bool>` 复验**：`partition-equal-subset-sum` 子集和滚动布尔表
+  （R36 `binary-prefix-divisible-by-5` 同面）。
+- **单调栈 `remove(length())` 复验**：`next-greater-element-ii` 以
+  `let top: Option<i64> = stack.remove(stack.length())` + `unwrap()` 弹栈
+  （R35 `combination-sum-iii` 同形）。
+- **哨兵 `bit_shift_left(60)`**：`the-maze-ii` 以 `(1 as i64).bit_shift_left(60)`
+  作 Dijkstra 无穷哨兵，位面复验。无新缺口。
+- **树族堆式下标复验（4 题）**：`binary-tree-zigzag-level-order-traversal`（按层索引
+  BFS）、`count-univalue-subtrees` / `kth-smallest-element-in-a-bst`（计数器数组
+  替代元组返回——`-> (bool, i64)` 元组返回面未实测，不据此编号）、`path-sum-iii`
+  （语料含空树 `root: []`，`i >= length` 即空）。
+- **语料清洗记录（非语言缺口）**：`kth-smallest-element-in-a-bst` 删 10 条
+  `k > 节点数` 越界 null-expected 用例（41 → 31）；
+  `binary-number-with-alternating-bits` 删 5 条 `n > 2³¹-1` 越界用例（72 → 67），
+  其 expected 由 int32 算术移位参照算出、与题面参照矛盾。
+- **Python lane 既有缺陷登记**：树 4 题 Python 参照按 `TreeNode` 对象写、与堆式数组
+  语料不符（同 R35 / R36 / R37），改 TS 参照复核。
+
 ### 未命中面（第 6 批探测，2026-11-04，仅 G23 一条新编号）
 
 - **`utf8.split` 首次被压住**：`split-strings-by-separator`（2788）直接 `word.split(separator)`

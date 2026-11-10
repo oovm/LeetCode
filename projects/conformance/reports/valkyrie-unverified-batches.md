@@ -2129,3 +2129,53 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   与参照的「低 32 位 8 nibble 窗口」语义在越界实参上不一致，改 `BigInt` 移位 +
   `& 0xF` 复刻参照窗口。
 - 验证口径：编译通过 0、端到端通过 0、写完未验证 24（V）；TS 基线 16/16 实测通过。
+
+## 批次 R38-2026-11-10（blocked 清障续批三 24 题 + TypeScript 基线 16 题，V 写完未构建）
+
+- 两个子批，口径同 R36 / R37。R38-A 从剩余陈旧 `# blocked: std.collection 数组参数读取`
+  题池（上批后剩 137）再选 24 题。
+- R38-A 能力分组（24）：
+  - 矩阵 / 图 4：`01-matrix`（多源 BFS，数字 slug namespace `one_one_matrix`）、
+    `the-maze-ii`（停点图 Dijkstra，`bit_shift_left(60)` 哨兵）、`word-search`
+    （DFS 回溯 + 就地 `"#"` 占位、`char as u32` 比较）、`sparse-matrix-multiplication`
+    （跳零三重循环）。
+  - 哈希 / 计数 4：`group-shifted-strings`（规范键 `HashMap<utf8, i64>` →
+    题内标 `# 题内触发点:` 命中 std::hash#445）、`find-maximum-number-of-string-pairs`
+    （`Utf8Builder` 反转串暴力配对）、`number-of-boomerangs`（距离桶增量 `2 * prior`）、
+    `sum-of-good-numbers`（左右邻查）。
+  - 双指针 / 栈 / 二分 5：`maximum-size-subarray-sum-equals-k`（前缀和首现表）、
+    `minimum-size-subarray-sum`（滑动窗口）、`next-greater-element-ii`（循环数组单调栈，
+    `remove(length())` 弹栈）、`sort-transformed-array`（抛物线两端收缩）、
+    `search-in-rotated-sorted-array-ii`（同值收缩二分）。
+  - DP / 回溯 4：`best-time-to-buy-and-sell-stock-with-cooldown`（hold/sold/rest 三态）、
+    `combination-sum-ii`（排序 + 同层跳重回溯）、`partition-equal-subset-sum`
+    （`ArrayList<bool>` 子集和滚动表）、`predict-the-winner`（区间差分 DP）。
+  - 树 4：`binary-tree-zigzag-level-order-traversal`（按层索引 BFS + 奇层反转）、
+    `count-univalue-subtrees`（递归 bool + 计数器数组）、`path-sum-iii`（双重递归，
+    语料含空树）、`kth-smallest-element-in-a-bst`（堆式下标中序 + 计数器）。
+  - 文本 2：`shuffle-string`（`ArrayList<char>` 落位 + builder 拼接）、
+    `slowest-key`（码位比较 + builder 单字符返回）。
+- 三件套：24/24（`solution.v` + `metadata.invoke.valkyrie` 裸导出名）。
+- 静态自查：24/24 通过（六项同前；数字 slug 拼写映射 `01-matrix` → `one_one_matrix`，
+  与 `three_sum_*` 先例一致）。
+- 镜像回放（非 V 构建，不作为通过证据）：Python 参照 **20 题通过**；
+  树 4 题 Python 参照按 `TreeNode` 对象写、与堆式数组语料不符（Python lane 既有缺陷），
+  改 TS 参照复核 **4/4 全过**。本批合计 **1823 条用例** 经参照实现核对一致。
+- R38-A 语料清洗（1 题 10 条）：`kth-smallest-element-in-a-bst` 的 10 条
+  `k > 节点数` 越界用例 `expected` 为 `null`（宿主异常期望未清），按 R29 C 批口径
+  删除（41 → 31），删除后 TS 复核 31/31 绿。
+- R38-B 范围（16）：`2-keys-keyboard`、`account-balance-after-rounded-purchase`、
+  `binary-number-with-alternating-bits`、`counting-bits`、`day-of-the-year`、
+  `decode-xored-array`、`defanging-an-ip-address`、`detect-capital`、`di-string-match`、
+  `distinct-numbers-in-each-subarray`、`divide-two-integers`、`fibonacci-number`、
+  `final-value-of-variable-after-performing-operations`、
+  `find-greatest-common-divisor-of-array`、`fizz-buzz`、`count-numbers-with-unique-digits`。
+- R38-B 实测：`run_ts_solver.ts` 逐题单进程，**16/16 exit 0（1590 用例全过）**。
+- R38-B 语料清洗（1 题 5 条）：`binary-number-with-alternating-bits` 的 5 条
+  `n > 2³¹-1` 越界用例 expected 由 int32 算术移位参照算出（与题面参照矛盾），删除
+  （72 → 67），删除后 TS 绿。
+- R38-B 参照解实测修正（2 题，本批自写初版错）：`account-balance-after-rounded-purchase`
+  题面是「初始 100、就近取十、5 进位」（非 1000/向上取整），改 `Math.round`；
+  `divide-two-integers` 的 `<<` 在 `shift + 1 >= 32` 按模 32 回绕死循环，改倍增减法。
+- 验证口径：编译通过 0、端到端通过 0、写完未验证 24（V）；TS 基线 16/16 实测通过。
+
