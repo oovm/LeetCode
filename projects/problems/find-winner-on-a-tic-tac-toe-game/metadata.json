@@ -691,6 +691,7 @@
     ],
     "invoke": {
         "python": "Solution().tictactoe",
-        "typescript": "Solution().tictactoe"
+        "typescript": "Solution().tictactoe",
+        "valkyrie": "tictactoe"
     }
 }

@@ -1,5 +1,21 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: prefixesDivBy5 需要 读取 nums 逐位累模 5
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.binary_prefix_divisible_by_5;
+
+using std.collection;
+
+# 前缀值只保留模 5 余数：`value = (value * 2 + bit) % 5`，逐位判定余数是否为 0。
+[export(case: "camelCase")]
+micro prefixesDivBy5(nums: ArrayList<i64>) -> ArrayList<bool> {
+    let mut out: ArrayList<bool> = ArrayList::new(nums.length())
+    let mut value: i64 = 0
+    loop bit in nums {
+        value = (value * 2 + bit) % 5
+        out.push(value == 0)
+    }
+    return out
+}
+
+class Solution {
+    micro prefixesDivBy5(self, nums: ArrayList<i64>): ArrayList<bool> {
+        return prefixesDivBy5(nums)
+    }
+}

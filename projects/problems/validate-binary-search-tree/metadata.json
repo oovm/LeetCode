@@ -163,6 +163,7 @@
     ],
     "invoke": {
         "python": "Solution().isValidBST",
-        "typescript": "Solution().isValidBST"
+        "typescript": "Solution().isValidBST",
+        "valkyrie": "isValidBST"
     }
 }

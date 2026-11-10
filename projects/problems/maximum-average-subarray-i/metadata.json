@@ -700,6 +700,7 @@
     ],
     "invoke": {
         "python": "Solution().findMaxAverage",
-        "typescript": "Solution().findMaxAverage"
+        "typescript": "Solution().findMaxAverage",
+        "valkyrie": "findMaxAverage"
     }
 }

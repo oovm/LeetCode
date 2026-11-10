@@ -607,6 +607,7 @@
     ],
     "invoke": {
         "python": "Solution().anagramMappings",
-        "typescript": "Solution().anagramMappings"
+        "typescript": "Solution().anagramMappings",
+        "valkyrie": "anagramMappings"
     }
 }

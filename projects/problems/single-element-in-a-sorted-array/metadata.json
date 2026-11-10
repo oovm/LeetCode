@@ -896,6 +896,7 @@
     ],
     "invoke": {
         "python": "Solution().singleNonDuplicate",
-        "typescript": "Solution().singleNonDuplicate"
+        "typescript": "Solution().singleNonDuplicate",
+        "valkyrie": "singleNonDuplicate"
     }
 }

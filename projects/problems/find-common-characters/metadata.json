@@ -629,6 +629,7 @@
     ],
     "invoke": {
         "python": "Solution().commonChars",
-        "typescript": "Solution().commonChars"
+        "typescript": "Solution().commonChars",
+        "valkyrie": "commonChars"
     }
 }

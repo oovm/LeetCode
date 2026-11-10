@@ -1,5 +1,47 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: findRadius 需要 读取 houses/heaters 二分最小半径
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.heaters;
+
+using std.collection;
+using std.math;
+
+#  heater 排序后对每个 house 二分找最近 heater，取左右两邻距离较小者，再对全局取最大。
+[export(case: "camelCase")]
+micro findRadius(houses: ArrayList<i64>, heaters: ArrayList<i64>) -> i64 {
+    let mut sorted: ArrayList<i64> = ArrayList::new(heaters.length())
+    loop value in heaters {
+        sorted.push(value)
+    }
+    sort(sorted)
+    let mut best: i64 = 0
+    loop house in houses {
+        let mut lo: usize = 0
+        let mut hi: usize = sorted.length()
+        while lo < hi {
+            let mid: usize = (lo + hi) / 2
+            if sorted⁅mid⁆ < house {
+                lo = mid + 1
+            } else {
+                hi = mid
+            }
+        }
+        let mut radius: i64 = 0
+        if lo < sorted.length() {
+            radius = sorted⁅lo⁆ - house
+        }
+        if lo > 0 {
+            let left: i64 = house - sorted⁅lo - 1⁆
+            if radius == 0 || left < radius {
+                radius = left
+            }
+        }
+        if radius > best {
+            best = radius
+        }
+    }
+    return best
+}
+
+class Solution {
+    micro findRadius(self, houses: ArrayList<i64>, heaters: ArrayList<i64>): i64 {
+        return findRadius(houses, heaters)
+    }
+}

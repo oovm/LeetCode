@@ -1,5 +1,28 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: singleNonDuplicate 需要 读取 nums 二分找单元素
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.single_element_in_a_sorted_array;
+
+using std.collection;
+
+# 二分且 mid 恒取偶：配对 `(2k, 2k+1)` 相等则答案在右半（mid+2），否则在左半（含 mid）。O(log n)。
+[export(case: "camelCase")]
+micro singleNonDuplicate(nums: ArrayList<i64>) -> i64 {
+    let mut lo: usize = 0
+    let mut hi: usize = nums.length() - 1
+    while lo < hi {
+        let mut mid: usize = lo + (hi - lo) / 2
+        if mid % 2 == 1 {
+            mid = mid - 1
+        }
+        if nums⁅mid⁆ == nums⁅mid + 1⁆ {
+            lo = mid + 2
+        } else {
+            hi = mid
+        }
+    }
+    return nums⁅lo⁆
+}
+
+class Solution {
+    micro singleNonDuplicate(self, nums: ArrayList<i64>): i64 {
+        return singleNonDuplicate(nums)
+    }
+}

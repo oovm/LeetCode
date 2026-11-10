@@ -728,6 +728,7 @@
     ],
     "invoke": {
         "python": "Solution().getCommon",
-        "typescript": "Solution().getCommon"
+        "typescript": "Solution().getCommon",
+        "valkyrie": "getCommon"
     }
 }

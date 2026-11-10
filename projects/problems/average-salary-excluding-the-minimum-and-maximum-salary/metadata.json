@@ -665,6 +665,7 @@
     ],
     "invoke": {
         "python": "Solution().average",
-        "typescript": "Solution().average"
+        "typescript": "Solution().average",
+        "valkyrie": "average"
     }
 }

@@ -675,6 +675,7 @@
     ],
     "invoke": {
         "python": "Solution().countQuadruplets",
-        "typescript": "Solution().countQuadruplets"
+        "typescript": "Solution().countQuadruplets",
+        "valkyrie": "countQuadruplets"
     }
 }

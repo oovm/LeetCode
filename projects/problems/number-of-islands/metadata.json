@@ -734,6 +734,7 @@
     ],
     "invoke": {
         "python": "Solution().numIslands",
-        "typescript": "Solution().numIslands"
+        "typescript": "Solution().numIslands",
+        "valkyrie": "numIslands"
     }
 }

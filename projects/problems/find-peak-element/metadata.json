@@ -603,6 +603,7 @@
     ],
     "invoke": {
         "python": "Solution().findPeakElement",
-        "typescript": "Solution().findPeakElement"
+        "typescript": "Solution().findPeakElement",
+        "valkyrie": "findPeakElement"
     }
 }

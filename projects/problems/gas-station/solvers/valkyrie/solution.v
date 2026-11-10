@@ -1,5 +1,32 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: canCompleteCircuit 需要 读取 gas/cost 贪心找起点
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.gas_station;
+
+using std.collection;
+
+# 贪心：油箱亏空即把起点推到下一站；全程总盈余非负则当前起点可行。
+[export(case: "camelCase")]
+micro canCompleteCircuit(gas: ArrayList<i64>, cost: ArrayList<i64>) -> i64 {
+    let mut tank: i64 = 0
+    let mut start: i64 = 0
+    let mut balance: i64 = 0
+    let mut index: usize = 0
+    while index < gas.length() {
+        let delta: i64 = gas⁅index⁆ - cost⁅index⁆
+        tank = tank + delta
+        balance = balance + delta
+        if tank < 0 {
+            start = index as i64 + 1
+            tank = 0
+        }
+        index = index + 1
+    }
+    if balance >= 0 {
+        return start
+    }
+    return -1
+}
+
+class Solution {
+    micro canCompleteCircuit(self, gas: ArrayList<i64>, cost: ArrayList<i64>): i64 {
+        return canCompleteCircuit(gas, cost)
+    }
+}

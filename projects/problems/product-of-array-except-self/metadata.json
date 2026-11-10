@@ -734,6 +734,7 @@
     ],
     "invoke": {
         "python": "Solution().productExceptSelf",
-        "typescript": "Solution().productExceptSelf"
+        "typescript": "Solution().productExceptSelf",
+        "valkyrie": "productExceptSelf"
     }
 }

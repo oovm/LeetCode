@@ -2808,6 +2808,7 @@
     ],
     "invoke": {
         "python": "Solution().prefixesDivBy5",
-        "typescript": "Solution().prefixesDivBy5"
+        "typescript": "Solution().prefixesDivBy5",
+        "valkyrie": "prefixesDivBy5"
     }
 }

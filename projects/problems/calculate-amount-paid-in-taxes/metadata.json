@@ -861,6 +861,7 @@
     ],
     "invoke": {
         "python": "Solution().calculateTax",
-        "typescript": "Solution().calculateTax"
+        "typescript": "Solution().calculateTax",
+        "valkyrie": "calculateTax"
     }
 }

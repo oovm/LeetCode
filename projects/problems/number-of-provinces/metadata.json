@@ -648,6 +648,7 @@
     ],
     "invoke": {
         "python": "Solution().findCircleNum",
-        "typescript": "Solution().findCircleNum"
+        "typescript": "Solution().findCircleNum",
+        "valkyrie": "findCircleNum"
     }
 }

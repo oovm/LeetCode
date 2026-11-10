@@ -687,6 +687,7 @@
     ],
     "invoke": {
         "python": "Solution().findKOr",
-        "typescript": "Solution().findKOr"
+        "typescript": "Solution().findKOr",
+        "valkyrie": "findKOr"
     }
 }

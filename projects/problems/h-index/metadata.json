@@ -486,6 +486,7 @@
     ],
     "invoke": {
         "python": "Solution().hIndex",
-        "typescript": "Solution().hIndex"
+        "typescript": "Solution().hIndex",
+        "valkyrie": "hIndex"
     }
 }

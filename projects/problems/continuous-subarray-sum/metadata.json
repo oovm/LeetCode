@@ -863,6 +863,7 @@
     ],
     "invoke": {
         "python": "Solution().checkSubarraySum",
-        "typescript": "Solution().checkSubarraySum"
+        "typescript": "Solution().checkSubarraySum",
+        "valkyrie": "checkSubarraySum"
     }
 }

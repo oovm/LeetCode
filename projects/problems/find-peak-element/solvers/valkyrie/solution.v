@@ -1,5 +1,25 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: findPeakElement 需要 读取 nums 二分找峰值
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.find_peak_element;
+
+using std.collection;
+
+# 二分：`nums[mid] < nums[mid+1]` 则右半必有峰，否则左半（含 mid）有峰。
+[export(case: "camelCase")]
+micro findPeakElement(nums: ArrayList<i64>) -> i64 {
+    let mut lo: usize = 0
+    let mut hi: usize = nums.length() - 1
+    while lo < hi {
+        let mid: usize = (lo + hi) / 2
+        if nums⁅mid⁆ < nums⁅mid + 1⁆ {
+            lo = mid + 1
+        } else {
+            hi = mid
+        }
+    }
+    return lo as i64
+}
+
+class Solution {
+    micro findPeakElement(self, nums: ArrayList<i64>): i64 {
+        return findPeakElement(nums)
+    }
+}
