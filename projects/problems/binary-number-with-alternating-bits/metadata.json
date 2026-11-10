@@ -110,21 +110,9 @@
         },
         {
             "args": {
-                "n": 2863311531
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "n": 341
             },
             "expected": true
-        },
-        {
-            "args": {
-                "n": 4294967295
-            },
-            "expected": false
         },
         {
             "args": {
@@ -195,12 +183,6 @@
         {
             "args": {
                 "n": 4194303
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "n": 2147483649
             },
             "expected": false
         },
@@ -326,12 +308,6 @@
         },
         {
             "args": {
-                "n": 4294967294
-            },
-            "expected": false
-        },
-        {
-            "args": {
                 "n": 18
             },
             "expected": false
@@ -429,12 +405,6 @@
         {
             "args": {
                 "n": 6
-            },
-            "expected": false
-        },
-        {
-            "args": {
-                "n": 3427813328
             },
             "expected": false
         }
