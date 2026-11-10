@@ -2889,6 +2889,29 @@ micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countabl
 - **树族堆式下标写法确认**：语料 `root` 无 `null`（全树以完整堆式数组给出），
   `ArrayList<i64>` + `2i+1 / 2i+2` 即可表达，无需 `Option` 载体；4 题同形。
 
+### 未命中面（R36 批次，2026-11-10，新编号 0 条）
+
+- **本批口径**：R36-A 全部理想写法、写完未构建；下列「够用」均指**源码面存在**，
+  构建证据待后续窗口复验。
+- **`Option<i64>` 作递归开区间界首次进题解**：`validate-binary-search-tree` 用
+  `is_some()` / `unwrap()` 判界；`None` 字面量在实参位需显式类型注解
+  （`let no_bound: Option<i64> = None`，与 `third-maximum-number` 先例同形）。无新缺口。
+- **`ArrayList` 引用语义就地写 + 递归辅助**：`number-of-islands` 的 `grid⁅i⁆⁅j⁆ = "0"`
+  与 `number-of-provinces` 的 `parent⁅x⁆ = ...` 直接下标赋值（`flood-fill` 同形），
+  递归 `micro` 辅助函数无需 `&mut`。无新缺口。
+- **`[[utf8]]` 等值 + 就地改写面复验**：`number-of-islands` 在岛屿洪泛上首次成规模
+  用 `== "1"` / 改 `"0"`，与 R35 `bomb-enemy` / `available-captures-for-rook` 同面。
+- **位具名方法复验**：`find-the-k-or-of-an-array` 用 `bit_or` 与
+  `(1 as i64).bit_shift_left(bit as u32)`（usize 位宽需 `as u32`），R19 位面复验批次。
+- **`Utf8Builder` 单字符构造复验**：`find-common-characters` 以 builder 拼结果串，
+  文本构造面复验；`f64` 返回触发点 3 题（`calculate-amount-paid-in-taxes` /
+  `maximum-average-subarray-i` / `mean-of-array-after-removing-some-elements`）
+  为 G2/G3 叠加实例，题内已标 `# 题内触发点:`，不新开编号。
+- **usize 乘法比较**：`detect-pattern-of-length-m-repeated-k-or-more-times` 直接
+  `m * k <= length` 比较，无溢出特判需求。无新缺口。
+- **语料修正记录（非语言缺口）**：`base-7` 的 `tests[].expected` 47 条由 number 修为
+  string（生成器类型错误，题面返回 String），按 R28 先例，未删用例。
+
 ### 未命中面（第 6 批探测，2026-11-04，仅 G23 一条新编号）
 
 - **`utf8.split` 首次被压住**：`split-strings-by-separator`（2788）直接 `word.split(separator)`

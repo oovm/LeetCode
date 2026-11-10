@@ -2037,3 +2037,49 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   **4/4 全过（55 用例）**。本批合计 **2357 条用例** 经参照实现核对一致，无 `corpusDefect` 新增。
 - 验证口径：编译通过 0、端到端通过 0、写完未验证 27；待构建窗口按
   `node --import tsx projects/conformance/scripts/run_v_dual_target_baseline.ts --one-id <id>` 复跑。
+
+## 批次 R36-2026-11-10（blocked 清障续批 24 题 + TypeScript 基线 16 题，V 写完未构建）
+
+- 两个子批。R36-A 沿 R35 口径（用户指令：只考虑理想写法、倒逼上游完善，不考虑
+  `nyar.rs` / `valkyrie.v` 进度），从剩余陈旧 `# blocked: std.collection 数组参数读取`
+  题池再清 24 题；R36-B 为 TypeScript 基线：从「V 有解、TS 空」题池（123 题）取 16 题
+  补参考解，覆盖数值 / 位 / 日期 / DP / 前缀和 / 双指针面。
+- R36-A 能力分组（24）：
+  - 均值 / f64 触发点 4：`average-salary-excluding-the-minimum-and-maximum-salary`
+    （i64 整除口径）、`mean-of-array-after-removing-some-elements`、
+    `maximum-average-subarray-i`、`calculate-amount-paid-in-taxes`（后三题返回 f64，
+    题内标 `# 题内触发点:`，G2/G3 叠加实例）。
+  - 哈希 / 计数 7：`find-anagram-mappings`、`find-common-characters`（`Utf8Builder`
+    单字符构造）、`form-smallest-number-from-two-digit-arrays`、`minimum-common-value`、
+    `count-special-quadruplets`、`find-winner-on-a-tic-tac-toe-game`（行列掩码）、
+    `h-index`（`sort` 自然序）。
+  - 位 2：`find-the-k-or-of-an-array`（`bit_or` + `(1 as i64).bit_shift_left(bit as u32)`）、
+    `binary-prefix-divisible-by-5`（`ArrayList<bool>`）。
+  - 双指针 / 二分 / 前缀和 / 贪心 8：`detect-pattern-of-length-m-repeated-k-or-more-times`
+    （usize 乘比较）、`continuous-subarray-sum`（前缀余数 `HashMap`）、`heaters`
+    （sort + 二分）、`find-peak-element`、`single-element-in-a-sorted-array`（偶 mid 二分）、
+    `product-of-array-except-self`（前缀/后缀积两趟）、`search-a-2d-matrix-ii`（右上阶梯）、
+    `gas-station`（贪心）。
+  - 图 / 树 3：`number-of-islands`（`[[utf8]]` 就地改 `"0"` 洪泛 DFS）、
+    `number-of-provinces`（路径压缩并查集递归 `find`）、`validate-binary-search-tree`
+    （堆式下标 + `Option<i64>` 开区间界）。
+- 三件套：24/24（`solution.v` + `metadata.invoke.valkyrie` 裸导出名；题库原有 TS / Python 参照不变）。
+- 静态自查：24/24 通过（namespace / export 恰一处 / 顶层=类名=invoke / 无残留 blocked /
+  形参名同序 / 括号配平，六项同 R35）。
+- 镜像回放（非 V 构建，不作为通过证据）：Python 参照 **23 题通过**；
+  `validate-binary-search-tree` Python 参照按 `TreeNode` 对象写、与堆式数组语料不符
+  （Python lane 既有缺陷，非本批引入），改用 TS 参照复核 **26/26**。本批合计
+  **2226 条用例** 经参照实现核对一致。
+- R36-B 范围（16）：`add-two-integers`、`alternating-digit-sum`、`base-7`、`binary-gap`、
+  `clumsy-factorial`、`complement-of-base-10-integer`、`count-square-submatrices-with-all-ones`、
+  `day-of-the-week`、`hamming-distance`、`integer-break`、`k-radius-subarray-averages`、
+  `number-of-1-bits`、`pascals-triangle-ii`、`shortest-distance-to-a-character`、
+  `sum-of-square-numbers`、`arranging-coins`。
+- R36-B 实测：`run_ts_solver.ts` 逐题单进程，**16/16 exit 0（981 用例全过）**。
+- R36-B 语料修正（1 题 47 条）：`base-7` 的 `tests[].expected` 被生成器写成 number
+  （如 `-11333311`），题面返回 String；按 R28 `remove-all-occurrences-of-a-substring`
+  先例逐条修为字符串，未删用例；修正后 Python / TS 参照双绿。
+- R36-B 参照解实测修正（3 题，非 V 缺口）：`clumsy-factorial` 减法分支（op 循环 push `-i`）；
+  `complement-of-base-10-integer` 的 `<<` 在 n=2³²-1 溢出 int32 死循环，改算术 mask；
+  `number-of-1-bits` 的 `>>> 0` 在 n=2⁴⁰（语料超 LeetCode 约束）截位，改算术取位。
+- 验证口径：编译通过 0、端到端通过 0、写完未验证 24（V）；TS 基线 16/16 实测通过。
