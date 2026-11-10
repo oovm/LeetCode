@@ -84,6 +84,7 @@
     ],
     "invoke": {
         "python": "Solution().findLeaves",
-        "typescript": "Solution().findLeaves"
+        "typescript": "Solution().findLeaves",
+        "valkyrie": "findLeaves"
     }
 }

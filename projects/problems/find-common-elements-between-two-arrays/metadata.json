@@ -721,6 +721,7 @@
     ],
     "invoke": {
         "python": "Solution().findIntersectionValues",
-        "typescript": "Solution().findIntersectionValues"
+        "typescript": "Solution().findIntersectionValues",
+        "valkyrie": "findIntersectionValues"
     }
 }

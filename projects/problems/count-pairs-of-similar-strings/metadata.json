@@ -1702,6 +1702,7 @@
     ],
     "invoke": {
         "python": "Solution().similarPairs",
-        "typescript": "Solution().similarPairs"
+        "typescript": "Solution().similarPairs",
+        "valkyrie": "similarPairs"
     }
 }

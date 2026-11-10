@@ -1165,6 +1165,7 @@
     ],
     "invoke": {
         "python": "Solution().searchMatrix",
-        "typescript": "Solution().searchMatrix"
+        "typescript": "Solution().searchMatrix",
+        "valkyrie": "searchMatrix"
     }
 }

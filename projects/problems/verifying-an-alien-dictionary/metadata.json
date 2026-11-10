@@ -1194,6 +1194,7 @@
     ],
     "invoke": {
         "python": "Solution().isAlienSorted",
-        "typescript": "Solution().isAlienSorted"
+        "typescript": "Solution().isAlienSorted",
+        "valkyrie": "isAlienSorted"
     }
 }

@@ -970,6 +970,7 @@
     ],
     "invoke": {
         "python": "Solution().uniquePathsWithObstacles",
-        "typescript": "Solution().uniquePathsWithObstacles"
+        "typescript": "Solution().uniquePathsWithObstacles",
+        "valkyrie": "uniquePathsWithObstacles"
     }
 }

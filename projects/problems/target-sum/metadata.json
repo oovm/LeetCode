@@ -602,6 +602,7 @@
     ],
     "invoke": {
         "python": "Solution().findTargetSumWays",
-        "typescript": "Solution().findTargetSumWays"
+        "typescript": "Solution().findTargetSumWays",
+        "valkyrie": "findTargetSumWays"
     }
 }

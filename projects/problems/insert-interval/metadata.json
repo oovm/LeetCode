@@ -1169,6 +1169,7 @@
     ],
     "invoke": {
         "python": "Solution().insert",
-        "typescript": "Solution().insert"
+        "typescript": "Solution().insert",
+        "valkyrie": "insert"
     }
 }

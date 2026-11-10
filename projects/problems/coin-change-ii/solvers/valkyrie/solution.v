@@ -1,5 +1,29 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: change 需要 读取 coins 动态规划组合计数
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.coin_change_ii;
+
+using std.collection;
+
+# 组合数 DP：外层逐硬币、内层升序金额，dp[a] += dp[a - coin]，天然去排列重复。
+[export(case: "camelCase")]
+micro change(amount: i64, coins: ArrayList<i64>) -> i64 {
+    let mut dp: ArrayList<i64> = ArrayList::new(amount as usize + 1)
+    let mut slot: i64 = 0
+    while slot <= amount {
+        dp.push(0)
+        slot = slot + 1
+    }
+    dp⁅0⁆ = 1
+    loop coin in coins {
+        let mut a: usize = coin as usize
+        while a <= amount as usize {
+            dp⁅a⁆ = dp⁅a⁆ + dp⁅a - coin as usize⁆
+            a = a + 1
+        }
+    }
+    return dp⁅amount as usize⁆
+}
+
+class Solution {
+    micro change(self, amount: i64, coins: ArrayList<i64>): i64 {
+        return change(amount, coins)
+    }
+}

@@ -980,6 +980,7 @@
     ],
     "invoke": {
         "python": "Solution().hasPath",
-        "typescript": "Solution().hasPath"
+        "typescript": "Solution().hasPath",
+        "valkyrie": "hasPath"
     }
 }

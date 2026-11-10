@@ -1,5 +1,37 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: twoSumLessThanK 需要 读取 nums 排序双指针找小于 k 最大和
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.two_sum_less_than_k;
+
+using std.collection;
+
+# 拷贝排序后双指针：和 < k 时记录并左移收紧上界，否则右移降和。O(n log n)。
+[export(case: "camelCase")]
+micro twoSumLessThanK(nums: ArrayList<i64>, k: i64) -> i64 {
+    let mut sorted: ArrayList<i64> = ArrayList::new(nums.length())
+    loop value in nums {
+        sorted.push(value)
+    }
+    sort(sorted)
+    let mut lo: usize = 0
+    let mut hi: usize = sorted.length() - 1
+    let mut best: i64 = -1
+    while lo < hi {
+        let sum: i64 = sorted⁅lo⁆ + sorted⁅hi⁆
+        if sum < k {
+            if sum > best {
+                best = sum
+            }
+            lo = lo + 1
+        } else {
+            if hi == 0 {
+                break
+            }
+            hi = hi - 1
+        }
+    }
+    return best
+}
+
+class Solution {
+    micro twoSumLessThanK(self, nums: ArrayList<i64>, k: i64): i64 {
+        return twoSumLessThanK(nums, k)
+    }
+}

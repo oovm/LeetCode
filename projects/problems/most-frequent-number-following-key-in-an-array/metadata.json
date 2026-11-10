@@ -755,6 +755,7 @@
     ],
     "invoke": {
         "python": "Solution().mostFrequent",
-        "typescript": "Solution().mostFrequent"
+        "typescript": "Solution().mostFrequent",
+        "valkyrie": "mostFrequent"
     }
 }

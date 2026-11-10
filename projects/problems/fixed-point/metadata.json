@@ -725,6 +725,7 @@
     ],
     "invoke": {
         "python": "Solution().fixedPoint",
-        "typescript": "Solution().fixedPoint"
+        "typescript": "Solution().fixedPoint",
+        "valkyrie": "fixedPoint"
     }
 }

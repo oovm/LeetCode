@@ -229,6 +229,7 @@
     ],
     "invoke": {
         "python": "Solution().sumNumbers",
-        "typescript": "Solution().sumNumbers"
+        "typescript": "Solution().sumNumbers",
+        "valkyrie": "sumNumbers"
     }
 }

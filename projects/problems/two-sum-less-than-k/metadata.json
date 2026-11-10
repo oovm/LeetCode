@@ -709,6 +709,7 @@
     ],
     "invoke": {
         "python": "Solution().twoSumLessThanK",
-        "typescript": "Solution().twoSumLessThanK"
+        "typescript": "Solution().twoSumLessThanK",
+        "valkyrie": "twoSumLessThanK"
     }
 }

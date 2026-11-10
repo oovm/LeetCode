@@ -491,6 +491,7 @@
     ],
     "invoke": {
         "python": "Solution().rangeSumBST",
-        "typescript": "Solution().rangeSumBST"
+        "typescript": "Solution().rangeSumBST",
+        "valkyrie": "rangeSumBST"
     }
 }

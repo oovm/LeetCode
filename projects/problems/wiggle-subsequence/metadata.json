@@ -823,6 +823,7 @@
     ],
     "invoke": {
         "python": "Solution().wiggleMaxLength",
-        "typescript": "Solution().wiggleMaxLength"
+        "typescript": "Solution().wiggleMaxLength",
+        "valkyrie": "wiggleMaxLength"
     }
 }

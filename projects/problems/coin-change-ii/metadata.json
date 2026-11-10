@@ -875,6 +875,7 @@
     ],
     "invoke": {
         "python": "Solution().change",
-        "typescript": "Solution().change"
+        "typescript": "Solution().change",
+        "valkyrie": "change"
     }
 }

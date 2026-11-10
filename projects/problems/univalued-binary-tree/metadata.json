@@ -171,6 +171,7 @@
     ],
     "invoke": {
         "python": "Solution().isUnivalTree",
-        "typescript": "Solution().isUnivalTree"
+        "typescript": "Solution().isUnivalTree",
+        "valkyrie": "isUnivalTree"
     }
 }

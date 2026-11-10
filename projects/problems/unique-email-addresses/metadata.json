@@ -889,6 +889,7 @@
     ],
     "invoke": {
         "python": "Solution().numUniqueEmails",
-        "typescript": "Solution().numUniqueEmails"
+        "typescript": "Solution().numUniqueEmails",
+        "valkyrie": "numUniqueEmails"
     }
 }

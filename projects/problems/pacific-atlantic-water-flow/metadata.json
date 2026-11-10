@@ -2101,6 +2101,7 @@
     ],
     "invoke": {
         "python": "Solution().pacificAtlantic",
-        "typescript": "Solution().pacificAtlantic"
+        "typescript": "Solution().pacificAtlantic",
+        "valkyrie": "pacificAtlantic"
     }
 }

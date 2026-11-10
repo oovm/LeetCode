@@ -1,5 +1,29 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: fixedPoint 需要 读取 arr 二分找 arr[i]==i
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.fixed_point;
+
+using std.collection;
+
+# 严格递增数组：f(i) = arr[i] - i 不减，二分首个 arr[mid] >= mid，验证等号即最小不动点。
+[export(case: "camelCase")]
+micro fixedPoint(arr: ArrayList<i64>) -> i64 {
+    let n: usize = arr.length()
+    let mut lo: usize = 0
+    let mut hi: usize = n
+    while lo < hi {
+        let mid: usize = (lo + hi) / 2
+        if arr⁅mid⁆ >= mid as i64 {
+            hi = mid
+        } else {
+            lo = mid + 1
+        }
+    }
+    if lo < n && arr⁅lo⁆ == lo as i64 {
+        return lo as i64
+    }
+    return -1
+}
+
+class Solution {
+    micro fixedPoint(self, arr: ArrayList<i64>): i64 {
+        return fixedPoint(arr)
+    }
+}
