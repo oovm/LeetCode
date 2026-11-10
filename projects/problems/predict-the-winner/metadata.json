@@ -661,6 +661,7 @@
     ],
     "invoke": {
         "python": "Solution().predictTheWinner",
-        "typescript": "Solution().predictTheWinner"
+        "typescript": "Solution().predictTheWinner",
+        "valkyrie": "predictTheWinner"
     }
 }

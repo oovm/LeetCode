@@ -215,6 +215,7 @@
     ],
     "invoke": {
         "python": "Solution().pathSum",
-        "typescript": "Solution().pathSum"
+        "typescript": "Solution().pathSum",
+        "valkyrie": "pathSum"
     }
 }

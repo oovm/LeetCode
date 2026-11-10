@@ -547,6 +547,7 @@
     ],
     "invoke": {
         "python": "Solution().maxRotateFunction",
-        "typescript": "Solution().maxRotateFunction"
+        "typescript": "Solution().maxRotateFunction",
+        "valkyrie": "maxRotateFunction"
     }
 }

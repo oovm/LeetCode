@@ -799,6 +799,7 @@
     ],
     "invoke": {
         "python": "Solution().sumOfGoodNumbers",
-        "typescript": "Solution().sumOfGoodNumbers"
+        "typescript": "Solution().sumOfGoodNumbers",
+        "valkyrie": "sumOfGoodNumbers"
     }
 }

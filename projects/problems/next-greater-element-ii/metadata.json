@@ -775,6 +775,7 @@
     ],
     "invoke": {
         "python": "Solution().nextGreaterElements",
-        "typescript": "Solution().nextGreaterElements"
+        "typescript": "Solution().nextGreaterElements",
+        "valkyrie": "nextGreaterElements"
     }
 }

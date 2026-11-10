@@ -989,6 +989,7 @@
     ],
     "invoke": {
         "python": "Solution().shortestDistance",
-        "typescript": "Solution().shortestDistance"
+        "typescript": "Solution().shortestDistance",
+        "valkyrie": "shortestDistance"
     }
 }

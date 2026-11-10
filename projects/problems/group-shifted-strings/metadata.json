@@ -3996,6 +3996,7 @@
     ],
     "invoke": {
         "python": "Solution().groupStrings",
-        "typescript": "Solution().groupStrings"
+        "typescript": "Solution().groupStrings",
+        "valkyrie": "groupStrings"
     }
 }

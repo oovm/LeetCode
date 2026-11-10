@@ -1,5 +1,31 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: sumOfGoodNumbers 需要 读取 nums 求好于 k 邻元素和
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.sum_of_good_numbers;
+
+using std.collection;
+
+# 好数 = 与左邻 k 位或右邻 k 位相等；逐格两侧各查一次即可，O(n)。
+[export(case: "camelCase")]
+micro sumOfGoodNumbers(nums: ArrayList<i64>, k: i64) -> i64 {
+    let n: usize = nums.length()
+    let mut total: i64 = 0
+    let mut i: usize = 0
+    while i < n {
+        let mut good: bool = false
+        if i >= k as usize && nums⁅i - k as usize⁆ == nums⁅i⁆ {
+            good = true
+        }
+        if i + k as usize < n && nums⁅i + k as usize⁆ == nums⁅i⁆ {
+            good = true
+        }
+        if good {
+            total = total + nums⁅i⁆
+        }
+        i = i + 1
+    }
+    return total
+}
+
+class Solution {
+    micro sumOfGoodNumbers(self, nums: ArrayList<i64>, k: i64): i64 {
+        return sumOfGoodNumbers(nums, k)
+    }
+}

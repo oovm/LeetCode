@@ -662,6 +662,7 @@
     ],
     "invoke": {
         "python": "Solution().multiply",
-        "typescript": "Solution().multiply"
+        "typescript": "Solution().multiply",
+        "valkyrie": "multiply"
     }
 }

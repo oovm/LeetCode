@@ -836,6 +836,7 @@
     ],
     "invoke": {
         "python": "Solution().maxSubArrayLen",
-        "typescript": "Solution().maxSubArrayLen"
+        "typescript": "Solution().maxSubArrayLen",
+        "valkyrie": "maxSubArrayLen"
     }
 }

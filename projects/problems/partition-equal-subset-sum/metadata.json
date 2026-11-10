@@ -532,6 +532,7 @@
     ],
     "invoke": {
         "python": "Solution().canPartition",
-        "typescript": "Solution().canPartition"
+        "typescript": "Solution().canPartition",
+        "valkyrie": "canPartition"
     }
 }

@@ -101,6 +101,7 @@
     ],
     "invoke": {
         "python": "Solution().zigzagLevelOrder",
-        "typescript": "Solution().zigzagLevelOrder"
+        "typescript": "Solution().zigzagLevelOrder",
+        "valkyrie": "zigzagLevelOrder"
     }
 }

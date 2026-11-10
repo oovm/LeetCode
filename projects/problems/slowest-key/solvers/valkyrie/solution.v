@@ -1,5 +1,30 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: slowestKey 需要 读取 releaseTimes/keysPressed 找最长按键
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.slowest_key;
+
+using std.collection;
+using std.text;
+
+# 逐键比较时长：首键时长为 releaseTimes[0]，其后为相邻差；时长更大或等长但码位更大者胜。
+[export(case: "camelCase")]
+micro slowestKey(releaseTimes: ArrayList<i64>, keysPressed: utf8) -> utf8 {
+    let mut best_code: u32 = keysPressed⁅0⁆ as u32
+    let mut best_dur: i64 = releaseTimes⁅0⁆
+    let mut i: usize = 1
+    while i < keysPressed.length() {
+        let dur: i64 = releaseTimes⁅i⁆ - releaseTimes⁅i - 1⁆
+        let code: u32 = keysPressed⁅i⁆ as u32
+        if dur > best_dur || (dur == best_dur && code > best_code) {
+            best_dur = dur
+            best_code = code
+        }
+        i = i + 1
+    }
+    let mut builder: Utf8Builder = Utf8Builder::new(0)
+    builder.append(best_code as char)
+    return builder.build()
+}
+
+class Solution {
+    micro slowestKey(self, releaseTimes: ArrayList<i64>, keysPressed: utf8): utf8 {
+        return slowestKey(releaseTimes, keysPressed)
+    }
+}

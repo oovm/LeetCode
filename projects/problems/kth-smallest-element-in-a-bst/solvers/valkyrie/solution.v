@@ -1,5 +1,32 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: kthSmallest 需要 层序数组读取 root 中序第 k 小
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.kth_smallest_element_in_a_bst;
+
+using std.collection;
+
+# 堆式下标中序遍历：`seen⁅0⁆` 作计数器；第 k 个被访问的节点值即答案。
+micro inorder(root: ArrayList<i64>, i: usize, k: i64, seen: ArrayList<i64>) -> i64 {
+    if i >= root.length() {
+        return -1
+    }
+    let left: i64 = inorder(root, 2 * i + 1, k, seen)
+    if left != -1 {
+        return left
+    }
+    seen⁅0⁆ = seen⁅0⁆ + 1
+    if seen⁅0⁆ == k {
+        return root⁅i⁆
+    }
+    return inorder(root, 2 * i + 2, k, seen)
+}
+
+[export(case: "camelCase")]
+micro kthSmallest(root: ArrayList<i64>, k: i64) -> i64 {
+    let mut seen: ArrayList<i64> = ArrayList::new(1)
+    seen.push(0)
+    return inorder(root, 0, k, seen)
+}
+
+class Solution {
+    micro kthSmallest(self, root: ArrayList<i64>, k: i64): i64 {
+        return kthSmallest(root, k)
+    }
+}

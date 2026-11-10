@@ -126,6 +126,7 @@
     ],
     "invoke": {
         "python": "Solution().exist",
-        "typescript": "Solution().exist"
+        "typescript": "Solution().exist",
+        "valkyrie": "exist"
     }
 }

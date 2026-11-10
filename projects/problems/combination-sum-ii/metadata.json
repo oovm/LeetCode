@@ -7073,6 +7073,7 @@
     "invoke": {
         "python": "Solution().combinationSum2",
         "typescript": "Solution().combinationSum2",
+        "valkyrie": "combinationSum2",
         "wolframSxo": "combinationSum2",
         "matlabSxo": "combinationSum2"
     }

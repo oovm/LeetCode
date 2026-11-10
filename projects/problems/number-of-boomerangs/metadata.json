@@ -637,6 +637,7 @@
     ],
     "invoke": {
         "python": "Solution().numberOfBoomerangs",
-        "typescript": "Solution().numberOfBoomerangs"
+        "typescript": "Solution().numberOfBoomerangs",
+        "valkyrie": "numberOfBoomerangs"
     }
 }

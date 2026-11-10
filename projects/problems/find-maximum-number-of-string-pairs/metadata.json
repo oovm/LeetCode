@@ -1832,6 +1832,7 @@
     ],
     "invoke": {
         "python": "Solution().maximumNumberOfStringPairs",
-        "typescript": "Solution().maximumNumberOfStringPairs"
+        "typescript": "Solution().maximumNumberOfStringPairs",
+        "valkyrie": "maximumNumberOfStringPairs"
     }
 }

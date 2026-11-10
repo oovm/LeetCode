@@ -823,6 +823,7 @@
     ],
     "invoke": {
         "python": "Solution().updateMatrix",
-        "typescript": "Solution().updateMatrix"
+        "typescript": "Solution().updateMatrix",
+        "valkyrie": "updateMatrix"
     }
 }

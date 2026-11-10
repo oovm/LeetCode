@@ -546,6 +546,7 @@
     ],
     "invoke": {
         "python": "Solution().search",
-        "typescript": "Solution().search"
+        "typescript": "Solution().search",
+        "valkyrie": "search"
     }
 }

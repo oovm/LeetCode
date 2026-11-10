@@ -300,6 +300,7 @@
     ],
     "invoke": {
         "python": "Solution().countUnivalSubtrees",
-        "typescript": "Solution().countUnivalSubtrees"
+        "typescript": "Solution().countUnivalSubtrees",
+        "valkyrie": "countUnivalSubtrees"
     }
 }

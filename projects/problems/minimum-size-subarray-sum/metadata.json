@@ -565,6 +565,7 @@
     ],
     "invoke": {
         "python": "Solution().minSubArrayLen",
-        "typescript": "Solution().minSubArrayLen"
+        "typescript": "Solution().minSubArrayLen",
+        "valkyrie": "minSubArrayLen"
     }
 }
