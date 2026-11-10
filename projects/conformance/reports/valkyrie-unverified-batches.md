@@ -2083,3 +2083,49 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   `complement-of-base-10-integer` 的 `<<` 在 n=2³²-1 溢出 int32 死循环，改算术 mask；
   `number-of-1-bits` 的 `>>> 0` 在 n=2⁴⁰（语料超 LeetCode 约束）截位，改算术取位。
 - 验证口径：编译通过 0、端到端通过 0、写完未验证 24（V）；TS 基线 16/16 实测通过。
+
+## 批次 R37-2026-11-10（blocked 清障续批二 24 题 + TypeScript 基线 16 题，V 写完未构建）
+
+- 两个子批，口径同 R36。R37-A 从剩余陈旧 `# blocked: std.collection 数组参数读取`
+  题池（清障后剩 177）再选 24 题；`expected` 为 `null` 的就地修改类 3 题
+  （`surrounded-regions` / `walls-and-gates` / `wiggle-sort`）按 R35 排除口径不入批。
+- R37-A 能力分组（24）：
+  - 矩阵 / 图 4：`maximal-square`（`[[utf8]]` 滚动 DP）、`pacific-atlantic-water-flow`
+    （双海岸 DFS）、`unique-paths-ii`（滚动列 DP）、`the-maze`（四向滑动 DFS）。
+  - 哈希 / 计数 5：`intersection-of-multiple-arrays`（值域桶计数）、
+    `find-common-elements-between-two-arrays`（双桶存在性）、`two-sum-less-than-k`
+    （`sort` 自然序 + 双指针）、`most-frequent-number-following-key-in-an-array`（桶计数）、
+    `count-pairs-of-similar-strings`（字符集压 26 位掩码 + `HashMap<i64, i64>`）。
+  - 二分 5：`h-index-ii`（升序找首个 `citations[i] >= n - i`）、`search-in-rotated-sorted-array`
+    （i64 下标避免 usize 减穿）、`fixed-point`、`search-a-2d-matrix`（展平二分）、
+    `insert-interval`（三段线性归并）。
+  - DP / 贪心 4：`paint-house`（三列滚动）、`coin-change-ii`（组合数 DP）、
+    `target-sum`（2^n DFS 递归）、`wiggle-subsequence`（up/down 贪心，`std.math.max`）。
+  - 树 4：`univalued-binary-tree`、`sum-root-to-leaf-numbers`、`range-sum-of-bst`（BST 剪枝）、
+    `find-leaves-of-binary-tree`（按高度分行；内层 `ArrayList::new` 显式类型避嵌套推断）——
+    全部堆式下标递归。
+  - 文本 2：`unique-email-addresses`（`Utf8Builder` 双段重建 + `HashMap<utf8, i64>`
+    去重键 → 题内标 `# 题内触发点:` 命中 std::hash#445）、`verifying-an-alien-dictionary`
+    （rank 表 + `char as u32` 逐字符比较）。
+- 三件套：24/24（`solution.v` + `metadata.invoke.valkyrie` 裸导出名）。
+- 静态自查：24/24 通过（六项同 R35 / R36）。
+- 镜像回放（非 V 构建，不作为通过证据）：Python 参照 **19 题通过**；
+  树 4 题 Python 参照按 `TreeNode` 对象写、与堆式数组语料不符（Python lane 既有缺陷）；
+  `pacific-atlantic-water-flow` Python 参照返回 `(i, j)` 元组、与 list 期望永不相等
+  （同为 Python lane 既有缺陷，值本身逐条一致）——共 5 题改 TS 参照复核
+  **5/5 全过（190 用例）**。本批合计 **2272 条用例** 经参照实现核对一致。
+- R37-B 范围（16）：`a-number-after-a-double-reversal`、`add-digits`、`armstrong-number`、
+  `binary-watch`、`bitwise-and-of-numbers-range`、`bulb-switcher`、
+  `calculate-money-in-leetcode-bank`、`cells-in-a-range-on-an-excel-sheet`、
+  `concatenation-of-array`、`consecutive-numbers-sum`、`construct-the-rectangle`、
+  `convert-a-number-to-hexadecimal`、`convert-integer-to-the-sum-of-two-no-zero-integers`、
+  `convert-the-temperature`、`count-asterisks`、`count-integers-with-even-digit-sum`。
+- R37-B 实测：`run_ts_solver.ts` 逐题单进程，**16/16 exit 0（1061 用例全过）**。
+- R37-B 语料清洗（1 条）：`convert-a-number-to-hexadecimal` `tests[24]` 的 `args.num`
+  为越界字符串 `"67553994410557440"`（2⁵⁶，超 32 位有界约束），且 `expected`
+  `"fffffffc"` 与参照对该实参的输出（`""`）矛盾——实参已损坏，删除该条（60 → 59），
+  删除后 Python / TS 参照双绿。
+- R37-B 参照解实测修正（1 题）：`convert-a-number-to-hexadecimal` 手写十进制转换
+  与参照的「低 32 位 8 nibble 窗口」语义在越界实参上不一致，改 `BigInt` 移位 +
+  `& 0xF` 复刻参照窗口。
+- 验证口径：编译通过 0、端到端通过 0、写完未验证 24（V）；TS 基线 16/16 实测通过。

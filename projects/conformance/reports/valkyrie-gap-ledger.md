@@ -2912,6 +2912,35 @@ micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countabl
 - **语料修正记录（非语言缺口）**：`base-7` 的 `tests[].expected` 47 条由 number 修为
   string（生成器类型错误，题面返回 String），按 R28 先例，未删用例。
 
+### 未命中面（R37 批次，2026-11-10，新编号 0 条）
+
+- **本批口径**：R37-A 全部理想写法、写完未构建；下列「够用」均指**源码面存在**，
+  构建证据待后续窗口复验。
+- **`HashMap<i64, i64>` + 位掩码键**：`count-pairs-of-similar-strings` 把字符集压成
+  26 位掩码作键，`bit_or` / `bit_shift_left`（usize 位宽直接传参，同 `find-the-k-or`
+  写法）复验。无新缺口。
+- **`HashMap<utf8, i64>` 去重键触发点**：`unique-email-addresses` 按理想写法用 `utf8`
+  作键，题内标 `# 题内触发点:` 命中 std::hash#445（与 `sentence-similarity-ii` 同停点），
+  不新开编号。
+- **`Utf8Builder` 双段重建 + `utf8 +` 拼接**：`unique-email-addresses` 的 `normalize`
+  用两个 builder 分段收集再 `+ "@" +` 拼接；`@` / `+` / `.` 走 `char as u32` 码位比较
+  （R35 `delete-columns-to-make-sorted` 同形）。无新缺口。
+- **递归辅助 + 就地 `[[i64]]` 访问标记面复验**：`pacific-atlantic-water-flow` /
+  `the-maze` 用 `seen⁅i⁆⁅j⁆ = 1` 与递归 `flow` / `roll`（R36 `number-of-islands` 同形）。
+- **`sort` 自然序复验**：`two-sum-less-than-k` 先拷贝再 `sort`（R35 口径）。
+- **树族堆式下标复验（4 题）**：`univalued-binary-tree` / `sum-root-to-leaf-numbers` /
+  `range-sum-of-bst` / `find-leaves-of-binary-tree`——叶判定 `2i+1 >= length`，
+  `find-leaves` 内层 `ArrayList::new(0)` 显式类型注解避嵌套推断（R28 编译失败族规避）。
+- **i64 下标二分复验**：`search-in-rotated-sorted-array` 用 i64 `lo` / `hi`
+  （`hi = mid - 1` 在 `mid == 0` 时 usize 会减穿），`search-a-2d-matrix` 展平时
+  `mid / cols as i64` 还原行列。无新缺口。
+- **Python lane 既有缺陷登记（非 V 缺口、非语料缺陷）**：
+  `pacific-atlantic-water-flow` Python 参照返回 `(i, j)` 元组，与 list 期望永不相等
+  （值逐条一致），改 TS 参照复核；树 4 题同 R35 的 `TreeNode` 形态不符。
+- **语料清洗记录（非语言缺口）**：`convert-a-number-to-hexadecimal` `tests[24]` 实参为
+  越界字符串 `"67553994410557440"` 且 expected 与参照输出矛盾（实参损坏），删除 1 条
+  （60 → 59），删除后 Python / TS 双绿。
+
 ### 未命中面（第 6 批探测，2026-11-04，仅 G23 一条新编号）
 
 - **`utf8.split` 首次被压住**：`split-strings-by-separator`（2788）直接 `word.split(separator)`
