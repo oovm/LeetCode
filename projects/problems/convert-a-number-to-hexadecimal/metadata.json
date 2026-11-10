@@ -153,12 +153,6 @@
         },
         {
             "args": {
-                "num": "67553994410557440"
-            },
-            "expected": "fffffffc"
-        },
-        {
-            "args": {
                 "num": 1048575
             },
             "expected": "fffff"
