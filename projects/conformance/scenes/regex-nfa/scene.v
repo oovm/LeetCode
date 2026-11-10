@@ -152,7 +152,7 @@ micro accepts(nfa: Nfa, seeds: ArrayList<i64>) -> bool {
     return found
 }
 
-# 从每个起点只用起点状态集驱动（不回溯），跑完整个后缀。
+# 从每个起点只用起点状态集驱动（不回溯）；到达接受状态即早返回（子串匹配语义）。
 micro run_from(nfa: Nfa, text: utf8, offset: i64) -> bool {
     let mut current: ArrayList<i64> = start_set(nfa)
     let length: i64 = text.length() as i64
@@ -185,6 +185,9 @@ micro run_from(nfa: Nfa, text: utf8, offset: i64) -> bool {
         }
         if current.length() == 0 {
             return false
+        }
+        if accepts(nfa, current) {
+            return true
         }
         position = position + 1
     }
