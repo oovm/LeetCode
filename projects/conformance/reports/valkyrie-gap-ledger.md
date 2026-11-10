@@ -2779,6 +2779,24 @@ micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countabl
   - 1 题 `maximum-number-of-eaten-apples` 的自定义 `Fruit: Comparable` 撞 MIR lowering 缺陷 G31，
     构建未通过，未计入上述 9 题。
 
+### G33 `utf8` 数值串解析无一等入口（`to_i64()` [提案]，源码尚不存在）
+
+- 一句判据：题面数字串（RPN 的 `"13"` / `"-4"`、`atoi` 的 `"   -42"`）必须能经 `utf8` 上的
+  一个解析入口转成整数；现在每个调用点都手写「符号位 + 逐位 `* 10 + (ch as u32 - 48)`」，
+  同一套逻辑随调用点线性增长（判据 b）。
+- 语言构造：`tokens: ArrayList<utf8>` → `i64`；`s: utf8` → `i64`。
+- 期望签名（[提案]，源码尚不存在）：`micro to_i64(self): Option<i64>`——可失败形态归 `Option`，
+  越界与非法字符为 `None`；不引入异常式旁路。
+- 现状：`std/source/text/` 无任何 utf8→整数入口；`format.v:68` 的 `decimal_i64` 是 **private**
+  且方向相反（`i64 → utf8`）。
+- 真实调用点（2 处，2026-11-10 扫描）：
+  - `evaluate-reverse-polish-notation/solution.v:7`（`token_to_value` 手写逐位累积，R35 写入）；
+  - `string-to-integer-atoi/solution.v:37`（手写 `digit` 累积，已构建通过基线内）。
+- 最小复现：`projects/problems/evaluate-reverse-polish-notation/solvers/valkyrie/solution.v`
+  的 `token_to_value`；替换为 `t.to_i64()` 即触发 `unresolved call`。
+- 判定：**真缺口**（判据 b：两处独立手写，题库数字串族后续只会增加调用点）。
+- 修复初判：**加 API**（`std.text` 的 `Utf8Text` 上补 `to_i64`；`i64 → utf8` 公开形态另记）。
+
 ### 未命中面（第 3 批探测，2026-11-04，无强制影响题，故不编号）
 
 - **迭代器适配器族不是缺口**：`filter_map` / `skip_while` / `take_while` 都在
@@ -2840,6 +2858,36 @@ micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countabl
   都只需「边界下标收缩」或「读写指针相对移动」，索引循环即可表达。G19 维持单实例（189）。
 - **表达力缺口档仍只有 G8**：本批新增触发面（G13 第二实例、G18 空转）都有等价写法；
   `MultiSet` / `BitSet` / `Deque` 三条容器面全部落在 std 已有 API 上，未出现「没有任何近似物」。
+
+### 未命中面（R35 批次，2026-11-10，新编号 1 条：G33）
+
+- **本批口径**：R35 全部按理想写法落地、写完未构建（不占构建窗口）。下列「够用」均指
+  **源码面存在**（以 `valkyrie.v` 工作树为准），构建证据待后续窗口复验。
+- **`sort(ArrayList<i64>)` 自然序入口第三次确认存在**：`3sum-closest` / `3sum-smaller` / `4sum`
+  直接 `sort(sorted)`（`sort.v:84`，G26 已恢复、比较器由 `Comparable` 派生）。
+  本批一律「先拷贝再排序」，不改写入参，与 TS 参照的输入可变性差异无关。
+- **`loop <var> in <ArrayList>` 首次成规模写进题解**：本批 12 题用 `loop` 遍历
+  （拷贝、计数、扫描），不再手写 `while + ⁅i⁆` 索引；迭代协议 `172b944a` 修复后
+  30 题还原全过（见「待还原组」节），本批为该面的规模复验批次。
+- **`std.math` 的 `abs` / `min`（i64）首次进题解**：`3sum-closest`（距离比较）、
+  `distance-between-bus-stops`（环形取小）。源码存在（`math/integer.v:7 / :28`），无新缺口。
+- **`utf8` 等值比较面确认够用**：`battleships-in-a-board` / `bomb-enemy` /
+  `available-captures-for-rook` / `count-items-matching-a-rule` 大量用 `== "X"` / `== "W"`；
+  `infix ==` 在 `Utf8Text.v:749` 真实存在。managed 通道 `infix !=` 实例未解析的旧观测
+  （lane-coverage 工具链状态行）按当前 pin 待复验，本批不新增编号。
+- **`utf8` 拼接 / `length` 面首次成规模**：`check-if-string-is-a-prefix-of-array` 用
+  `built = built + word`（`Utf8Text.v:150` 真实存在）；`vowelStrings` / `minDeletionSize`
+  用 `⁅i⁆` 取 `char` + `as u32`。无新增缺口。
+- **`char` 序比较走 `as u32`**：`delete-columns-to-make-sorted` 未直接对 `char` 用 `<`
+  （`char: Comparable` 是否覆盖序未实测），按既有码位比较写法处理；**不据此编号**，
+  待 `char` 序面有强制题再判。
+- **`f64` 返回值面**：`average-of-levels-in-binary-tree` 返回 `ArrayList<f64>` 并做
+  `i64 as f64` 精确转换——G2（`-> f64` 合同，2026-11-07 已恢复）与 G3（glue 的
+  `ArrayList` demarshal）的叠加实例，题内已标 `# 题内触发点:`，不新开编号。
+- **`utf8` 数值解析首次压出真缺口**：`evaluate-reverse-polish-notation` 手写 `token_to_value`，
+  与 `string-to-integer-atoi` 构成两处独立手写 → **G33**。
+- **树族堆式下标写法确认**：语料 `root` 无 `null`（全树以完整堆式数组给出），
+  `ArrayList<i64>` + `2i+1 / 2i+2` 即可表达，无需 `Option` 载体；4 题同形。
 
 ### 未命中面（第 6 批探测，2026-11-04，仅 G23 一条新编号）
 

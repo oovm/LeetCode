@@ -1992,3 +1992,48 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   `crawler-log-folder`（`solution.v:29` `classify_folder` unresolved）、`merge-intervals`（`solution.v:38`
   `order_items` 走未落地的 `sort` 提案入口）、`valid-sudoku`（`source/collection` `self.words.set` 5 个候选
   均不匹配实参类型）。
+
+## 批次 R35-2026-11-10（陈旧 `数组参数读取` blocked 清障：27 题理想写法写入，写完未构建）
+
+- 选题：从 254 道仍带 `# blocked: std.collection 数组参数读取` 的题池取 27 题。该阻塞注释已被
+  `two-sum` 与 R30/R32 实证证伪（数组形参可直接索引与遍历），本批成规模清障。
+  排除口径：`corpusDefect=true` 的题一律不碰（本批剔除 `cells-with-odd-values-in-a-matrix`、
+  `count-negative-numbers-in-a-sorted-matrix`、`element-appearing-more-than-25-in-sorted-array`、
+  `build-array-from-permutation`；`fair-candy-swap` / `apple-redistribution-into-boxes` 的
+  `tests[].expected` 为 `null`（宿主异常期望未清），不入本批）。
+- **本批口径（用户指令）**：只考虑理想写法、倒逼上游完善——不迁就编译器/运行时当前进度，
+  不写绕路 hack；缺能力处按账本标注约定登记（本批新编号 **G33**：`utf8` 数值解析无一等入口）。
+  写入窗口不运行 `legion build` / cargo，不占构建槽位。
+- 能力分组（27）：
+  - 矩阵 / 棋盘 6：`check-if-grid-satisfies-conditions`、`convert-1d-array-into-2d-array`、
+    `diagonal-traverse`（`reverse()`）、`battleships-in-a-board`、`available-captures-for-rook`、
+    `bomb-enemy`（`[[utf8]]` 等值比较面）。
+  - 排序 / 双指针 6：`3sum-closest`、`3sum-smaller`、`4sum`（`sort(ArrayList<i64>)` 自然序 +
+    去重）、`check-if-n-and-its-double-exist`（`HashSet`）、`distance-between-bus-stops`
+    （`std.math.min`）、`diet-plan-performance`（定窗滑动）。
+  - 哈希 / 前缀 / DP 5：`contiguous-array`（`HashMap` 前缀平衡）、`circular-array-loop`
+    （快慢指针 + 就地标记，拷贝入参后 `⁅ ⁆=` 写穿副本）、`combination-sum-iv`（递推 DP，
+    `expected` 8437020668201 在 i64 域内）、`faulty-sensor`、`check-if-it-is-a-straight-line`（叉积）。
+  - 文本 6：`check-distances-between-same-letters`、`count-the-number-of-vowel-strings-in-range`、
+    `check-if-string-is-a-prefix-of-array`（`utf8` `+` 拼接）、`count-items-matching-a-rule`
+    （`utf8 ==` 等值）、`delete-columns-to-make-sorted`（`char` 码位比较）、
+    `evaluate-reverse-polish-notation`（手写数字解析 → 触发 G33）。
+  - 树 / 栈 4：`average-of-levels-in-binary-tree`（`ArrayList<f64>` 返回，G2/G3 叠加实例，
+    题内已标 `# 题内触发点:`）、`binary-tree-right-side-view`、`find-bottom-left-tree-value`、
+    `cousins-in-binary-tree`。
+- 三件套：27/27（`solution.v` + `metadata.invoke.valkyrie`；题库原有 TS / Python 参照不变）。
+- 理想写法面：`loop <var> in <ArrayList>` 首次成规模使用（12 题）；`sort` 自然序入口（3 题）；
+  `std.math` `abs` / `min`（2 题）；`utf8` `+` / `==` / `⁅i⁆` 取 `char`（6 题）；
+  定长填充不再手写（本批计数表用 `ArrayList::new + push` 显式构造，未用 `[value; count]`，
+  该面归 G1 观察）。
+- 静态自查（27/27）：namespace 与目录名一致（数字 slug 按 `three_sum_*` / `four_sum` 拼写，
+  与 `three_sum_with_multiplicity` 先例一致）、`[export(case: "camelCase")]` 恰一处、
+  顶层 `micro` 与 `Class Solution` 方法同名、`invoke.valkyrie` 为裸导出名、
+  形参名与 `tests[].args` 键逐字同序、无残留 `# blocked`。
+- 镜像回放（按 `metadata.tests[].args` 键序回放，非 V 构建，不作为通过证据）：
+  Python 参照 **23 题通过**；`average-of-levels-in-binary-tree` / `binary-tree-right-side-view` /
+  `find-bottom-left-tree-value` / `cousins-in-binary-tree` 4 题 Python 参照按 `TreeNode` 对象写、
+  与堆式数组语料不符（Python lane 既有缺陷，非本批引入、非语料缺陷），改用 TS 参照复核：
+  **4/4 全过（55 用例）**。本批合计 **2357 条用例** 经参照实现核对一致，无 `corpusDefect` 新增。
+- 验证口径：编译通过 0、端到端通过 0、写完未验证 27；待构建窗口按
+  `node --import tsx projects/conformance/scripts/run_v_dual_target_baseline.ts --one-id <id>` 复跑。
