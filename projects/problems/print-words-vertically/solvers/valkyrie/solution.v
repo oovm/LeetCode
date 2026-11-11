@@ -7,7 +7,7 @@ using std.text
 # 题面保证单词由单个空格分隔，故用 `split(" ")` 等价展开。
 class Solution {
     [export(case: "camelCase")]
-    micro printVertically(s: utf8) -> ArrayList<utf8> {
+    micro printVertically(s: utf8) -> [utf8] {
         let words: [utf8] = s.split(" ")
         let word_count: usize = words.length()
         let mut longest: usize = 0
@@ -35,13 +35,13 @@ class Solution {
                 if words⁅draw⁆.length() > column {
                     builder.append(words⁅draw⁆.character_at(column))
                 } else {
-                    builder.append(" ")
+                    builder.append(char::from(32))
                 }
                 draw = draw + 1
             }
             lines.push(builder.build())
             column = column + 1
         }
-        return lines
+        return lines.to_array()
     }
 }

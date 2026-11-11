@@ -24,7 +24,7 @@ micro letter_start(digit: i64) -> i64 {
     if digit == 8 {
         return 116
     }
-    return 122
+    return 119
 }
 
 micro letter_count(digit: i64) -> i64 {
@@ -42,11 +42,11 @@ micro letter_count(digit: i64) -> i64 {
 # 题内触发点: 嵌套容器构造 —— `ArrayList<ArrayList<i64>>` 逐层重建 + 精确预分配。
 # 题内触发点: `Utf8Builder` —— 每串 1–4 次 `append(char)` 后 `build()`。
 [export(case: "camelCase")]
-micro letter_combinations(digits: utf8) -> ArrayList<utf8> {
+micro letter_combinations(digits: utf8) -> [utf8] {
     let total: usize = digits.byte_length()
     let mut result: ArrayList<utf8> = ArrayList::new(0)
     if total == 0 {
-        return result
+        return result.to_array()
     }
 
     let mut combos: ArrayList<ArrayList<i64>> = ArrayList::new(1)
@@ -82,11 +82,11 @@ micro letter_combinations(digits: utf8) -> ArrayList<utf8> {
         }
         result.push(builder.build())
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro letterCombinations(self, digits: utf8): ArrayList<utf8> {
+    micro letterCombinations(self, digits: utf8): [utf8] {
         return letter_combinations(digits)
     }
 }

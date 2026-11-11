@@ -2,7 +2,7 @@ namespace leetcode.stepping_numbers;
 
 # 从 0-9 起 BFS 追加相邻数字，按值自然升序产出。
 [export(case: "camelCase")]
-micro count_stepping_numbers(low: i64, high: i64) -> ArrayList<i64> {
+micro count_stepping_numbers(low: i64, high: i64) -> [i64] {
     let mut queue: ArrayList<i64> = ArrayList::new(0)
     let mut head: usize = 0
     let mut answer: ArrayList<i64> = ArrayList::new(0)
@@ -33,11 +33,11 @@ micro count_stepping_numbers(low: i64, high: i64) -> ArrayList<i64> {
             }
         }
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro countSteppingNumbers(self, low: i64, high: i64): ArrayList<i64> {
+    micro countSteppingNumbers(self, low: i64, high: i64): [i64] {
         return count_stepping_numbers(low, high)
     }
 }

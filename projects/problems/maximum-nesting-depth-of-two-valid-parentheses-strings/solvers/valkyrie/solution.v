@@ -4,7 +4,7 @@ using std.collection;
 
 # 按当前嵌套深度交替分给两组，任一时刻两组深度差不超过 1 且各串合法。
 [export(case: "camelCase")]
-micro max_depth_after_split(seq: utf8) -> ArrayList<i64> {
+micro max_depth_after_split(seq: utf8) -> [i64] {
     let size: usize = seq.length()
     let mut answer: ArrayList<i64> = ArrayList::new(size)
     loop _fill in 0..size {
@@ -21,11 +21,11 @@ micro max_depth_after_split(seq: utf8) -> ArrayList<i64> {
             answer⁅index⁆ = depth & 1
         }
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro maxDepthAfterSplit(self, seq: utf8): ArrayList<i64> {
+    micro maxDepthAfterSplit(self, seq: utf8): [i64] {
         return max_depth_after_split(seq)
     }
 }

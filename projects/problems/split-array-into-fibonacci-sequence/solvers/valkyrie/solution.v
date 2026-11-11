@@ -42,14 +42,14 @@ micro extend(num: utf8, start: usize, answer: ArrayList<i64>) -> bool {
 }
 
 [export(case: "camelCase")]
-micro split_into_fibonacci(num: utf8) -> ArrayList<i64> {
+micro split_into_fibonacci(num: utf8) -> [i64] {
     let mut answer: ArrayList<i64> = ArrayList::new(0)
     extend(num, 0, answer)
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro splitIntoFibonacci(self, num: utf8): ArrayList<i64> {
+    micro splitIntoFibonacci(self, num: utf8): [i64] {
         return split_into_fibonacci(num)
     }
 }

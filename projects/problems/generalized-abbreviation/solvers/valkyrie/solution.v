@@ -31,15 +31,15 @@ micro generate_into(word: utf8, position: i64, current: utf8, out: ArrayList<utf
 }
 
 [export(case: "camelCase")]
-micro generate_abbreviations(word: utf8) -> ArrayList<utf8> {
+micro generate_abbreviations(word: utf8) -> [utf8] {
     let mut out: ArrayList<utf8> = ArrayList::new(0)
     let mut empty: Utf8Builder = Utf8Builder::new(0)
     generate_into(word, 0, empty.build(), out)
-    return out
+    return out.to_array()
 }
 
 class Solution {
-    micro generateAbbreviations(self, word: utf8): ArrayList<utf8> {
+    micro generateAbbreviations(self, word: utf8): [utf8] {
         return generate_abbreviations(word)
     }
 }

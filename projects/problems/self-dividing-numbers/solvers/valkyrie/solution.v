@@ -16,7 +16,7 @@ micro is_self_dividing(n: i64) -> bool {
 }
 
 [export(case: "camelCase")]
-micro self_dividing_numbers(left: i64, right: i64) -> ArrayList<i64> {
+micro self_dividing_numbers(left: i64, right: i64) -> [i64] {
     let mut result: ArrayList<i64> = ArrayList::new(0)
     let mut n: i64 = left
     while n <= right {
@@ -25,11 +25,11 @@ micro self_dividing_numbers(left: i64, right: i64) -> ArrayList<i64> {
         }
         n = n + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro selfDividingNumbers(self, left: i64, right: i64): ArrayList<i64> {
+    micro selfDividingNumbers(self, left: i64, right: i64): [i64] {
         return self_dividing_numbers(left, right)
     }
 }

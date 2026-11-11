@@ -2,7 +2,7 @@ namespace leetcode.moving_stones_until_consecutive;
 
 # 排序后：最小移动数为 0/1/2 三档，最大移动数为两端空隙之和。
 [export(case: "camelCase")]
-micro num_moves_stones(a: i64, b: i64, c: i64) -> ArrayList<i64> {
+micro num_moves_stones(a: i64, b: i64, c: i64) -> [i64] {
     let mut x: i64 = a
     let mut y: i64 = b
     let mut z: i64 = c
@@ -33,11 +33,11 @@ micro num_moves_stones(a: i64, b: i64, c: i64) -> ArrayList<i64> {
     let mut answer: ArrayList<i64> = ArrayList::new(2)
     answer.push(min_moves)
     answer.push(max_moves)
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro numMovesStones(self, a: i64, b: i64, c: i64): ArrayList<i64> {
+    micro numMovesStones(self, a: i64, b: i64, c: i64): [i64] {
         return num_moves_stones(a, b, c)
     }
 }
