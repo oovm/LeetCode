@@ -40,7 +40,8 @@ micro i32_bounds() -> i64 {
     return total
 }
 
-# i64 加法越界应被可观察地拒绝，而不是静默回绕。
+# i64 加法按二进制补码回绕：MAX + 1 得到 MIN。
+# 溢出检查不是隐式语义；需要可观察失败时由作者显式 `raise`/边界检查表达。
 [export(name: "overflowTrap")]
 micro overflow_trap() -> i64 {
     let max: i64 = 9223372036854775807

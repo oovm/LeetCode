@@ -6,6 +6,6 @@
         { "export": "i32Truncation", "expected": 0, "note": "2^32 截断为 0" },
         { "export": "divisionTruncation", "expected": -31, "note": "-3 * 10 + (-1)" },
         { "export": "i32Bounds", "expected": -1, "note": "MAX + MIN" },
-        { "export": "overflowTrap", "expected": "trap", "note": "越界必须可观察" }
+        { "export": "overflowTrap", "expected": "-9223372036854775808", "note": "wrapping：MAX + 1 == MIN（i64 运算按补码回绕）" }
     ]
 }
