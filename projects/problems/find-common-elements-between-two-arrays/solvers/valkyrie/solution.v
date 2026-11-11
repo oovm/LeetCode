@@ -4,7 +4,7 @@ using std.collection;
 
 # 值域 0..1000 双桶存在性计数：逐值查另一侧桶即可，无需哈希容器。
 [export(case: "camelCase")]
-micro findIntersectionValues(nums1: ArrayList<i64>, nums2: ArrayList<i64>) -> ArrayList<i64> {
+micro findIntersectionValues(nums1: [i64], nums2: [i64]) -> [i64] {
     let mut in1: ArrayList<i64> = ArrayList::new(1001)
     let mut in2: ArrayList<i64> = ArrayList::new(1001)
     let mut slot: usize = 0
@@ -34,11 +34,11 @@ micro findIntersectionValues(nums1: ArrayList<i64>, nums2: ArrayList<i64>) -> Ar
     let mut out: ArrayList<i64> = ArrayList::new(2)
     out.push(first)
     out.push(second)
-    return out
+    return out.to_array()
 }
 
 class Solution {
-    micro findIntersectionValues(self, nums1: ArrayList<i64>, nums2: ArrayList<i64>): ArrayList<i64> {
+    micro findIntersectionValues(self, nums1: [i64], nums2: [i64]): [i64] {
         return findIntersectionValues(nums1, nums2)
     }
 }

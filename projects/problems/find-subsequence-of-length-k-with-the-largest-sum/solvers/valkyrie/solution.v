@@ -4,7 +4,7 @@ using std.collection;
 
 # 索引按 (值, 索引) 升序稳定排序，取末尾 k 个即最大和子序列，再恢复原序输出。
 [export(case: "camelCase")]
-micro max_subsequence(nums: ArrayList<i64>, k: i64) -> ArrayList<i64> {
+micro max_subsequence(nums: [i64], k: i64) -> [i64] {
     let count: usize = nums.length()
     let mut order: ArrayList<i64> = ArrayList::new(count)
     let mut index: usize = 0
@@ -47,11 +47,11 @@ micro max_subsequence(nums: ArrayList<i64>, k: i64) -> ArrayList<i64> {
         result.push(nums⁅at⁆)
         cursor = cursor + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro maxSubsequence(self, nums: ArrayList<i64>, k: i64): ArrayList<i64> {
+    micro maxSubsequence(self, nums: [i64], k: i64): [i64] {
         return max_subsequence(nums, k)
     }
 }

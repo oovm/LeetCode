@@ -4,7 +4,7 @@ using std.collection;
 
 # 前缀含当前元素，后缀从下一项开始；分别统计两侧去重个数再相减。
 [export(case: "camelCase")]
-micro distinctDifferenceArray(nums: ArrayList<i64>) -> ArrayList<i64> {
+micro distinctDifferenceArray(nums: [i64]) -> [i64] {
     let count: usize = nums.length()
 
     let mut prefix: ArrayList<i64> = ArrayList::new(count)
@@ -43,11 +43,11 @@ micro distinctDifferenceArray(nums: ArrayList<i64>) -> ArrayList<i64> {
         answer.push(prefix⁅index⁆ - right)
         index = index + 1
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro distinctDifferenceArray(self, nums: ArrayList<i64>): ArrayList<i64> {
+    micro distinctDifferenceArray(self, nums: [i64]): [i64] {
         return distinctDifferenceArray(nums)
     }
 }

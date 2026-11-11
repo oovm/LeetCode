@@ -4,7 +4,7 @@ using std.collection;
 
 # 单调递增栈：从左到右能删就删，最多删 count - k 个，栈内留下最小字典序。
 [export(case: "camelCase")]
-micro mostCompetitive(nums: ArrayList<i64>, k: i64) -> ArrayList<i64> {
+micro mostCompetitive(nums: [i64], k: i64) -> [i64] {
     let count: usize = nums.length()
     let keep: usize = k as usize
     let mut remove: usize = count - keep
@@ -32,11 +32,11 @@ micro mostCompetitive(nums: ArrayList<i64>, k: i64) -> ArrayList<i64> {
         result.push(stack⁅cursor⁆)
         cursor = cursor + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro mostCompetitive(self, nums: ArrayList<i64>, k: i64): ArrayList<i64> {
+    micro mostCompetitive(self, nums: [i64], k: i64): [i64] {
         return mostCompetitive(nums, k)
     }
 }

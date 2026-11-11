@@ -4,7 +4,7 @@ using std.collection;
 
 # 维护已扫描前缀里的最小值与最大值下标，逐个检查跨过 indexDifference 后能否满足数值差。
 [export(case: "camelCase")]
-micro findIndices(nums: ArrayList<i64>, indexDifference: i64, valueDifference: i64) -> ArrayList<i64> {
+micro findIndices(nums: [i64], indexDifference: i64, valueDifference: i64) -> [i64] {
     let mut answer: ArrayList<i64> = ArrayList::new(2)
     let count: i64 = nums.length() as i64
     let mut minimum_index: i64 = 0
@@ -21,22 +21,22 @@ micro findIndices(nums: ArrayList<i64>, indexDifference: i64, valueDifference: i
         if nums⁅current as usize⁆ - nums⁅minimum_index as usize⁆ >= valueDifference {
             answer.push(minimum_index)
             answer.push(current)
-            return answer
+            return answer.to_array()
         }
         if nums⁅maximum_index as usize⁆ - nums⁅current as usize⁆ >= valueDifference {
             answer.push(maximum_index)
             answer.push(current)
-            return answer
+            return answer.to_array()
         }
         current = current + 1
     }
     answer.push(-1)
     answer.push(-1)
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro findIndices(self, nums: ArrayList<i64>, indexDifference: i64, valueDifference: i64): ArrayList<i64> {
+    micro findIndices(self, nums: [i64], indexDifference: i64, valueDifference: i64): [i64] {
         return findIndices(nums, indexDifference, valueDifference)
     }
 }

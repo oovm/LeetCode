@@ -5,7 +5,7 @@ using std.collection;
 # 最优窗口起点 l 满足：若 x - arr[l] > arr[l+k] - x 则右移。
 # 二分 l 的取值区间 [0, n-k]，再切出长度 k 的窗口，O(log n + k)。
 [export(case: "camelCase")]
-micro find_closest_elements(arr: ArrayList<i64>, k: i64, x: i64) -> ArrayList<i64> {
+micro find_closest_elements(arr: [i64], k: i64, x: i64) -> [i64] {
     let total: i64 = arr.length() as i64
     if k >= total {
         return arr
@@ -28,11 +28,11 @@ micro find_closest_elements(arr: ArrayList<i64>, k: i64, x: i64) -> ArrayList<i6
         window.push(arr⁅(low + offset) as usize⁆)
         offset = offset + 1
     }
-    return window
+    return window.to_array()
 }
 
 class Solution {
-    micro findClosestElements(self, arr: ArrayList<i64>, k: i64, x: i64): ArrayList<i64> {
+    micro findClosestElements(self, arr: [i64], k: i64, x: i64): [i64] {
         return find_closest_elements(arr, k, x)
     }
 }

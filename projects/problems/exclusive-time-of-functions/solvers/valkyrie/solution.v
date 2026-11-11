@@ -26,7 +26,7 @@ micro parse_number(log: utf8, start: usize, stop: usize) -> i64 {
 }
 
 [export(case: "camelCase")]
-micro exclusive_time(n: i64, logs: ArrayList<utf8>) -> ArrayList<i64> {
+micro exclusive_time(n: i64, logs: [utf8]) -> [i64] {
     let mut answer: ArrayList<i64> = ArrayList::new(n as usize)
     let mut index: i64 = 0
     while index < n {
@@ -59,11 +59,11 @@ micro exclusive_time(n: i64, logs: ArrayList<utf8>) -> ArrayList<i64> {
         }
         at = at + 1
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro exclusiveTime(self, n: i64, logs: ArrayList<utf8>): ArrayList<i64> {
+    micro exclusiveTime(self, n: i64, logs: [utf8]): [i64] {
         return exclusive_time(n, logs)
     }
 }

@@ -4,7 +4,7 @@ using std.collection;
 
 # 排序后 target 占据 [小于个数, 小于个数+等于个数) 区间。
 [export(case: "camelCase")]
-micro targetIndices(nums: ArrayList<i64>, target: i64) -> ArrayList<i64> {
+micro targetIndices(nums: [i64], target: i64) -> [i64] {
     let mut less: i64 = 0
     let mut equal: i64 = 0
     let mut index: usize = 0
@@ -24,11 +24,11 @@ micro targetIndices(nums: ArrayList<i64>, target: i64) -> ArrayList<i64> {
         result.push(less + offset)
         offset = offset + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro targetIndices(self, nums: ArrayList<i64>, target: i64): ArrayList<i64> {
+    micro targetIndices(self, nums: [i64], target: i64): [i64] {
         return targetIndices(nums, target)
     }
 }
