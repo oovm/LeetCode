@@ -1,7 +1,7 @@
 namespace leetcode.contains_duplicate_ii;
 
 [export(case: "camelCase")]
-micro contains_nearby_duplicate(nums: ArrayList<i64>, k: i64) -> bool {
+micro contains_nearby_duplicate(nums: [i64], k: i64) -> bool {
     let mut last: HashMap<i64, i64> = HashMap::new(0)
     let mut i: usize = 0
     while i < nums.length() {
@@ -19,7 +19,7 @@ micro contains_nearby_duplicate(nums: ArrayList<i64>, k: i64) -> bool {
 }
 
 class Solution {
-    micro containsNearbyDuplicate(self, nums: ArrayList<i64>, k: i64): bool {
+    micro containsNearbyDuplicate(self, nums: [i64], k: i64): bool {
         return contains_nearby_duplicate(nums, k)
     }
 }

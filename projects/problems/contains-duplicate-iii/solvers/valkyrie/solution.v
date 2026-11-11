@@ -5,7 +5,7 @@ using std.collection;
 # 滑动窗口按值有序；`BTreeSet` 的 `floor` / `ceiling` 给出前驱与后继（G16 已提供）。
 # 任一方向的距离落在 `valueDiff` 内即命中，不再物化 `to_list()` 快照或手写二分。
 [export(case: "camelCase")]
-micro contains_nearby_almost_duplicate(nums: ArrayList<i64>, indexDiff: i64, valueDiff: i64) -> bool {
+micro contains_nearby_almost_duplicate(nums: [i64], indexDiff: i64, valueDiff: i64) -> bool {
     let span: usize = indexDiff as usize
     let mut window: BTreeSet<i64> = BTreeSet::new()
     let mut i: usize = 0
@@ -33,7 +33,7 @@ micro contains_nearby_almost_duplicate(nums: ArrayList<i64>, indexDiff: i64, val
 }
 
 class Solution {
-    micro containsNearbyAlmostDuplicate(self, nums: ArrayList<i64>, indexDiff: i64, valueDiff: i64): bool {
+    micro containsNearbyAlmostDuplicate(self, nums: [i64], indexDiff: i64, valueDiff: i64): bool {
         return contains_nearby_almost_duplicate(nums, indexDiff, valueDiff)
     }
 }

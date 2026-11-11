@@ -5,7 +5,7 @@ using std.collection;
 # 堆式层序数组里邻居是父节点与两个子节点。从值为 k 的节点做 BFS，
 # 首个没有子节点的节点就是最近叶子，O(n)。
 [export(case: "camelCase")]
-micro find_closest_leaf(root: ArrayList<i64>, k: i64) -> i64 {
+micro find_closest_leaf(root: [i64], k: i64) -> i64 {
     let total: i64 = root.length() as i64
     let mut start: i64 = -1
     let mut index: i64 = 0
@@ -58,7 +58,7 @@ micro find_closest_leaf(root: ArrayList<i64>, k: i64) -> i64 {
 }
 
 class Solution {
-    micro findClosestLeaf(self, root: ArrayList<i64>, k: i64): i64 {
+    micro findClosestLeaf(self, root: [i64], k: i64): i64 {
         return find_closest_leaf(root, k)
     }
 }

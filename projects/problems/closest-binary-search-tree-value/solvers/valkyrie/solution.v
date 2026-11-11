@@ -3,7 +3,7 @@ namespace leetcode.closest_binary_search_tree_value;
 # BST 决定唯一搜索路径：按 target 大小关系下行，途中保留距离最近的值，等距取较小值。
 # 题面 `target` 是浮点（LeetCode 270 原签名），这里按 `f64` 接收，返回值仍为整数值。
 [export(case: "camelCase")]
-micro closestValue(root: ArrayList<i64>, target: f64) -> i64 {
+micro closestValue(root: [i64], target: f64) -> i64 {
     if root.length() == 0 {
         return 0
     }
@@ -40,7 +40,7 @@ micro closestValue(root: ArrayList<i64>, target: f64) -> i64 {
 }
 
 class Solution {
-    micro closestValue(self, root: ArrayList<i64>, target: f64): i64 {
+    micro closestValue(self, root: [i64], target: f64): i64 {
         return closestValue(root, target)
     }
 }

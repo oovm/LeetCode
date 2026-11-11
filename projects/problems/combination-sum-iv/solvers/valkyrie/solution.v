@@ -4,7 +4,7 @@ using std.collection;
 
 # 完全排列计数：dp[t] 累加所有可达的 dp[t - x]，按目标值递推。
 [export(case: "camelCase")]
-micro combinationSum4(nums: ArrayList<i64>, target: i64) -> i64 {
+micro combinationSum4(nums: [i64], target: i64) -> i64 {
     let mut dp: ArrayList<i64> = ArrayList::new(target as usize + 1)
     let mut slot: i64 = 0
     while slot <= target {
@@ -27,7 +27,7 @@ micro combinationSum4(nums: ArrayList<i64>, target: i64) -> i64 {
 }
 
 class Solution {
-    micro combinationSum4(self, nums: ArrayList<i64>, target: i64): i64 {
+    micro combinationSum4(self, nums: [i64], target: i64): i64 {
         return combinationSum4(nums, target)
     }
 }

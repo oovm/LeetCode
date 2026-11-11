@@ -4,7 +4,7 @@ using std.collection;
 
 # 把 0 视作 -1 求前缀平衡：同一平衡值首次出现下标缓存，跨度即等长 0/1 子数组。
 [export(case: "camelCase")]
-micro findMaxLength(nums: ArrayList<i64>) -> i64 {
+micro findMaxLength(nums: [i64]) -> i64 {
     let mut firstSeen: HashMap<i64, i64> = HashMap::new(0)
     firstSeen.insert(0, -1)
     let mut balance: i64 = 0
@@ -30,7 +30,7 @@ micro findMaxLength(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findMaxLength(self, nums: ArrayList<i64>): i64 {
+    micro findMaxLength(self, nums: [i64]): i64 {
         return findMaxLength(nums)
     }
 }

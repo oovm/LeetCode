@@ -1,7 +1,7 @@
 namespace leetcode.contains_duplicate;
 
 [export(case: "camelCase")]
-micro contains_duplicate(nums: ArrayList<i64>) -> bool {
+micro contains_duplicate(nums: [i64]) -> bool {
     let mut seen: HashSet<i64> = HashSet::new()
     loop x in nums {
         if seen.contains(x) {
@@ -13,7 +13,7 @@ micro contains_duplicate(nums: ArrayList<i64>) -> bool {
 }
 
 class Solution {
-    micro containsDuplicate(self, nums: ArrayList<i64>): bool {
+    micro containsDuplicate(self, nums: [i64]): bool {
         return contains_duplicate(nums)
     }
 }
