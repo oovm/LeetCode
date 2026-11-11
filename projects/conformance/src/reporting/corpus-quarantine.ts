@@ -167,9 +167,12 @@ export function quarantineCaseStats(stats: SolverCaseStats, indices: ReadonlySet
     let removedSkipped = 0;
     let removedSkippedTimeout = 0;
     let removedSkippedIntegerArgument = 0;
+    // 在范围内但缺逐例记录的坐标同样无法安全扣减：计入 unbound，不静默吞掉。
+    let missingRecordCoordinates = 0;
     for (const index of inRange) {
         const record = byIndex.get(index);
         if (record === undefined) {
+            missingRecordCoordinates += 1;
             continue;
         }
         removed.push({ index: record.index, caseId: record.caseId, digest: record.digest, status: record.status });
@@ -212,6 +215,6 @@ export function quarantineCaseStats(stats: SolverCaseStats, indices: ReadonlySet
             cases: records.filter((record) => !removedIndices.has(record.index)),
         },
         removed,
-        unbound: 0,
+        unbound: missingRecordCoordinates,
     };
 }
