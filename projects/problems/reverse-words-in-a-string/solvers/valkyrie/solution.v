@@ -11,9 +11,9 @@ micro reverse_words(s: utf8) -> utf8 {
     while i > 0 {
         i = i - 1
         if result.length() > 0 {
-            result = result + " "
+            result = result ++ " "
         }
-        result = result + words⁅i⁆
+        result = result ++ words⁅i⁆
     }
     return result
 }

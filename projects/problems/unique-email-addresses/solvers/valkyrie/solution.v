@@ -29,7 +29,7 @@ micro normalize(email: utf8) -> utf8 {
         }
         i = i + 1
     }
-    return local.build() + "@" + domain.build()
+    return local.build() ++ "@" ++ domain.build()
 }
 
 [export(case: "camelCase")]

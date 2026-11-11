@@ -9,10 +9,10 @@ micro expand(open: i64, close: i64, limit: i64, current: utf8, results: ArrayLis
         return
     }
     if open < limit {
-        expand(open + 1, close, limit, current + "(", results)
+        expand(open + 1, close, limit, current ++ "(", results)
     }
     if close < open {
-        expand(open, close + 1, limit, current + ")", results)
+        expand(open, close + 1, limit, current ++ ")", results)
     }
 }
 
