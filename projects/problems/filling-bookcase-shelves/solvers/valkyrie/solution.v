@@ -4,7 +4,7 @@ using std.collection;
 
 # 前缀 DP：dp[i] 为前 i 本书的最小总高，枚举最后一层的起点转移。
 [export(case: "camelCase")]
-micro min_height_shelves(books: ArrayList<ArrayList<i64>>, shelfWidth: i64) -> i64 {
+micro min_height_shelves(books: [[i64]], shelfWidth: i64) -> i64 {
     let count: usize = books.length()
     let mut table: ArrayList<i64> = ArrayList::new(count + 1)
     let mut fill: usize = 0
@@ -41,7 +41,7 @@ micro min_height_shelves(books: ArrayList<ArrayList<i64>>, shelfWidth: i64) -> i
 }
 
 class Solution {
-    micro minHeightShelves(self, books: ArrayList<ArrayList<i64>>, shelfWidth: i64): i64 {
+    micro minHeightShelves(self, books: [[i64]], shelfWidth: i64): i64 {
         return min_height_shelves(books, shelfWidth)
     }
 }

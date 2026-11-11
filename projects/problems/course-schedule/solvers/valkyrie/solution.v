@@ -4,7 +4,7 @@ using std.collection;
 
 # Kahn 拓扑排序：入度表 + 队列；处理完所有节点即无环。
 [export(case: "camelCase")]
-micro canFinish(numCourses: i64, prerequisites: ArrayList<ArrayList<i64>>) -> bool {
+micro canFinish(numCourses: i64, prerequisites: [[i64]]) -> bool {
     let n: usize = numCourses as usize
     let mut indeg: ArrayList<i64> = ArrayList::new(n)
     let mut slot: usize = 0
@@ -43,7 +43,7 @@ micro canFinish(numCourses: i64, prerequisites: ArrayList<ArrayList<i64>>) -> bo
 }
 
 class Solution {
-    micro canFinish(self, numCourses: i64, prerequisites: ArrayList<ArrayList<i64>>): bool {
+    micro canFinish(self, numCourses: i64, prerequisites: [[i64]]): bool {
         return canFinish(numCourses, prerequisites)
     }
 }

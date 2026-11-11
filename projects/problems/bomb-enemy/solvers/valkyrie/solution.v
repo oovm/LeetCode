@@ -4,7 +4,7 @@ using std.collection;
 
 # 行/列命中数按墙分段缓存：段起点重扫一次，逐格取当前行段与列段之和。
 [export(case: "camelCase")]
-micro maxKilledEnemies(grid: ArrayList<ArrayList<utf8>>) -> i64 {
+micro maxKilledEnemies(grid: [[utf8]]) -> i64 {
     let rows: usize = grid.length()
     let columns: usize = grid⁅0⁆.length()
     let mut best: i64 = 0
@@ -53,7 +53,7 @@ micro maxKilledEnemies(grid: ArrayList<ArrayList<utf8>>) -> i64 {
 }
 
 class Solution {
-    micro maxKilledEnemies(self, grid: ArrayList<ArrayList<utf8>>): i64 {
+    micro maxKilledEnemies(self, grid: [[utf8]]): i64 {
         return maxKilledEnemies(grid)
     }
 }

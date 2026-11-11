@@ -6,7 +6,7 @@ using std.collection;
 # 一旦所有相邻对都已定序，后面的列必然可以保留，直接提前结束。
 # 语料含行长度不齐的输入（F6），列宽沿用首串长度，越界位置跳过比较。
 [export(case: "camelCase")]
-micro min_deletion_size(strs: ArrayList<utf8>) -> i64 {
+micro min_deletion_size(strs: [utf8]) -> i64 {
     let rows: usize = strs.length()
     if rows == 0 {
         return 0
@@ -80,7 +80,7 @@ micro min_deletion_size(strs: ArrayList<utf8>) -> i64 {
 }
 
 class Solution {
-    micro minDeletionSize(self, strs: ArrayList<utf8>): i64 {
+    micro minDeletionSize(self, strs: [utf8]): i64 {
         return min_deletion_size(strs)
     }
 }

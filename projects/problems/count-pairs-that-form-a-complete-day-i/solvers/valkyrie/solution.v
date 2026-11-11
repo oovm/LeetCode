@@ -4,7 +4,7 @@ using std.collection;
 
 # 模 24 计频，配对数为之前出现的互补余数个数。
 [export(case: "camelCase")]
-micro countCompleteDayPairs(hours: ArrayList<i64>) -> i64 {
+micro countCompleteDayPairs(hours: [i64]) -> i64 {
     let mut counts: ArrayList<i64> = ArrayList::new(24)
     let mut slot: usize = 0
     while slot < 24 {
@@ -24,7 +24,7 @@ micro countCompleteDayPairs(hours: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro countCompleteDayPairs(self, hours: ArrayList<i64>): i64 {
+    micro countCompleteDayPairs(self, hours: [i64]): i64 {
         return countCompleteDayPairs(hours)
     }
 }

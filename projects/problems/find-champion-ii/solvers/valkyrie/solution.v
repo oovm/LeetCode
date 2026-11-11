@@ -4,7 +4,7 @@ using std.collection;
 
 # 冠军是唯一没有入边的节点：统计入度后，入度为 0 的节点多于或少于一个都返回 -1。
 [export(case: "camelCase")]
-micro findChampion(n: i64, edges: ArrayList<ArrayList<i64>>) -> i64 {
+micro findChampion(n: i64, edges: [[i64]]) -> i64 {
     let count: usize = n as usize
     let mut indegree: ArrayList<i64> = ArrayList::new(count)
     let mut fill: usize = 0
@@ -15,7 +15,7 @@ micro findChampion(n: i64, edges: ArrayList<ArrayList<i64>>) -> i64 {
 
     let mut index: usize = 0
     while index < edges.length() {
-        let edge: ArrayList<i64> = edges⁅index⁆
+        let edge: [i64] = edges⁅index⁆
         let target: i64 = edge⁅1⁆
         indegree.set((target + 1) as isize, indegree⁅target as usize⁆ + 1)
         index = index + 1
@@ -39,7 +39,7 @@ micro findChampion(n: i64, edges: ArrayList<ArrayList<i64>>) -> i64 {
 }
 
 class Solution {
-    micro findChampion(self, n: i64, edges: ArrayList<ArrayList<i64>>): i64 {
+    micro findChampion(self, n: i64, edges: [[i64]]): i64 {
         return findChampion(n, edges)
     }
 }

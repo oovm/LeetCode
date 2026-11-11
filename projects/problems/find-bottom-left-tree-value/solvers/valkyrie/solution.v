@@ -4,7 +4,7 @@ using std.collection;
 
 # 层序遍历：每层推进前记下该层最左节点，最后一层的最左即答案。
 [export(case: "camelCase")]
-micro findBottomLeftValue(root: ArrayList<i64>) -> i64 {
+micro findBottomLeftValue(root: [i64]) -> i64 {
     let mut answer: i64 = root⁅0⁆
     let mut level: ArrayList<i64> = ArrayList::new(1)
     level.push(0)
@@ -27,7 +27,7 @@ micro findBottomLeftValue(root: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findBottomLeftValue(self, root: ArrayList<i64>): i64 {
+    micro findBottomLeftValue(self, root: [i64]): i64 {
         return findBottomLeftValue(root)
     }
 }

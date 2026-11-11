@@ -4,7 +4,7 @@ using std.collection;
 
 # 差分数组：每个上车点 +x、下车点 -x，再前缀累加判断是否超载。
 [export(case: "camelCase")]
-micro car_pooling(trips: ArrayList<ArrayList<i64>>, capacity: i64) -> bool {
+micro car_pooling(trips: [[i64]], capacity: i64) -> bool {
     let mut farthest: i64 = 0
     let mut index: usize = 0
     while index < trips.length() {
@@ -45,7 +45,7 @@ micro car_pooling(trips: ArrayList<ArrayList<i64>>, capacity: i64) -> bool {
 }
 
 class Solution {
-    micro carPooling(self, trips: ArrayList<ArrayList<i64>>, capacity: i64): bool {
+    micro carPooling(self, trips: [[i64]], capacity: i64): bool {
         return car_pooling(trips, capacity)
     }
 }
