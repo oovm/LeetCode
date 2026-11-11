@@ -356,7 +356,7 @@ micro write_json(value: Json) -> utf8 {
             buffer.build()
         case Mapping(keys, values):
             let mut buffer: Utf8Builder = Utf8Builder::new(16)
-            buffer.append('{')
+            buffer.append('\{')
             let mut index: usize = 0
             while index < keys.length() {
                 if index > 0 {
@@ -367,7 +367,7 @@ micro write_json(value: Json) -> utf8 {
                 buffer.append(write_json(values⁅index⁆))
                 index = index + 1
             }
-            buffer.append('}')
+            buffer.append('\}')
             buffer.build()
     }
 }
