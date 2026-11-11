@@ -1,7 +1,7 @@
 namespace leetcode.longest_continuous_increasing_subsequence;
 
 [export(case: "camelCase")]
-micro find_length_of_lcis(nums: ArrayList<i64>) -> i64 {
+micro find_length_of_lcis(nums: [i64]) -> i64 {
     let n: usize = nums.length()
     let mut ans: i64 = 1
     let mut cnt: i64 = 1
@@ -21,7 +21,7 @@ micro find_length_of_lcis(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findLengthOfLCIS(self, nums: ArrayList<i64>): i64 {
+    micro findLengthOfLCIS(self, nums: [i64]): i64 {
         return find_length_of_lcis(nums)
     }
 }

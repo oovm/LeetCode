@@ -4,7 +4,7 @@ using std.collection;
 
 # 滑窗内任一值的出现次数 ≤ k：扩到右端后，只可能右端值的计数超标，从左端收缩到合规。
 [export(case: "camelCase")]
-micro maxSubarrayLength(nums: ArrayList<i64>, k: i64) -> i64 {
+micro maxSubarrayLength(nums: [i64], k: i64) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new(nums.length())
     let mut left: usize = 0
     let mut best: i64 = 0
@@ -33,7 +33,7 @@ micro maxSubarrayLength(nums: ArrayList<i64>, k: i64) -> i64 {
 }
 
 class Solution {
-    micro maxSubarrayLength(self, nums: ArrayList<i64>, k: i64): i64 {
+    micro maxSubarrayLength(self, nums: [i64], k: i64): i64 {
         return maxSubarrayLength(nums, k)
     }
 }

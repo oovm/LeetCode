@@ -4,7 +4,7 @@ using std.collection;
 
 # 按 (末尾下标, 公差) 记录最长链长，公差用固定偏移压进 64 位键。
 [export(case: "camelCase")]
-micro longest_arith_seq_length(nums: ArrayList<i64>) -> i64 {
+micro longest_arith_seq_length(nums: [i64]) -> i64 {
     let count: usize = nums.length()
     let offset: i64 = 2097152
     let stride: i64 = 4194304
@@ -42,7 +42,7 @@ micro longest_arith_seq_length(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro longestArithSeqLength(self, nums: ArrayList<i64>): i64 {
+    micro longestArithSeqLength(self, nums: [i64]): i64 {
         return longest_arith_seq_length(nums)
     }
 }

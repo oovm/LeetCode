@@ -5,7 +5,7 @@ using std.collection;
 # 以 (前一项下标, 当前项下标) 为状态做 DP，值到下标的哈希让每次转移 O(1)，
 # 总复杂度 O(n^2)。
 [export(case: "camelCase")]
-micro lenLongestFibSubseq(arr: ArrayList<i64>) -> i64 {
+micro lenLongestFibSubseq(arr: [i64]) -> i64 {
     let n: i64 = arr.length() as i64
     let mut position: HashMap<i64, i64> = HashMap::new(n as usize)
     let mut i: i64 = 0
@@ -46,7 +46,7 @@ micro lenLongestFibSubseq(arr: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro lenLongestFibSubseq(self, arr: ArrayList<i64>): i64 {
+    micro lenLongestFibSubseq(self, arr: [i64]): i64 {
         return lenLongestFibSubseq(arr)
     }
 }

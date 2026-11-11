@@ -4,7 +4,7 @@ using std.collection;
 
 # 记录上一次比较的方向，方向交替就延长，方向相同或相等就重置，一趟 O(n)。
 [export(case: "camelCase")]
-micro maxTurbulenceSize(arr: ArrayList<i64>) -> i64 {
+micro maxTurbulenceSize(arr: [i64]) -> i64 {
     let count: usize = arr.length()
     let mut best: i64 = 1
     let mut run: i64 = 1
@@ -36,7 +36,7 @@ micro maxTurbulenceSize(arr: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro maxTurbulenceSize(self, arr: ArrayList<i64>): i64 {
+    micro maxTurbulenceSize(self, arr: [i64]): i64 {
         return maxTurbulenceSize(arr)
     }
 }

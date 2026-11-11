@@ -4,7 +4,7 @@ using std.collection;
 
 # 并集成员集合 O(m)，再顺序扫描链表统计连续段数 O(n)。
 [export(case: "camelCase")]
-micro num_components(head: ArrayList<i64>, nums: ArrayList<i64>) -> i64 {
+micro num_components(head: [i64], nums: [i64]) -> i64 {
     let mut present: HashMap<i64, i64> = HashMap::new(nums.length())
     let mut i: usize = 0
     while i < nums.length() {
@@ -30,7 +30,7 @@ micro num_components(head: ArrayList<i64>, nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro numComponents(self, head: ArrayList<i64>, nums: ArrayList<i64>): i64 {
+    micro numComponents(self, head: [i64], nums: [i64]): i64 {
         return num_components(head, nums)
     }
 }

@@ -2,7 +2,7 @@ namespace leetcode.longest_subarray_of_1s_after_deleting_one_element;
 
 # 滑窗内允许一个 0：窗口就是「删掉至多一个元素后连续 1」的可覆盖区间，答案要减去保留的那个位置。
 [export(case: "camelCase")]
-micro longestSubarray(nums: ArrayList<i64>) -> i64 {
+micro longestSubarray(nums: [i64]) -> i64 {
     let mut zeros: i64 = 0
     let mut left: usize = 0
     let mut best: i64 = 0
@@ -27,7 +27,7 @@ micro longestSubarray(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro longestSubarray(self, nums: ArrayList<i64>): i64 {
+    micro longestSubarray(self, nums: [i64]): i64 {
         return longestSubarray(nums)
     }
 }

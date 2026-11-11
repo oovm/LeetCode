@@ -4,7 +4,7 @@ using std.collection;
 
 # 从每个相邻 +1 的起点向后扩展交替段，取最长长度，无则 -1。
 [export(case: "camelCase")]
-micro alternatingSubarray(nums: ArrayList<i64>) -> i64 {
+micro alternatingSubarray(nums: [i64]) -> i64 {
     let mut best: i64 = -1
     let mut index: usize = 0
     while index + 1 < nums.length() {
@@ -24,7 +24,7 @@ micro alternatingSubarray(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro alternatingSubarray(self, nums: ArrayList<i64>): i64 {
+    micro alternatingSubarray(self, nums: [i64]): i64 {
         return alternatingSubarray(nums)
     }
 }

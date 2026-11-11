@@ -4,7 +4,7 @@ using std.collection;
 
 # 和谐子序列只由「相差 1」的两个值组成：频次表 + 遍历键找相邻值，时间 O(n)、空间 O(n)。
 [export(case: "camelCase")]
-micro findLHS(nums: ArrayList<i64>) -> i64 {
+micro findLHS(nums: [i64]) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new(nums.length())
     loop value in nums {
         let mut next: i64 = 1
@@ -31,7 +31,7 @@ micro findLHS(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findLHS(self, nums: ArrayList<i64>): i64 {
+    micro findLHS(self, nums: [i64]): i64 {
         return findLHS(nums)
     }
 }

@@ -38,7 +38,7 @@ micro is_predecessor(short: utf8, longer: utf8) -> bool {
 }
 
 [export(case: "camelCase")]
-micro longest_str_chain(words: ArrayList<utf8>) -> i64 {
+micro longest_str_chain(words: [utf8]) -> i64 {
     let count: usize = words.length()
     if count == 0 {
         return 0
@@ -82,7 +82,7 @@ micro longest_str_chain(words: ArrayList<utf8>) -> i64 {
 }
 
 class Solution {
-    micro longestStrChain(self, words: ArrayList<utf8>): i64 {
+    micro longestStrChain(self, words: [utf8]): i64 {
         return longest_str_chain(words)
     }
 }

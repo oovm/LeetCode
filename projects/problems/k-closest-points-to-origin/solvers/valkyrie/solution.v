@@ -2,14 +2,14 @@ namespace leetcode.k_closest_points_to_origin;
 
 using std.collection;
 
-micro distance_of(point: ArrayList<i64>) -> i64 {
+micro distance_of(point: [i64]) -> i64 {
     let x: i64 = point⁅0⁆
     let y: i64 = point⁅1⁆
     return x * x + y * y
 }
 
 # 距离升序；等距保持输入相对次序（`sorted_by` 稳定）。
-micro compare_points(left: ArrayList<i64>, right: ArrayList<i64>) -> i32 {
+micro compare_points(left: [i64], right: [i64]) -> i32 {
     let left_distance: i64 = distance_of(left)
     let right_distance: i64 = distance_of(right)
     if left_distance < right_distance {
@@ -22,20 +22,24 @@ micro compare_points(left: ArrayList<i64>, right: ArrayList<i64>) -> i32 {
 }
 
 [export(case: "camelCase")]
-micro k_closest(points: ArrayList<ArrayList<i64>>, k: i64) -> ArrayList<ArrayList<i64>> {
-    let ordered: ArrayList<ArrayList<i64>> = sorted_by(points, compare_points)
+micro k_closest(points: [[i64]], k: i64) -> [[i64]] {
+    let mut ordered: ArrayList<[i64]> = ArrayList::new(points.length())
+    loop point in points {
+        ordered.push(point)
+    }
+    merge_sort(ordered, compare_points)
     let take: usize = k as usize
-    let mut result: ArrayList<ArrayList<i64>> = ArrayList::new(take)
+    let mut result: ArrayList<[i64]> = ArrayList::new(take)
     let mut index: usize = 0
     while index < take && index < ordered.length() {
         result.push(ordered⁅index⁆)
         index = index + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro kClosest(self, points: ArrayList<ArrayList<i64>>, k: i64): ArrayList<ArrayList<i64>> {
+    micro kClosest(self, points: [[i64]], k: i64): [[i64]] {
         return k_closest(points, k)
     }
 }
