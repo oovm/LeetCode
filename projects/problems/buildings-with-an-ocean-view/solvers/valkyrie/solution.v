@@ -4,7 +4,7 @@ using std.collection;
 
 # 从右往左扫描，保留比当前最高还高的建筑，最后把下标栈翻转输出。
 [export(case: "camelCase")]
-micro findBuildings(heights: ArrayList<i64>) -> ArrayList<i64> {
+micro findBuildings(heights: [i64]) -> [i64] {
     let count: usize = heights.length()
     let mut picked: ArrayList<i64> = ArrayList::new(count)
     let mut highest: i64 = -1
@@ -22,11 +22,11 @@ micro findBuildings(heights: ArrayList<i64>) -> ArrayList<i64> {
     while picked.is_empty() == false {
         result.push(picked.pop().unwrap())
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro findBuildings(self, heights: ArrayList<i64>): ArrayList<i64> {
+    micro findBuildings(self, heights: [i64]): [i64] {
         return findBuildings(heights)
     }
 }

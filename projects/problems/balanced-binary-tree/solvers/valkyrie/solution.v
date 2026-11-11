@@ -1,7 +1,7 @@
 namespace leetcode.balanced_binary_tree;
 
 # 自底向上高度校验：返回 -1 表示子树已不平衡，正数表示该子树高度，单次遍历 O(n)。
-micro height(root: ArrayList<i64>, index: usize) -> i64 {
+micro height(root: [i64], index: usize) -> i64 {
     if index >= root.length() {
         return 0
     }
@@ -27,12 +27,12 @@ micro height(root: ArrayList<i64>, index: usize) -> i64 {
 }
 
 [export(case: "camelCase")]
-micro isBalanced(root: ArrayList<i64>) -> bool {
+micro isBalanced(root: [i64]) -> bool {
     return height(root, 0) >= 0
 }
 
 class Solution {
-    micro isBalanced(self, root: ArrayList<i64>): bool {
+    micro isBalanced(self, root: [i64]): bool {
         return isBalanced(root)
     }
 }

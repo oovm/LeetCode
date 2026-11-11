@@ -15,7 +15,7 @@ micro cmp_i64(a: i64, b: i64) -> i32 {
 # 按位置把车压成键排序，再从头车（最靠前）往车队尾部扫描。
 # 到达时间用交叉相乘比较，避免浮点：t_new > t_prev 当且仅当 `num * prev_den > prev_num * den`。
 [export(case: "camelCase")]
-micro car_fleet(target: i64, position: ArrayList<i64>, speed: ArrayList<i64>) -> i64 {
+micro car_fleet(target: i64, position: [i64], speed: [i64]) -> i64 {
     let n: usize = position.length()
     let mut keys: ArrayList<i64> = ArrayList::new(n)
     let mut index: usize = 0
@@ -44,7 +44,7 @@ micro car_fleet(target: i64, position: ArrayList<i64>, speed: ArrayList<i64>) ->
 }
 
 class Solution {
-    micro carFleet(self, target: i64, position: ArrayList<i64>, speed: ArrayList<i64>): i64 {
+    micro carFleet(self, target: i64, position: [i64], speed: [i64]): i64 {
         return car_fleet(target, position, speed)
     }
 }

@@ -1,7 +1,7 @@
 namespace leetcode.can_place_flowers;
 
 [export(case: "camelCase")]
-micro can_place_flowers(mut flowerbed: ArrayList<i64>, n: i64) -> bool {
+micro can_place_flowers(mut flowerbed: [i64], n: i64) -> bool {
     let len: usize = flowerbed.length()
     let mut remaining: i64 = n
     let mut i: usize = 0
@@ -25,7 +25,7 @@ micro can_place_flowers(mut flowerbed: ArrayList<i64>, n: i64) -> bool {
 }
 
 class Solution {
-    micro canPlaceFlowers(mut self, flowerbed: ArrayList<i64>, n: i64): bool {
+    micro canPlaceFlowers(mut self, flowerbed: [i64], n: i64): bool {
         return can_place_flowers(flowerbed, n)
     }
 }

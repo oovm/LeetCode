@@ -1,7 +1,7 @@
 namespace leetcode.best_time_to_buy_and_sell_stock_ii;
 
 [export(case: "camelCase")]
-micro max_profit(prices: ArrayList<i64>) -> i64 {
+micro max_profit(prices: [i64]) -> i64 {
     let mut ans: i64 = 0
     let mut i: usize = 1
     while i < prices.length() {
@@ -16,7 +16,7 @@ micro max_profit(prices: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro maxProfit(self, prices: ArrayList<i64>): i64 {
+    micro maxProfit(self, prices: [i64]): i64 {
         return max_profit(prices)
     }
 }

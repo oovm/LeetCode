@@ -2,7 +2,7 @@ namespace leetcode.best_time_to_buy_and_sell_stock;
 
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 [export(case: "camelCase")]
-micro max_profit(prices: ArrayList<i64>) -> i64 {
+micro max_profit(prices: [i64]) -> i64 {
     let mut min_price: i64 = 9223372036854775807
     let mut max_profit: i64 = 0
     loop price in prices {
@@ -18,7 +18,7 @@ micro max_profit(prices: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro maxProfit(self, prices: ArrayList<i64>): i64 {
+    micro maxProfit(self, prices: [i64]): i64 {
         return max_profit(prices)
     }
 }

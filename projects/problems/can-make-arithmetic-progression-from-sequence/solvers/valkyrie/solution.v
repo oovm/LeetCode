@@ -1,7 +1,7 @@
 namespace leetcode.can_make_arithmetic_progression_from_sequence;
 
 [export(case: "camelCase")]
-micro can_make_arithmetic_progression(arr: ArrayList<i64>) -> bool {
+micro can_make_arithmetic_progression(arr: [i64]) -> bool {
     let n: usize = arr.length()
     let mut values: ArrayList<i64> = ArrayList::new(n)
     let mut i: usize = 0
@@ -38,7 +38,7 @@ micro can_make_arithmetic_progression(arr: ArrayList<i64>) -> bool {
 }
 
 class Solution {
-    micro canMakeArithmeticProgression(self, arr: ArrayList<i64>): bool {
+    micro canMakeArithmeticProgression(self, arr: [i64]): bool {
         return can_make_arithmetic_progression(arr)
     }
 }

@@ -51,7 +51,7 @@ micro order_items<T>(items: ArrayList<T>): unit
 
 class Solution {
     [export(case: "camelCase")]
-    micro bestTeamScore(scores: ArrayList<i64>, ages: ArrayList<i64>) -> i64 {
+    micro bestTeamScore(scores: [i64], ages: [i64]) -> i64 {
         let count: usize = scores.length()
         if count == 0 {
             return 0

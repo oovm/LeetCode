@@ -4,7 +4,7 @@ using std.collection;
 
 # 单次扫：同时维护最小、最大与总和，去极值后除以 `n - 2`。
 [export(case: "camelCase")]
-micro average(salary: ArrayList<i64>) -> i64 {
+micro average(salary: [i64]) -> f64 {
     let mut min: i64 = salary⁅0⁆
     let mut max: i64 = salary⁅0⁆
     let mut sum: i64 = 0
@@ -13,11 +13,11 @@ micro average(salary: ArrayList<i64>) -> i64 {
         if value > max { max = value }
         sum = sum + value
     }
-    return (sum - min - max) / (salary.length() as i64 - 2)
+    return (sum - min - max) as f64 / (salary.length() as i64 - 2) as f64
 }
 
 class Solution {
-    micro average(self, salary: ArrayList<i64>): i64 {
+    micro average(self, salary: [i64]): f64 {
         return average(salary)
     }
 }

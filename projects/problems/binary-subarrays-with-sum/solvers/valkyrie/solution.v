@@ -5,7 +5,7 @@ using std.collection;
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 前缀和 + 频次表：每个前缀 `prefix` 累加此前出现过的 `prefix - goal` 次数。
 [export(case: "camelCase")]
-micro numSubarraysWithSum(nums: ArrayList<i64>, goal: i64) -> i64 {
+micro numSubarraysWithSum(nums: [i64], goal: i64) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new(nums.length() + 1)
     counts.insert(0, 1)
 
@@ -29,7 +29,7 @@ micro numSubarraysWithSum(nums: ArrayList<i64>, goal: i64) -> i64 {
 }
 
 class Solution {
-    micro numSubarraysWithSum(self, nums: ArrayList<i64>, goal: i64): i64 {
+    micro numSubarraysWithSum(self, nums: [i64], goal: i64): i64 {
         return numSubarraysWithSum(nums, goal)
     }
 }

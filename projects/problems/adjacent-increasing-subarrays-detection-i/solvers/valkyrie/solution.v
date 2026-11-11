@@ -3,7 +3,7 @@ namespace leetcode.solution
 using std.collection
 
 # 先量出从每个起点开始能连续严格递增多长，再看相邻两段长度是否都 >= k。
-micro strict_run(nums: ArrayList<i64>, start: usize, limit: usize) -> i64 {
+micro strict_run(nums: [i64], start: usize, limit: usize) -> i64 {
     let mut length: i64 = 1
     let mut index: usize = start
     while index + 1 < limit && nums⁅index⁆ < nums⁅index + 1⁆ {
@@ -15,7 +15,7 @@ micro strict_run(nums: ArrayList<i64>, start: usize, limit: usize) -> i64 {
 
 class Solution {
     [export(case: "camelCase")]
-    micro hasIncreasingSubarrays(nums: ArrayList<i64>, k: i64) -> bool {
+    micro hasIncreasingSubarrays(nums: [i64], k: i64) -> bool {
         let count: usize = nums.length()
         let need: usize = k as usize
         if need == 0 || need * 2 > count {
