@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 import { isArtifactCacheFresh, legionInvokeOvmExport } from '@nyar/valkyrie';
 
-import { readNyarExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
+import { readNyarExecutionPin } from '../src/adapters/shared/execution-pin.ts';
 import { compareIntegerResult, isUnsafeIntegerLiteralString } from '../src/domain/integer-literal.ts';
 import {
     extractTestFailureIndex,
@@ -138,8 +138,13 @@ async function main(): Promise<number> {
     const projectDir = valkyrieProjectDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
 
     let artifacts: NyarVmArtifacts | null = null;
-    const pinned = readNyarExecutionPinFromEnv();
-    if (pinned) {
+    const pinReading = readNyarExecutionPin();
+    if (pinReading.state === 'invalid') {
+        // 三态合同：Invalid 必须失败，不得与 Absent 合并后静默重建。
+        throw new Error(`execution pin invalid: ${pinReading.reason}`);
+    }
+    if (pinReading.state === 'valid') {
+        const pinned = pinReading.pin;
         const freshness = isArtifactCacheFresh(pinned.artifactDir, pinned.compileTarget);
         if (!freshness.fresh) {
             throw new Error(freshness.reason ?? 'pinned execution manifest stale');

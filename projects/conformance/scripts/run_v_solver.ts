@@ -6,7 +6,7 @@ import { pathToFileURL } from 'node:url';
 
 import { isArtifactCacheFresh } from '@nyar/valkyrie';
 import { resolveCompileTargetPlan } from '../src/adapters/shared/compile-target-plan.ts';
-import { readNodeExecutionPinFromEnv } from '../src/adapters/shared/execution-pin.ts';
+import { readNodeExecutionPin } from '../src/adapters/shared/execution-pin.ts';
 import {
     extractTestFailureIndex,
     formatSolverResultLine,
@@ -296,8 +296,13 @@ async function main(): Promise<number> {
     const projectDir = valkyrieProjectDir(LEETCODE_ROOT_FROM_PACKAGE, problem);
 
     let artifacts: VBuildArtifacts | null = null;
-    const pinned = readNodeExecutionPinFromEnv();
-    if (pinned) {
+    const pinReading = readNodeExecutionPin();
+    if (pinReading.state === 'invalid') {
+        // 三态合同：Invalid 必须失败，不得与 Absent 合并后静默重建。
+        throw new Error(`execution pin invalid: ${pinReading.reason}`);
+    }
+    if (pinReading.state === 'valid') {
+        const pinned = pinReading.pin;
         const freshness = isArtifactCacheFresh(pinned.artifactDir, pinned.compileTarget);
         if (!freshness.fresh) {
             throw new Error(freshness.reason ?? 'pinned execution manifest stale');
