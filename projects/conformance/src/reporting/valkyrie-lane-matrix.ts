@@ -100,6 +100,8 @@ export type LaneMatrixSummary = {
     skipped_integer_argument: number;
     /** 从 `testCaseTotal` 与四字段中剔除的隔离用例数。 */
     quarantinedCases: number;
+    /** 因缺逐例记录而无法扣减的隔离坐标数（禁止从汇总倒推，如实上报）。 */
+    quarantineUnbound: number;
     problemPassRate: number;
     buildPassRate: number;
     runtimePassRate: number;
@@ -159,6 +161,7 @@ function summarizeLane(
     const skipped = rows.reduce((sum, row) => sum + (row.skipped ?? 0), 0);
     const skippedTimeout = rows.reduce((sum, row) => sum + (row.skipped_timeout ?? 0), 0);
     const skippedIntegerArgument = rows.reduce((sum, row) => sum + (row.skipped_integer_argument ?? 0), 0);
+    const quarantineUnbound = rows.reduce((sum, row) => sum + (row.quarantine?.unbound ?? 0), 0);
     const rate = (count: number, denom = denominator) => (denom === 0 ? 0 : count / denom);
     return {
         denominator,
@@ -181,6 +184,7 @@ function summarizeLane(
         skipped_timeout: skippedTimeout,
         skipped_integer_argument: skippedIntegerArgument,
         quarantinedCases: baselineTotal - testCaseTotal,
+        quarantineUnbound,
         problemPassRate: rate(green),
         buildPassRate: rate(buildPass),
         runtimePassRate: rate(runtimePass),
@@ -208,7 +212,10 @@ export function buildValkyrieLaneMatrixReport(
             if (!indices || indices.size === 0) {
                 return entry;
             }
-            const adjust = (row: ValkyrieLaneRow): ValkyrieLaneRow => ({ ...row, ...quarantineCaseStats(row, indices) });
+            const adjust = (row: ValkyrieLaneRow): ValkyrieLaneRow => {
+                const adjustment = quarantineCaseStats(row, indices);
+                return { ...row, ...adjustment.stats, quarantine: { removed: adjustment.removed, unbound: adjustment.unbound } };
+            };
             return {
                 id: entry.id,
                 rows: {

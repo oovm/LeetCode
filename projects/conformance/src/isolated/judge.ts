@@ -462,7 +462,7 @@ function assertScriptOperationOutcome(outcome: CaseOutcome, operationCase: Opera
 }
 
 /** valkyrie lane（wasm）：按 ABI 返回类型把期望值同样规整为十进制文本后比较（对齐 `run_v_solver.ts`）。 */
-function assertValkyrieOutcome(
+export function assertValkyrieOutcome(
     outcome: CaseOutcome,
     expected: unknown,
     returnsAbi: WasmAbiType | null,
@@ -471,6 +471,13 @@ function assertValkyrieOutcome(
 ): void {
     if (!outcome.ok) {
         if (typeof expected === 'string' && expected.startsWith('Error:')) {
+            // [01 §4.12] 验收观察门：预期 trap 只接受明确的 guest trap 类型与原因；
+            // glue/ABI/JS TypeError 等宿主侧异常即使文本恰好匹配也不得判为通过。
+            if (outcome.guestTrap === undefined) {
+                throw new Error(
+                    `tests[${outcome.index}]: expected guest trap, got host anomaly${outcome.phase ? ` phase=${outcome.phase}` : ''}: ${outcome.error}`,
+                );
+            }
             const actual = `Error: ${outcome.error}`;
             if (actual === expected) {
                 return;
@@ -491,6 +498,10 @@ function assertValkyrieOutcome(
 /**
  * valkyrie ovm/jvm/clr lane：整数结果两侧规整为精确十进制文本比较
  * （对齐 `run_nyar_solver.ts` 与 `managed-runner.ts` 口径），其余形态按结构比较。
+ *
+ * `Error:` 期望保持消息精确匹配：napi/managed 宿主尚未冻结 guest trap 类型表，
+ * 强行套用 wasm lane 的 guest trap 门会把未分类的真实 guest 失败误判为宿主异常；
+ * 子进程若能明确识别 guest trap 会以 `guestTrap` 字段随包携带，供报告区分。
  */
 function assertNumericTextOutcome(outcome: CaseOutcome, expected: unknown, mode: CompareMode, context: MatchContext): void {
     if (!outcome.ok) {

@@ -32,10 +32,12 @@ import {
     classifyMatrixOutcome,
     collectUnverifiedReasons,
     emptySolverCaseStats,
+    type CaseRecord,
     type MatrixRowOutcome,
     type MatrixUnverifiedReason,
     type SolverCaseStats,
 } from '../shared/solver-case-stats.ts';
+import type { QuarantineRemoval } from '../../reporting/corpus-quarantine.ts';
 import { valkyrieSolverBlockedReason } from '../valkyrie-node/valkyrie.ts';
 import { nyarBuildDir } from '../valkyrie-nyar/valkyrie.ts';
 import { resolveNyarBuildArtifacts, resolveNyarInvokeBlocker, runNyarReference } from '../valkyrie-nyar/ref.ts';
@@ -101,6 +103,10 @@ export type ValkyrieBackendMatrixRow = {
     firstFailureIndex: number | null;
     firstFailure: string | null;
     solverNote: string | null;
+    /** 逐例真实观测记录（旧格式行可为空）；隔离统计只消费记录，不倒推。 */
+    cases?: CaseRecord[];
+    /** 侧车隔离的逐例绑定证据与无法扣减坐标数；未施加隔离时缺省。 */
+    quarantine?: { removed: QuarantineRemoval[]; unbound: number };
     green: boolean;
     /** 行级三态：绿 / 红 / 未验证。未验证不是失败。 */
     outcome: MatrixRowOutcome;
@@ -123,6 +129,7 @@ function withCaseStats(row: ValkyrieBackendMatrixRowNoGreen, stats: SolverCaseSt
         skipped_integer_argument: stats.skipped_integer_argument ?? 0,
         firstFailureIndex: stats.firstFailureIndex,
         firstFailure: stats.firstFailure,
+        ...(stats.cases === undefined ? {} : { cases: stats.cases }),
         green: false,
         // 三态在 probe 末尾按完整行证据重算；这里先给安全的红色占位。
         outcome: 'red',

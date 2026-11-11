@@ -1,5 +1,33 @@
+import type { ObservationPhase } from '../../observation/guest-trap.ts';
+
 /** `run_*_solver` 在 stdout 末行写出的结构化用例结果前缀。 */
 export const SOLVER_RESULT_MARKER = 'VALKYRIE_SOLVER_RESULT ';
+
+/**
+ * 逐例结果记录（[01 §4.12] 验收观察门）。
+ *
+ * 每条记录携带稳定 case identity 与内容摘要；隔离统计只消费记录中的真实逐例状态，
+ * 禁止从汇总计数倒推。`not_run` / `blocked` 逐例显式落账，不靠区间推断。
+ */
+export type CaseRecordStatus = 'pass' | 'fail' | 'blocked' | 'not_run' | 'skipped';
+
+export type CaseRecord = {
+    /** `metadata.tests` 下标（原始坐标，非可执行子集位置）。 */
+    index: number;
+    /** 稳定身份：`<slug>::tests[<index>]`。 */
+    caseId: string;
+    /** 用例内容（`args` + `expected`）的 sha256 摘要。 */
+    digest: string;
+    status: CaseRecordStatus;
+    /** `skipped` 的细分原因。 */
+    skipped_reason?: 'timeout' | 'integer-argument';
+    /** 宿主侧观测阶段（wasm lane 才有）。 */
+    phase?: ObservationPhase;
+    /** 明确 guest trap 身份（类型 + 原因）。 */
+    guest_trap?: { kind: string; reason: string };
+    /** 失败/阻塞/未运行的首行原因。 */
+    message?: string;
+};
 
 /**
  * 用例结果四分类；`executed_pass + executed_fail + blocked + not_run === testCaseTotal - skipped`。
@@ -24,6 +52,8 @@ export type SolverCaseStats = {
     skipped_integer_argument?: number;
     firstFailureIndex: number | null;
     firstFailure: string | null;
+    /** 逐例真实观测；缺失表示旧格式行，隔离统计不得倒推。 */
+    cases?: CaseRecord[];
 };
 
 export function emptySolverCaseStats(error: string | null = null): SolverCaseStats {
@@ -64,6 +94,64 @@ export function formatSolverResultLine(stats: SolverCaseStats): string {
     return `${SOLVER_RESULT_MARKER}${JSON.stringify(stats)}`;
 }
 
+const CASE_RECORD_STATUSES: readonly CaseRecordStatus[] = ['pass', 'fail', 'blocked', 'not_run', 'skipped'];
+
+/** 逐例记录形状校验；`undefined` 表示旧格式无记录，坏形状返回 `null` fail-closed。 */
+function parseCaseRecords(raw: unknown): CaseRecord[] | null | undefined {
+    if (raw === undefined || raw === null) {
+        return undefined;
+    }
+    if (!Array.isArray(raw)) {
+        return null;
+    }
+    const records: CaseRecord[] = [];
+    for (const item of raw) {
+        if (typeof item !== 'object' || item === null || Array.isArray(item)) {
+            return null;
+        }
+        const record = item as Record<string, unknown>;
+        if (
+            typeof record.index !== 'number'
+                || !Number.isInteger(record.index)
+                || record.index < 0
+                || typeof record.caseId !== 'string'
+                || typeof record.digest !== 'string'
+                || !/^[0-9a-f]{64}$/.test(record.digest)
+                || !CASE_RECORD_STATUSES.includes(record.status as CaseRecordStatus)
+        ) {
+            return null;
+        }
+        const parsed: CaseRecord = {
+            index: record.index,
+            caseId: record.caseId,
+            digest: record.digest,
+            status: record.status as CaseRecordStatus,
+        };
+        if (record.skipped_reason === 'timeout' || record.skipped_reason === 'integer-argument') {
+            parsed.skipped_reason = record.skipped_reason;
+        }
+        if (record.phase === 'marshal' || record.phase === 'guest-invoke' || record.phase === 'demarshal-normalize') {
+            parsed.phase = record.phase;
+        }
+        if (
+            typeof record.guest_trap === 'object'
+                && record.guest_trap !== null
+                && typeof (record.guest_trap as Record<string, unknown>).kind === 'string'
+                && typeof (record.guest_trap as Record<string, unknown>).reason === 'string'
+        ) {
+            parsed.guest_trap = {
+                kind: (record.guest_trap as Record<string, string>).kind,
+                reason: (record.guest_trap as Record<string, string>).reason,
+            };
+        }
+        if (typeof record.message === 'string') {
+            parsed.message = record.message;
+        }
+        records.push(parsed);
+    }
+    return records;
+}
+
 /** 从 solver 子进程输出中解析用例统计；缺失时返回 null。 */
 export function parseSolverResultLine(text: string): SolverCaseStats | null {
     const lines = text.split(/\r?\n/);
@@ -84,6 +172,10 @@ export function parseSolverResultLine(text: string): SolverCaseStats | null {
             ) {
                 return null;
             }
+            const cases = parseCaseRecords((payload as { cases?: unknown }).cases);
+            if (cases === null) {
+                return null;
+            }
             return {
                 ok: payload.ok,
                 testCaseTotal: payload.testCaseTotal,
@@ -98,6 +190,7 @@ export function parseSolverResultLine(text: string): SolverCaseStats | null {
                     : 0,
                 firstFailureIndex: payload.firstFailureIndex ?? null,
                 firstFailure: payload.firstFailure ?? null,
+                ...(cases === undefined || cases === null ? {} : { cases }),
             };
         } catch {
             return null;

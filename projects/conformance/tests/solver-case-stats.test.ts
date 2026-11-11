@@ -52,6 +52,62 @@ describe('solver case stats marker', () => {
         expect(emptySolverCaseStats('blocked').firstFailure).toBe('blocked');
     });
 
+    it('逐例记录随 marker 行往返', () => {
+        const digest = 'a'.repeat(64);
+        const stats = {
+            ok: false,
+            testCaseTotal: 3,
+            executed_pass: 1,
+            executed_fail: 1,
+            blocked: 0,
+            not_run: 1,
+            skipped: 0,
+            skipped_timeout: 0,
+            skipped_integer_argument: 0,
+            firstFailureIndex: 1,
+            firstFailure: 'tests[1]: boom',
+            cases: [
+                { index: 0, caseId: 'two-sum::tests[0]', digest, status: 'pass' as const },
+                {
+                    index: 1,
+                    caseId: 'two-sum::tests[1]',
+                    digest,
+                    status: 'fail' as const,
+                    phase: 'guest-invoke' as const,
+                    guest_trap: { kind: 'wasm-runtime-error', reason: 'unreachable' },
+                    message: 'boom',
+                },
+                { index: 2, caseId: 'two-sum::tests[2]', digest, status: 'not_run' as const },
+            ],
+        };
+        const parsed = parseSolverResultLine(formatSolverResultLine(stats));
+        expect(parsed?.cases).toEqual(stats.cases);
+    });
+
+    it('坏形状的逐例记录 fail-closed 为 null', () => {
+        const base = {
+            ok: true,
+            testCaseTotal: 1,
+            executed_pass: 1,
+            executed_fail: 0,
+            blocked: 0,
+            not_run: 0,
+            firstFailureIndex: null,
+            firstFailure: null,
+        };
+        expect(parseSolverResultLine(formatSolverResultLine({ ...base, cases: [{ index: 0 }] }))).toBeNull();
+        expect(
+            parseSolverResultLine(
+                formatSolverResultLine({ ...base, cases: [{ index: 0, caseId: 'x::tests[0]', digest: 'zz', status: 'pass' }] }),
+            ),
+        ).toBeNull();
+        expect(
+            parseSolverResultLine(
+                formatSolverResultLine({ ...base, cases: [{ index: 0, caseId: 'x::tests[0]', digest: 'a'.repeat(64), status: 'weird' }] }),
+            ),
+        ).toBeNull();
+    });
+
     it('parses skipped reason counts separately', () => {
         const stats = {
             ok: true,

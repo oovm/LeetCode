@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 
-import type { SolverCaseStats } from '../adapters/shared/solver-case-stats.ts';
+import type { CaseRecord, CaseRecordStatus, SolverCaseStats } from '../adapters/shared/solver-case-stats.ts';
 
 /**
  * 可执行隔离的缺陷类。
@@ -88,48 +88,130 @@ export function loadCorpusQuarantine(manifestPath: string, source = manifestPath
 type CaseBuckets = Pick<SolverCaseStats, 'executed_pass' | 'executed_fail' | 'blocked' | 'not_run'>;
 
 /**
- * 按坐标把隔离用例从四字段统计里扣掉。
- *
- * 归类重建规则（与 `run_*_solver` 的四字段合同一致）：`blocked` 行整行阻塞；`ok` 行整行通过；
- * 其余行 `firstFailureIndex` 之前为通过、该下标为失败、其后为未运行。
- * 越界下标（清单与当前 metadata 不一致）不计入，避免凭空减少用例。
+ * 被隔离项的逐例绑定证据：身份 + 内容摘要 + 真实逐例状态。
+ * 摘要来自 solver 的逐例记录，隔离项因此绑定 case 内容；语料内容变化后
+ * 旧隔离坐标的摘要不再可比，报告必须如实呈现。
  */
-export function quarantineCaseStats(stats: SolverCaseStats, indices: ReadonlySet<number>): SolverCaseStats {
-    const buckets: CaseBuckets = { executed_pass: 0, executed_fail: 0, blocked: 0, not_run: 0 };
-    let removed = 0;
-    for (const index of indices) {
-        if (!Number.isInteger(index) || index < 0 || index >= stats.testCaseTotal) {
-            continue;
-        }
-        removed += 1;
-        buckets[classifyCase(stats, index)] += 1;
+export type QuarantineRemoval = {
+    index: number;
+    caseId: string;
+    digest: string;
+    status: CaseRecordStatus;
+};
+
+export type QuarantineAdjustment = {
+    stats: SolverCaseStats;
+    /** 实际扣减的隔离项（逐例状态与摘要来自真实记录）。 */
+    removed: QuarantineRemoval[];
+    /** 无逐例记录而无法安全扣减的坐标数（禁止从汇总计数倒推逐例状态）。 */
+    unbound: number;
+};
+
+/** 汇总计数与逐例记录必须一致；不一致说明观测链自身失真，立即失败。 */
+function assertCasesConsistent(stats: SolverCaseStats, records: CaseRecord[]): void {
+    const count = (status: CaseRecordStatus) => records.filter((record) => record.status === status).length;
+    const countSkipped = (reason: 'timeout' | 'integer-argument') =>
+        records.filter((record) => record.status === 'skipped' && record.skipped_reason === reason).length;
+    const mismatches: string[] = [];
+    if (records.length !== stats.testCaseTotal) {
+        mismatches.push(`记录数 ${records.length} !== testCaseTotal ${stats.testCaseTotal}`);
     }
-    return {
-        ...stats,
-        testCaseTotal: stats.testCaseTotal - removed,
-        executed_pass: stats.executed_pass - buckets.executed_pass,
-        executed_fail: stats.executed_fail - buckets.executed_fail,
-        blocked: stats.blocked - buckets.blocked,
-        not_run: stats.not_run - buckets.not_run,
-    };
+    if (count('pass') !== stats.executed_pass) {
+        mismatches.push(`pass 记录 ${count('pass')} !== executed_pass ${stats.executed_pass}`);
+    }
+    if (count('fail') !== stats.executed_fail) {
+        mismatches.push(`fail 记录 ${count('fail')} !== executed_fail ${stats.executed_fail}`);
+    }
+    if (count('blocked') !== stats.blocked) {
+        mismatches.push(`blocked 记录 ${count('blocked')} !== blocked ${stats.blocked}`);
+    }
+    if (count('not_run') !== stats.not_run) {
+        mismatches.push(`not_run 记录 ${count('not_run')} !== not_run ${stats.not_run}`);
+    }
+    if (count('skipped') !== (stats.skipped ?? 0)) {
+        mismatches.push(`skipped 记录 ${count('skipped')} !== skipped ${stats.skipped ?? 0}`);
+    }
+    if (countSkipped('timeout') !== (stats.skipped_timeout ?? 0)) {
+        mismatches.push(`timeout 记录 ${countSkipped('timeout')} !== skipped_timeout ${stats.skipped_timeout ?? 0}`);
+    }
+    if (countSkipped('integer-argument') !== (stats.skipped_integer_argument ?? 0)) {
+        mismatches.push(
+            `integer-argument 记录 ${countSkipped('integer-argument')} !== skipped_integer_argument ${stats.skipped_integer_argument ?? 0}`,
+        );
+    }
+    if (mismatches.length > 0) {
+        throw new Error(`逐例记录与汇总计数不一致（观测链失真，拒绝倒推）：${mismatches.join('；')}`);
+    }
 }
 
-function classifyCase(stats: SolverCaseStats, index: number): keyof CaseBuckets {
-    if (stats.blocked > 0) {
-        return 'blocked';
+/**
+ * 按坐标把隔离用例从统计里扣掉。
+ *
+ * 逐例状态只来自 solver 的真实记录（`cases`），禁止从汇总计数或 `firstFailureIndex`
+ * 区间倒推。无逐例记录时不扣减，坐标计入 `unbound` 如实上报。越界下标（清单与
+ * 当前 metadata 不一致）不计入，避免凭空减少用例。
+ */
+export function quarantineCaseStats(stats: SolverCaseStats, indices: ReadonlySet<number>): QuarantineAdjustment {
+    const inRange = [...indices].filter((index) => Number.isInteger(index) && index >= 0 && index < stats.testCaseTotal);
+    const records = stats.cases;
+    if (records === undefined || records.length === 0) {
+        return { stats, removed: [], unbound: inRange.length };
     }
-    if (stats.ok) {
-        return 'executed_pass';
+    assertCasesConsistent(stats, records);
+    const byIndex = new Map<number, CaseRecord>();
+    for (const record of records) {
+        byIndex.set(record.index, record);
     }
-    const firstFailureIndex = stats.firstFailureIndex;
-    if (firstFailureIndex === null) {
-        return 'not_run';
+    const removed: QuarantineRemoval[] = [];
+    const buckets: CaseBuckets = { executed_pass: 0, executed_fail: 0, blocked: 0, not_run: 0 };
+    let removedSkipped = 0;
+    let removedSkippedTimeout = 0;
+    let removedSkippedIntegerArgument = 0;
+    for (const index of inRange) {
+        const record = byIndex.get(index);
+        if (record === undefined) {
+            continue;
+        }
+        removed.push({ index: record.index, caseId: record.caseId, digest: record.digest, status: record.status });
+        switch (record.status) {
+            case 'pass':
+                buckets.executed_pass += 1;
+                break;
+            case 'fail':
+                buckets.executed_fail += 1;
+                break;
+            case 'blocked':
+                buckets.blocked += 1;
+                break;
+            case 'not_run':
+                buckets.not_run += 1;
+                break;
+            case 'skipped':
+                removedSkipped += 1;
+                if (record.skipped_reason === 'timeout') {
+                    removedSkippedTimeout += 1;
+                }
+                if (record.skipped_reason === 'integer-argument') {
+                    removedSkippedIntegerArgument += 1;
+                }
+                break;
+        }
     }
-    if (index < firstFailureIndex) {
-        return 'executed_pass';
-    }
-    if (index === firstFailureIndex) {
-        return 'executed_fail';
-    }
-    return 'not_run';
+    const removedIndices = new Set(removed.map((item) => item.index));
+    return {
+        stats: {
+            ...stats,
+            testCaseTotal: stats.testCaseTotal - removed.length,
+            executed_pass: stats.executed_pass - buckets.executed_pass,
+            executed_fail: stats.executed_fail - buckets.executed_fail,
+            blocked: stats.blocked - buckets.blocked,
+            not_run: stats.not_run - buckets.not_run,
+            skipped: (stats.skipped ?? 0) - removedSkipped,
+            skipped_timeout: (stats.skipped_timeout ?? 0) - removedSkippedTimeout,
+            skipped_integer_argument: (stats.skipped_integer_argument ?? 0) - removedSkippedIntegerArgument,
+            cases: records.filter((record) => !removedIndices.has(record.index)),
+        },
+        removed,
+        unbound: 0,
+    };
 }

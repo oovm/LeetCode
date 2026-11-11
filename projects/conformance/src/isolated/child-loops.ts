@@ -9,6 +9,7 @@
  * 解法返回值若含越过安全整数的 `number` 或非有限浮点，`encodeValue` 抛错并记为该用例失败，
  * 不在协议边界静默降级。
  */
+import { classifyThrown } from '../observation/guest-trap.ts';
 import { decodeValue, encodeValue, type CaseOutcome, type RunCase } from './protocol.ts';
 import type { Candidate } from './ts-entry.ts';
 
@@ -57,7 +58,17 @@ export async function executeRun(candidate: Candidate, plan: RunPlan): Promise<R
             const value = await candidate(freshArgs(entry));
             results.push({ index: entry.index, ok: true, value: encodeValue(value, `cases[${entry.index}].result`) });
         } catch (err) {
-            results.push({ index: entry.index, ok: false, error: errorMessage(err) });
+            const classified = classifyThrown(err, 'guest-invoke');
+            const outcome: CaseOutcome = {
+                index: entry.index,
+                ok: false,
+                error: errorMessage(err),
+                phase: classified.kind === 'guest-trap' ? 'guest-invoke' : classified.phase,
+            };
+            if (classified.kind === 'guest-trap') {
+                outcome.guestTrap = { kind: classified.trapKind, reason: classified.reason };
+            }
+            results.push(outcome);
         }
     }
     return { results, samples, collectMs: performance.now() - collectStart };

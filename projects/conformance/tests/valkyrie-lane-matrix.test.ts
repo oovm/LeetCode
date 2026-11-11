@@ -47,8 +47,9 @@ function greenWasm(id: string): ValkyrieMatrixRow {
     };
 }
 
-/** 第 2 条用例失败的真实形态：前 2 条通过、1 条失败、后面 2 条未执行。 */
+/** 第 2 条用例失败的真实形态：前 2 条通过、1 条失败、后面 2 条未执行，并携带逐例记录。 */
 function failingWasm(id: string): ValkyrieMatrixRow {
+    const digest = 'b'.repeat(64);
     return {
         ...greenWasm(id),
         runtimeOk: false,
@@ -59,6 +60,13 @@ function failingWasm(id: string): ValkyrieMatrixRow {
         not_run: 2,
         firstFailureIndex: 2,
         firstFailure: 'tests[2]: expected 2, got 3',
+        cases: [
+            { index: 0, caseId: `${id}::tests[0]`, digest, status: 'pass' },
+            { index: 1, caseId: `${id}::tests[1]`, digest, status: 'pass' },
+            { index: 2, caseId: `${id}::tests[2]`, digest, status: 'fail', message: 'tests[2]: expected 2, got 3' },
+            { index: 3, caseId: `${id}::tests[3]`, digest, status: 'not_run' },
+            { index: 4, caseId: `${id}::tests[4]`, digest, status: 'not_run' },
+        ],
         green: false,
         outcome: 'red',
         unverifiedReasons: [],
@@ -332,10 +340,48 @@ describe('valkyrie lane matrix report', () => {
         expect(report.summary.wasm.executed_fail).toBe(0);
         expect(report.summary.wasm.not_run).toBe(2);
         expect(report.summary.wasm.quarantinedCases).toBe(2);
+        expect(report.summary.wasm.quarantineUnbound).toBe(0);
         // 未配置隔离时无扣减。
         expect(report.summary.jvm.quarantinedCases).toBe(0);
         expect(report.problems[0]!.rows.wasm.green).toBe(false);
         expect(report.quarantine).toEqual({ source: 'test-list.json', caseCount: 2, problemCount: 1 });
+        // 隔离项绑定逐例身份与内容摘要，状态来自真实记录而非倒推。
+        const binding = report.problems[0]!.rows.wasm.quarantine;
+        expect(binding).toBeDefined();
+        expect(binding!.unbound).toBe(0);
+        expect(binding!.removed.map((item) => item.caseId).sort()).toEqual(['two-sum::tests[0]', 'two-sum::tests[2]']);
+        expect(binding!.removed.find((item) => item.index === 0)!.status).toBe('pass');
+        expect(binding!.removed.find((item) => item.index === 2)!.status).toBe('fail');
+        expect(binding!.removed[0]!.digest).toMatch(/^[0-9a-f]{64}$/);
+    });
+
+    it('refuses to back-derive per-case status when a row lacks case records', () => {
+        const quarantine: LaneQuarantine = {
+            source: 'test-list.json',
+            caseCount: 2,
+            problemCount: 1,
+            indices: new Map([['two-sum', new Set([0, 1])]]),
+        };
+        // ovm lane 行没有逐例记录：不扣减，坐标如实计 unbound。
+        const report = buildValkyrieLaneMatrixReport([entry('two-sum')], { corpusIds: ['two-sum'], quarantine });
+        expect(report.summary.ovm.testCaseTotal).toBe(2);
+        expect(report.summary.ovm.executed_pass).toBe(2);
+        expect(report.summary.ovm.quarantinedCases).toBe(0);
+        expect(report.summary.ovm.quarantineUnbound).toBe(2);
+        expect(report.problems[0]!.rows.ovm.quarantine).toEqual({ removed: [], unbound: 2 });
+    });
+
+    it('rejects quarantine adjustment when aggregates contradict case records', () => {
+        const quarantine: LaneQuarantine = {
+            source: 'test-list.json',
+            caseCount: 1,
+            problemCount: 1,
+            indices: new Map([['two-sum', new Set([0])]]),
+        };
+        const distorted = { ...failingWasm('two-sum'), executed_pass: 99 };
+        expect(() => buildValkyrieLaneMatrixReport([entry('two-sum', { wasm: distorted })], { corpusIds: ['two-sum'], quarantine })).toThrow(
+            /逐例记录与汇总计数不一致/,
+        );
     });
 
     it('parses quarantine coordinates from the sidecar manifest and ignores class D', () => {

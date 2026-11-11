@@ -11,8 +11,10 @@ import {
     extractTestFailureIndex,
     formatSolverResultLine,
     isBlockedSolverMessage,
+    type CaseRecord,
     type SolverCaseStats,
 } from '../src/adapters/shared/solver-case-stats.ts';
+import { fillRemainingRecords, makeRecord, failureObservation } from '../src/observation/solver-records.ts';
 import {
     matchWasmExportSymbol,
     type AbiExport,
@@ -185,7 +187,9 @@ async function runOperationSequenceCases(
     host: InvokeHost,
     entry: string,
     abi: { schema: LibraryInvokeSchema; lookup: AbiLookup },
-    tests: OperationSequenceCase[],
+    items: { testCase: OperationSequenceCase; index: number }[],
+    tests: { args: Record<string, unknown>; expected: unknown }[],
+    slug: string,
     rawTotal: number,
     skipped: number,
 ): Promise<number> {
@@ -200,8 +204,15 @@ async function runOperationSequenceCases(
     }
     const constructorParams = orderedParameters(abi.lookup.exportSchema, false, `构造入口 "${entry}"`);
 
-    let pass = 0;
+    const records: CaseRecord[] = [];
     for (const [index, testCase] of tests.entries()) {
+        if (isNoExecutableExpectation(testCase)) {
+            records.push(makeRecord(slug, index, testCase, 'skipped', { skipped_reason: 'timeout' }));
+        }
+    }
+
+    let pass = 0;
+    for (const { testCase, index } of items) {
         const sequence = testCase.args;
         const operations = sequence.operations;
         try {
@@ -240,9 +251,23 @@ async function runOperationSequenceCases(
                 }
             }
             pass += 1;
+            records.push(makeRecord(slug, index, testCase, 'pass'));
         } catch (err) {
             const message = String(err);
             const infrastructureBlocked = isBlockedSolverMessage(message);
+            records.push(
+                makeRecord(slug, index, testCase, infrastructureBlocked ? 'blocked' : 'fail', {
+                    message: message.split('\n')[0],
+                    ...failureObservation(err),
+                }),
+            );
+            fillRemainingRecords(
+                records,
+                slug,
+                items,
+                infrastructureBlocked ? 'blocked' : 'not_run',
+                infrastructureBlocked ? message.split('\n')[0] : undefined,
+            );
             emitStats({
                 ok: false,
                 testCaseTotal: rawTotal,
@@ -255,6 +280,7 @@ async function runOperationSequenceCases(
                 skipped_integer_argument: 0,
                 firstFailureIndex: extractTestFailureIndex(message) ?? index,
                 firstFailure: message,
+                cases: records,
             });
             console.error(message);
             return 1;
@@ -273,6 +299,7 @@ async function runOperationSequenceCases(
         skipped_integer_argument: 0,
         firstFailureIndex: null,
         firstFailure: null,
+        cases: records,
     });
     return 0;
 }
@@ -363,7 +390,7 @@ async function main(): Promise<number> {
         if (sequenceCases.length !== executableCases.length) {
             throw new Error('同一道题混用了单入口用例与操作序列用例，无法判定执行模型');
         }
-        return await runOperationSequenceCases(host, entry, abi, sequenceCases.map(({ testCase }) => testCase), rawTotal, skippedApriori);
+        return await runOperationSequenceCases(host, entry, abi, sequenceCases, tests, slug, rawTotal, skippedApriori);
     }
 
     let pass = 0;
@@ -377,6 +404,17 @@ async function main(): Promise<number> {
         }
     }
     const skipped = skippedApriori + unrepresentableIndices.size;
+
+    // 逐例记录：先落全部 `skipped`（哨兵与整数 ABI），再按真实观测逐例追加。
+    const records: CaseRecord[] = [];
+    for (const [index, testCase] of tests.entries()) {
+        if (isNoExecutableExpectation(testCase)) {
+            records.push(makeRecord(slug, index, testCase, 'skipped', { skipped_reason: 'timeout' }));
+        } else if (unrepresentableIndices.has(index)) {
+            records.push(makeRecord(slug, index, testCase, 'skipped', { skipped_reason: 'integer-argument' }));
+        }
+    }
+
     for (const { testCase: case_, index } of executableCases) {
         if (unrepresentableIndices.has(index)) {
             continue;
@@ -401,9 +439,23 @@ async function main(): Promise<number> {
                 }
             }
             pass += 1;
+            records.push(makeRecord(slug, index, case_, 'pass'));
         } catch (err) {
             const message = String(err);
             const infrastructureBlocked = isBlockedSolverMessage(message);
+            records.push(
+                makeRecord(slug, index, case_, infrastructureBlocked ? 'blocked' : 'fail', {
+                    message: message.split('\n')[0],
+                    ...failureObservation(err),
+                }),
+            );
+            fillRemainingRecords(
+                records,
+                slug,
+                executableCases,
+                infrastructureBlocked ? 'blocked' : 'not_run',
+                infrastructureBlocked ? message.split('\n')[0] : undefined,
+            );
             emitStats({
                 ok: false,
                 testCaseTotal: rawTotal,
@@ -416,6 +468,7 @@ async function main(): Promise<number> {
                 skipped_integer_argument: unrepresentableIndices.size,
                 firstFailureIndex: extractTestFailureIndex(message) ?? index,
                 firstFailure: message,
+                cases: records,
             });
             console.error(message);
             return 1;
@@ -434,6 +487,7 @@ async function main(): Promise<number> {
         skipped_integer_argument: unrepresentableIndices.size,
         firstFailureIndex: null,
         firstFailure: null,
+        cases: records,
     });
     return 0;
 }

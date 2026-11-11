@@ -9,6 +9,7 @@
  * - `undefined` 编码为 `{ $undefined: true }`，避免 JSON 在数组位上丢洞。
  * - 非有限浮点（`NaN`/`Infinity`）拒绝编码；普通浮点原样通过（其精度语义与 JSON 语料一致）。
  */
+import type { ObservationPhase } from '../observation/guest-trap.ts';
 
 export const PROTOCOL_VERSION = 'ndjson-v1' as const;
 
@@ -133,6 +134,14 @@ export type RunCase = {
     args: Record<string, TaggedValue>;
 };
 
+/** 失败用例的宿主侧观测：真实阶段与可确认的 guest trap 身份（[01 §4.12] 验收观察门）。 */
+export type CaseFailureObservation = {
+    /** 异常归回的观测阶段。 */
+    phase?: ObservationPhase;
+    /** 仅明确 guest trap 才填写；宿主侧异常不得伪造。 */
+    guestTrap?: { kind: string; reason: string };
+};
+
 /** judge → solver 子进程。`lane` 仅 managed 子进程使用（jvm/clr 分发）。 */
 export type JudgeMessage =
     | { type: 'load'; invoke: string; solution?: string; artifactDir?: string; lane?: 'jvm' | 'clr' }
@@ -141,7 +150,7 @@ export type JudgeMessage =
 
 export type CaseOutcome =
     | { index: number; ok: true; value: TaggedValue }
-    | { index: number; ok: false; error: string };
+    | ({ index: number; ok: false; error: string } & CaseFailureObservation);
 
 /** solver → judge 子进程回包。 */
 export type SolverMessage =

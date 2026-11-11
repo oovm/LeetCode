@@ -57,6 +57,6 @@ export function solverCaseId(slug: string, index: number): string {
 }
 
 /** 判题用例内容摘要：绑定 metadata 用例的 `args` 与 `expected` 原文。 */
-export function solverCaseDigest(args: Record<string, unknown>, expected: unknown): string {
+export function solverCaseDigest(args: unknown, expected: unknown): string {
     return digestOf({ args, expected });
 }

@@ -14,8 +14,10 @@ import {
     extractTestFailureIndex,
     formatSolverResultLine,
     isBlockedSolverMessage,
+    type CaseRecord,
     type SolverCaseStats,
 } from '../src/adapters/shared/solver-case-stats.ts';
+import { fillRemainingRecords, makeRecord, failureObservation } from '../src/observation/solver-records.ts';
 import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
 import { compareModeForExecution, formatValue, resultsMatch } from '../src/domain/compare-mode.ts';
 import { problemIdFromDir } from '../src/domain/metadata.ts';
@@ -185,6 +187,14 @@ async function main(): Promise<number> {
         .map((testCase, index) => ({ testCase, index }))
         .filter(({ testCase }) => !isNoExecutableExpectation(testCase));
 
+    // 逐例记录：先落全部 `skipped` 哨兵，再按真实观测逐例追加（[01 §4.12] 验收观察门）。
+    const records: CaseRecord[] = [];
+    for (const [index, testCase] of tests.entries()) {
+        if (isNoExecutableExpectation(testCase)) {
+            records.push(makeRecord(slug, index, testCase, 'skipped', { skipped_reason: 'timeout' }));
+        }
+    }
+
     let pass = 0;
     for (const { testCase: case_, index } of executableCases) {
         try {
@@ -212,9 +222,23 @@ async function main(): Promise<number> {
                 }
             }
             pass += 1;
+            records.push(makeRecord(slug, index, case_, 'pass'));
         } catch (err) {
             const message = String(err);
             const infrastructureBlocked = isBlockedSolverMessage(message);
+            records.push(
+                makeRecord(slug, index, case_, infrastructureBlocked ? 'blocked' : 'fail', {
+                    message: message.split('\n')[0],
+                    ...failureObservation(err),
+                }),
+            );
+            fillRemainingRecords(
+                records,
+                slug,
+                executableCases,
+                infrastructureBlocked ? 'blocked' : 'not_run',
+                infrastructureBlocked ? message.split('\n')[0] : undefined,
+            );
             emitStats({
                 ok: false,
                 testCaseTotal: tests.length,
@@ -227,6 +251,7 @@ async function main(): Promise<number> {
                 skipped_integer_argument: 0,
                 firstFailureIndex: extractTestFailureIndex(message) ?? index,
                 firstFailure: message,
+                cases: records,
             });
             console.error(message);
             return 1;
@@ -245,6 +270,7 @@ async function main(): Promise<number> {
         skipped_integer_argument: 0,
         firstFailureIndex: null,
         firstFailure: null,
+        cases: records,
     });
     return 0;
 }
