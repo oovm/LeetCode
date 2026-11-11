@@ -4,7 +4,7 @@ using std.collection;
 
 # 找绝对值最小的数；绝对值相同取较大者。
 [export(case: "camelCase")]
-micro findClosestNumber(nums: ArrayList<i64>) -> i64 {
+micro findClosestNumber(nums: [i64]) -> i64 {
     let mut best: i64 = nums⁅0⁆
     let mut index: usize = 1
     while index < nums.length() {
@@ -26,7 +26,7 @@ micro findClosestNumber(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findClosestNumber(self, nums: ArrayList<i64>): i64 {
+    micro findClosestNumber(self, nums: [i64]): i64 {
         return findClosestNumber(nums)
     }
 }

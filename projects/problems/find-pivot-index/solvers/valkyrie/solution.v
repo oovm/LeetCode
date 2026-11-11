@@ -2,7 +2,7 @@ namespace leetcode.find_pivot_index
 
 # 先求总和，再从左累加，判断左侧和等于右侧和（总和减左和减当前元素）。
 [export(case: "camelCase")]
-micro pivotIndex(nums: ArrayList<i64>) -> i64 {
+micro pivotIndex(nums: [i64]) -> i64 {
     let count: usize = nums.length()
     let mut total: i64 = 0
     let mut i: usize = 0
@@ -25,7 +25,7 @@ micro pivotIndex(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro pivotIndex(self, nums: ArrayList<i64>): i64 {
+    micro pivotIndex(self, nums: [i64]): i64 {
         return pivotIndex(nums)
     }
 }

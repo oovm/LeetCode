@@ -5,7 +5,7 @@ using std.math;
 
 # 环形路线：顺时针弧长与总长之差的较小者即答案。
 [export(case: "camelCase")]
-micro distanceBetweenBusStops(distance: ArrayList<i64>, start: i64, destination: i64) -> i64 {
+micro distanceBetweenBusStops(distance: [i64], start: i64, destination: i64) -> i64 {
     let mut a: usize = 0
     let mut b: usize = 0
     if start < destination {
@@ -29,7 +29,7 @@ micro distanceBetweenBusStops(distance: ArrayList<i64>, start: i64, destination:
 }
 
 class Solution {
-    micro distanceBetweenBusStops(self, distance: ArrayList<i64>, start: i64, destination: i64): i64 {
+    micro distanceBetweenBusStops(self, distance: [i64], start: i64, destination: i64): i64 {
         return distanceBetweenBusStops(distance, start, destination)
     }
 }

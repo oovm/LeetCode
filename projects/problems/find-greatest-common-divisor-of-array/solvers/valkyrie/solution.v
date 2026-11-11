@@ -12,7 +12,7 @@ micro gcd(a: i64, b: i64) -> i64 {
 }
 
 [export(case: "camelCase")]
-micro find_gcd(nums: ArrayList<i64>) -> i64 {
+micro find_gcd(nums: [i64]) -> i64 {
     let mut min_val: i64 = nums⁅0⁆
     let mut max_val: i64 = nums⁅0⁆
     let mut i: usize = 1
@@ -30,7 +30,7 @@ micro find_gcd(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findGCD(self, nums: ArrayList<i64>): i64 {
+    micro findGCD(self, nums: [i64]): i64 {
         return find_gcd(nums)
     }
 }

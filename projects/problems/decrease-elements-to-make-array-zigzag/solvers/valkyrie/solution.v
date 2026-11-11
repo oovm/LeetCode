@@ -3,7 +3,7 @@ namespace leetcode.decrease_elements_to_make_array_zigzag;
 using std.collection;
 
 # 两种峰谷起点各扫一遍：谷位只需压到「两侧较小值减一」，O(n)。
-micro cost(nums: ArrayList<i64>, start: i64) -> i64 {
+micro cost(nums: [i64], start: i64) -> i64 {
     let count: i64 = nums.length() as i64
     let mut total: i64 = 0
     let mut i: i64 = start
@@ -25,7 +25,7 @@ micro cost(nums: ArrayList<i64>, start: i64) -> i64 {
 }
 
 [export(case: "camelCase")]
-micro movesToMakeZigzag(nums: ArrayList<i64>) -> i64 {
+micro movesToMakeZigzag(nums: [i64]) -> i64 {
     let even: i64 = cost(nums, 0)
     let odd: i64 = cost(nums, 1)
     if even < odd {
@@ -35,7 +35,7 @@ micro movesToMakeZigzag(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro movesToMakeZigzag(self, nums: ArrayList<i64>): i64 {
+    micro movesToMakeZigzag(self, nums: [i64]): i64 {
         return movesToMakeZigzag(nums)
     }
 }
