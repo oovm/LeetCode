@@ -5,7 +5,7 @@ using std.collection;
 # 堆式层序数组里子节点下标更大，倒序累加即可得到每棵子树的节点和。
 # 只要某个非根子树的节点和等于总和一半即可切分，O(n)。
 [export(case: "camelCase")]
-micro check_equal_tree(root: ArrayList<i64>) -> bool {
+micro check_equal_tree(root: [i64]) -> bool {
     let total_nodes: i64 = root.length() as i64
     if total_nodes == 0 {
         return false
@@ -43,7 +43,7 @@ micro check_equal_tree(root: ArrayList<i64>) -> bool {
 }
 
 class Solution {
-    micro checkEqualTree(self, root: ArrayList<i64>): bool {
+    micro checkEqualTree(self, root: [i64]): bool {
         return check_equal_tree(root)
     }
 }

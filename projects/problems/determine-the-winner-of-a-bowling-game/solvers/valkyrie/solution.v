@@ -2,7 +2,7 @@ namespace leetcode.determine_the_winner_of_a_bowling_game;
 
 using std.collection;
 
-micro scoreFor(rolls: ArrayList<i64>) -> i64 {
+micro scoreFor(rolls: [i64]) -> i64 {
     let mut total: i64 = 0
     let mut index: usize = 0
     while index < rolls.length() {
@@ -22,7 +22,7 @@ micro scoreFor(rolls: ArrayList<i64>) -> i64 {
 
 # 分别计算两名玩家得分，再比较大小。
 [export(case: "camelCase")]
-micro isWinner(player1: ArrayList<i64>, player2: ArrayList<i64>) -> i64 {
+micro isWinner(player1: [i64], player2: [i64]) -> i64 {
     let first: i64 = scoreFor(player1)
     let second: i64 = scoreFor(player2)
     if first > second {
@@ -35,7 +35,7 @@ micro isWinner(player1: ArrayList<i64>, player2: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro isWinner(self, player1: ArrayList<i64>, player2: ArrayList<i64>): i64 {
+    micro isWinner(self, player1: [i64], player2: [i64]): i64 {
         return isWinner(player1, player2)
     }
 }

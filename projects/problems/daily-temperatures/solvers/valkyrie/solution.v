@@ -4,7 +4,7 @@ using std.collection;
 
 # 单调递减下标栈（`ArrayList` 当栈）：遇到更高温度就结算栈顶。
 [export(case: "camelCase")]
-micro dailyTemperatures(temperatures: ArrayList<i64>) -> ArrayList<i64> {
+micro dailyTemperatures(temperatures: [i64]) -> [i64] {
     let count: usize = temperatures.length()
     let mut result: ArrayList<i64> = ArrayList::new(count)
     let mut fill: usize = 0
@@ -27,11 +27,11 @@ micro dailyTemperatures(temperatures: ArrayList<i64>) -> ArrayList<i64> {
         stack.push(index as i64)
         index = index + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro dailyTemperatures(self, temperatures: ArrayList<i64>): ArrayList<i64> {
+    micro dailyTemperatures(self, temperatures: [i64]): [i64] {
         return dailyTemperatures(temperatures)
     }
 }

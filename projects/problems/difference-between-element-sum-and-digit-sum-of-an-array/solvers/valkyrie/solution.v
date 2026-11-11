@@ -2,7 +2,7 @@ namespace leetcode.difference_between_element_sum_and_digit_sum_of_an_array
 
 # 分别求元素和与十进制数位和，返回二者绝对差。
 [export(case: "camelCase")]
-micro differenceOfSum(nums: ArrayList<i64>) -> i64 {
+micro differenceOfSum(nums: [i64]) -> i64 {
     let count: usize = nums.length()
     let mut elementSum: i64 = 0
     let mut digitSum: i64 = 0
@@ -25,7 +25,7 @@ micro differenceOfSum(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro differenceOfSum(self, nums: ArrayList<i64>): i64 {
+    micro differenceOfSum(self, nums: [i64]): i64 {
         return differenceOfSum(nums)
     }
 }

@@ -4,7 +4,7 @@ using std.collection;
 
 # 升序扫描：每遇到仍有余量的最小值，就连续消耗 k 个相邻值，消耗不到即失败。
 [export(case: "camelCase")]
-micro isPossibleDivide(nums: ArrayList<i64>, k: i64) -> bool {
+micro isPossibleDivide(nums: [i64], k: i64) -> bool {
     if nums.length() as i64 % k != 0 {
         return false
     }
@@ -48,7 +48,7 @@ micro isPossibleDivide(nums: ArrayList<i64>, k: i64) -> bool {
 }
 
 class Solution {
-    micro isPossibleDivide(self, nums: ArrayList<i64>, k: i64): bool {
+    micro isPossibleDivide(self, nums: [i64], k: i64): bool {
         return isPossibleDivide(nums, k)
     }
 }

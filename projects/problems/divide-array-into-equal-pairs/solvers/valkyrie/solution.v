@@ -4,7 +4,7 @@ using std.collection;
 
 # 每个数值出现次数为偶数即可两两配对。
 [export(case: "camelCase")]
-micro divideArray(nums: ArrayList<i64>) -> bool {
+micro divideArray(nums: [i64]) -> bool {
     let mut counts: HashMap<i64, i64> = HashMap::new(0)
     let mut index: usize = 0
     while index < nums.length() {
@@ -28,7 +28,7 @@ micro divideArray(nums: ArrayList<i64>) -> bool {
 }
 
 class Solution {
-    micro divideArray(self, nums: ArrayList<i64>) -> bool {
+    micro divideArray(self, nums: [i64]) -> bool {
         return divideArray(nums)
     }
 }
