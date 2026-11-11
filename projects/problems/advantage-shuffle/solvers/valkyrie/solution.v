@@ -8,7 +8,7 @@ using std.collection;
 # 按 `nums2` 的值排序索引需要接收比较器的 `sorted_by`（提案 API，见 G11），
 # 比较器还捕获外层 `nums2`（闭包捕获，待验证）。
 [export(case: "camelCase")]
-micro advantageCount(nums1: ArrayList<i64>, nums2: ArrayList<i64>) -> ArrayList<i64> {
+micro advantageCount(nums1: [i64], nums2: [i64]) -> [i64] {
     let mut sorted_a: ArrayList<i64> = ArrayList::new(nums1.length())
     loop value in nums1 {
         sorted_a.push(value)
@@ -82,11 +82,11 @@ micro advantageCount(nums1: ArrayList<i64>, nums2: ArrayList<i64>) -> ArrayList<
         result.set((loser_index + 1) as isize, leftovers⁅m⁆)
         m = m + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro advantageCount(self, nums1: ArrayList<i64>, nums2: ArrayList<i64>): ArrayList<i64> {
+    micro advantageCount(self, nums1: [i64], nums2: [i64]): [i64] {
         return advantageCount(nums1, nums2)
     }
 }

@@ -4,7 +4,7 @@ using std.collection;
 
 # 桶计数：citation >= n 的归到桶 n，其余归到对应桶；从高位向下累加计数，首次 >= h 即答案。
 [export(case: "camelCase")]
-micro hIndex(citations: ArrayList<i64>) -> i64 {
+micro hIndex(citations: [i64]) -> i64 {
     let n: i64 = citations.length() as i64
     let mut bucket: ArrayList<i64> = ArrayList::new((n + 1) as usize)
     let mut slot: i64 = 0
@@ -13,7 +13,7 @@ micro hIndex(citations: ArrayList<i64>) -> i64 {
         slot = slot + 1
     }
     loop value in citations {
-        let capped: i64 = value
+        let mut capped: i64 = value
         if value > n {
             capped = n
         }
@@ -32,7 +32,7 @@ micro hIndex(citations: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro hIndex(self, citations: ArrayList<i64>): i64 {
+    micro hIndex(self, citations: [i64]): i64 {
         return hIndex(citations)
     }
 }

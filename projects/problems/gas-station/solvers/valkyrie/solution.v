@@ -4,7 +4,7 @@ using std.collection;
 
 # 贪心：油箱亏空即把起点推到下一站；全程总盈余非负则当前起点可行。
 [export(case: "camelCase")]
-micro canCompleteCircuit(gas: ArrayList<i64>, cost: ArrayList<i64>) -> i64 {
+micro canCompleteCircuit(gas: [i64], cost: [i64]) -> i64 {
     let mut tank: i64 = 0
     let mut start: i64 = 0
     let mut balance: i64 = 0
@@ -26,7 +26,7 @@ micro canCompleteCircuit(gas: ArrayList<i64>, cost: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro canCompleteCircuit(self, gas: ArrayList<i64>, cost: ArrayList<i64>): i64 {
+    micro canCompleteCircuit(self, gas: [i64], cost: [i64]): i64 {
         return canCompleteCircuit(gas, cost)
     }
 }

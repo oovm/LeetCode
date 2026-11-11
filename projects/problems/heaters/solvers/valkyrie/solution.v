@@ -5,7 +5,7 @@ using std.math;
 
 #  heater 排序后对每个 house 二分找最近 heater，取左右两邻距离较小者，再对全局取最大。
 [export(case: "camelCase")]
-micro findRadius(houses: ArrayList<i64>, heaters: ArrayList<i64>) -> i64 {
+micro findRadius(houses: [i64], heaters: [i64]) -> i64 {
     let mut sorted: ArrayList<i64> = ArrayList::new(heaters.length())
     loop value in heaters {
         sorted.push(value)
@@ -23,13 +23,15 @@ micro findRadius(houses: ArrayList<i64>, heaters: ArrayList<i64>) -> i64 {
                 hi = mid
             }
         }
-        let mut radius: i64 = 0
+        # 距离恒非负，用 -1 表示「还没有候选」；不能用 0 当作缺省，
+        # 否则 house 与某个 heater 重合时会把左侧较大距离覆盖回来。
+        let mut radius: i64 = -1
         if lo < sorted.length() {
             radius = sorted⁅lo⁆ - house
         }
         if lo > 0 {
             let left: i64 = house - sorted⁅lo - 1⁆
-            if radius == 0 || left < radius {
+            if radius < 0 || left < radius {
                 radius = left
             }
         }
@@ -41,7 +43,7 @@ micro findRadius(houses: ArrayList<i64>, heaters: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findRadius(self, houses: ArrayList<i64>, heaters: ArrayList<i64>): i64 {
+    micro findRadius(self, houses: [i64], heaters: [i64]): i64 {
         return findRadius(houses, heaters)
     }
 }
