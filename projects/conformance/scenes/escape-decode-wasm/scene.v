@@ -36,10 +36,10 @@ micro field_count() -> i64 {
     let length: i64 = text.length() as i64
     let mut index: i64 = 0
     while index < length {
-        let code: i64 = (text.character_at(index as usize) as u32) as i64
-        if code == 44 {
+        let current: char = text.character_at(index as usize)
+        if current == ',' {
             commas = commas + 1
-        } else if code == 10 {
+        } else if current == '\n' {
             lf_lines = lf_lines + 1
         }
 
@@ -56,9 +56,9 @@ micro total_checksum() -> i64 {
     let length: i64 = text.length() as i64
     let mut index: i64 = 0
     while index < length {
-        let code: i64 = (text.character_at(index as usize) as u32) as i64
-        if code != 13 && code != 10 && code != 44 {
-            total = total + code
+        let current: char = text.character_at(index as usize)
+        if current != '\r' && current != '\n' && current != ',' {
+            total = total + (current as u32) as i64
         }
 
         index = index + 1

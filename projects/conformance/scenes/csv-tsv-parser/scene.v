@@ -33,10 +33,9 @@ micro parse_csv(text: utf8) -> Result<ArrayList<utf8>, CsvError> {
     let mut last_was_comma: bool = false
     while index < length {
         let current: char = text.character_at(index as usize)
-        let code: i64 = (current as u32) as i64
         if quoted {
-            if code == 34 {
-                if index + 1 < length && (((text.character_at((index + 1) as usize) as u32) as i64) == 34) {
+            if current == '"' {
+                if index + 1 < length && text.character_at((index + 1) as usize) == '"' {
                     buffer.append(current)
                     index = index + 2
                 } else {
@@ -47,7 +46,7 @@ micro parse_csv(text: utf8) -> Result<ArrayList<utf8>, CsvError> {
                 buffer.append(current)
                 index = index + 1
             }
-        } else if code == 34 {
+        } else if current == '"' {
             if field_started {
                 let error: CsvError = UnexpectedQuote(index)
                 return Fail(error)
@@ -55,16 +54,16 @@ micro parse_csv(text: utf8) -> Result<ArrayList<utf8>, CsvError> {
             quoted = true
             field_started = true
             index = index + 1
-        } else if code == 44 {
+        } else if current == ',' {
             let field: utf8 = buffer.build()
             fields.push(field)
             buffer = Utf8Builder::new(16)
             field_started = false
             last_was_comma = true
             index = index + 1
-        } else if code == 13 {
+        } else if current == '\r' {
             index = index + 1
-        } else if code == 10 {
+        } else if current == '\n' {
             let field: utf8 = buffer.build()
             fields.push(field)
             buffer = Utf8Builder::new(16)

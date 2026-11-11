@@ -1,6 +1,7 @@
 {
     "id": "string-escape-quote",
     "cases": [
-        { "export": "escapedQuoteLength", "expected": 3, "note": "a\"b 三码位" }
+        { "export": "escapedQuoteLength", "expected": 3, "note": "a\"b 三码位" },
+        { "export": "escapedQuoteChecksum", "expected": 229, "note": "码位和 97 + 34 + 98，锁定内容而不只是长度" }
     ]
 }
