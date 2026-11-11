@@ -13,10 +13,10 @@ micro cmp_i64(a: i64, b: i64) -> i32 {
 }
 
 [export(case: "camelCase")]
-micro three_sum(mut nums: ArrayList<i64>) -> ArrayList<ArrayList<i64>> {
-    quick_sort(nums, cmp_i64)
+micro three_sum(mut nums: [i64]) -> [[i64]] {
+    sort_by(nums, cmp_i64)
     let n: usize = nums.length()
-    let mut ans: ArrayList<ArrayList<i64>> = ArrayList::new(0)
+    let mut ans: ArrayList<[i64]> = ArrayList::new(0)
     let mut i: usize = 0
     while i + 2 < n {
         let vi: i64 = nums⁅i⁆
@@ -40,7 +40,7 @@ micro three_sum(mut nums: ArrayList<i64>) -> ArrayList<ArrayList<i64>> {
                 triplet.push(nums⁅i⁆)
                 triplet.push(nums⁅j⁆)
                 triplet.push(nums⁅k⁆)
-                ans.push(triplet)
+                ans.push(triplet.to_array())
                 j = j + 1
                 k = k - 1
                 while j < k && nums⁅j⁆ == nums⁅j - 1⁆ {
@@ -53,11 +53,11 @@ micro three_sum(mut nums: ArrayList<i64>) -> ArrayList<ArrayList<i64>> {
         }
         i = i + 1
     }
-    return ans
+    return ans.to_array()
 }
 
 class Solution {
-    micro threeSum(self, nums: ArrayList<i64>): ArrayList<ArrayList<i64>> {
+    micro threeSum(self, nums: [i64]): [[i64]] {
         return three_sum(nums)
     }
 }

@@ -4,14 +4,14 @@ using std.collection;
 
 # 排序后固定两元，双指针找和；命中后跳过 lo/hi 的重复值，外层跳过 a/b 重复值。
 [export(case: "camelCase")]
-micro fourSum(nums: ArrayList<i64>, target: i64) -> ArrayList<ArrayList<i64>> {
+micro fourSum(nums: [i64], target: i64) -> [[i64]] {
     let mut sorted: ArrayList<i64> = ArrayList::new(nums.length())
     loop value in nums {
         sorted.push(value)
     }
     sort(sorted)
     let length: usize = sorted.length()
-    let mut result: ArrayList<ArrayList<i64>> = ArrayList::new(0)
+    let mut result: ArrayList<[i64]> = ArrayList::new(0)
     let mut a: usize = 0
     while a + 3 < length {
         if a == 0 || sorted⁅a⁆ != sorted⁅a - 1⁆ {
@@ -32,7 +32,7 @@ micro fourSum(nums: ArrayList<i64>, target: i64) -> ArrayList<ArrayList<i64>> {
                             quad.push(sorted⁅b⁆)
                             quad.push(sorted⁅low⁆)
                             quad.push(sorted⁅high⁆)
-                            result.push(quad)
+                            result.push(quad.to_array())
                             while low < high && sorted⁅low⁆ == sorted⁅low + 1⁆ {
                                 low = low + 1
                             }
@@ -49,11 +49,11 @@ micro fourSum(nums: ArrayList<i64>, target: i64) -> ArrayList<ArrayList<i64>> {
         }
         a = a + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro fourSum(self, nums: ArrayList<i64>, target: i64): ArrayList<ArrayList<i64>> {
+    micro fourSum(self, nums: [i64], target: i64): [[i64]] {
         return fourSum(nums, target)
     }
 }
