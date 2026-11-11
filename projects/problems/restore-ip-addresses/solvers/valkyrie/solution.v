@@ -23,11 +23,11 @@ micro is_segment(digits: ArrayList<i64>, start: usize, length: usize) -> bool {
 # 题内触发点: `Utf8Builder` —— 11 次 `append(char)` 后才 `build()`。
 # 题内触发点: G5 —— `ArrayList::new(4)` 预分配后按段数逐次 `push`。
 [export(case: "camelCase")]
-micro restore_ip_addresses(s: utf8) -> ArrayList<utf8> {
+micro restore_ip_addresses(s: utf8) -> [utf8] {
     let total: usize = s.byte_length()
     let mut result: ArrayList<utf8> = ArrayList::new(4)
     if total < 4 || total > 12 {
-        return result
+        return result.to_array()
     }
 
     let mut digits: ArrayList<i64> = ArrayList::new(total)
@@ -89,11 +89,11 @@ micro restore_ip_addresses(s: utf8) -> ArrayList<utf8> {
         }
         first = first + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro restoreIpAddresses(self, s: utf8): ArrayList<utf8> {
+    micro restoreIpAddresses(self, s: utf8): [utf8] {
         return restore_ip_addresses(s)
     }
 }

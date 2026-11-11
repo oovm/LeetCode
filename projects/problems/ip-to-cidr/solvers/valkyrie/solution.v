@@ -50,7 +50,7 @@ micro parse_ip(ip: utf8) -> i64 {
 }
 
 [export(case: "camelCase")]
-micro ip_to_cidr(ip: utf8, n: i64) -> ArrayList<utf8> {
+micro ip_to_cidr(ip: utf8, n: i64) -> [utf8] {
     let address_limit: i64 = 4294967296
     let mut out: ArrayList<utf8> = ArrayList::new(0)
     let mut start: i64 = parse_ip(ip)
@@ -65,11 +65,11 @@ micro ip_to_cidr(ip: utf8, n: i64) -> ArrayList<utf8> {
         start = start + block
         remaining = remaining - block
     }
-    return out
+    return out.to_array()
 }
 
 class Solution {
-    micro ipToCIDR(self, ip: utf8, n: i64): ArrayList<utf8> {
+    micro ipToCIDR(self, ip: utf8, n: i64): [utf8] {
         return ip_to_cidr(ip, n)
     }
 }

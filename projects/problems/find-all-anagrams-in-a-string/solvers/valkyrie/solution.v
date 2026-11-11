@@ -7,12 +7,12 @@ using std.collection;
 # 题内触发点: G13 —— `utf8` 没有码点视图，只能 `byte_length` / `byte_at` 走字节。
 # 题内触发点: `HashMap` 删除面 —— 窗口计数归零时 `remove(k)`，其 `Option<V>` 返回值显式承接。
 [export(case: "camelCase")]
-micro find_anagrams(s: utf8, p: utf8) -> ArrayList<i64> {
+micro find_anagrams(s: utf8, p: utf8) -> [i64] {
     let total: usize = s.byte_length()
     let window_size: usize = p.byte_length()
     let mut result: ArrayList<i64> = ArrayList::new(total)
     if window_size == 0 || window_size > total {
-        return result
+        return result.to_array()
     }
 
     let mut need: HashMap<u32, i64> = HashMap::new(window_size)
@@ -72,11 +72,11 @@ micro find_anagrams(s: utf8, p: utf8) -> ArrayList<i64> {
             result.push(left as i64)
         }
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro findAnagrams(self, s: utf8, p: utf8): ArrayList<i64> {
+    micro findAnagrams(self, s: utf8, p: utf8): [i64] {
         return find_anagrams(s, p)
     }
 }

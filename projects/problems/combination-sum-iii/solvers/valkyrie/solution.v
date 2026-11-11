@@ -4,14 +4,14 @@ using std.collection;
 
 # 取/不取 i 的 DFS：先取 i 再回溯，然后跳过 i。与参考实现的次序一致，
 # 剪枝用 `i > 剩余和` 与剩余名额，整体 O(C(9,k)·k)。
-micro dfs_combine(i: i64, remaining: i64, k: i64, path: ArrayList<i64>, out: ArrayList<ArrayList<i64>>) -> unit {
+micro dfs_combine(i: i64, remaining: i64, k: i64, path: ArrayList<i64>, out: ArrayList<[i64]>) -> unit {
     if remaining == 0 {
         if path.length() as i64 == k {
             let mut row: ArrayList<i64> = ArrayList::new(path.length())
             loop value in path {
                 row.push(value)
             }
-            out.push(row)
+            out.push(row.to_array())
         }
         return
     }
@@ -28,15 +28,15 @@ micro dfs_combine(i: i64, remaining: i64, k: i64, path: ArrayList<i64>, out: Arr
 }
 
 [export(case: "camelCase")]
-micro combination_sum3(k: i64, n: i64) -> ArrayList<ArrayList<i64>> {
-    let mut out: ArrayList<ArrayList<i64>> = ArrayList::new(32)
+micro combination_sum3(k: i64, n: i64) -> [[i64]] {
+    let mut out: ArrayList<[i64]> = ArrayList::new(32)
     let mut path: ArrayList<i64> = ArrayList::new(k as usize)
     dfs_combine(1, n, k, path, out)
-    return out
+    return out.to_array()
 }
 
 class Solution {
-    micro combinationSum3(self, k: i64, n: i64): ArrayList<ArrayList<i64>> {
+    micro combinationSum3(self, k: i64, n: i64): [[i64]] {
         return combination_sum3(k, n)
     }
 }

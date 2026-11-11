@@ -6,7 +6,7 @@ using std.collection;
 # `utf8` 的 Cardinal 视图直接给 `char`，字母序号靠 `as u32` 码位相减——绕开 `char` 无 `<` 的比较面。
 # 返回值是「行数 + 末行宽度」二元组，V 侧用 `ArrayList<i64>` 承载（G3：固定数组无返回值入口）。
 [export(case: "camelCase")]
-micro number_of_lines(widths: [i64], s: utf8) -> ArrayList<i64> {
+micro number_of_lines(widths: [i64], s: utf8) -> [i64] {
     let count: usize = s.length()
     let mut lines: i64 = 1
     let mut used: i64 = 0
@@ -27,11 +27,11 @@ micro number_of_lines(widths: [i64], s: utf8) -> ArrayList<i64> {
     let mut answer: ArrayList<i64> = ArrayList::new(2)
     answer.push(lines)
     answer.push(used)
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro numberOfLines(self, widths: [i64], s: utf8): ArrayList<i64> {
+    micro numberOfLines(self, widths: [i64], s: utf8): [i64] {
         return number_of_lines(widths, s)
     }
 }

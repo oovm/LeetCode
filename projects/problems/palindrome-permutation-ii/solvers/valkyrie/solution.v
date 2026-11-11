@@ -57,7 +57,7 @@ micro expand(
 }
 
 [export(case: "camelCase")]
-micro generate_palindromes(s: utf8) -> ArrayList<utf8> {
+micro generate_palindromes(s: utf8) -> [utf8] {
     let mut out: ArrayList<utf8> = ArrayList::new(0)
     let total: usize = s.byte_length()
     let mut chars: ArrayList<char> = ArrayList::new(total)
@@ -87,15 +87,15 @@ micro generate_palindromes(s: utf8) -> ArrayList<utf8> {
         index = index + 1
     }
     if middle_count > 1 {
-        return out
+        return out.to_array()
     }
     let middle: utf8 = text_of(chars, middle_at)
     expand(chars, counts, total, middle, out)
-    return out
+    return out.to_array()
 }
 
 class Solution {
-    micro generatePalindromes(self, s: utf8): ArrayList<utf8> {
+    micro generatePalindromes(self, s: utf8): [utf8] {
         return generate_palindromes(s)
     }
 }

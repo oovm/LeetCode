@@ -18,11 +18,11 @@ micro window_text(s: utf8, start: usize) -> utf8 {
 
 class Solution {
     [export(case: "camelCase")]
-    micro findRepeatedDnaSequences(s: utf8) -> ArrayList<utf8> {
+    micro findRepeatedDnaSequences(s: utf8) -> [utf8] {
         let mut result: ArrayList<utf8> = ArrayList::new(0)
         let length: usize = s.byte_length()
         if length < 10 {
-            return result
+            return result.to_array()
         }
 
         let mut seen: HashSet<utf8> = HashSet::new()
@@ -40,6 +40,6 @@ class Solution {
             }
             start = start + 1
         }
-        return result
+        return result.to_array()
     }
 }
