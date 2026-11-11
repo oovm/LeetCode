@@ -1,0 +1,8 @@
+{
+    "id": "string-interpolation",
+    "cases": [
+        { "export": "interpolatedMixedChecksum", "expected": 295, "note": "文本、变量、常量插值得到 `ab-7`" },
+        { "export": "bracedLiteralChecksum", "expected": 489, "note": "`\\{`/`\\}` 是字面花括号 `x{y}`" },
+        { "export": "interpolatedOrderValue", "expected": 12, "note": "两次有副作用调用从左到右各求值一次" }
+    ]
+}
