@@ -62,12 +62,17 @@ micro compare_logs(left: utf8, right: utf8) -> i32 {
 
 # 字母日志按内容、再按标识符排序；数字日志保持原始相对顺序（merge_sort 稳定）。
 [export(case: "camelCase")]
-micro reorder_log_files(logs: ArrayList<utf8>) -> ArrayList<utf8> {
-    return sorted_by(logs, compare_logs)
+micro reorder_log_files(logs: [utf8]) -> [utf8] {
+    let mut values: ArrayList<utf8> = ArrayList::new(logs.length())
+    loop value in logs {
+        values.push(value)
+    }
+    let ordered: ArrayList<utf8> = sorted_by(values, compare_logs)
+    return ordered.to_array()
 }
 
 class Solution {
-    micro reorderLogFiles(self, logs: ArrayList<utf8>): ArrayList<utf8> {
+    micro reorderLogFiles(self, logs: [utf8]): [utf8] {
         return reorder_log_files(logs)
     }
 }

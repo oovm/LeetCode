@@ -6,7 +6,7 @@ using std.collection
 # 只依赖 `new` / `add` / `contains` / `union` / `group_count`，不依赖索引式并查集构造。
 class Solution {
     [export(case: "camelCase")]
-    micro numIslands2(m: i64, n: i64, positions: ArrayList<ArrayList<i64>>) -> ArrayList<i64> {
+    micro numIslands2(m: i64, n: i64, positions: [[i64]]) -> [i64] {
         let cols: i64 = n
         let mut islands: DisjointSet<i64> = DisjointSet::new()
         let mut answers: ArrayList<i64> = ArrayList::new(positions.length())
@@ -43,6 +43,6 @@ class Solution {
             }
             answers.push(islands.group_count() as i64)
         }
-        return answers
+        return answers.to_array()
     }
 }
