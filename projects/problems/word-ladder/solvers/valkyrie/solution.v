@@ -20,7 +20,7 @@ micro build_candidate(word: utf8, position: usize, letter: u8) -> utf8 {
 
 class Solution {
     [export(case: "camelCase")]
-    micro ladderLength(beginWord: utf8, endWord: utf8, wordList: ArrayList<utf8>) -> i64 {
+    micro ladderLength(beginWord: utf8, endWord: utf8, wordList: [utf8]) -> i64 {
         let mut dictionary: HashSet<utf8> = HashSet::new()
         loop word in wordList {
             dictionary.insert(word)

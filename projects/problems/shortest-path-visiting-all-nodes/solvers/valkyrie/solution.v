@@ -7,7 +7,7 @@ using std.collection
 # 也不作「BitSet 已能自报规模」的假设。
 class Solution {
     [export(case: "camelCase")]
-    micro shortestPathLength(graph: ArrayList<ArrayList<i64>>) -> i64 {
+    micro shortestPathLength(graph: [[i64]]) -> i64 {
         let nodes: usize = graph.length()
         let states: i64 = (1 as i64) << (nodes as i64)
         let mut visited: BitSet = BitSet::with_capacity((nodes as i64 * states) as usize)

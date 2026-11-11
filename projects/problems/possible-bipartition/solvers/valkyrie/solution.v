@@ -7,7 +7,7 @@ using std.math.graph_theory
 # std 的 graph 模块已提供 `bipartition`（G9 已恢复），题内不再手写 BFS 染色。
 class Solution {
     [export(case: "camelCase")]
-    micro possibleBipartition(n: i64, dislikes: ArrayList<ArrayList<i64>>) -> bool {
+    micro possibleBipartition(n: i64, dislikes: [[i64]]) -> bool {
         let mut graph: DirectedGraph<i64> = DirectedGraph::new()
         let mut person: i64 = 1
         while person <= n {

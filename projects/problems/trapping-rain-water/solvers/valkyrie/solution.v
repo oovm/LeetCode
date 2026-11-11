@@ -4,7 +4,7 @@ using std.collection
 
 class Solution {
     [export(case: "camelCase")]
-    micro trap(height: ArrayList<i64>) -> i64 {
+    micro trap(height: [i64]) -> i64 {
         let total: usize = height.length()
         if total == 0 {
             return 0

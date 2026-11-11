@@ -15,7 +15,7 @@ micro popcount(value: i64) -> i64 {
 
 class Solution {
     [export(case: "camelCase")]
-    micro minOperations(nums: ArrayList<i64>, k: i64) -> i64 {
+    micro minOperations(nums: [i64], k: i64) -> i64 {
         let mut total: i64 = 0
         loop value in nums {
             total = total ^ value

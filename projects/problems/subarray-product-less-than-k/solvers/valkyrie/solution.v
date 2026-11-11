@@ -6,7 +6,7 @@ using std.collection
 # 生成器第 98 条用例含 0.1 / 0.01 这类非整数，与 i64 入参不相容，已删该条。
 class Solution {
     [export(case: "camelCase")]
-    micro numSubarrayProductLessThanK(nums: ArrayList<i64>, k: i64) -> i64 {
+    micro numSubarrayProductLessThanK(nums: [i64], k: i64) -> i64 {
         if k <= 1 {
             return 0
         }
