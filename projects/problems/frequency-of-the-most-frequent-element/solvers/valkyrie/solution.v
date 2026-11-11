@@ -2,7 +2,7 @@ namespace leetcode.frequency_of_the_most_frequent_element;
 
 # 升序 + 滑窗：窗口内元素全部抬到右端值所需代价 = `right * 窗长 - 窗和`，超出 k 则左端退出。
 [export(case: "camelCase")]
-micro maxFrequency(nums: ArrayList<i64>, k: i64) -> i64 {
+micro maxFrequency(nums: [i64], k: i64) -> i64 {
     let mut ordered: ArrayList<i64> = ArrayList::new(nums.length())
     loop value in nums {
         ordered.push(value)
@@ -31,7 +31,7 @@ micro maxFrequency(nums: ArrayList<i64>, k: i64) -> i64 {
 }
 
 class Solution {
-    micro maxFrequency(self, nums: ArrayList<i64>, k: i64): i64 {
+    micro maxFrequency(self, nums: [i64], k: i64): i64 {
         return maxFrequency(nums, k)
     }
 }

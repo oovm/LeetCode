@@ -4,7 +4,7 @@ using std.collection;
 
 # 有公共数字取最小公共值；否则用两数组最小值拼两位取较优方向。
 [export(case: "camelCase")]
-micro minNumber(nums1: ArrayList<i64>, nums2: ArrayList<i64>) -> i64 {
+micro minNumber(nums1: [i64], nums2: [i64]) -> i64 {
     let mut set1: HashSet<i64> = HashSet::new()
     loop value in nums1 {
         set1.insert(value)
@@ -39,7 +39,7 @@ micro minNumber(nums1: ArrayList<i64>, nums2: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro minNumber(self, nums1: ArrayList<i64>, nums2: ArrayList<i64>): i64 {
+    micro minNumber(self, nums1: [i64], nums2: [i64]): i64 {
         return minNumber(nums1, nums2)
     }
 }

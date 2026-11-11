@@ -4,7 +4,7 @@ using std.collection;
 
 # 升序引用数组二分：找首个 citations[i] >= n - i，答案即 n - i；找不到则 0。O(log n)。
 [export(case: "camelCase")]
-micro hIndex(citations: ArrayList<i64>) -> i64 {
+micro hIndex(citations: [i64]) -> i64 {
     let n: usize = citations.length()
     let mut lo: usize = 0
     let mut hi: usize = n
@@ -20,7 +20,7 @@ micro hIndex(citations: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro hIndex(self, citations: ArrayList<i64>): i64 {
+    micro hIndex(self, citations: [i64]): i64 {
         return hIndex(citations)
     }
 }

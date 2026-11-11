@@ -14,7 +14,7 @@ micro find(x: usize, parent: ArrayList<i64>) -> usize {
 }
 
 [export(case: "camelCase")]
-micro validTree(n: i64, edges: ArrayList<ArrayList<i64>>) -> bool {
+micro validTree(n: i64, edges: [[i64]]) -> bool {
     if edges.length() as i64 != n - 1 {
         return false
     }
@@ -43,7 +43,7 @@ micro validTree(n: i64, edges: ArrayList<ArrayList<i64>>) -> bool {
 }
 
 class Solution {
-    micro validTree(self, n: i64, edges: ArrayList<ArrayList<i64>>): bool {
+    micro validTree(self, n: i64, edges: [[i64]]): bool {
         return validTree(n, edges)
     }
 }
