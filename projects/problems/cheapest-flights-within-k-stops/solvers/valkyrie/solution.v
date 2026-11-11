@@ -4,7 +4,7 @@ using std.collection;
 
 # Bellman-Ford 的「最多 k 次中转」版本：每轮只允许再走一条边。
 [export(case: "camelCase")]
-micro findCheapestPrice(n: i64, flights: ArrayList<ArrayList<i64>>, src: i64, dst: i64, k: i64) -> i64 {
+micro findCheapestPrice(n: i64, flights: [[i64]], src: i64, dst: i64, k: i64) -> i64 {
     let count: usize = n as usize
     let infinity: i64 = 1000000000000
 
@@ -27,7 +27,7 @@ micro findCheapestPrice(n: i64, flights: ArrayList<ArrayList<i64>>, src: i64, ds
 
         let mut index: usize = 0
         while index < flights.length() {
-            let flight: ArrayList<i64> = flights⁅index⁆
+            let flight: [i64] = flights⁅index⁆
             let from: i64 = flight⁅0⁆
             let to: i64 = flight⁅1⁆
             let price: i64 = flight⁅2⁆
@@ -56,7 +56,7 @@ micro findCheapestPrice(n: i64, flights: ArrayList<ArrayList<i64>>, src: i64, ds
 }
 
 class Solution {
-    micro findCheapestPrice(self, n: i64, flights: ArrayList<ArrayList<i64>>, src: i64, dst: i64, k: i64): i64 {
+    micro findCheapestPrice(self, n: i64, flights: [[i64]], src: i64, dst: i64, k: i64): i64 {
         return findCheapestPrice(n, flights, src, dst, k)
     }
 }

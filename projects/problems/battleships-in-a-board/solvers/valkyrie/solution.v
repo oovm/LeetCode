@@ -4,7 +4,7 @@ using std.collection;
 
 # 每艘战列舰只统计其左上角：本格为 'X' 且上、左邻均不为 'X'。
 [export(case: "camelCase")]
-micro countBattleships(board: ArrayList<ArrayList<utf8>>) -> i64 {
+micro countBattleships(board: [[utf8]]) -> i64 {
     let rows: usize = board.length()
     let columns: usize = board⁅0⁆.length()
     let mut count: i64 = 0
@@ -27,7 +27,7 @@ micro countBattleships(board: ArrayList<ArrayList<utf8>>) -> i64 {
 }
 
 class Solution {
-    micro countBattleships(self, board: ArrayList<ArrayList<utf8>>): i64 {
+    micro countBattleships(self, board: [[utf8]]): i64 {
         return countBattleships(board)
     }
 }

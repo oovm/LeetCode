@@ -38,7 +38,7 @@ micro path_ok(node: i64, destination: i64, graph: ArrayList<ArrayList<i64>>, col
 }
 
 [export(case: "camelCase")]
-micro leadsToDestination(n: i64, edges: ArrayList<ArrayList<i64>>, source: i64, destination: i64) -> bool {
+micro leadsToDestination(n: i64, edges: [[i64]], source: i64, destination: i64) -> bool {
     let count: usize = n as usize
     let mut graph: ArrayList<ArrayList<i64>> = ArrayList::new(count)
     let mut fill: usize = 0
@@ -50,7 +50,7 @@ micro leadsToDestination(n: i64, edges: ArrayList<ArrayList<i64>>, source: i64, 
 
     let mut index: usize = 0
     while index < edges.length() {
-        let edge: ArrayList<i64> = edges⁅index⁆
+        let edge: [i64] = edges⁅index⁆
         let from: i64 = edge⁅0⁆
         let to: i64 = edge⁅1⁆
         let mut outgoing: ArrayList<i64> = graph⁅from as usize⁆
@@ -69,7 +69,7 @@ micro leadsToDestination(n: i64, edges: ArrayList<ArrayList<i64>>, source: i64, 
 }
 
 class Solution {
-    micro leadsToDestination(self, n: i64, edges: ArrayList<ArrayList<i64>>, source: i64, destination: i64): bool {
+    micro leadsToDestination(self, n: i64, edges: [[i64]], source: i64, destination: i64): bool {
         return leadsToDestination(n, edges, source, destination)
     }
 }

@@ -4,7 +4,7 @@ using std.collection;
 
 # 相邻按下时间之差即一次按住的时长，取最长一次，相同则取按钮编号较小者。
 [export(case: "camelCase")]
-micro buttonWithLongestTime(events: ArrayList<ArrayList<i64>>) -> i64 {
+micro buttonWithLongestTime(events: [[i64]]) -> i64 {
     let mut best_id: i64 = events⁅0⁆⁅0⁆
     let mut best_time: i64 = events⁅0⁆⁅1⁆
     let mut position: usize = 1
@@ -24,7 +24,7 @@ micro buttonWithLongestTime(events: ArrayList<ArrayList<i64>>) -> i64 {
 }
 
 class Solution {
-    micro buttonWithLongestTime(self, events: ArrayList<ArrayList<i64>>): i64 {
+    micro buttonWithLongestTime(self, events: [[i64]]): i64 {
         return buttonWithLongestTime(events)
     }
 }
