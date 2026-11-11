@@ -1,11 +1,12 @@
 namespace leetcode.regions_cut_by_slashes;
 
 using std.collection;
+using std.text;
 
 # 每格拆成 4 个小块（左上 0 / 右上 1 / 左下 2 / 右下 3），
 # 先按字符把格内小块连起来，再跨格连接相邻小块，最后并查集分量数就是区域数。
 [export(case: "camelCase")]
-micro regionsBySlashes(grid: ArrayList<String>) -> i64 {
+micro regionsBySlashes(grid: ArrayList<utf8>) -> i64 {
     let count: usize = grid.length()
     if count == 0 {
         return 0
@@ -22,7 +23,7 @@ micro regionsBySlashes(grid: ArrayList<String>) -> i64 {
 
     let mut row: usize = 0
     while row < count {
-        let text: String = grid⁅row⁆
+        let text: utf8 = grid⁅row⁆
         let mut col: usize = 0
         while col < text.length() {
             let cell: i64 = (row * count + col) as i64
@@ -56,7 +57,7 @@ micro regionsBySlashes(grid: ArrayList<String>) -> i64 {
 }
 
 class Solution {
-    micro regionsBySlashes(self, grid: ArrayList<String>): i64 {
+    micro regionsBySlashes(self, grid: ArrayList<utf8>): i64 {
         return regionsBySlashes(grid)
     }
 }
