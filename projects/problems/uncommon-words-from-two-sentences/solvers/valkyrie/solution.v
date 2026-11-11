@@ -53,7 +53,7 @@ micro count_word(words: ArrayList<utf8>, target: utf8) -> i64 {
 
 # 两句话合并后恰好出现一次的词，按首次出现顺序输出。
 [export(case: "camelCase")]
-micro uncommon_from_sentences(s1: utf8, s2: utf8) -> ArrayList<utf8> {
+micro uncommon_from_sentences(s1: utf8, s2: utf8) -> [utf8] {
     let words1: ArrayList<utf8> = tokenize(s1)
     let words2: ArrayList<utf8> = tokenize(s2)
     let mut result: ArrayList<utf8> = ArrayList::new(0)
@@ -73,11 +73,11 @@ micro uncommon_from_sentences(s1: utf8, s2: utf8) -> ArrayList<utf8> {
         }
         i = i + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro uncommonFromSentences(self, s1: utf8, s2: utf8): ArrayList<utf8> {
+    micro uncommonFromSentences(self, s1: utf8, s2: utf8): [utf8] {
         return uncommon_from_sentences(s1, s2)
     }
 }

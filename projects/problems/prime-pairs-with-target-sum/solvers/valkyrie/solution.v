@@ -29,24 +29,24 @@ micro build_sieve(limit: i64) -> ArrayList<bool> {
 
 # 枚举 a <= b 且 a + b = n 的素数对，按 a 升序输出。
 [export(case: "camelCase")]
-micro find_prime_pairs(n: i64) -> ArrayList<ArrayList<i64>> {
+micro find_prime_pairs(n: i64) -> [[i64]] {
     let prime: ArrayList<bool> = build_sieve(n)
-    let mut answer: ArrayList<ArrayList<i64>> = ArrayList::new(0)
+    let mut answer: ArrayList<[i64]> = ArrayList::new(0)
     let mut a: i64 = 2
     while a <= n / 2 {
         if prime⁅a as usize⁆ && prime⁅(n - a) as usize⁆ {
             let mut pair: ArrayList<i64> = ArrayList::new(2)
             pair.push(a)
             pair.push(n - a)
-            answer.push(pair)
+            answer.push(pair.to_array())
         }
         a = a + 1
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro findPrimePairs(self, n: i64): ArrayList<ArrayList<i64>> {
+    micro findPrimePairs(self, n: i64): [[i64]] {
         return find_prime_pairs(n)
     }
 }

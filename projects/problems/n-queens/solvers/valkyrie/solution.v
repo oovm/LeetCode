@@ -28,9 +28,9 @@ micro render(placements: ArrayList<i64>, size: usize) -> ArrayList<utf8> {
 }
 
 # 第 row 行逐列试放；列下标 0 基，故「行 - 列」平移 size - 1 后作下沉对角线下标。
-micro place(row: usize, size: usize, columns: BitSet, downward: BitSet, upward: BitSet, placements: ArrayList<i64>, results: ArrayList<ArrayList<utf8>>) -> unit {
+micro place(row: usize, size: usize, columns: BitSet, downward: BitSet, upward: BitSet, placements: ArrayList<i64>, results: ArrayList<[utf8]>) -> unit {
     if row == size {
-        results.push(render(placements, size))
+        results.push(render(placements, size).to_array())
         return
     }
 
@@ -55,14 +55,14 @@ micro place(row: usize, size: usize, columns: BitSet, downward: BitSet, upward: 
 
 class Solution {
     [export(case: "camelCase")]
-    micro solveNQueens(n: i64) -> ArrayList<ArrayList<utf8>> {
+    micro solveNQueens(n: i64) -> [[utf8]] {
         let size: usize = n as usize
         let mut columns: BitSet = BitSet::with_capacity(size)
         let mut downward: BitSet = BitSet::with_capacity(size * 2)
         let mut upward: BitSet = BitSet::with_capacity(size * 2)
         let mut placements: ArrayList<i64> = ArrayList::new(size)
-        let mut results: ArrayList<ArrayList<utf8>> = ArrayList::new(0)
+        let mut results: ArrayList<[utf8]> = ArrayList::new(0)
         place(0, size, columns, downward, upward, placements, results)
-        return results
+        return results.to_array()
     }
 }

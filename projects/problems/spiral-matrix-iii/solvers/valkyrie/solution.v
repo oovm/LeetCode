@@ -6,13 +6,13 @@ using std.collection;
 # 题内触发点: 嵌套容器构造 —— 结果按 `rows * cols` 精确预分配，每个坐标行 `new(2)`。
 # 题内触发点: 不依赖 `Array<T>`，全程只走 `ArrayList` 的行容器（G11 的边界未命中）。
 [export(case: "camelCase")]
-micro spiral_matrix_iii(rows: i64, cols: i64, rStart: i64, cStart: i64) -> ArrayList<ArrayList<i64>> {
+micro spiral_matrix_iii(rows: i64, cols: i64, rStart: i64, cStart: i64) -> [[i64]] {
     let total: i64 = rows * cols
-    let mut result: ArrayList<ArrayList<i64>> = ArrayList::new(total as usize)
+    let mut result: ArrayList<[i64]> = ArrayList::new(total as usize)
     let mut origin: ArrayList<i64> = ArrayList::new(2)
     origin.push(rStart)
     origin.push(cStart)
-    result.push(origin)
+    result.push(origin.to_array())
 
     let mut direction: i64 = 0
     let mut moves: i64 = 1
@@ -38,7 +38,7 @@ micro spiral_matrix_iii(rows: i64, cols: i64, rStart: i64, cStart: i64) -> Array
                         let mut point: ArrayList<i64> = ArrayList::new(2)
                         point.push(rStart)
                         point.push(cStart)
-                        result.push(point)
+                        result.push(point.to_array())
                     }
                 }
                 step = step + 1
@@ -48,11 +48,11 @@ micro spiral_matrix_iii(rows: i64, cols: i64, rStart: i64, cStart: i64) -> Array
         }
         moves = moves + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro spiralMatrixIII(self, rows: i64, cols: i64, rStart: i64, cStart: i64): ArrayList<ArrayList<i64>> {
+    micro spiralMatrixIII(self, rows: i64, cols: i64, rStart: i64, cStart: i64): [[i64]] {
         return spiral_matrix_iii(rows, cols, rStart, cStart)
     }
 }

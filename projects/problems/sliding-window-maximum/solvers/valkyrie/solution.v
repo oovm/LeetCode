@@ -4,7 +4,7 @@ using std.collection;
 
 # 单调队列：Deque 只存下标，队首即窗口最大值。
 [export(case: "camelCase")]
-micro max_sliding_window(nums: [i64], k: i64) -> ArrayList<i64> {
+micro max_sliding_window(nums: [i64], k: i64) -> [i64] {
     let count: usize = nums.length()
     let width: usize = k as usize
     let mut result: ArrayList<i64> = ArrayList::new(count)
@@ -18,7 +18,7 @@ micro max_sliding_window(nums: [i64], k: i64) -> ArrayList<i64> {
         window.push_back(i as i64)
 
         if i >= width {
-            while window.peek_front().unwrap() < (i - width) as i64 {
+            while window.peek_front().unwrap() < (i - width + 1) as i64 {
                 window.pop_front()
             }
         }
@@ -28,11 +28,11 @@ micro max_sliding_window(nums: [i64], k: i64) -> ArrayList<i64> {
         }
         i = i + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro maxSlidingWindow(self, nums: [i64], k: i64): ArrayList<i64> {
+    micro maxSlidingWindow(self, nums: [i64], k: i64): [i64] {
         return max_sliding_window(nums, k)
     }
 }
