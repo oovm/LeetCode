@@ -5,7 +5,7 @@ using std.math;
 
 # 排序后固定最小元，双指针收拢三数和，追踪与 target 距离最小者。
 [export(case: "camelCase")]
-micro threeSumClosest(nums: ArrayList<i64>, target: i64) -> i64 {
+micro threeSumClosest(nums: [i64], target: i64) -> i64 {
     let mut sorted: ArrayList<i64> = ArrayList::new(nums.length())
     loop value in nums {
         sorted.push(value)
@@ -36,7 +36,7 @@ micro threeSumClosest(nums: ArrayList<i64>, target: i64) -> i64 {
 }
 
 class Solution {
-    micro threeSumClosest(self, nums: ArrayList<i64>, target: i64): i64 {
+    micro threeSumClosest(self, nums: [i64], target: i64): i64 {
         return threeSumClosest(nums, target)
     }
 }

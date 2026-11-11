@@ -5,7 +5,7 @@ using std.math;
 
 # 状态机 DP：hold / sold / rest 三态逐日转移；卖出次日强制冷却经 rest 走 sold 前值。
 [export(case: "camelCase")]
-micro maxProfit(prices: ArrayList<i64>) -> i64 {
+micro maxProfit(prices: [i64]) -> i64 {
     let n: usize = prices.length()
     if n == 0 {
         return 0
@@ -26,7 +26,7 @@ micro maxProfit(prices: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro maxProfit(self, prices: ArrayList<i64>): i64 {
+    micro maxProfit(self, prices: [i64]): i64 {
         return maxProfit(prices)
     }
 }

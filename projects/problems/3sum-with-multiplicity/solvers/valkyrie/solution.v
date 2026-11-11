@@ -6,7 +6,7 @@ using std.collection;
 # 组合贡献：三数相同取 C(x,3)，两数相同取 C(x,2) * y，全不同取 x * y * z。
 # 频次表宽度按语料实际最大值取，避免越界。
 [export(case: "camelCase")]
-micro three_sum_multi(arr: ArrayList<i64>, target: i64) -> i64 {
+micro three_sum_multi(arr: [i64], target: i64) -> i64 {
     let modulus: i64 = 1000000007
     let mut highest: i64 = 0
     let mut index: usize = 0
@@ -61,7 +61,7 @@ micro three_sum_multi(arr: ArrayList<i64>, target: i64) -> i64 {
 }
 
 class Solution {
-    micro threeSumMulti(self, arr: ArrayList<i64>, target: i64): i64 {
+    micro threeSumMulti(self, arr: [i64], target: i64): i64 {
         return three_sum_multi(arr, target)
     }
 }
