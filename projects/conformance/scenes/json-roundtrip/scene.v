@@ -91,6 +91,10 @@ micro parse_text(mut reader: JsonReader) -> Result<utf8, JsonError> {
     let length: i64 = reader_length(reader)
     reader.cursor = reader.cursor + 1
     let mut buffer: Utf8Builder = Utf8Builder::new(16)
+    let newline: char = '\n'
+    let tab: char = '\t'
+    let quote: char = '"'
+    let backslash: char = '\\'
     let mut running: bool = true
     while running && reader.cursor < length {
         let code: i64 = code_at(reader, reader.cursor)
@@ -105,13 +109,13 @@ micro parse_text(mut reader: JsonReader) -> Result<utf8, JsonError> {
             }
             let escaped: i64 = code_at(reader, reader.cursor)
             if escaped == 110 {
-                buffer.append('\n')
+                buffer.append(newline)
             } else if escaped == 116 {
-                buffer.append('\t')
+                buffer.append(tab)
             } else if escaped == 34 {
-                buffer.append('"')
+                buffer.append(quote)
             } else {
-                buffer.append('\\')
+                buffer.append(backslash)
             }
             reader.cursor = reader.cursor + 1
         } else {
@@ -315,23 +319,26 @@ micro parse_json(text: utf8) -> Result<Json, JsonError> {
 
 micro write_text(value: utf8) -> utf8 {
     let mut buffer: Utf8Builder = Utf8Builder::new(16)
-    buffer.append('"')
+    let quote: char = '"'
+    let backslash: char = '\\'
+    let letter_n: char = 'n'
+    buffer.append(quote)
     loop current in value {
         let code: i64 = (current as u32) as i64
         if code == 34 {
-            buffer.append('\\')
-            buffer.append('"')
+            buffer.append(backslash)
+            buffer.append(quote)
         } else if code == 92 {
-            buffer.append('\\')
-            buffer.append('\\')
+            buffer.append(backslash)
+            buffer.append(backslash)
         } else if code == 10 {
-            buffer.append('\\')
-            buffer.append('n')
+            buffer.append(backslash)
+            buffer.append(letter_n)
         } else {
             buffer.append(current)
         }
     }
-    buffer.append('"')
+    buffer.append(quote)
     return buffer.build()
 }
 
@@ -343,31 +350,38 @@ micro write_json(value: Json) -> utf8 {
         case Textual(text): write_text(text)
         case Sequence(items):
             let mut buffer: Utf8Builder = Utf8Builder::new(16)
-            buffer.append('[')
+            let open: char = '['
+            let close: char = ']'
+            let comma: char = ','
+            buffer.append(open)
             let mut index: usize = 0
             while index < items.length() {
                 if index > 0 {
-                    buffer.append(',')
+                    buffer.append(comma)
                 }
                 buffer.append(write_json(items⁅index⁆))
                 index = index + 1
             }
-            buffer.append(']')
+            buffer.append(close)
             buffer.build()
         case Mapping(keys, values):
             let mut buffer: Utf8Builder = Utf8Builder::new(16)
-            buffer.append('\{')
+            let open: char = '\{'
+            let close: char = '\}'
+            let comma: char = ','
+            let colon: char = ':'
+            buffer.append(open)
             let mut index: usize = 0
             while index < keys.length() {
                 if index > 0 {
-                    buffer.append(',')
+                    buffer.append(comma)
                 }
                 buffer.append(write_text(keys⁅index⁆))
-                buffer.append(':')
+                buffer.append(colon)
                 buffer.append(write_json(values⁅index⁆))
                 index = index + 1
             }
-            buffer.append('\}')
+            buffer.append(close)
             buffer.build()
     }
 }
