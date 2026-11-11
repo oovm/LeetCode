@@ -24,8 +24,12 @@ micro cmp_abs(a: i64, b: i64) -> i32 {
 }
 
 [export(case: "camelCase")]
-micro canReorderDoubled(arr: ArrayList<i64>) -> bool {
-    let ordered: ArrayList<i64> = sorted_by(arr, cmp_abs)
+micro canReorderDoubled(arr: [i64]) -> bool {
+    let mut ordered: ArrayList<i64> = ArrayList::new(arr.length())
+    loop value in arr {
+        ordered.push(value)
+    }
+    merge_sort(ordered, cmp_abs)
 
     let mut counts: HashMap<i64, i64> = HashMap::new(ordered.length())
     loop value in ordered {
@@ -57,7 +61,7 @@ micro canReorderDoubled(arr: ArrayList<i64>) -> bool {
 }
 
 class Solution {
-    micro canReorderDoubled(self, arr: ArrayList<i64>): bool {
+    micro canReorderDoubled(self, arr: [i64]): bool {
         return canReorderDoubled(arr)
     }
 }

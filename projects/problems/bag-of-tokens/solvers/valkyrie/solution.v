@@ -14,8 +14,12 @@ micro compare_asc(a: i64, b: i64) -> i32 {
 
 # 升序后双指针：够能量就买最便宜的换分，不够就用已有的分卖掉最贵的。
 [export(case: "camelCase")]
-micro bagOfTokensScore(tokens: ArrayList<i64>, power: i64) -> i64 {
-    let ordered: ArrayList<i64> = sorted_by(tokens, compare_asc)
+micro bagOfTokensScore(tokens: [i64], power: i64) -> i64 {
+    let mut ordered: ArrayList<i64> = ArrayList::new(tokens.length())
+    loop value in tokens {
+        ordered.push(value)
+    }
+    merge_sort(ordered, compare_asc)
     let mut low: usize = 0
     let mut high: usize = ordered.length()
     let mut energy: i64 = power
@@ -41,7 +45,7 @@ micro bagOfTokensScore(tokens: ArrayList<i64>, power: i64) -> i64 {
 }
 
 class Solution {
-    micro bagOfTokensScore(self, tokens: ArrayList<i64>, power: i64): i64 {
+    micro bagOfTokensScore(self, tokens: [i64], power: i64): i64 {
         return bagOfTokensScore(tokens, power)
     }
 }
