@@ -4,7 +4,7 @@ using std.collection;
 
 # 双重枚举，检查 nums1[i] 能否被 nums2[j] * k 整除。
 [export(case: "camelCase")]
-micro numberOfPairs(nums1: ArrayList<i64>, nums2: ArrayList<i64>, k: i64) -> i64 {
+micro numberOfPairs(nums1: [i64], nums2: [i64], k: i64) -> i64 {
     let mut total: i64 = 0
     let mut left: usize = 0
     while left < nums1.length() {
@@ -22,7 +22,7 @@ micro numberOfPairs(nums1: ArrayList<i64>, nums2: ArrayList<i64>, k: i64) -> i64
 }
 
 class Solution {
-    micro numberOfPairs(self, nums1: ArrayList<i64>, nums2: ArrayList<i64>, k: i64): i64 {
+    micro numberOfPairs(self, nums1: [i64], nums2: [i64], k: i64): i64 {
         return numberOfPairs(nums1, nums2, k)
     }
 }

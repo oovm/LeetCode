@@ -36,7 +36,7 @@ micro stretchy(s: utf8, t: utf8) -> bool {
 }
 
 [export(case: "camelCase")]
-micro expressive_words(s: utf8, words: ArrayList<utf8>) -> i64 {
+micro expressive_words(s: utf8, words: [utf8]) -> i64 {
     let mut total: i64 = 0
     let mut index: usize = 0
     while index < words.length() {
@@ -49,7 +49,7 @@ micro expressive_words(s: utf8, words: ArrayList<utf8>) -> i64 {
 }
 
 class Solution {
-    micro expressiveWords(self, s: utf8, words: ArrayList<utf8>): i64 {
+    micro expressiveWords(self, s: utf8, words: [utf8]): i64 {
         return expressive_words(s, words)
     }
 }

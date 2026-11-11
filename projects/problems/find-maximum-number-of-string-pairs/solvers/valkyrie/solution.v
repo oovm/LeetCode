@@ -15,7 +15,7 @@ micro reversed(word: utf8) -> utf8 {
 }
 
 [export(case: "camelCase")]
-micro maximumNumberOfStringPairs(words: ArrayList<utf8>) -> i64 {
+micro maximumNumberOfStringPairs(words: [utf8]) -> i64 {
     let n: usize = words.length()
     let mut count: i64 = 0
     let mut i: usize = 0
@@ -34,7 +34,7 @@ micro maximumNumberOfStringPairs(words: ArrayList<utf8>) -> i64 {
 }
 
 class Solution {
-    micro maximumNumberOfStringPairs(self, words: ArrayList<utf8>): i64 {
+    micro maximumNumberOfStringPairs(self, words: [utf8]): i64 {
         return maximumNumberOfStringPairs(words)
     }
 }

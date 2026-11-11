@@ -4,7 +4,7 @@ using std.collection;
 
 # 频次等于自身值的数称为幸运数，取其中最大者。
 [export(case: "camelCase")]
-micro findLucky(arr: ArrayList<i64>) -> i64 {
+micro findLucky(arr: [i64]) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new(0)
     let mut position: usize = 0
     while position < arr.length() {
@@ -32,7 +32,7 @@ micro findLucky(arr: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findLucky(self, arr: ArrayList<i64>): i64 {
+    micro findLucky(self, arr: [i64]): i64 {
         return findLucky(arr)
     }
 }

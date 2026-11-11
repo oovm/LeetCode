@@ -1,7 +1,7 @@
 namespace leetcode.final_value_of_variable_after_performing_operations;
 
 [export(case: "camelCase")]
-micro final_value_after_operations(operations: ArrayList<utf8>) -> i64 {
+micro final_value_after_operations(operations: [utf8]) -> i64 {
     let mut x: i64 = 0
     let mut i: usize = 0
     while i < operations.length() {
@@ -18,7 +18,7 @@ micro final_value_after_operations(operations: ArrayList<utf8>) -> i64 {
 }
 
 class Solution {
-    micro finalValueAfterOperations(self, operations: ArrayList<utf8>): i64 {
+    micro finalValueAfterOperations(self, operations: [utf8]): i64 {
         return final_value_after_operations(operations)
     }
 }

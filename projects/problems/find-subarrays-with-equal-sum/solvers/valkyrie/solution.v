@@ -4,7 +4,7 @@ using std.collection;
 
 # 相邻两数之和放进集合，若重复出现即存在等和子数组。
 [export(case: "camelCase")]
-micro findSubarrays(nums: ArrayList<i64>) -> bool {
+micro findSubarrays(nums: [i64]) -> bool {
     let mut seen: HashSet<i64> = HashSet::new()
     let mut index: usize = 0
     while index + 1 < nums.length() {
@@ -19,7 +19,7 @@ micro findSubarrays(nums: ArrayList<i64>) -> bool {
 }
 
 class Solution {
-    micro findSubarrays(self, nums: ArrayList<i64>): bool {
+    micro findSubarrays(self, nums: [i64]): bool {
         return findSubarrays(nums)
     }
 }

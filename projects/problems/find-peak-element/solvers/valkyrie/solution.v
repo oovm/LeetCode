@@ -4,7 +4,7 @@ using std.collection;
 
 # 二分：`nums[mid] < nums[mid+1]` 则右半必有峰，否则左半（含 mid）有峰。
 [export(case: "camelCase")]
-micro findPeakElement(nums: ArrayList<i64>) -> i64 {
+micro findPeakElement(nums: [i64]) -> i64 {
     let mut lo: usize = 0
     let mut hi: usize = nums.length() - 1
     while lo < hi {
@@ -19,7 +19,7 @@ micro findPeakElement(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findPeakElement(self, nums: ArrayList<i64>): i64 {
+    micro findPeakElement(self, nums: [i64]): i64 {
         return findPeakElement(nums)
     }
 }
