@@ -14,7 +14,7 @@ micro find(x: usize, parent: ArrayList<i64>) -> usize {
 }
 
 [export(case: "camelCase")]
-micro validPath(n: i64, edges: ArrayList<ArrayList<i64>>, source: i64, destination: i64) -> bool {
+micro validPath(n: i64, edges: [[i64]], source: i64, destination: i64) -> bool {
     let mut parent: ArrayList<i64> = ArrayList::new(n as usize)
     let mut i: usize = 0
     while i < n as usize {
@@ -32,7 +32,7 @@ micro validPath(n: i64, edges: ArrayList<ArrayList<i64>>, source: i64, destinati
 }
 
 class Solution {
-    micro validPath(self, n: i64, edges: ArrayList<ArrayList<i64>>, source: i64, destination: i64): bool {
+    micro validPath(self, n: i64, edges: [[i64]], source: i64, destination: i64): bool {
         return validPath(n, edges, source, destination)
     }
 }

@@ -10,7 +10,7 @@ micro absolute(value: i64) -> i64 {
 }
 
 # 后序返回子树盈亏，子树的每次搬运量取两侧盈亏绝对值。
-micro collect(root: ArrayList<i64>, index: usize, moves: ArrayList<i64>) -> i64 {
+micro collect(root: [i64], index: usize, moves: ArrayList<i64>) -> i64 {
     if index >= root.length() {
         return 0
     }
@@ -29,7 +29,7 @@ micro collect(root: ArrayList<i64>, index: usize, moves: ArrayList<i64>) -> i64 
 }
 
 [export(case: "camelCase")]
-micro distribute_coins(root: ArrayList<i64>) -> i64 {
+micro distribute_coins(root: [i64]) -> i64 {
     let mut moves: ArrayList<i64> = ArrayList::new(1)
     moves.push(0)
     collect(root, 0, moves)
@@ -37,7 +37,7 @@ micro distribute_coins(root: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro distributeCoins(self, root: ArrayList<i64>): i64 {
+    micro distributeCoins(self, root: [i64]): i64 {
         return distribute_coins(root)
     }
 }

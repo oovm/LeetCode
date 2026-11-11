@@ -4,7 +4,7 @@ using std.collection;
 
 # 玩家 x 只要某一种球的取球次数超过 x 就成为赢家，每个玩家最多计一次。
 [export(case: "camelCase")]
-micro winningPlayerCount(n: i64, pick: ArrayList<ArrayList<i64>>) -> i64 {
+micro winningPlayerCount(n: i64, pick: [[i64]]) -> i64 {
     let players: usize = n as usize
     let mut counts: ArrayList<ArrayList<i64>> = ArrayList::new(players)
     let mut wins: ArrayList<i64> = ArrayList::new(players)
@@ -36,7 +36,7 @@ micro winningPlayerCount(n: i64, pick: ArrayList<ArrayList<i64>>) -> i64 {
 }
 
 class Solution {
-    micro winningPlayerCount(self, n: i64, pick: ArrayList<ArrayList<i64>>): i64 {
+    micro winningPlayerCount(self, n: i64, pick: [[i64]]): i64 {
         return winningPlayerCount(n, pick)
     }
 }

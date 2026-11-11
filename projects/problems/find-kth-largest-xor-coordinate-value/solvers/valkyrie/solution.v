@@ -66,7 +66,7 @@ micro kth_largest(mut values: ArrayList<i64>, k: i64) -> i64 {
 
 # 二维前缀异或 O(行列)，再对全部下标异或值做快选取第 k 大。
 [export(case: "camelCase")]
-micro kth_largest_value(matrix: ArrayList<ArrayList<i64>>, k: i64) -> i64 {
+micro kth_largest_value(matrix: [[i64]], k: i64) -> i64 {
     let rows: i64 = matrix.length() as i64
     let columns: i64 = matrix⁅0⁆.length() as i64
     let stride: i64 = columns + 1
@@ -97,7 +97,7 @@ micro kth_largest_value(matrix: ArrayList<ArrayList<i64>>, k: i64) -> i64 {
 }
 
 class Solution {
-    micro kthLargestValue(self, matrix: ArrayList<ArrayList<i64>>, k: i64): i64 {
+    micro kthLargestValue(self, matrix: [[i64]], k: i64): i64 {
         return kth_largest_value(matrix, k)
     }
 }
