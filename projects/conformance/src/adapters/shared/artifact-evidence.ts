@@ -13,6 +13,8 @@ import type { CompileTargetPlan } from './compile-target-plan.ts';
 export type ExecutionManifestView = {
     schema_version: number;
     target: string;
+    /** 产出该构建的编译器构建身份；旧 manifest 缺少该字段时为 undefined。 */
+    compiler_build_identity?: string;
     compile_evidence: {
         semantic_closure_hash?: string;
         canonical_surface_hash?: string;
