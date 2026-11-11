@@ -103,8 +103,10 @@ describe('多解比较模式', () => {
         ).toBe(false);
 
         const advantageArgs = { nums1: [2, 7, 11, 15], nums2: [1, 10, 4, 11] };
-        expect(resultsMatch([1, 4, 10, 11], [], 'validator-required', { problemId: 'advantage-shuffle', args: advantageArgs })).toBe(true);
-        expect(resultsMatch([2, 7, 11, 15], [], 'validator-required', { problemId: 'advantage-shuffle', args: advantageArgs })).toBe(false);
+        // 题面返回 `nums1` 的重排；`[2, 11, 7, 15]` 取得全部 4 个优势位。
+        expect(resultsMatch([2, 11, 7, 15], [], 'validator-required', { problemId: 'advantage-shuffle', args: advantageArgs })).toBe(true);
+        // `[1, 4, 10, 11]` 是 `nums2` 的排列，不是 `nums1` 的排列。
+        expect(resultsMatch([1, 4, 10, 11], [], 'validator-required', { problemId: 'advantage-shuffle', args: advantageArgs })).toBe(false);
     });
 
     it('无解用例的语义校验器接受空答案', () => {

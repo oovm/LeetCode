@@ -86,8 +86,12 @@ const validateAdvantageShuffle: SemanticValidator = (actual, _expected, args) =>
     if (!nums1 || !nums2 || !shuffles) {
         return '答案或入参不是整数数组';
     }
-    if (!sameMultiset(nums2, shuffles)) {
-        return '答案不是 nums2 的排列';
+    if (nums1.length !== nums2.length || shuffles.length !== nums1.length) {
+        return '答案或入参长度不一致';
+    }
+    // 题面返回的是 `nums1` 的重排；优势数是 `shuffles[i] > nums2[i]` 的个数。
+    if (!sameMultiset(nums1, shuffles)) {
+        return '答案不是 nums1 的排列';
     }
     const sorted1 = nums1.slice().sort((a, b) => a - b);
     const sorted2 = nums2.slice().sort((a, b) => a - b);
@@ -100,13 +104,44 @@ const validateAdvantageShuffle: SemanticValidator = (actual, _expected, args) =>
         }
     }
     let wins = 0;
-    for (let index = 0; index < nums1.length; index += 1) {
-        if (nums1[index] > shuffles[index]) {
+    for (let index = 0; index < nums2.length; index += 1) {
+        if (shuffles[index] > nums2[index]) {
             wins += 1;
         }
     }
     if (wins !== maxWins) {
         return `优势数 ${wins}，题面上限 ${maxWins}`;
+    }
+    return null;
+};
+
+const validateGasStation: SemanticValidator = (actual, _expected, args) => {
+    const gas = argInts(args, 'gas');
+    const cost = argInts(args, 'cost');
+    const start = toNumber(actual);
+    if (!gas || !cost || start === null) {
+        return '答案或入参不是整数';
+    }
+    if (gas.length === 0 || cost.length !== gas.length) {
+        return 'gas/cost 长度不一致';
+    }
+    if (start === -1) {
+        let total = 0;
+        for (let index = 0; index < gas.length; index += 1) {
+            total += gas[index] - cost[index];
+        }
+        return total >= 0 ? '总盈余非负，不应返回 -1' : null;
+    }
+    if (!Number.isInteger(start) || start < 0 || start >= gas.length) {
+        return '起点越界';
+    }
+    let tank = 0;
+    for (let step = 0; step < gas.length; step += 1) {
+        const index = (start + step) % gas.length;
+        tank += gas[index] - cost[index];
+        if (tank < 0) {
+            return `从 ${start} 出发第 ${step + 1} 站亏空`;
+        }
     }
     return null;
 };
@@ -673,6 +708,7 @@ const validateParityAlternating: SemanticValidator = (actual, _expected, args) =
 
 const VALIDATORS: Record<string, SemanticValidator> = {
     'advantage-shuffle': validateAdvantageShuffle,
+    'gas-station': validateGasStation,
     'course-schedule-ii': validateCourseScheduleTwo,
     'di-string-match': validateDiStringMatch,
     'erect-the-fence': validateErectTheFence,

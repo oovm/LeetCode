@@ -81,8 +81,11 @@ def _validate_advantage_shuffle(actual: Any, _expected: Any, args: dict[str, Any
     shuffles = _int_array(actual)
     if not nums1 or not nums2 or not shuffles:
         return "答案或入参不是整数数组"
-    if not _same_multiset(nums2, shuffles):
-        return "答案不是 nums2 的排列"
+    if len(nums1) != len(nums2) or len(shuffles) != len(nums1):
+        return "答案或入参长度不一致"
+    # 题面返回的是 nums1 的重排；优势数是 shuffles[i] > nums2[i] 的个数。
+    if not _same_multiset(nums1, shuffles):
+        return "答案不是 nums1 的排列"
     sorted1 = sorted(nums1)
     sorted2 = sorted(nums2)
     right = 0
@@ -91,9 +94,31 @@ def _validate_advantage_shuffle(actual: Any, _expected: Any, args: dict[str, Any
         if right < len(sorted2) and value > sorted2[right]:
             max_wins += 1
             right += 1
-    wins = sum(1 for index, value in enumerate(nums1) if value > shuffles[index])
+    wins = sum(1 for index, value in enumerate(shuffles) if value > nums2[index])
     if wins != max_wins:
         return f"优势数 {wins}，题面上限 {max_wins}"
+    return None
+
+
+def _validate_gas_station(actual: Any, _expected: Any, args: dict[str, Any]) -> str | None:
+    gas = _arg_ints(args, "gas")
+    cost = _arg_ints(args, "cost")
+    start = _to_number(actual)
+    if not gas or not cost or start is None:
+        return "答案或入参不是整数"
+    if len(gas) == 0 or len(cost) != len(gas):
+        return "gas/cost 长度不一致"
+    if start == -1:
+        total = sum(gas[index] - cost[index] for index in range(len(gas)))
+        return "总盈余非负，不应返回 -1" if total >= 0 else None
+    if not isinstance(start, int) or start < 0 or start >= len(gas):
+        return "起点越界"
+    tank = 0
+    for step in range(len(gas)):
+        index = (start + step) % len(gas)
+        tank += gas[index] - cost[index]
+        if tank < 0:
+            return f"从 {start} 出发第 {step + 1} 站亏空"
     return None
 
 
@@ -517,6 +542,7 @@ def _validate_parity_alternating(actual: Any, _expected: Any, args: dict[str, An
 
 _VALIDATORS = {
     "advantage-shuffle": _validate_advantage_shuffle,
+    "gas-station": _validate_gas_station,
     "course-schedule-ii": _validate_course_schedule_two,
     "di-string-match": _validate_di_string_match,
     "erect-the-fence": _validate_erect_the_fence,

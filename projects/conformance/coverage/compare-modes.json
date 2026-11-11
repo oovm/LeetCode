@@ -122,6 +122,10 @@
             "mode": "validator-required",
             "evidence": "题面允许返回任意满足交换后等和的答案"
         },
+        "gas-station": {
+            "mode": "validator-required",
+            "evidence": "退化用例（gas 与 cost 全相等）下任意起点都可行，题面唯一解保证不覆盖该情形，按回路可行性校验"
+        },
         "find-all-anagrams-in-a-string": {
             "mode": "unordered-1d",
             "evidence": "You may return the answer in any order."
