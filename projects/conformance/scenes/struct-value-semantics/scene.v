@@ -5,8 +5,8 @@ structure Point {
     y: i64
 }
 
-# 语义探针：`let mut b = a` 后改写 b，观察 a 是否同步变化。
-# 实测结果见 scene.json 的期望值与备注，语义未冻结，只记录不判定。
+# 值语义：`let mut b = a` 是逐字段拷贝，改写 b 不影响 a；
+# `mut` 形参仍是调用方共享的接收者（见下方 helperMutationVisible）。
 [export(name: "assignmentSharing")]
 micro assignment_sharing() -> i64 {
     let a: Point = Point { x: 1, y: 2 }
