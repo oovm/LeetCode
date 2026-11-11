@@ -6,12 +6,12 @@ using std.collection;
 # 「最小且 >= 终点的起点」就是右区间，越界即 -1；`ceiling_key` 直接给出该键（G16 已提供），
 # 不再全量物化 `keys()` 后手写二分。
 [export(case: "camelCase")]
-micro find_right_interval(intervals: ArrayList<ArrayList<i64>>) -> ArrayList<i64> {
+micro find_right_interval(intervals: [[i64]]) -> [i64] {
     let count: usize = intervals.length()
     let mut starts: BTreeMap<i64, i64> = BTreeMap::new(count)
     let mut i: usize = 0
     while i < count {
-        let span: ArrayList<i64> = intervals⁅i⁆
+        let span: [i64] = intervals⁅i⁆
         starts.insert(span⁅0⁆, i as i64)
         i = i + 1
     }
@@ -19,7 +19,7 @@ micro find_right_interval(intervals: ArrayList<ArrayList<i64>>) -> ArrayList<i64
     let mut result: ArrayList<i64> = ArrayList::new(count)
     i = 0
     while i < count {
-        let span: ArrayList<i64> = intervals⁅i⁆
+        let span: [i64] = intervals⁅i⁆
         let end: i64 = span⁅1⁆
         let upper: Option<i64> = starts.ceiling_key(end)
         if upper.is_some() {
@@ -30,11 +30,11 @@ micro find_right_interval(intervals: ArrayList<ArrayList<i64>>) -> ArrayList<i64
         }
         i = i + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro findRightInterval(self, intervals: ArrayList<ArrayList<i64>>): ArrayList<i64> {
+    micro findRightInterval(self, intervals: [[i64]]): [i64] {
         return find_right_interval(intervals)
     }
 }

@@ -5,7 +5,7 @@ using std.collection;
 # 反向图 + Kahn：出度为 0 的节点安全，删掉它后前驱出度递减。
 # 队列用 `Deque`，反转邻接表用 `ArrayList<ArrayList<i64>>`。
 [export(case: "camelCase")]
-micro eventualSafeNodes(graph: ArrayList<ArrayList<i64>>) -> ArrayList<i64> {
+micro eventualSafeNodes(graph: [[i64]]) -> [i64] {
     let count: usize = graph.length()
     let mut out_degree: ArrayList<i64> = ArrayList::new(count)
     let mut reverse: ArrayList<ArrayList<i64>> = ArrayList::new(count)
@@ -20,7 +20,7 @@ micro eventualSafeNodes(graph: ArrayList<ArrayList<i64>>) -> ArrayList<i64> {
     let mut node: usize = 0
     let limit: i64 = count as i64
     while node < count {
-        let edges: ArrayList<i64> = graph⁅node⁆
+        let edges: [i64] = graph⁅node⁆
         let mut index: usize = 0
         while index < edges.length() {
             let target: i64 = edges⁅index⁆
@@ -66,11 +66,11 @@ micro eventualSafeNodes(graph: ArrayList<ArrayList<i64>>) -> ArrayList<i64> {
         }
         cursor = cursor + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro eventualSafeNodes(self, graph: ArrayList<ArrayList<i64>>): ArrayList<i64> {
+    micro eventualSafeNodes(self, graph: [[i64]]): [i64] {
         return eventualSafeNodes(graph)
     }
 }
