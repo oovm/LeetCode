@@ -4,7 +4,7 @@ using std.collection;
 
 # 两次下界二分：找 ≥ target 的首个位置，找 > target 的首个位置再减一。
 # 题内触发点: G3 —— 结果以 `ArrayList<i64>` 返回，命中聚合返回值 bridge 缺口。
-micro lower_bound(nums: ArrayList<i64>, target: i64) -> usize {
+micro lower_bound(nums: [i64], target: i64) -> usize {
     let mut low: usize = 0
     let mut high: usize = nums.length()
     while low < high {
@@ -18,7 +18,7 @@ micro lower_bound(nums: ArrayList<i64>, target: i64) -> usize {
     return low
 }
 
-micro upper_bound(nums: ArrayList<i64>, target: i64) -> usize {
+micro upper_bound(nums: [i64], target: i64) -> usize {
     let mut low: usize = 0
     let mut high: usize = nums.length()
     while low < high {
@@ -33,22 +33,22 @@ micro upper_bound(nums: ArrayList<i64>, target: i64) -> usize {
 }
 
 [export(case: "camelCase")]
-micro search_range(nums: ArrayList<i64>, target: i64) -> ArrayList<i64> {
+micro search_range(nums: [i64], target: i64) -> [i64] {
     let mut result: ArrayList<i64> = ArrayList::new(2)
     let first: usize = lower_bound(nums, target)
     if first == nums.length() || nums⁅first⁆ != target {
         result.push(-1)
         result.push(-1)
-        return result
+        return result.to_array()
     }
 
     result.push(first as i64)
     result.push(upper_bound(nums, target) as i64 - 1)
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro searchRange(self, nums: ArrayList<i64>, target: i64): ArrayList<i64> {
+    micro searchRange(self, nums: [i64], target: i64): [i64] {
         return search_range(nums, target)
     }
 }

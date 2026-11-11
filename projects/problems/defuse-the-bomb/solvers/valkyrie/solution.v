@@ -4,7 +4,7 @@ using std.collection;
 
 # 环形窗口求和，k 的正负决定窗口方向。
 [export(case: "camelCase")]
-micro decrypt(code: ArrayList<i64>, k: i64) -> ArrayList<i64> {
+micro decrypt(code: [i64], k: i64) -> [i64] {
     let count: usize = code.length()
     let mut answer: ArrayList<i64> = ArrayList::new(count)
     let mut position: usize = 0
@@ -13,7 +13,7 @@ micro decrypt(code: ArrayList<i64>, k: i64) -> ArrayList<i64> {
         position = position + 1
     }
     if k == 0 {
-        return answer
+        return answer.to_array()
     }
 
     position = 0
@@ -39,11 +39,11 @@ micro decrypt(code: ArrayList<i64>, k: i64) -> ArrayList<i64> {
         answer⁅position⁆ = total
         position = position + 1
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro decrypt(self, code: ArrayList<i64>, k: i64): ArrayList<i64> {
+    micro decrypt(self, code: [i64], k: i64): [i64] {
         return decrypt(code, k)
     }
 }

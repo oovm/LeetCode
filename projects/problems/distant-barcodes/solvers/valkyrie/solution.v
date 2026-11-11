@@ -14,7 +14,7 @@ micro compare_i64(a: i64, b: i64) -> i32 {
 
 # 按频次降序排好后把前半段放偶数位、后半段放奇数位，保证相邻不同。
 [export(case: "camelCase")]
-micro rearrange_barcodes(barcodes: ArrayList<i64>) -> ArrayList<i64> {
+micro rearrange_barcodes(barcodes: [i64]) -> [i64] {
     let count: usize = barcodes.length()
     let base: i64 = 16384
     let mut frequencies: HashMap<i64, i64> = HashMap::new(count + 1)
@@ -54,11 +54,11 @@ micro rearrange_barcodes(barcodes: ArrayList<i64>) -> ArrayList<i64> {
         result⁅tail * 2 + 1⁆ = order⁅half + tail⁆ % base
         tail = tail + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro rearrangeBarcodes(self, barcodes: ArrayList<i64>): ArrayList<i64> {
+    micro rearrangeBarcodes(self, barcodes: [i64]): [i64] {
         return rearrange_barcodes(barcodes)
     }
 }

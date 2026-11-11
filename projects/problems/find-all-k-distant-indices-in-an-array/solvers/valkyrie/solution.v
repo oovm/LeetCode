@@ -4,7 +4,7 @@ using std.collection;
 
 # 每个等于 key 的下标把半径 k 的范围标记出来，最后按下标升序收集被标记位置。
 [export(case: "camelCase")]
-micro findKDistantIndices(nums: ArrayList<i64>, key: i64, k: i64) -> ArrayList<i64> {
+micro findKDistantIndices(nums: [i64], key: i64, k: i64) -> [i64] {
     let count: usize = nums.length()
     let mut marked: ArrayList<i64> = ArrayList::new(count)
     let mut index: usize = 0
@@ -37,11 +37,11 @@ micro findKDistantIndices(nums: ArrayList<i64>, key: i64, k: i64) -> ArrayList<i
         }
         index = index + 1
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro findKDistantIndices(self, nums: ArrayList<i64>, key: i64, k: i64): ArrayList<i64> {
+    micro findKDistantIndices(self, nums: [i64], key: i64, k: i64): [i64] {
         return findKDistantIndices(nums, key, k)
     }
 }

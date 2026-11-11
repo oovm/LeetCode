@@ -4,11 +4,11 @@ using std.collection;
 
 # 固定长度窗口滑动，用计数器维护窗口内不同值的个数。
 [export(case: "camelCase")]
-micro distinctNumbers(nums: ArrayList<i64>, k: i64) -> ArrayList<i64> {
+micro distinctNumbers(nums: [i64], k: i64) -> [i64] {
     let count: usize = nums.length()
     let mut answer: ArrayList<i64> = ArrayList::new(count)
     if k <= 0 || k as usize > count {
-        return answer
+        return answer.to_array()
     }
     let window: usize = k as usize
 
@@ -48,11 +48,11 @@ micro distinctNumbers(nums: ArrayList<i64>, k: i64) -> ArrayList<i64> {
         answer.push(distinct)
         index = index + 1
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro distinctNumbers(self, nums: ArrayList<i64>, k: i64): ArrayList<i64> {
+    micro distinctNumbers(self, nums: [i64], k: i64): [i64] {
         return distinctNumbers(nums, k)
     }
 }

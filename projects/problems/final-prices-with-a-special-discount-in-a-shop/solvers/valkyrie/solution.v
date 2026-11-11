@@ -4,7 +4,7 @@ using std.collection;
 
 # 单调栈保存尚未结算的下标，遇到不高于栈顶的价格就立即打折并出栈。
 [export(case: "camelCase")]
-micro finalPrices(prices: ArrayList<i64>) -> ArrayList<i64> {
+micro finalPrices(prices: [i64]) -> [i64] {
     let count: usize = prices.length()
     let mut answer: ArrayList<i64> = ArrayList::new(count)
     let mut position: usize = 0
@@ -31,11 +31,11 @@ micro finalPrices(prices: ArrayList<i64>) -> ArrayList<i64> {
         stack.push(position as i64)
         position = position + 1
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro finalPrices(self, prices: ArrayList<i64>): ArrayList<i64> {
+    micro finalPrices(self, prices: [i64]): [i64] {
         return finalPrices(prices)
     }
 }

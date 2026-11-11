@@ -4,7 +4,7 @@ using std.collection;
 
 # 首两个元素分别入两表，之后按两表末元素大小分配，最后拼接。
 [export(case: "camelCase")]
-micro resultArray(nums: ArrayList<i64>) -> ArrayList<i64> {
+micro resultArray(nums: [i64]) -> [i64] {
     let mut first: ArrayList<i64> = ArrayList::new(nums.length())
     let mut second: ArrayList<i64> = ArrayList::new(nums.length())
     first.push(nums⁅0⁆)
@@ -29,11 +29,11 @@ micro resultArray(nums: ArrayList<i64>) -> ArrayList<i64> {
         result.push(second⁅index⁆)
         index = index + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro resultArray(self, nums: ArrayList<i64>): ArrayList<i64> {
+    micro resultArray(self, nums: [i64]): [i64] {
         return resultArray(nums)
     }
 }
