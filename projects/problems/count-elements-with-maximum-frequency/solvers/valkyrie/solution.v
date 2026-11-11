@@ -5,7 +5,7 @@ using std.collection;
 # MultiSet 直接承载频次：`distinct_elements` 给出键集，`count` 取每键频次；
 # 最大频次对应元素的总贡献 = 最大频次 × 达到该频次的键数。
 [export(case: "camelCase")]
-micro max_frequency_elements(nums: ArrayList<i64>) -> i64 {
+micro max_frequency_elements(nums: [i64]) -> i64 {
     let mut counts: MultiSet<i64> = MultiSet::new()
     let mut inserted: usize = 0
     loop value in nums {
@@ -31,7 +31,7 @@ micro max_frequency_elements(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro maxFrequencyElements(self, nums: ArrayList<i64>): i64 {
+    micro maxFrequencyElements(self, nums: [i64]): i64 {
         return max_frequency_elements(nums)
     }
 }

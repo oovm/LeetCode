@@ -4,7 +4,7 @@ using std.collection;
 
 # 数据规模很小，直接枚举所有 i < j 的和。
 [export(case: "camelCase")]
-micro countPairs(nums: ArrayList<i64>, target: i64) -> i64 {
+micro countPairs(nums: [i64], target: i64) -> i64 {
     let count: usize = nums.length()
     let mut total: i64 = 0
     let mut left: usize = 0
@@ -22,7 +22,7 @@ micro countPairs(nums: ArrayList<i64>, target: i64) -> i64 {
 }
 
 class Solution {
-    micro countPairs(self, nums: ArrayList<i64>, target: i64): i64 {
+    micro countPairs(self, nums: [i64], target: i64): i64 {
         return countPairs(nums, target)
     }
 }

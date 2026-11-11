@@ -4,7 +4,7 @@ using std.collection;
 
 # 枚举 i < j，同时要求等值且下标乘积能被 k 整除。
 [export(case: "camelCase")]
-micro countPairs(nums: ArrayList<i64>, k: i64) -> i64 {
+micro countPairs(nums: [i64], k: i64) -> i64 {
     let count: usize = nums.length()
     let mut total: i64 = 0
     let mut left: usize = 0
@@ -25,7 +25,7 @@ micro countPairs(nums: ArrayList<i64>, k: i64) -> i64 {
 }
 
 class Solution {
-    micro countPairs(self, nums: ArrayList<i64>, k: i64): i64 {
+    micro countPairs(self, nums: [i64], k: i64): i64 {
         return countPairs(nums, k)
     }
 }

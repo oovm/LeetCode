@@ -4,7 +4,7 @@ using std.collection;
 
 # 枚举 d、c、b、a 四下标（a < b < c < d），判 `nums[a] + nums[b] + nums[c] == nums[d]`。
 [export(case: "camelCase")]
-micro countQuadruplets(nums: ArrayList<i64>) -> i64 {
+micro countQuadruplets(nums: [i64]) -> i64 {
     let length: usize = nums.length()
     let mut count: i64 = 0
     let mut d: usize = 3
@@ -30,7 +30,7 @@ micro countQuadruplets(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro countQuadruplets(self, nums: ArrayList<i64>): i64 {
+    micro countQuadruplets(self, nums: [i64]): i64 {
         return countQuadruplets(nums)
     }
 }

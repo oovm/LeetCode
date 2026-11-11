@@ -4,7 +4,7 @@ using std.collection;
 
 # 统计存在 x + 1 的元素个数：先建频次表，再第二遍扫描。
 [export(case: "camelCase")]
-micro countElements(arr: ArrayList<i64>) -> i64 {
+micro countElements(arr: [i64]) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new(0)
     let mut position: usize = 0
     while position < arr.length() {
@@ -30,7 +30,7 @@ micro countElements(arr: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro countElements(self, arr: ArrayList<i64>): i64 {
+    micro countElements(self, arr: [i64]): i64 {
         return countElements(arr)
     }
 }

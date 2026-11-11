@@ -4,7 +4,7 @@ using std.collection;
 
 # 统计严格大于最小值且严格小于最大值的元素个数。
 [export(case: "camelCase")]
-micro countElements(nums: ArrayList<i64>) -> i64 {
+micro countElements(nums: [i64]) -> i64 {
     let count: usize = nums.length()
     if count == 0 {
         return 0
@@ -35,7 +35,7 @@ micro countElements(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro countElements(self, nums: ArrayList<i64>): i64 {
+    micro countElements(self, nums: [i64]): i64 {
         return countElements(nums)
     }
 }

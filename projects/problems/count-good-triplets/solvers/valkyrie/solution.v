@@ -8,7 +8,7 @@ micro abs_i64(x: i64) -> i64 {
 }
 
 [export(case: "camelCase")]
-micro count_good_triplets(arr: ArrayList<i64>, a: i64, b: i64, c: i64) -> i64 {
+micro count_good_triplets(arr: [i64], a: i64, b: i64, c: i64) -> i64 {
     let n: usize = arr.length()
     let mut ans: i64 = 0
     let mut i: usize = 0
@@ -33,7 +33,7 @@ micro count_good_triplets(arr: ArrayList<i64>, a: i64, b: i64, c: i64) -> i64 {
 }
 
 class Solution {
-    micro countGoodTriplets(self, arr: ArrayList<i64>, a: i64, b: i64, c: i64): i64 {
+    micro countGoodTriplets(self, arr: [i64], a: i64, b: i64, c: i64): i64 {
         return count_good_triplets(arr, a, b, c)
     }
 }

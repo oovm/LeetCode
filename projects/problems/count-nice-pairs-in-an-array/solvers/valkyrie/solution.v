@@ -16,7 +16,7 @@ micro reverse_number(value: i64) -> i64 {
 }
 
 [export(case: "camelCase")]
-micro countNicePairs(nums: ArrayList<i64>) -> i64 {
+micro countNicePairs(nums: [i64]) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new(nums.length())
     let mut total: i64 = 0
     loop value in nums {
@@ -34,7 +34,7 @@ micro countNicePairs(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro countNicePairs(self, nums: ArrayList<i64>): i64 {
+    micro countNicePairs(self, nums: [i64]): i64 {
         return countNicePairs(nums)
     }
 }

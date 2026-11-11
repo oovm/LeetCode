@@ -4,7 +4,7 @@ using std.collection;
 
 # 先去重相邻重复值，再统计局部峰与局部谷的个数。
 [export(case: "camelCase")]
-micro countHillValley(nums: ArrayList<i64>) -> i64 {
+micro countHillValley(nums: [i64]) -> i64 {
     let mut compact: ArrayList<i64> = ArrayList::new(nums.length())
     let mut index: usize = 0
     while index < nums.length() {
@@ -28,7 +28,7 @@ micro countHillValley(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro countHillValley(self, nums: ArrayList<i64>): i64 {
+    micro countHillValley(self, nums: [i64]): i64 {
         return countHillValley(nums)
     }
 }

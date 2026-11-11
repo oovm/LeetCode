@@ -4,7 +4,7 @@ using std.collection;
 
 # 枚举 i < j，统计绝对差恰为 k 的数对。
 [export(case: "camelCase")]
-micro countKDifference(nums: ArrayList<i64>, k: i64) -> i64 {
+micro countKDifference(nums: [i64], k: i64) -> i64 {
     let count: usize = nums.length()
     let mut total: i64 = 0
     let mut left: usize = 0
@@ -26,7 +26,7 @@ micro countKDifference(nums: ArrayList<i64>, k: i64) -> i64 {
 }
 
 class Solution {
-    micro countKDifference(self, nums: ArrayList<i64>, k: i64): i64 {
+    micro countKDifference(self, nums: [i64], k: i64): i64 {
         return countKDifference(nums, k)
     }
 }

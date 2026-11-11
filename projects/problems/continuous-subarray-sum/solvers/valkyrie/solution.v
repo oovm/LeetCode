@@ -4,7 +4,7 @@ using std.collection;
 
 # 前缀和取模：同一余数两次出现且跨度 >= 2 即存在 k 的倍数子数组。
 [export(case: "camelCase")]
-micro checkSubarraySum(nums: ArrayList<i64>, k: i64) -> bool {
+micro checkSubarraySum(nums: [i64], k: i64) -> bool {
     let mut firstSeen: HashMap<i64, i64> = HashMap::new(0)
     firstSeen.insert(0, -1)
     let mut sum: i64 = 0
@@ -24,7 +24,7 @@ micro checkSubarraySum(nums: ArrayList<i64>, k: i64) -> bool {
 }
 
 class Solution {
-    micro checkSubarraySum(self, nums: ArrayList<i64>, k: i64): bool {
+    micro checkSubarraySum(self, nums: [i64], k: i64): bool {
         return checkSubarraySum(nums, k)
     }
 }
