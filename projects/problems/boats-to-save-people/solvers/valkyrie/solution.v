@@ -2,7 +2,7 @@ namespace leetcode.boats_to_save_people;
 
 # 排序后双指针：最重的人尽量和最轻的人同船，装不下就自己一船。
 [export(case: "camelCase")]
-micro numRescueBoats(people: ArrayList<i64>, limit: i64) -> i64 {
+micro numRescueBoats(people: [i64], limit: i64) -> i64 {
     let mut ordered: ArrayList<i64> = ArrayList::new(people.length())
     loop value in people {
         ordered.push(value)
@@ -23,7 +23,7 @@ micro numRescueBoats(people: ArrayList<i64>, limit: i64) -> i64 {
 }
 
 class Solution {
-    micro numRescueBoats(self, people: ArrayList<i64>, limit: i64): i64 {
+    micro numRescueBoats(self, people: [i64], limit: i64): i64 {
         return numRescueBoats(people, limit)
     }
 }

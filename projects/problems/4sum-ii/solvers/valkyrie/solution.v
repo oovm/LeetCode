@@ -4,7 +4,7 @@ using std.collection;
 
 # 两两配对和：`nums1 × nums2` 的和入表，`nums3 × nums4` 的负和查表计数累加。
 [export(case: "camelCase")]
-micro fourSumCount(nums1: ArrayList<i64>, nums2: ArrayList<i64>, nums3: ArrayList<i64>, nums4: ArrayList<i64>) -> i64 {
+micro fourSumCount(nums1: [i64], nums2: [i64], nums3: [i64], nums4: [i64]) -> i64 {
     let mut count: HashMap<i64, i64> = HashMap::new(0)
     loop a in nums1 {
         loop b in nums2 {
@@ -29,7 +29,7 @@ micro fourSumCount(nums1: ArrayList<i64>, nums2: ArrayList<i64>, nums3: ArrayLis
 }
 
 class Solution {
-    micro fourSumCount(self, nums1: ArrayList<i64>, nums2: ArrayList<i64>, nums3: ArrayList<i64>, nums4: ArrayList<i64>): i64 {
+    micro fourSumCount(self, nums1: [i64], nums2: [i64], nums3: [i64], nums4: [i64]): i64 {
         return fourSumCount(nums1, nums2, nums3, nums4)
     }
 }

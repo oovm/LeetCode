@@ -6,7 +6,7 @@ using std.collection
 # 记成「当前见过的最大的第三位」。之后只要左侧出现比它小的值，就凑成了 `nums[i] < nums[k] < nums[j]`。
 class Solution {
     [export(case: "camelCase")]
-    micro find132pattern(nums: ArrayList<i64>) -> bool {
+    micro find132pattern(nums: [i64]) -> bool {
         let count: usize = nums.length()
         let mut stack: ArrayList<i64> = ArrayList::new(count)
         let mut has_third: bool = false
