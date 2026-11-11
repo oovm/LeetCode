@@ -6,7 +6,7 @@ using std.collection
 # 生成器用例有 3 条把下标写到界外（期望本身就是 Error），已删，不按越界做兜底。
 class Solution {
     [export(case: "camelCase")]
-    micro arrayNesting(nums: ArrayList<i64>) -> i64 {
+    micro arrayNesting(mut nums: [i64]) -> i64 {
         let n: usize = nums.length()
         let mut best: i64 = 0
         let mut start: usize = 0
