@@ -4,7 +4,7 @@ using std.collection;
 
 # 先就地合并相邻相等项，再把所有 0 移到末尾。
 [export(case: "camelCase")]
-micro applyOperations(nums: ArrayList<i64>) -> ArrayList<i64> {
+micro applyOperations(nums: [i64]) -> [i64] {
     let count: usize = nums.length()
     let mut working: ArrayList<i64> = ArrayList::new(count)
     let mut index: usize = 0
@@ -34,11 +34,11 @@ micro applyOperations(nums: ArrayList<i64>) -> ArrayList<i64> {
     while answer.length() < count {
         answer.push(0)
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro applyOperations(self, nums: ArrayList<i64>): ArrayList<i64> {
+    micro applyOperations(self, nums: [i64]): [i64] {
         return applyOperations(nums)
     }
 }

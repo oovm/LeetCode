@@ -23,7 +23,7 @@ micro settle(stack: ArrayList<i64>, rock: i64) -> bool {
 }
 
 [export(case: "camelCase")]
-micro asteroid_collision(asteroids: ArrayList<i64>) -> ArrayList<i64> {
+micro asteroid_collision(asteroids: [i64]) -> [i64] {
     let mut stack: ArrayList<i64> = ArrayList::new(asteroids.length())
     let mut index: usize = 0
     while index < asteroids.length() {
@@ -35,11 +35,11 @@ micro asteroid_collision(asteroids: ArrayList<i64>) -> ArrayList<i64> {
         }
         index = index + 1
     }
-    return stack
+    return stack.to_array()
 }
 
 class Solution {
-    micro asteroidCollision(self, asteroids: ArrayList<i64>): ArrayList<i64> {
+    micro asteroidCollision(self, asteroids: [i64]): [i64] {
         return asteroid_collision(asteroids)
     }
 }

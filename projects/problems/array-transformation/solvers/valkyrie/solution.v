@@ -4,7 +4,7 @@ using std.collection;
 
 # 每轮按上一轮快照更新中间元素，直到不再变化。
 [export(case: "camelCase")]
-micro transformArray(arr: ArrayList<i64>) -> ArrayList<i64> {
+micro transformArray(arr: [i64]) -> [i64] {
     let count: usize = arr.length()
     let mut current: ArrayList<i64> = ArrayList::new(count)
     let mut position: usize = 0
@@ -40,11 +40,11 @@ micro transformArray(arr: ArrayList<i64>) -> ArrayList<i64> {
             position = position + 1
         }
     }
-    return current
+    return current.to_array()
 }
 
 class Solution {
-    micro transformArray(self, arr: ArrayList<i64>): ArrayList<i64> {
+    micro transformArray(self, arr: [i64]): [i64] {
         return transformArray(arr)
     }
 }

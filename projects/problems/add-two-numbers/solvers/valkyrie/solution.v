@@ -4,7 +4,7 @@ namespace leetcode.add_two_numbers;
 # jvm/clr 最小 lowering 缺 `ArrayList<i64>` 载体合同。其余 lane 不计入交付完成度。
 
 [export(case: "camelCase")]
-micro add_two_numbers(l1: ArrayList<i64>, l2: ArrayList<i64>) -> ArrayList<i64> {
+micro add_two_numbers(l1: [i64], l2: [i64]) -> [i64] {
     let mut result: ArrayList<i64> = ArrayList::new(0)
     let mut i: usize = 0
     let mut carry: i64 = 0
@@ -22,11 +22,11 @@ micro add_two_numbers(l1: ArrayList<i64>, l2: ArrayList<i64>) -> ArrayList<i64> 
         result.push(s % 10)
         i = i + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro addTwoNumbers(self, l1: ArrayList<i64>, l2: ArrayList<i64>): ArrayList<i64> {
+    micro addTwoNumbers(self, l1: [i64], l2: [i64]): [i64] {
         return add_two_numbers(l1, l2)
     }
 }

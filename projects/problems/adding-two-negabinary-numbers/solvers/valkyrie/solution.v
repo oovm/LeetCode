@@ -5,7 +5,7 @@ using std.collection;
 # 负二进制逐位相加：位和 >= 2 时留低位并把 -1 进位，位和为 -1 时留 1 并把 +1 进位。
 # 只扫一遍两条输入，O(n)。
 [export(case: "camelCase")]
-micro addNegabinary(arr1: ArrayList<i64>, arr2: ArrayList<i64>) -> ArrayList<i64> {
+micro addNegabinary(arr1: [i64], arr2: [i64]) -> [i64] {
     let mut i: i64 = arr1.length() as i64 - 1
     let mut j: i64 = arr2.length() as i64 - 1
     let mut carry: i64 = 0
@@ -46,11 +46,11 @@ micro addNegabinary(arr1: ArrayList<i64>, arr2: ArrayList<i64>) -> ArrayList<i64
         trimmed.push(result⁅start⁆)
         start = start + 1
     }
-    return trimmed
+    return trimmed.to_array()
 }
 
 class Solution {
-    micro addNegabinary(self, arr1: ArrayList<i64>, arr2: ArrayList<i64>): ArrayList<i64> {
+    micro addNegabinary(self, arr1: [i64], arr2: [i64]): [i64] {
         return addNegabinary(arr1, arr2)
     }
 }
