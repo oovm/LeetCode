@@ -4,7 +4,7 @@ using std.collection;
 
 # 排序后固定最小元，双指针：和小于 target 时 [lo, hi) 全部可配对，一次计入。
 [export(case: "camelCase")]
-micro threeSumSmaller(nums: ArrayList<i64>, target: i64) -> i64 {
+micro threeSumSmaller(nums: [i64], target: i64) -> i64 {
     let mut sorted: ArrayList<i64> = ArrayList::new(nums.length())
     loop value in nums {
         sorted.push(value)
@@ -31,7 +31,7 @@ micro threeSumSmaller(nums: ArrayList<i64>, target: i64) -> i64 {
 }
 
 class Solution {
-    micro threeSumSmaller(self, nums: ArrayList<i64>, target: i64): i64 {
+    micro threeSumSmaller(self, nums: [i64], target: i64): i64 {
         return threeSumSmaller(nums, target)
     }
 }

@@ -2,7 +2,7 @@ namespace leetcode.average_value_of_even_numbers_that_are_divisible_by_three
 
 # 能被 3 整除的偶数即 6 的倍数；取这些数的和与个数，整除求平均，无则返回 0。
 [export(case: "camelCase")]
-micro averageValue(nums: ArrayList<i64>) -> i64 {
+micro averageValue(nums: [i64]) -> i64 {
     let count: usize = nums.length()
     let mut total: i64 = 0
     let mut picked: i64 = 0
@@ -22,7 +22,7 @@ micro averageValue(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro averageValue(self, nums: ArrayList<i64>): i64 {
+    micro averageValue(self, nums: [i64]): i64 {
         return averageValue(nums)
     }
 }

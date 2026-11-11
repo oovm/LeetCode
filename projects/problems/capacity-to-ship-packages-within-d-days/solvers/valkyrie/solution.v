@@ -5,7 +5,7 @@ using std.collection;
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 二分答案：运力下界是单件最大重量，上界是全量总重。
 # 可行性按顺序装船，装不下就开新船。
-micro days_needed(weights: ArrayList<i64>, capacity: i64) -> i64 {
+micro days_needed(weights: [i64], capacity: i64) -> i64 {
     let mut days: i64 = 1
     let mut current: i64 = 0
     loop weight in weights {
@@ -20,7 +20,7 @@ micro days_needed(weights: ArrayList<i64>, capacity: i64) -> i64 {
 }
 
 [export(case: "camelCase")]
-micro shipWithinDays(weights: ArrayList<i64>, days: i64) -> i64 {
+micro shipWithinDays(weights: [i64], days: i64) -> i64 {
     let mut low: i64 = 0
     let mut high: i64 = 0
     loop weight in weights {
@@ -41,7 +41,7 @@ micro shipWithinDays(weights: ArrayList<i64>, days: i64) -> i64 {
 }
 
 class Solution {
-    micro shipWithinDays(self, weights: ArrayList<i64>, days: i64): i64 {
+    micro shipWithinDays(self, weights: [i64], days: i64): i64 {
         return shipWithinDays(weights, days)
     }
 }

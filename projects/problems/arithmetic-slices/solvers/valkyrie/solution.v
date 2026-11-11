@@ -2,7 +2,7 @@ namespace leetcode.arithmetic_slices;
 
 # 统计连续等差段：长度为 len 的等差段贡献 len-1 个等差子数组。
 [export(case: "camelCase")]
-micro number_of_arithmetic_slices(nums: ArrayList<i64>) -> i64 {
+micro number_of_arithmetic_slices(nums: [i64]) -> i64 {
     let n: usize = nums.length()
     let mut total: i64 = 0
     let mut run: i64 = 0
@@ -23,7 +23,7 @@ micro number_of_arithmetic_slices(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro numberOfArithmeticSlices(self, nums: ArrayList<i64>): i64 {
+    micro numberOfArithmeticSlices(self, nums: [i64]): i64 {
         return number_of_arithmetic_slices(nums)
     }
 }
