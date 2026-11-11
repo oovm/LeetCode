@@ -19,7 +19,7 @@ micro anagram_key(word: utf8) -> MultiSet<char> {
 }
 
 [export(case: "camelCase")]
-micro remove_anagrams(words: ArrayList<utf8>) -> ArrayList<utf8> {
+micro remove_anagrams(words: [utf8]) -> [utf8] {
     let count: usize = words.length()
     let mut keys: ArrayList<MultiSet<char>> = ArrayList::new(count)
     let mut i: usize = 0
@@ -42,11 +42,11 @@ micro remove_anagrams(words: ArrayList<utf8>) -> ArrayList<utf8> {
         }
         i = i + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro removeAnagrams(self, words: ArrayList<utf8>): ArrayList<utf8> {
+    micro removeAnagrams(self, words: [utf8]): [utf8] {
         return remove_anagrams(words)
     }
 }
