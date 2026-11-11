@@ -20,7 +20,7 @@ micro matches_at(s: utf8, word: utf8, start: usize) -> bool {
 }
 
 [export(case: "camelCase")]
-micro add_bold_tag(s: utf8, words: ArrayList<utf8>) -> utf8 {
+micro add_bold_tag(s: utf8, words: [utf8]) -> utf8 {
     let length: usize = s.byte_length()
     let mut covered: ArrayList<bool> = ArrayList::new(length)
     let mut index: usize = 0
@@ -71,7 +71,7 @@ micro add_bold_tag(s: utf8, words: ArrayList<utf8>) -> utf8 {
 }
 
 class Solution {
-    micro addBoldTag(self, s: utf8, words: ArrayList<utf8>): utf8 {
+    micro addBoldTag(self, s: utf8, words: [utf8]): utf8 {
         return add_bold_tag(s, words)
     }
 }

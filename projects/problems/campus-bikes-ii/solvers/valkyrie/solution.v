@@ -23,7 +23,7 @@ micro popcount(mask: i64, bits: i64) -> i64 {
 
 # 位掩码 DP：dp[mask] = 前 popcount(mask) 名工人用 mask 中车辆的最小代价。
 [export(case: "camelCase")]
-micro assign_bikes(workers: ArrayList<ArrayList<i64>>, bikes: ArrayList<ArrayList<i64>>) -> i64 {
+micro assign_bikes(workers: [[i64]], bikes: [[i64]]) -> i64 {
     let n: i64 = workers.length() as i64
     let m: i64 = bikes.length() as i64
     let mut states: i64 = 1
@@ -81,7 +81,7 @@ micro assign_bikes(workers: ArrayList<ArrayList<i64>>, bikes: ArrayList<ArrayLis
 }
 
 class Solution {
-    micro assignBikes(self, workers: ArrayList<ArrayList<i64>>, bikes: ArrayList<ArrayList<i64>>): i64 {
+    micro assignBikes(self, workers: [[i64]], bikes: [[i64]]): i64 {
         return assign_bikes(workers, bikes)
     }
 }
