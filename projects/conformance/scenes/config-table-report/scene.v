@@ -102,21 +102,24 @@ micro max_key_width(keys: ArrayList<utf8>) -> i64 {
 micro render_table(config: Config) -> utf8 {
     let width: i64 = max_key_width(config.keys)
     let mut buffer: Utf8Builder = Utf8Builder::new(32)
+    let newline: char = '\n'
+    let space: char = ' '
+    let colon: char = ':'
     let mut index: usize = 0
     while index < config.keys.length() {
         if index > 0 {
-            buffer.append('\n')
+            buffer.append(newline)
         }
         let key: utf8 = config.keys⁅index⁆
         buffer.append(key)
         let padding: i64 = width - (key.length() as i64)
         let mut spaces: i64 = 0
         while spaces < padding {
-            buffer.append(' ')
+            buffer.append(space)
             spaces = spaces + 1
         }
-        buffer.append(':')
-        buffer.append(' ')
+        buffer.append(colon)
+        buffer.append(space)
         buffer.append(config.values⁅index⁆)
         index = index + 1
     }
