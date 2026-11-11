@@ -17,7 +17,7 @@ micro starts_with(word: utf8, pref: utf8) -> bool {
 }
 
 [export(case: "camelCase")]
-micro prefix_count(words: ArrayList<utf8>, pref: utf8) -> i64 {
+micro prefix_count(words: [utf8], pref: utf8) -> i64 {
     let mut count: i64 = 0
     let mut i: usize = 0
     while i < words.length() {
@@ -30,7 +30,7 @@ micro prefix_count(words: ArrayList<utf8>, pref: utf8) -> i64 {
 }
 
 class Solution {
-    micro prefixCount(self, words: ArrayList<utf8>, pref: utf8): i64 {
+    micro prefixCount(self, words: [utf8], pref: utf8): i64 {
         return prefix_count(words, pref)
     }
 }

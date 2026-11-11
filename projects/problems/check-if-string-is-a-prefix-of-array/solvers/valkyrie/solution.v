@@ -4,10 +4,10 @@ using std.collection;
 
 # 按序拼接单词，拼到恰好等于 s 即前缀成立；超过长度即失败。
 [export(case: "camelCase")]
-micro isPrefixString(s: utf8, words: ArrayList<utf8>) -> bool {
+micro isPrefixString(s: utf8, words: [utf8]) -> bool {
     let mut built: utf8 = ""
     loop word in words {
-        built = built + word
+        built = built ++ word
         if built == s {
             return true
         }
@@ -19,7 +19,7 @@ micro isPrefixString(s: utf8, words: ArrayList<utf8>) -> bool {
 }
 
 class Solution {
-    micro isPrefixString(self, s: utf8, words: ArrayList<utf8>): bool {
+    micro isPrefixString(self, s: utf8, words: [utf8]): bool {
         return isPrefixString(s, words)
     }
 }

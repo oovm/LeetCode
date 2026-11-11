@@ -4,7 +4,7 @@ using std.collection;
 
 # 逐列检查：只要出现上一行字符大于下一行字符，该列必须删除。
 [export(case: "camelCase")]
-micro minDeletionSize(strs: ArrayList<utf8>) -> i64 {
+micro minDeletionSize(strs: [utf8]) -> i64 {
     let rows: usize = strs.length()
     let columns: usize = strs⁅0⁆.length()
     let mut removed: i64 = 0
@@ -27,7 +27,7 @@ micro minDeletionSize(strs: ArrayList<utf8>) -> i64 {
 }
 
 class Solution {
-    micro minDeletionSize(self, strs: ArrayList<utf8>): i64 {
+    micro minDeletionSize(self, strs: [utf8]): i64 {
         return minDeletionSize(strs)
     }
 }

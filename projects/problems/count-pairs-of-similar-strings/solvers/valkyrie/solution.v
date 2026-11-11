@@ -8,14 +8,14 @@ micro char_mask(word: utf8) -> i64 {
     let mut i: usize = 0
     while i < word.length() {
         let letter: usize = ((word⁅i⁆ as u32) as i64 - 97) as usize
-        mask = mask.bit_or((1 as i64).bit_shift_left(letter))
+        mask = mask.bit_or((1 as i64).bit_shift_left(letter as i64))
         i = i + 1
     }
     return mask
 }
 
 [export(case: "camelCase")]
-micro similarPairs(words: ArrayList<utf8>) -> i64 {
+micro similarPairs(words: [utf8]) -> i64 {
     let mut seen: HashMap<i64, i64> = HashMap::new(0)
     let mut total: i64 = 0
     loop word in words {
@@ -31,7 +31,7 @@ micro similarPairs(words: ArrayList<utf8>) -> i64 {
 }
 
 class Solution {
-    micro similarPairs(self, words: ArrayList<utf8>): i64 {
+    micro similarPairs(self, words: [utf8]): i64 {
         return similarPairs(words)
     }
 }
