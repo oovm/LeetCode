@@ -4,10 +4,10 @@ using std.collection;
 
 # 按层索引 BFS：每层收集当前层的值，奇数层反转；下一层由当前层每个节点的两子节点组成。
 [export(case: "camelCase")]
-micro zigzagLevelOrder(root: ArrayList<i64>) -> ArrayList<ArrayList<i64>> {
-    let mut out: ArrayList<ArrayList<i64>> = ArrayList::new(0)
+micro zigzagLevelOrder(root: [i64]) -> [[i64]] {
+    let mut out: ArrayList<[i64]> = ArrayList::new(0)
     if root.length() == 0 {
-        return out
+        return out.to_array()
     }
     let mut level: ArrayList<i64> = ArrayList::new(1)
     level.push(0)
@@ -27,7 +27,7 @@ micro zigzagLevelOrder(root: ArrayList<i64>) -> ArrayList<ArrayList<i64>> {
                 slot = slot - 1
             }
         }
-        out.push(row)
+        out.push(row.to_array())
         let mut next: ArrayList<i64> = ArrayList::new(0)
         let mut slot: usize = 0
         while slot < level.length() {
@@ -45,11 +45,11 @@ micro zigzagLevelOrder(root: ArrayList<i64>) -> ArrayList<ArrayList<i64>> {
         level = next
         left_to_right = !left_to_right
     }
-    return out
+    return out.to_array()
 }
 
 class Solution {
-    micro zigzagLevelOrder(self, root: ArrayList<i64>): ArrayList<ArrayList<i64>> {
+    micro zigzagLevelOrder(self, root: [i64]): [[i64]] {
         return zigzagLevelOrder(root)
     }
 }

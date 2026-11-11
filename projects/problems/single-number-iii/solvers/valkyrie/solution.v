@@ -3,7 +3,7 @@ namespace leetcode.single_number_iii;
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 先取全部异或得到两个目标数的差异位，再按该位分组异或。
 [export(case: "camelCase")]
-micro single_number(nums: ArrayList<i64>) -> ArrayList<i64> {
+micro single_number(nums: [i64]) -> [i64] {
     let mut merged: i64 = 0
     loop x in nums {
         merged = merged ^ x
@@ -21,11 +21,11 @@ micro single_number(nums: ArrayList<i64>) -> ArrayList<i64> {
     let mut out: ArrayList<i64> = ArrayList::new(2)
     out.push(first)
     out.push(second)
-    return out
+    return out.to_array()
 }
 
 class Solution {
-    micro singleNumber(self, nums: ArrayList<i64>): ArrayList<i64> {
+    micro singleNumber(self, nums: [i64]): [i64] {
         return single_number(nums)
     }
 }

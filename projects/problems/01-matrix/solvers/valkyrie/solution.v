@@ -4,7 +4,7 @@ using std.collection;
 
 # 多源 BFS：所有 0 格入队距离 0，四邻逐层松弛；每格至多入队一次，O(mn)。
 [export(case: "camelCase")]
-micro updateMatrix(mat: ArrayList<ArrayList<i64>>) -> ArrayList<ArrayList<i64>> {
+micro updateMatrix(mat: [[i64]]) -> [[i64]] {
     let rows: usize = mat.length()
     let cols: usize = mat⁅0⁆.length()
     let mut dist: ArrayList<ArrayList<i64>> = ArrayList::new(rows)
@@ -49,11 +49,17 @@ micro updateMatrix(mat: ArrayList<ArrayList<i64>>) -> ArrayList<ArrayList<i64>> 
             queue.push(r as i64 * cols as i64 + (c + 1) as i64)
         }
     }
-    return dist
+    let mut frozen: ArrayList<[i64]> = ArrayList::new(rows)
+    let mut freeze_cursor: usize = 0
+    while freeze_cursor < rows {
+        frozen.push(dist⁅freeze_cursor⁆.to_array())
+        freeze_cursor = freeze_cursor + 1
+    }
+    return frozen.to_array()
 }
 
 class Solution {
-    micro updateMatrix(self, mat: ArrayList<ArrayList<i64>>): ArrayList<ArrayList<i64>> {
+    micro updateMatrix(self, mat: [[i64]]): [[i64]] {
         return updateMatrix(mat)
     }
 }

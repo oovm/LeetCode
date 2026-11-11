@@ -12,7 +12,7 @@ micro compare_text(left: utf8, right: utf8) -> i32 {
 # 这里按规模合并、同规模取右侧为根，与语料参照解的根选择一致；std DisjointSet
 # 按秩合并且同秩取左侧，根账户会不同（语料 expected 以参照解根名为准）。
 [export(case: "camelCase")]
-micro accounts_merge(accounts: ArrayList<ArrayList<utf8>>) -> ArrayList<ArrayList<utf8>> {
+micro accounts_merge(accounts: [[utf8]]) -> [[utf8]] {
     let count: usize = accounts.length()
     let total: i64 = count as i64
 
@@ -28,7 +28,7 @@ micro accounts_merge(accounts: ArrayList<ArrayList<utf8>>) -> ArrayList<ArrayLis
     let mut owner: HashMap<utf8, i64> = HashMap::new(count)
     index = 0
     while index < total {
-        let row: ArrayList<utf8> = accounts⁅index as usize⁆
+        let row: [utf8] = accounts⁅index as usize⁆
         let mut k: usize = 1
         while k < row.length() {
             let email: utf8 = row⁅k⁆
@@ -80,7 +80,7 @@ micro accounts_merge(accounts: ArrayList<ArrayList<utf8>>) -> ArrayList<ArrayLis
         index = index + 1
     }
 
-    let mut merged: ArrayList<ArrayList<utf8>> = ArrayList::new(count)
+    let mut merged: ArrayList<[utf8]> = ArrayList::new(count)
     let mut slot: i64 = 0
     while slot < group_count {
         let representative: i64 = root_of_slot⁅slot as usize⁆
@@ -90,7 +90,7 @@ micro accounts_merge(accounts: ArrayList<ArrayList<utf8>>) -> ArrayList<ArrayLis
         index = 0
         while index < total {
             if slot_of_account⁅index as usize⁆ == slot {
-                let row: ArrayList<utf8> = accounts⁅index as usize⁆
+                let row: [utf8] = accounts⁅index as usize⁆
                 let mut k: usize = 1
                 while k < row.length() {
                     let email: utf8 = row⁅k⁆
@@ -105,20 +105,20 @@ micro accounts_merge(accounts: ArrayList<ArrayList<utf8>>) -> ArrayList<ArrayLis
         }
         # 组内邮箱副本就地 `merge_sort`，比较器走 `Utf8Text` 的 `Comparable` 合同（`natural_order`）。
         merge_sort(emails, compare_text)
-        let first: ArrayList<utf8> = accounts⁅representative as usize⁆
+        let first: [utf8] = accounts⁅representative as usize⁆
         let mut entry: ArrayList<utf8> = ArrayList::new(emails.length() + 1)
         entry.push(first⁅0⁆)
         loop email in emails {
             entry.push(email)
         }
-        merged.push(entry)
+        merged.push(entry.to_array())
         slot = slot + 1
     }
-    return merged
+    return merged.to_array()
 }
 
 class Solution {
-    micro accountsMerge(self, accounts: ArrayList<ArrayList<utf8>>): ArrayList<ArrayList<utf8>> {
+    micro accountsMerge(self, accounts: [[utf8]]): [[utf8]] {
         return accounts_merge(accounts)
     }
 }
