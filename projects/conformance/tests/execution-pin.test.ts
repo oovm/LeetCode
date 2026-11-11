@@ -14,7 +14,7 @@ import {
     readNodeExecutionPin,
 } from '../src/adapters/shared/execution-pin.ts';
 
-/** 三态合同（[01 §4.12] 工具链身份门）：Absent 允许独立构建、Valid 执行已核验产物、Invalid 必须失败。 */
+/** 三态合同（工具链身份门）：Absent 允许独立构建、Valid 执行已核验产物、Invalid 必须失败。 */
 describe('execution pin 三态', () => {
     it('所有 pin 键都未出现时是 Absent，允许子进程独立构建', () => {
         const reading = readNodeExecutionPin({});

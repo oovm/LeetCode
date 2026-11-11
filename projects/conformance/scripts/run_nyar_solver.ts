@@ -187,7 +187,7 @@ async function main(): Promise<number> {
         .map((testCase, index) => ({ testCase, index }))
         .filter(({ testCase }) => !isNoExecutableExpectation(testCase));
 
-    // 逐例记录：先落全部 `skipped` 哨兵，再按真实观测逐例追加（[01 §4.12] 验收观察门）。
+    // 逐例记录：先落全部 `skipped` 哨兵，再按真实观测逐例追加（验收观察门）。
     const records: CaseRecord[] = [];
     for (const [index, testCase] of tests.entries()) {
         if (isNoExecutableExpectation(testCase)) {

@@ -134,7 +134,7 @@ export type RunCase = {
     args: Record<string, TaggedValue>;
 };
 
-/** 失败用例的宿主侧观测：真实阶段与可确认的 guest trap 身份（[01 §4.12] 验收观察门）。 */
+/** 失败用例的宿主侧观测：真实阶段与可确认的 guest trap 身份（验收观察门）。 */
 export type CaseFailureObservation = {
     /** 异常归回的观测阶段。 */
     phase?: ObservationPhase;

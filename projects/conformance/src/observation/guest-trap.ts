@@ -1,5 +1,5 @@
 /**
- * guest trap 与宿主侧异常的分类（[01 §4.12] 验收观察门）。
+ * guest trap 与宿主侧异常的分类（验收观察门）。
  *
  * 预期 trap 只接受明确的 guest trap 类型与原因：
  * - `wasm-runtime-error`：`WebAssembly.RuntimeError`（unreachable、越界、整数溢出等 wasm 原生 trap）。

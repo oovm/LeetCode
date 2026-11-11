@@ -29,7 +29,7 @@ export type NyarExecutionPin = {
 };
 
 /**
- * execution pin 三态（[01 §4.12] 工具链身份门）：
+ * execution pin 三态（工具链身份门）：
  * - `absent`：本 lane 的 pin 键一个都没有出现，子进程允许独立构建。
  * - `valid`：字段完整且指定产物存在，子进程必须执行已核验产物。
  * - `invalid`：任一 pin 键出现但字段不完整，或指定产物已消失。必须失败，

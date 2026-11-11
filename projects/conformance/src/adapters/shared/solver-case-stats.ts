@@ -4,7 +4,7 @@ import type { ObservationPhase } from '../../observation/guest-trap.ts';
 export const SOLVER_RESULT_MARKER = 'VALKYRIE_SOLVER_RESULT ';
 
 /**
- * 逐例结果记录（[01 §4.12] 验收观察门）。
+ * 逐例结果记录（验收观察门）。
  *
  * 每条记录携带稳定 case identity 与内容摘要；隔离统计只消费记录中的真实逐例状态，
  * 禁止从汇总计数倒推。`not_run` / `blocked` 逐例显式落账，不靠区间推断。

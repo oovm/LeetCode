@@ -1,5 +1,5 @@
 /**
- * 场景用例的分阶段观测执行器（[01 §4.12] 验收观察门）。
+ * 场景用例的分阶段观测执行器（验收观察门）。
  *
  * marshal、guest invoke、demarshal-normalize 三个阶段独立报告；预期 trap 只接受
  * `guest-trap.ts` 认定的明确 guest trap 类型与原因，宿主侧异常永不判为通过。

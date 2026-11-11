@@ -6,7 +6,7 @@
  * 只吃「语法/语义写法是否成立」的证据，不迁就编译器现状：构建或调用失败都按
  * 缺口记录到 `reports/valkyrie-language-probe-ledger.md`，不改场景源码。
  *
- * 观测口径（[01 §4.12] 工具链身份门与验收观察门）：
+ * 观测口径（工具链身份门与验收观察门）：
  * - build / marshal / guest invoke / demarshal-normalize 分阶段独立报告。
  * - 预期 trap 只接受明确的 guest trap 类型与原因；宿主侧异常永不判为通过。
  * - 每条结果携带稳定 case identity 与内容摘要，逐例状态来自本例真实观测。

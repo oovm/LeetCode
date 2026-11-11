@@ -471,7 +471,7 @@ export function assertValkyrieOutcome(
 ): void {
     if (!outcome.ok) {
         if (typeof expected === 'string' && expected.startsWith('Error:')) {
-            // [01 §4.12] 验收观察门：预期 trap 只接受明确的 guest trap 类型与原因；
+            // 验收观察门：预期 trap 只接受明确的 guest trap 类型与原因；
             // glue/ABI/JS TypeError 等宿主侧异常即使文本恰好匹配也不得判为通过。
             if (outcome.guestTrap === undefined) {
                 throw new Error(
