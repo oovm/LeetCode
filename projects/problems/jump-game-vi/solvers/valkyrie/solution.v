@@ -5,7 +5,7 @@ using std.collection;
 # DP：`dp[i] = nums[i] + max(dp[j])`，j 落在最后 k 步内。
 # 用单调递减的 `Deque` 维护窗口内的最大 dp 下标。
 [export(case: "camelCase")]
-micro maxResult(nums: ArrayList<i64>, k: i64) -> i64 {
+micro maxResult(nums: [i64], k: i64) -> i64 {
     let count: usize = nums.length()
     let limit: usize = k as usize
 
@@ -41,7 +41,7 @@ micro maxResult(nums: ArrayList<i64>, k: i64) -> i64 {
 }
 
 class Solution {
-    micro maxResult(self, nums: ArrayList<i64>, k: i64): i64 {
+    micro maxResult(self, nums: [i64], k: i64): i64 {
         return maxResult(nums, k)
     }
 }

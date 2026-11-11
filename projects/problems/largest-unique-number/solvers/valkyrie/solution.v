@@ -4,7 +4,7 @@ using std.collection;
 
 # 先计频，再在只出现一次的数值中取最大。
 [export(case: "camelCase")]
-micro largestUniqueNumber(nums: ArrayList<i64>) -> i64 {
+micro largestUniqueNumber(nums: [i64]) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new(0)
     let mut index: usize = 0
     while index < nums.length() {
@@ -33,7 +33,7 @@ micro largestUniqueNumber(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro largestUniqueNumber(self, nums: ArrayList<i64>): i64 {
+    micro largestUniqueNumber(self, nums: [i64]): i64 {
         return largestUniqueNumber(nums)
     }
 }

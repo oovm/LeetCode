@@ -14,8 +14,12 @@ micro compare_ascending(a: i64, b: i64) -> i32 {
 
 # 升序贪心：总重量不超过 5000 时尽量多装。
 [export(case: "camelCase")]
-micro maxNumberOfApples(weight: ArrayList<i64>) -> i64 {
-    let ordered: ArrayList<i64> = sorted_by(weight, compare_ascending)
+micro maxNumberOfApples(weight: [i64]) -> i64 {
+    let mut ordered: ArrayList<i64> = ArrayList::new(weight.length())
+    loop value in weight {
+        ordered.push(value)
+    }
+    merge_sort(ordered, compare_ascending)
     let mut total: i64 = 0
     let mut count: i64 = 0
     let mut position: usize = 0
@@ -32,7 +36,7 @@ micro maxNumberOfApples(weight: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro maxNumberOfApples(self, weight: ArrayList<i64>): i64 {
+    micro maxNumberOfApples(self, weight: [i64]): i64 {
         return maxNumberOfApples(weight)
     }
 }

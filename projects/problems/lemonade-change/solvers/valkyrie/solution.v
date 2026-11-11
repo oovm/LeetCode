@@ -2,7 +2,7 @@ namespace leetcode.lemonade_change
 
 # 面额只有 5/10/20：10 元必须用 5 元找零，20 元优先用 10+5、否则用三张 5。
 [export(case: "camelCase")]
-micro lemonadeChange(bills: ArrayList<i64>) -> bool {
+micro lemonadeChange(bills: [i64]) -> bool {
     let count: usize = bills.length()
     let mut five: i64 = 0
     let mut ten: i64 = 0
@@ -42,7 +42,7 @@ micro lemonadeChange(bills: ArrayList<i64>) -> bool {
 }
 
 class Solution {
-    micro lemonadeChange(self, bills: ArrayList<i64>): bool {
+    micro lemonadeChange(self, bills: [i64]): bool {
         return lemonadeChange(bills)
     }
 }

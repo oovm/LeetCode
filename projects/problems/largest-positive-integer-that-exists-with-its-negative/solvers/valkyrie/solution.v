@@ -4,7 +4,7 @@ using std.collection;
 
 # 找最大的 k，使 k 与 -k 都出现；不存在返回 -1。
 [export(case: "camelCase")]
-micro findMaxK(nums: ArrayList<i64>) -> i64 {
+micro findMaxK(nums: [i64]) -> i64 {
     let mut seen: HashMap<i64, i64> = HashMap::new(0)
     let mut index: usize = 0
     while index < nums.length() {
@@ -24,7 +24,7 @@ micro findMaxK(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findMaxK(self, nums: ArrayList<i64>): i64 {
+    micro findMaxK(self, nums: [i64]): i64 {
         return findMaxK(nums)
     }
 }

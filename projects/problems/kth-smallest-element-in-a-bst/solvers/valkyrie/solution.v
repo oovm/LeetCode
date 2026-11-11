@@ -3,7 +3,7 @@ namespace leetcode.kth_smallest_element_in_a_bst;
 using std.collection;
 
 # 堆式下标中序遍历：`seen⁅0⁆` 作计数器；第 k 个被访问的节点值即答案。
-micro inorder(root: ArrayList<i64>, i: usize, k: i64, seen: ArrayList<i64>) -> i64 {
+micro inorder(root: [i64], i: usize, k: i64, seen: ArrayList<i64>) -> i64 {
     if i >= root.length() {
         return -1
     }
@@ -19,14 +19,14 @@ micro inorder(root: ArrayList<i64>, i: usize, k: i64, seen: ArrayList<i64>) -> i
 }
 
 [export(case: "camelCase")]
-micro kthSmallest(root: ArrayList<i64>, k: i64) -> i64 {
+micro kthSmallest(root: [i64], k: i64) -> i64 {
     let mut seen: ArrayList<i64> = ArrayList::new(1)
     seen.push(0)
     return inorder(root, 0, k, seen)
 }
 
 class Solution {
-    micro kthSmallest(self, root: ArrayList<i64>, k: i64): i64 {
+    micro kthSmallest(self, root: [i64], k: i64): i64 {
         return kthSmallest(root, k)
     }
 }

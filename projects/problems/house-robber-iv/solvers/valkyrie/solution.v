@@ -5,7 +5,7 @@ using std.collection;
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 二分答案：最小可接受金额 `cap` 单调可行。
 # 贪心扫描：金额不超过 `cap` 就取，并跳过相邻下一间。
-micro enough(nums: ArrayList<i64>, cap: i64, k: i64) -> bool {
+micro enough(nums: [i64], cap: i64, k: i64) -> bool {
     let mut taken: i64 = 0
     let mut index: usize = 0
     while index < nums.length() {
@@ -20,7 +20,7 @@ micro enough(nums: ArrayList<i64>, cap: i64, k: i64) -> bool {
 }
 
 [export(case: "camelCase")]
-micro minCapability(nums: ArrayList<i64>, k: i64) -> i64 {
+micro minCapability(nums: [i64], k: i64) -> i64 {
     let mut low: i64 = nums⁅0⁆
     let mut high: i64 = nums⁅0⁆
     loop value in nums {
@@ -43,7 +43,7 @@ micro minCapability(nums: ArrayList<i64>, k: i64) -> i64 {
 }
 
 class Solution {
-    micro minCapability(self, nums: ArrayList<i64>, k: i64): i64 {
+    micro minCapability(self, nums: [i64], k: i64): i64 {
         return minCapability(nums, k)
     }
 }

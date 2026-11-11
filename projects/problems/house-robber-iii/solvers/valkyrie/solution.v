@@ -3,7 +3,7 @@ namespace leetcode.house_robber_iii;
 using std.collection;
 
 # 树 DP：返回 `[rob, not_rob]` 两值装进 `ArrayList<i64>`（元组返回面未实测，计数器数组同形）。
-micro dfs(root: ArrayList<i64>, i: usize) -> ArrayList<i64> {
+micro dfs(root: [i64], i: usize) -> ArrayList<i64> {
     if i >= root.length() {
         let mut zero: ArrayList<i64> = ArrayList::new(2)
         zero.push(0)
@@ -28,7 +28,7 @@ micro dfs(root: ArrayList<i64>, i: usize) -> ArrayList<i64> {
 }
 
 [export(case: "camelCase")]
-micro rob(root: ArrayList<i64>) -> i64 {
+micro rob(root: [i64]) -> i64 {
     let result: ArrayList<i64> = dfs(root, 0)
     if result⁅0⁆ > result⁅1⁆ {
         return result⁅0⁆
@@ -37,7 +37,7 @@ micro rob(root: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro rob(self, root: ArrayList<i64>): i64 {
+    micro rob(self, root: [i64]): i64 {
         return rob(root)
     }
 }
