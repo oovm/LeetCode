@@ -2179,3 +2179,41 @@ receiver type is unknown, so member `unwrap` cannot be resolved
   `divide-two-integers` 的 `<<` 在 `shift + 1 >= 32` 按模 32 回绕死循环，改倍增减法。
 - 验证口径：编译通过 0、端到端通过 0、写完未验证 24（V）；TS 基线 16/16 实测通过。
 
+## 批次 R39-2026-11-11（blocked 清障续批四 24 题，本窗口已构建实测）
+
+- 口径同 R36-R38。R39-A 从剩余陈旧 `# blocked: std.collection 数组参数读取`
+  题池（R38 后剩 113）再选 24 题。本子批无 R39-B（本窗口未做 TypeScript 基线）。
+- R39-A 能力分组（24）：
+  - 图 / 拓扑 3：`course-schedule`（拓扑入度表）、`find-if-path-exists-in-graph`
+    （并查集连通）、`graph-valid-tree`（并查集 + 边数核对）。
+  - 树（堆式下标）6：`binary-tree-level-order-traversal`（按层 BFS 出
+    `[[i64]]`）、`house-robber-iii`（树 DP 返回 `ArrayList<i64>` 对）、
+    `minimum-distance-between-bst-nodes`（中序差分）、`second-minimum-node-in-a-binary-tree`
+    （递归下探）、`sum-of-root-to-leaf-binary-numbers`（DFS 累加二进制前缀）、
+    `two-sum-iv-input-is-a-bst`（中序展平 + 双指针）。
+  - 哈希 / 计数 6：`4sum-ii`（两两和表查负和）、`lonely-pixel-i`（行列桶 +
+    `HashMap<utf8, i64>` 色键）、`majority-element-ii`（Boyer-Moore 二候选）、
+    `check-if-a-number-is-majority-element-in-a-sorted-array`（区间二分计数）、
+    `special-array-with-x-elements-greater-than-or-equal-x`（排序 + 后缀判定）、
+    `shortest-word-distance-iii`（三指针单扫）。
+  - 数组 / DP / 贪心 9：`increasing-triplet-subsequence`（双界单扫）、
+    `make-a-square-with-the-same-color`（`[[char]]` 码位枚举）、`matchsticks-to-square`
+    （降序回溯剪枝）、`max-consecutive-ones-ii`（一次翻转窗口）、`minesweeper`
+    （`[[utf8]]` 八邻计数）、`ones-and-zeroes`（三维背包）、`range-addition`
+    （差分 + `[[i64]]` 展平）、`sum-of-all-subset-xor-totals`（逐位贡献）、
+    `minimum-time-difference`（`utf8` 时刻转分钟 + `sort` 环差）。
+- 三件套：24/24（`solution.v` + `metadata.invoke.valkyrie` 裸导出名）。
+- 验证窗口实测（2026-11-11，单进程顺序 `run_v_solver.ts` 逐题）：
+  - **构建 24/24 通过**（首跑 2 题编译红，均为题解写法错、编译器判据正确，已修）：
+    `house-robber-iii` 的 `skip_left` / `skip` 分支内重赋值缺 `let mut`；
+    `sum-of-all-subset-xor-totals` 的 `bit_shift_left` / `bit_shift_right` 实参写成
+    `as u32`，而 `i64.v` 声明 `rhs: Self`（i64），改直传。R36/R38 账内
+    「`(1 as i64).bit_shift_left(bit as u32)` 复验」为源码面结论，构建面不成立，
+    已按本窗口证据更正（见缺口账 G3 重启条目）。
+  - **隔离判题 24/24 阻塞于同一边界**：`[wasm-js-glue] Cannot marshal
+    InstanceHandle "ArrayList": expected the opaque handle returned by this
+    module's constructor export`——形状推断序列桥被 `22335123` 按 01 §5.4 清退后，
+    序列容器的宿主构造/回读暂无正式边界合同，G3 重启（裁决：导出包装投影，
+    上游实现中）。合计 1740 条用例 blocked，不计入任何通过数。
+- 验证口径：编译通过 24、端到端通过 0、边界阻塞 24（G3 重启同因）。
+

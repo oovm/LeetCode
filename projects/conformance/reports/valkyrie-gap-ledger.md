@@ -1874,6 +1874,13 @@ micro sequential_digits(low: i64, high: i64) -> ArrayList<i64>
   归「编译失败」而非 G3；`Option` 负载的 `null` 语义待这 4 题编译通过后再验证，不另开编号。
 - 判定：**已恢复**（2026-11-04 23:50 addon 重建时由 glue 侧补齐 `Array` 编组 / 解组）。
   原判定为真缺口（判据 c），恢复后本案只留档，不再作为失败归族依据。
+- **2026-11-11 重启**：恢复桥基于形状推断（Reference + 两字段 Array/整数），按 01 §5.4
+  裁决被 `22335123`（🔥 Remove shape-inferred sequence ABI）清退。当前合同下
+  `ArrayList` 形参/返回投影为 `InstanceHandle`（不透明句柄），宿主无构造/回读合同，
+  下游理想题 24/24 与历史 136 题端到端绿语料均阻塞于同一边界（R39 实测 1740 用例
+  blocked）。裁决：**导出包装投影**——宿主按 `Array<element>` 合同 marshal JS 数组，
+  导出 wrapper 在模块内走语言侧 `[host_contract]`（`new` / `push` / `length` / `at`）
+  构造/回读，语言内部保持引用身份，`InstanceHandle` 本体语义不动。上游实现进行中。
 
 ### G4 std `Utf8Builder.append(char)` 在 std 模块自编译时无法实例化（疑似失效，待复验）
 
@@ -2970,6 +2977,21 @@ micro sort_unstable<T, C>(list: mut C) where C: Cardinal<Element = T> & Countabl
   其 expected 由 int32 算术移位参照算出、与题面参照矛盾。
 - **Python lane 既有缺陷登记**：树 4 题 Python 参照按 `TreeNode` 对象写、与堆式数组
   语料不符（同 R35 / R36 / R37），改 TS 参照复核。
+
+### 未命中面（R39 批次，2026-11-11，新编号 0 条）
+
+- **本批口径**：R39-A 24 题全部完成构建实测（区别于 R36-R38 的写完未构建），
+  构建 24/24 通过，判题 24/24 阻塞于 G3 重启边界（宿主构造 `ArrayList` 实参），
+  不新开编号、归 G3。
+- **位移实参面更正（写作错，非缺口）**：`i64.v` 的 `bit_shift_left` / `bit_shift_right`
+  形参为 `Self`（i64），实参写 `as u32` 触发 `unresolved_call`（`sum-of-all-subset-xor-totals`）。
+  R36 / R38 账内「`(1 as i64).bit_shift_left(bit as u32)` 位面复验」仅为源码面结论，
+  构建面不成立，按本窗口证据降级为未验证，历史题池含同写法的题待 G3 桥后复跑时一并修。
+- **`let mut` 判据复验（编译器正确）**：`house-robber-iii` 分支内重赋值缺 `let mut`
+  被拒，判据与规范一致，题解已修，不属缺口。
+- **运行面全部待复验**：`sort` 环差（`minimum-time-difference`）、`[[utf8]]` 八邻
+  （`minesweeper`）、`[[i64]]` 分层返回（`binary-tree-level-order-traversal`）、
+  并查集三题等，均因边界阻塞未触达运行期，G3 桥落地后按本批清单逐题复验。
 
 ### 未命中面（第 6 批探测，2026-11-04，仅 G23 一条新编号）
 
