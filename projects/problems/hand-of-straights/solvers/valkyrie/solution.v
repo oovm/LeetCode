@@ -5,7 +5,7 @@ using std.collection;
 # 升序扫描手牌：每遇到仍有余量的最小值，就连续消耗 `groupSize` 个相邻值。
 # 排序只影响扫描顺序，频次表保证每个值恰好用尽。
 [export(case: "camelCase")]
-micro isNStraightHand(hand: ArrayList<i64>, groupSize: i64) -> bool {
+micro isNStraightHand(hand: [i64], groupSize: i64) -> bool {
     if hand.length() as i64 % groupSize != 0 {
         return false
     }
@@ -49,7 +49,7 @@ micro isNStraightHand(hand: ArrayList<i64>, groupSize: i64) -> bool {
 }
 
 class Solution {
-    micro isNStraightHand(self, hand: ArrayList<i64>, groupSize: i64): bool {
+    micro isNStraightHand(self, hand: [i64], groupSize: i64): bool {
         return isNStraightHand(hand, groupSize)
     }
 }

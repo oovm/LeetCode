@@ -6,7 +6,7 @@ using std.collection;
 # 条件：`y > 0.5x + 7` 且 `y <= x` 且 `(y <= 100 或 x >= 100)`，等价于 `2y > x + 14`。
 # 同岁时减去自己给自己发请求的那一份。
 [export(case: "camelCase")]
-micro num_friend_requests(ages: ArrayList<i64>) -> i64 {
+micro num_friend_requests(ages: [i64]) -> i64 {
     let mut counts: ArrayList<i64> = ArrayList::new(121)
     let mut fill: usize = 0
     while fill < 121 {
@@ -39,7 +39,7 @@ micro num_friend_requests(ages: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro numFriendRequests(self, ages: ArrayList<i64>): i64 {
+    micro numFriendRequests(self, ages: [i64]): i64 {
         return num_friend_requests(ages)
     }
 }

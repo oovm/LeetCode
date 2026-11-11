@@ -1,7 +1,7 @@
 namespace leetcode.largest_number_at_least_twice_of_others;
 
 [export(case: "camelCase")]
-micro dominant_index(nums: ArrayList<i64>) -> i64 {
+micro dominant_index(nums: [i64]) -> i64 {
     let n: usize = nums.length()
     let mut best: i64 = -1
     let mut idx: i64 = -1
@@ -30,7 +30,7 @@ micro dominant_index(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro dominantIndex(self, nums: ArrayList<i64>): i64 {
+    micro dominantIndex(self, nums: [i64]): i64 {
         return dominant_index(nums)
     }
 }

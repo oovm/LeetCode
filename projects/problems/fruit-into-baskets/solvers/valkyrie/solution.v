@@ -5,7 +5,7 @@ using std.collection;
 # 最多两只篮子：滑窗内不同水果种类 ≤ 2，超出时左端收缩并清理计数。
 # 频次表用 `HashMap<i64, i64>`，删除键当且仅当计数归零。
 [export(case: "camelCase")]
-micro totalFruit(fruits: ArrayList<i64>) -> i64 {
+micro totalFruit(fruits: [i64]) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new(fruits.length())
     let mut left: usize = 0
     let mut best: i64 = 0
@@ -40,7 +40,7 @@ micro totalFruit(fruits: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro totalFruit(self, fruits: ArrayList<i64>): i64 {
+    micro totalFruit(self, fruits: [i64]): i64 {
         return totalFruit(fruits)
     }
 }

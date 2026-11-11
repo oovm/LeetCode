@@ -7,7 +7,7 @@ using std.collection;
 # `BinaryHeap::new()` 是最小序，这里直接用正值入堆，无需取负。
 # 复核于 addon `9d51ad08`（2026-11-05）：`Ordering` 布局缺口已修，`BinaryHeap<i64>` 可用。
 [export(case: "camelCase")]
-micro furthestBuilding(heights: ArrayList<i64>, bricks: i64, ladders: i64) -> i64 {
+micro furthestBuilding(heights: [i64], bricks: i64, ladders: i64) -> i64 {
     let mut heap: BinaryHeap<i64> = BinaryHeap::new()
     let mut remaining: i64 = bricks
     let mut index: usize = 1
@@ -29,7 +29,7 @@ micro furthestBuilding(heights: ArrayList<i64>, bricks: i64, ladders: i64) -> i6
 }
 
 class Solution {
-    micro furthestBuilding(self, heights: ArrayList<i64>, bricks: i64, ladders: i64): i64 {
+    micro furthestBuilding(self, heights: [i64], bricks: i64, ladders: i64): i64 {
         return furthestBuilding(heights, bricks, ladders)
     }
 }

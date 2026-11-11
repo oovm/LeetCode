@@ -6,7 +6,7 @@ using std.collection;
 # 题内触发点: G12 —— `BTreeSet::new()` 与 `HashSet::new()` 同样没有容量构造。
 # 题内触发点: G16 —— `BTreeSet` 没有 `nth` / `rank`，按秩取元素只能 `to_list()` 后下标访问。
 [export(case: "camelCase")]
-micro find_pairs(nums: ArrayList<i64>, k: i64) -> i64 {
+micro find_pairs(nums: [i64], k: i64) -> i64 {
     let count: usize = nums.length()
     let mut freq: HashMap<i64, i64> = HashMap::new(count)
     let mut distinct: BTreeSet<i64> = BTreeSet::new()
@@ -53,7 +53,7 @@ micro find_pairs(nums: ArrayList<i64>, k: i64) -> i64 {
 }
 
 class Solution {
-    micro findPairs(self, nums: ArrayList<i64>, k: i64): i64 {
+    micro findPairs(self, nums: [i64], k: i64): i64 {
         return find_pairs(nums, k)
     }
 }
