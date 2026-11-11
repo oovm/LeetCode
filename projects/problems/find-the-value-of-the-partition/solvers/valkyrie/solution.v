@@ -2,7 +2,7 @@ namespace leetcode.find_the_value_of_the_partition;
 
 # 划分后左半最大与右半最小之差的最小值，等于升序相邻元素差的最小值。
 [export(case: "camelCase")]
-micro findValueOfPartition(nums: ArrayList<i64>) -> i64 {
+micro findValueOfPartition(nums: [i64]) -> i64 {
     let mut ordered: ArrayList<i64> = ArrayList::new(nums.length())
     loop value in nums {
         ordered.push(value)
@@ -26,7 +26,7 @@ micro findValueOfPartition(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findValueOfPartition(self, nums: ArrayList<i64>): i64 {
+    micro findValueOfPartition(self, nums: [i64]): i64 {
         return findValueOfPartition(nums)
     }
 }

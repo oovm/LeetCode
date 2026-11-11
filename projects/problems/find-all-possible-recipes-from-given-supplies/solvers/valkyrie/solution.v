@@ -23,12 +23,12 @@ micro same_text(left: utf8, right: utf8) -> bool {
 #  Kahn 推进：队列从 supplies 开始，每处理一个材料就扫描所有食谱，
 # 把还缺原料的食谱剩余数减一，归零的食谱立即入队并计入答案。
 [export(case: "camelCase")]
-micro findAllRecipes(recipes: ArrayList<utf8>, ingredients: ArrayList<ArrayList<utf8>>, supplies: ArrayList<utf8>) -> ArrayList<utf8> {
+micro findAllRecipes(recipes: [utf8], ingredients: [[utf8]], supplies: [utf8]) -> [utf8] {
     let count: usize = recipes.length()
     let mut remaining: ArrayList<i64> = ArrayList::new(count)
     let mut fill: usize = 0
     while fill < count {
-        let needs: ArrayList<utf8> = ingredients⁅fill⁆
+        let needs: [utf8] = ingredients⁅fill⁆
         remaining.push(needs.length() as i64)
         fill = fill + 1
     }
@@ -50,7 +50,7 @@ micro findAllRecipes(recipes: ArrayList<utf8>, ingredients: ArrayList<ArrayList<
         while recipe_index < count {
             let left: i64 = remaining⁅recipe_index⁆
             if left > 0 {
-                let needs: ArrayList<utf8> = ingredients⁅recipe_index⁆
+                let needs: [utf8] = ingredients⁅recipe_index⁆
                 let mut matched: bool = false
                 let mut need_index: usize = 0
                 while need_index < needs.length() {
@@ -74,11 +74,11 @@ micro findAllRecipes(recipes: ArrayList<utf8>, ingredients: ArrayList<ArrayList<
             recipe_index = recipe_index + 1
         }
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro findAllRecipes(self, recipes: ArrayList<utf8>, ingredients: ArrayList<ArrayList<utf8>>, supplies: ArrayList<utf8>): ArrayList<utf8> {
+    micro findAllRecipes(self, recipes: [utf8], ingredients: [[utf8]], supplies: [utf8]): [utf8] {
         return findAllRecipes(recipes, ingredients, supplies)
     }
 }

@@ -4,7 +4,7 @@ using std.collection;
 
 # 严格递增数组：f(i) = arr[i] - i 不减，二分首个 arr[mid] >= mid，验证等号即最小不动点。
 [export(case: "camelCase")]
-micro fixedPoint(arr: ArrayList<i64>) -> i64 {
+micro fixedPoint(arr: [i64]) -> i64 {
     let n: usize = arr.length()
     let mut lo: usize = 0
     let mut hi: usize = n
@@ -23,7 +23,7 @@ micro fixedPoint(arr: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro fixedPoint(self, arr: ArrayList<i64>): i64 {
+    micro fixedPoint(self, arr: [i64]): i64 {
         return fixedPoint(arr)
     }
 }

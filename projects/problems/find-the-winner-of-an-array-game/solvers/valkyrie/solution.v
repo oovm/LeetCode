@@ -4,7 +4,7 @@ using std.collection;
 
 # 每个元素只会作为挑战者出现一次，连续胜场达到 k 就结束，O(n)。
 [export(case: "camelCase")]
-micro getWinner(arr: ArrayList<i64>, k: i64) -> i64 {
+micro getWinner(arr: [i64], k: i64) -> i64 {
     let mut winner: i64 = arr⁅0⁆
     let mut wins: i64 = 0
     let mut i: usize = 1
@@ -25,7 +25,7 @@ micro getWinner(arr: ArrayList<i64>, k: i64) -> i64 {
 }
 
 class Solution {
-    micro getWinner(self, arr: ArrayList<i64>, k: i64): i64 {
+    micro getWinner(self, arr: [i64], k: i64): i64 {
         return getWinner(arr, k)
     }
 }

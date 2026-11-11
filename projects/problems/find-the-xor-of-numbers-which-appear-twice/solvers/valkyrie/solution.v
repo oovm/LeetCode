@@ -4,7 +4,7 @@ using std.collection;
 
 # 计频后只对恰好出现两次的值异或一次（处理后把计数清零避免重复异或）。
 [export(case: "camelCase")]
-micro duplicateNumbersXOR(nums: ArrayList<i64>) -> i64 {
+micro duplicateNumbersXOR(nums: [i64]) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new(0)
     let mut index: usize = 0
     while index < nums.length() {
@@ -30,7 +30,7 @@ micro duplicateNumbersXOR(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro duplicateNumbersXOR(self, nums: ArrayList<i64>): i64 {
+    micro duplicateNumbersXOR(self, nums: [i64]): i64 {
         return duplicateNumbersXOR(nums)
     }
 }
