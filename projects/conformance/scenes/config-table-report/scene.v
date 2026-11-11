@@ -150,7 +150,7 @@ micro config_value_sum() -> i64 {
     return value_sum(config.values)
 }
 
-# 三行表格加两个换行，校验和 2191。
+# 三行表格加两个换行，校验和 2091。
 [export(name: "configTableChecksum")]
 micro config_table_checksum() -> i64 {
     let config: Config = sample_config()
