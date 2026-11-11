@@ -6,7 +6,7 @@ using std.collection
 # 就以 `i` 开头形成一个长度为 3 的交替组。下标越过末尾就回到 0，首尾相接。
 class Solution {
     [export(case: "camelCase")]
-    micro numberOfAlternatingGroups(colors: ArrayList<i64>) -> i64 {
+    micro numberOfAlternatingGroups(colors: [i64]) -> i64 {
         let count: usize = colors.length()
         if count < 3 {
             return 0

@@ -3,7 +3,7 @@ namespace leetcode.array_partition
 # 升序后相邻两数成对，每组取较小者恰好是排序后的第 0、2、4... 个元素。
 # 值域 [-10000, 30000] 有界，用计数表代替比较排序，时间 O(n + 值域)。
 [export(case: "camelCase")]
-micro arrayPairSum(nums: ArrayList<i64>) -> i64 {
+micro arrayPairSum(nums: [i64]) -> i64 {
     let count: usize = nums.length()
     let zero: usize = 0
     let mut low: i64 = nums⁅zero⁆
@@ -54,7 +54,7 @@ micro arrayPairSum(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro arrayPairSum(self, nums: ArrayList<i64>): i64 {
+    micro arrayPairSum(self, nums: [i64]): i64 {
         return arrayPairSum(nums)
     }
 }
