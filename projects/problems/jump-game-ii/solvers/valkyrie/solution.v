@@ -2,7 +2,7 @@ namespace leetcode.jump_game_ii;
 
 # 按跳跃层数推进：当前层走到边界时步数加一。
 [export(case: "camelCase")]
-micro jump(nums: ArrayList<i64>) -> i64 {
+micro jump(nums: [i64]) -> i64 {
     let n: usize = nums.length()
     let mut jumps: i64 = 0
     let mut end: i64 = 0
@@ -23,7 +23,7 @@ micro jump(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro jump(self, nums: ArrayList<i64>): i64 {
+    micro jump(self, nums: [i64]): i64 {
         return jump(nums)
     }
 }

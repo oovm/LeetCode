@@ -3,7 +3,7 @@ namespace leetcode.total_hamming_distance;
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 每位的贡献为 1 的个数乘 0 的个数。
 [export(case: "camelCase")]
-micro total_hamming_distance(nums: ArrayList<i64>) -> i64 {
+micro total_hamming_distance(nums: [i64]) -> i64 {
     let n: i64 = nums.length() as i64
     let mut total: i64 = 0
     let mut bit: i64 = 0
@@ -21,7 +21,7 @@ micro total_hamming_distance(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro totalHammingDistance(self, nums: ArrayList<i64>): i64 {
+    micro totalHammingDistance(self, nums: [i64]): i64 {
         return total_hamming_distance(nums)
     }
 }

@@ -1,6 +1,6 @@
 namespace leetcode.house_robber_ii;
 
-micro rob_range(nums: ArrayList<i64>, start: usize, end: usize) -> i64 {
+micro rob_range(nums: [i64], start: usize, end: usize) -> i64 {
     let mut take: i64 = 0
     let mut skip: i64 = 0
     let mut i: usize = start
@@ -23,7 +23,7 @@ micro rob_range(nums: ArrayList<i64>, start: usize, end: usize) -> i64 {
 
 # 环状排列拆成「不含最后一间」与「不含第一间」两条链。
 [export(case: "camelCase")]
-micro rob(nums: ArrayList<i64>) -> i64 {
+micro rob(nums: [i64]) -> i64 {
     let n: usize = nums.length()
     if n == 1 {
         return nums⁅0⁆
@@ -37,7 +37,7 @@ micro rob(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro rob(self, nums: ArrayList<i64>): i64 {
+    micro rob(self, nums: [i64]): i64 {
         return rob(nums)
     }
 }

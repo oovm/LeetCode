@@ -3,7 +3,7 @@ namespace leetcode.house_robber;
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 打家劫舍：滚动保存「抢上一间」与「不抢上一间」两种最优值。
 [export(case: "camelCase")]
-micro rob(nums: ArrayList<i64>) -> i64 {
+micro rob(nums: [i64]) -> i64 {
     let mut take: i64 = 0
     let mut skip: i64 = 0
     loop x in nums {
@@ -22,7 +22,7 @@ micro rob(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro rob(self, nums: ArrayList<i64>): i64 {
+    micro rob(self, nums: [i64]): i64 {
         return rob(nums)
     }
 }

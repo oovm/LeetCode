@@ -3,7 +3,7 @@ namespace leetcode.last_stone_weight_ii;
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 0/1 背包：尽量把石头分成和最接近的两堆，答案即总和的差值。
 [export(name: "lastStoneWeightII")]
-micro last_stone_weight_i_i(stones: ArrayList<i64>) -> i64 {
+micro last_stone_weight_i_i(stones: [i64]) -> i64 {
     let mut total: i64 = 0
     loop stone in stones {
         total = total + stone
@@ -36,7 +36,7 @@ micro last_stone_weight_i_i(stones: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro lastStoneWeightII(self, stones: ArrayList<i64>): i64 {
+    micro lastStoneWeightII(self, stones: [i64]): i64 {
         return last_stone_weight_i_i(stones)
     }
 }

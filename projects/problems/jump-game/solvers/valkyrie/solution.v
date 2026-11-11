@@ -2,7 +2,7 @@ namespace leetcode.jump_game;
 
 # 贪心维护可达最远下标。
 [export(case: "camelCase")]
-micro can_jump(nums: ArrayList<i64>) -> bool {
+micro can_jump(nums: [i64]) -> bool {
     let n: usize = nums.length()
     let mut farthest: i64 = 0
     let mut i: usize = 0
@@ -17,7 +17,7 @@ micro can_jump(nums: ArrayList<i64>) -> bool {
 }
 
 class Solution {
-    micro canJump(self, nums: ArrayList<i64>): bool {
+    micro canJump(self, nums: [i64]): bool {
         return can_jump(nums)
     }
 }

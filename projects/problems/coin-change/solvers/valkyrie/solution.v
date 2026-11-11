@@ -2,7 +2,7 @@ namespace leetcode.coin_change;
 
 # 完全背包：dp[a] 为凑出金额 a 的最少硬币数，-1 表示不可达。
 [export(case: "camelCase")]
-micro coin_change(coins: ArrayList<i64>, amount: i64) -> i64 {
+micro coin_change(coins: [i64], amount: i64) -> i64 {
     let mut dp: ArrayList<i64> = ArrayList::new((amount + 1) as usize)
     let mut a: i64 = 0
     while a <= amount {
@@ -30,7 +30,7 @@ micro coin_change(coins: ArrayList<i64>, amount: i64) -> i64 {
 }
 
 class Solution {
-    micro coinChange(self, coins: ArrayList<i64>, amount: i64): i64 {
+    micro coinChange(self, coins: [i64], amount: i64): i64 {
         return coin_change(coins, amount)
     }
 }

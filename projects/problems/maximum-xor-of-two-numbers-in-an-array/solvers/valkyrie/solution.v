@@ -3,7 +3,7 @@ namespace leetcode.maximum_xor_of_two_numbers_in_an_array;
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 从高位开始逐位确定答案：前缀哈希判定该位能否取 1。
 [export(name: "findMaximumXOR")]
-micro find_maximum_x_o_r(nums: ArrayList<i64>) -> i64 {
+micro find_maximum_x_o_r(nums: [i64]) -> i64 {
     let mut best: i64 = 0
     let mut mask: i64 = 0
     let mut bit: i64 = 30
@@ -26,7 +26,7 @@ micro find_maximum_x_o_r(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro findMaximumXOR(self, nums: ArrayList<i64>): i64 {
+    micro findMaximumXOR(self, nums: [i64]): i64 {
         return find_maximum_x_o_r(nums)
     }
 }

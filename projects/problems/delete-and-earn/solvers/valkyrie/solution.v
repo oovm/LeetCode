@@ -3,7 +3,7 @@ namespace leetcode.delete_and_earn;
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 按数值聚合成 points，再做打家劫舍式递推。
 [export(case: "camelCase")]
-micro delete_and_earn(nums: ArrayList<i64>) -> i64 {
+micro delete_and_earn(nums: [i64]) -> i64 {
     let mut maximum: i64 = 0
     loop x in nums {
         if x > maximum {
@@ -40,7 +40,7 @@ micro delete_and_earn(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro deleteAndEarn(self, nums: ArrayList<i64>): i64 {
+    micro deleteAndEarn(self, nums: [i64]): i64 {
         return delete_and_earn(nums)
     }
 }

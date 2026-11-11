@@ -3,7 +3,7 @@ namespace leetcode.maximum_product_subarray;
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 同时滚动当前最大值与最小值，负数翻转时交换角色。
 [export(case: "camelCase")]
-micro max_product(nums: ArrayList<i64>) -> i64 {
+micro max_product(nums: [i64]) -> i64 {
     let mut best: i64 = nums⁅0⁆
     let mut hi: i64 = 1
     let mut lo: i64 = 1
@@ -34,7 +34,7 @@ micro max_product(nums: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro maxProduct(self, nums: ArrayList<i64>): i64 {
+    micro maxProduct(self, nums: [i64]): i64 {
         return max_product(nums)
     }
 }
