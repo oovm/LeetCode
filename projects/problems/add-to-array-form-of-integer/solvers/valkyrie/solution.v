@@ -5,7 +5,7 @@ using std.collection;
 # 大整数 limbs：`num` 已是十进制逐位承载，`k` 直接当初始进位，逐位加后自行进位。
 # 不依赖任意精度类型（std 只到 i128 / u128，无需大整数即能表达）。
 [export(case: "camelCase")]
-micro add_to_array_form(num: [i64], k: i64) -> ArrayList<i64> {
+micro add_to_array_form(num: [i64], k: i64) -> [i64] {
     let mut digits: ArrayList<i64> = ArrayList::new(num.length() + 16)
     let mut i: i64 = num.length() as i64 - 1
     let mut carry: i64 = k
@@ -29,11 +29,11 @@ micro add_to_array_form(num: [i64], k: i64) -> ArrayList<i64> {
         left = left + 1
         right = right - 1
     }
-    return digits
+    return digits.to_array()
 }
 
 class Solution {
-    micro addToArrayForm(self, num: [i64], k: i64): ArrayList<i64> {
+    micro addToArrayForm(self, num: [i64], k: i64): [i64] {
         return add_to_array_form(num, k)
     }
 }

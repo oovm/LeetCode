@@ -22,7 +22,7 @@ micro absolute(value: i64) -> i64 {
 # 距离、工人号、车号压进单个 i64 键后一次排序，按题面字典序贪心分配。
 # 键基数 1000 覆盖题面上限 100 台车 / 100 名工人。
 [export(case: "camelCase")]
-micro assign_bikes(workers: ArrayList<ArrayList<i64>>, bikes: ArrayList<ArrayList<i64>>) -> ArrayList<i64> {
+micro assign_bikes(workers: [[i64]], bikes: [[i64]]) -> [i64] {
     let n: i64 = workers.length() as i64
     let m: i64 = bikes.length() as i64
 
@@ -31,8 +31,8 @@ micro assign_bikes(workers: ArrayList<ArrayList<i64>>, bikes: ArrayList<ArrayLis
     while worker_index < n {
         let mut bike_index: i64 = 0
         while bike_index < m {
-            let worker: ArrayList<i64> = workers⁅worker_index as usize⁆
-            let bike: ArrayList<i64> = bikes⁅bike_index as usize⁆
+            let worker: [i64] = workers⁅worker_index as usize⁆
+            let bike: [i64] = bikes⁅bike_index as usize⁆
             let distance: i64 = absolute(worker⁅0⁆ - bike⁅0⁆) + absolute(worker⁅1⁆ - bike⁅1⁆)
             keys.push(distance * 1000000 + worker_index * 1000 + bike_index)
             bike_index = bike_index + 1
@@ -70,11 +70,11 @@ micro assign_bikes(workers: ArrayList<ArrayList<i64>>, bikes: ArrayList<ArrayLis
         }
         cursor = cursor + 1
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro assignBikes(self, workers: ArrayList<ArrayList<i64>>, bikes: ArrayList<ArrayList<i64>>): ArrayList<i64> {
+    micro assignBikes(self, workers: [[i64]], bikes: [[i64]]): [i64] {
         return assign_bikes(workers, bikes)
     }
 }
