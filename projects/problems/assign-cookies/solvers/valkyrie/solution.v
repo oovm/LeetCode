@@ -13,9 +13,9 @@ micro cmp_i64(a: i64, b: i64) -> i32 {
 }
 
 [export(case: "camelCase")]
-micro find_content_children(mut g: ArrayList<i64>, mut s: ArrayList<i64>) -> i64 {
-    quick_sort(g, cmp_i64)
-    quick_sort(s, cmp_i64)
+micro find_content_children(mut g: [i64], mut s: [i64]) -> i64 {
+    sort_by(g, cmp_i64)
+    sort_by(s, cmp_i64)
     let mut j: usize = 0
     let mut i: usize = 0
     while i < g.length() {
@@ -33,7 +33,7 @@ micro find_content_children(mut g: ArrayList<i64>, mut s: ArrayList<i64>) -> i64
 }
 
 class Solution {
-    micro findContentChildren(mut self, g: ArrayList<i64>, s: ArrayList<i64>): i64 {
+    micro findContentChildren(mut self, g: [i64], s: [i64]): i64 {
         return find_content_children(g, s)
     }
 }

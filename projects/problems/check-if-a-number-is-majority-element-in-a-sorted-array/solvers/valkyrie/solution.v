@@ -3,7 +3,7 @@ namespace leetcode.check_if_a_number_is_majority_element_in_a_sorted_array;
 using std.collection;
 
 # 有序数组二分：求 target 首次出现下标，计数 = 末次 - 首次 + 1 与 n/2 比较。
-micro first_at_least(nums: ArrayList<i64>, target: i64) -> usize {
+micro first_at_least(nums: [i64], target: i64) -> usize {
     let mut lo: usize = 0
     let mut hi: usize = nums.length()
     while lo < hi {
@@ -18,14 +18,14 @@ micro first_at_least(nums: ArrayList<i64>, target: i64) -> usize {
 }
 
 [export(case: "camelCase")]
-micro isMajorityElement(nums: ArrayList<i64>, target: i64) -> bool {
+micro isMajorityElement(nums: [i64], target: i64) -> bool {
     let first: usize = first_at_least(nums, target)
     let last: usize = first_at_least(nums, target + 1)
     return last - first > nums.length() / 2
 }
 
 class Solution {
-    micro isMajorityElement(self, nums: ArrayList<i64>, target: i64): bool {
+    micro isMajorityElement(self, nums: [i64], target: i64): bool {
         return isMajorityElement(nums, target)
     }
 }

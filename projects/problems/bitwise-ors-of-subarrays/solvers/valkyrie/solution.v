@@ -3,7 +3,7 @@ namespace leetcode.bitwise_ors_of_subarrays;
 # 已还原（`172b944a` 修复块退出写回 + 当前 addon `25132ccf`）：`loop <var> in <ArrayList>` 可用。
 # 维护「以当前元素结尾的所有子数组 OR」去重集合，并累计全局去重集合。
 [export(case: "camelCase")]
-micro subarray_bitwise_o_rs(arr: ArrayList<i64>) -> i64 {
+micro subarray_bitwise_o_rs(arr: [i64]) -> i64 {
     let mut current: ArrayList<i64> = ArrayList::new(0)
     let mut seen: HashMap<i64, i64> = HashMap::new(0)
     let mut total: i64 = 0
@@ -33,7 +33,7 @@ micro subarray_bitwise_o_rs(arr: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro subarrayBitwiseORs(self, arr: ArrayList<i64>): i64 {
+    micro subarrayBitwiseORs(self, arr: [i64]): i64 {
         return subarray_bitwise_o_rs(arr)
     }
 }

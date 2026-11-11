@@ -5,7 +5,7 @@ using std.collection;
 # 正反面同值的卡片无法翻出别的数字，它上面的值不可用；
 # 其余候选值只需扫描一遍取最小可行值，O(n)。
 [export(case: "camelCase")]
-micro flipgame(fronts: ArrayList<i64>, backs: ArrayList<i64>) -> i64 {
+micro flipgame(fronts: [i64], backs: [i64]) -> i64 {
     let mut blocked: HashMap<i64, i64> = HashMap::new(fronts.length())
     let mut i: usize = 0
     while i < fronts.length() {
@@ -35,7 +35,7 @@ micro flipgame(fronts: ArrayList<i64>, backs: ArrayList<i64>) -> i64 {
 }
 
 class Solution {
-    micro flipgame(self, fronts: ArrayList<i64>, backs: ArrayList<i64>): i64 {
+    micro flipgame(self, fronts: [i64], backs: [i64]): i64 {
         return flipgame(fronts, backs)
     }
 }

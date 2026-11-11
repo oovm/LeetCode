@@ -4,7 +4,7 @@ using std.collection;
 
 # 连续数组：元素互不相同且最大值减最小值等于长度减一。
 [export(case: "camelCase")]
-micro isConsecutive(nums: ArrayList<i64>) -> bool {
+micro isConsecutive(nums: [i64]) -> bool {
     let count: usize = nums.length()
     if count == 0 {
         return false
@@ -31,7 +31,7 @@ micro isConsecutive(nums: ArrayList<i64>) -> bool {
 }
 
 class Solution {
-    micro isConsecutive(self, nums: ArrayList<i64>): bool {
+    micro isConsecutive(self, nums: [i64]): bool {
         return isConsecutive(nums)
     }
 }

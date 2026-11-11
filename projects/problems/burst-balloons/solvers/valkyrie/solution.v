@@ -5,7 +5,7 @@ using std.collection
 # 题内触发点: 区间 DP；只用到 `ArrayList` 与下标读写，不依赖自定义记录排序。
 class Solution {
     [export(case: "camelCase")]
-    micro maxCoins(nums: ArrayList<i64>) -> i64 {
+    micro maxCoins(nums: [i64]) -> i64 {
         let count: usize = nums.length()
         let size: usize = count + 2
         let mut values: ArrayList<i64> = ArrayList::new(size)

@@ -4,7 +4,7 @@ using std.collection;
 
 # 有序且至多旋转一次，等价于环形相邻下降次数不超过一。
 [export(case: "camelCase")]
-micro check(nums: ArrayList<i64>) -> bool {
+micro check(nums: [i64]) -> bool {
     let count: usize = nums.length()
     if count == 0 {
         return true
@@ -22,7 +22,7 @@ micro check(nums: ArrayList<i64>) -> bool {
 }
 
 class Solution {
-    micro check(self, nums: ArrayList<i64>): bool {
+    micro check(self, nums: [i64]): bool {
         return check(nums)
     }
 }
