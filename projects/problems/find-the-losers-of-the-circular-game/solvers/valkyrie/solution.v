@@ -2,7 +2,7 @@ namespace leetcode.find_the_losers_of_the_circular_game;
 
 # 模拟接球，步长为 i * k，标记所有接到球的玩家。
 [export(case: "camelCase")]
-micro circular_game_losers(n: i64, k: i64) -> ArrayList<i64> {
+micro circular_game_losers(n: i64, k: i64) -> [i64] {
     let mut seen: ArrayList<bool> = ArrayList::new(n as usize)
     let mut i: i64 = 0
     while i < n {
@@ -24,11 +24,11 @@ micro circular_game_losers(n: i64, k: i64) -> ArrayList<i64> {
         }
         i = i + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro circularGameLosers(self, n: i64, k: i64): ArrayList<i64> {
+    micro circularGameLosers(self, n: i64, k: i64): [i64] {
         return circular_game_losers(n, k)
     }
 }

@@ -4,7 +4,7 @@ using std.collection;
 
 # 先写 1..n+1 的升序排列，再把每一段连续的 D 原地反转；每段只扫一次，整体 O(n)。
 [export(case: "camelCase")]
-micro find_permutation(s: utf8) -> ArrayList<i64> {
+micro find_permutation(s: utf8) -> [i64] {
     let n: usize = s.byte_length()
     let mut ans: ArrayList<i64> = ArrayList::new(n + 1)
     let mut index: usize = 0
@@ -34,11 +34,11 @@ micro find_permutation(s: utf8) -> ArrayList<i64> {
             index = stop
         }
     }
-    return ans
+    return ans.to_array()
 }
 
 class Solution {
-    micro findPermutation(self, s: utf8): ArrayList<i64> {
+    micro findPermutation(self, s: utf8): [i64] {
         return find_permutation(s)
     }
 }

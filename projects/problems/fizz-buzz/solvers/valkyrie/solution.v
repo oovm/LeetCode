@@ -1,7 +1,7 @@
 namespace leetcode.fizz_buzz;
 
 [export(case: "camelCase")]
-micro fizz_buzz(n: i64) -> ArrayList<utf8> {
+micro fizz_buzz(n: i64) -> [utf8] {
     let mut result: ArrayList<utf8> = ArrayList::new(n as usize)
     let mut i: i64 = 1
     while i <= n {
@@ -18,11 +18,11 @@ micro fizz_buzz(n: i64) -> ArrayList<utf8> {
         }
         i = i + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro fizzBuzz(self, n: i64): ArrayList<utf8> {
+    micro fizzBuzz(self, n: i64): [utf8] {
         return fizz_buzz(n)
     }
 }

@@ -2,7 +2,7 @@ namespace leetcode.cells_in_a_range_on_an_excel_sheet;
 
 # 逐列再逐行生成 s 覆盖的矩形区域。
 [export(case: "camelCase")]
-micro cells_in_range(s: utf8) -> ArrayList<utf8> {
+micro cells_in_range(s: utf8) -> [utf8] {
     let first_column: u32 = s⁅0⁆ as u32
     let last_column: u32 = s⁅3⁆ as u32
     let first_row: i64 = s⁅1⁆ as u32 as i64 - 48
@@ -20,11 +20,11 @@ micro cells_in_range(s: utf8) -> ArrayList<utf8> {
         }
         column = column + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro cellsInRange(self, s: utf8): ArrayList<utf8> {
+    micro cellsInRange(self, s: utf8): [utf8] {
         return cells_in_range(s)
     }
 }

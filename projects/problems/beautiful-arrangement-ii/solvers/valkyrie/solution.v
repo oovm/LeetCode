@@ -5,7 +5,7 @@ using std.collection;
 # 从 1 开始，先用 k-1 步在 `high` / `low` 两端交替取数，制造 k-1 个递减的新差值；
 # 剩余数字按「最后一次取高则降序、取低则升序」补齐，只再引入差值 1。整体 O(n)。
 [export(case: "camelCase")]
-micro constructArray(n: i64, k: i64) -> ArrayList<i64> {
+micro constructArray(n: i64, k: i64) -> [i64] {
     let mut result: ArrayList<i64> = ArrayList::new(n as usize)
     result.push(1)
     let mut low: i64 = 2
@@ -39,11 +39,11 @@ micro constructArray(n: i64, k: i64) -> ArrayList<i64> {
             value = value + 1
         }
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro constructArray(self, n: i64, k: i64): ArrayList<i64> {
+    micro constructArray(self, n: i64, k: i64): [i64] {
         return constructArray(n, k)
     }
 }

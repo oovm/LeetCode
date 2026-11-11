@@ -5,7 +5,7 @@ using std.collection;
 # 先记每个字符最后出现的位置，再扫描一遍：区间右端随字符最后一次出现扩张，
 # 走到右端时切出一段。O(|s|)。
 [export(case: "camelCase")]
-micro partition_labels(s: utf8) -> ArrayList<i64> {
+micro partition_labels(s: utf8) -> [i64] {
     let mut last: ArrayList<i64> = ArrayList::new(26)
     let mut slot: i64 = 0
     while slot < 26 {
@@ -35,11 +35,11 @@ micro partition_labels(s: utf8) -> ArrayList<i64> {
         }
         index = index + 1
     }
-    return out
+    return out.to_array()
 }
 
 class Solution {
-    micro partitionLabels(self, s: utf8): ArrayList<i64> {
+    micro partitionLabels(self, s: utf8): [i64] {
         return partition_labels(s)
     }
 }

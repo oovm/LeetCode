@@ -2,7 +2,7 @@ namespace leetcode.divide_a_string_into_groups_of_size_k;
 
 # 每 k 个字符一组，末组不足用 fill 补齐。
 [export(case: "camelCase")]
-micro divide_string(s: utf8, k: i64, fill: utf8) -> ArrayList<utf8> {
+micro divide_string(s: utf8, k: i64, fill: utf8) -> [utf8] {
     let n: usize = s.length()
     let size: usize = k as usize
     let mut result: ArrayList<utf8> = ArrayList::new(0)
@@ -21,11 +21,11 @@ micro divide_string(s: utf8, k: i64, fill: utf8) -> ArrayList<utf8> {
         result.push(builder.build())
         start = start + size
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro divideString(self, s: utf8, k: i64, fill: utf8): ArrayList<utf8> {
+    micro divideString(self, s: utf8, k: i64, fill: utf8): [utf8] {
         return divide_string(s, k, fill)
     }
 }

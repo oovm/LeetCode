@@ -16,7 +16,7 @@ micro same_word(s: utf8, start: usize, length: usize, word: utf8) -> bool {
 
 # 先按空格切成词区间，再找连续 first + second 后的第三个词。
 [export(case: "camelCase")]
-micro find_ocurrences(text: utf8, first: utf8, second: utf8) -> ArrayList<utf8> {
+micro find_ocurrences(text: utf8, first: utf8, second: utf8) -> [utf8] {
     let n: usize = text.length()
     let mut starts: ArrayList<usize> = ArrayList::new(n)
     let mut lengths: ArrayList<usize> = ArrayList::new(n)
@@ -51,11 +51,11 @@ micro find_ocurrences(text: utf8, first: utf8, second: utf8) -> ArrayList<utf8> 
         }
         index = index + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro findOcurrences(self, text: utf8, first: utf8, second: utf8): ArrayList<utf8> {
+    micro findOcurrences(self, text: utf8, first: utf8, second: utf8): [utf8] {
         return find_ocurrences(text, first, second)
     }
 }

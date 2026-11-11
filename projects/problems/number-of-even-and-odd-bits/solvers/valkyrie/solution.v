@@ -2,7 +2,7 @@ namespace leetcode.number_of_even_and_odd_bits;
 
 # 统计偶位与奇位上的置位数。
 [export(case: "camelCase")]
-micro even_odd_bit(n: i64) -> ArrayList<i64> {
+micro even_odd_bit(n: i64) -> [i64] {
     let mut even: i64 = 0
     let mut odd: i64 = 0
     let mut bit: i64 = 0
@@ -21,11 +21,11 @@ micro even_odd_bit(n: i64) -> ArrayList<i64> {
     let mut result: ArrayList<i64> = ArrayList::new(2)
     result.push(even)
     result.push(odd)
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro evenOddBit(self, n: i64): ArrayList<i64> {
+    micro evenOddBit(self, n: i64): [i64] {
         return even_odd_bit(n)
     }
 }

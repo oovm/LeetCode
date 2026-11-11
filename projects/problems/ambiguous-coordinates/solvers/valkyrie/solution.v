@@ -35,7 +35,7 @@ micro pieces(text: utf8, start: usize, stop: usize, out: ArrayList<utf8>) -> uni
 }
 
 [export(case: "camelCase")]
-micro ambiguous_coordinates(s: utf8) -> ArrayList<utf8> {
+micro ambiguous_coordinates(s: utf8) -> [utf8] {
     let length: usize = s.byte_length()
     let mut out: ArrayList<utf8> = ArrayList::new(0)
     let mut split: usize = 2
@@ -62,11 +62,11 @@ micro ambiguous_coordinates(s: utf8) -> ArrayList<utf8> {
         }
         split = split + 1
     }
-    return out
+    return out.to_array()
 }
 
 class Solution {
-    micro ambiguousCoordinates(self, s: utf8): ArrayList<utf8> {
+    micro ambiguousCoordinates(self, s: utf8): [utf8] {
         return ambiguous_coordinates(s)
     }
 }

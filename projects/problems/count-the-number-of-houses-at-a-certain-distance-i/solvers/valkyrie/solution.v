@@ -4,7 +4,7 @@ using std.collection;
 
 # 以每个节点为源做 BFS 得到全部点对距离，按距离累加无序点对的两倍数量。
 [export(case: "camelCase")]
-micro countOfPairs(n: i64, x: i64, y: i64) -> ArrayList<i64> {
+micro countOfPairs(n: i64, x: i64, y: i64) -> [i64] {
     let count: usize = n as usize
 
     let mut adjacency: ArrayList<ArrayList<i64>> = ArrayList::new(count)
@@ -89,11 +89,11 @@ micro countOfPairs(n: i64, x: i64, y: i64) -> ArrayList<i64> {
 
         source = source + 1
     }
-    return answer
+    return answer.to_array()
 }
 
 class Solution {
-    micro countOfPairs(self, n: i64, x: i64, y: i64): ArrayList<i64> {
+    micro countOfPairs(self, n: i64, x: i64, y: i64): [i64] {
         return countOfPairs(n, x, y)
     }
 }

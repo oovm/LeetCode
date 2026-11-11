@@ -2,7 +2,7 @@ namespace leetcode.distribute_candies_to_people;
 
 # 按 1,2,3... 循环递增发放，剩余不足时全部给出。
 [export(case: "camelCase")]
-micro distribute_candies(candies: i64, num_people: i64) -> ArrayList<i64> {
+micro distribute_candies(candies: i64, num_people: i64) -> [i64] {
     let mut result: ArrayList<i64> = ArrayList::new(num_people as usize)
     let mut i: i64 = 0
     while i < num_people {
@@ -22,11 +22,11 @@ micro distribute_candies(candies: i64, num_people: i64) -> ArrayList<i64> {
         given = given + 1
         index = (index + 1) % num_people
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro distributeCandies(self, candies: i64, num_people: i64): ArrayList<i64> {
+    micro distributeCandies(self, candies: i64, num_people: i64): [i64] {
         return distribute_candies(candies, num_people)
     }
 }

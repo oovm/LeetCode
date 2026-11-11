@@ -1,7 +1,7 @@
 namespace leetcode.gray_code;
 
 [export(case: "camelCase")]
-micro gray_code(n: i64) -> ArrayList<i64> {
+micro gray_code(n: i64) -> [i64] {
     let mut total: i64 = 1
     let mut j: i64 = 0
     while j < n {
@@ -14,11 +14,11 @@ micro gray_code(n: i64) -> ArrayList<i64> {
         result.push(i.bit_xor(i / 2))
         i = i + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro grayCode(self, n: i64): ArrayList<i64> {
+    micro grayCode(self, n: i64): [i64] {
         return gray_code(n)
     }
 }

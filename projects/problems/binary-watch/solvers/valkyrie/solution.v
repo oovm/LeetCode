@@ -12,7 +12,7 @@ micro bit_count(x: i64) -> i64 {
 
 # 枚举 12 小时 x 60 分钟，点亮数等于 turnedOn 即合法。
 [export(case: "camelCase")]
-micro read_binary_watch(turnedOn: i64) -> ArrayList<utf8> {
+micro read_binary_watch(turnedOn: i64) -> [utf8] {
     let mut result: ArrayList<utf8> = ArrayList::new(0)
     let mut hour: i64 = 0
     while hour < 12 {
@@ -32,11 +32,11 @@ micro read_binary_watch(turnedOn: i64) -> ArrayList<utf8> {
         }
         hour = hour + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro readBinaryWatch(self, turnedOn: i64): ArrayList<utf8> {
+    micro readBinaryWatch(self, turnedOn: i64): [utf8] {
         return read_binary_watch(turnedOn)
     }
 }

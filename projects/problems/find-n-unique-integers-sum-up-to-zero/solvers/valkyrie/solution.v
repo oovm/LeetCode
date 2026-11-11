@@ -2,7 +2,7 @@ namespace leetcode.find_n_unique_integers_sum_up_to_zero;
 
 # 成对放 i 与 -i，剩一个名额补 0。
 [export(case: "camelCase")]
-micro sum_zero(n: i64) -> ArrayList<i64> {
+micro sum_zero(n: i64) -> [i64] {
     let mut result: ArrayList<i64> = ArrayList::new(n as usize)
     let mut i: i64 = 1
     while i * 2 <= n {
@@ -13,11 +13,11 @@ micro sum_zero(n: i64) -> ArrayList<i64> {
     if n % 2 == 1 {
         result.push(0)
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro sumZero(self, n: i64): ArrayList<i64> {
+    micro sumZero(self, n: i64): [i64] {
         return sum_zero(n)
     }
 }
