@@ -153,6 +153,7 @@
     ],
     "invoke": {
         "python": "Solution().isMajorityElement",
-        "typescript": "Solution().isMajorityElement"
+        "typescript": "Solution().isMajorityElement",
+        "valkyrie": "isMajorityElement"
     }
 }

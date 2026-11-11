@@ -1207,6 +1207,7 @@
     ],
     "invoke": {
         "python": "Solution().getModifiedArray",
-        "typescript": "Solution().getModifiedArray"
+        "typescript": "Solution().getModifiedArray",
+        "valkyrie": "getModifiedArray"
     }
 }

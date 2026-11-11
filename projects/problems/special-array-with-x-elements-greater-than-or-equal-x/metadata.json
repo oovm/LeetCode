@@ -527,6 +527,7 @@
     ],
     "invoke": {
         "python": "Solution().specialArray",
-        "typescript": "Solution().specialArray"
+        "typescript": "Solution().specialArray",
+        "valkyrie": "specialArray"
     }
 }

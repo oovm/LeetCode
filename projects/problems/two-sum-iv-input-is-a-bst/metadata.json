@@ -322,6 +322,7 @@
     ],
     "invoke": {
         "python": "Solution().findTarget",
-        "typescript": "Solution().findTarget"
+        "typescript": "Solution().findTarget",
+        "valkyrie": "findTarget"
     }
 }

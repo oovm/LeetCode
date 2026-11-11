@@ -835,6 +835,7 @@
     ],
     "invoke": {
         "python": "Solution().validTree",
-        "typescript": "Solution().validTree"
+        "typescript": "Solution().validTree",
+        "valkyrie": "validTree"
     }
 }

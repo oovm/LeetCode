@@ -948,6 +948,7 @@
     ],
     "invoke": {
         "python": "Solution().shortestWordDistance",
-        "typescript": "Solution().shortestWordDistance"
+        "typescript": "Solution().shortestWordDistance",
+        "valkyrie": "shortestWordDistance"
     }
 }

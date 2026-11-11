@@ -840,6 +840,7 @@
     ],
     "invoke": {
         "python": "Solution().canFinish",
-        "typescript": "Solution().canFinish"
+        "typescript": "Solution().canFinish",
+        "valkyrie": "canFinish"
     }
 }

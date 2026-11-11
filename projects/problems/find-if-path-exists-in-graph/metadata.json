@@ -84,6 +84,7 @@
     ],
     "invoke": {
         "python": "Solution().validPath",
-        "typescript": "Solution().validPath"
+        "typescript": "Solution().validPath",
+        "valkyrie": "validPath"
     }
 }

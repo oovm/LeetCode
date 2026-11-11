@@ -2078,6 +2078,7 @@
     ],
     "invoke": {
         "python": "Solution().updateBoard",
-        "typescript": "Solution().updateBoard"
+        "typescript": "Solution().updateBoard",
+        "valkyrie": "updateBoard"
     }
 }

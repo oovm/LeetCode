@@ -751,6 +751,7 @@
     ],
     "invoke": {
         "python": "Solution().increasingTriplet",
-        "typescript": "Solution().increasingTriplet"
+        "typescript": "Solution().increasingTriplet",
+        "valkyrie": "increasingTriplet"
     }
 }

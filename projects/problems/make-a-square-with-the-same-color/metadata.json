@@ -67,6 +67,7 @@
     ],
     "invoke": {
         "python": "Solution().canMakeSquare",
-        "typescript": "Solution().canMakeSquare"
+        "typescript": "Solution().canMakeSquare",
+        "valkyrie": "canMakeSquare"
     }
 }

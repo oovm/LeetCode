@@ -661,6 +661,7 @@
     ],
     "invoke": {
         "python": "Solution().sumRootToLeaf",
-        "typescript": "Solution().sumRootToLeaf"
+        "typescript": "Solution().sumRootToLeaf",
+        "valkyrie": "sumRootToLeaf"
     }
 }

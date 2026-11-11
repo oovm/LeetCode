@@ -605,6 +605,7 @@
     ],
     "invoke": {
         "python": "Solution().subsetXORSum",
-        "typescript": "Solution().subsetXORSum"
+        "typescript": "Solution().subsetXORSum",
+        "valkyrie": "subsetXORSum"
     }
 }

@@ -880,6 +880,7 @@
     ],
     "invoke": {
         "python": "Solution().fourSumCount",
-        "typescript": "Solution().fourSumCount"
+        "typescript": "Solution().fourSumCount",
+        "valkyrie": "fourSumCount"
     }
 }

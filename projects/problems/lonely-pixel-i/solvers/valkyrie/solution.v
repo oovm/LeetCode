@@ -1,5 +1,53 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: findLonelyPixel 需要 读取 picture 行列计数孤独像素
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.lonely_pixel_i;
+
+using std.collection;
+
+# 行/列计数：统计每行每列的 `'B'` 个数；格为 `'B'` 且行列计数都为 1 即独立像素。
+[export(case: "camelCase")]
+micro findLonelyPixel(picture: ArrayList<ArrayList<utf8>>) -> i64 {
+    let rows: usize = picture.length()
+    let cols: usize = picture⁅0⁆.length()
+    let mut row_count: ArrayList<i64> = ArrayList::new(rows)
+    let mut col_count: ArrayList<i64> = ArrayList::new(cols)
+    let mut i: usize = 0
+    while i < rows {
+        row_count.push(0)
+        i = i + 1
+    }
+    i = 0
+    while i < cols {
+        col_count.push(0)
+        i = i + 1
+    }
+    i = 0
+    while i < rows {
+        let mut j: usize = 0
+        while j < cols {
+            if picture⁅i⁆⁅j⁆⁅0⁆ as u32 == 66 {
+                row_count⁅i⁆ = row_count⁅i⁆ + 1
+                col_count⁅j⁆ = col_count⁅j⁆ + 1
+            }
+            j = j + 1
+        }
+        i = i + 1
+    }
+    let mut count: i64 = 0
+    i = 0
+    while i < rows {
+        let mut j: usize = 0
+        while j < cols {
+            if picture⁅i⁆⁅j⁆⁅0⁆ as u32 == 66 && row_count⁅i⁆ == 1 && col_count⁅j⁆ == 1 {
+                count = count + 1
+            }
+            j = j + 1
+        }
+        i = i + 1
+    }
+    return count
+}
+
+class Solution {
+    micro findLonelyPixel(self, picture: ArrayList<ArrayList<utf8>>): i64 {
+        return findLonelyPixel(picture)
+    }
+}

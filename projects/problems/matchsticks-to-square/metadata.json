@@ -523,6 +523,7 @@
     ],
     "invoke": {
         "python": "Solution().makesquare",
-        "typescript": "Solution().makesquare"
+        "typescript": "Solution().makesquare",
+        "valkyrie": "makesquare"
     }
 }

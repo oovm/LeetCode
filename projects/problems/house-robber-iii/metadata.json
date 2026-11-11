@@ -126,6 +126,7 @@
     ],
     "invoke": {
         "python": "Solution().rob",
-        "typescript": "Solution().rob"
+        "typescript": "Solution().rob",
+        "valkyrie": "rob"
     }
 }

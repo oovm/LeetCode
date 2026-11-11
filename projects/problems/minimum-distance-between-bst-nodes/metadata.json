@@ -330,6 +330,7 @@
     ],
     "invoke": {
         "python": "Solution().minDiffInBST",
-        "typescript": "Solution().minDiffInBST"
+        "typescript": "Solution().minDiffInBST",
+        "valkyrie": "minDiffInBST"
     }
 }

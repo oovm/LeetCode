@@ -901,6 +901,7 @@
     ],
     "invoke": {
         "python": "Solution().findLonelyPixel",
-        "typescript": "Solution().findLonelyPixel"
+        "typescript": "Solution().findLonelyPixel",
+        "valkyrie": "findLonelyPixel"
     }
 }

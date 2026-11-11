@@ -1,5 +1,36 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: getModifiedArray 需要 读取 updates 差分数组重建
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.range_addition;
+
+using std.collection;
+
+# 差分数组：区间加只在 `[l] += v`、`[r+1] -= v` 打点，前缀和还原即最终数组。
+[export(case: "camelCase")]
+micro getModifiedArray(length: i64, updates: ArrayList<ArrayList<i64>>) -> ArrayList<i64> {
+    let n: usize = length as usize
+    let mut diff: ArrayList<i64> = ArrayList::new(n)
+    let mut slot: usize = 0
+    while slot < n {
+        diff.push(0)
+        slot = slot + 1
+    }
+    loop update in updates {
+        diff⁅update⁅0⁆ as usize⁆ = diff⁅update⁅0⁆ as usize⁆ + update⁅2⁆
+        if update⁅1⁆ + 1 < length {
+            diff⁅(update⁅1⁆ + 1) as usize⁆ = diff⁅(update⁅1⁆ + 1) as usize⁆ - update⁅2⁆
+        }
+    }
+    let mut out: ArrayList<i64> = ArrayList::new(n)
+    let mut running: i64 = 0
+    slot = 0
+    while slot < n {
+        running = running + diff⁅slot⁆
+        out.push(running)
+        slot = slot + 1
+    }
+    return out
+}
+
+class Solution {
+    micro getModifiedArray(self, length: i64, updates: ArrayList<ArrayList<i64>>): ArrayList<i64> {
+        return getModifiedArray(length, updates)
+    }
+}

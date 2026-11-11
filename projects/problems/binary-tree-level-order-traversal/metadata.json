@@ -79,6 +79,7 @@
     ],
     "invoke": {
         "python": "Solution().levelOrder",
-        "typescript": "Solution().levelOrder"
+        "typescript": "Solution().levelOrder",
+        "valkyrie": "levelOrder"
     }
 }

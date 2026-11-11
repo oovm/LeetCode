@@ -1,5 +1,26 @@
-# blocked: std.collection 数组参数读取
-# 题内触发点: sumRootToLeaf 需要 层序数组读取 root 累加路径二进制值
-# 期望语义: 宿主传入的数组参数可直接索引与遍历
-# 实际报错: unresolved call <computed>（数组参数读取不被支持）
-# 最小复现: 引用 projects/problems/merge-two-sorted-lists/solvers/valkyrie/solution.v
+namespace leetcode.sum_of_root_to_leaf_binary_numbers;
+
+using std.collection;
+
+# 堆式下标 DFS：路径值 acc = acc * 2 + bit；叶（无左子）返回 acc，否则左右相加。
+micro dfs(root: ArrayList<i64>, i: usize, acc: i64) -> i64 {
+    if i >= root.length() {
+        return 0
+    }
+    let value: i64 = acc * 2 + root⁅i⁆
+    if 2 * i + 1 >= root.length() {
+        return value
+    }
+    return dfs(root, 2 * i + 1, value) + dfs(root, 2 * i + 2, value)
+}
+
+[export(case: "camelCase")]
+micro sumRootToLeaf(root: ArrayList<i64>) -> i64 {
+    return dfs(root, 0, 0)
+}
+
+class Solution {
+    micro sumRootToLeaf(self, root: ArrayList<i64>): i64 {
+        return sumRootToLeaf(root)
+    }
+}
