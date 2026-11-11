@@ -2,8 +2,8 @@ namespace leetcode.pascals_triangle;
 
 # 逐行用 C(r, c) 递推生成。
 [export(case: "camelCase")]
-micro generate(numRows: i64) -> ArrayList<ArrayList<i64>> {
-    let mut result: ArrayList<ArrayList<i64>> = ArrayList::new(numRows as usize)
+micro generate(numRows: i64) -> [[i64]] {
+    let mut result: ArrayList<[i64]> = ArrayList::new(numRows as usize)
     let mut row: i64 = 0
     while row < numRows {
         let mut line: ArrayList<i64> = ArrayList::new((row + 1) as usize)
@@ -14,14 +14,14 @@ micro generate(numRows: i64) -> ArrayList<ArrayList<i64>> {
             value = value * (row - column) / (column + 1)
             column = column + 1
         }
-        result.push(line)
+        result.push(line.to_array())
         row = row + 1
     }
-    return result
+    return result.to_array()
 }
 
 class Solution {
-    micro generate(self, numRows: i64): ArrayList<ArrayList<i64>> {
+    micro generate(self, numRows: i64): [[i64]] {
         return generate(numRows)
     }
 }

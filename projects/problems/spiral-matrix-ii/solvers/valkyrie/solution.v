@@ -2,7 +2,7 @@ namespace leetcode.spiral_matrix_ii;
 
 # 按右、下、左、上四个边界收缩填充。
 [export(case: "camelCase")]
-micro generate_matrix(n: i64) -> ArrayList<ArrayList<i64>> {
+micro generate_matrix(n: i64) -> [[i64]] {
     let mut matrix: ArrayList<ArrayList<i64>> = ArrayList::new(n as usize)
     let mut r: i64 = 0
     while r < n {
@@ -54,11 +54,17 @@ micro generate_matrix(n: i64) -> ArrayList<ArrayList<i64>> {
             left = left + 1
         }
     }
-    return matrix
+    let mut output: ArrayList<[i64]> = ArrayList::new(matrix.length())
+    let mut index: usize = 0
+    while index < matrix.length() {
+        output.push(matrix⁅index⁆.to_array())
+        index = index + 1
+    }
+    return output.to_array()
 }
 
 class Solution {
-    micro generateMatrix(self, n: i64): ArrayList<ArrayList<i64>> {
+    micro generateMatrix(self, n: i64): [[i64]] {
         return generate_matrix(n)
     }
 }
