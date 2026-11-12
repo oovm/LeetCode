@@ -540,8 +540,26 @@ def _validate_parity_alternating(actual: Any, _expected: Any, args: dict[str, An
     return None
 
 
+def _validate_anagram_mappings(actual: Any, _expected: Any, args: dict[str, Any]) -> str | None:
+    nums1 = _int_array(args.get("nums1"))
+    nums2 = _int_array(args.get("nums2"))
+    mapping = _int_array(actual)
+    if not nums1 or not nums2 or not mapping:
+        return "答案或入参形态不合法"
+    if len(mapping) != len(nums1):
+        return f"映射长度 {len(mapping)}，题面要求 {len(nums1)}"
+    # LC 760：mapping[i] = j 只要求 nums2[j] == nums1[i]；重复值时「任意合法 j」都可。
+    for index, target in enumerate(mapping):
+        if not isinstance(target, int) or target < 0 or target >= len(nums2):
+            return f"第 {index} 项下标越界"
+        if nums2[target] != nums1[index]:
+            return f"第 {index} 项映射到值 {nums2[target]}，题面要求 {nums1[index]}"
+    return None
+
+
 _VALIDATORS = {
     "advantage-shuffle": _validate_advantage_shuffle,
+    "find-anagram-mappings": _validate_anagram_mappings,
     "gas-station": _validate_gas_station,
     "course-schedule-ii": _validate_course_schedule_two,
     "di-string-match": _validate_di_string_match,

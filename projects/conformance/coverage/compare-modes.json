@@ -154,6 +154,10 @@
             "mode": "unordered-1d",
             "evidence": "Return the list in any order."
         },
+        "find-anagram-mappings": {
+            "mode": "validator-required",
+            "evidence": "LC 760: If there are multiple answers, return any of them."
+        },
         "find-and-replace-pattern": {
             "mode": "unordered-1d",
             "evidence": "You may return the answer in any order."

@@ -706,8 +706,32 @@ const validateParityAlternating: SemanticValidator = (actual, _expected, args) =
     return null;
 };
 
+const validateAnagramMappings: SemanticValidator = (actual, _expected, args) => {
+    const nums1 = argInts(args, 'nums1');
+    const nums2 = argInts(args, 'nums2');
+    const mapping = intArray(actual);
+    if (!nums1 || !nums2 || !mapping) {
+        return '答案或入参形态不合法';
+    }
+    if (mapping.length !== nums1.length) {
+        return `映射长度 ${mapping.length}，题面要求 ${nums1.length}`;
+    }
+    // LC 760：mapping[i] = j 只要求 nums2[j] == nums1[i]；重复值时「任意合法 j」都可。
+    for (let index = 0; index < nums1.length; index += 1) {
+        const target = mapping[index];
+        if (!Number.isInteger(target) || target < 0 || target >= nums2.length) {
+            return `第 ${index} 项下标越界`;
+        }
+        if (nums2[target] !== nums1[index]) {
+            return `第 ${index} 项映射到值 ${nums2[target]}，题面要求 ${nums1[index]}`;
+        }
+    }
+    return null;
+};
+
 const VALIDATORS: Record<string, SemanticValidator> = {
     'advantage-shuffle': validateAdvantageShuffle,
+    'find-anagram-mappings': validateAnagramMappings,
     'gas-station': validateGasStation,
     'course-schedule-ii': validateCourseScheduleTwo,
     'di-string-match': validateDiStringMatch,
