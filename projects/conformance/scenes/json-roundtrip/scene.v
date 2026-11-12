@@ -5,7 +5,6 @@ using std.text
 
 # 简易 JSON：递归 `unite` 承载值，解析与序列化共用同一棵树。
 unite Json {
-    [constructor]
     Null
     [constructor]
     Boolean {
@@ -33,15 +32,15 @@ unite Json {
 unite JsonError {
     [constructor]
     UnexpectedCharacter {
-        position: i64
+        position: usize
     }
     [constructor]
     UnterminatedText {
-        position: i64
+        position: usize
     }
     [constructor]
     TrailingContent {
-        position: i64
+        position: usize
     }
 }
 
@@ -55,27 +54,27 @@ micro json_error_code(error: JsonError) -> i64 {
 
 structure JsonReader {
     text: utf8
-    cursor: i64
+    cursor: usize
 }
 
 micro reader_new(text: utf8) -> JsonReader {
     return JsonReader { text: text, cursor: 0 }
 }
 
-micro reader_length(reader: JsonReader) -> i64 {
-    return reader.text.length() as i64
+micro reader_length(reader: JsonReader) -> usize {
+    return reader.text.length()
 }
 
-micro code_at(reader: JsonReader, offset: i64) -> i64 {
-    return (reader.text.character_at(offset as usize) as u32) as i64
+micro char_at(reader: JsonReader, offset: usize) -> char {
+    return reader.text.character_at(offset)
 }
 
 micro skip_whitespace(mut reader: JsonReader) -> unit {
     let mut skipping: bool = true
-    let length: i64 = reader_length(reader)
+    let length: usize = reader_length(reader)
     while skipping && reader.cursor < length {
-        let code: i64 = code_at(reader, reader.cursor)
-        if code == 32 || code == 9 || code == 10 || code == 13 {
+        let character: char = char_at(reader, reader.cursor)
+        if character == ' ' || character == '\t' || character == '\n' || character == '\r' {
             reader.cursor = reader.cursor + 1
         } else {
             skipping = false
@@ -83,12 +82,12 @@ micro skip_whitespace(mut reader: JsonReader) -> unit {
     }
 }
 
-micro is_digit_code(code: i64) -> bool {
-    return code >= 48 && code <= 57
+micro is_digit(character: char) -> bool {
+    return character >= '0' && character <= '9'
 }
 
 micro parse_text(mut reader: JsonReader) -> Result<utf8, JsonError> {
-    let length: i64 = reader_length(reader)
+    let length: usize = reader_length(reader)
     reader.cursor = reader.cursor + 1
     let mut buffer: Utf8Builder = Utf8Builder::new(16)
     let newline: char = '\n'
@@ -97,29 +96,29 @@ micro parse_text(mut reader: JsonReader) -> Result<utf8, JsonError> {
     let backslash: char = '\\'
     let mut running: bool = true
     while running && reader.cursor < length {
-        let code: i64 = code_at(reader, reader.cursor)
-        if code == 34 {
+        let character: char = char_at(reader, reader.cursor)
+        if character == quote {
             reader.cursor = reader.cursor + 1
             running = false
-        } else if code == 92 {
+        } else if character == backslash {
             reader.cursor = reader.cursor + 1
             if reader.cursor >= length {
                 let error: JsonError = UnterminatedText(reader.cursor)
                 return Fail(error)
             }
-            let escaped: i64 = code_at(reader, reader.cursor)
-            if escaped == 110 {
+            let escaped: char = char_at(reader, reader.cursor)
+            if escaped == 'n' {
                 buffer.append(newline)
-            } else if escaped == 116 {
+            } else if escaped == 't' {
                 buffer.append(tab)
-            } else if escaped == 34 {
+            } else if escaped == quote {
                 buffer.append(quote)
             } else {
                 buffer.append(backslash)
             }
             reader.cursor = reader.cursor + 1
         } else {
-            buffer.append(reader.text.character_at(reader.cursor as usize))
+            buffer.append(character)
             reader.cursor = reader.cursor + 1
         }
     }
@@ -132,12 +131,12 @@ micro parse_text(mut reader: JsonReader) -> Result<utf8, JsonError> {
 }
 
 micro expect_word(mut reader: JsonReader, word: utf8) -> bool {
-    let length: i64 = reader_length(reader)
-    let width: i64 = word.length() as i64
+    let length: usize = reader_length(reader)
+    let width: usize = word.length()
     if reader.cursor + width > length {
         return false
     }
-    let part: utf8 = reader.text.slice(reader.cursor as usize, width as usize)
+    let part: utf8 = reader.text.slice(reader.cursor, width)
     if part != word {
         return false
     }
@@ -146,18 +145,19 @@ micro expect_word(mut reader: JsonReader, word: utf8) -> bool {
 }
 
 micro parse_number(mut reader: JsonReader) -> i64 {
-    let length: i64 = reader_length(reader)
+    let length: usize = reader_length(reader)
     let mut negative: bool = false
-    if code_at(reader, reader.cursor) == 45 {
+    if char_at(reader, reader.cursor) == '-' {
         negative = true
         reader.cursor = reader.cursor + 1
     }
     let mut magnitude: i64 = 0
     let mut scanning: bool = true
     while scanning && reader.cursor < length {
-        let code: i64 = code_at(reader, reader.cursor)
-        if is_digit_code(code) {
-            magnitude = magnitude * 10 + (code - 48)
+        let character: char = char_at(reader, reader.cursor)
+        if is_digit(character) {
+            let digit_value: u32 = (character as u32) - ('0' as u32)
+            magnitude = magnitude * 10 + (digit_value as i64)
             reader.cursor = reader.cursor + 1
         } else {
             scanning = false
@@ -173,7 +173,7 @@ micro parse_array(mut reader: JsonReader) -> Result<Json, JsonError> {
     reader.cursor = reader.cursor + 1
     let mut items: ArrayList<Json> = ArrayList::new(8)
     skip_whitespace(reader)
-    if reader.cursor < reader_length(reader) && code_at(reader, reader.cursor) == 93 {
+    if reader.cursor < reader_length(reader) && char_at(reader, reader.cursor) == ']' {
         reader.cursor = reader.cursor + 1
         return Fine(Sequence { items: items })
     }
@@ -190,11 +190,11 @@ micro parse_array(mut reader: JsonReader) -> Result<Json, JsonError> {
             let error: JsonError = UnexpectedCharacter(reader.cursor)
             return Fail(error)
         }
-        let separator: i64 = code_at(reader, reader.cursor)
-        if separator == 44 {
+        let separator: char = char_at(reader, reader.cursor)
+        if separator == ',' {
             reader.cursor = reader.cursor + 1
             skip_whitespace(reader)
-        } else if separator == 93 {
+        } else if separator == ']' {
             reader.cursor = reader.cursor + 1
             running = false
         } else {
@@ -210,14 +210,14 @@ micro parse_object(mut reader: JsonReader) -> Result<Json, JsonError> {
     let mut keys: ArrayList<utf8> = ArrayList::new(8)
     let mut values: ArrayList<Json> = ArrayList::new(8)
     skip_whitespace(reader)
-    if reader.cursor < reader_length(reader) && code_at(reader, reader.cursor) == 125 {
+    if reader.cursor < reader_length(reader) && char_at(reader, reader.cursor) == '\}' {
         reader.cursor = reader.cursor + 1
         return Fine(Mapping { keys: keys, values: values })
     }
     let mut running: bool = true
     while running {
         skip_whitespace(reader)
-        if reader.cursor >= reader_length(reader) || code_at(reader, reader.cursor) != 34 {
+        if reader.cursor >= reader_length(reader) || char_at(reader, reader.cursor) != '"' {
             let error: JsonError = UnexpectedCharacter(reader.cursor)
             return Fail(error)
         }
@@ -227,7 +227,7 @@ micro parse_object(mut reader: JsonReader) -> Result<Json, JsonError> {
             case Fail(error): return Fail(error)
         }
         skip_whitespace(reader)
-        if reader.cursor >= reader_length(reader) || code_at(reader, reader.cursor) != 58 {
+        if reader.cursor >= reader_length(reader) || char_at(reader, reader.cursor) != ':' {
             let error: JsonError = UnexpectedCharacter(reader.cursor)
             return Fail(error)
         }
@@ -245,10 +245,10 @@ micro parse_object(mut reader: JsonReader) -> Result<Json, JsonError> {
             let error: JsonError = UnexpectedCharacter(reader.cursor)
             return Fail(error)
         }
-        let separator: i64 = code_at(reader, reader.cursor)
-        if separator == 44 {
+        let separator: char = char_at(reader, reader.cursor)
+        if separator == ',' {
             reader.cursor = reader.cursor + 1
-        } else if separator == 125 {
+        } else if separator == '\}' {
             reader.cursor = reader.cursor + 1
             running = false
         } else {
@@ -265,37 +265,37 @@ micro parse_value(mut reader: JsonReader) -> Result<Json, JsonError> {
         let error: JsonError = UnexpectedCharacter(reader.cursor)
         return Fail(error)
     }
-    let code: i64 = code_at(reader, reader.cursor)
-    if code == 34 {
+    let character: char = char_at(reader, reader.cursor)
+    if character == '"' {
         let parsed: Result<utf8, JsonError> = parse_text(reader)
         return match parsed {
             case Fine(value): Fine(Textual { value: value })
             case Fail(error): Fail(error)
         }
     }
-    if code == 91 {
+    if character == '[' {
         return parse_array(reader)
     }
-    if code == 123 {
+    if character == '\{' {
         return parse_object(reader)
     }
-    if code == 116 {
+    if character == 't' {
         if expect_word(reader, "true") {
             return Fine(Boolean { value: true })
         }
     }
-    if code == 102 {
+    if character == 'f' {
         if expect_word(reader, "false") {
             return Fine(Boolean { value: false })
         }
     }
-    if code == 110 {
+    if character == 'n' {
         if expect_word(reader, "null") {
             let empty: Json = Null
             return Fine(empty)
         }
     }
-    if code == 45 || is_digit_code(code) {
+    if character == '-' || is_digit(character) {
         return Fine(Numeric { value: parse_number(reader) })
     }
     let error: JsonError = UnexpectedCharacter(reader.cursor)
@@ -322,16 +322,16 @@ micro write_text(value: utf8) -> utf8 {
     let quote: char = '"'
     let backslash: char = '\\'
     let letter_n: char = 'n'
+    let newline: char = '\n'
     buffer.append(quote)
     loop current in value {
-        let code: i64 = (current as u32) as i64
-        if code == 34 {
+        if current == quote {
             buffer.append(backslash)
             buffer.append(quote)
-        } else if code == 92 {
+        } else if current == backslash {
             buffer.append(backslash)
             buffer.append(backslash)
-        } else if code == 10 {
+        } else if current == newline {
             buffer.append(backslash)
             buffer.append(letter_n)
         } else {
