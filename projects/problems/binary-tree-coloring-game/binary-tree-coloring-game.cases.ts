@@ -1,0 +1,117 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "root": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
+                "n": 25,
+                "x": 13
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "root": [1, 2, 3, 4, 5],
+                "n": 5,
+                "x": 2
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "root": [1, 2, 3, 4, 5, 6],
+                "n": 6,
+                "x": 4
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "root": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                "n": 11,
+                "x": 3
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "root": [1, 2, 3, 4, 5, 6, 7],
+                "n": 7,
+                "x": 5
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "root": [1, 2, 3],
+                "n": 3,
+                "x": 1
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "root": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+                "n": 31,
+                "x": 16
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "root": [4, 2, 7, 1, 3, 6, 9],
+                "n": 7,
+                "x": 4
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "root": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "n": 9,
+                "x": 4
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "root": [3, 1, 5, 0, 2, 4, 6],
+                "n": 7,
+                "x": 3
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "root": [1, 2, 3, 4, 5, 6, 7],
+                "n": 7,
+                "x": 4
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "root": [1, 2, 3, 4, 5, 6, 7],
+                "n": 7,
+                "x": 2
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "root": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                "n": 15,
+                "x": 8
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "root": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                "n": 15,
+                "x": 7
+            },
+            "expected": true
+        }
+    ];

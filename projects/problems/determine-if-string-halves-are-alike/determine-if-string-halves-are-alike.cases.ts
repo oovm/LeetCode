@@ -1,0 +1,617 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "s": "aAeEiIoOuU"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "Leetcode"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "AbCdEfGh"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "textbook"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "cOdInGQuEsTiOn"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "AaEeIiOoUu"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "leetcode"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "abcdefgH"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "Margelet"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "book"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "MerryChristmas"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "ArtificialIntelligence"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "aAbBcCdDeEfFgG"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "Supercalifragilisticexpialidocious"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "InDiCoRn"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "vowelvowelvowelvowelvowelvowel"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "VowelCOnsonAnt"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "bBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "EqUiVaLeNt"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "unevenNumberOfVowels"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "QuantumComputing"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "AbCdEfGhIjKlMnOpQrStUvWxYz"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "Internationalization"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "AbcDeFgHiJkLmNoPqRsTuVwXyZ"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "Electroencephalographies"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "fAcEtImE"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "AnALoGuIzAtIoN"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "sImPlEVoWaElStRiNg"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "VoWaElCoUnTiNg"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "SiMpLy"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "Electroencephalography"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "abcdefghijABCDEFGHIJ"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "METHINKSITISLIKEALITTLEIODEUCALYPTUS"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "HumanComputerInteraction"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "AmOrAnGe"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "balancedString"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "EuPoCrAtIc"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "RoMaNiCa"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "aAaAaAaAaAbBbBbBbB"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "MaRiNo"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "CloudComputing"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "DataScienceAndML"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "Hippopotomonstrosesquippedaliophobia"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "Pseudopseudohypoparathyroidism"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "DatabaseManagement"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "ComplexExample"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "QwErTyUiOpAsDfGhJkLzXcVbNm"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "AEIOUaeiouAEIOUaeiou"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "SyMmEtrY"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "PaLInDrOmE"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "Floccinaucinihilipilifications"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "AlphabetSymmetry"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "VowelsInBoth"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "FLUtTuAtIoNs"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "MaLiNoUs"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "InternetOfThings"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "PeRuKkIa"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "TrAnSaPoRt"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "OddAndEven"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "aEiOuUoIeA"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "Alphabetical"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "VowelsAEIOUaeiou"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "aEiOuUeIoA"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "SeNtEnCe"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "RepetitionRepetition"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "MississippiRiver"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "vowelvowelvowelvowel"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "MississippiRiverside"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "aeiouAEIOUaeiouAEIOU"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "PythonCoding"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "aEiOuUaEiO"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "ProgrammingIsFun"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "aEiOuAeIoU"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "Alphabetically"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "zyxwvutsrqponmlkjihgfedcba"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "DataAnalysis"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "VoCaBuLaRy"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "AEIOUaeiou"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "abcdefghijklmnopqrstuvwxyz"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "CaThODoRiC"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "Antidisestablishmentarianism"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "BaLaNcEd"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "BlockchainTechnology"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "SystemAnalysis"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "hAlFVaLuEs"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "AlphabetSoup"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "Unbelievable"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "SplittingStrings"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "GrApHiTe"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "evenNumberOfVowels"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "RoTiCoRn"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "bYtEcOdE"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "BigDataAnalytics"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "FLYINGDUCK"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "ComplexityAnalysis"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "equalvowelcounts"
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "s": "EnvironmentalStudies"
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "s": "xyzXYZxyzXYZ"
+            },
+            "expected": true
+        }
+    ];

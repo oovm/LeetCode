@@ -1,0 +1,662 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "inorder": [-1],
+                "postorder": [-1]
+            },
+            "expected": [-1]
+        },
+        {
+            "args": {
+                "inorder": [1, 2],
+                "postorder": [2, 1]
+            },
+            "expected": [1, null, 2]
+        },
+        {
+            "args": {
+                "inorder": [3, 2, 1],
+                "postorder": [3, 2, 1]
+            },
+            "expected": [1, 2, null, 3]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5],
+                "postorder": [1, 2, 5, 4, 3]
+            },
+            "expected": [3, 2, 4, 1, null, null, 5]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4],
+                "postorder": [1, 2, 4, 3]
+            },
+            "expected": [3, 2, 4, 1]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7],
+                "postorder": [1, 3, 2, 5, 7, 6, 4]
+            },
+            "expected": [4, 2, 6, 1, 3, 5, 7]
+        },
+        {
+            "args": {
+                "inorder": [9, 3, 15, 20, 7],
+                "postorder": [9, 15, 7, 20, 3]
+            },
+            "expected": [3, 9, 20, null, null, 15, 7]
+        },
+        {
+            "args": {
+                "inorder": [4, 2, 5, 1, 6, 3, 7],
+                "postorder": [4, 5, 2, 6, 7, 3, 1]
+            },
+            "expected": [1, 2, 3, 4, 5, 6, 7]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                "postorder": [1, 2, 4, 3, 6, 8, 10, 9, 7, 5, 12, 14, 16, 17, 15, 13, 11, 18, 20, 19]
+            },
+            "expected": [
+                19,
+                18,
+                20,
+                11,
+                null,
+                null,
+                null,
+                5,
+                13,
+                3,
+                7,
+                12,
+                15,
+                2,
+                4,
+                6,
+                9,
+                null,
+                null,
+                14,
+                17,
+                1,
+                null,
+                null,
+                null,
+                null,
+                null,
+                8,
+                10,
+                null,
+                null,
+                16
+            ]
+        },
+        {
+            "args": {
+                "inorder": [7, 10, 4, 3, 1, 2, 8, 11, 5, 9, 6],
+                "postorder": [7, 10, 4, 3, 11, 8, 9, 5, 6, 2, 1]
+            },
+            "expected": [1, 3, 2, 4, null, null, 6, 10, null, 5, null, 7, null, 8, 9, null, null, null, 11]
+        },
+        {
+            "args": {
+                "inorder": [5, 4, 8, 7, 10, 9, 1, 3, 6, 2],
+                "postorder": [5, 8, 10, 9, 7, 4, 6, 3, 2, 1]
+            },
+            "expected": [1, 4, 2, 5, 7, 3, null, null, null, 8, 9, null, 6, null, null, 10]
+        },
+        {
+            "args": {
+                "inorder": [3, 1, 4, 2, 5, 9, 6, 7, 8],
+                "postorder": [3, 4, 1, 9, 7, 8, 6, 5, 2]
+            },
+            "expected": [2, 1, 5, 3, 4, null, 6, null, null, null, null, 9, 8, null, null, 7]
+        },
+        {
+            "args": {
+                "inorder": [2, 4, 5, 7, 11, 13, 15, 17, 19, 21, 23, 25],
+                "postorder": [2, 5, 4, 11, 15, 13, 7, 23, 25, 21, 19, 17]
+            },
+            "expected": [17, 7, 19, 4, 13, null, 21, 2, 5, 11, 15, null, 25, null, null, null, null, null, null, null, null, 23]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 5, 3, 4, 6, 8, 7, 9, 11, 10, 12, 13, 14, 15],
+                "postorder": [1, 5, 2, 4, 3, 8, 11, 10, 12, 9, 7, 6, 14, 15, 13]
+            },
+            "expected": [
+                13,
+                6,
+                15,
+                3,
+                7,
+                14,
+                null,
+                2,
+                4,
+                8,
+                9,
+                null,
+                null,
+                1,
+                5,
+                null,
+                null,
+                null,
+                null,
+                null,
+                12,
+                null,
+                null,
+                null,
+                null,
+                10,
+                null,
+                11
+            ]
+        },
+        {
+            "args": {
+                "inorder": [4, 2, 5, 1, 6, 9, 8, 7, 3, 11, 10],
+                "postorder": [4, 5, 2, 6, 9, 7, 8, 1, 11, 10, 3]
+            },
+            "expected": [3, 1, 10, 2, 8, 11, null, 4, 5, 9, 7, null, null, null, null, null, null, 6]
+        },
+        {
+            "args": {
+                "inorder": [5, 3, 8, 1, 4, 9, 7, 2, 6, 11, 10, 12],
+                "postorder": [5, 8, 3, 9, 4, 1, 11, 12, 10, 6, 2, 7]
+            },
+            "expected": [7, 1, 2, 3, 4, null, 6, 5, 8, null, 9, null, 10, null, null, null, null, null, null, 11, 12]
+        },
+        {
+            "args": {
+                "inorder": [5, 3, 7, 1, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29],
+                "postorder": [5, 7, 3, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 1]
+            },
+            "expected": [
+                1,
+                3,
+                29,
+                5,
+                7,
+                27,
+                null,
+                null,
+                null,
+                null,
+                null,
+                25,
+                null,
+                23,
+                null,
+                21,
+                null,
+                19,
+                null,
+                17,
+                null,
+                15,
+                null,
+                13,
+                null,
+                11,
+                null,
+                9
+            ]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                "postorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+            },
+            "expected": [
+                20,
+                19,
+                null,
+                18,
+                null,
+                17,
+                null,
+                16,
+                null,
+                15,
+                null,
+                14,
+                null,
+                13,
+                null,
+                12,
+                null,
+                11,
+                null,
+                10,
+                null,
+                9,
+                null,
+                8,
+                null,
+                7,
+                null,
+                6,
+                null,
+                5,
+                null,
+                4,
+                null,
+                3,
+                null,
+                2,
+                null,
+                1
+            ]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                "postorder": [1, 3, 2, 5, 7, 6, 4, 9, 11, 12, 10, 8]
+            },
+            "expected": [8, 4, 10, 2, 6, 9, 12, 1, 3, 5, 7, null, null, 11]
+        },
+        {
+            "args": {
+                "inorder": [16, 8, 17, 4, 18, 9, 19, 2, 20, 10, 21, 5, 22, 11, 23, 1, 24, 6, 25, 12, 26, 3, 27, 7, 28],
+                "postorder": [16, 17, 8, 18, 19, 9, 4, 20, 21, 10, 22, 11, 5, 23, 2, 24, 25, 12, 26, 6, 27, 28, 7, 3, 1]
+            },
+            "expected": [
+                1,
+                2,
+                3,
+                4,
+                23,
+                6,
+                7,
+                8,
+                9,
+                5,
+                null,
+                24,
+                26,
+                27,
+                28,
+                16,
+                17,
+                18,
+                19,
+                10,
+                11,
+                null,
+                null,
+                12,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                20,
+                21,
+                22,
+                null,
+                25
+            ]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "postorder": [1, 3, 2, 5, 4, 7, 9, 8, 6]
+            },
+            "expected": [6, 4, 8, 2, 5, 7, 9, 1, 3]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                "postorder": [1, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 13, 12, 15, 14]
+            },
+            "expected": [14, 12, 15, 10, 13, null, null, 8, 11, null, null, 6, 9, null, null, 4, 7, null, null, 2, 5, null, null, 1, 3]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "postorder": [1, 2, 4, 3, 6, 8, 9, 7, 5]
+            },
+            "expected": [5, 3, 7, 2, 4, 6, 9, 1, null, null, null, null, null, 8]
+        },
+        {
+            "args": {
+                "inorder": [3, 1, 2, 4, 6, 5, 7],
+                "postorder": [3, 2, 1, 6, 7, 5, 4]
+            },
+            "expected": [4, 1, 5, 3, 2, 6, 7]
+        },
+        {
+            "args": {
+                "inorder": [3, 9, 20, 15, 7, 10, 25, 30],
+                "postorder": [3, 15, 7, 20, 10, 30, 25, 9]
+            },
+            "expected": [9, 3, 25, null, null, 10, 30, 20, null, null, null, null, 7, 15]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                "postorder": [1, 3, 2, 5, 4, 7, 6, 9, 11, 13, 15, 14, 12, 10, 8]
+            },
+            "expected": [8, 6, 10, 4, 7, 9, 12, 2, 5, null, null, null, null, 11, 14, 1, 3, null, null, null, null, 13, 15]
+        },
+        {
+            "args": {
+                "inorder": [10, 5, 15, 3, 7, 18, 12, 20, 25],
+                "postorder": [10, 15, 5, 7, 3, 18, 25, 20, 12]
+            },
+            "expected": [12, 18, 20, 3, null, null, 25, 5, 7, null, null, 10, 15]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                "postorder": [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2]
+            },
+            "expected": [
+                2,
+                1,
+                4,
+                null,
+                null,
+                3,
+                6,
+                null,
+                null,
+                5,
+                8,
+                null,
+                null,
+                7,
+                10,
+                null,
+                null,
+                9,
+                12,
+                null,
+                null,
+                11,
+                14,
+                null,
+                null,
+                13,
+                16,
+                null,
+                null,
+                15,
+                18,
+                null,
+                null,
+                17,
+                20,
+                null,
+                null,
+                19
+            ]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                "postorder": [1, 3, 5, 7, 9, 11, 13, 15, 14, 12, 10, 8, 6, 4, 2]
+            },
+            "expected": [
+                2,
+                1,
+                4,
+                null,
+                null,
+                3,
+                6,
+                null,
+                null,
+                5,
+                8,
+                null,
+                null,
+                7,
+                10,
+                null,
+                null,
+                9,
+                12,
+                null,
+                null,
+                11,
+                14,
+                null,
+                null,
+                13,
+                15
+            ]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+                "postorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+            },
+            "expected": [
+                16,
+                15,
+                null,
+                14,
+                null,
+                13,
+                null,
+                12,
+                null,
+                11,
+                null,
+                10,
+                null,
+                9,
+                null,
+                8,
+                null,
+                7,
+                null,
+                6,
+                null,
+                5,
+                null,
+                4,
+                null,
+                3,
+                null,
+                2,
+                null,
+                1
+            ]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                "postorder": [1, 3, 5, 7, 9, 10, 8, 6, 4, 2]
+            },
+            "expected": [2, 1, 4, null, null, 3, 6, null, null, 5, 8, null, null, 7, 10, null, null, 9]
+        },
+        {
+            "args": {
+                "inorder": [1, 3, 2, 6, 5, 7, 4, 8, 10, 9],
+                "postorder": [1, 3, 6, 7, 5, 2, 10, 9, 8, 4]
+            },
+            "expected": [4, 2, 8, 3, 5, null, 9, 1, null, 6, 7, 10]
+        },
+        {
+            "args": {
+                "inorder": [8, 5, 11, 1, 2, 6, 9, 3, 13, 7, 10],
+                "postorder": [8, 11, 5, 2, 6, 1, 9, 13, 10, 7, 3]
+            },
+            "expected": [3, 9, 7, 1, null, 13, 10, 5, 6, null, null, null, null, 8, 11, 2]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                "postorder": [1, 3, 2, 5, 7, 6, 4, 9, 11, 13, 14, 12, 10, 8, 15]
+            },
+            "expected": [
+                15,
+                8,
+                null,
+                4,
+                10,
+                2,
+                6,
+                9,
+                12,
+                1,
+                3,
+                5,
+                7,
+                null,
+                null,
+                11,
+                14,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                13
+            ]
+        },
+        {
+            "args": {
+                "inorder": [1, 5, 3, 6, 2, 7, 4, 8],
+                "postorder": [1, 5, 6, 3, 7, 8, 4, 2]
+            },
+            "expected": [2, 3, 4, 5, 6, 7, 8, 1]
+        },
+        {
+            "args": {
+                "inorder": [4, 2, 5, 1, 6, 3, 8, 10, 7, 9],
+                "postorder": [4, 5, 2, 6, 8, 10, 9, 7, 3, 1]
+            },
+            "expected": [1, 2, 3, 4, 5, 6, 7, null, null, null, null, null, null, 10, 9, 8]
+        },
+        {
+            "args": {
+                "inorder": [8, 4, 9, 2, 10, 5, 11, 1, 12, 6, 13, 3, 14, 7, 15],
+                "postorder": [8, 9, 4, 10, 11, 5, 2, 12, 13, 6, 14, 15, 7, 3, 1]
+            },
+            "expected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+        },
+        {
+            "args": {
+                "inorder": [5, 4, 6, 2, 7, 8, 3, 1, 9],
+                "postorder": [5, 6, 4, 8, 7, 3, 9, 1, 2]
+            },
+            "expected": [2, 4, 1, 5, 6, 3, 9, null, null, null, null, 7, null, null, null, null, 8]
+        },
+        {
+            "args": {
+                "inorder": [16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+                "postorder": [16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+            },
+            "expected": [
+                1,
+                2,
+                null,
+                3,
+                null,
+                4,
+                null,
+                5,
+                null,
+                6,
+                null,
+                7,
+                null,
+                8,
+                null,
+                9,
+                null,
+                10,
+                null,
+                11,
+                null,
+                12,
+                null,
+                13,
+                null,
+                14,
+                null,
+                15,
+                null,
+                16
+            ]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                "postorder": [1, 3, 2, 5, 4, 7, 6, 9, 11, 13, 15, 17, 16, 14, 12, 10, 8]
+            },
+            "expected": [
+                8,
+                6,
+                10,
+                4,
+                7,
+                9,
+                12,
+                2,
+                5,
+                null,
+                null,
+                null,
+                null,
+                11,
+                14,
+                1,
+                3,
+                null,
+                null,
+                null,
+                null,
+                13,
+                16,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                15,
+                17
+            ]
+        },
+        {
+            "args": {
+                "inorder": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "postorder": [1, 3, 5, 7, 9, 8, 6, 4, 2]
+            },
+            "expected": [2, 1, 4, null, null, 3, 6, null, null, 5, 8, null, null, 7, 9]
+        },
+        {
+            "args": {
+                "inorder": [5, 3, 7, 2, 8, 9, 4, 10, 1, 6, 11, 12],
+                "postorder": [5, 7, 3, 8, 9, 2, 10, 4, 11, 12, 6, 1]
+            },
+            "expected": [1, 4, 6, 2, 10, null, 12, 3, 9, null, null, 11, null, 5, 7, 8]
+        }
+    ];

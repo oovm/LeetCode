@@ -1113,12 +1113,6 @@ export const cases: ProblemCases = [
         },
         {
             "args": {
-                "word": "abcdefghijkl"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "word": "abcdefghijk"
             },
             "expected": [
@@ -3174,12 +3168,6 @@ export const cases: ProblemCases = [
         },
         {
             "args": {
-                "word": "abcdefghijklm"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "word": "abcdef"
             },
             "expected": [
@@ -3319,12 +3307,6 @@ export const cases: ProblemCases = [
                 "5a",
                 "6"
             ]
-        },
-        {
-            "args": {
-                "word": "abcdefghijklmn"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -5038,12 +5020,6 @@ export const cases: ProblemCases = [
         },
         {
             "args": {
-                "word": "abcdefghijklmnop"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "word": "python"
             },
             "expected": [
@@ -5370,18 +5346,6 @@ export const cases: ProblemCases = [
                 "4d",
                 "5"
             ]
-        },
-        {
-            "args": {
-                "word": "alibabacloud"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "datastructure"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -11596,12 +11560,6 @@ export const cases: ProblemCases = [
         },
         {
             "args": {
-                "word": "abcdefghijklmno"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "word": "abcdefgh"
             },
             "expected": [
@@ -12381,12 +12339,6 @@ export const cases: ProblemCases = [
                 "8c",
                 "9"
             ]
-        },
-        {
-            "args": {
-                "word": "uncharacteristically"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -14445,12 +14397,6 @@ export const cases: ProblemCases = [
         },
         {
             "args": {
-                "word": "abbreviation"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "word": "mississippi"
             },
             "expected": [
@@ -16506,24 +16452,6 @@ export const cases: ProblemCases = [
         },
         {
             "args": {
-                "word": "sesquipedalianism"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "uniquecharacters"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "repeatedcharactersss"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "word": "rhythm"
             },
             "expected": [
@@ -16855,12 +16783,6 @@ export const cases: ProblemCases = [
                 "7d",
                 "8"
             ]
-        },
-        {
-            "args": {
-                "word": "alphanumeric123"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -19950,12 +19872,6 @@ export const cases: ProblemCases = [
         },
         {
             "args": {
-                "word": "unbelievable"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "word": "watermelon"
             },
             "expected": [
@@ -21058,18 +20974,6 @@ export const cases: ProblemCases = [
         },
         {
             "args": {
-                "word": "xylophonists"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "aabbccddeeffgg"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "word": "unique"
             },
             "expected": [
@@ -21138,42 +21042,6 @@ export const cases: ProblemCases = [
                 "5e",
                 "6"
             ]
-        },
-        {
-            "args": {
-                "word": "microphthalmotropos"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "atleastfifteencharacters"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "supercalifragilisticexpialidocious"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "generalization"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "encyclopedia"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "zazazazazazazaza"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -21693,12 +21561,6 @@ export const cases: ProblemCases = [
                 "8y",
                 "9"
             ]
-        },
-        {
-            "args": {
-                "word": "pseudopseudohypoparathyroidism"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -23757,18 +23619,6 @@ export const cases: ProblemCases = [
         },
         {
             "args": {
-                "word": "antidisestablishmentarianism"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "honorificabilitudinitatibus"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "word": "xyzzzy"
             },
             "expected": [
@@ -23908,30 +23758,6 @@ export const cases: ProblemCases = [
                 "5c",
                 "6"
             ]
-        },
-        {
-            "args": {
-                "word": "floccinaucinihilipilification"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "pneumonoultramicroscopicsilicovolcanoconiosis"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "psycholinguistics"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -24195,18 +24021,6 @@ export const cases: ProblemCases = [
                 "7t",
                 "8"
             ]
-        },
-        {
-            "args": {
-                "word": "thisisaverylongword"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "incomprehensibilities"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -24726,18 +24540,6 @@ export const cases: ProblemCases = [
                 "8h",
                 "9"
             ]
-        },
-        {
-            "args": {
-                "word": "electroencephalography"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "onomatopoeia"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {
@@ -26817,12 +26619,6 @@ export const cases: ProblemCases = [
         },
         {
             "args": {
-                "word": "optimization"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
                 "word": "permutation"
             },
             "expected": [
@@ -28875,42 +28671,6 @@ export const cases: ProblemCases = [
                 "10n",
                 "11"
             ]
-        },
-        {
-            "args": {
-                "word": "testcasefortesting"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "hippopotamus"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "backtracking"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "repetitionrepetition"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "consecutivesamecharacterssssss"
-            },
-            "expected": "Execution timed out"
-        },
-        {
-            "args": {
-                "word": "abcdefghijklmnopqrstuvwxyz"
-            },
-            "expected": "Execution timed out"
         },
         {
             "args": {

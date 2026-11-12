@@ -1,0 +1,761 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "nums": [1]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 1]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [4, 2, 4, 0, 0, 3, 0, 5, 1, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [-1, 0, 0, 3, 5, -2]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 1, 0, 0, 2, 0, 3]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 1]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 1, 0, 3, 12]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 2, 0, 3, 0, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 2, 0, 3, 0, 4, 0, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 3, 12]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 0, 0, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 3, 0, 5, 0, 7, 0, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 1, 2, 3, 4, 5, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [7, 8, 9, 0, 0, 0, 0, 0, 10]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 0, 0, 0, 0, 6, 7, 8, 9, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [-1, 0, -2, 0, -3, 0, -4, 0, -5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [5, 0, 1, 0, 2, 0, 3, 0, 4, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 2, 0, 3, 0, 4, 0, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 0, 1, 2, 3, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 1, 0, 2, 0, 3, 0, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 0, 0, 6, 7, 8, 9, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [3, 0, 5, 0, 6, 0, 7]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 2, 0, 3, 0, 4, 5, 6, 0, 7, 8, 9, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [-3, 0, -5, 0, -6, 0, -7]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 0, 0, 0, 0, 0, 2, 3, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [-1, 0, -2, 0, -3, 0, -4, 0, -5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 6, 0, 7, 8, 0, 9, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [5, 0, 1, 0, 2, 0, 3, 0, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 2, 0, 3, 0, 4, 5, 0, 6, 0, 7]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 0, 0, 0, 4, 5, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 2, 0, 0, 3, 4, 0, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 1, 2, 3, 4, 5, 0, 0, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 2, 0, 3, 0, 4, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 2, 0, 3, 4, 5, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [-1, -2, -3, 0, 0, 0, 0, 4, 5, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 0, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 0, 0, 1, 2, 3, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -2, -3, -4, -5, -6, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [23456789, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [7, 0, 1, 0, 2, 0, 3, 0, 4, 5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 0, 0, 0, 5, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [9, 0, 0, 8, 0, 7, 0, 6, 0, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [9, 0, 0, 8, 0, 7, 6, 0, 5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 0, 0, 0, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1000000000, 0, 1000000000, 0, 1000000000]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 0, 4, 5, 0, 0, 6, 0, 7, 8, 9, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 2, 0, 3, 0, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 1, 0, 2, 0, 3, 0, 4, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [5, 4, 3, 2, 1, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 0, 3, 4, 0, 5, 6, 0, 7]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1000000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 2, 0, 3, 0, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 0, 0, 0, 4, 5, 6, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 2, 0, 3, 0, 4, 0, 5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [10, 20, 30, 0, 0, 0, 0, 40, 50, 60]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 0, 0, 0, 2, 3, 4, 5, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 2, 0, 3, 0, 4, 0, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 1, 2, 3, 4, 5, 6, 7, 8]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [5, 0, 4, 0, 3, 0, 2, 0, 1, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [10, 20, 0, 0, 30, 40, 0, 50, 0, 0, 60]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 0, 0, 3, 0, 0, 4, 0, 0, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [10, 20, 30, 40, 0, 0, 0, 0, 50, 60]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 2, 0, 3, 0, 4, 0, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 2, 3, 4, 5, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [5, 3, 0, 1, 0, 2, 0, 0, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [-1, -2, -3, -4, -5, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 1, 2, 3, 4, 5, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [-1, 0, -2, 0, -3, 0, -4, 0, -5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 1, -1, 2, -2, 3, -3]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 0, 3, 12, 0, 0, 0, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [7, 6, 0, 5, 0, 4, 3, 0, 2, 1]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 2, 0, 4, 0, 6, 0, 8]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 4, 0, 0, 0, 5, 6, 7, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 2, 3, 4, 5, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [5, 1, 0, 3, 0, 12, 0, 1, 2, 3]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, -1, 2, -2, 3, -3, 4, -4, 5, -5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 2, 3, 0, 4, 5, 0, 6, 7]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 0, 0, 0, 3, 4, 5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, -1, 0, -2, 0, -3, 0, -4, 0, -5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 1, 2, 3, 4, 5, 0, 0, 0, 0, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, 2, 3, 0, 0, 0, 0, 0, 0, 4, 5, 6, 7, 8, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, 0, 2, 0, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 1, 0, -1, 0, 2, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [9, 0, 0, 8, 0, 7, 0, 6, 0, 5, 0, 4, 0, 3, 0, 2, 0, 1]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [1, -1, 2, -2, 3, -3, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "nums": [0, 0, 0, 0, 0, -1, -2, -3, -4, -5, -6]
+            },
+            "expected": null
+        }
+    ];

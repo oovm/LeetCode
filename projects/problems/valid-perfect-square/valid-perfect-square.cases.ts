@@ -1,0 +1,359 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "num": 14
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 9
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 1000000000
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 49
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 50
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 25
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 4
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 1524157875
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 1
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 100
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 99
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 2147483647
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 101
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 16
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 26
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 15
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 10
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 9801
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 100000000
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 401
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 104976
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 1025
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 123456789
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 1000000001
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 2500
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 100000001
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 2304
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 207936
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 400
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 2
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 3
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 141376
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 1024
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 16777216
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 999999999
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 1000000
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 1000001
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 1073741824
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 5
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 8
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 17
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 36
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 64
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 81
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 121
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 144
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 169
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 196
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 225
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 361
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 576
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 625
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 676
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 900
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 961
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 10000
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 2147395599
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "num": 2147395600
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "num": 2147395601
+            },
+            "expected": false
+        }
+    ];

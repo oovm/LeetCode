@@ -1,0 +1,635 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "num": 100000,
+                "k": 2
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 240,
+                "k": 2
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "num": 1111,
+                "k": 2
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "num": 430043,
+                "k": 2
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "num": 99999,
+                "k": 5
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 123456,
+                "k": 3
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 987654,
+                "k": 1
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 1111,
+                "k": 1
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "num": 987654321,
+                "k": 4
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 999999999,
+                "k": 9
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 111222333,
+                "k": 5
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 234567701,
+                "k": 10
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 100100100,
+                "k": 4
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "num": 13579251,
+                "k": 7
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 10100001,
+                "k": 5
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 412341235,
+                "k": 6
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 111111111,
+                "k": 1
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 876543211,
+                "k": 3
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 123456801,
+                "k": 6
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 7777777,
+                "k": 7
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 12301230,
+                "k": 4
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "num": 112130001,
+                "k": 6
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 141919811,
+                "k": 5
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 1000000000,
+                "k": 9
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 1,
+                "k": 8
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 777777778,
+                "k": 8
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 2,
+                "k": 9
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 566778901,
+                "k": 6
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 222222223,
+                "k": 4
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 333333333,
+                "k": 4
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 10101011,
+                "k": 2
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "num": 111111112,
+                "k": 3
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 999999999,
+                "k": 2
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 567890123,
+                "k": 6
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 11001101,
+                "k": 8
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 566778901,
+                "k": 5
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 555555555,
+                "k": 6
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 100100100,
+                "k": 3
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "num": 642086421,
+                "k": 4
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 86420,
+                "k": 2
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 1,
+                "k": 10
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 123456801,
+                "k": 7
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 100010002,
+                "k": 6
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 8,
+                "k": 7
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 987654321,
+                "k": 9
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 876543211,
+                "k": 2
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 222222222,
+                "k": 2
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 999999999,
+                "k": 1
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 357924681,
+                "k": 2
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 333333334,
+                "k": 4
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 555555001,
+                "k": 6
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 864208642,
+                "k": 3
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 101010101,
+                "k": 3
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 555555556,
+                "k": 2
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 987654321,
+                "k": 3
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 233445567,
+                "k": 6
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 12345679,
+                "k": 7
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 358979301,
+                "k": 4
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 222222222,
+                "k": 3
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "num": 111111112,
+                "k": 5
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 123123123,
+                "k": 2
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 1000000,
+                "k": 4
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 888888801,
+                "k": 11
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 112130001,
+                "k": 7
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 357924681,
+                "k": 5
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 987655001,
+                "k": 9
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 506070809,
+                "k": 6
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 777000777,
+                "k": 4
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "num": 101010101,
+                "k": 5
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 987654301,
+                "k": 9
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 123123123,
+                "k": 4
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 1000000000,
+                "k": 5
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 1,
+                "k": 10
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 222222222,
+                "k": 1
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 506070809,
+                "k": 9
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 101010101,
+                "k": 2
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "num": 567890123,
+                "k": 3
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 222222222,
+                "k": 5
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 987654321,
+                "k": 7
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 999999999,
+                "k": 7
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 999999999,
+                "k": 3
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "num": 864197532,
+                "k": 4
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 301230124,
+                "k": 4
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 10101011,
+                "k": 6
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 1000000000,
+                "k": 4
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 444444444,
+                "k": 5
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 333444556,
+                "k": 4
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 1001001,
+                "k": 5
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 555555555,
+                "k": 5
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 7777777,
+                "k": 2
+            },
+            "expected": 0
+        }
+    ];

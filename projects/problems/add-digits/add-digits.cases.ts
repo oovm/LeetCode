@@ -1,0 +1,311 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "num": 10
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 9
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 111111111
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 47
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "num": 456789
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "num": 38
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "num": 45
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 234567890
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "num": 1000000000
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 942
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "num": 123
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "num": 987654321
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 0
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "num": 4567
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "num": 1
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 111
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "num": 999999999
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 19
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 9999
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 10000
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 222222222
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 555555555
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 888888888
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 1111111111
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 27
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 444444444
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 777777777
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 666666666
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 123456789
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 5
+            },
+            "expected": 5
+        },
+        {
+            "args": {
+                "num": 333333333
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 11
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "num": 1234567890
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 94528
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 18
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 4321
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 369369369
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 2
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "num": 3
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "num": 7
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "num": 8
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "num": 20
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "num": 28
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 99
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 101
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "num": 199
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 200
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "num": 333
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 1000
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "num": 2147483646
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 2147483647
+            },
+            "expected": 1
+        }
+    ];

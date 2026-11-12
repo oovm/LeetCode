@@ -1,0 +1,334 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "s1": "aabbcc",
+                "s2": "ccbbaa"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "abac",
+                "s2": "baca"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "abcd",
+                "s2": "dcba"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "abc",
+                "s2": "bca"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "abcdef",
+                "s2": "fedcba"
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "s1": "aabc",
+                "s2": "abac"
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "s1": "abcde",
+                "s2": "edcba"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "ab",
+                "s2": "ba"
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "s1": "aabbcc",
+                "s2": "abcabc"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "aabbaabbcc",
+                "s2": "ccbbaabbaa"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "aabbccddeeff",
+                "s2": "ffeeddccbbaa"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s1": "abcabcabc",
+                "s2": "cbacbacba"
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "s1": "abcdeabcde",
+                "s2": "edcbaedcba"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s1": "aabbccddeeff",
+                "s2": "fedcbafedcba"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s1": "aabbcc",
+                "s2": "bbaacc"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "aabbccdd",
+                "s2": "ddccbaab"
+            },
+            "expected": 5
+        },
+        {
+            "args": {
+                "s1": "abcdefgh",
+                "s2": "hgfedcba"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s1": "aabbcc",
+                "s2": "ccbaab"
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "s1": "abcdefabc",
+                "s2": "cbadefabc"
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "s1": "abcabcabc",
+                "s2": "bcbacabac"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s1": "abcabcabc",
+                "s2": "cbaabcabc"
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "s1": "abcdabcd",
+                "s2": "dcbaabcd"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "abcdefabc",
+                "s2": "fdecbaabc"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s1": "abcdefghij",
+                "s2": "jihgfedcba"
+            },
+            "expected": 5
+        },
+        {
+            "args": {
+                "s1": "abcdabcd",
+                "s2": "dcbadcba"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s1": "abcdef",
+                "s2": "fabcde"
+            },
+            "expected": 5
+        },
+        {
+            "args": {
+                "s1": "aabbc",
+                "s2": "bbaca"
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "s1": "abcdefg",
+                "s2": "gfedcba"
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "s1": "aabbbccc",
+                "s2": "cccbbbaa"
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "s1": "aabbcc",
+                "s2": "cbacba"
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "s1": "abababab",
+                "s2": "babababa"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s1": "abcabcabcabc",
+                "s2": "cbacbacbacba"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s1": "aabbccddeeff",
+                "s2": "abcdefabcdef"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s1": "abcdabcdabcd",
+                "s2": "dcbaabcdabcd"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "aabbccddeeff",
+                "s2": "ffeeddccbaab"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s1": "abcabdc",
+                "s2": "dcbaacb"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s1": "abcabc",
+                "s2": "cbacba"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "abcabc",
+                "s2": "bcbaca"
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "s1": "abcdefabcdef",
+                "s2": "defabcfedcba"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s1": "abcabc",
+                "s2": "cbabac"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "abcabcabc",
+                "s2": "cccbaabba"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s1": "aabbcdef",
+                "s2": "defbbaac"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s1": "abcdefabcdef",
+                "s2": "fedcbafedcba"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s1": "aaaabbbb",
+                "s2": "bbbbaaaa"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s1": "abac",
+                "s2": "caba"
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "s1": "abcdefgabcdefg",
+                "s2": "gfedcbagfedcba"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s1": "abcbca",
+                "s2": "bcbaca"
+            },
+            "expected": 2
+        }
+    ];

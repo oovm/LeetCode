@@ -1,0 +1,131 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "n": 700
+            },
+            "expected": 1660140
+        },
+        {
+            "args": {
+                "n": 800
+            },
+            "expected": 3353149
+        },
+        {
+            "args": {
+                "n": 100
+            },
+            "expected": 41334
+        },
+        {
+            "args": {
+                "n": 600
+            },
+            "expected": 772866
+        },
+        {
+            "args": {
+                "n": 37
+            },
+            "expected": 1478
+        },
+        {
+            "args": {
+                "n": 200
+            },
+            "expected": 41334
+        },
+        {
+            "args": {
+                "n": 400
+            },
+            "expected": 601470
+        },
+        {
+            "args": {
+                "n": 900
+            },
+            "expected": 3353149
+        },
+        {
+            "args": {
+                "n": 9
+            },
+            "expected": 82
+        },
+        {
+            "args": {
+                "n": 2
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "n": 25
+            },
+            "expected": 182
+        },
+        {
+            "args": {
+                "n": 1
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "n": 500
+            },
+            "expected": 772866
+        },
+        {
+            "args": {
+                "n": 1000
+            },
+            "expected": 10804657
+        },
+        {
+            "args": {
+                "n": 10
+            },
+            "expected": 182
+        },
+        {
+            "args": {
+                "n": 300
+            },
+            "expected": 184768
+        },
+        {
+            "args": {
+                "n": 50
+            },
+            "expected": 3503
+        },
+        {
+            "args": {
+                "n": 625
+            },
+            "expected": 772866
+        },
+        {
+            "args": {
+                "n": 999
+            },
+            "expected": 9804657
+        },
+        {
+            "args": {
+                "n": 750
+            },
+            "expected": 2154349
+        },
+        {
+            "args": {
+                "n": 150
+            },
+            "expected": 41334
+        }
+    ];

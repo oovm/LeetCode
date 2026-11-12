@@ -1,0 +1,185 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "s": "WFWFWFWFWFWFWFWFWFWF"
+            },
+            "expected": 730500
+        },
+        {
+            "args": {
+                "s": "WFW"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "FWEFWEFW"
+            },
+            "expected": 157
+        },
+        {
+            "args": {
+                "s": "FWFWFWFWFWFWFWFWFWFW"
+            },
+            "expected": 730500
+        },
+        {
+            "args": {
+                "s": "EWE"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "WFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+            },
+            "expected": 377759202
+        },
+        {
+            "args": {
+                "s": "EEEEEEEEEEEE"
+            },
+            "expected": 2364
+        },
+        {
+            "args": {
+                "s": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFWE"
+            },
+            "expected": 697784136
+        },
+        {
+            "args": {
+                "s": "FWEFWFWFEF"
+            },
+            "expected": 671
+        },
+        {
+            "args": {
+                "s": "EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+            },
+            "expected": 942021245
+        },
+        {
+            "args": {
+                "s": "EWFEWFWEWFWEWFWEWFWE"
+            },
+            "expected": 723067
+        },
+        {
+            "args": {
+                "s": "FFFFFFFFFFFF"
+            },
+            "expected": 2364
+        },
+        {
+            "args": {
+                "s": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+            },
+            "expected": 486882611
+        },
+        {
+            "args": {
+                "s": "WWE"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s": "FWFWFW"
+            },
+            "expected": 40
+        },
+        {
+            "args": {
+                "s": "FWFEWFWEWF"
+            },
+            "expected": 670
+        },
+        {
+            "args": {
+                "s": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+            },
+            "expected": 956577544
+        },
+        {
+            "args": {
+                "s": "FFF"
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "s": "WFWFWFW"
+            },
+            "expected": 86
+        },
+        {
+            "args": {
+                "s": "FWEFW"
+            },
+            "expected": 18
+        },
+        {
+            "args": {
+                "s": "F"
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "s": "EWW"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s": "FWFWFWFW"
+            },
+            "expected": 168
+        },
+        {
+            "args": {
+                "s": "EFEFEF"
+            },
+            "expected": 40
+        },
+        {
+            "args": {
+                "s": "FFFFFFFFFFFFFFFFFF"
+            },
+            "expected": 158972
+        },
+        {
+            "args": {
+                "s": "FWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFW"
+            },
+            "expected": 380726528
+        },
+        {
+            "args": {
+                "s": "EEWEEWEEWE"
+            },
+            "expected": 678
+        },
+        {
+            "args": {
+                "s": "FWFWFWFWFW"
+            },
+            "expected": 688
+        },
+        {
+            "args": {
+                "s": "EEEE"
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "s": "FWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWFWE"
+            },
+            "expected": 116417994
+        }
+    ];

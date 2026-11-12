@@ -1,0 +1,671 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "num": 11891
+            },
+            "expected": 99009
+        },
+        {
+            "args": {
+                "num": 34567891
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 123321
+            },
+            "expected": 900009
+        },
+        {
+            "args": {
+                "num": 55555555
+            },
+            "expected": 99999999
+        },
+        {
+            "args": {
+                "num": 111111
+            },
+            "expected": 999999
+        },
+        {
+            "args": {
+                "num": 23456790
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 76543211
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 88888888
+            },
+            "expected": 99999999
+        },
+        {
+            "args": {
+                "num": 87654322
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 1010102
+            },
+            "expected": 9090900
+        },
+        {
+            "args": {
+                "num": 12321
+            },
+            "expected": 90009
+        },
+        {
+            "args": {
+                "num": 9999999
+            },
+            "expected": 9999999
+        },
+        {
+            "args": {
+                "num": 1
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 475328
+            },
+            "expected": 900000
+        },
+        {
+            "args": {
+                "num": 99999999
+            },
+            "expected": 99999999
+        },
+        {
+            "args": {
+                "num": 8888888
+            },
+            "expected": 9999999
+        },
+        {
+            "args": {
+                "num": 99999
+            },
+            "expected": 99999
+        },
+        {
+            "args": {
+                "num": 1000000
+            },
+            "expected": 9000000
+        },
+        {
+            "args": {
+                "num": 90
+            },
+            "expected": 99
+        },
+        {
+            "args": {
+                "num": 1111111
+            },
+            "expected": 9999999
+        },
+        {
+            "args": {
+                "num": 66666666
+            },
+            "expected": 99999999
+        },
+        {
+            "args": {
+                "num": 44444444
+            },
+            "expected": 99999999
+        },
+        {
+            "args": {
+                "num": 11111112
+            },
+            "expected": 99999990
+        },
+        {
+            "args": {
+                "num": 88111223
+            },
+            "expected": 99000000
+        },
+        {
+            "args": {
+                "num": 65432110
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 1
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 1010102
+            },
+            "expected": 9090900
+        },
+        {
+            "args": {
+                "num": 88890001
+            },
+            "expected": 99900000
+        },
+        {
+            "args": {
+                "num": 11000012
+            },
+            "expected": 99000090
+        },
+        {
+            "args": {
+                "num": 1
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 80808080
+            },
+            "expected": 90909090
+        },
+        {
+            "args": {
+                "num": 3330333
+            },
+            "expected": 9990999
+        },
+        {
+            "args": {
+                "num": 11119999
+            },
+            "expected": 99990000
+        },
+        {
+            "args": {
+                "num": 33211234
+            },
+            "expected": 99000090
+        },
+        {
+            "args": {
+                "num": 77000778
+            },
+            "expected": 99000990
+        },
+        {
+            "args": {
+                "num": 59595959
+            },
+            "expected": 90909090
+        },
+        {
+            "args": {
+                "num": 78909877
+            },
+            "expected": 90000099
+        },
+        {
+            "args": {
+                "num": 55555601
+            },
+            "expected": 99999000
+        },
+        {
+            "args": {
+                "num": 23123124
+            },
+            "expected": 90090090
+        },
+        {
+            "args": {
+                "num": 21098766
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 55555556
+            },
+            "expected": 99999990
+        },
+        {
+            "args": {
+                "num": 11000112
+            },
+            "expected": 99000990
+        },
+        {
+            "args": {
+                "num": 1
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 77777778
+            },
+            "expected": 99999990
+        },
+        {
+            "args": {
+                "num": 21232101
+            },
+            "expected": 90909000
+        },
+        {
+            "args": {
+                "num": 76767677
+            },
+            "expected": 90909099
+        },
+        {
+            "args": {
+                "num": 50505050
+            },
+            "expected": 90909090
+        },
+        {
+            "args": {
+                "num": 99999992
+            },
+            "expected": 99999997
+        },
+        {
+            "args": {
+                "num": 23321124
+            },
+            "expected": 90090090
+        },
+        {
+            "args": {
+                "num": 12233445
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 90099010
+            },
+            "expected": 99999909
+        },
+        {
+            "args": {
+                "num": 5050506
+            },
+            "expected": 9090900
+        },
+        {
+            "args": {
+                "num": 111999
+            },
+            "expected": 999000
+        },
+        {
+            "args": {
+                "num": 10001
+            },
+            "expected": 90009
+        },
+        {
+            "args": {
+                "num": 11222334
+            },
+            "expected": 99000000
+        },
+        {
+            "args": {
+                "num": 10987655
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 59595960
+            },
+            "expected": 90909000
+        },
+        {
+            "args": {
+                "num": 10101010
+            },
+            "expected": 90909090
+        },
+        {
+            "args": {
+                "num": 2
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 34567001
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 98765433
+            },
+            "expected": 91000000
+        },
+        {
+            "args": {
+                "num": 99119912
+            },
+            "expected": 99889980
+        },
+        {
+            "args": {
+                "num": 100000000
+            },
+            "expected": 900000000
+        },
+        {
+            "args": {
+                "num": 55555556
+            },
+            "expected": 99999990
+        },
+        {
+            "args": {
+                "num": 55505556
+            },
+            "expected": 99909990
+        },
+        {
+            "args": {
+                "num": 99112000
+            },
+            "expected": 99880000
+        },
+        {
+            "args": {
+                "num": 88888889
+            },
+            "expected": 99999990
+        },
+        {
+            "args": {
+                "num": 76540001
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 11000112
+            },
+            "expected": 99000990
+        },
+        {
+            "args": {
+                "num": 10101011
+            },
+            "expected": 90909099
+        },
+        {
+            "args": {
+                "num": 990100
+            },
+            "expected": 999099
+        },
+        {
+            "args": {
+                "num": 88888801
+            },
+            "expected": 99999900
+        },
+        {
+            "args": {
+                "num": 77777778
+            },
+            "expected": 99999990
+        },
+        {
+            "args": {
+                "num": 89898990
+            },
+            "expected": 90909000
+        },
+        {
+            "args": {
+                "num": 12312001
+            },
+            "expected": 90090009
+        },
+        {
+            "args": {
+                "num": 1001002
+            },
+            "expected": 9009000
+        },
+        {
+            "args": {
+                "num": 2
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 9876544
+            },
+            "expected": 9100000
+        },
+        {
+            "args": {
+                "num": 77889801
+            },
+            "expected": 99000000
+        },
+        {
+            "args": {
+                "num": 1
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "num": 95959596
+            },
+            "expected": 94949490
+        },
+        {
+            "args": {
+                "num": 76543211
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 100000000
+            },
+            "expected": 900000000
+        },
+        {
+            "args": {
+                "num": 90909090
+            },
+            "expected": 99999999
+        },
+        {
+            "args": {
+                "num": 99990000
+            },
+            "expected": 99999999
+        },
+        {
+            "args": {
+                "num": 91919192
+            },
+            "expected": 98989890
+        },
+        {
+            "args": {
+                "num": 555000
+            },
+            "expected": 999000
+        },
+        {
+            "args": {
+                "num": 89898990
+            },
+            "expected": 90909000
+        },
+        {
+            "args": {
+                "num": 32109877
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 11100011
+            },
+            "expected": 99900099
+        },
+        {
+            "args": {
+                "num": 88888889
+            },
+            "expected": 99999990
+        },
+        {
+            "args": {
+                "num": 11111112
+            },
+            "expected": 99999990
+        },
+        {
+            "args": {
+                "num": 21321322
+            },
+            "expected": 90090099
+        },
+        {
+            "args": {
+                "num": 95959595
+            },
+            "expected": 94949494
+        },
+        {
+            "args": {
+                "num": 21212122
+            },
+            "expected": 90909099
+        },
+        {
+            "args": {
+                "num": 34321099
+            },
+            "expected": 90900000
+        },
+        {
+            "args": {
+                "num": 21234322
+            },
+            "expected": 90900099
+        },
+        {
+            "args": {
+                "num": 30123013
+            },
+            "expected": 90009009
+        },
+        {
+            "args": {
+                "num": 33223323
+            },
+            "expected": 99009909
+        },
+        {
+            "args": {
+                "num": 99009900
+            },
+            "expected": 99999999
+        },
+        {
+            "args": {
+                "num": 23456790
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 5555555
+            },
+            "expected": 9999999
+        },
+        {
+            "args": {
+                "num": 22334456
+            },
+            "expected": 99000000
+        },
+        {
+            "args": {
+                "num": 34567891
+            },
+            "expected": 90000000
+        },
+        {
+            "args": {
+                "num": 90909091
+            },
+            "expected": 99999990
+        },
+        {
+            "args": {
+                "num": 999000
+            },
+            "expected": 999999
+        },
+        {
+            "args": {
+                "num": 10100001
+            },
+            "expected": 90900009
+        },
+        {
+            "args": {
+                "num": 88811122
+            },
+            "expected": 99900000
+        },
+        {
+            "args": {
+                "num": 2020203
+            },
+            "expected": 9090900
+        },
+        {
+            "args": {
+                "num": 35791361
+            },
+            "expected": 90000900
+        },
+        {
+            "args": {
+                "num": 12121212
+            },
+            "expected": 90909090
+        }
+    ];

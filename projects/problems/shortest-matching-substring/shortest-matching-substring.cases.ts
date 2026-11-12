@@ -1,0 +1,376 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "s": "abcdefg",
+                "p": "*bcd*fg"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "abcabcabc",
+                "p": "*bc*bc"
+            },
+            "expected": 5
+        },
+        {
+            "args": {
+                "s": "mississippi",
+                "p": "mis*si*"
+            },
+            "expected": 5
+        },
+        {
+            "args": {
+                "s": "baccbaadbc",
+                "p": "cc*baa*adb"
+            },
+            "expected": -1
+        },
+        {
+            "args": {
+                "s": "aaaaa",
+                "p": "*aaa*"
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "s": "xyz",
+                "p": "*x*z"
+            },
+            "expected": -1
+        },
+        {
+            "args": {
+                "s": "xyxyxyxy",
+                "p": "xy*xy*"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s": "abaacbaecebce",
+                "p": "ba*c*ce"
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "s": "aaaaaa",
+                "p": "a*a*a"
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "s": "hellothere",
+                "p": "he*lo*re"
+            },
+            "expected": 10
+        },
+        {
+            "args": {
+                "s": "a",
+                "p": "**"
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "s": "abcde",
+                "p": "*c*"
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "s": "xyz",
+                "p": "*z*"
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "s": "madlogic",
+                "p": "*adlogi*"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "",
+                "p": "**"
+            },
+            "expected": -1
+        },
+        {
+            "args": {
+                "s": "mississippi",
+                "p": "mis*is*ip"
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "s": "mississippi",
+                "p": "*issi*"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s": "abracadabra",
+                "p": "*bra*bra"
+            },
+            "expected": 10
+        },
+        {
+            "args": {
+                "s": "aabbccddeeffgg",
+                "p": "*bbcc*eeff"
+            },
+            "expected": 10
+        },
+        {
+            "args": {
+                "s": "hellohellohello",
+                "p": "*llohe*llo"
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "s": "mississippi",
+                "p": "*iss*iss"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "aaaaaaabbbb",
+                "p": "*aaaa*bbb"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+                "p": "zz*zz*zz"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "abcdefghijkxyz",
+                "p": "*def*xyz"
+            },
+            "expected": 11
+        },
+        {
+            "args": {
+                "s": "hellohellohello",
+                "p": "he*ll*ohello"
+            },
+            "expected": 10
+        },
+        {
+            "args": {
+                "s": "mississippi",
+                "p": "*issi*ppi"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s": "abcabcabcabc",
+                "p": "*abc*abc"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "thisisateststring",
+                "p": "*test*string"
+            },
+            "expected": 10
+        },
+        {
+            "args": {
+                "s": "mississipi",
+                "p": "*iss*issi"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s": "abcdefghijabcdefghijabcdefghij",
+                "p": "abc*efg*ij"
+            },
+            "expected": 10
+        },
+        {
+            "args": {
+                "s": "racecar",
+                "p": "*ace*car"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "banana",
+                "p": "*na*na"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
+                "p": "aa*bb*cc"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "abcdefghijabcdefghij",
+                "p": "*def*ghijghij"
+            },
+            "expected": -1
+        },
+        {
+            "args": {
+                "s": "ababababab",
+                "p": "*aba*aba"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s": "ababababab",
+                "p": "ab*a*ab"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "ababababa",
+                "p": "*aba*aba"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s": "zzzzzzzzzzz",
+                "p": "zz*zz*zz"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "abababab",
+                "p": "*bab*ab"
+            },
+            "expected": 5
+        },
+        {
+            "args": {
+                "s": "aaaaaaaaaa",
+                "p": "*aaaaa*aa"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s": "xyxzyzyx",
+                "p": "*xyz*zyx"
+            },
+            "expected": -1
+        },
+        {
+            "args": {
+                "s": "hellohellohello",
+                "p": "ello*hello*"
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "s": "xyzyzyzyzyz",
+                "p": "*zyz*zyz"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s": "abcdeabcde",
+                "p": "*bcde*bc"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s": "zzzzyyyxxxwwww",
+                "p": "*yyy*xxx"
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "s": "xylophone",
+                "p": "*pho*ne"
+            },
+            "expected": 5
+        },
+        {
+            "args": {
+                "s": "abcdefghijklmnopqrstuvwxyz",
+                "p": "abc*xyz*"
+            },
+            "expected": 26
+        },
+        {
+            "args": {
+                "s": "abcdefghij",
+                "p": "*def*ghij"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s": "abcabcabcabcabc",
+                "p": "*abc*abcabc"
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "s": "aabbccddeeff",
+                "p": "*bbcc*ccdd"
+            },
+            "expected": -1
+        },
+        {
+            "args": {
+                "s": "abcdeabcdeabcde",
+                "p": "*bcde*bcde"
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "s": "mississippi",
+                "p": "miss*ss*"
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "s": "hellohellohello",
+                "p": "*hello*lo"
+            },
+            "expected": 10
+        }
+    ];

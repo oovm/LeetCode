@@ -1,0 +1,581 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "arr": [8, 4, 5, 0, 0, 0, 0, 7]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 0, 3, 0, 0, 0, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 2, 3, 4, 5, 6, 7]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [9, 8, 7, 6, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 0, 2, 0, 3, 0, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 0, 2, 3, 0, 4, 5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 3]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 0, 1, 0, 1, 0, 1, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 0, 0, 8, 0, 4, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 1, 0, 2, 0, 3, 0, 4, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 0, 0, 2, 0, 0, 3, 0, 0, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 1, 2, 3, 0, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [8, 0, 0, 0, 4, 0, 5, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [5, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 0, 3, 0, 4, 5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [7, 0, 8, 0, 9, 0, 1, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 2, 0, 3, 0, 4, 0, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 1, 2, 0, 3, 4, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 2, 3, 0, 4, 0, 5, 6, 7, 8, 9, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [5, 5, 5, 5, 5, 5, 5, 5, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [8, 6, 0, 3, 4, 0, 1, 8]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 0, 2, 3, 0, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 0, 1, 0, 1, 0, 1]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [9, 0, 0, 0, 8, 0, 0, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [8, 0, 0, 8, 0, 8, 0, 0, 0, 3]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [6, 0, 6, 0, 6, 0, 6, 0, 6, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 0, 2, 3, 4, 0, 5, 0, 6, 7]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 0, 3, 0, 4, 5, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [8, 0, 0, 0, 3, 0, 1, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 3, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [8, 6, 5, 0, 0, 5, 0, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 0, 3, 4, 0, 5, 6, 7, 8]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 0, 2, 0, 3, 0, 4, 0, 5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 0, 2, 0, 3, 0, 4, 0, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 0, 2, 0, 3, 0, 4, 5, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 3, 0, 4, 5, 6, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [9, 8, 7, 6, 5, 4, 3, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [9, 1, 0, 2, 0, 3, 4, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 2, 3, 4, 5, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [9, 1, 2, 3, 0, 0, 0, 0, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 3, 4, 5, 6, 7, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 3, 4, 5, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 0, 2, 0, 3, 0, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 0, 3, 4, 0, 5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [5, 5, 5, 5, 0, 0, 5, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [7, 0, 1, 2, 0, 3, 4, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [5, 0, 5, 0, 5, 0, 5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [3, 0, 0, 0, 0, 0, 0, 0, 0, 3]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [9, 0, 1, 0, 2, 0, 3, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [4, 3, 2, 1, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [8, 0, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 0, 0, 0, 3, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 2, 0, 1, 0, 3, 0, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 0, 1, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [8, 0, 0, 5, 0, 0, 7, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 1, 2, 3, 4, 5, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 4, 1, 0, 0, 8, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 1, 1, 0, 0, 1, 1]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 2, 0, 2, 0, 2, 0, 2, 0, 2]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 2, 3, 4, 5, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [5, 0, 0, 0, 9, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 9, 0, 8, 0, 7, 0, 6, 0, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 0, 0, 0, 3, 4, 5, 6, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 0, 3, 4, 0, 5, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 1, 0, 0, 2, 0, 0, 3, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 3, 0, 0, 4, 5, 6, 7, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 2, 0, 3, 0, 4, 5, 6]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [7, 0, 8, 0, 9, 0, 10, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 3, 4, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [5, 6, 0, 0, 7, 8, 9, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [9, 0, 0, 0, 5, 0, 2, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 0, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 2, 3, 4, 5, 6, 7, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 2, 3, 4, 5, 6, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 2, 3, 4, 5, 6, 0, 7, 8]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [5, 0, 1, 0, 2, 0, 3, 0, 4, 5]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 0, 0, 0, 1, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [8, 0, 5, 0, 6, 0, 2, 0, 3, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 0, 1, 2, 0, 3, 4]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [9, 0, 9, 0, 9, 0, 9, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 2, 0, 3, 4, 5, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 0, 2, 0, 3, 0, 4, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 0, 2, 0, 3, 4, 0, 5, 6, 7]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 1, 2, 3, 4, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [7, 0, 4, 2, 3, 0, 0, 1]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [8, 0, 0, 0, 0, 0, 7, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [5, 6, 7, 8, 9, 0, 1, 0, 2, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [7, 2, 0, 3, 0, 0, 8, 0, 4, 0]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [9, 0, 5, 0, 0, 0, 0, 2, 0, 1]
+            },
+            "expected": null
+        },
+        {
+            "args": {
+                "arr": [1, 0, 3, 0, 5, 0, 7, 0, 9, 0]
+            },
+            "expected": null
+        }
+    ];

@@ -1,0 +1,311 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "n": 8
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 3
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 4
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 9
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 6
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 2
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 1000
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 7
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 10
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 5
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 625
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 576
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 729
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 49
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 50
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 300
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 99
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 64
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 17
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 649
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 23
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 343
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 640
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 819
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 128
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 1024
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 299
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 777
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 701
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 999
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 129
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 18
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 32
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 256
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 997
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 768
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 127
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 81
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 150
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 503
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 24
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 15
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 400
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 512
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 31
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 377
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 499
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 1
+            },
+            "expected": false
+        },
+        {
+            "args": {
+                "n": 500
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 420
+            },
+            "expected": true
+        },
+        {
+            "args": {
+                "n": 13
+            },
+            "expected": false
+        }
+    ];

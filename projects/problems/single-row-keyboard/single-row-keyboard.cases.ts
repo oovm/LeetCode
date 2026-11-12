@@ -1,0 +1,593 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "keyboard": "abcdefghijklmnopqrstuvwxyz",
+                "word": "a"
+            },
+            "expected": 0
+        },
+        {
+            "args": {
+                "keyboard": "abcdefghijklmnopqrstuvwxyz",
+                "word": "pqrstuvwxyzabcdefghijklmno"
+            },
+            "expected": 64
+        },
+        {
+            "args": {
+                "keyboard": "zyxwvutsrqponmlkjihgfedcba",
+                "word": "zyxwvutsrqponmlkjihgfedcba"
+            },
+            "expected": 25
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuiopasdfghjklzxcvbnm",
+                "word": "internationalization"
+            },
+            "expected": 188
+        },
+        {
+            "args": {
+                "keyboard": "abcdefghijklmnopqrstuvwxyz",
+                "word": "cba"
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "keyboard": "abcdefghijklmnopqrstuvwxyz",
+                "word": "thequickbrownfoxjumpsoverthelazydog"
+            },
+            "expected": 328
+        },
+        {
+            "args": {
+                "keyboard": "pqrstuvwxyzabcdefghijklmno",
+                "word": "leetcode"
+            },
+            "expected": 73
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuioplkjhgfdsazxcvbnm",
+                "word": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+            },
+            "expected": 19
+        },
+        {
+            "args": {
+                "keyboard": "poiuytrewqlkjhgfdsamnbvcxz",
+                "word": "programmingcontestisfun"
+            },
+            "expected": 224
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuiopasdfghjklzxcvbnm",
+                "word": "abacabadabacaba"
+            },
+            "expected": 162
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuiopasdfghjklzxcvbnm",
+                "word": "supercalifragilisticexpialidocious"
+            },
+            "expected": 275
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuioplkjhgfdsazxcvbnm",
+                "word": "hellofromtheotherworld"
+            },
+            "expected": 174
+        },
+        {
+            "args": {
+                "keyboard": "poiuytrewqlkjhgfdsamnbvcxz",
+                "word": "abcdefghijklmnopqrstuvwxyz"
+            },
+            "expected": 229
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuiopasdfghjklzxcvbnm",
+                "word": "thequickbrownfoxjumpsoverthelazydog"
+            },
+            "expected": 322
+        },
+        {
+            "args": {
+                "keyboard": "poiuytrewqlkjhgfdsamnbvcxz",
+                "word": "rhythm"
+            },
+            "expected": 37
+        },
+        {
+            "args": {
+                "keyboard": "lkjhgfdsapoiuytrewqmnbvcxz",
+                "word": "softwareengineering"
+            },
+            "expected": 114
+        },
+        {
+            "args": {
+                "keyboard": "poiuytrewqlkjhgfdsamnbvcxz",
+                "word": "bazinga"
+            },
+            "expected": 82
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuiopasdfghjklzxcvbnm",
+                "word": "neuromuscular"
+            },
+            "expected": 151
+        },
+        {
+            "args": {
+                "keyboard": "abcdefghijklmnopqrstuvwxyz",
+                "word": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+            },
+            "expected": 75
+        },
+        {
+            "args": {
+                "keyboard": "zyxwvutsrqponmlkjihgfedcba",
+                "word": "zyxwvutsrqponmlkjihgfedcbaabcdefghijklmnopqrstuvwxyz"
+            },
+            "expected": 50
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "supercalifragilisticexpialidocious"
+            },
+            "expected": 278
+        },
+        {
+            "args": {
+                "keyboard": "fedcbaonmlkjihgtsrqpzyxwvu",
+                "word": "programmingisfun"
+            },
+            "expected": 139
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "quantization"
+            },
+            "expected": 119
+        },
+        {
+            "args": {
+                "keyboard": "asdfghjklzxcvbnmqwertyuiop",
+                "word": "antidisestablishmentarianism"
+            },
+            "expected": 367
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuiopasdfghjklzxcvbnm",
+                "word": "mississippi"
+            },
+            "expected": 63
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "aquickbrownfoxjumpsoverthelazydog"
+            },
+            "expected": 317
+        },
+        {
+            "args": {
+                "keyboard": "ejkflqzcvbnpitywrdxhgmosau",
+                "word": "exponentially"
+            },
+            "expected": 114
+        },
+        {
+            "args": {
+                "keyboard": "poiuytrewqlkjhgfdsamnbvcxz",
+                "word": "antidisestablishmentarianism"
+            },
+            "expected": 295
+        },
+        {
+            "args": {
+                "keyboard": "poiuytrewqlkjhgfdsamnbvcxz",
+                "word": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+            },
+            "expected": 447
+        },
+        {
+            "args": {
+                "keyboard": "zyxwvutsrqponmlkjihgfedcba",
+                "word": "abacabadabacaba"
+            },
+            "expected": 47
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "algorithm"
+            },
+            "expected": 66
+        },
+        {
+            "args": {
+                "keyboard": "poiuytrewqasdfghjklzxcvbnm",
+                "word": "congratulations"
+            },
+            "expected": 161
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "thequickbrownfoxjumpsoverthelazydog"
+            },
+            "expected": 339
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "racecar"
+            },
+            "expected": 96
+        },
+        {
+            "args": {
+                "keyboard": "poiuytrewqlkjhgfdsamnbvcxz",
+                "word": "honorificabilitudinitatibus"
+            },
+            "expected": 313
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "alibabacloud"
+            },
+            "expected": 121
+        },
+        {
+            "args": {
+                "keyboard": "asdfghjklqwertyuiopzxcvbnm",
+                "word": "supercalifragilisticexpialidocious"
+            },
+            "expected": 283
+        },
+        {
+            "args": {
+                "keyboard": "zxcvbnmlkjhgfdsapoiuytrewq",
+                "word": "extraterrestrialization"
+            },
+            "expected": 181
+        },
+        {
+            "args": {
+                "keyboard": "lkjhgfdsazxcvbnmqwertyuiop",
+                "word": "thisisaverylongwordthatwilltestthekeyboardlayout"
+            },
+            "expected": 510
+        },
+        {
+            "args": {
+                "keyboard": "zxcvbnmlkjhgfdsapoiuytrewq",
+                "word": "abcdefghijklmnopqrstuvwxyz"
+            },
+            "expected": 224
+        },
+        {
+            "args": {
+                "keyboard": "zxcvbnmlkjhgfdsapoiuytrewq",
+                "word": "floccinaucinihilipilification"
+            },
+            "expected": 271
+        },
+        {
+            "args": {
+                "keyboard": "asdfghjklqwertyuiopzxcvbnm",
+                "word": "juxtaposition"
+            },
+            "expected": 104
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "rhythm"
+            },
+            "expected": 66
+        },
+        {
+            "args": {
+                "keyboard": "abcdefghijklmnopqrstuvwxyz",
+                "word": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+            },
+            "expected": 25
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuioplkjhgfdsazxcvbnm",
+                "word": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "expected": 18
+        },
+        {
+            "args": {
+                "keyboard": "zyxwvutsrqponmlkjihgfedcba",
+                "word": "reverseengineering"
+            },
+            "expected": 149
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "congratulationsonwinningthetournament"
+            },
+            "expected": 397
+        },
+        {
+            "args": {
+                "keyboard": "abcdefghijklmnopqrstuvwxyz",
+                "word": "zzzzzzzzzzzzzzzzzzzz"
+            },
+            "expected": 25
+        },
+        {
+            "args": {
+                "keyboard": "abcdefghijklmnopqrstuvwxyz",
+                "word": "hellohellohellohellohellohellohellohello"
+            },
+            "expected": 160
+        },
+        {
+            "args": {
+                "keyboard": "ploazxykrmnghijfdscwutevbq",
+                "word": "characterization"
+            },
+            "expected": 136
+        },
+        {
+            "args": {
+                "keyboard": "zxcvbnmlkjhgfdsapoiuytrewq",
+                "word": "quixotically"
+            },
+            "expected": 122
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuiopasdfghjklzxcvbnm",
+                "word": "aabbccddeeffgghhiijjkkllmmooppqqrrssttuuvvwwxxyyzz"
+            },
+            "expected": 215
+        },
+        {
+            "args": {
+                "keyboard": "zxcvbnmlkjhgfdsapoiuytrewq",
+                "word": "antidisestablishmentarianism"
+            },
+            "expected": 232
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuioplkjhgfdsazxcvbnm",
+                "word": "supercalifragilisticexpialidocious"
+            },
+            "expected": 293
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuiopasdfghjklzxcvbnm",
+                "word": "everygoodboydoesfine"
+            },
+            "expected": 166
+        },
+        {
+            "args": {
+                "keyboard": "qazwsxedcrfvtgbyhnujmiklop",
+                "word": "pneumonoultramicroscopicsilicovolcanoconiosis"
+            },
+            "expected": 442
+        },
+        {
+            "args": {
+                "keyboard": "asdfghjklzxcvbnmqwertyuiop",
+                "word": "thelazybrownfoxjumpsoverthelazydog"
+            },
+            "expected": 394
+        },
+        {
+            "args": {
+                "keyboard": "fghijklmnopqrstuvwxyzabcde",
+                "word": "pythonprogramming"
+            },
+            "expected": 109
+        },
+        {
+            "args": {
+                "keyboard": "asdfghjklzxcvbnmqwertyuiop",
+                "word": "pseudopseudohypoparathyroidism"
+            },
+            "expected": 441
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzasdfghjklpoiuytrewq",
+                "word": "quixotically"
+            },
+            "expected": 94
+        },
+        {
+            "args": {
+                "keyboard": "poiuytrewqlkjhgfdsamnbvcxz",
+                "word": "floccinaucinihilipilification"
+            },
+            "expected": 330
+        },
+        {
+            "args": {
+                "keyboard": "fghijklmnopqrstuvwxyzabcde",
+                "word": "fedcbazyxwvutsrqponmlkjihgf"
+            },
+            "expected": 50
+        },
+        {
+            "args": {
+                "keyboard": "asdfghjklqwertyuiopzxcvbnm",
+                "word": "programmingisfun"
+            },
+            "expected": 174
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuiopasdfghjklzxcvbnm",
+                "word": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz"
+            },
+            "expected": 215
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "programmingisfun"
+            },
+            "expected": 149
+        },
+        {
+            "args": {
+                "keyboard": "ghijklmnopqrstuvwxyzabcdef",
+                "word": "thisisaverylongwordthatwilltestyouralgorithm"
+            },
+            "expected": 362
+        },
+        {
+            "args": {
+                "keyboard": "asdfghjklzxcvbnmqwertyuiop",
+                "word": "mississippi"
+            },
+            "expected": 115
+        },
+        {
+            "args": {
+                "keyboard": "ejkpfghizxncovmwbartldsqyu",
+                "word": "onomatopoeia"
+            },
+            "expected": 77
+        },
+        {
+            "args": {
+                "keyboard": "zyxwvutsrqponmlkjihgfedcba",
+                "word": "racecar"
+            },
+            "expected": 50
+        },
+        {
+            "args": {
+                "keyboard": "abcdefghijklmnopqrstuvwxyz",
+                "word": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+            },
+            "expected": 25
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "qwertyuioplkjhgfdsazxcvbnm"
+            },
+            "expected": 66
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuioplkjhgfdsazxcvbnm",
+                "word": "floccinaucinihilipilification"
+            },
+            "expected": 242
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuioplkjhgfdsazxcvbnm",
+                "word": "incomprehensible"
+            },
+            "expected": 178
+        },
+        {
+            "args": {
+                "keyboard": "asdfghjklzxcvbnmqwertyuiop",
+                "word": "thequickbrownfoxjumpsoverthelazydog"
+            },
+            "expected": 378
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "abababababababababababababababababababababababababababababab"
+            },
+            "expected": 782
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzlkjhgfdsapoiuytrewq",
+                "word": "algorithmically"
+            },
+            "expected": 130
+        },
+        {
+            "args": {
+                "keyboard": "mnbvcxzasdfghjklpoiuytrewq",
+                "word": "floccinaucinihilipilification"
+            },
+            "expected": 237
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuiopasdfghjklzxcvbnm",
+                "word": "thelazybrownfoxjumpsoverthelazydog"
+            },
+            "expected": 354
+        },
+        {
+            "args": {
+                "keyboard": "poiuytrewqlkjhgfdsamnbvcxz",
+                "word": "supercalifragilisticexpialidocious"
+            },
+            "expected": 377
+        },
+        {
+            "args": {
+                "keyboard": "lkjhgfdsapoiuytrewqzxcvbnm",
+                "word": "mellifluous"
+            },
+            "expected": 93
+        },
+        {
+            "args": {
+                "keyboard": "qwertyuioplkjhgfdsazxcvbnm",
+                "word": "bipartisan"
+            },
+            "expected": 86
+        },
+        {
+            "args": {
+                "keyboard": "poiuytrewqlkjhgfdsazxcvbnm",
+                "word": "interstellar"
+            },
+            "expected": 94
+        },
+        {
+            "args": {
+                "keyboard": "zxcvbnmlkjhgfdsapoiuytrewq",
+                "word": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz"
+            },
+            "expected": 224
+        },
+        {
+            "args": {
+                "keyboard": "asdfghjklpoiuytrewqzxcvbnm",
+                "word": "mississippi"
+            },
+            "expected": 83
+        }
+    ];

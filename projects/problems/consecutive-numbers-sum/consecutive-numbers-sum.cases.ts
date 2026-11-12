@@ -1,0 +1,323 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "n": 100
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "n": 15
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "n": 9
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "n": 1000000
+            },
+            "expected": 7
+        },
+        {
+            "args": {
+                "n": 25
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "n": 1
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "n": 1000000000
+            },
+            "expected": 10
+        },
+        {
+            "args": {
+                "n": 1000
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "n": 10
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "n": 5
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "n": 3
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "n": 45
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "n": 210
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "n": 897
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "n": 999999999
+            },
+            "expected": 20
+        },
+        {
+            "args": {
+                "n": 49
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "n": 12345
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "n": 67890
+            },
+            "expected": 16
+        },
+        {
+            "args": {
+                "n": 2147483647
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "n": 76543210
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "n": 56789
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "n": 89123456
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "n": 2019
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "n": 6789
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "n": 10000
+            },
+            "expected": 5
+        },
+        {
+            "args": {
+                "n": 43210987
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "n": 1001
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "n": 2
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "n": 200000000
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "n": 50000000
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "n": 1024
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "n": 101
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "n": 8
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "n": 10000000
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "n": 56789123
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "n": 845123
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "n": 1048576
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "n": 89
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "n": 89754321
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "n": 8472187
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "n": 84521
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "n": 13
+            },
+            "expected": 2
+        },
+        {
+            "args": {
+                "n": 150
+            },
+            "expected": 6
+        },
+        {
+            "args": {
+                "n": 987654321
+            },
+            "expected": 18
+        },
+        {
+            "args": {
+                "n": 123456789
+            },
+            "expected": 12
+        },
+        {
+            "args": {
+                "n": 1234567
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "n": 121
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "n": 999999
+            },
+            "expected": 64
+        },
+        {
+            "args": {
+                "n": 123456
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "n": 500
+            },
+            "expected": 4
+        },
+        {
+            "args": {
+                "n": 54321
+            },
+            "expected": 8
+        },
+        {
+            "args": {
+                "n": 100000000
+            },
+            "expected": 9
+        },
+        {
+            "args": {
+                "n": 1500
+            },
+            "expected": 8
+        }
+    ];

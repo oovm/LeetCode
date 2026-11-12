@@ -1,0 +1,437 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "s": "abcdef"
+            },
+            "expected": "abcdef"
+        },
+        {
+            "args": {
+                "s": "a1b2c3d4e5"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "a1b2c3d4e5f6g7h8i9j0"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "a1b2c3d4e5f6"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "a1b2c3"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abcd1234"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abcd1"
+            },
+            "expected": "abc"
+        },
+        {
+            "args": {
+                "s": "cb34"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "a1b1c1"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "a1b2c3d4"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "a1b"
+            },
+            "expected": "b"
+        },
+        {
+            "args": {
+                "s": "a1b1c1d1e1f1g1h1i1j1k1l1m1n1o1p1q1r1s1t1u1v1w1x1y1z1"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abc"
+            },
+            "expected": "abc"
+        },
+        {
+            "args": {
+                "s": "abc1d2e3"
+            },
+            "expected": "ab"
+        },
+        {
+            "args": {
+                "s": "abcd"
+            },
+            "expected": "abcd"
+        },
+        {
+            "args": {
+                "s": "abc123"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "z9y8x7w6v5u4t3s2r1q0p1o2n3m4l5k6j7i8h9g0f1e2d3c4b5a6"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abc123d4ef5"
+            },
+            "expected": "e"
+        },
+        {
+            "args": {
+                "s": "z1y2x3w4v5u6t7s8r9q0p1o2n3m4l5k6j7i8h9g0f1e2d3c4b5a6"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "xyz765mno432lmn109pqr876"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "hello2world1"
+            },
+            "expected": "hellworl"
+        },
+        {
+            "args": {
+                "s": "zz9yy8xx7ww6vv5uu4tt3ss2rr1qqppooonnmmllkkjjiihhggffeedcba1"
+            },
+            "expected": "zyxwvutsrqqppooonnmmllkkjjiihhggffeedcb"
+        },
+        {
+            "args": {
+                "s": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2g3h4i5j6k7l8m9n0o1p2q3r4s5t6u7v8w9x0y1z2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "mnbv1234cvbnm5678mnbvc90"
+            },
+            "expected": "cmnb"
+        },
+        {
+            "args": {
+                "s": "abcdefghij1klmnopqr2stuv3wxyz4abcd5efg6hij7klmno8pqr9stu0vwx1yz2"
+            },
+            "expected": "abcdefghiklmnopqstuwxyabcefhiklmnpqstvwy"
+        },
+        {
+            "args": {
+                "s": "abcdefghijklmnopqrstuvwxyz1234567890"
+            },
+            "expected": "abcdefghijklmnop"
+        },
+        {
+            "args": {
+                "s": "q1w2e3r4t5y6u7i8o9p0"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abcdefghij1234567890klmnopqrstuvwxyz"
+            },
+            "expected": "klmnopqrstuvwxyz"
+        },
+        {
+            "args": {
+                "s": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abcdefgh12345678ijkl90mnopqrstu12345678vwxyz0"
+            },
+            "expected": "ijmvwxy"
+        },
+        {
+            "args": {
+                "s": "abcd1234abcd5678abcd90abcd"
+            },
+            "expected": "ababcd"
+        },
+        {
+            "args": {
+                "s": "z9y8x7w6v5u4t3s2r1"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "x1y2z3a4b5c6d7e8f9g0"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "a1a2a3a4a5a6a7a8a9a0b1b2b3b4b5b6b7b8b9b0c1c2c3c4c5c6c7c8c9c0"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abcdefgh1ijklm2nopqr3stuv4wxyz5"
+            },
+            "expected": "abcdefgijklnopqstuwxy"
+        },
+        {
+            "args": {
+                "s": "m1n2o3p4q5r6s7t8u9v0w1x2y3z4"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abcdefghij0987654321klmnopqrstuvwxyz"
+            },
+            "expected": "klmnopqrstuvwxyz"
+        },
+        {
+            "args": {
+                "s": "abcdef123ghijkl456mnopq789rstuv0"
+            },
+            "expected": "abcghimnrstu"
+        },
+        {
+            "args": {
+                "s": "x1y2z3x1y2z3"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "xyz123abc456def789ghi0"
+            },
+            "expected": "gh"
+        },
+        {
+            "args": {
+                "s": "abcdefghi1jklmnopq2rstuvwxy3z"
+            },
+            "expected": "abcdefghjklmnoprstuvwxz"
+        },
+        {
+            "args": {
+                "s": "aaa1bbb2ccc3ddd4eee5fff6ggg7hhh8iii9jjj"
+            },
+            "expected": "aabbccddeeffgghhiijjj"
+        },
+        {
+            "args": {
+                "s": "abcdef1ghijkl2mnopqr3stuv4wxyz5"
+            },
+            "expected": "abcdeghijkmnopqstuwxy"
+        },
+        {
+            "args": {
+                "s": "mno4pqr5stu6vwx7yz8"
+            },
+            "expected": "mnpqstvwy"
+        },
+        {
+            "args": {
+                "s": "p1q2r3s4t5u6v7w8x9y0z1a2b3c4d5e6f7g8h9i0"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abc123def456ghi789jkl0mno1pqr2stu3vwx4yz5"
+            },
+            "expected": "jkmnpqstvwy"
+        },
+        {
+            "args": {
+                "s": "abcdefghijklmnopqrstuvwxyz0123456789"
+            },
+            "expected": "abcdefghijklmnop"
+        },
+        {
+            "args": {
+                "s": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "x9y8z7w6v5u4t3s2r1q0p"
+            },
+            "expected": "p"
+        },
+        {
+            "args": {
+                "s": "x9y8z7"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abcdefghi1jklmnopq2rstuv3wxyz4"
+            },
+            "expected": "abcdefghjklmnoprstuwxy"
+        },
+        {
+            "args": {
+                "s": "m9n8o7p6q5r4s3t2u1"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abc123def456ghi789jkl012mno345pqr678stu90"
+            },
+            "expected": "s"
+        },
+        {
+            "args": {
+                "s": "z9y8x7w6v5u4t3s2r1q"
+            },
+            "expected": "q"
+        },
+        {
+            "args": {
+                "s": "abcdefghij1klmnopqr2stuv3wxyz4"
+            },
+            "expected": "abcdefghiklmnopqstuwxy"
+        },
+        {
+            "args": {
+                "s": "abcdef123ghijkl456mno789pqr12stu34vwxy5z"
+            },
+            "expected": "abcghipsvwxz"
+        },
+        {
+            "args": {
+                "s": "abcdefghij1234567890"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "xyz123"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abcd1234efgh5678ijkl90"
+            },
+            "expected": "ij"
+        },
+        {
+            "args": {
+                "s": "abc1def2ghi3jkl4mno5pqr6stu7vwx8yz9"
+            },
+            "expected": "abdeghjkmnpqstvwy"
+        },
+        {
+            "args": {
+                "s": "x9y8z7x6y5z4x3y2z1"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2g3h4i5j6k7l8m9n0o1p2q3r4s5t6u7v8w9x0y1z2"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "z9y8x7w6v5u4t3s2r1q0ponmlkjihgfedcba"
+            },
+            "expected": "ponmlkjihgfedcba"
+        },
+        {
+            "args": {
+                "s": "xyz7uvw8mno9"
+            },
+            "expected": "xyuvmn"
+        },
+        {
+            "args": {
+                "s": "abcdefghij1klmnopq2rstuv3wxyz4"
+            },
+            "expected": "abcdefghiklmnoprstuwxy"
+        },
+        {
+            "args": {
+                "s": "p1q2r3s4t5u6v7w8x9y0z"
+            },
+            "expected": "z"
+        },
+        {
+            "args": {
+                "s": "z1y2x3w4v5u6t7s8r9q0"
+            },
+            "expected": ""
+        },
+        {
+            "args": {
+                "s": "abcdefghij1klmnopq2rstuvwx3yz"
+            },
+            "expected": "abcdefghiklmnoprstuvwyz"
+        },
+        {
+            "args": {
+                "s": "abcdef1ghijkl2mnopqr3stuv4wxyz5abcdef6ghijkl7mnopqr8stuv9wxyz0"
+            },
+            "expected": "abcdeghijkmnopqstuwxyabcdeghijkmnopqstuwxy"
+        }
+    ];

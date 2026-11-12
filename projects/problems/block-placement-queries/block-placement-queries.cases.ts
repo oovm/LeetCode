@@ -1,0 +1,1002 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "queries": [[2, 5, 2], [1, 3], [2, 5, 3], [1, 4], [2, 5, 1]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 5], [1, 3], [2, 5, 2], [1, 10], [2, 10, 3]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 7], [2, 7, 6], [1, 2], [2, 7, 5], [2, 7, 6]]
+            },
+            "expected": [true, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [2, 2, 2], [1, 3], [2, 4, 1], [2, 4, 2]]
+            },
+            "expected": [false, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [1, 15], [2, 20, 10], [2, 12, 3]]
+            },
+            "expected": [false, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 5, 1], [1, 3], [1, 4], [2, 5, 1]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 3], [1, 5], [1, 7], [2, 10, 5]]
+            },
+            "expected": [false]
+        },
+        {
+            "args": {
+                "queries": [[2, 5, 3], [1, 2], [2, 5, 2], [1, 4], [2, 5, 3]]
+            },
+            "expected": [true, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 5], [1, 10], [2, 10, 3], [2, 10, 7]]
+            },
+            "expected": [true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [1, 4], [2, 4, 2]]
+            },
+            "expected": [false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 3], [1, 5], [2, 6, 2], [2, 6, 4]]
+            },
+            "expected": [true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [2, 10, 4], [1, 15], [2, 15, 7]]
+            },
+            "expected": [true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 10, 5], [1, 5], [2, 5, 2], [2, 10, 8]]
+            },
+            "expected": [true, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 10, 5], [1, 3], [2, 5, 2]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [1, 5], [2, 10, 3], [2, 5, 2]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 2], [2, 3, 3], [2, 3, 1], [2, 2, 2]]
+            },
+            "expected": [false, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 5], [1, 10], [2, 12, 3], [2, 12, 7], [2, 12, 10]]
+            },
+            "expected": [true, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [2, 2, 1], [1, 3], [2, 4, 2], [1, 5], [2, 6, 3], [1, 7], [2, 8, 4], [1, 9], [2, 10, 5]]
+            },
+            "expected": [true, true, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 2],
+                    [1, 4],
+                    [1, 6],
+                    [1, 8],
+                    [1, 10],
+                    [2, 10, 5],
+                    [2, 10, 4],
+                    [2, 10, 3],
+                    [2, 10, 2],
+                    [2, 10, 1],
+                    [1, 12],
+                    [2, 12, 6],
+                    [2, 12, 5],
+                    [2, 12, 4],
+                    [2, 12, 3],
+                    [2, 12, 2],
+                    [2, 12, 1]
+                ]
+            },
+            "expected": [false, false, false, true, true, false, false, false, false, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [2, 5, 5], [2, 5, 4], [2, 5, 3], [2, 5, 2], [2, 5, 1]]
+            },
+            "expected": [false, false, false, false, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 2], [1, 4], [1, 6], [1, 8], [1, 10], [2, 10, 9], [2, 10, 3], [2, 10, 5]]
+            },
+            "expected": [false, false, false]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 1],
+                    [1, 3],
+                    [1, 5],
+                    [1, 7],
+                    [1, 9],
+                    [2, 10, 9],
+                    [2, 10, 8],
+                    [2, 10, 7],
+                    [2, 10, 6],
+                    [2, 10, 5],
+                    [2, 10, 4],
+                    [2, 10, 3],
+                    [2, 10, 2],
+                    [2, 10, 1]
+                ]
+            },
+            "expected": [false, false, false, false, false, false, false, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 2], [1, 4], [1, 6], [1, 8], [2, 10, 8], [2, 8, 4], [2, 6, 2]]
+            },
+            "expected": [false, false, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 3], [1, 5], [1, 7], [1, 9], [2, 10, 8], [2, 10, 4], [2, 10, 2]]
+            },
+            "expected": [false, false, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [2, 5, 2], [2, 5, 3], [2, 5, 4], [2, 5, 5]]
+            },
+            "expected": [false, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [2, 5, 1], [2, 5, 2], [2, 5, 3], [2, 5, 4], [2, 5, 5]]
+            },
+            "expected": [true, false, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 10], [2, 5, 4], [2, 10, 8], [1, 15], [2, 20, 5], [2, 20, 10], [2, 20, 15], [2, 20, 20]]
+            },
+            "expected": [true, true, true, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 2],
+                    [1, 4],
+                    [1, 6],
+                    [1, 8],
+                    [1, 10],
+                    [1, 12],
+                    [1, 14],
+                    [1, 16],
+                    [1, 18],
+                    [1, 20],
+                    [2, 21, 10],
+                    [2, 21, 20],
+                    [2, 21, 30],
+                    [2, 21, 40],
+                    [2, 21, 50]
+                ]
+            },
+            "expected": [false, false, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 1],
+                    [1, 3],
+                    [1, 5],
+                    [1, 7],
+                    [1, 9],
+                    [1, 11],
+                    [1, 13],
+                    [1, 15],
+                    [1, 17],
+                    [1, 19],
+                    [2, 20, 1],
+                    [2, 20, 2],
+                    [2, 20, 3],
+                    [2, 20, 4],
+                    [2, 20, 5],
+                    [2, 20, 6],
+                    [2, 20, 7],
+                    [2, 20, 8],
+                    [2, 20, 9],
+                    [2, 20, 10]
+                ]
+            },
+            "expected": [true, true, false, false, false, false, false, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [2, 2, 1], [2, 3, 2], [1, 4], [2, 5, 3], [1, 6], [2, 7, 4], [1, 8], [2, 9, 5]]
+            },
+            "expected": [true, true, true, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [2, 2, 2], [1, 3], [1, 4], [1, 5], [2, 5, 4], [2, 5, 1]]
+            },
+            "expected": [false, false, true]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 10],
+                    [1, 9],
+                    [1, 8],
+                    [1, 7],
+                    [1, 6],
+                    [1, 5],
+                    [1, 4],
+                    [1, 3],
+                    [1, 2],
+                    [1, 1],
+                    [2, 10, 5],
+                    [2, 9, 4],
+                    [2, 8, 3],
+                    [2, 7, 2],
+                    [2, 6, 1]
+                ]
+            },
+            "expected": [false, false, false, false, true]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 2],
+                    [2, 3, 1],
+                    [1, 4],
+                    [2, 5, 2],
+                    [1, 6],
+                    [2, 7, 3],
+                    [1, 8],
+                    [2, 9, 4],
+                    [1, 10],
+                    [2, 11, 5],
+                    [1, 12],
+                    [2, 13, 6]
+                ]
+            },
+            "expected": [true, true, false, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [2, 12, 3], [1, 7], [2, 10, 6], [2, 8, 2]]
+            },
+            "expected": [true, false, true]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 1],
+                    [1, 2],
+                    [2, 2, 1],
+                    [2, 2, 2],
+                    [1, 3],
+                    [2, 3, 1],
+                    [2, 3, 2],
+                    [2, 3, 3],
+                    [1, 4],
+                    [2, 4, 1],
+                    [2, 4, 2],
+                    [2, 4, 3],
+                    [2, 4, 4]
+                ]
+            },
+            "expected": [true, false, true, false, false, true, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 2],
+                    [1, 4],
+                    [1, 6],
+                    [1, 8],
+                    [1, 10],
+                    [1, 12],
+                    [1, 14],
+                    [2, 16, 12],
+                    [2, 16, 8],
+                    [2, 16, 4],
+                    [2, 16, 6],
+                    [2, 16, 10],
+                    [2, 16, 14]
+                ]
+            },
+            "expected": [false, false, false, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 3], [1, 5], [1, 7], [1, 9], [2, 10, 2], [2, 10, 4], [2, 10, 6], [2, 10, 8], [2, 10, 10]]
+            },
+            "expected": [true, false, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [2, 2, 1], [2, 3, 2], [1, 4], [1, 5], [2, 6, 3], [2, 7, 4], [2, 8, 5]]
+            },
+            "expected": [true, true, true, false, false]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 1],
+                    [2, 2, 1],
+                    [1, 3],
+                    [2, 4, 2],
+                    [1, 5],
+                    [2, 6, 3],
+                    [1, 7],
+                    [2, 8, 4],
+                    [1, 9],
+                    [2, 10, 5],
+                    [1, 11],
+                    [2, 12, 6],
+                    [1, 13],
+                    [2, 14, 7],
+                    [1, 14],
+                    [2, 15, 8],
+                    [1, 16],
+                    [2, 17, 9],
+                    [1, 17],
+                    [2, 18, 10]
+                ]
+            },
+            "expected": [true, true, false, false, false, false, false, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [2, 3, 1], [2, 3, 2], [1, 4], [1, 5], [2, 6, 3], [2, 6, 5], [1, 7], [2, 8, 4]]
+            },
+            "expected": [true, true, true, false, false]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 1],
+                    [1, 2],
+                    [1, 3],
+                    [1, 4],
+                    [1, 5],
+                    [1, 6],
+                    [1, 7],
+                    [1, 8],
+                    [1, 9],
+                    [1, 10],
+                    [2, 10, 1],
+                    [2, 10, 2],
+                    [2, 10, 3],
+                    [2, 10, 4],
+                    [2, 10, 5],
+                    [2, 10, 6],
+                    [2, 10, 7],
+                    [2, 10, 8],
+                    [2, 10, 9],
+                    [2, 10, 10]
+                ]
+            },
+            "expected": [true, false, false, false, false, false, false, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [2, 6, 1], [2, 6, 2], [2, 6, 3], [2, 6, 4], [2, 6, 5], [2, 6, 6]]
+            },
+            "expected": [true, false, false, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [2, 2, 2], [1, 3], [2, 4, 1], [2, 4, 2], [1, 5], [2, 6, 1], [2, 6, 2], [2, 6, 3], [2, 6, 4], [2, 6, 5]]
+            },
+            "expected": [false, true, true, true, true, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 1],
+                    [1, 2],
+                    [1, 3],
+                    [1, 4],
+                    [1, 5],
+                    [1, 6],
+                    [1, 7],
+                    [1, 8],
+                    [1, 9],
+                    [1, 10],
+                    [2, 11, 10],
+                    [2, 11, 9],
+                    [2, 11, 8],
+                    [2, 11, 7],
+                    [2, 11, 6],
+                    [2, 11, 5],
+                    [2, 11, 4],
+                    [2, 11, 3],
+                    [2, 11, 2],
+                    [2, 11, 1]
+                ]
+            },
+            "expected": [false, false, false, false, false, false, false, false, false, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [2, 10, 4], [1, 15], [2, 15, 6], [1, 20], [2, 20, 8], [2, 20, 9]]
+            },
+            "expected": [true, true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 3], [1, 5], [1, 7], [2, 10, 2], [2, 8, 2], [2, 6, 2], [2, 4, 2], [2, 2, 2]]
+            },
+            "expected": [true, true, true, true, false]
+        },
+        {
+            "args": {
+                "queries": [
+                    [1, 1],
+                    [2, 1, 1],
+                    [1, 2],
+                    [2, 2, 2],
+                    [1, 3],
+                    [2, 3, 3],
+                    [1, 4],
+                    [2, 4, 4],
+                    [1, 5],
+                    [2, 5, 5],
+                    [1, 6],
+                    [2, 6, 6],
+                    [1, 7],
+                    [2, 7, 7],
+                    [1, 8],
+                    [2, 8, 8],
+                    [1, 9],
+                    [2, 9, 9],
+                    [1, 10],
+                    [2, 10, 10]
+                ]
+            },
+            "expected": [true, false, false, false, false, false, false, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 20, 5], [1, 15], [2, 25, 10], [1, 20], [2, 30, 15], [1, 25], [2, 40, 20], [1, 30], [2, 50, 25]]
+            },
+            "expected": [true, true, false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [1, 15], [2, 20, 10], [2, 20, 5], [2, 20, 15]]
+            },
+            "expected": [false, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [1, 8], [1, 9], [1, 10], [2, 10, 5]]
+            },
+            "expected": [false]
+        },
+        {
+            "args": {
+                "queries": [[1, 20], [2, 20, 10], [1, 5], [2, 20, 15], [1, 15], [2, 20, 12], [2, 20, 18]]
+            },
+            "expected": [true, true, false, false]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 1], [1, 5], [2, 10, 4], [2, 10, 5], [2, 10, 6]]
+            },
+            "expected": [true, true, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [2, 10, 3], [1, 6], [2, 10, 3], [2, 10, 4]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 3], [1, 6], [2, 6, 3], [2, 6, 4]]
+            },
+            "expected": [true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 3], [1, 6], [2, 10, 4], [1, 1], [2, 10, 9]]
+            },
+            "expected": [true, false]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 1], [1, 5], [2, 10, 5], [2, 10, 6]]
+            },
+            "expected": [true, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [2, 12, 7], [1, 8], [2, 15, 9]]
+            },
+            "expected": [false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 3], [1, 6], [2, 8, 4], [1, 5], [2, 10, 3]]
+            },
+            "expected": [false, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [2, 5, 4], [1, 15], [2, 15, 10], [2, 10, 3]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 3], [1, 6], [1, 9], [2, 12, 7], [2, 12, 5]]
+            },
+            "expected": [false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [2, 5, 3]]
+            },
+            "expected": [false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [2, 3, 2], [2, 4, 2]]
+            },
+            "expected": [false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 10, 5], [1, 5], [2, 10, 3], [2, 5, 4]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [2, 15, 4], [2, 15, 6], [1, 8], [2, 15, 7]]
+            },
+            "expected": [true, false, false]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 10], [1, 5], [2, 10, 4], [1, 3], [2, 10, 3]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 3], [1, 5], [2, 10, 5], [1, 8], [2, 10, 2]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 5, 4], [1, 3], [2, 4, 1], [1, 4], [2, 5, 2]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [1, 15], [2, 10, 3], [2, 20, 8]]
+            },
+            "expected": [true, false]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 5], [1, 5], [2, 5, 2], [1, 10], [2, 10, 5]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 5, 2], [1, 3], [1, 7], [2, 9, 4]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [2, 3, 2], [2, 3, 3]]
+            },
+            "expected": [false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 15, 10], [1, 5], [2, 8, 3]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [1, 15], [2, 15, 5], [2, 15, 10], [2, 15, 20]]
+            },
+            "expected": [true, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 10, 5], [1, 5], [2, 10, 3], [2, 10, 6]]
+            },
+            "expected": [true, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [2, 4, 3], [2, 3, 1], [2, 5, 4]]
+            },
+            "expected": [false, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 10, 9], [2, 10, 10], [2, 10, 11]]
+            },
+            "expected": [true, true, false]
+        },
+        {
+            "args": {
+                "queries": [[2, 5, 1], [1, 3], [2, 5, 2], [1, 4], [2, 5, 2]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 5, 2], [1, 2], [1, 3], [2, 5, 2], [2, 4, 2]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 15, 5], [2, 15, 10], [1, 5], [2, 15, 4]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [2, 5, 4], [1, 3], [2, 3, 2], [2, 5, 3]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 10, 5], [1, 5], [2, 10, 4]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 3], [1, 5], [2, 4, 2], [2, 6, 3]]
+            },
+            "expected": [true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 10, 5], [1, 5], [2, 10, 5], [2, 5, 1]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 1], [1, 5], [2, 10, 2], [1, 7], [2, 10, 3]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 10, 5], [1, 8], [2, 10, 7], [1, 6], [2, 10, 8]]
+            },
+            "expected": [true, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 10, 5], [2, 10, 10], [1, 5], [2, 10, 5], [2, 10, 1], [2, 10, 9]]
+            },
+            "expected": [true, true, true, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 3], [2, 6, 2], [2, 6, 4]]
+            },
+            "expected": [true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [2, 8, 3], [1, 15], [2, 20, 5]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [1, 5], [2, 10, 4], [2, 10, 5], [1, 3], [2, 10, 2]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 5, 2], [1, 3], [2, 4, 2], [1, 7], [2, 8, 6]]
+            },
+            "expected": [true, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [1, 15], [2, 20, 10], [2, 20, 15], [2, 20, 20]]
+            },
+            "expected": [false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 5], [1, 5], [1, 10], [2, 10, 5]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 3], [1, 5], [2, 5, 2], [1, 7], [2, 10, 4]]
+            },
+            "expected": [true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 10, 5], [1, 3], [2, 10, 2], [2, 5, 3]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 5, 3], [1, 2], [1, 4], [2, 5, 2], [1, 3], [2, 5, 1]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 3], [1, 5], [1, 7], [2, 8, 2], [2, 8, 3], [2, 8, 4]]
+            },
+            "expected": [true, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 3], [1, 5], [1, 7], [2, 8, 2]]
+            },
+            "expected": [true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [2, 10, 4], [2, 10, 5]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [2, 10, 1], [1, 5], [2, 10, 4], [1, 10], [2, 10, 3]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [2, 15, 4], [2, 15, 6], [2, 15, 5]]
+            },
+            "expected": [true, false, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [1, 5], [2, 8, 2], [1, 3], [2, 6, 2]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 5], [1, 3], [2, 10, 2], [1, 7], [2, 10, 3]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [2, 2, 1], [2, 3, 2], [1, 2], [2, 3, 1]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [1, 4], [2, 4, 3], [2, 4, 2], [2, 4, 1]]
+            },
+            "expected": [false, false, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [2, 10, 5], [2, 10, 10], [1, 5], [2, 5, 2]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [2, 3, 1], [2, 3, 2], [2, 3, 3]]
+            },
+            "expected": [true, false, false]
+        },
+        {
+            "args": {
+                "queries": [[2, 15, 1], [1, 5], [2, 10, 5], [1, 10], [2, 15, 5]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 5], [1, 3], [1, 7], [2, 10, 3], [1, 5], [2, 10, 2]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 8], [2, 8, 4], [1, 6], [2, 8, 3]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [1, 4], [2, 5, 3], [2, 5, 1]]
+            },
+            "expected": [false, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 5, 3], [1, 3], [2, 5, 2]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [2, 7, 3], [1, 15], [2, 15, 6]]
+            },
+            "expected": [true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [2, 3, 3], [2, 5, 2], [1, 4], [2, 4, 2]]
+            },
+            "expected": [false, true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 3], [2, 4, 2], [2, 6, 3]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 2], [1, 5], [1, 8], [2, 10, 3], [2, 10, 2], [2, 10, 1]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 2], [1, 4], [1, 6], [1, 8], [2, 10, 3]]
+            },
+            "expected": [false]
+        },
+        {
+            "args": {
+                "queries": [[1, 4], [2, 6, 3], [1, 2], [2, 8, 6], [1, 6], [2, 10, 5]]
+            },
+            "expected": [true, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [2, 9, 3], [1, 15], [2, 14, 5]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 5], [1, 3], [1, 7], [2, 10, 5], [2, 10, 2]]
+            },
+            "expected": [true, false, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 5], [1, 3], [1, 7], [2, 10, 6], [1, 5], [2, 10, 4]]
+            },
+            "expected": [true, false, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [1, 5], [2, 12, 4], [2, 8, 3]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [2, 3, 1], [2, 3, 2]]
+            },
+            "expected": [true, false]
+        },
+        {
+            "args": {
+                "queries": [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [2, 5, 4], [2, 10, 5]]
+            },
+            "expected": [false, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 3], [1, 5], [1, 7], [2, 8, 2], [2, 8, 4], [2, 8, 6]]
+            },
+            "expected": [true, false, false]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 5], [1, 5], [2, 10, 4], [1, 8], [2, 10, 3]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 10], [1, 5], [2, 15, 5], [2, 10, 3], [1, 12], [2, 15, 4]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 5, 4], [1, 3], [2, 3, 2], [1, 5], [2, 5, 3]]
+            },
+            "expected": [true, true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [2, 15, 6], [2, 15, 10], [2, 15, 11]]
+            },
+            "expected": [false, false, false]
+        },
+        {
+            "args": {
+                "queries": [[2, 1, 1], [1, 1], [2, 1, 1]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[1, 5], [1, 10], [2, 8, 3], [2, 12, 5]]
+            },
+            "expected": [true, true]
+        },
+        {
+            "args": {
+                "queries": [[2, 10, 5], [1, 3], [2, 10, 3], [1, 7], [2, 10, 4]]
+            },
+            "expected": [true, true, true]
+        }
+    ];

@@ -1,0 +1,271 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "s": "aaaa",
+                "k": 2
+            },
+            "expected": "aa"
+        },
+        {
+            "args": {
+                "s": "mnopqr",
+                "k": 3
+            },
+            "expected": "nw"
+        },
+        {
+            "args": {
+                "s": "hellohellohellohello",
+                "k": 5
+            },
+            "expected": "vvvv"
+        },
+        {
+            "args": {
+                "s": "ababababab",
+                "k": 2
+            },
+            "expected": "bbbbb"
+        },
+        {
+            "args": {
+                "s": "zzzz",
+                "k": 4
+            },
+            "expected": "w"
+        },
+        {
+            "args": {
+                "s": "abcd",
+                "k": 2
+            },
+            "expected": "bf"
+        },
+        {
+            "args": {
+                "s": "mxz",
+                "k": 3
+            },
+            "expected": "i"
+        },
+        {
+            "args": {
+                "s": "zzzz",
+                "k": 2
+            },
+            "expected": "yy"
+        },
+        {
+            "args": {
+                "s": "aaaabbbbcccc",
+                "k": 4
+            },
+            "expected": "aei"
+        },
+        {
+            "args": {
+                "s": "abcdefghijklmnopqrstuvwxyz",
+                "k": 26
+            },
+            "expected": "n"
+        },
+        {
+            "args": {
+                "s": "abcdefghijklmnopqrstuvwxyza",
+                "k": 1
+            },
+            "expected": "abcdefghijklmnopqrstuvwxyza"
+        },
+        {
+            "args": {
+                "s": "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc",
+                "k": 3
+            },
+            "expected": "dddddddddddddddddd"
+        },
+        {
+            "args": {
+                "s": "hellohellohellohellohellohellohellohellohellohello",
+                "k": 5
+            },
+            "expected": "vvvvvvvvvv"
+        },
+        {
+            "args": {
+                "s": "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcd",
+                "k": 5
+            },
+            "expected": "ghijghij"
+        },
+        {
+            "args": {
+                "s": "zzzzzzzzzzzzzzzzzzzzzzzzzz",
+                "k": 26
+            },
+            "expected": "a"
+        },
+        {
+            "args": {
+                "s": "abacabadabacaba",
+                "k": 5
+            },
+            "expected": "dfd"
+        },
+        {
+            "args": {
+                "s": "qrstuvwx",
+                "k": 4
+            },
+            "expected": "si"
+        },
+        {
+            "args": {
+                "s": "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcd",
+                "k": 4
+            },
+            "expected": "gggggggggg"
+        },
+        {
+            "args": {
+                "s": "hellotherehellothere",
+                "k": 5
+            },
+            "expected": "vzvz"
+        },
+        {
+            "args": {
+                "s": "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc",
+                "k": 3
+            },
+            "expected": "dddddddddddddddddddddddd"
+        },
+        {
+            "args": {
+                "s": "qwertqwertqwertqwertqwertqwertqwertqwertqwertqwertqwert",
+                "k": 5
+            },
+            "expected": "aaaaaaaaaaa"
+        },
+        {
+            "args": {
+                "s": "mnopqrnopqrmnopqrnopqrmnopqr",
+                "k": 7
+            },
+            "expected": "wxca"
+        },
+        {
+            "args": {
+                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
+                "k": 26
+            },
+            "expected": "aa"
+        },
+        {
+            "args": {
+                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
+                "k": 13
+            },
+            "expected": "kqxd"
+        },
+        {
+            "args": {
+                "s": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
+                "k": 26
+            },
+            "expected": "nn"
+        },
+        {
+            "args": {
+                "s": "aaabbbcccdddeeefffggghhhiii",
+                "k": 3
+            },
+            "expected": "adgjmpsvy"
+        },
+        {
+            "args": {
+                "s": "zyxwvutsrqponmlkjihgfedcbaabcdefghijklmnopqrstuvwxyz",
+                "k": 13
+            },
+            "expected": "naan"
+        },
+        {
+            "args": {
+                "s": "allthesmalllettersofthealphabetarehereeverywhere",
+                "k": 8
+            },
+            "expected": "ebgfav"
+        },
+        {
+            "args": {
+                "s": "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcd",
+                "k": 10
+            },
+            "expected": "nrnr"
+        },
+        {
+            "args": {
+                "s": "zyxwvutsrqponmlkjihgfedcba",
+                "k": 13
+            },
+            "expected": "na"
+        },
+        {
+            "args": {
+                "s": "zyxwvutsrqponmlkjihgfedcba",
+                "k": 1
+            },
+            "expected": "zyxwvutsrqponmlkjihgfedcba"
+        },
+        {
+            "args": {
+                "s": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
+                "k": 78
+            },
+            "expected": "n"
+        },
+        {
+            "args": {
+                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
+                "k": 52
+            },
+            "expected": "a"
+        },
+        {
+            "args": {
+                "s": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
+                "k": 52
+            },
+            "expected": "a"
+        },
+        {
+            "args": {
+                "s": "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
+                "k": 4
+            },
+            "expected": "cksaiqygowemu"
+        },
+        {
+            "args": {
+                "s": "xyzxyzxyz",
+                "k": 3
+            },
+            "expected": "uuu"
+        },
+        {
+            "args": {
+                "s": "mnopqrxyzuvw",
+                "k": 3
+            },
+            "expected": "nwul"
+        },
+        {
+            "args": {
+                "s": "zyxwvutsrqponmlkjihgfedcba",
+                "k": 26
+            },
+            "expected": "n"
+        }
+    ];

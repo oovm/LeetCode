@@ -1,0 +1,390 @@
+// 本文件由 `json_to_cases_ts.mjs` 从 `metadata.json` 逐字转换生成；整数经 BigInt 逐字保真，勿手改数值。
+import type { ProblemCases } from '../../conformance/src/isolated/cases.ts';
+
+export const cases: ProblemCases = [
+        {
+            "args": {
+                "m": 20,
+                "n": 16
+            },
+            "expected": 1855967520
+        },
+        {
+            "args": {
+                "m": 1,
+                "n": 100
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "m": 3,
+                "n": 7
+            },
+            "expected": 28
+        },
+        {
+            "args": {
+                "m": 5,
+                "n": 5
+            },
+            "expected": 70
+        },
+        {
+            "args": {
+                "m": 10,
+                "n": 10
+            },
+            "expected": 48620
+        },
+        {
+            "args": {
+                "m": 5,
+                "n": 3
+            },
+            "expected": 15
+        },
+        {
+            "args": {
+                "m": 30,
+                "n": 11
+            },
+            "expected": 635745396
+        },
+        {
+            "args": {
+                "m": 1,
+                "n": 1
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "m": 3,
+                "n": 2
+            },
+            "expected": 3
+        },
+        {
+            "args": {
+                "m": 100,
+                "n": 1
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "m": 40,
+                "n": 10
+            },
+            "expected": 1677106640
+        },
+        {
+            "args": {
+                "m": 67,
+                "n": 8
+            },
+            "expected": 1629348612
+        },
+        {
+            "args": {
+                "m": 30,
+                "n": 11
+            },
+            "expected": 635745396
+        },
+        {
+            "args": {
+                "m": 5,
+                "n": 95
+            },
+            "expected": 3612280
+        },
+        {
+            "args": {
+                "m": 15,
+                "n": 15
+            },
+            "expected": 40116600
+        },
+        {
+            "args": {
+                "m": 1,
+                "n": 50
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "m": 30,
+                "n": 11
+            },
+            "expected": 635745396
+        },
+        {
+            "args": {
+                "m": 99,
+                "n": 7
+            },
+            "expected": 1517381580
+        },
+        {
+            "args": {
+                "m": 25,
+                "n": 13
+            },
+            "expected": 1251677700
+        },
+        {
+            "args": {
+                "m": 90,
+                "n": 7
+            },
+            "expected": 869107785
+        },
+        {
+            "args": {
+                "m": 75,
+                "n": 7
+            },
+            "expected": 300500200
+        },
+        {
+            "args": {
+                "m": 30,
+                "n": 11
+            },
+            "expected": 635745396
+        },
+        {
+            "args": {
+                "m": 75,
+                "n": 7
+            },
+            "expected": 300500200
+        },
+        {
+            "args": {
+                "m": 30,
+                "n": 11
+            },
+            "expected": 635745396
+        },
+        {
+            "args": {
+                "m": 100,
+                "n": 5
+            },
+            "expected": 4421275
+        },
+        {
+            "args": {
+                "m": 80,
+                "n": 7
+            },
+            "expected": 437353560
+        },
+        {
+            "args": {
+                "m": 40,
+                "n": 10
+            },
+            "expected": 1677106640
+        },
+        {
+            "args": {
+                "m": 80,
+                "n": 7
+            },
+            "expected": 437353560
+        },
+        {
+            "args": {
+                "m": 5,
+                "n": 8
+            },
+            "expected": 330
+        },
+        {
+            "args": {
+                "m": 99,
+                "n": 1
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "m": 5,
+                "n": 100
+            },
+            "expected": 4421275
+        },
+        {
+            "args": {
+                "m": 99,
+                "n": 2
+            },
+            "expected": 99
+        },
+        {
+            "args": {
+                "m": 10,
+                "n": 40
+            },
+            "expected": 1677106640
+        },
+        {
+            "args": {
+                "m": 60,
+                "n": 8
+            },
+            "expected": 778789440
+        },
+        {
+            "args": {
+                "m": 2,
+                "n": 99
+            },
+            "expected": 99
+        },
+        {
+            "args": {
+                "m": 1,
+                "n": 99
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "m": 45,
+                "n": 9
+            },
+            "expected": 752538150
+        },
+        {
+            "args": {
+                "m": 55,
+                "n": 8
+            },
+            "expected": 436270780
+        },
+        {
+            "args": {
+                "m": 50,
+                "n": 2
+            },
+            "expected": 50
+        },
+        {
+            "args": {
+                "m": 60,
+                "n": 8
+            },
+            "expected": 778789440
+        },
+        {
+            "args": {
+                "m": 50,
+                "n": 9
+            },
+            "expected": 1652411475
+        },
+        {
+            "args": {
+                "m": 100,
+                "n": 7
+            },
+            "expected": 1609344100
+        },
+        {
+            "args": {
+                "m": 15,
+                "n": 5
+            },
+            "expected": 3060
+        },
+        {
+            "args": {
+                "m": 99,
+                "n": 7
+            },
+            "expected": 1517381580
+        },
+        {
+            "args": {
+                "m": 20,
+                "n": 16
+            },
+            "expected": 1855967520
+        },
+        {
+            "args": {
+                "m": 15,
+                "n": 20
+            },
+            "expected": 818809200
+        },
+        {
+            "args": {
+                "m": 45,
+                "n": 9
+            },
+            "expected": 752538150
+        },
+        {
+            "args": {
+                "m": 25,
+                "n": 13
+            },
+            "expected": 1251677700
+        },
+        {
+            "args": {
+                "m": 2,
+                "n": 50
+            },
+            "expected": 50
+        },
+        {
+            "args": {
+                "m": 40,
+                "n": 10
+            },
+            "expected": 1677106640
+        },
+        {
+            "args": {
+                "m": 50,
+                "n": 1
+            },
+            "expected": 1
+        },
+        {
+            "args": {
+                "m": 70,
+                "n": 7
+            },
+            "expected": 201359550
+        },
+        {
+            "args": {
+                "m": 15,
+                "n": 21
+            },
+            "expected": 1391975640
+        },
+        {
+            "args": {
+                "m": 33,
+                "n": 11
+            },
+            "expected": 1471442973
+        },
+        {
+            "args": {
+                "m": 35,
+                "n": 10
+            },
+            "expected": 563921995
+        }
+    ];
