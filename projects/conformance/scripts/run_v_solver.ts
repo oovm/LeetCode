@@ -324,7 +324,8 @@ async function main(): Promise<number> {
     }
     if (pinReading.state === 'valid') {
         const pinned = pinReading.pin;
-        const freshness = isArtifactCacheFresh(pinned.artifactDir, pinned.compileTarget);
+        // 权威 verifier 需要项目上下文才能 fully-verified；缺上下文的新产物一律拒绝复用。
+        const freshness = isArtifactCacheFresh(pinned.artifactDir, pinned.compileTarget, projectDir);
         if (!freshness.fresh) {
             throw new Error(freshness.reason ?? 'pinned execution manifest stale');
         }

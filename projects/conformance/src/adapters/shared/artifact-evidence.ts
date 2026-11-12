@@ -38,7 +38,9 @@ export type ArtifactEvidence = {
 /**
  * 读取产物证据。
  *
- * freshness 的 expected target 固定为 `plan.canonicalTarget`；artifact 记录的 target
+ * freshness 的 expected target 固定为 `plan.canonicalTarget`，并传入 `plan.solverDir`
+ * 作为权威 verifier 的项目上下文（缺项目上下文时 verifier 只能给出
+ * artifact-self-consistent 分级，一律拒绝复用）；artifact 记录的 target
  * 只作为证据，不再充当期望值，因此 target 漂移会表现为不新鲜并带原因。
  */
 export function readArtifactEvidence(artifactDir: string, plan: CompileTargetPlan): ArtifactEvidence {
@@ -52,7 +54,7 @@ export function readArtifactEvidence(artifactDir: string, plan: CompileTargetPla
             reason: '缺少 execution manifest',
         };
     }
-    const freshness = isArtifactCacheFresh(artifactDir, plan.canonicalTarget);
+    const freshness = isArtifactCacheFresh(artifactDir, plan.canonicalTarget, plan.solverDir);
     return {
         expectedTarget: plan.canonicalTarget,
         manifestTarget: manifest.target,
