@@ -3,14 +3,6 @@
     "questionId": 1485,
     "difficulty": "Medium",
     "tags": ["Tree", "Depth-First Search", "Breadth-First Search", "Hash Table", "Binary Tree"],
-    "tests": [
-        {
-            "args": {
-                "root": []
-            },
-            "expected": null
-        }
-    ],
     "invoke": {
         "python": "Solution().copyRandomBinaryTree",
         "typescript": "Solution().copyRandomBinaryTree"

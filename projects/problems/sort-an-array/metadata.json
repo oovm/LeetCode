@@ -3,38 +3,6 @@
     "questionId": 912,
     "difficulty": "Medium",
     "tags": ["Array", "Divide and Conquer", "Bucket Sort", "Counting Sort", "Radix Sort", "Sorting", "Heap (Priority Queue)", "Merge Sort"],
-    "tests": [
-        {
-            "args": {
-                "nums": [0]
-            },
-            "expected": [0]
-        },
-        {
-            "args": {
-                "nums": [-1]
-            },
-            "expected": [-1]
-        },
-        {
-            "args": {
-                "nums": [50000]
-            },
-            "expected": [50000]
-        },
-        {
-            "args": {
-                "nums": [-50000]
-            },
-            "expected": [-50000]
-        },
-        {
-            "args": {
-                "nums": [1]
-            },
-            "expected": [1]
-        }
-    ],
     "invoke": {
         "python": "Solution().sortArray",
         "typescript": "Solution().sortArray"

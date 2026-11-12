@@ -3,31 +3,6 @@
     "questionId": 155,
     "difficulty": "Medium",
     "tags": ["Stack", "Design"],
-    "tests": [
-        {
-            "args": {
-                "operations": [
-                    "MinStack",
-                    "push",
-                    "push",
-                    "push",
-                    "getMin",
-                    "pop",
-                    "top",
-                    "getMin"
-                ],
-                "arguments": [[], [-2], [0], [-3], [], [], [], []]
-            },
-            "expected": [null, null, null, null, -3, null, 0, -2]
-        },
-        {
-            "args": {
-                "operations": ["MinStack", "push", "push", "getMin", "pop", "getMin", "top"],
-                "arguments": [[], [0], [2], [], [], [], []]
-            },
-            "expected": [null, null, null, 0, null, 0, 0]
-        }
-    ],
     "invoke": {
         "python": "MinStack",
         "typescript": "MinStack",

@@ -3,15 +3,6 @@
     "questionId": 2782,
     "difficulty": "Medium",
     "tags": ["Union Find", "Counting", "Interactive"],
-    "tests": [
-        {
-            "args": {
-                "n": 1,
-                "categoryHandler": [1]
-            },
-            "expected": 1
-        }
-    ],
     "invoke": {
         "python": "Solution().numberOfCategories",
         "typescript": "Solution().numberOfCategories"

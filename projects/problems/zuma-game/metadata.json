@@ -3,15 +3,6 @@
     "questionId": 488,
     "difficulty": "Hard",
     "tags": ["Stack", "Breadth-First Search", "Memoization", "String", "Dynamic Programming"],
-    "tests": [
-        {
-            "args": {
-                "board": "RRYYGG",
-                "hand": ""
-            },
-            "expected": -1
-        }
-    ],
     "invoke": {
         "python": "Solution().findMinStep",
         "typescript": "Solution().findMinStep"

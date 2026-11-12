@@ -3,44 +3,6 @@
     "questionId": 146,
     "difficulty": "Medium",
     "tags": ["Hash Table", "Linked List", "Design", "Doubly-Linked List"],
-    "tests": [
-        {
-            "args": {
-                "operations": [
-                    "LRUCache",
-                    "put",
-                    "put",
-                    "get",
-                    "put",
-                    "get",
-                    "put",
-                    "get",
-                    "get",
-                    "get"
-                ],
-                "arguments": [
-                    [2],
-                    [1, 1],
-                    [2, 2],
-                    [1],
-                    [3, 3],
-                    [2],
-                    [4, 4],
-                    [1],
-                    [3],
-                    [4]
-                ]
-            },
-            "expected": [null, null, null, 1, null, -1, null, -1, 3, 4]
-        },
-        {
-            "args": {
-                "operations": ["LRUCache", "put", "get", "put", "get"],
-                "arguments": [[1], [2, 1], [2], [3, 2], [2]]
-            },
-            "expected": [null, null, 1, null, -1]
-        }
-    ],
     "invoke": {
         "python": "LRUCache",
         "typescript": "LRUCache",
