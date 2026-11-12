@@ -10,12 +10,12 @@ micro findKOr(nums: ArrayList<i64>, k: i64) -> i64 {
     while bit < 32 {
         let mut count: i64 = 0
         loop value in nums {
-            if value.bit_shift_right(bit as u32).bit_and(1) == 1 {
+            if value.bit_shift_right(bit as i64).bit_and(1) == 1 {
                 count = count + 1
             }
         }
         if count >= k {
-            result = result.bit_or((1 as i64).bit_shift_left(bit))
+            result = result.bit_or((1 as i64).bit_shift_left(bit as i64))
         }
         bit = bit + 1
     }
