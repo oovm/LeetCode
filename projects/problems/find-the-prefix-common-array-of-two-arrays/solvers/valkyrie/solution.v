@@ -4,12 +4,11 @@ using std.collection
 
 # 题内触发点: G25 —— 两个前缀集合用 `BitSet` 累积，每个下标求交集的置位数。
 # 依赖 `std.collection.BitSet` 的 `clone()` 与 `count()`（G25 已提供，见缺口账本）。
-# 容量口径：按输入实际最大值定容，不假设题面上界 —— 这是有意选择，不是偷懒。
-# 代价是位集容量由输入数据决定、不可预测；题面写 1..n，但生成器用例存在取值超出 n 的情形，
-# 换来的好处是不为此删用例、也不给越界值加特判。
+# 容量口径：按输入实际最大值定容，不假设题面上界 —— 越界取值用例已按官方合同标注为语料缺陷。
+# 入参与返回走值形切片（`[i64]`）：名义 `ArrayList` 句柄的 wasm 入参编组仍是编译器缺口（见 06 登记）。
 class Solution {
     [export(case: "camelCase")]
-    micro findThePrefixCommonArray(A: ArrayList<i64>, B: ArrayList<i64>) -> ArrayList<i64> {
+    micro findThePrefixCommonArray(A: [i64], B: [i64]) -> [i64] {
         let n: usize = A.length()
         let mut largest: i64 = 0
         let mut cursor: usize = 0
@@ -37,6 +36,6 @@ class Solution {
             result.push(both.count() as i64)
             index = index + 1
         }
-        return result
+        return result.to_array()
     }
 }

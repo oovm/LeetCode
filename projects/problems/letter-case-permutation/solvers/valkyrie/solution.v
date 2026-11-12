@@ -40,14 +40,14 @@ micro dfs(s: utf8, i: usize, out: ArrayList<utf8>) {
 }
 
 [export(case: "camelCase")]
-micro letter_case_permutation(s: utf8) -> ArrayList<utf8> {
+micro letter_case_permutation(s: utf8) -> [utf8] {
     let mut out: ArrayList<utf8> = ArrayList::new(0)
     dfs(s, 0, out)
-    return out
+    return out.to_array()
 }
 
 class Solution {
-    micro letterCasePermutation(self, s: utf8): ArrayList<utf8> {
+    micro letterCasePermutation(self, s: utf8): [utf8] {
         return letter_case_permutation(s)
     }
 }
