@@ -6,7 +6,7 @@ import { join } from 'node:path';
 
 import { pathToFileURL } from 'node:url';
 
-import { loadProblemCases } from '../../domain/cases-loader.ts';
+import { loadProblemCases, type LoadedProblemCases } from '../../domain/cases-loader.ts';
 
 
 
@@ -144,23 +144,15 @@ export function loadMetadata(problemRoot: string): {
 
 /**
  * 判题用例装载（valkyrie 各 lane 共用）：唯一真源为 `<slug>.cases.ts` 强类型 TS 用例模块。
+ * 返回装载快照：过滤前已冻结全部条目的 `sourceIndex`/`caseId`/`digest`，
+ * `executable`/`executableEntries`/`excludedEntries` 只是选择视图，下游禁止重新编号。
  * TS 模块承载 `bigint` 字面量与显式 `corpusDefect` 标注，规避 JSON 的表达力与序列化损失；
- * 缺陷条目不进 pass/fail 分母。`metadata.json#tests` 已全量清退，缺失用例模块即
- * `cases_missing` 结构化失败，不回退 JSON 判题。
+ * 缺陷条目不进 pass/fail 分母，但逐例落 excluded observation。`metadata.json#tests` 已全量清退，
+ * 缺失用例模块即 `cases_missing` 结构化失败，不回退 JSON 判题。
  */
-export function loadTestCases(problemRoot: string): { tests: TestCase[]; source: string; defectSkipped: number } {
+export function loadTestCases(problemRoot: string): LoadedProblemCases {
 
-    const loaded = loadProblemCases(problemRoot);
-
-    return {
-
-        tests: loaded.executable as TestCase[],
-
-        source: loaded.source,
-
-        defectSkipped: loaded.defectSkipped,
-
-    };
+    return loadProblemCases(problemRoot);
 
 }
 

@@ -110,32 +110,33 @@ async function loadTsCandidate(problemRoot: string) {
     const entry = requireInvoke(metadata, 'typescript');
     const mod = (await import(pathToFileURL(tsSolverPath(problemRoot)).href)) as Record<string, unknown>;
     const candidate = makeTsCandidate(entry, mod);
-    const cases = loadProblemCases(problemRoot);
-    return { id: problemIdFromDir(problemRoot), tests: cases.executable as TestCase[], candidate };
+    // 统一装载快照：断言坐标用过滤前冻结的 `sourceIndex`，不按可执行视图位置重新编号。
+    const snapshot = loadProblemCases(problemRoot);
+    return { id: problemIdFromDir(problemRoot), entries: snapshot.executableEntries, candidate };
 }
 
 /** 返回真实执行计数，供基线区分「全部断言通过」与「空跑也退 0」。 */
 export async function runTsSolverOnce(problemRoot: string, _problemId?: string): Promise<{ caseTotal: number; executed: number }> {
-    const { id, tests, candidate } = await loadTsCandidate(problemRoot);
-    const integerKeys = inferIntegerArgKeys(tests);
+    const { id, entries, candidate } = await loadTsCandidate(problemRoot);
+    const integerKeys = inferIntegerArgKeys(entries.map((entry) => entry.case));
     const mode = compareModeForExecution(id);
-    for (const [index, case_] of tests.entries()) {
-        assertTsCase(index, case_, candidate, integerKeys, mode, id);
+    for (const snapshotEntry of entries) {
+        assertTsCase(snapshotEntry.sourceIndex, snapshotEntry.case as TestCase, candidate, integerKeys, mode, id);
     }
-    return { caseTotal: tests.length, executed: tests.length };
+    return { caseTotal: entries.length, executed: entries.length };
 }
 
 /**
  * ??????????????? cases 用例 ??????????????????????? Node/tsx????
  */
 export async function benchTsSolverInProcess(problemRoot: string, iterations: number, warmup: number): Promise<number> {
-    const { id, tests, candidate } = await loadTsCandidate(problemRoot);
-    const integerKeys = inferIntegerArgKeys(tests);
+    const { id, entries, candidate } = await loadTsCandidate(problemRoot);
+    const integerKeys = inferIntegerArgKeys(entries.map((entry) => entry.case));
     const mode = compareModeForExecution(id);
 
     const runAll = () => {
-        for (const [index, case_] of tests.entries()) {
-            assertTsCase(index, case_, candidate, integerKeys, mode, id);
+        for (const snapshotEntry of entries) {
+            assertTsCase(snapshotEntry.sourceIndex, snapshotEntry.case as TestCase, candidate, integerKeys, mode, id);
         }
     };
 

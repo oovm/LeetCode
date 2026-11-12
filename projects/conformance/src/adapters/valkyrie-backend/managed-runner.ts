@@ -166,7 +166,8 @@ export function runManagedReference(
     contract: ManagedAbiContract,
 ): ManagedRunOutcome {
     try {
-        const { tests } = loadTestCases(problemRoot);
+        // 统一装载快照：坐标一律用过滤前冻结的 `sourceIndex`，分母含 `corpusDefect` 条目。
+        const snapshot = loadTestCases(problemRoot);
         const { invoke } = loadMetadata(problemRoot);
         const problemId = problemIdFromDir(problemRoot);
         const compareMode = compareModeForExecution(problemId);
@@ -181,7 +182,9 @@ export function runManagedReference(
         let skippedIntegerArgument = 0;
         let firstCommand: string | null = null;
         let exitStatus: number | null = null;
-        for (const [index, testCase] of tests.entries()) {
+        for (const snapshotEntry of snapshot.executableEntries) {
+            const index = snapshotEntry.sourceIndex;
+            const testCase = snapshotEntry.case as TestCase;
             if (NO_EXECUTABLE_EXPECTATION === testCase.expected) {
                 skippedTimeout += 1;
                 continue;
@@ -236,14 +239,17 @@ export function runManagedReference(
             exitStatus,
             caseStats: {
                 ok: true,
-                testCaseTotal: tests.length,
+                testCaseTotal: snapshot.entries.length,
                 executed_pass: pass,
                 executed_fail: 0,
                 blocked: 0,
                 not_run: 0,
-                skipped: skippedTimeout + skippedIntegerArgument,
+                skipped: skippedTimeout + skippedIntegerArgument + snapshot.excludedEntries.length,
                 skipped_timeout: skippedTimeout,
                 skipped_integer_argument: skippedIntegerArgument,
+                skipped_corpus_defect: snapshot.excludedEntries.length,
+                casesSource: snapshot.source,
+                casesDigest: snapshot.sourceDigest,
                 firstFailureIndex: null,
                 firstFailure: null,
             },

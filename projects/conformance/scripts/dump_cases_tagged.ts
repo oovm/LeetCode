@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /**
- * 把 `<slug>.cases.ts` 用例以 tagged NDJSON 形式输出到 stdout，供非 TS 直接 lane（如 Python 参考解）
- * 按协议解码。第一行是 header，其后每行一条可执行用例；`bigint` 以 `{"$bigint": "<十进制>"}` 传输，
- * 缺陷用例不进输出（判题分母 = 可执行子集）。
+ * 把 `<slug>.cases.ts` 装载快照以 tagged NDJSON 形式输出到 stdout，供非 TS 直接 lane（如 Python 参考解）
+ * 按协议解码。第一行是 header（含快照文件内容摘要 `sourceDigest`），其后每条可执行用例一行，
+ * `corpusDefect` 条目逐例输出 `excluded` 行（携带排除依据）；`bigint` 以 `{"$bigint": "<十进制>"}` 传输。
+ * 用例行的 `index` 是装载快照冻结的 `sourceIndex`（原始下标），Python 侧必须按该坐标报告失败，
+ * 不得按接收顺序重新编号；判题分母 = `case` 行（可执行子集）。
  *
  * 用法：`node --import tsx scripts/dump_cases_tagged.ts <problem-dir>`
  */
@@ -16,24 +18,39 @@ if (!problemDir) {
     process.exit(2);
 }
 
-const loaded = loadProblemCases(problemDir);
+const snapshot = loadProblemCases(problemDir);
 const slug = problemIdFromDir(problemDir);
 
 const header = {
     type: 'header',
     slug,
-    source: loaded.source,
-    total: loaded.executable.length,
-    defectSkipped: loaded.defectSkipped,
+    source: snapshot.source,
+    sourceDigest: snapshot.sourceDigest,
+    total: snapshot.executableEntries.length,
+    defectSkipped: snapshot.excludedEntries.length,
 };
 process.stdout.write(JSON.stringify(header) + '\n');
 
-for (const [index, case_] of loaded.executable.entries()) {
+for (const entry of snapshot.excludedEntries) {
+    process.stdout.write(
+        JSON.stringify({
+            type: 'excluded',
+            index: entry.sourceIndex,
+            caseId: entry.caseId,
+            digest: entry.digest,
+            exclusion: entry.exclusion,
+        }) + '\n',
+    );
+}
+
+for (const entry of snapshot.executableEntries) {
     const line = {
         type: 'case',
-        index,
-        args: encodeValue(case_.args, `cases[${index}].args`),
-        expected: encodeValue(case_.expected, `cases[${index}].expected`),
+        index: entry.sourceIndex,
+        caseId: entry.caseId,
+        digest: entry.digest,
+        args: encodeValue(entry.case.args, `cases[${entry.sourceIndex}].args`),
+        expected: encodeValue(entry.case.expected, `cases[${entry.sourceIndex}].expected`),
     };
     process.stdout.write(JSON.stringify(line) + '\n');
 }

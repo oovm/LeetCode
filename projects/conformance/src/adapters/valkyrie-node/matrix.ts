@@ -78,6 +78,8 @@ export type ValkyrieMatrixRow = {
     skipped_timeout?: number;
     /** `skipped` 中因整数 ABI 送不进非整数实参的条数。 */
     skipped_integer_argument?: number;
+    /** `skipped` 中因 `corpusDefect` 逐例排除（excluded observation）的条数。 */
+    skipped_corpus_defect?: number;
     firstFailureIndex: number | null;
     firstFailure: string | null;
     solverNote: string | null;
@@ -105,6 +107,7 @@ function withCaseStats(row: ValkyrieMatrixRowNoGreen, stats: SolverCaseStats): V
         skipped: stats.skipped ?? 0,
         skipped_timeout: stats.skipped_timeout ?? 0,
         skipped_integer_argument: stats.skipped_integer_argument ?? 0,
+        skipped_corpus_defect: stats.skipped_corpus_defect ?? 0,
         firstFailureIndex: stats.firstFailureIndex,
         firstFailure: stats.firstFailure,
         ...(stats.cases === undefined ? {} : { cases: stats.cases }),

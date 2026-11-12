@@ -14,7 +14,13 @@ import {
     type CaseRecord,
     type SolverCaseStats,
 } from '../src/adapters/shared/solver-case-stats.ts';
-import { fillRemainingRecords, makeRecord, failureObservation } from '../src/observation/solver-records.ts';
+import {
+    aggregateCaseStats,
+    failureObservation,
+    fillRemainingEntryRecords,
+    makeEntryRecord,
+    makeExcludedRecord,
+} from '../src/observation/solver-records.ts';
 import {
     matchWasmExportSymbol,
     type AbiExport,
@@ -35,6 +41,7 @@ import {
 } from '../src/adapters/valkyrie-node/ref.ts';
 import { valkyrieProjectDir } from '../src/catalog/index.ts';
 import { assertRejectsTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
+import type { CaseSnapshotEntry, LoadedProblemCases } from '../src/domain/cases-loader.ts';
 import { compareModeForExecution, formatValue, resultsMatch } from '../src/domain/compare-mode.ts';
 import { problemIdFromDir } from '../src/domain/metadata.ts';
 import { isOperationSequenceCase, operationStepPath } from '../src/domain/operation-sequence.ts';
@@ -188,12 +195,8 @@ async function runOperationSequenceCases(
     host: InvokeHost,
     entry: string,
     abi: { schema: LibraryInvokeSchema; lookup: AbiLookup },
-    items: { testCase: OperationSequenceCase; index: number }[],
-    tests: { args: Record<string, unknown>; expected: unknown }[],
-    slug: string,
-    rawTotal: number,
-    skipped: number,
-    casesSource?: string,
+    items: { snapshotEntry: CaseSnapshotEntry; case: OperationSequenceCase }[],
+    casesLoad: LoadedProblemCases,
 ): Promise<number> {
     const callExport = host.callExport;
     if (typeof callExport !== 'function') {
@@ -206,15 +209,18 @@ async function runOperationSequenceCases(
     }
     const constructorParams = orderedParameters(abi.lookup.exportSchema, false, `构造入口 "${entry}"`);
 
-    const records: CaseRecord[] = [];
-    for (const [index, testCase] of tests.entries()) {
-        if (isNoExecutableExpectation(testCase)) {
-            records.push(makeRecord(slug, index, testCase, 'skipped', { skipped_reason: 'timeout' }));
+    // 逐例记录：先落全部 `corpusDefect` excluded observation 与哨兵 `skipped`，
+    // 再按真实观测逐例追加；汇总计数一律由完整记录机械聚合。
+    const records: CaseRecord[] = casesLoad.excludedEntries.map(makeExcludedRecord);
+    for (const snapshotEntry of casesLoad.executableEntries) {
+        if (isNoExecutableExpectation(snapshotEntry.case)) {
+            records.push(makeEntryRecord(snapshotEntry, 'skipped', { skipped_reason: 'timeout' }));
         }
     }
+    const sequenceEntries = items.map((item) => item.snapshotEntry);
 
-    let pass = 0;
-    for (const { testCase, index } of items) {
+    for (const { snapshotEntry, case: testCase } of items) {
+        const index = snapshotEntry.sourceIndex;
         const sequence = testCase.args;
         const operations = sequence.operations;
         try {
@@ -252,59 +258,43 @@ async function runOperationSequenceCases(
                     throw new Error(`${path}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
                 }
             }
-            pass += 1;
-            records.push(makeRecord(slug, index, testCase, 'pass'));
+            records.push(makeEntryRecord(snapshotEntry, 'pass'));
         } catch (err) {
             const message = String(err);
             const infrastructureBlocked = isBlockedSolverMessage(message);
             records.push(
-                makeRecord(slug, index, testCase, infrastructureBlocked ? 'blocked' : 'fail', {
+                makeEntryRecord(snapshotEntry, infrastructureBlocked ? 'blocked' : 'fail', {
                     message: message.split('\n')[0],
                     ...failureObservation(err),
                 }),
             );
-            fillRemainingRecords(
+            fillRemainingEntryRecords(
                 records,
-                slug,
-                items,
+                sequenceEntries,
                 infrastructureBlocked ? 'blocked' : 'not_run',
                 infrastructureBlocked ? message.split('\n')[0] : undefined,
             );
-            emitStats({
-                ok: false,
-                testCaseTotal: rawTotal,
-                executed_pass: pass,
-                executed_fail: infrastructureBlocked ? 0 : 1,
-                blocked: infrastructureBlocked ? rawTotal - skipped - pass : 0,
-                not_run: infrastructureBlocked ? 0 : rawTotal - skipped - pass - 1,
-                skipped,
-                skipped_timeout: skipped,
-                skipped_integer_argument: 0,
-                casesSource,
-                firstFailureIndex: extractTestFailureIndex(message) ?? index,
-                firstFailure: message,
-                cases: records,
-            });
+            emitStats(
+                aggregateCaseStats(records, {
+                    casesSource: casesLoad.source,
+                    casesDigest: casesLoad.sourceDigest,
+                    firstFailureIndex: extractTestFailureIndex(message) ?? index,
+                    firstFailure: message,
+                }),
+            );
             console.error(message);
             return 1;
         }
     }
 
-    emitStats({
-        ok: true,
-        testCaseTotal: rawTotal,
-        executed_pass: pass,
-        executed_fail: 0,
-        blocked: 0,
-        not_run: 0,
-        skipped,
-        skipped_timeout: skipped,
-        skipped_integer_argument: 0,
-        casesSource,
-        firstFailureIndex: null,
-        firstFailure: null,
-        cases: records,
-    });
+    emitStats(
+        aggregateCaseStats(records, {
+            casesSource: casesLoad.source,
+            casesDigest: casesLoad.sourceDigest,
+            firstFailureIndex: null,
+            firstFailure: null,
+        }),
+    );
     return 0;
 }
 
@@ -358,8 +348,8 @@ async function main(): Promise<number> {
         throw new Error('legion build 未产出可执行产物');
     }
 
+    // 统一装载快照：过滤前已冻结 sourceIndex/caseId/digest，本 runner 只消费冻结身份。
     const casesLoad = loadTestCases(problemDir);
-    const tests = casesLoad.tests;
     const { invoke } = loadMetadata(problemDir);
     const problemId = problemIdFromDir(problemDir);
     const compareMode = compareModeForExecution(problemId);
@@ -381,47 +371,48 @@ async function main(): Promise<number> {
     // host.callExport 存在则走 ABI marshal/unmarshal；只暴露 invokeLeetCode 时 abi 参数可省
     const needsAbi = typeof host.callExport === 'function';
 
-    // ── 无期望语料：哨兵与非整数实参不进 pass/fail 分母 ──────────────────────
-    const skippedApriori = tests.filter(isNoExecutableExpectation).length;
-    const rawTotal = tests.length + casesLoad.defectSkipped;
-    const executableCases = tests
-        .map((testCase, index) => ({ testCase, index }))
-        .filter(({ testCase }) => !isNoExecutableExpectation(testCase));
+    // ── 无期望语料：哨兵与非整数实参不进 pass/fail 分母（逐例落账，不手算加回）──
+    const executableCaseEntries = casesLoad.executableEntries.filter(({ case: testCase }) => !isNoExecutableExpectation(testCase));
 
     // 设计类题目：构造一次实例句柄 + 逐操作调用，逐步断言。
-    const sequenceCases = executableCases.filter(
-        (item): item is { testCase: OperationSequenceCase; index: number } => isOperationSequenceCase(item.testCase),
-    );
+    const sequenceCases: { snapshotEntry: CaseSnapshotEntry; case: OperationSequenceCase }[] = [];
+    for (const snapshotEntry of executableCaseEntries) {
+        const testCase = snapshotEntry.case;
+        if (isOperationSequenceCase(testCase)) {
+            sequenceCases.push({ snapshotEntry, case: testCase });
+        }
+    }
     if (sequenceCases.length > 0) {
-        if (sequenceCases.length !== executableCases.length) {
+        if (sequenceCases.length !== executableCaseEntries.length) {
             throw new Error('同一道题混用了单入口用例与操作序列用例，无法判定执行模型');
         }
-        return await runOperationSequenceCases(host, entry, abi, sequenceCases, tests, slug, rawTotal, skippedApriori + casesLoad.defectSkipped, casesLoad.source);
+        return await runOperationSequenceCases(host, entry, abi, sequenceCases, casesLoad);
     }
 
-    let pass = 0;
-    // 送不进 ABI 的实参也预先计入 skipped：即使中途因其他用例失败中止，skipped 仍是全量。
+    // 送不进 ABI 的实参预先逐例落 `skipped`：即使中途因其他用例失败中止，记录仍是全量。
     const unrepresentableIndices = new Set<number>();
     if (needsAbi) {
-        for (const { testCase, index } of executableCases) {
-            if (hasUnrepresentableIntegerArgument(testCase, abi)) {
-                unrepresentableIndices.add(index);
+        for (const snapshotEntry of executableCaseEntries) {
+            if (hasUnrepresentableIntegerArgument(snapshotEntry.case, abi)) {
+                unrepresentableIndices.add(snapshotEntry.sourceIndex);
             }
         }
     }
-    const skipped = skippedApriori + unrepresentableIndices.size + casesLoad.defectSkipped;
 
-    // 逐例记录：先落全部 `skipped`（哨兵与整数 ABI），再按真实观测逐例追加。
-    const records: CaseRecord[] = [];
-    for (const [index, testCase] of tests.entries()) {
-        if (isNoExecutableExpectation(testCase)) {
-            records.push(makeRecord(slug, index, testCase, 'skipped', { skipped_reason: 'timeout' }));
-        } else if (unrepresentableIndices.has(index)) {
-            records.push(makeRecord(slug, index, testCase, 'skipped', { skipped_reason: 'integer-argument' }));
+    // 逐例记录：先落全部 `corpusDefect` excluded observation 与 `skipped`（哨兵、整数 ABI），
+    // 再按真实观测逐例追加；汇总计数由完整记录机械聚合。
+    const records: CaseRecord[] = casesLoad.excludedEntries.map(makeExcludedRecord);
+    for (const snapshotEntry of casesLoad.executableEntries) {
+        if (isNoExecutableExpectation(snapshotEntry.case)) {
+            records.push(makeEntryRecord(snapshotEntry, 'skipped', { skipped_reason: 'timeout' }));
+        } else if (unrepresentableIndices.has(snapshotEntry.sourceIndex)) {
+            records.push(makeEntryRecord(snapshotEntry, 'skipped', { skipped_reason: 'integer-argument' }));
         }
     }
 
-    for (const { testCase: case_, index } of executableCases) {
+    for (const snapshotEntry of executableCaseEntries) {
+        const case_ = snapshotEntry.case;
+        const index = snapshotEntry.sourceIndex;
         if (unrepresentableIndices.has(index)) {
             continue;
         }
@@ -444,61 +435,43 @@ async function main(): Promise<number> {
                     );
                 }
             }
-            pass += 1;
-            records.push(makeRecord(slug, index, case_, 'pass'));
+            records.push(makeEntryRecord(snapshotEntry, 'pass'));
         } catch (err) {
             const message = String(err);
             const infrastructureBlocked = isBlockedSolverMessage(message);
             records.push(
-                makeRecord(slug, index, case_, infrastructureBlocked ? 'blocked' : 'fail', {
+                makeEntryRecord(snapshotEntry, infrastructureBlocked ? 'blocked' : 'fail', {
                     message: message.split('\n')[0],
                     ...failureObservation(err),
                 }),
             );
-            fillRemainingRecords(
+            fillRemainingEntryRecords(
                 records,
-                slug,
-                executableCases,
+                executableCaseEntries,
                 infrastructureBlocked ? 'blocked' : 'not_run',
                 infrastructureBlocked ? message.split('\n')[0] : undefined,
             );
-            emitStats({
-                ok: false,
-                testCaseTotal: rawTotal,
-                executed_pass: pass,
-                executed_fail: infrastructureBlocked ? 0 : 1,
-                blocked: infrastructureBlocked ? rawTotal - skipped - pass : 0,
-                not_run: infrastructureBlocked ? 0 : rawTotal - skipped - pass - 1,
-                skipped,
-                skipped_timeout: skippedApriori,
-                skipped_integer_argument: unrepresentableIndices.size,
-                skipped_corpus_defect: casesLoad.defectSkipped,
-                casesSource: casesLoad.source,
-                firstFailureIndex: extractTestFailureIndex(message) ?? index,
-                firstFailure: message,
-                cases: records,
-            });
+            emitStats(
+                aggregateCaseStats(records, {
+                    casesSource: casesLoad.source,
+                    casesDigest: casesLoad.sourceDigest,
+                    firstFailureIndex: extractTestFailureIndex(message) ?? index,
+                    firstFailure: message,
+                }),
+            );
             console.error(message);
             return 1;
         }
     }
 
-    emitStats({
-        ok: true,
-        testCaseTotal: rawTotal,
-        executed_pass: pass,
-        executed_fail: 0,
-        blocked: 0,
-        not_run: 0,
-        skipped,
-        skipped_timeout: skippedApriori,
-        skipped_integer_argument: unrepresentableIndices.size,
-        skipped_corpus_defect: casesLoad.defectSkipped,
-        casesSource: casesLoad.source,
-        firstFailureIndex: null,
-        firstFailure: null,
-        cases: records,
-    });
+    emitStats(
+        aggregateCaseStats(records, {
+            casesSource: casesLoad.source,
+            casesDigest: casesLoad.sourceDigest,
+            firstFailureIndex: null,
+            firstFailure: null,
+        }),
+    );
     return 0;
 }
 

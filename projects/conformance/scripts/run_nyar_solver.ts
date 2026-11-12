@@ -17,7 +17,7 @@ import {
     type CaseRecord,
     type SolverCaseStats,
 } from '../src/adapters/shared/solver-case-stats.ts';
-import { fillRemainingRecords, makeRecord, failureObservation } from '../src/observation/solver-records.ts';
+import { aggregateCaseStats, failureObservation, fillRemainingEntryRecords, makeEntryRecord, makeExcludedRecord } from '../src/observation/solver-records.ts';
 import { assertTestCase, normalizeTsTestResult } from '../src/domain/assert.ts';
 import { compareModeForExecution, formatValue, resultsMatch } from '../src/domain/compare-mode.ts';
 import { problemIdFromDir } from '../src/domain/metadata.ts';
@@ -170,7 +170,8 @@ async function main(): Promise<number> {
         throw new Error('legion build --target ovm 未产出 `.nyar` 入口');
     }
 
-    const { tests } = loadTestCases(problemDir);
+    // 统一装载快照：过滤前已冻结 sourceIndex/caseId/digest，本 runner 只消费冻结身份。
+    const casesLoad = loadTestCases(problemDir);
     const { invoke } = loadMetadata(problemDir);
     const problemId = problemIdFromDir(problemDir);
     const compareMode = compareModeForExecution(problemId);
@@ -184,21 +185,20 @@ async function main(): Promise<number> {
         throw new Error(blocked);
     }
 
-    const skipped = tests.filter(isNoExecutableExpectation).length;
-    const executableCases = tests
-        .map((testCase, index) => ({ testCase, index }))
-        .filter(({ testCase }) => !isNoExecutableExpectation(testCase));
+    const executableCaseEntries = casesLoad.executableEntries.filter(({ case: testCase }) => !isNoExecutableExpectation(testCase));
 
-    // 逐例记录：先落全部 `skipped` 哨兵，再按真实观测逐例追加（验收观察门）。
-    const records: CaseRecord[] = [];
-    for (const [index, testCase] of tests.entries()) {
-        if (isNoExecutableExpectation(testCase)) {
-            records.push(makeRecord(slug, index, testCase, 'skipped', { skipped_reason: 'timeout' }));
+    // 逐例记录：先落全部 `corpusDefect` excluded observation 与 `skipped` 哨兵，
+    // 再按真实观测逐例追加（验收观察门）；汇总计数由完整记录机械聚合。
+    const records: CaseRecord[] = casesLoad.excludedEntries.map(makeExcludedRecord);
+    for (const snapshotEntry of casesLoad.executableEntries) {
+        if (isNoExecutableExpectation(snapshotEntry.case)) {
+            records.push(makeEntryRecord(snapshotEntry, 'skipped', { skipped_reason: 'timeout' }));
         }
     }
 
-    let pass = 0;
-    for (const { testCase: case_, index } of executableCases) {
+    for (const snapshotEntry of executableCaseEntries) {
+        const case_ = snapshotEntry.case;
+        const index = snapshotEntry.sourceIndex;
         try {
             if (typeof case_.expected === 'string' && case_.expected.startsWith('Error:')) {
                 assertTestCase(index, case_.expected, () => {
@@ -223,57 +223,43 @@ async function main(): Promise<number> {
                     throw new Error(`tests[${index}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
                 }
             }
-            pass += 1;
-            records.push(makeRecord(slug, index, case_, 'pass'));
+            records.push(makeEntryRecord(snapshotEntry, 'pass'));
         } catch (err) {
             const message = String(err);
             const infrastructureBlocked = isBlockedSolverMessage(message);
             records.push(
-                makeRecord(slug, index, case_, infrastructureBlocked ? 'blocked' : 'fail', {
+                makeEntryRecord(snapshotEntry, infrastructureBlocked ? 'blocked' : 'fail', {
                     message: message.split('\n')[0],
                     ...failureObservation(err),
                 }),
             );
-            fillRemainingRecords(
+            fillRemainingEntryRecords(
                 records,
-                slug,
-                executableCases,
+                executableCaseEntries,
                 infrastructureBlocked ? 'blocked' : 'not_run',
                 infrastructureBlocked ? message.split('\n')[0] : undefined,
             );
-            emitStats({
-                ok: false,
-                testCaseTotal: tests.length,
-                executed_pass: pass,
-                executed_fail: infrastructureBlocked ? 0 : 1,
-                blocked: infrastructureBlocked ? tests.length - skipped - pass : 0,
-                not_run: infrastructureBlocked ? 0 : tests.length - skipped - pass - 1,
-                skipped,
-                skipped_timeout: skipped,
-                skipped_integer_argument: 0,
-                firstFailureIndex: extractTestFailureIndex(message) ?? index,
-                firstFailure: message,
-                cases: records,
-            });
+            emitStats(
+                aggregateCaseStats(records, {
+                    casesSource: casesLoad.source,
+                    casesDigest: casesLoad.sourceDigest,
+                    firstFailureIndex: extractTestFailureIndex(message) ?? index,
+                    firstFailure: message,
+                }),
+            );
             console.error(message);
             return 1;
         }
     }
 
-    emitStats({
-        ok: true,
-        testCaseTotal: tests.length,
-        executed_pass: pass,
-        executed_fail: 0,
-        blocked: 0,
-        not_run: 0,
-        skipped,
-        skipped_timeout: skipped,
-        skipped_integer_argument: 0,
-        firstFailureIndex: null,
-        firstFailure: null,
-        cases: records,
-    });
+    emitStats(
+        aggregateCaseStats(records, {
+            casesSource: casesLoad.source,
+            casesDigest: casesLoad.sourceDigest,
+            firstFailureIndex: null,
+            firstFailure: null,
+        }),
+    );
     return 0;
 }
 

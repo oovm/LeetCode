@@ -9,10 +9,10 @@
 import { spawn } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 import { bunExecutable } from '../adapters/typescript-bun/bridge.ts';
 import { assertTestCase, normalizeTsTestResult } from '../domain/assert.ts';
+import { CasesLoadError, loadProblemCases, type CaseSnapshotEntry, type LoadedProblemCases } from '../domain/cases-loader.ts';
 import { compareModeForExecution, formatValue, resultsMatch, type CompareMode, type MatchContext } from '../domain/compare-mode.ts';
 import { coerceIntegerArgs, inferIntegerArgKeys } from '../domain/integer-args.ts';
 import { compareIntegerResult } from '../domain/integer-literal.ts';
@@ -20,10 +20,9 @@ import {
     assertOperationSequence,
     isOperationSequenceCase,
     operationSequenceUnsupportedReason,
-    type OperationSequenceCase,
 } from '../domain/operation-sequence.ts';
+import type { OperationSequenceCase } from '../domain/problem.ts';
 import { CONFORMANCE_ROOT } from '../domain/paths.ts';
-import { partitionCases, validateCasesModule, type ProblemCase } from './cases.ts';
 import {
     createLineAssembler,
     decodeLine,
@@ -75,6 +74,14 @@ export type JudgeOptions = {
     runTimeoutMs?: number;
 };
 
+/** `corpusDefect` 条目的逐例排除观察（冻结身份 + 排除依据）。 */
+export type ExcludedObservation = {
+    caseId: string;
+    digest: string;
+    kind: string;
+    reason: string;
+};
+
 export type JudgeResult = {
     ok: boolean;
     failureKind: JudgeFailureKind | null;
@@ -82,8 +89,12 @@ export type JudgeResult = {
     slug: string;
     lane: JudgeLane;
     casesSource: string;
+    /** 装载快照的文件内容 sha256（统一输入快照 identity）。 */
+    casesDigest: string;
     casesTotal: number;
     defectSkipped: number;
+    /** 每个 `corpusDefect` 条目的逐例排除观察。 */
+    excludedObservations: ExcludedObservation[];
     executed: number;
     passed: number;
     failed: number;
@@ -150,24 +161,21 @@ function spawnCommand(lane: JudgeLane): { command: string; args: string[]; displ
     return { command: process.execPath, args: ['--import', 'tsx', CHILD_TYPESCRIPT], display: `node --import tsx ${CHILD_TYPESCRIPT}` };
 }
 
-async function loadCases(
+/**
+ * 装载用例快照：与普通 runner、Python 桥、报表共用唯一装载器 `loadProblemCases`
+ * （同一文件内容 identity/digest，转译一次），不再自行动态 import cases 模块。
+ */
+function loadCases(
     options: JudgeOptions,
-    meta: ProblemMeta,
-): Promise<
-    | { ok: true; cases: ProblemCase[]; source: string }
-    | { ok: false; failureKind: 'cases_missing' | 'cases_schema' | 'unsafe_number'; message: string }
-> {
-    const defaultCasesPath = join(options.problemDir, `${meta.id}.cases.ts`);
-    const candidatesPath = options.casesPath ?? defaultCasesPath;
-    if (!existsSync(candidatesPath)) {
-        return { ok: false, failureKind: 'cases_missing', message: `用例模块不存在：${candidatesPath}` };
+): { ok: true; snapshot: LoadedProblemCases } | { ok: false; failureKind: 'cases_missing' | 'cases_schema' | 'unsafe_number'; message: string } {
+    try {
+        return { ok: true, snapshot: loadProblemCases(options.problemDir, options.casesPath) };
+    } catch (err) {
+        if (err instanceof CasesLoadError) {
+            return { ok: false, failureKind: err.kind, message: err.message };
+        }
+        throw err;
     }
-    const mod = (await import(pathToFileURL(candidatesPath).href)) as { cases?: unknown };
-    const validation = validateCasesModule(mod.cases, candidatesPath);
-    if (!validation.ok) {
-        return validation;
-    }
-    return { ok: true, cases: [...validation.cases], source: candidatesPath };
 }
 
 export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResult> {
@@ -181,8 +189,10 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
         slug: meta.id,
         lane: options.lane,
         casesSource: '',
+        casesDigest: '',
         casesTotal: 0,
         defectSkipped: 0,
+        excludedObservations: [],
         executed: 0,
         passed: 0,
         failed: 0,
@@ -206,22 +216,40 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
         return fail('load_failed', `metadata.invoke.${invokeKey} 缺失`);
     }
 
-    const loaded = await loadCases(options, meta);
+    const loaded = loadCases(options);
     if (!loaded.ok) {
         return fail(loaded.failureKind, loaded.message, { casesSource: options.casesPath ?? '' });
     }
-    const partitioned = partitionCases(loaded.cases);
-    const integerKeys = inferIntegerArgKeys(partitioned.executable);
+    const snapshot = loaded.snapshot;
+    // 冻结条目按 sourceIndex 作为判题坐标（不按可执行视图位置重新编号）。
+    const executableEntries = snapshot.executableEntries;
+    const excludedObservations: ExcludedObservation[] = snapshot.excludedEntries.map((entry) => ({
+        caseId: entry.caseId,
+        digest: entry.digest,
+        kind: entry.exclusion?.kind ?? 'corpusDefect',
+        reason: entry.exclusion?.reason ?? '',
+    }));
+    const loadedEvidence = {
+        casesSource: snapshot.source,
+        casesDigest: snapshot.sourceDigest,
+        casesTotal: snapshot.cases.length,
+        defectSkipped: snapshot.excludedEntries.length,
+        excludedObservations,
+    };
+    const integerKeys = inferIntegerArgKeys(snapshot.executable);
 
     let wireCases: RunCase[];
     try {
-        wireCases = partitioned.executable.map((entry, index) => ({
-            index,
-            args: encodeValue(coerceIntegerArgs(entry.args, integerKeys), `cases[${index}].args`) as Record<string, TaggedValue>,
+        wireCases = executableEntries.map((entry) => ({
+            index: entry.sourceIndex,
+            args: encodeValue(
+                coerceIntegerArgs(entry.case.args, integerKeys),
+                `cases[${entry.sourceIndex}].args`,
+            ) as Record<string, TaggedValue>,
         }));
     } catch (err) {
         if (err instanceof UnsafeNumberError) {
-            return fail('unsafe_number', err.message, { casesSource: loaded.source, casesTotal: loaded.cases.length });
+            return fail('unsafe_number', err.message, loadedEvidence);
         }
         throw err;
     }
@@ -320,10 +348,10 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
         const ready = await waitFor((message) => message.type === 'ready' || message.type === 'error', 60_000);
         if (ready === null) {
             const kind = exited !== null ? 'solver_exit' : 'solver_timeout';
-            return fail(kind, exited !== null ? exitDescription() : 'load 阶段超时', { casesSource: loaded.source, casesTotal: loaded.cases.length });
+            return fail(kind, exited !== null ? exitDescription() : 'load 阶段超时', loadedEvidence);
         }
         if (ready.type === 'error') {
-            return fail('load_failed', ready.message, { casesSource: loaded.source, casesTotal: loaded.cases.length });
+            return fail('load_failed', ready.message, loadedEvidence);
         }
         const returnsAbi = (ready.returnsAbi ?? null) as WasmAbiType | null;
 
@@ -333,30 +361,34 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
             done = await waitFor((message) => message.type === 'done' || message.type === 'error', runTimeoutMs);
         } catch (err) {
             if (err instanceof ProtocolDecodeError) {
-                return fail('protocol_error', err.message, { casesSource: loaded.source, casesTotal: loaded.cases.length });
+                return fail('protocol_error', err.message, loadedEvidence);
             }
             throw err;
         }
         if (done === null) {
             if (exited !== null) {
-                return fail('solver_exit', exitDescription(), { casesSource: loaded.source, casesTotal: loaded.cases.length });
+                return fail('solver_exit', exitDescription(), loadedEvidence);
             }
             child.kill();
-            return fail('solver_timeout', `run 阶段超过 ${runTimeoutMs}ms 未回包，已终止子进程`, {
-                casesSource: loaded.source,
-                casesTotal: loaded.cases.length,
-            });
+            return fail('solver_timeout', `run 阶段超过 ${runTimeoutMs}ms 未回包，已终止子进程`, loadedEvidence);
         }
         if (done.type === 'error') {
-            return fail('solver_error', done.message, { casesSource: loaded.source, casesTotal: loaded.cases.length });
+            return fail('solver_error', done.message, loadedEvidence);
         }
 
         let passed = 0;
         let firstFailureIndex: number | null = null;
         let firstFailure: string | null = null;
         const compareMode = compareModeForExecution(meta.id);
+        const entryBySourceIndex = new Map<number, CaseSnapshotEntry>(executableEntries.map((entry) => [entry.sourceIndex, entry]));
         for (const outcome of done.results) {
-            const entry = partitioned.executable[outcome.index]!;
+            const snapshotEntry = entryBySourceIndex.get(outcome.index);
+            if (snapshotEntry === undefined) {
+                firstFailureIndex = outcome.index;
+                firstFailure = `tests[${outcome.index}]: 子进程回报了下标不在装载快照的可执行条目中（身份链失真）`;
+                break;
+            }
+            const entry = snapshotEntry.case;
             const expectedRaw = normalizeTsTestResult(entry.expected);
             try {
                 const operationCase = isOperationSequenceCase(entry) ? (entry as OperationSequenceCase) : null;
@@ -384,12 +416,10 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
         const failed = done.results.length - passed;
         return {
             ...base,
+            ...loadedEvidence,
             ok: failed === 0,
             failureKind: failed === 0 ? null : 'assert_failed',
             message: firstFailure,
-            casesSource: loaded.source,
-            casesTotal: loaded.cases.length,
-            defectSkipped: partitioned.defect.length,
             executed: done.results.length,
             passed,
             failed,
@@ -398,7 +428,7 @@ export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResu
         };
     } catch (err) {
         if (err instanceof ProtocolDecodeError) {
-            return fail('protocol_error', err.message, { casesSource: loaded.source, casesTotal: loaded.cases.length });
+            return fail('protocol_error', err.message, loadedEvidence);
         }
         throw err;
     } finally {

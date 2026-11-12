@@ -172,8 +172,11 @@ def load_metadata(problem_dir: Path) -> dict[str, Any]:
 def load_cases_via_bridge(problem_dir: Path) -> list[dict[str, Any]]:
     """判题真源是 `<slug>.cases.ts`：经 node dumper 取 tagged NDJSON，`$bigint` 按原生 int 精确还原。
 
-    与隔离判题器共用协议编码（`isolated/protocol.ts`），Python 侧解码复用
-    `isolated_python_child._decode_value`；缺陷用例不进分母（dumper 只发可执行子集）。
+    与隔离判题器共用同一装载快照（`domain/cases-loader.ts`，协议编码见
+    `isolated/protocol.ts`），Python 侧解码复用 `isolated_python_child._decode_value`。
+    每条用例携带装载快照冻结的 `index`（原始 `sourceIndex`）：失败坐标按该 index 报告，
+    不得按接收顺序重新编号；`corpusDefect` 条目以 `excluded` 行逐例携带排除依据，
+    不进判题分母。
     """
     scripts_dir = Path(__file__).resolve().parent
     conformance_root = scripts_dir.parent
@@ -194,11 +197,22 @@ def load_cases_via_bridge(problem_dir: Path) -> list[dict[str, Any]]:
     if not lines:
         raise RuntimeError("cases dumper 无输出")
     tests: list[dict[str, Any]] = []
+    seen_indices: set[int] = set()
     for line in lines[1:]:
         message = json.loads(line)
         if message.get("type") != "case":
             continue
-        tests.append({"args": _decode_value(message["args"]), "expected": _decode_value(message["expected"])})
+        index = message["index"]
+        if not isinstance(index, int) or index < 0 or index in seen_indices:
+            raise RuntimeError(f"{problem_dir}: dumper 用例坐标非法或重复（index={index!r}）")
+        seen_indices.add(index)
+        tests.append(
+            {
+                "index": index,
+                "args": _decode_value(message["args"]),
+                "expected": _decode_value(message["expected"]),
+            }
+        )
     if not tests:
         raise RuntimeError(f"{problem_dir}: 可执行用例为空（cases.ts 缺失或全为缺陷标注）")
     return tests
@@ -269,7 +283,9 @@ def run_check(
     problem_id: str = "",
 ) -> None:
     int_keys = _infer_int_keys(tests)
-    for index, case in enumerate(tests):
+    for position, case in enumerate(tests):
+        # 失败坐标用装载快照冻结的 sourceIndex，不按接收顺序重新编号。
+        index: int = case.get("index", position)
         args = case.get("args")
         if not isinstance(args, dict):
             raise ValueError(f"tests[{index}].args 必须是 object")

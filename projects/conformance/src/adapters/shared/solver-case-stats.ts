@@ -6,13 +6,16 @@ export const SOLVER_RESULT_MARKER = 'VALKYRIE_SOLVER_RESULT ';
 /**
  * 逐例结果记录（验收观察门）。
  *
- * 每条记录携带稳定 case identity 与内容摘要；隔离统计只消费记录中的真实逐例状态，
- * 禁止从汇总计数倒推。`not_run` / `blocked` 逐例显式落账，不靠区间推断。
+ * 每条记录携带装载快照冻结的稳定 case identity 与内容摘要（`index` 一律是
+ * `<slug>.cases.ts` 的原始下标 `sourceIndex`，不是可执行视图位置）；
+ * 隔离统计只消费记录中的真实逐例状态，禁止从汇总计数倒推。
+ * `not_run` / `blocked` 逐例显式落账，不靠区间推断；`corpusDefect` 条目逐例落
+ * `skipped`（原因 `corpus-defect`）并携带排除依据，形成明确的 excluded observation。
  */
 export type CaseRecordStatus = 'pass' | 'fail' | 'blocked' | 'not_run' | 'skipped';
 
 export type CaseRecord = {
-    /** 可执行子集下标（`<slug>.cases.ts` 排除 `corpusDefect` 后的位置）。 */
+    /** cases 真源原始下标（装载快照冻结，禁止按选择视图重新编号）。 */
     index: number;
     /** 稳定身份：`<slug>::tests[<index>]`。 */
     caseId: string;
@@ -20,7 +23,9 @@ export type CaseRecord = {
     digest: string;
     status: CaseRecordStatus;
     /** `skipped` 的细分原因。 */
-    skipped_reason?: 'timeout' | 'integer-argument';
+    skipped_reason?: 'timeout' | 'integer-argument' | 'corpus-defect';
+    /** `corpus-defect` 排除的逐例依据（快照条目 `corpusDefect` 原值）。 */
+    exclusion?: { kind: string; reason: string };
     /** 宿主侧观测阶段（wasm lane 才有）。 */
     phase?: ObservationPhase;
     /** 明确 guest trap 身份（类型 + 原因）。 */
@@ -30,10 +35,12 @@ export type CaseRecord = {
 };
 
 /**
- * 用例结果四分类；`executed_pass + executed_fail + blocked + not_run === testCaseTotal - skipped`。
+ * 用例结果分类；`executed_pass + executed_fail + blocked + not_run === testCaseTotal - skipped`。
+ * 全部计数由完整逐例记录机械聚合（`aggregateCaseStats`），禁止手算加回。
  *
- * `skipped` 是「没有可执行期望」的语料：`Execution timed out` 哨兵，以及整数 ABI 送不进去的
- * 非整数实参。它们不进 pass/fail 分母，单独计数，不能悄悄变成通过率的一部分。
+ * `skipped` 是「没有可执行期望」或「被显式排除」的语料：`Execution timed out` 哨兵、
+ * 整数 ABI 送不进去的非整数实参，以及 `corpusDefect` 条目的逐例 excluded observation。
+ * 它们不进 pass/fail 分母，单独计数，不能悄悄变成通过率的一部分。
  */
 export type SolverCaseStats = {
     ok: boolean;
@@ -50,10 +57,12 @@ export type SolverCaseStats = {
     skipped_timeout?: number;
     /** `skipped` 中因整数 ABI 无法承载非整数实参的条数。 */
     skipped_integer_argument?: number;
-    /** `skipped` 中因 `corpusDefect` 标注排除的条数（TS 用例模块）。 */
+    /** `skipped` 中因 `corpusDefect` 标注排除的条数（逐例 excluded observation）。 */
     skipped_corpus_defect?: number;
     /** 判题用例来源：`<slug>.cases.ts`（唯一真源，JSON 判题已全量清退）。 */
     casesSource?: string;
+    /** 装载快照的文件内容 sha256（统一输入快照的跨消费者 identity）。 */
+    casesDigest?: string;
     firstFailureIndex: number | null;
     firstFailure: string | null;
     /** 逐例真实观测；缺失表示旧格式行，隔离统计不得倒推。 */
@@ -131,8 +140,28 @@ function parseCaseRecords(raw: unknown): CaseRecord[] | null | undefined {
             digest: record.digest,
             status: record.status as CaseRecordStatus,
         };
-        if (record.skipped_reason === 'timeout' || record.skipped_reason === 'integer-argument') {
+        if (record.skipped_reason === 'timeout' || record.skipped_reason === 'integer-argument' || record.skipped_reason === 'corpus-defect') {
             parsed.skipped_reason = record.skipped_reason;
+        }
+        const exclusion = record.exclusion as { kind?: unknown; reason?: unknown } | undefined;
+        if (parsed.skipped_reason === 'corpus-defect') {
+            // excluded observation 必须逐例携带排除依据，缺失即 fail-closed。
+            if (
+                typeof exclusion !== 'object'
+                || exclusion === null
+                || typeof exclusion.kind !== 'string'
+                || typeof exclusion.reason !== 'string'
+            ) {
+                return null;
+            }
+            parsed.exclusion = { kind: exclusion.kind, reason: exclusion.reason };
+        } else if (
+            typeof exclusion === 'object'
+            && exclusion !== null
+            && typeof exclusion.kind === 'string'
+            && typeof exclusion.reason === 'string'
+        ) {
+            parsed.exclusion = { kind: exclusion.kind, reason: exclusion.reason };
         }
         if (record.phase === 'marshal' || record.phase === 'guest-invoke' || record.phase === 'demarshal-normalize') {
             parsed.phase = record.phase;
@@ -194,6 +223,7 @@ export function parseSolverResultLine(text: string): SolverCaseStats | null {
                     : 0,
                 ...(typeof payload.skipped_corpus_defect === 'number' ? { skipped_corpus_defect: payload.skipped_corpus_defect } : {}),
                 ...(typeof payload.casesSource === 'string' ? { casesSource: payload.casesSource } : {}),
+                ...(typeof payload.casesDigest === 'string' ? { casesDigest: payload.casesDigest } : {}),
                 firstFailureIndex: payload.firstFailureIndex ?? null,
                 firstFailure: payload.firstFailure ?? null,
                 ...(cases === undefined || cases === null ? {} : { cases }),
@@ -221,6 +251,7 @@ export type MatrixRowOutcome = 'green' | 'red' | 'unverified';
 export type MatrixUnverifiedReason =
     | 'timeout'
     | 'integer-abi'
+    | 'corpus-defect'
     | 'unspecified-skip'
     | 'infrastructure'
     | 'not-run';
@@ -238,6 +269,8 @@ export type MatrixOutcomeFlags = {
     skipped?: number;
     skipped_timeout?: number;
     skipped_integer_argument?: number;
+    /** `skipped` 中因 `corpusDefect` 逐例排除的条数。 */
+    skipped_corpus_defect?: number;
 };
 
 /**
@@ -276,7 +309,11 @@ export function collectUnverifiedReasons(row: MatrixOutcomeFlags): MatrixUnverif
     if ((row.skipped_integer_argument ?? 0) > 0) {
         reasons.push('integer-abi');
     }
-    const unattributedSkip = (row.skipped ?? 0) - (row.skipped_timeout ?? 0) - (row.skipped_integer_argument ?? 0);
+    if ((row.skipped_corpus_defect ?? 0) > 0) {
+        reasons.push('corpus-defect');
+    }
+    const unattributedSkip =
+        (row.skipped ?? 0) - (row.skipped_timeout ?? 0) - (row.skipped_integer_argument ?? 0) - (row.skipped_corpus_defect ?? 0);
     if (unattributedSkip > 0) {
         reasons.push('unspecified-skip');
     }

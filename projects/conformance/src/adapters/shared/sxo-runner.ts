@@ -1,5 +1,7 @@
 import { median } from '@nyar/valkyrie';
 
+import type { CaseSnapshotEntry } from '../../domain/cases-loader.ts';
+
 import { createMatlabHarnessEvaluator, createWolframHarnessEvaluator, type SxoHarnessEvaluator } from './sxo-bridge.ts';
 import { loadSxoSolverBundle, type SxoDialect } from './sxo-solver-shared.ts';
 
@@ -100,22 +102,22 @@ async function runAllTests(
     runner: SxoDialectRunner,
     source: string,
     symbol: string,
-    tests: { args: Record<string, unknown>; expected: unknown }[],
+    entries: readonly CaseSnapshotEntry[],
     assert: boolean,
 ): Promise<void> {
     const evaluator = await runner.createEvaluator();
     evaluator.evaluateDefinition(source);
-    for (const [index, case_] of tests.entries()) {
-        const actual = runHarnessInvoke(evaluator, symbol, case_.args, case_.expected);
+    for (const snapshotEntry of entries) {
+        const actual = runHarnessInvoke(evaluator, symbol, snapshotEntry.case.args, snapshotEntry.case.expected);
         if (assert) {
-            assertSxoTestCase(index, case_.expected, case_.args, actual);
+            assertSxoTestCase(snapshotEntry.sourceIndex, snapshotEntry.case.expected, snapshotEntry.case.args, actual);
         }
     }
 }
 
 export async function runSxoSolverOnce(problemRoot: string, runner: SxoDialectRunner): Promise<void> {
-    const { tests, symbol, source } = loadSxoSolverBundle(problemRoot, runner.dialect);
-    await runAllTests(runner, source, symbol, tests, true);
+    const { entries, symbol, source } = loadSxoSolverBundle(problemRoot, runner.dialect);
+    await runAllTests(runner, source, symbol, entries, true);
 }
 
 export async function benchSxoSolverInProcess(
@@ -124,10 +126,10 @@ export async function benchSxoSolverInProcess(
     warmup: number,
     runner: SxoDialectRunner,
 ): Promise<number> {
-    const { tests, symbol, source } = loadSxoSolverBundle(problemRoot, runner.dialect);
+    const { entries, symbol, source } = loadSxoSolverBundle(problemRoot, runner.dialect);
 
     const runAll = async () => {
-        await runAllTests(runner, source, symbol, tests, true);
+        await runAllTests(runner, source, symbol, entries, true);
     };
 
     for (let i = 0; i < warmup; i++) {

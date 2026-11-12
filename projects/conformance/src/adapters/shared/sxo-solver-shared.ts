@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir } from '../../catalog/index.ts';
 import { assertTestCase } from '../../domain/assert.ts';
-import { loadProblemCases } from '../../domain/cases-loader.ts';
+import { loadProblemCases, type CaseSnapshotEntry } from '../../domain/cases-loader.ts';
 import { loadProblemMetadata, requireInvoke } from '../../domain/metadata.ts';
 import type { TestCase } from '../../domain/problem.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
@@ -69,12 +69,13 @@ export function loadSxoSolverBundle(problemRoot: string, dialect: SxoDialect) {
     if (isBlockedSource(source)) {
         throw new Error(`${dialect} 解处于阻塞状态`);
     }
-    return { tests: loadProblemCases(problemRoot).executable as TestCase[], symbol, source };
+    // 统一装载快照：断言坐标用过滤前冻结的 `sourceIndex`，不按可执行视图位置重新编号。
+    return { entries: loadProblemCases(problemRoot).executableEntries, symbol, source };
 }
 
-export function runSxoTests(tests: TestCase[], evaluateCase: (args: Record<string, unknown>) => unknown): void {
-    for (const [index, case_] of tests.entries()) {
-        assertTestCase(index, case_.expected, () => evaluateCase(case_.args));
+export function runSxoTests(entries: readonly CaseSnapshotEntry[], evaluateCase: (args: Record<string, unknown>) => unknown): void {
+    for (const snapshotEntry of entries) {
+        assertTestCase(snapshotEntry.sourceIndex, snapshotEntry.case.expected, () => evaluateCase(snapshotEntry.case.args));
     }
 }
 
