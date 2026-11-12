@@ -4,7 +4,7 @@ using std.collection;
 
 # 平移 m 自比：`arr[i] == arr[i+m]` 的连续段长达到 `m * (k - 1)` 即存在目标模式。
 [export(case: "camelCase")]
-micro containsPattern(arr: ArrayList<i64>, m: i64, k: i64) -> bool {
+micro containsPattern(arr: [i64], m: i64, k: i64) -> bool {
     let length: usize = arr.length()
     let width: usize = m as usize
     if width * (k as usize) > length {
@@ -27,7 +27,7 @@ micro containsPattern(arr: ArrayList<i64>, m: i64, k: i64) -> bool {
 }
 
 class Solution {
-    micro containsPattern(self, arr: ArrayList<i64>, m: i64, k: i64): bool {
+    micro containsPattern(self, arr: [i64], m: i64, k: i64): bool {
         return containsPattern(arr, m, k)
     }
 }

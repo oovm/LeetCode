@@ -23,7 +23,7 @@ micro token_to_value(text: utf8) -> i64 {
 
 # 逆波兰：数字入栈，运算符弹两数回推；除法向零截断。
 [export(case: "camelCase")]
-micro evalRPN(tokens: ArrayList<utf8>) -> i64 {
+micro evalRPN(tokens: [utf8]) -> i64 {
     let mut stack: ArrayList<i64> = ArrayList::new(0)
     loop token in tokens {
         if token == "+" || token == "-" || token == "*" || token == "/" {
@@ -46,7 +46,7 @@ micro evalRPN(tokens: ArrayList<utf8>) -> i64 {
 }
 
 class Solution {
-    micro evalRPN(self, tokens: ArrayList<utf8>): i64 {
+    micro evalRPN(self, tokens: [utf8]): i64 {
         return evalRPN(tokens)
     }
 }

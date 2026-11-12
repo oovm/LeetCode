@@ -2,7 +2,7 @@ namespace leetcode.find_center_of_star_graph;
 
 # 星形图的中心出现在每条边上，度数 ≥ 2；其余点度数恒为 1。
 [export(case: "camelCase")]
-micro find_center(edges: ArrayList<ArrayList<i64>>) -> i64 {
+micro find_center(edges: [[i64]]) -> i64 {
     let mut network: DirectedGraph<i64> = DirectedGraph::new()
     loop edge in edges {
         network.add_undirected_edge(edge⁅0⁆, edge⁅1⁆)
@@ -22,7 +22,7 @@ micro find_center(edges: ArrayList<ArrayList<i64>>) -> i64 {
 }
 
 class Solution {
-    micro findCenter(self, edges: ArrayList<ArrayList<i64>>): i64 {
+    micro findCenter(self, edges: [[i64]]): i64 {
         return find_center(edges)
     }
 }

@@ -18,7 +18,7 @@ micro matches_at(text: utf8, start: usize, word: utf8) -> bool {
 
 # 先标记每个起点能否匹配，再单遍重建字符串：命中就整段替换并跳过源长度。
 [export(case: "camelCase")]
-micro find_replace_string(s: utf8, indices: ArrayList<i64>, sources: ArrayList<utf8>, targets: ArrayList<utf8>) -> utf8 {
+micro find_replace_string(s: utf8, indices: [i64], sources: [utf8], targets: [utf8]) -> utf8 {
     let length: usize = s.byte_length()
     let mut owner: ArrayList<i64> = ArrayList::new(length)
     let mut fill: usize = 0
@@ -58,7 +58,7 @@ micro find_replace_string(s: utf8, indices: ArrayList<i64>, sources: ArrayList<u
 }
 
 class Solution {
-    micro findReplaceString(self, s: utf8, indices: ArrayList<i64>, sources: ArrayList<utf8>, targets: ArrayList<utf8>): utf8 {
+    micro findReplaceString(self, s: utf8, indices: [i64], sources: [utf8], targets: [utf8]): utf8 {
         return find_replace_string(s, indices, sources, targets)
     }
 }

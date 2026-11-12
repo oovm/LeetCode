@@ -23,7 +23,7 @@ micro greatest_common(left: i64, right: i64) -> i64 {
 
 class Solution {
     [export(case: "camelCase")]
-    micro maxPoints(points: ArrayList<ArrayList<i64>>) -> i64 {
+    micro maxPoints(points: [[i64]]) -> i64 {
         let total: usize = points.length()
         if total <= 2 {
             return total as i64
