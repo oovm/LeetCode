@@ -50,6 +50,10 @@ export type SolverCaseStats = {
     skipped_timeout?: number;
     /** `skipped` 中因整数 ABI 无法承载非整数实参的条数。 */
     skipped_integer_argument?: number;
+    /** `skipped` 中因 `corpusDefect` 标注排除的条数（TS 用例模块）。 */
+    skipped_corpus_defect?: number;
+    /** 判题用例来源：`<slug>.cases.ts` 优先，`metadata.json` 回退。 */
+    casesSource?: string;
     firstFailureIndex: number | null;
     firstFailure: string | null;
     /** 逐例真实观测；缺失表示旧格式行，隔离统计不得倒推。 */
@@ -188,6 +192,8 @@ export function parseSolverResultLine(text: string): SolverCaseStats | null {
                 skipped_integer_argument: typeof payload.skipped_integer_argument === 'number'
                     ? payload.skipped_integer_argument
                     : 0,
+                ...(typeof payload.skipped_corpus_defect === 'number' ? { skipped_corpus_defect: payload.skipped_corpus_defect } : {}),
+                ...(typeof payload.casesSource === 'string' ? { casesSource: payload.casesSource } : {}),
                 firstFailureIndex: payload.firstFailureIndex ?? null,
                 firstFailure: payload.firstFailure ?? null,
                 ...(cases === undefined || cases === null ? {} : { cases }),

@@ -16,7 +16,7 @@ import { compareModeForExecution, resultsMatch } from '../../domain/compare-mode
 import { coerceIntegerArgument, compareIntegerResult, I64_MAX, I64_MIN } from '../../domain/integer-literal.ts';
 import { problemIdFromDir } from '../../domain/metadata.ts';
 import { emptySolverCaseStats, extractTestFailureIndex, type SolverCaseStats } from '../shared/solver-case-stats.ts';
-import { loadMetadata, requireValkyrieInvokeEntry, resolveWasmExportSymbol, type TestCase } from '../valkyrie-node/ref.ts';
+import { loadMetadata, loadTestCases, requireValkyrieInvokeEntry, resolveWasmExportSymbol, type TestCase } from '../valkyrie-node/ref.ts';
 import { findManagedAbiEntry, ManagedAbiError, type ManagedAbiContract, type ManagedAbiEntry, type ManagedContrastLane } from './managed-abi.ts';
 
 export type ManagedRunOutcome = {
@@ -166,7 +166,8 @@ export function runManagedReference(
     contract: ManagedAbiContract,
 ): ManagedRunOutcome {
     try {
-        const { tests, invoke } = loadMetadata(problemRoot);
+        const { tests } = loadTestCases(problemRoot);
+        const { invoke } = loadMetadata(problemRoot);
         const problemId = problemIdFromDir(problemRoot);
         const compareMode = compareModeForExecution(problemId);
         const invokeEntry = requireValkyrieInvokeEntry(invoke);

@@ -26,6 +26,7 @@ import {
 import {
     ensureVBuild,
     loadMetadata,
+    loadTestCases,
     requireValkyrieInvokeEntry,
     resolveVBuildArtifacts,
     resolveWasmExportSymbol,
@@ -192,6 +193,7 @@ async function runOperationSequenceCases(
     slug: string,
     rawTotal: number,
     skipped: number,
+    casesSource?: string,
 ): Promise<number> {
     const callExport = host.callExport;
     if (typeof callExport !== 'function') {
@@ -278,6 +280,7 @@ async function runOperationSequenceCases(
                 skipped,
                 skipped_timeout: skipped,
                 skipped_integer_argument: 0,
+                casesSource,
                 firstFailureIndex: extractTestFailureIndex(message) ?? index,
                 firstFailure: message,
                 cases: records,
@@ -297,6 +300,7 @@ async function runOperationSequenceCases(
         skipped,
         skipped_timeout: skipped,
         skipped_integer_argument: 0,
+        casesSource,
         firstFailureIndex: null,
         firstFailure: null,
         cases: records,
@@ -354,7 +358,9 @@ async function main(): Promise<number> {
         throw new Error('legion build 未产出可执行产物');
     }
 
-    const { tests, invoke } = loadMetadata(problemDir);
+    const casesLoad = loadTestCases(problemDir);
+    const tests = casesLoad.tests;
+    const { invoke } = loadMetadata(problemDir);
     const problemId = problemIdFromDir(problemDir);
     const compareMode = compareModeForExecution(problemId);
     const entry = requireValkyrieInvokeEntry(invoke);
@@ -377,7 +383,7 @@ async function main(): Promise<number> {
 
     // ── 无期望语料：哨兵与非整数实参不进 pass/fail 分母 ──────────────────────
     const skippedApriori = tests.filter(isNoExecutableExpectation).length;
-    const rawTotal = tests.length;
+    const rawTotal = tests.length + casesLoad.defectSkipped;
     const executableCases = tests
         .map((testCase, index) => ({ testCase, index }))
         .filter(({ testCase }) => !isNoExecutableExpectation(testCase));
@@ -390,7 +396,7 @@ async function main(): Promise<number> {
         if (sequenceCases.length !== executableCases.length) {
             throw new Error('同一道题混用了单入口用例与操作序列用例，无法判定执行模型');
         }
-        return await runOperationSequenceCases(host, entry, abi, sequenceCases, tests, slug, rawTotal, skippedApriori);
+        return await runOperationSequenceCases(host, entry, abi, sequenceCases, tests, slug, rawTotal, skippedApriori + casesLoad.defectSkipped, casesLoad.source);
     }
 
     let pass = 0;
@@ -403,7 +409,7 @@ async function main(): Promise<number> {
             }
         }
     }
-    const skipped = skippedApriori + unrepresentableIndices.size;
+    const skipped = skippedApriori + unrepresentableIndices.size + casesLoad.defectSkipped;
 
     // 逐例记录：先落全部 `skipped`（哨兵与整数 ABI），再按真实观测逐例追加。
     const records: CaseRecord[] = [];
@@ -466,6 +472,8 @@ async function main(): Promise<number> {
                 skipped,
                 skipped_timeout: skippedApriori,
                 skipped_integer_argument: unrepresentableIndices.size,
+                skipped_corpus_defect: casesLoad.defectSkipped,
+                casesSource: casesLoad.source,
                 firstFailureIndex: extractTestFailureIndex(message) ?? index,
                 firstFailure: message,
                 cases: records,
@@ -485,6 +493,8 @@ async function main(): Promise<number> {
         skipped,
         skipped_timeout: skippedApriori,
         skipped_integer_argument: unrepresentableIndices.size,
+        skipped_corpus_defect: casesLoad.defectSkipped,
+        casesSource: casesLoad.source,
         firstFailureIndex: null,
         firstFailure: null,
         cases: records,

@@ -16,7 +16,7 @@ import { readArtifactEvidence } from '../shared/artifact-evidence.ts';
 import { resolveLaneTargetPlan, type CompileTargetPlan } from '../shared/compile-target-plan.ts';
 import { encodeNyarExecutionPin } from '../shared/execution-pin.ts';
 import { emptySolverCaseStats, parseSolverResultLine, type SolverCaseStats } from '../shared/solver-case-stats.ts';
-import { loadMetadata, resolveWasmExportSymbol } from '../valkyrie-node/ref.ts';
+import { loadMetadata, loadTestCases, resolveWasmExportSymbol } from '../valkyrie-node/ref.ts';
 import { formatLegionError, legionBuildNyar, NYAR_BUILD_TARGET, nyarBuildDir, valkyrieNyarRunnerReady } from './valkyrie.ts';
 
 const RUN_NYAR_SOLVER = join(LEETCODE_ROOT_FROM_PACKAGE, 'projects', 'conformance', 'scripts', 'run_nyar_solver.ts');
@@ -166,7 +166,8 @@ export async function runNyarSolverOnce(problemRoot: string, pin?: NyarReference
             if (!artifacts) {
                 return '无法 legion build --target ovm';
             }
-            const { tests, invoke } = loadMetadata(problemRoot);
+            const tests = loadTestCases(problemRoot).tests;
+            const { invoke } = loadMetadata(problemRoot);
             const entry = invoke.valkyrie ?? invoke.typescript;
             if (!entry) {
                 return 'metadata.invoke 缺失';
