@@ -2,9 +2,7 @@ namespace probe.recursive_union;
 
 # 递归带载荷联合：零元、单字段、递归字段、双递归字段。
 unite Expr {
-    [constructor]
-    Zero {
-    }
+    Zero
 
     [constructor]
     Num {

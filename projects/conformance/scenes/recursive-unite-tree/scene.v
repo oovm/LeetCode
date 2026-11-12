@@ -2,9 +2,7 @@ namespace probe.recursive_unite_tree;
 
 # 递归 unite：双载荷 `Branch` 直接持有自身类型。
 unite Node {
-    [constructor]
-    Empty {
-    }
+    Empty
 
     [constructor]
     Leaf {

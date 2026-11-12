@@ -2,9 +2,7 @@ namespace probe.pattern_matching;
 
 # 扁平带载荷联合：零元、单字段、双字段。
 unite Command {
-    [constructor]
-    Stop {
-    }
+    Stop
 
     [constructor]
     Move {

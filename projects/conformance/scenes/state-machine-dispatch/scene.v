@@ -27,7 +27,6 @@ unite Command {
     Multiply {
         value: i64
     }
-    [constructor]
     Reset
 }
 
