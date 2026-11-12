@@ -110,7 +110,7 @@ export type QuarantineAdjustment = {
 /** 汇总计数与逐例记录必须一致；不一致说明观测链自身失真，立即失败。 */
 function assertCasesConsistent(stats: SolverCaseStats, records: CaseRecord[]): void {
     const count = (status: CaseRecordStatus) => records.filter((record) => record.status === status).length;
-    const countSkipped = (reason: 'timeout' | 'integer-argument') =>
+    const countSkipped = (reason: NonNullable<CaseRecord['skipped_reason']>) =>
         records.filter((record) => record.status === 'skipped' && record.skipped_reason === reason).length;
     const mismatches: string[] = [];
     if (records.length !== stats.testCaseTotal) {
@@ -137,6 +137,11 @@ function assertCasesConsistent(stats: SolverCaseStats, records: CaseRecord[]): v
     if (countSkipped('integer-argument') !== (stats.skipped_integer_argument ?? 0)) {
         mismatches.push(
             `integer-argument 记录 ${countSkipped('integer-argument')} !== skipped_integer_argument ${stats.skipped_integer_argument ?? 0}`,
+        );
+    }
+    if (countSkipped('corpus-defect') !== (stats.skipped_corpus_defect ?? 0)) {
+        mismatches.push(
+            `corpus-defect 记录 ${countSkipped('corpus-defect')} !== skipped_corpus_defect ${stats.skipped_corpus_defect ?? 0}`,
         );
     }
     if (mismatches.length > 0) {
@@ -167,6 +172,7 @@ export function quarantineCaseStats(stats: SolverCaseStats, indices: ReadonlySet
     let removedSkipped = 0;
     let removedSkippedTimeout = 0;
     let removedSkippedIntegerArgument = 0;
+    let removedSkippedCorpusDefect = 0;
     // 在范围内但缺逐例记录的坐标同样无法安全扣减：计入 unbound，不静默吞掉。
     let missingRecordCoordinates = 0;
     for (const index of inRange) {
@@ -197,6 +203,9 @@ export function quarantineCaseStats(stats: SolverCaseStats, indices: ReadonlySet
                 if (record.skipped_reason === 'integer-argument') {
                     removedSkippedIntegerArgument += 1;
                 }
+                if (record.skipped_reason === 'corpus-defect') {
+                    removedSkippedCorpusDefect += 1;
+                }
                 break;
         }
     }
@@ -212,6 +221,7 @@ export function quarantineCaseStats(stats: SolverCaseStats, indices: ReadonlySet
             skipped: (stats.skipped ?? 0) - removedSkipped,
             skipped_timeout: (stats.skipped_timeout ?? 0) - removedSkippedTimeout,
             skipped_integer_argument: (stats.skipped_integer_argument ?? 0) - removedSkippedIntegerArgument,
+            skipped_corpus_defect: (stats.skipped_corpus_defect ?? 0) - removedSkippedCorpusDefect,
             cases: records.filter((record) => !removedIndices.has(record.index)),
         },
         removed,
