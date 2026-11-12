@@ -29,7 +29,7 @@
 
 1. 上游：`legion test` 或 std 单测命令（写全）
 2. leetcode：`legion build .../solvers/valkyrie --target wasm` 通过
-3. （可选）`metadata.tests` 全绿
+3. （可选）`cases.ts` 用例全绿
 
 ### 风险与回滚
 

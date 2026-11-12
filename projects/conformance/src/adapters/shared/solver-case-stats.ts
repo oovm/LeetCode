@@ -12,7 +12,7 @@ export const SOLVER_RESULT_MARKER = 'VALKYRIE_SOLVER_RESULT ';
 export type CaseRecordStatus = 'pass' | 'fail' | 'blocked' | 'not_run' | 'skipped';
 
 export type CaseRecord = {
-    /** `metadata.tests` 下标（原始坐标，非可执行子集位置）。 */
+    /** 可执行子集下标（`<slug>.cases.ts` 排除 `corpusDefect` 后的位置）。 */
     index: number;
     /** 稳定身份：`<slug>::tests[<index>]`。 */
     caseId: string;
@@ -52,7 +52,7 @@ export type SolverCaseStats = {
     skipped_integer_argument?: number;
     /** `skipped` 中因 `corpusDefect` 标注排除的条数（TS 用例模块）。 */
     skipped_corpus_defect?: number;
-    /** 判题用例来源：`<slug>.cases.ts` 优先，`metadata.json` 回退。 */
+    /** 判题用例来源：`<slug>.cases.ts`（唯一真源，JSON 判题已全量清退）。 */
     casesSource?: string;
     firstFailureIndex: number | null;
     firstFailure: string | null;

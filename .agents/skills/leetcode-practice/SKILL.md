@@ -50,7 +50,7 @@ solvers/valkyrie/solution.v + legion.von
 **完成标准**：
 
 - 三端算法与 readme **最终优化** 同阶同语义
-- Python / TS 对本机 `metadata.tests` 全绿
+- Python / TS 对本机 `cases.ts` 用例全绿
 - V：可 `legion build`；若 std 不够，在 `solution.v` 顶行 `# 阻塞：<摘要>` 并 **进入 ④**（勿用题解 hack 绕过）
 
 **命令（单题）**：
@@ -68,7 +68,7 @@ legion build projects/problems/<slug>/solvers/valkyrie --target wasm -o .cache/<
 **必做**：
 
 1. `legion build …/solvers/valkyrie --target wasm` 成功
-2. 对 **metadata.tests** 跑 V（harness / `legion test`，环境允许时）
+2. 对 **cases.ts 用例** 跑 V（harness / `legion test`，环境允许时）
 3. （可选）`LEETCODE_BENCH_ID=<slug> pnpm bench` 对比 TS 与 V 耗时
 
 **通过**：V 与 TS/Python 同测例结果一致，且无未解释的编译/链接错误。
@@ -96,7 +96,7 @@ legion build projects/problems/<slug>/solvers/valkyrie --target wasm -o .cache/<
 ## 单题检查清单
 
 - [ ] ① `readme.md` 符合 coach 规范
-- [ ] ② Python + TS `metadata.tests` 全绿
+- [ ] ② Python + TS `cases.ts` 用例全绿
 - [ ] ② V 源码与 `legion.von` 就绪
 - [ ] ③ `legion build --target wasm` 通过
 - [ ] ③ V 测例与题解一致（与其它实现对齐）

@@ -1,18 +1,17 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import type { ProblemSpec, TestCase } from './problem.ts';
+import type { ProblemSpec } from './problem.ts';
 
-export function loadProblemMetadata(problemRoot: string): Pick<ProblemSpec, 'tests' | 'invoke'> {
+/**
+ * `metadata.json` 非判题元数据：只承载 `invoke` 入口路由。
+ * 判题用例真源唯一为 `<slug>.cases.ts`（见 `cases-loader.ts`），JSON 判题已全量清退。
+ */
+export function loadProblemMetadata(problemRoot: string): Pick<ProblemSpec, 'invoke'> {
     const meta = JSON.parse(readFileSync(join(problemRoot, 'metadata.json'), 'utf8')) as {
-        tests?: TestCase[];
         invoke?: Record<string, string | undefined>;
     };
-    const tests = meta.tests;
-    if (!tests?.length) {
-        throw new Error('metadata.tests 为空');
-    }
-    return { tests, invoke: meta.invoke ?? {} };
+    return { invoke: meta.invoke ?? {} };
 }
 
 export function requireInvoke(metadata: Pick<ProblemSpec, 'invoke'>, key: string): string {

@@ -3,7 +3,7 @@ name: leetcode-implement
 description: >-
   刷题流程第②步：三端求解器。完整刷题见 leetcode-practice。
   实现 leetcode.v 三端求解器：Python、TypeScript、Valkyrie solution.v。
-  算法须与题解（readme 参考实现）一致，通过 metadata.tests。用户提及实现、solver、
+  算法须与题解（readme 参考实现）一致，通过 cases.ts 用例。用户提及实现、solver、
   TS、V、Python 对齐题解时加载。
 ---
 
@@ -52,7 +52,7 @@ projects/problems/<slug>/solvers/
 ## TypeScript
 
 - 单文件 `solution.ts`：`export class Solution { ... }`
-- 方法名与 `invoke.typescript` 一致；参数顺序与 `metadata.tests[].args` 键序一致（`Object.values(args)`）。
+- 方法名与 `invoke.typescript` 一致；参数顺序与 `cases.ts` 用例 `args` 键序一致（`Object.values(args)`）。
 - **Node**：`run_ts_solver.ts`（`tsx`）。**Bun**：`run_bun_solver.ts` 复用同一文件与 `invoke.typescript`，看板列 **TypeScript (Bun)**。
 - harness 经 `fn.call(instance, …)` 调用，`this` 指向 `Solution` 实例；可用 `private` 辅助方法。
 - 不写测试 harness、不引 conformance 包。
@@ -61,7 +61,7 @@ projects/problems/<slug>/solvers/
 
 - **仅单文件**：`solution.wl` / `solution.m`；**禁止**题级 `package.json`。`@sxo/*` 由 `projects/conformance` 统一声明。
 - `metadata.invoke.wolframSxo` / `matlabSxo`：函数名（如 `twoSum`），非 `Solution().twoSum`。
-- 参数顺序与 `metadata.tests[].args` 键序一致；无解返回须与 metadata 一致（`null` 而非 `[]`，Wolfram 侧 harness 解析 `Null`）。
+- 参数顺序与 `cases.ts` 用例 `args` 键序一致；无解返回须与用例一致（`null` 而非 `[]`，Wolfram 侧 harness 解析 `Null`）。
 - 缺 `@sxo/*` 能力：首行 `# 阻塞：` / `% 阻塞：` + 加载 **`sxo-evolution`**。
 
 ## Valkyrie
@@ -77,7 +77,7 @@ projects/problems/<slug>/solvers/
 ## 检查清单
 
 - [ ] 三端算法与 coach **最终算法** 同阶同语义
-- [ ] Python / TS 对本机 `metadata.tests` 全绿
+- [ ] Python / TS 对本机 `cases.ts` 用例全绿
 - [ ] 未在 readme 写代码或语言名（coach 规则不变）
 - [ ] V 至少 `legion build --target wasm` 可尝试（环境允许时）
 

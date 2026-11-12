@@ -35,7 +35,7 @@ const TEST_COORDINATE = /^tests\[(\d+)\]\./;
 /**
  * 从精度缺陷清单解析隔离坐标。
  *
- * 清单是侧车 manifest：坐标只标识 `metadata.tests` 下标，不改 metadata、不改 expected。
+ * 清单是侧车 manifest：坐标只标识 cases 真源 `<slug>.cases.ts` 下标（与清理前 metadata 原始顺序一致），不改判题数据。
  * 类不在 `QUARANTINE_CLASSES` 的条目（`D`）忽略。
  */
 export function parseCorpusQuarantine(text: string, source: string): CorpusQuarantine {

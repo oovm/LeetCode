@@ -123,7 +123,7 @@ function tsFailureCategory(row: TsRow): string {
     if (reason.includes('空跑') || reason.includes('执行计数不完整')) {
         return 'no-execution-count';
     }
-    if (reason.includes('metadata.tests 缺失或为空')) {
+    if (reason.includes('cases 模块缺失或可执行用例为空')) {
         return 'empty-tests';
     }
     if (orderOnlyMismatch(reason)) {
@@ -169,7 +169,7 @@ function summarizeTs(rows: TsRow[], total: number): Record<string, unknown> {
 /** V 失败归类：只按已记录证据分桶，不把载荷/测试数据缺陷算成编译器缺陷。 */
 function vFailureCategory(reason: string | null): string {
     const text = reason ?? '';
-    if (/AbiSchemaError|metadata\.tests/.test(text)) return 'test-data';
+    if (/AbiSchemaError|metadata\.tests|用例模块不存在|cases 模块校验失败/.test(text)) return 'test-data';
     if (/parse args-json|serialize result|type mismatch/.test(text)) return 'abi-contract';
     if (/legion build --target \S+ failed|compile pipeline rejected/.test(text)) return 'build-failure';
     if (/FATAL ERROR|heap out of memory|panicked at/.test(text)) return 'runtime-crash';
@@ -381,7 +381,7 @@ function main(): void {
     const tsMd = [
         '# TypeScript lane 基线',
         '',
-        '判题绿只证明「与 `metadata.tests[].expected` 一致」，不证明「与题面一致」。本报告只记录真实执行计数。',
+        '判题绿只证明「与 `<slug>.cases.ts` 用例 `expected` 一致」，不证明「与题面一致」。本报告只记录真实执行计数。',
         '',
         '## 范围',
         '',
@@ -451,7 +451,7 @@ function main(): void {
     const vMd = [
         '# Valkyrie 双 target 基线',
         '',
-        '判题绿只证明「与 `metadata.tests[].expected` 一致」，不证明「与题面一致」。',
+        '判题绿只证明「与 `<slug>.cases.ts` 用例 `expected` 一致」，不证明「与题面一致」。',
         '',
         '## 范围',
         '',

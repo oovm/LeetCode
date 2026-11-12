@@ -37,7 +37,7 @@ export type ValkyrieNyarBenchResult = {
 };
 
 /**
- * 旧 nyar lane 基准：`legion build --target ovm` 的编译耗时 + `metadata.tests` 的运行耗时。
+ * 旧 nyar lane 基准：`legion build --target ovm` 的编译耗时 + `<slug>.cases.ts` 的运行耗时。
  * 计划对象只解析一次，产物不可 invoke 时 `vRuntimeMs` 置 null 并说明原因。
  */
 export async function benchValkyrieNyarProblem(

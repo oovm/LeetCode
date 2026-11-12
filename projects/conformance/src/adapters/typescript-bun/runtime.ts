@@ -4,9 +4,11 @@
  */
 import { pathToFileURL } from 'node:url';
 
+import { loadProblemCases } from '../../domain/cases-loader.ts';
 import { compareModeForExecution } from '../../domain/compare-mode.ts';
 import { inferIntegerArgKeys } from '../../domain/integer-args.ts';
 import { loadProblemMetadata, problemIdFromDir, requireInvoke } from '../../domain/metadata.ts';
+import type { TestCase } from '../../domain/problem.ts';
 import { assertTsCase, makeTsCandidate, tsSolverPath } from '../typescript-node/ref.ts';
 
 function median(values: number[]): number {
@@ -26,7 +28,8 @@ async function loadTsCandidate(problemRoot: string) {
     const entry = requireInvoke(metadata, 'typescript');
     const mod = (await import(pathToFileURL(tsSolverPath(problemRoot)).href)) as Record<string, unknown>;
     const candidate = makeTsCandidate(entry, mod);
-    return { id: problemIdFromDir(problemRoot), tests: metadata.tests, candidate };
+    const cases = loadProblemCases(problemRoot);
+    return { id: problemIdFromDir(problemRoot), tests: cases.executable as TestCase[], candidate };
 }
 
 export async function runBunSolverOnce(problemRoot: string): Promise<{ caseTotal: number; executed: number }> {

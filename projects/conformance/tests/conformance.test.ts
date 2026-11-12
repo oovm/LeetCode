@@ -35,7 +35,7 @@ describe('Python ÊµÏÖÍê±¸ÐÔ£¨LeetCodeDataset£©', () => {
     }
 });
 
-describe('Valkyrie wasm Íê±¸ÐÔ£¨legion build + metadata.tests£©', () => {
+describe('Valkyrie wasm Íê±¸ÐÔ£¨legion build + cases 用例£©', () => {
     const ready = valkyrieNativeRunnerReady();
 
     for (const problem of BATCH_PROBLEMS) {
@@ -43,7 +43,7 @@ describe('Valkyrie wasm Íê±¸ÐÔ£¨legion build + metadata.tests£©', () =
         const hasSolver = hasValkyrieSolver(problemRoot) && valkyrieSolverBlockedReason(problemRoot) === null;
 
         it.skipIf(!ready || !hasSolver)(
-            `${problem.id} legion buildï¼ˆæŒ‰ manifest targetï¼‰ ÇÒ metadata.tests ±ØÐëÍ¨¹ý`,
+            `${problem.id} legion buildï¼ˆæŒ‰ manifest targetï¼‰ ÇÒ cases 用例 ±ØÐëÍ¨¹ý`,
             { timeout: 10 * 60 * 1000 },
             async () => {
                 const projectPath = legionProjectDir(LEETCODE_ROOT, problem);
@@ -51,8 +51,8 @@ describe('Valkyrie wasm Íê±¸ÐÔ£¨legion build + metadata.tests£©', () =
 
                 expect(row.buildStatus, row.buildError ?? 'build failed').toBe(0);
                 expect(row.manifestFresh, row.manifestError ?? 'execution manifest stale').toBe(true);
-                expect(row.runtimeOk, row.runtimeError ?? 'metadata.tests failed').toBe(true);
-                expect(row.testCaseTotal, 'metadata.tests 用例数为 0').toBeGreaterThan(0);
+                expect(row.runtimeOk, row.runtimeError ?? 'cases 用例 failed').toBe(true);
+                expect(row.testCaseTotal, 'cases 用例数为 0').toBeGreaterThan(0);
                 expect(row.executed_pass, row.firstFailure ?? '通过数不等于用例总数').toBe(row.testCaseTotal);
                 expect(row.executed_fail).toBe(0);
                 expect(row.blocked).toBe(0);
@@ -62,7 +62,7 @@ describe('Valkyrie wasm Íê±¸ÐÔ£¨legion build + metadata.tests£©', () =
     }
 });
 
-describe('Valkyrie nyar Íê±¸ÐÔ£¨legion build --target nyar + metadata.tests£©', () => {
+describe('Valkyrie nyar Íê±¸ÐÔ£¨legion build --target nyar + cases 用例£©', () => {
     const ready = valkyrieNyarRunnerReady();
 
     for (const problem of BATCH_PROBLEMS) {
@@ -70,7 +70,7 @@ describe('Valkyrie nyar Íê±¸ÐÔ£¨legion build --target nyar + metadata.te
         const hasSolver = hasValkyrieSolver(problemRoot) && valkyrieSolverBlockedReason(problemRoot) === null;
 
         it.skipIf(!ready || !hasSolver)(
-            `${problem.id} legion build --target nyar ÇÒ metadata.tests ±ØÐëÍ¨¹ý`,
+            `${problem.id} legion build --target nyar ÇÒ cases 用例 ±ØÐëÍ¨¹ý`,
             { timeout: 10 * 60 * 1000 },
             async () => {
                 const projectPath = legionProjectDir(LEETCODE_ROOT, problem);
@@ -78,8 +78,8 @@ describe('Valkyrie nyar Íê±¸ÐÔ£¨legion build --target nyar + metadata.te
 
                 expect(row.buildStatus, row.buildError ?? 'build failed').toBe(0);
                 expect(row.manifestFresh, row.manifestError ?? 'execution manifest stale').toBe(true);
-                expect(row.runtimeOk, row.runtimeError ?? 'metadata.tests failed').toBe(true);
-                expect(row.testCaseTotal, 'metadata.tests 用例数为 0').toBeGreaterThan(0);
+                expect(row.runtimeOk, row.runtimeError ?? 'cases 用例 failed').toBe(true);
+                expect(row.testCaseTotal, 'cases 用例数为 0').toBeGreaterThan(0);
                 expect(row.executed_pass, row.firstFailure ?? '通过数不等于用例总数').toBe(row.testCaseTotal);
                 expect(row.executed_fail).toBe(0);
                 expect(row.blocked).toBe(0);

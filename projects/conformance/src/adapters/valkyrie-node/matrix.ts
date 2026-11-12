@@ -222,7 +222,7 @@ export async function probeValkyrieProblem(problem: ProblemDefinition, projectPa
             compileTarget: plan.canonicalTarget,
         });
         runtimeOk = ref.ok;
-        runtimeError = ref.ok ? null : ref.stderr || 'metadata.tests 未执行';
+        runtimeError = ref.ok ? null : ref.stderr || 'cases 用例未执行';
         caseStats = ref.caseStats;
     }
 
@@ -259,7 +259,7 @@ export async function probeValkyrieProblem(problem: ProblemDefinition, projectPa
     return row;
 }
 
-/** 判断 `legion test` 是否通过 + manifest 一致 + `run_v_solver` metadata.tests 跑通。 */
+/** 判断 `legion test` 是否通过 + manifest 一致 + `run_v_solver` cases 用例跑通。 */
 export function isValkyrieGreen(row: ValkyrieMatrixRow): boolean {
     return isMatrixRowGreen(row);
 }

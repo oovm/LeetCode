@@ -11,9 +11,10 @@ export type RunIdInputs = {
     executionNonce: string;
 };
 
-/** �� benchmark/correctness manifest һ�µ���ĿԴ��ժҪ�� */
+/** 与 benchmark/correctness manifest 一致的题目源码摘要；`bigint` 用例值按 `<十进制>n` 稳定序列化。 */
 export function problemSourceDigest(problemId: string, implementationId: string, tests: unknown[]): string {
-    return digestSource([problemId, implementationId, JSON.stringify(tests)]);
+    const serialized = JSON.stringify(tests, (_key, value: unknown) => (typeof value === 'bigint' ? `${value}n` : value));
+    return digestSource([problemId, implementationId, serialized]);
 }
 
 export function digestSource(parts: string[]): string {

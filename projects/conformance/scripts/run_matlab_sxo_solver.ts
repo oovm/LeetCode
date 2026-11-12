@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** ¼ÓÔØ solvers/matlab-sxo/solution.m ²¢¾­ @sxo/matlab Ö´ÐÐ metadata.tests¡£ */
+/** ï¿½ï¿½ï¿½ï¿½ solvers/matlab-sxo/solution.m ï¿½ï¿½ï¿½ï¿½ @sxo/matlab Ö´ï¿½ï¿½ cases ç”¨ä¾‹ï¿½ï¿½ */
 import { SXO_BENCH_PARAMS } from '../src/planning/bench-params.ts';
 import { benchMatlabSxoSolverInProcess, runMatlabSxoSolverOnce } from '../src/adapters/matlab-sxo/ref.ts';
 import { sxoRunnerReady, sxoSkipReason } from '../src/adapters/shared/sxo-bridge.ts';
@@ -15,7 +15,7 @@ async function main(): Promise<number> {
     }
 
     if (!sxoRunnerReady()) {
-        console.error(sxoSkipReason() ?? '@sxo/matlab Î´°²×°');
+        console.error(sxoSkipReason() ?? '@sxo/matlab Î´ï¿½ï¿½×°');
         return 2;
     }
 

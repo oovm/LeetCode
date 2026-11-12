@@ -91,7 +91,7 @@
 ### SXO 单脚本约定
 
 - **禁止**在 `projects/problems/<slug>/` 下为 SXO 再建 `package.json` / `pyproject.toml`；`@sxo/*` 仅声明在 `projects/conformance/package.json` 的 `optionalDependencies`（`pnpm install` 自动拉取 npm 包）。
-- `metadata.invoke.wolframSxo` / `matlabSxo`：裸函数名（如 `twoSum`），参数顺序与 `metadata.tests[].args` 键序一致（`Object.values(args)`）。
+- `metadata.invoke.wolframSxo` / `matlabSxo`：裸函数名（如 `twoSum`），参数顺序与 `<slug>.cases.ts` 用例 `args` 键序一致（`Object.values(args)`）。
 - harness 拼接：`{solution 全文}\n\n{symbol}[{args}]`（Wolfram）或 `{symbol}({args})`（MATLAB），经 `Mathematica.create({ autoSimplify: false })` / `Matlab.create({ autoSimplify: false })` 求值后与 `expected` 比对。
 - 上游缺能力：脚本首行 `# 阻塞：`（Wolfram）或 `% 阻塞：`（MATLAB），并走 **`sxo-evolution`**。
 - 单题验题：
@@ -105,19 +105,19 @@ LeetCode 仓只负责题解、metadata、题意 harness 和结果证据。Valkyr
 
 题目失败时先检查入口需求链：export → receiver/call → declaration/instance → evidence → body。无法证明某个声明属于入口闭包时，问题归 Compiler 的 binding/closure contract，不能修改题解、加入源码排除表或为单题增加特判。
 
-`legion build`、artifact/export/invoke 和 `metadata.tests` 是不同证据。局部编译、CLI wrapper、单 target、空用例或旧缓存不能代表题意通过。矩阵报告必须记录本次来源、Compiler/host/target/profile、artifact digest、非空 export、真实 invoke 和全部用例结果。
+`legion build`、artifact/export/invoke 和 `<slug>.cases.ts` 判题用例是不同证据。局部编译、CLI wrapper、单 target、空用例或旧缓存不能代表题意通过。矩阵报告必须记录本次来源、Compiler/host/target/profile、artifact digest、非空 export、真实 invoke 和全部用例结果。
 
 源码 formatter 由 Oak 的 CST/token-gap formatter 拥有。Nyar 的 PP document 是模型打印，不得用于覆盖题解源码。题解 readme 仍遵守本仓教练稿约定，不能写入编译器内部 workaround。
 
 ## 基准测试
 
-- **外部基准**：先 `legion build` 得到 wasm + js glue，再在 harness 里对 **metadata.tests** 计时；leetcode **不在** `solution.v` 写 `[benchmark]`。
-- **TS (Node) 运行**：harness 单进程加载题解（`tsx` 转译发生在计时外），预热后只对全量 `metadata.tests` 循环取中位数 → `runtimeMs`（不含每次冷启动 Node）。
-- **TS (Bun) 运行**：`bun` 子进程内直载同一 `solution.ts`，预热后只计 `metadata.tests` 循环 → `tbRuntimeMs`；`bun` 来自 `projects/conformance` 的 `devDependency`（`pnpm install`，若二进制缺失在根目录执行 `pnpm approve-builds` 放行 `bun`）或 PATH / `BUN_PATH`。
+- **外部基准**：先 `legion build` 得到 wasm + js glue，再在 harness 里对 **`<slug>.cases.ts` 用例** 计时；leetcode **不在** `solution.v` 写 `[benchmark]`。
+- **TS (Node) 运行**：harness 单进程加载题解（`tsx` 转译发生在计时外），预热后只对全量 `cases.ts` 用例循环取中位数 → `runtimeMs`（不含每次冷启动 Node）。
+- **TS (Bun) 运行**：`bun` 子进程内直载同一 `solution.ts`，预热后只计 `cases.ts` 用例循环 → `tbRuntimeMs`；`bun` 来自 `projects/conformance` 的 `devDependency`（`pnpm install`，若二进制缺失在根目录执行 `pnpm approve-builds` 放行 `bun`）或 PATH / `BUN_PATH`。
 - **V 编译**：`pnpm bench` 对 `legion build` 计时 → `vCompileMs`（target 由 `legion.von` 的 `build[].target` 决定，**不**调用 `legion bench`）。
 - **V 运行**：只记录本次真实产物 invoke 的用例结果与计时。未执行、缺导出、零用例或失败均不计通过；性能缺测可以显示 missing，但不能掩盖正确性未通过。
 - 编排：`pnpm bench` → `scripts/benchmark.mjs` → `@leetcode/conformance` `bench-all.ts`（支持 `--count`、`--id`、`--lang` 等 CLI）。
-- **Wolfram / MATLAB (Sxo)**：单 Node 进程内复用 `@sxo/*` frontend，预热后只对全量 `metadata.tests` 循环取中位数 → `runtimeMs`（对齐 Python / TS 公平性）。
+- **Wolfram / MATLAB (Sxo)**：单 Node 进程内复用 `@sxo/*` frontend，预热后只对全量 `<slug>.cases.ts` 用例循环取中位数 → `runtimeMs`（对齐 Python / TS 公平性）。
 - 看板：`pnpm dashboard`；基准按语言写入 `projects/dashboard/public/benchmark-*.json`（`pnpm bench:typescript` / `bench:typescript-bun` / `bench:valkyrie` / `bench:wolfram-sxo` / `bench:matlab-sxo`，或 `LEETCODE_BENCH_LANG=typescript-bun pnpm bench`）。
 
 ## 格式化与链接
@@ -147,7 +147,7 @@ pnpm dashboard        # 看板 dev
 - **subject 末尾禁止句号 `.`**。body 句子正常用句号。
 - **全文禁止 `;` 与 `；`**（subject 与 body，改用句号或分行）。
 - **禁止内部计划/里程碑代号**：`Phase 1`、`phase-1`、`M0`/`Gate-N`、roadmap 切片名等 **一律不进** commit message。
-- **标识符必须反引号**：slug / 类型 / 函数 / 字段 / 路径 / 模块名，如 `` `two-sum` ``、`` `solution.v` ``、`` `legions.von` ``、`` `assertTestCase` ``、`` `metadata.tests` ``。
+- **标识符必须反引号**：slug / 类型 / 函数 / 字段 / 路径 / 模块名，如 `` `two-sum` ``、`` `solution.v` ``、`` `legions.von` ``、`` `assertTestCase` ``、`` `cases.ts` ``。
 - **禁止含糊缩写**：写全称（约定俗成的 `BFS`/`DFS` 可保留；指 TypeScript 时写 `TypeScript`，勿写 bare `TS`）。
 - **版本号不进 commit message**（如 `4.1.11`），改用「patched releases」等表述。
 
@@ -247,17 +247,17 @@ legion test <project-dir> --target wasm
 
 编译 target 由 `legion.von` 的 `build[].target` 唯一决定（`resolveCompileTargetPlan` 无默认值，声明缺失或多值即结构化失败），`--target` 须与 manifest 一致。Node 只是 runner 执行宿主，不等于编译 target 是 `node`。
 
-### 5. `legion test` ≠ 对 `metadata.tests` 验题意
+### 5. `legion test` ≠ 对 `<slug>.cases.ts` 验题意
 
 | 机制                                        | 验什么                                                                               |
 |---------------------------------------------|--------------------------------------------------------------------------------------|
-| `run_python_solver.py` / `run_ts_solver.ts` | **题意**：`metadata.json` 全量 `tests`                                               |
+| `run_python_solver.py` / `run_ts_solver.ts` | **题意**：`<slug>.cases.ts` 全量可执行用例（JSON 判题已全量清退）                    |
 | `legion build`                              | V 解能否按 `build[].target` 编译、链接（two-sum 为 wasm）                            |
-| `run_v_solver.ts` / `run_nyar_solver.ts`    | **题意**：对 legion 产物跑全量 `metadata.tests`（空壳 wasm 在 harness 内判失败）     |
+| `run_v_solver.ts` / `run_nyar_solver.ts`    | **题意**：对 legion 产物跑全量 `cases.ts` 用例（空壳 wasm 在 harness 内判失败）      |
 | `legion test`                               | 工程内 `[test]` 或 `test/` 目录中的 **V 单测**；无则 **0 通过、跳过**，exit 0 仍可能 |
 
-leetcode **不**在 `solution.v` 里写 `[benchmark]`；也 **不必**为每题复制 `metadata.tests` 进 `[test]`，除非刻意加 V
-侧单测。`pnpm test:problems` 对 **有** `solution.v` 的题要求 **build 绿且** `metadata.tests` 绿（wasm 经 `run_v_solver.ts`，nyar 经
+leetcode **不**在 `solution.v` 里写 `[benchmark]`；也 **不必**为每题复制 `cases.ts` 用例进 `[test]`，除非刻意加 V
+侧单测。`pnpm test:problems` 对 **有** `solution.v` 的题要求 **build 绿且** `cases.ts` 用例绿（wasm 经 `run_v_solver.ts`，nyar 经
 `run_nyar_solver.ts`）；无题解的批次题 **跳过** V 用例。`legion test` 仍不作为题意门禁。算法对错以 **题解**为准，三端实现须与题解一致。
 
 ### 6. 单题 `solvers/valkyrie/` 不在 workspace `members` 内是正常的
@@ -297,14 +297,13 @@ slug 写进 `legions.von`。
 | 看板写 `typescript-bun` / `bun` 小写 | 展示名 **TypeScript (Bun)**（技术 id 仍 `typescript-bun`） |
 | 去 Rust `sxo-dialect-*` 找 leetcode 默认入口 | 题解跑测走 **npm evaluate API**；dialect 仅在 `sxo-evolution` 补 lowering 时动 |
 
-### 11. `metadata.tests` 大整数与 `null` 语义
+### 11. `cases.ts` 大整数与 `null` 语义
 
-- JSON 数字超过 $2^{53}-1$ 时， **生成/编辑 metadata 可能静默损坏**（如回文题 `1000000000000000000` 末位被抹平）；题解与实现算法正确仍会对不上
-  `expected`。修复时以算法重算 `expected`，或改用字符串键存大整数（需 harness 同步）。
+- 判题真源是 `<slug>.cases.ts` TS 模块：超过 $2^{53}-1$ 的整数以 **`bigint` 字面量**（精确十进制 + `n` 后缀）逐字承载，不存在 JSON 数字静默损坏；`metadata.json#tests` 已全量清退，任何 lane 不得回读 JSON 判题。
 - `expected: null` 表示 **无返回值断言**（原地修改、无解等）。TS `void` 解得到 `undefined`，harness 在 `ts-ref.ts` 中归一为
   `null` 再比较。
-- 无解数组题（如 `two-sum`）实现应返回 `null`，勿返回 `[]`，与 metadata 一致。
-- `expected: "Error: …"` 表示 **应抛出异常**（如 `merge-sorted-array` 缓冲区不足）。Python harness 将 `Error: {message}` 与异常消息比对；TS 用 `ts-ref.assertTestCase` 同理。实现应在越界写入时抛错，勿在入口仅比较 `len(nums1) === m+n`（metadata 中常有 `len > m+n` 的有效用例）。
+- 无解数组题（如 `two-sum`）实现应返回 `null`，勿返回 `[]`，与用例一致。
+- `expected: "Error: …"` 表示 **应抛出异常**（如 `merge-sorted-array` 缓冲区不足）。Python harness 将 `Error: {message}` 与异常消息比对；TS 用 `ts-ref.assertTestCase` 同理。实现应在越界写入时抛错，勿在入口仅比较 `len(nums1) === m+n`（用例中常有 `len > m+n` 的有效输入）。
 
 ## Agent Skills（`.agents/skills/`）
 
@@ -312,7 +311,7 @@ slug 写进 `legions.von`。
 |-------------------------|------------------------------------------------------|
 | **`leetcode-practice`** | **刷题全流程**（编排下列四步，用户说刷题时先加载）   |
 | `leetcode-coach`        | ① 单题 `readme.md` 教练稿（语言无关）                |
-| `leetcode-implement`    | ② `solvers/` 三端实现与 `metadata.tests`             |
+| `leetcode-implement`    | ② `solvers/` 三端实现与 `<slug>.cases.ts` 判题用例   |
 | `valkyrie-guide`        | ② 写 V 时：语法、下标、std、legion                   |
 | `valkyrie-evolution`    | ④ 按缺口在 `../valkyrie.v` / `../nyar-vm.rs` 补能力 |
 | `sxo-evolution`         | ④ 按缺口在 sxo-framework `@sxo/mathematica` / `@sxo/matlab` 补能力（看板标 **(Sxo)**） |

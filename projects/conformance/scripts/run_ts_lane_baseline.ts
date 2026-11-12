@@ -20,6 +20,7 @@ import { PROBLEMS, problemDir } from '../src/catalog/index.ts';
 import { bunExecutable } from '../src/adapters/typescript-bun/bridge.ts';
 import { hasTsSolver, tsSolverPath } from '../src/adapters/typescript-node/ref.ts';
 import { hasValkyrieSolver, valkyrieSolverBlockedReason } from '../src/adapters/valkyrie-node/valkyrie.ts';
+import { loadProblemCases } from '../src/domain/cases-loader.ts';
 import { LEETCODE_ROOT } from '../src/domain/paths.ts';
 
 const CONFORMANCE_ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -89,8 +90,7 @@ if (process.argv.includes('--list')) {
 
 function testCaseTotal(root: string): number | null {
     try {
-        const meta = JSON.parse(readFileSync(`${root}/metadata.json`, 'utf8')) as { tests?: unknown[] };
-        return Array.isArray(meta.tests) ? meta.tests.length : null;
+        return loadProblemCases(root).executable.length;
     } catch {
         return null;
     }
@@ -126,7 +126,7 @@ function runProblem(problem: (typeof PROBLEMS)[number]): Row {
         return { ...base, status: 'fail', ms: Date.now() - startedAt, reason: 'solution.ts 未导出 export class Solution' };
     }
     if (total === null || total === 0) {
-        return { ...base, status: 'fail', ms: Date.now() - startedAt, reason: 'metadata.tests 缺失或为空（无真实执行计数）' };
+        return { ...base, status: 'fail', ms: Date.now() - startedAt, reason: 'cases 模块缺失或可执行用例为空（无真实执行计数）' };
     }
 
     const exe = channel === 'bun' ? bunExecutable() : process.execPath;

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** 加载 solvers/typescript/<project>/solution.ts 并执行 metadata.tests。 */
+/** 加载 solvers/typescript/<project>/solution.ts 并执行 cases 用例。 */
 import { benchTsSolverInProcess, runTsSolverOnce } from '../src/adapters/typescript-node/ref.ts';
 import { TYPESCRIPT_BENCH_PARAMS } from '../src/planning/bench-params.ts';
 

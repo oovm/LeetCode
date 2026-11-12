@@ -51,7 +51,7 @@ export type WasmAbiType =
 export interface AbiParameter {
     /** 声明顺序（0 起、连续、唯一）；解析后按此升序归一。 */
     index: number;
-    /** 编译期参数名；metadata.tests.args 按此键取值。 */
+    /** 编译期参数名；cases 用例.args 按此键取值。 */
     name: string;
     /** marshal 的权威类型。 */
     type: WasmAbiType;
@@ -428,7 +428,7 @@ export function matchWasmExportSymbol(
 // ── 参数位置展开 ──────────────────────────────────────────────────────────────
 
 /**
- * 按 schema 的参数身份把 metadata.tests.args 展开成位置参数。
+ * 按 schema 的参数身份把 cases 用例.args 展开成位置参数。
  *
  * 只做身份校验与位置排序：位置由 `index` 升序决定，取值只按 `name` 查；
  * 缺参数、多出未声明参数一律抛结构化错误。
@@ -441,12 +441,12 @@ export function orderArgsBySchema(exportSchema: AbiExport, args: Record<string, 
     for (const param of exportSchema.params) {
         declaredNames.add(param.name);
         if (!Object.hasOwn(args, param.name)) {
-            throw new AbiSchemaError('missing_argument', `args.${param.name}`, `metadata.tests.args 缺少参数 "${param.name}"`);
+            throw new AbiSchemaError('missing_argument', `args.${param.name}`, `cases 用例.args 缺少参数 "${param.name}"`);
         }
     }
     for (const key of Object.keys(args)) {
         if (!declaredNames.has(key)) {
-            throw new AbiSchemaError('unknown_argument', `args.${key}`, `metadata.tests.args 含 schema 未声明的参数 "${key}"`);
+            throw new AbiSchemaError('unknown_argument', `args.${key}`, `cases 用例.args 含 schema 未声明的参数 "${key}"`);
         }
     }
     return [...exportSchema.params]

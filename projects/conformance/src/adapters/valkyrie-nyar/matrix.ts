@@ -14,7 +14,7 @@ export async function probeValkyrieNyarProblem(problem: ProblemDefinition, proje
     return probeValkyrieBackendProblem(problem, projectPath, 'ovm');
 }
 
-/** 判断 `legion test` 是否通过 + manifest 一致 + `run_nyar_solver` metadata.tests 跑通。 */
+/** 判断 `legion test` 是否通过 + manifest 一致 + `run_nyar_solver` cases 用例跑通。 */
 export function isValkyrieNyarGreen(row: ValkyrieNyarMatrixRow): boolean {
     return isMatrixRowGreen(row);
 }

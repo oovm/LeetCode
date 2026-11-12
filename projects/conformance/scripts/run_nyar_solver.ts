@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** 对旧 OVM lane 产物运行 `metadata.tests`（通过 @nyar/valkyrie N-API 调用 `.nyar` 导出）。 */
+/** 对旧 OVM lane 产物运行 `<slug>.cases.ts` 判题用例（通过 @nyar/valkyrie N-API 调用 `.nyar` 导出）。 */
 import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { arch, platform } from 'node:os';
@@ -26,6 +26,7 @@ import { LEETCODE_ROOT_FROM_PACKAGE } from '../src/domain/paths.ts';
 import {
     ensureNyarBuild,
     loadMetadata,
+    loadTestCases,
     resolveNyarBuildArtifacts,
     nyarInvokeBlockedReason,
     type NyarVmArtifacts,
@@ -169,7 +170,8 @@ async function main(): Promise<number> {
         throw new Error('legion build --target ovm 未产出 `.nyar` 入口');
     }
 
-    const { tests, invoke } = loadMetadata(problemDir);
+    const { tests } = loadTestCases(problemDir);
+    const { invoke } = loadMetadata(problemDir);
     const problemId = problemIdFromDir(problemDir);
     const compareMode = compareModeForExecution(problemId);
     const entry = invoke.valkyrie ?? invoke.typescript;

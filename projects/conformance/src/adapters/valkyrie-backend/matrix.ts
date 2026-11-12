@@ -278,7 +278,7 @@ export async function probeValkyrieBackendProblem(
             compileTarget: plan.canonicalTarget,
         });
         runtimeOk = ref.ok;
-        runtimeError = ref.ok ? null : ref.stderr || 'metadata.tests 未执行';
+        runtimeError = ref.ok ? null : ref.stderr || 'cases 用例未执行';
         caseStats = ref.caseStats;
     }
     if (lane !== 'ovm' && verdict.status === 'ready' && managedArtifact !== null && managedContract !== null) {

@@ -30,7 +30,7 @@
 ### 验收
 
 1. 上游：`pnpm --filter @sxo/<pkg> test` 或指定 matrix case
-2. leetcode：单题 `metadata.tests` 全绿（对应 sxo 脚本）
+2. leetcode：单题 `cases.ts` 用例全绿（对应 sxo 脚本）
 3. （可选）bench 行 `runtimeMs` 非 null，看板标签含 **(Sxo)**
 
 ### 风险与回滚

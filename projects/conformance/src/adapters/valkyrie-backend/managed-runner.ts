@@ -5,7 +5,7 @@
  * - `jvm`: `java -cp <jar> <launcher_class>`，argv 由 launcher 按形参类型解析；
  * - `clr`: `dotnet exec <dll> <logical_entry>`，`managed_entry` 按逻辑入口分发。
  *
- * 每个 `metadata.tests` 用例单独起进程，取 stdout 最后一行为返回值并比对。
+ * 每个 `<slug>.cases.ts` 用例单独起进程，取 stdout 最后一行为返回值并比对。
  * 任何缺合同、入口缺失、形参个数/类型不符、进程非零退出都结构化失败，
  * 不猜返回值、不跳过用例。
  */
@@ -155,7 +155,7 @@ function launchManagedEntry(
 }
 
 /**
- * 对本次 managed 产物执行全量 `metadata.tests`。
+ * 对本次 managed 产物执行全量 `<slug>.cases.ts`。
  *
  * `contract` 必须来自 `readManagedAbiContract`（已校验 digest/artifact/lane）。
  */

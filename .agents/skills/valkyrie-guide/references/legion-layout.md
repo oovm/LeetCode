@@ -40,4 +40,4 @@ legion build solvers/valkyrie --target wasm -o .cache/out
 legion test solvers/valkyrie --target wasm
 ```
 
-路径相对于题目目录或传入绝对路径。leetcode 基准以外部 harness 跑 `metadata.tests` 为准，不依赖源码内 `[benchmark]`。
+路径相对于题目目录或传入绝对路径。leetcode 基准以外部 harness 跑 `cases.ts` 用例为准，不依赖源码内 `[benchmark]`。

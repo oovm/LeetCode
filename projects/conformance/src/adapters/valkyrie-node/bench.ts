@@ -27,7 +27,7 @@ export type ValkyrieBenchResult = {
 
 /**
  * leetcode 的 V 基准：用同一 `CompileTargetPlan` 驱动 `legion build`，
- * 产物是 target 决定的 artifact，由 `run_v_solver.ts` 对 `metadata.tests` 计时。
+ * 产物是 target 决定的 artifact，由 `run_v_solver.ts` 对 `<slug>.cases.ts` 计时。
  * 产物无法 invoke 时 `vRuntimeMs` 置 null，并在 `error` 里说明原因。
  */
 export function benchValkyrieProblem(

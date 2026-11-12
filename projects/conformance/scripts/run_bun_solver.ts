@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-/** 在 Bun 进程内加载 solvers/typescript/solution.ts 并执行 metadata.tests。 */
+/** 在 Bun 进程内加载 solvers/typescript/solution.ts 并执行 cases 用例。 */
 import { BUN_BENCH_PARAMS } from '../src/planning/bench-params.ts';
 import { benchBunSolverInProcess, runBunSolverOnce } from '../src/adapters/typescript-bun/runtime.ts';
 

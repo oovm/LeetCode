@@ -5,7 +5,7 @@ export const PYTHON_BENCH_PARAMS = {
     warmup: 5,
     aggregation: 'median' as const,
     metric: 'runtime' as const,
-    /** 单 Python 进程内加载题解后只计 metadata.tests 循环，不含每次冷启动解释器。 */
+    /** 单 Python 进程内加载题解后只计 cases 用例循环，不含每次冷启动解释器。 */
     timingScope: 'in-process-metadata-tests' as const,
 };
 
@@ -15,7 +15,7 @@ export const TYPESCRIPT_BENCH_PARAMS = {
     aggregation: 'median' as const,
     metric: 'runtime' as const,
     runner: 'tsx' as const,
-    /** 单进程内加载题解后只计 metadata.tests 循环，不含每次冷启动 Node。 */
+    /** 单进程内加载题解后只计 cases 用例循环，不含每次冷启动 Node。 */
     timingScope: 'in-process-metadata-tests' as const,
 };
 
@@ -25,7 +25,7 @@ export const BUN_BENCH_PARAMS = {
     aggregation: 'median' as const,
     metric: 'runtime' as const,
     runner: 'bun' as const,
-    /** Bun 子进程内加载题解后只计 metadata.tests 循环，不含每次冷启动 Bun。 */
+    /** Bun 子进程内加载题解后只计 cases 用例循环，不含每次冷启动 Bun。 */
     timingScope: 'in-process-metadata-tests' as const,
 };
 
@@ -38,11 +38,11 @@ export const VALKYRIE_BENCH_PARAMS = {
 };
 
 export const SXO_BENCH_PARAMS = {
-    /** 每题 metadata.tests 较多且 N-API 重；低于 Python 的 50 迭代以免 bench 看似挂起。 */
+    /** 每题 cases 用例较多且 N-API 重；低于 Python 的 50 迭代以免 bench 看似挂起。 */
     iterations: 10,
     warmup: 2,
     aggregation: 'median' as const,
     metric: 'runtime' as const,
-    /** 单 Node 进程内复用 `HostSession`，只计 metadata.tests 循环。 */
+    /** 单 Node 进程内复用 `HostSession`，只计 cases 用例循环。 */
     timingScope: 'in-process-metadata-tests' as const,
 };

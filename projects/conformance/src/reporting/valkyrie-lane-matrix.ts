@@ -64,7 +64,7 @@ export const DELIVERY_LANE: MatrixLaneId = 'wasm';
 
 export type LaneRuntimeCounts = Record<ArtifactRuntimeStatus, number>;
 
-/** 侧车隔离坐标：slug → 被排除的 `metadata.tests` 下标。 */
+/** 侧车隔离坐标：slug → 被排除的 cases 真源 `<slug>.cases.ts` 下标。 */
 export type LaneQuarantine = {
     source: string;
     caseCount: number;

@@ -5,7 +5,7 @@ export type CallTestCase = {
 };
 
 /**
- * 设计类题目的操作序列实参原形（与 `metadata.tests` 已有字段一一对应）：
+ * 设计类题目的操作序列实参原形（与 `<slug>.cases.ts` 用例已有字段一一对应）：
  * `operations[0]` 是类名（构造），其后是方法名；`arguments` 与 `operations` 等长，
  * `arguments[0]` 是构造参数，其余是各操作的实参。
  */
@@ -20,7 +20,7 @@ export type OperationSequenceCase = {
     expected: unknown[];
 };
 
-/** 单题测试用例；题目目录 `metadata.json` 为事实所有者。 */
+/** 单题测试用例；题目目录 `<slug>.cases.ts` 为判题真源（JSON 判题已全量清退）。 */
 export type TestCase = CallTestCase | OperationSequenceCase;
 
 /** 稳定题目标识与元数据；catalog 仅为索引视图。 */

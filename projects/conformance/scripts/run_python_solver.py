@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
-"""加载 solvers/python/solution.py 并执行 metadata.tests。"""
+"""加载 solvers/python/solution.py 并执行 `<slug>.cases.ts` 判题用例（JSON 判题已全量清退）。"""
 from __future__ import annotations
 
 import copy
 import json
 import re
+import shutil
+import subprocess
 import sys
 import time
 from pathlib import Path
 from typing import Any, Callable
 
 from python_design_sequence import invoke_case, is_operation_sequence_args, operation_step_path
+from isolated_python_child import _decode_value
 import semantic_validators
 
 # 十进制字符串还原走原生 int（任意精度）：放开默认 4300 位上限，
@@ -166,6 +169,41 @@ def load_metadata(problem_dir: Path) -> dict[str, Any]:
     return json.loads(meta_path.read_text(encoding="utf-8"))
 
 
+def load_cases_via_bridge(problem_dir: Path) -> list[dict[str, Any]]:
+    """判题真源是 `<slug>.cases.ts`：经 node dumper 取 tagged NDJSON，`$bigint` 按原生 int 精确还原。
+
+    与隔离判题器共用协议编码（`isolated/protocol.ts`），Python 侧解码复用
+    `isolated_python_child._decode_value`；缺陷用例不进分母（dumper 只发可执行子集）。
+    """
+    scripts_dir = Path(__file__).resolve().parent
+    conformance_root = scripts_dir.parent
+    dumper = scripts_dir / "dump_cases_tagged.ts"
+    node = shutil.which("node")
+    if not node:
+        raise RuntimeError("找不到 node —— cases.ts 装载桥不可用")
+    proc = subprocess.run(
+        [node, "--import", "tsx", str(dumper), str(problem_dir)],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        cwd=str(conformance_root),
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"cases dumper 失败（rc={proc.returncode}）：{(proc.stderr or '').strip()[:500]}")
+    lines = [line for line in (proc.stdout or "").splitlines() if line.strip()]
+    if not lines:
+        raise RuntimeError("cases dumper 无输出")
+    tests: list[dict[str, Any]] = []
+    for line in lines[1:]:
+        message = json.loads(line)
+        if message.get("type") != "case":
+            continue
+        tests.append({"args": _decode_value(message["args"]), "expected": _decode_value(message["expected"])})
+    if not tests:
+        raise RuntimeError(f"{problem_dir}: 可执行用例为空（cases.ts 缺失或全为缺陷标注）")
+    return tests
+
+
 def _read_pair(prelude_path: Path, solution_path: Path) -> str | None:
     if prelude_path.is_file() and solution_path.is_file():
         prelude = prelude_path.read_text(encoding="utf-8").rstrip()
@@ -276,9 +314,7 @@ def load_solver_context(
     if not slug:
         raise ValueError("metadata.id 缺失")
 
-    tests = meta.get("tests")
-    if not tests:
-        raise ValueError("metadata.tests 为空")
+    tests = load_cases_via_bridge(problem_dir)
 
     invoke = meta.get("invoke") or {}
     entry_point = invoke.get("python")
@@ -308,7 +344,7 @@ def median_ms(values: list[float]) -> float:
 
 
 def bench_solver(problem_dir: Path, iterations: int, warmup: int) -> float:
-    """单 Python 进程内加载题解后只计 metadata.tests 循环（对齐 TS in-process）。"""
+    """单 Python 进程内加载题解后只计 cases.ts 用例循环（对齐 TS in-process）。"""
     candidate, tests, mode, problem_id = load_solver_context(problem_dir)
 
     def run_all() -> None:

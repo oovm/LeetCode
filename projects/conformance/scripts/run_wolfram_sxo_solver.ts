@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** ¼ÓÔØ solvers/wolfram-sxo/solution.wl ²¢¾­ @sxo/mathematica Ö´ÐÐ metadata.tests¡£ */
+/** ï¿½ï¿½ï¿½ï¿½ solvers/wolfram-sxo/solution.wl ï¿½ï¿½ï¿½ï¿½ @sxo/mathematica Ö´ï¿½ï¿½ cases ç”¨ä¾‹ï¿½ï¿½ */
 import { SXO_BENCH_PARAMS } from '../src/planning/bench-params.ts';
 import { benchWolframSxoSolverInProcess, runWolframSxoSolverOnce } from '../src/adapters/wolfram-sxo/ref.ts';
 import { sxoRunnerReady, sxoSkipReason } from '../src/adapters/shared/sxo-bridge.ts';
@@ -15,7 +15,7 @@ async function main(): Promise<number> {
     }
 
     if (!sxoRunnerReady()) {
-        console.error(sxoSkipReason() ?? '@sxo/mathematica Î´°²×°');
+        console.error(sxoSkipReason() ?? '@sxo/mathematica Î´ï¿½ï¿½×°');
         return 2;
     }
 

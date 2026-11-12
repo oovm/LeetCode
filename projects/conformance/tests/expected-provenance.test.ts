@@ -1,8 +1,9 @@
 /**
  * 「未溯源的 expected 不得计入绿」门禁。
  *
- * - 现存 metadata 里不允许再有未登记的异常文本 expected；
- * - 所有仍存在的异常文本必须逐条命中 `expected-provenance.json` 的 `untraced` 记录；
+ * - 现存 cases 真源（`<slug>.cases.ts`）里不允许再有未登记的异常文本 expected；
+ * - 所有仍存在的异常文本必须逐条命中 `expected-provenance.json` 的 `untraced` 记录
+ *   （下标坐标按 cases 数组原始顺序，与清理前 metadata 一致）；
  * - `untraced` 所在题目不得出现在覆盖清单的 `coverageEligible: true` 条目里。
  */
 import { readdirSync, readFileSync } from 'node:fs';
@@ -10,6 +11,7 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { loadProblemCases } from '../src/domain/cases-loader.ts';
 import { CONFORMANCE_ROOT, LEETCODE_ROOT } from '../src/domain/paths.ts';
 
 type ProvenanceEntry = { problemId: string; caseIndex: number; provenance: string; disposition: string };
@@ -24,7 +26,7 @@ function isAbnormalExpected(value: unknown): value is string {
 }
 
 describe('expected 溯源门禁', () => {
-    it('现存异常文本 expected 必须全部登记为 untraced', () => {
+    it('现存异常文本 expected 必须全部登记为 untraced', { timeout: 180_000 }, () => {
         const report = JSON.parse(
             readFileSync(join(CONFORMANCE_ROOT, 'reports', 'expected-provenance.json'), 'utf8'),
         ) as ProvenanceReport;
@@ -36,14 +38,13 @@ describe('expected 溯源门禁', () => {
 
         const found: string[] = [];
         for (const problemId of readdirSync(PROBLEMS_DIR)) {
-            const metadataPath = join(PROBLEMS_DIR, problemId, 'metadata.json');
-            let metadata: { tests?: Array<{ expected?: unknown }> };
+            let cases: Array<{ expected?: unknown }>;
             try {
-                metadata = JSON.parse(readFileSync(metadataPath, 'utf8')) as typeof metadata;
+                cases = loadProblemCases(join(PROBLEMS_DIR, problemId)).cases;
             } catch {
                 continue;
             }
-            for (const [index, test] of (metadata.tests ?? []).entries()) {
+            for (const [index, test] of cases.entries()) {
                 if (isAbnormalExpected(test.expected)) {
                     found.push(`${problemId}#${index}`);
                 }

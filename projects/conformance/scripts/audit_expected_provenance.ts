@@ -17,6 +17,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { loadProblemCases } from '../src/domain/cases-loader.ts';
 import { CONFORMANCE_ROOT, LEETCODE_ROOT } from '../src/domain/paths.ts';
 
 const REPORT_DIR = join(CONFORMANCE_ROOT, 'reports');
@@ -59,10 +60,10 @@ type ProvenanceEntry = {
     disposition: 'removed-in-cleanup' | 'retained-dirty';
 };
 
+/** 现存用例真源是 `<slug>.cases.ts`（JSON 判题已清退）；下标与清理前 metadata 逐字一致。 */
 function readMetadataFromDisk(problemId: string): Metadata {
-    return JSON.parse(
-        readFileSync(join(LEETCODE_ROOT, 'projects', 'problems', problemId, 'metadata.json'), 'utf8'),
-    ) as Metadata;
+    const cases = loadProblemCases(join(LEETCODE_ROOT, 'projects', 'problems', problemId)).cases;
+    return { id: problemId, tests: cases as TestCase[] };
 }
 
 function readMetadataFromCleanupParent(problemId: string): Metadata {

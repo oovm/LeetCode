@@ -42,7 +42,7 @@ description: >-
 
 **习惯**
 
-- 与 LeetCode / `metadata.tests` 对齐的 **逻辑下标**（从 0 开始）→ 优先用 **`⁅i⁆`** 访问 `ArrayList`。
+- 与 LeetCode / `cases.ts` 用例对齐的 **逻辑下标**（从 0 开始）→ 优先用 **`⁅i⁆`** 访问 `ArrayList`。
 - 勿把 C/Java/TS 的 `arr[i]` 直接当成 0-based 套到 V 的 **`[i]`** 上。
 - `insert` / `remove` / `set` 的 **ordinal 参数同样 1-based**。
 
@@ -94,7 +94,7 @@ solvers/valkyrie/
 └── solution.v
 ```
 
-- **不要**在 `solution.v` 里写 `[benchmark]`；leetcode 用外部 harness 跑 `metadata.tests`。
+- **不要**在 `solution.v` 里写 `[benchmark]`；leetcode 用外部 harness 跑 `cases.ts` 用例。
 - 编译：`legion build <dir> --target wasm -o ...`（Rust seed，见 `AGENTS.md` §维护者陷阱；非 `valkyrie.v` 自举 legion）。
 
 ### wasm invoke（库模式，无 `[main]`）
@@ -136,7 +136,7 @@ harness 从 `metadata.invoke`（如 `Solution().twoSum`）解析 wasm 导出名 
 
 - [ ] 访问 `ArrayList` 未误用 1-based `[i]` 当 0-based
 - [ ] `HashMap` / `ArrayList` 在 `std.collection` 下
-- [ ] 返回下标与 `metadata.tests` 一致（0-based）
+- [ ] 返回下标与 `cases.ts` 用例一致（0-based）
 - [ ] 已对照同题 coach readme 的最优算法
 - [ ] wasm invoke：顶层 `[export]` 包装 + `snake_case`；需对齐 invoke 时加 `case: "camelCase"`
 

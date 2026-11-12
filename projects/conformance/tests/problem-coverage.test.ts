@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 
 import { runPythonReference } from '../src/adapters/python/ref.ts';
 import { hasReadyTsSolver, runTsReference } from '../src/adapters/typescript-node/ref.ts';
+import { loadProblemCases } from '../src/domain/cases-loader.ts';
 import { requireArgsConstraint, validateTestArgs } from '../src/domain/args-constraints.ts';
 import { requireCompareMode } from '../src/domain/compare-mode.ts';
 import { probeValkyrieProblem } from '../src/adapters/valkyrie-node/matrix.ts';
@@ -126,7 +127,7 @@ describe('题库覆盖清单', () => {
                 continue;
             }
 
-            expect(metadata.tests.length, `${id}: metadata.tests 为空`).toBeGreaterThan(0);
+            expect(loadProblemCases(root).cases.length, `${id}: cases 模块用例为空`).toBeGreaterThan(0);
 
             const solution = readFileSync(join(root, 'solvers', 'valkyrie', 'solution.v'), 'utf8').trim();
             if (solution.length === 0) {
@@ -160,10 +161,10 @@ for (const { problem: entry, batch } of entries) {
 
             // 题面约束前置：args 本身不合法时，三通道一致没有意义。
             const root = problemDir(LEETCODE_ROOT, problem);
-            const metadata = loadProblemMetadata(root);
+            const cases = loadProblemCases(root).cases;
             const argsConstraint = requireArgsConstraint(id);
             const argViolations: string[] = [];
-            metadata.tests.forEach((test, index) => {
+            cases.forEach((test, index) => {
                 const issue = validateTestArgs(argsConstraint, test.args as Record<string, unknown>);
                 if (issue) {
                     argViolations.push(`${id} tests[${index}]: ${issue}`);
@@ -190,10 +191,10 @@ for (const { problem: entry, batch } of entries) {
 
             expect(row.buildStatus, row.buildError ?? `V 构建失败：${root}`).toBe(0);
             // `legion test` status 不作为绿判据：项目没有 test/ 目录时它同样返回 0。
-            // 绿必须拿到真实执行计数：全量 metadata.tests 真实执行且全部通过。
+            // 绿必须拿到真实执行计数：全量 cases 真源用例真实执行且全部通过。
             expect(row.manifestFresh, row.manifestError ?? 'execution manifest 已过期').toBe(true);
-            expect(row.runtimeOk, row.runtimeError ?? 'metadata.tests 未执行').toBe(true);
-            expect(row.testCaseTotal, 'metadata.tests 用例数为 0').toBeGreaterThan(0);
+            expect(row.runtimeOk, row.runtimeError ?? 'cases 模块用例未执行').toBe(true);
+            expect(row.testCaseTotal, 'cases 模块用例数为 0').toBeGreaterThan(0);
             expect(row.blocked, row.firstFailure ?? '存在 blocked 用例').toBe(0);
             expect(row.not_run, row.firstFailure ?? '存在未执行用例').toBe(0);
             expect(row.executed_fail, row.firstFailure ?? '存在失败用例').toBe(0);

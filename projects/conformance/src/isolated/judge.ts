@@ -1,7 +1,7 @@
 /**
  * 隔离判题器（父进程侧）。
  *
- * 判题器只负责：装载用例（`<slug>.cases.ts` 或 metadata.json 回退）、校验 schema 与数值保真、
+ * 判题器只负责：装载用例（唯一真源 `<slug>.cases.ts`，缺失即结构化失败）、校验 schema 与数值保真、
  * 经 NDJSON 协议把用例发给独立的解法子进程、回收结果并断言、汇总计时。
  * 判题进程从不 import 解法；解法子进程从不加载判题/断言代码 —— JIT 上下文完全分离。
  * Node 与 Bun 子进程跑同一份 `child-typescript.ts`，同协议同计时口径。
@@ -65,7 +65,7 @@ export type JudgeFailureKind =
 export type JudgeOptions = {
     problemDir: string;
     lane: JudgeLane;
-    /** 显式用例模块路径；缺省按 `<problemDir>/<id>.cases.ts` 探测，再回退 metadata.json。 */
+    /** 显式用例模块路径；缺省按 `<problemDir>/<id>.cases.ts` 装载（唯一真源，不回退 metadata.json）。 */
     casesPath?: string;
     /** valkyrie lane 必填：legion build 产物目录（含 *.mjs glue 与 *.wasm）。 */
     artifactDir?: string;
@@ -118,7 +118,7 @@ function loadEnvelope(problemDir: string): ProblemMeta {
     if (!existsSync(metaPath)) {
         throw new Error(`missing metadata: ${metaPath}`);
     }
-    const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as { id?: string; tests?: unknown; invoke?: Record<string, string | undefined> };
+    const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as { id?: string; invoke?: Record<string, string | undefined> };
     const id = meta.id?.trim();
     if (!id) {
         throw new Error('metadata.id 缺失');
@@ -158,26 +158,16 @@ async function loadCases(
     | { ok: false; failureKind: 'cases_missing' | 'cases_schema' | 'unsafe_number'; message: string }
 > {
     const defaultCasesPath = join(options.problemDir, `${meta.id}.cases.ts`);
-    const explicit = options.casesPath;
-    const candidatesPath = explicit ?? (existsSync(defaultCasesPath) ? defaultCasesPath : null);
-    if (candidatesPath !== null) {
-        if (!existsSync(candidatesPath)) {
-            return { ok: false, failureKind: 'cases_missing', message: `用例模块不存在：${candidatesPath}` };
-        }
-        const mod = (await import(pathToFileURL(candidatesPath).href)) as { cases?: unknown };
-        const validation = validateCasesModule(mod.cases, candidatesPath);
-        if (!validation.ok) {
-            return validation;
-        }
-        return { ok: true, cases: [...validation.cases], source: candidatesPath };
+    const candidatesPath = options.casesPath ?? defaultCasesPath;
+    if (!existsSync(candidatesPath)) {
+        return { ok: false, failureKind: 'cases_missing', message: `用例模块不存在：${candidatesPath}` };
     }
-    const metaPath = join(options.problemDir, 'metadata.json');
-    const parsed = JSON.parse(readFileSync(metaPath, 'utf8')) as { tests?: unknown };
-    const validation = validateCasesModule(parsed.tests, `${metaPath}#tests`);
+    const mod = (await import(pathToFileURL(candidatesPath).href)) as { cases?: unknown };
+    const validation = validateCasesModule(mod.cases, candidatesPath);
     if (!validation.ok) {
         return validation;
     }
-    return { ok: true, cases: [...validation.cases], source: `${metaPath}#tests` };
+    return { ok: true, cases: [...validation.cases], source: candidatesPath };
 }
 
 export async function runIsolatedJudge(options: JudgeOptions): Promise<JudgeResult> {

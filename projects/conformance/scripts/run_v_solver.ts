@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** 对本次 legion node lane 产物运行 `metadata.tests`：加载 wasm invoke 与 glue 后在 node 进程内比对。 */
+/** 对本次 legion node lane 产物运行 `<slug>.cases.ts`：加载 wasm invoke 与 glue 后在 node 进程内比对。 */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';

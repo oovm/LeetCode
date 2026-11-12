@@ -166,15 +166,12 @@ export async function runNyarSolverOnce(problemRoot: string, pin?: NyarReference
             if (!artifacts) {
                 return '无法 legion build --target ovm';
             }
-            const tests = loadTestCases(problemRoot).tests;
             const { invoke } = loadMetadata(problemRoot);
             const entry = invoke.valkyrie ?? invoke.typescript;
             if (!entry) {
                 return 'metadata.invoke 缺失';
             }
-            if (tests.length === 0) {
-                return 'metadata.tests 缺失';
-            }
+            loadTestCases(problemRoot);
             return nyarInvokeBlockedReason(artifacts.nyarPath, entry);
         } catch (err) {
             return String(err);
@@ -222,4 +219,4 @@ export async function runNyarReference(problem: ProblemDefinition, pin?: NyarRef
     }
 }
 
-export { loadMetadata, type TestCase } from '../valkyrie-node/ref.ts';
+export { loadMetadata, loadTestCases, type TestCase } from '../valkyrie-node/ref.ts';

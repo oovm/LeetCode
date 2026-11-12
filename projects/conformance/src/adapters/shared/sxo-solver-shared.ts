@@ -4,13 +4,15 @@ import { join } from 'node:path';
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir } from '../../catalog/index.ts';
 import { assertTestCase } from '../../domain/assert.ts';
-import { loadProblemMetadata, requireInvoke, type TestCase } from '../../domain/metadata.ts';
+import { loadProblemCases } from '../../domain/cases-loader.ts';
+import { loadProblemMetadata, requireInvoke } from '../../domain/metadata.ts';
+import type { TestCase } from '../../domain/problem.ts';
 import { LEETCODE_ROOT_FROM_PACKAGE } from '../../domain/paths.ts';
 export type SxoDialect = 'wolfram-sxo' | 'matlab-sxo';
 
 export type { TestCase };
 
-const BLOCKED_MARKERS = ['# ×èÈû£º', '% ×èÈû£º'];
+const BLOCKED_MARKERS = ['# é˜»å¡ï¼š', '% é˜»å¡ï¼š'];
 
 function isBlockedSource(text: string): boolean {
     const firstLine =
@@ -65,9 +67,9 @@ export function loadSxoSolverBundle(problemRoot: string, dialect: SxoDialect) {
     const symbol = requireInvoke(metadata, key);
     const source = readFileSync(solverPath(problemRoot, dialect), 'utf8');
     if (isBlockedSource(source)) {
-        throw new Error(`${dialect} ½â´¦ÓÚ×èÈû×´Ì¬`);
+        throw new Error(`${dialect} è§£å¤„äºé˜»å¡çŠ¶æ€`);
     }
-    return { tests: metadata.tests, symbol, source };
+    return { tests: loadProblemCases(problemRoot).executable as TestCase[], symbol, source };
 }
 
 export function runSxoTests(tests: TestCase[], evaluateCase: (args: Record<string, unknown>) => unknown): void {

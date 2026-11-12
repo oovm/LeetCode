@@ -13,7 +13,7 @@ export type MatrixGreenFlags = {
 };
 
 /**
- * 绿：能编、manifest 新鲜且 `metadata.tests` 全量真实执行通过。
+ * 绿：能编、manifest 新鲜且 `<slug>.cases.ts` 全量真实执行通过。
  *
  * 不使用 `legion test` 的 status：项目没有 `test/` 目录时它同样返回 0，
  * 用 status 当绿判据会让“没跑”也变绿。`skipped` 是未执行用例，不能计入通过数。

@@ -12,7 +12,7 @@ export function hasBareNumber(value: unknown): boolean {
 }
 
 /**
- * 按本题的 `metadata.tests` 推断各实参键的类型：任一同键出现裸数值即判定整数型，
+ * 按本题的 `<slug>.cases.ts` 推断各实参键的类型：任一同键出现裸数值即判定整数型，
  * 仅对整数型键规整超安全整数字符串；字符串型键（如 `add-binary` 的二进制串，
  * 词法上与超安全整数十进制串无法区分）一律原样保留，不误判为大整数。
  */

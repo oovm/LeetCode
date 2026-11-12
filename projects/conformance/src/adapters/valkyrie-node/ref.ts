@@ -1,16 +1,12 @@
 import { spawnSync } from 'node:child_process';
 
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 
 import { join } from 'node:path';
 
 import { pathToFileURL } from 'node:url';
 
-import { runInNewContext } from 'node:vm';
-
-import ts from 'typescript';
-
-import { partitionCases, validateCasesModule } from '../../isolated/cases.ts';
+import { loadProblemCases } from '../../domain/cases-loader.ts';
 
 
 
@@ -116,9 +112,11 @@ export function resolveVBuildArtifacts(problem: ProblemDefinition) {
 
 
 
+/**
+ * `metadata.json` 非判题元数据：只承载 `invoke` 入口路由。
+ * 判题用例已全量清退出 JSON，真源唯一为 `<slug>.cases.ts`（见 `loadTestCases`）。
+ */
 export function loadMetadata(problemRoot: string): {
-
-    tests: TestCase[];
 
     invoke: { valkyrie?: string; typescript?: string };
 
@@ -126,19 +124,9 @@ export function loadMetadata(problemRoot: string): {
 
     const meta = JSON.parse(readFileSync(join(problemRoot, 'metadata.json'), 'utf8')) as {
 
-        tests?: TestCase[];
-
         invoke?: { valkyrie?: string; typescript?: string };
 
     };
-
-    const tests = meta.tests;
-
-    if (!tests?.length) {
-
-        throw new Error('metadata.tests 缺失');
-
-    }
 
     const entry = meta.invoke?.valkyrie ?? meta.invoke?.typescript;
 
@@ -148,70 +136,31 @@ export function loadMetadata(problemRoot: string): {
 
     }
 
-    return { tests, invoke: { valkyrie: meta.invoke?.valkyrie, typescript: meta.invoke?.typescript } };
+    return { invoke: { valkyrie: meta.invoke?.valkyrie, typescript: meta.invoke?.typescript } };
 
 }
 
 
 
 /**
- * 判题用例装载（valkyrie 各 lane 共用）：与隔离判题器同一优先级 ——
- * `<slug>.cases.ts` 强类型 TS 用例模块优先，`metadata.json#tests` 仅为回退。
- * TS 模块承载 `bigint` 字面量与显式 `corpusDefect` 标注，规避 JSON 的表达力
- * 与序列化损失；缺陷条目不进 pass/fail 分母。
- *
- * cases 模块是纯数据 + `import type` 的 ESM；lane 装载入口多为同步函数，
- * 这里按源码文本转译（`ts.transpileModule`，ES2020/CJS）后在隔离沙箱中求值，
- * 不依赖调用方是否运行在 tsx 的 require hook 下。
+ * 判题用例装载（valkyrie 各 lane 共用）：唯一真源为 `<slug>.cases.ts` 强类型 TS 用例模块。
+ * TS 模块承载 `bigint` 字面量与显式 `corpusDefect` 标注，规避 JSON 的表达力与序列化损失；
+ * 缺陷条目不进 pass/fail 分母。`metadata.json#tests` 已全量清退，缺失用例模块即
+ * `cases_missing` 结构化失败，不回退 JSON 判题。
  */
 export function loadTestCases(problemRoot: string): { tests: TestCase[]; source: string; defectSkipped: number } {
 
-    const meta = JSON.parse(readFileSync(join(problemRoot, 'metadata.json'), 'utf8')) as { id?: string };
+    const loaded = loadProblemCases(problemRoot);
 
-    const slug = meta.id?.trim();
+    return {
 
-    if (slug) {
+        tests: loaded.executable as TestCase[],
 
-        const casesPath = join(problemRoot, `${slug}.cases.ts`);
+        source: loaded.source,
 
-        if (existsSync(casesPath)) {
+        defectSkipped: loaded.defectSkipped,
 
-            const source = readFileSync(casesPath, 'utf8');
-
-            const { outputText } = ts.transpileModule(source, {
-                compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
-                fileName: casesPath,
-            });
-
-            const sandbox = { exports: {} as Record<string, unknown> };
-
-            runInNewContext(outputText, sandbox, { filename: casesPath });
-
-            const validation = validateCasesModule(sandbox.exports.cases, casesPath);
-
-            if (!validation.ok) {
-
-                throw new Error(`cases 模块校验失败（${validation.failureKind}）：${validation.message}`);
-
-            }
-
-            const partitioned = partitionCases(validation.cases);
-
-            return {
-
-                tests: partitioned.executable as TestCase[],
-
-                source: casesPath,
-
-                defectSkipped: partitioned.defect.length,
-
-            };
-
-        }
-
-    }
-
-    return { tests: loadMetadata(problemRoot).tests, source: join(problemRoot, 'metadata.json'), defectSkipped: 0 };
+    };
 
 }
 
@@ -473,11 +422,9 @@ export async function runVSolverOnce(problemRoot: string, pin?: VReferencePin): 
             if (!artifacts) {
                 return '无法 legion build —— 检查 legion.von 与编译环境';
             }
-            const { tests, invoke } = loadMetadata(problemRoot);
+            const { invoke } = loadMetadata(problemRoot);
             const entry = requireValkyrieInvokeEntry(invoke);
-            if (tests.length === 0) {
-                return 'metadata.tests 缺失';
-            }
+            loadTestCases(problemRoot);
             return wasmInvokeBlockedReason(artifacts.entry.legionWasm, entry);
         } catch (err) {
             return String(err);

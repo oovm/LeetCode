@@ -7,6 +7,7 @@ import { median } from '@nyar/valkyrie';
 import type { ProblemDefinition } from '../../catalog/index.ts';
 import { problemDir } from '../../catalog/index.ts';
 import { assertTestCase, normalizeTsTestResult } from '../../domain/assert.ts';
+import { loadProblemCases } from '../../domain/cases-loader.ts';
 import { compareModeForExecution, type CompareMode } from '../../domain/compare-mode.ts';
 import { coerceIntegerArgs as coerceTsArgs, inferIntegerArgKeys } from '../../domain/integer-args.ts';
 import { loadProblemMetadata, problemIdFromDir, requireInvoke } from '../../domain/metadata.ts';
@@ -109,7 +110,8 @@ async function loadTsCandidate(problemRoot: string) {
     const entry = requireInvoke(metadata, 'typescript');
     const mod = (await import(pathToFileURL(tsSolverPath(problemRoot)).href)) as Record<string, unknown>;
     const candidate = makeTsCandidate(entry, mod);
-    return { id: problemIdFromDir(problemRoot), tests: metadata.tests, candidate };
+    const cases = loadProblemCases(problemRoot);
+    return { id: problemIdFromDir(problemRoot), tests: cases.executable as TestCase[], candidate };
 }
 
 /** 返回真实执行计数，供基线区分「全部断言通过」与「空跑也退 0」。 */
@@ -124,7 +126,7 @@ export async function runTsSolverOnce(problemRoot: string, _problemId?: string):
 }
 
 /**
- * ??????????????? metadata.tests ??????????????????????? Node/tsx????
+ * ??????????????? cases 用例 ??????????????????????? Node/tsx????
  */
 export async function benchTsSolverInProcess(problemRoot: string, iterations: number, warmup: number): Promise<number> {
     const { id, tests, candidate } = await loadTsCandidate(problemRoot);

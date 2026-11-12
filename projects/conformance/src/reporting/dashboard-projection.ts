@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 import { BENCH_PUBLIC_DIR, LEETCODE_ROOT } from '../domain/paths.ts';
-import { loadProblemMetadata } from '../domain/metadata.ts';
+import { loadProblemCases } from '../domain/cases-loader.ts';
 import { PROBLEMS, problemDir } from '../catalog/index.ts';
 import type { ImplementationId } from '../adapters/ids.ts';
 import { DASHBOARD_BENCH_FILES, IMPLEMENTATION_TO_BENCH_LANGUAGE } from '../adapters/ids.ts';
@@ -30,7 +30,7 @@ function recordsForImplementation(records: RunRecord[], implementationId: Implem
 function resolveSourceCurrent(problemId: string, implementationId: ImplementationId, recordDigest: string): boolean {
     try {
         const root = problemDir(LEETCODE_ROOT, { id: problemId });
-        const tests = loadProblemMetadata(root).tests;
+        const tests = loadProblemCases(root).executable;
         return recordDigest === problemSourceDigest(problemId, implementationId, tests);
     } catch {
         return false;

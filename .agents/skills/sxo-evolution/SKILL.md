@@ -13,7 +13,7 @@ description: >-
 Athena 能力 → 回到 leetcode.v 验证。
 
 与 `leetcode-practice` 四步中，本 skill 负责 **④ 演进（SXO 分支）**。不改 coach readme；② 中
-`solution.wl` / `solution.m` 因 **@sxo/* 能力不足** 无法通过 `metadata.tests` 时转入此处。
+`solution.wl` / `solution.m` 因 **@sxo/* 能力不足** 无法通过 `cases.ts` 用例时转入此处。
 
 **不是** Wolfram Engine / MATLAB 运行时演进；看板与文档一律标 **Wolfram (Sxo)**、**MATLAB (Sxo)**。
 
@@ -75,7 +75,7 @@ leetcode **消费** npm 包；优先改 **已发布面包**（`@sxo/mathematica`
 
 1. **权威在 sxo-framework**：编辑兄弟仓 npm 包与测试；不在 leetcode.v 复制 `@sxo/*` 源码。
 2. **测试跟能力走**：改 frontend 须补 `tests/` 或 feature-matrix case；禁止只改实现不补测。
-3. **最小公开面**：先满足 leetcode 单题 `metadata.tests`；泛化放后续切片。
+3. **最小公开面**：先满足 leetcode 单题 `cases.ts` 用例；泛化放后续切片。
 4. **标签诚实**：文档与看板写 **Wolfram (Sxo)** / **MATLAB (Sxo)**（括号内 **Sxo** 大写 S），不写「Mathematica 兼容」「MATLAB 替代」。
 5. commit 在 **sxo-framework** 仓，gitmoji + 英文 subject；leetcode 侧只解除阻塞与 harness 接线。
 
@@ -94,7 +94,7 @@ node --import tsx projects/conformance/scripts/run_wolfram_sxo_solver.ts project
 node --import tsx projects/conformance/scripts/run_matlab_sxo_solver.ts projects/problems/<slug>
 ```
 
-对照 Python / TypeScript 同一 `metadata.tests`。
+对照 Python / TypeScript 同一 `cases.ts` 用例。
 
 ## 检查清单
 

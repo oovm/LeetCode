@@ -1,5 +1,6 @@
-import type { ProblemSpec } from '../domain/problem.ts';
+import type { ProblemSpec, TestCase } from '../domain/problem.ts';
 import { LEETCODE_ROOT } from '../domain/paths.ts';
+import { loadProblemCases } from '../domain/cases-loader.ts';
 import { loadProblemMetadata } from '../domain/metadata.ts';
 import { problemsForBatch } from '../planning/batch-limit.ts';
 import { PROBLEMS, problemDir } from '../catalog/index.ts';
@@ -10,13 +11,14 @@ export function toProblemSpec(problem: (typeof PROBLEMS)[number]): ProblemSpec {
     const meta = problemMetaById.get(problem.id);
     const root = problemDir(LEETCODE_ROOT, problem);
     const metadata = loadProblemMetadata(root);
+    const cases = loadProblemCases(root);
     return {
         id: problem.id,
         title: problem.title,
         questionId: meta?.questionId ?? 0,
         difficulty: meta?.difficulty ?? 'Unknown',
         tags: meta?.tags ?? [],
-        tests: metadata.tests,
+        tests: cases.executable as TestCase[],
         invoke: metadata.invoke,
     };
 }

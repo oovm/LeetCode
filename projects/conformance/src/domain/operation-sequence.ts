@@ -1,7 +1,7 @@
 /**
  * 设计类题目的操作序列模型：一次构造 + 逐操作调用 + 每步断言。
  *
- * 题面原形（`metadata.tests`）：
+ * 题面原形（`<slug>.cases.ts`）：
  * `args.operations`（`[类名, 方法名, ...]`）、`args.arguments`（与 operations 等长，
  * `arguments[0]` 为构造参数）、`expected`（与 operations 等长，构造步为 `null`）。
  *

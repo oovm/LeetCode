@@ -50,7 +50,7 @@ function pythonCard(env: PythonBenchEnvironment | null, ready: boolean): EnvCard
     return {
         key: 'python',
         title: 'Python',
-        subtitle: '单进程加载后只计 metadata.tests 循环',
+        subtitle: '单进程加载后只计 cases 用例循环',
         ready,
         versionRows: [{ label: 'Python', value: env.runtimeVersion }],
         paramRows: [
@@ -70,7 +70,7 @@ function typescriptCard(env: TypeScriptBenchEnvironment | null, ready: boolean):
     return {
         key: 'typescript',
         title: 'TypeScript',
-        subtitle: '单进程加载后只计 metadata.tests 循环',
+        subtitle: '单进程加载后只计 cases 用例循环',
         ready,
         versionRows: [
             { label: 'Node', value: env.nodeVersion },
@@ -94,7 +94,7 @@ function typescriptBunCard(env: TypeScriptBunBenchEnvironment | null, ready: boo
     return {
         key: 'typescriptBun',
         title: 'TypeScript (Bun)',
-        subtitle: 'Bun 子进程内加载题解，只计 metadata.tests 循环',
+        subtitle: 'Bun 子进程内加载题解，只计 cases 用例循环',
         ready,
         versionRows: [{ label: 'Bun', value: env.bunVersion ?? '—' }],
         paramRows: [
@@ -116,7 +116,7 @@ function wolframSxoCard(env: WolframSxoBenchEnvironment | null, ready: boolean):
     return {
         key: 'wolframSxo',
         title: 'Wolfram (Sxo)',
-        subtitle: '单进程 @sxo/mathematica，只计 metadata.tests 循环',
+        subtitle: '单进程 @sxo/mathematica，只计 cases 用例循环',
         ready,
         versionRows: [{ label: '@sxo/mathematica', value: env.sxoMathematicaVersion ?? '—' }],
         paramRows: [
@@ -137,7 +137,7 @@ function matlabSxoCard(env: MatlabSxoBenchEnvironment | null, ready: boolean): E
     return {
         key: 'matlabSxo',
         title: 'MATLAB (Sxo)',
-        subtitle: '单进程 @sxo/matlab，只计 metadata.tests 循环',
+        subtitle: '单进程 @sxo/matlab，只计 cases 用例循环',
         ready,
         versionRows: [{ label: '@sxo/matlab', value: env.sxoMatlabVersion ?? '—' }],
         paramRows: [

@@ -3,7 +3,7 @@
 LeetCode 题目在 **Valkyrie（V）** 与 **TypeScript** 上的完备性测试、外部产物基准与对比看板。
 
 本仓收录大量 LeetCode 题目（`metadata.json` + 多语言求解器）。 **题解**（`readme.md`）为语言无关的 **参考实现**；Python、TS、V
-三端实现须与题解一致，并用同一套 `metadata.tests` 校验，在看板中对比 TS 与 V 运行耗时。
+三端实现须与题解一致，并用同一套 `cases.ts` 用例校验，在看板中对比 TS 与 V 运行耗时。
 
 ## 依赖兄弟仓
 
@@ -83,7 +83,7 @@ pnpm dashboard            # 启动看板 dev server
 - **Valkyrie**：`solvers/valkyrie/solution.v` + `legion.von`（`entry: "solution.v"`，`core` / `std` 为 workspace 依赖；
   编译 target 由 `build[].target` 唯一决定，`two-sum` 为 `wasm`，中性 Wasm 不注入宿主 API；Node 只是 runner 执行宿主）。
 
-基准采用 **外部 harness**：`legion build` 产出 wasm + js glue；TS 对 `metadata.tests` 计时（`tsRuntimeMs`）。`pnpm bench` 对 V 侧只计 **编译**（`vCompileMs`），**不**调用 `legion bench` / `[benchmark]`；`vRuntimeMs` 待 wasm invoke harness 接线。
+基准采用 **外部 harness**：`legion build` 产出 wasm + js glue；TS 对 `cases.ts` 用例计时（`tsRuntimeMs`）。`pnpm bench` 对 V 侧只计 **编译**（`vCompileMs`），**不**调用 `legion bench` / `[benchmark]`；`vRuntimeMs` 待 wasm invoke harness 接线。
 
 ## 看板
 

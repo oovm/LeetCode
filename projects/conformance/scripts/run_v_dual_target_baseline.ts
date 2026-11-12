@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Valkyrie 双 target 批次基线：`wasm` 与 `ovm` 各自在独立子进程里构建 + 真跑 `metadata.tests`。
+ * Valkyrie 双 target 批次基线：`wasm` 与 `ovm` 各自在独立子进程里构建 + 真跑 `<slug>.cases.ts`。
  *
  * 口径：
  * - 一个 target 的结果绝不复制自另一个；两 lane 分别记录总数 / 通过 / 失败 / blocked / 未验证。
