@@ -6,6 +6,7 @@
  * ovm/jvm/clr 由 lane 显式指定并经 `legionPlan` 结构化规范化。
  * 只有 wasm lane 参与 `0.0.x` 交付完成度统计；各 lane 独立探测、独立计数，互不顶替。
  */
+import { spawnSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -17,8 +18,9 @@ import { probeValkyrieBackendProblem } from '../adapters/valkyrie-backend/matrix
 import { valkyrieNativeRunnerReady, valkyrieNativeSkipReason } from '../adapters/valkyrie-node/valkyrie.ts';
 import { valkyrieNyarRunnerReady, valkyrieNyarSkipReason } from '../adapters/valkyrie-nyar/valkyrie.ts';
 import { parseBatchLimit, problemsForBatch } from '../planning/batch-limit.ts';
-import { buildValkyrieLaneMatrixReport, type LaneQuarantine } from '../reporting/valkyrie-lane-matrix.ts';
+import { buildValkyrieLaneMatrixReport, type LaneQuarantine, type MatrixInputIdentity } from '../reporting/valkyrie-lane-matrix.ts';
 import { loadCorpusQuarantine } from '../reporting/corpus-quarantine.ts';
+import { resolveAddonIdentity, resolveCompilerBuildIdentity } from '../observation/toolchain-identity.ts';
 
 const CONFORMANCE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const LEETCODE_ROOT = join(CONFORMANCE_ROOT, '..', '..');
@@ -37,6 +39,36 @@ function resolveQuarantine(): LaneQuarantine | null {
         indices.set(slug, new Set(cases.keys()));
     }
     return { source: quarantine.source, caseCount: quarantine.caseCount, problemCount: quarantine.problemCount, indices };
+}
+
+/**
+ * 采集本次矩阵的输入身份：native addon（sha256/mtime）、addon 内嵌编译器构建身份
+ * （nyar rev）、V 语料 checkout 的 git rev（`VALKYRIE_V_ROOT`，缺省取同级 valkyrie.v）。
+ * 任一身份不可解析时如实记录 unresolved，不伪造、不回退旧值。
+ */
+function resolveInputIdentity(): MatrixInputIdentity {
+    const addon = resolveAddonIdentity();
+    const compilerBuild = resolveCompilerBuildIdentity();
+    const valkyrieVRoot = process.env.VALKYRIE_V_ROOT?.trim() || join(LEETCODE_ROOT, '..', 'valkyrie.v');
+    let valkyrieV: MatrixInputIdentity['valkyrieV'];
+    try {
+        const probe = spawnSync('git', ['-C', valkyrieVRoot, 'rev-parse', 'HEAD'], { encoding: 'utf8' });
+        const rev = probe.status === 0 ? probe.stdout.trim() : '';
+        valkyrieV = rev.length > 0
+            ? { state: 'resolved', rev }
+            : { state: 'unresolved', reason: `git rev-parse HEAD 失败：${probe.stderr?.trim() || `status=${probe.status}`}` };
+    } catch (err) {
+        valkyrieV = { state: 'unresolved', reason: `valkyrie.v rev 读取失败：${err instanceof Error ? err.message : String(err)}` };
+    }
+    return {
+        addon: addon.state === 'resolved'
+            ? { state: 'resolved', sha256: addon.sha256, mtimeIso: addon.mtimeIso }
+            : { state: 'unresolved', reason: addon.reason },
+        compilerBuild: compilerBuild.state === 'resolved'
+            ? { state: 'resolved', identity: compilerBuild.identity, fingerprint: compilerBuild.fingerprint }
+            : { state: 'unresolved', reason: compilerBuild.reason },
+        valkyrieV,
+    };
 }
 
 function parseArgs(argv: string[]): { outPath: string; idFilter: string | null } {
@@ -68,6 +100,10 @@ async function main(): Promise<number> {
         return 2;
     }
 
+    // 输入身份在矩阵开始前采集：长跑期间 V checkout 可能前进，报告必须绑定实际起跑 rev。
+    const identity = resolveInputIdentity();
+    console.log(`identity addon=${identity.addon.state === 'resolved' ? identity.addon.sha256 : `UNRESOLVED(${identity.addon.reason})`} compiler-build=${identity.compilerBuild.state === 'resolved' ? identity.compilerBuild.identity : `UNRESOLVED(${identity.compilerBuild.reason})`} valkyrie.v=${identity.valkyrieV.state === 'resolved' ? identity.valkyrieV.rev : `UNRESOLVED(${identity.valkyrieV.reason})`}`);
+
     const batchLimit = parseBatchLimit({ fallbackKeys: ['LEETCODE_MATRIX_LIMIT', 'LEETCODE_BENCH_LIMIT'] });
     const corpus = PROBLEMS.filter((problem) => hasValkyrieSolver(problemDir(LEETCODE_ROOT, problem)));
     let candidates = corpus;
@@ -97,6 +133,7 @@ async function main(): Promise<number> {
         batchLimit,
         quarantine: resolveQuarantine(),
     });
+    report.identity = identity;
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
 

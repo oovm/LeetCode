@@ -109,8 +109,21 @@ export type LaneMatrixSummary = {
     greenRate: number;
 };
 
+/**
+ * 报告输入身份（工具链身份门）：本次矩阵实际消费的 native addon、addon 内嵌的
+ * 编译器构建身份，以及 V 语料 checkout 的 git rev。路径卫生：只记录可核验摘要与
+ * rev，不记录本机绝对路径。
+ */
+export type MatrixInputIdentity = {
+    addon: { state: 'resolved'; sha256: string; mtimeIso: string } | { state: 'unresolved'; reason: string };
+    compilerBuild: { state: 'resolved'; identity: string; fingerprint: string } | { state: 'unresolved'; reason: string };
+    valkyrieV: { state: 'resolved'; rev: string } | { state: 'unresolved'; reason: string };
+};
+
 export type ValkyrieLaneMatrixReport = {
     generatedAt: string;
+    /** 本次运行的输入身份；缺失时如实留 unresolved，不伪造。 */
+    identity?: MatrixInputIdentity;
     batchLimit: number | null;
     denominator: number;
     corpusIds: string[];
