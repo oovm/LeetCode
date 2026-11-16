@@ -4,25 +4,31 @@
  * 都从这里取，禁止在任一侧复制第二套 marshal 规则。
  */
 import { coerceIntegerArgument, I64_MAX, I64_MIN, integerResultText } from '../domain/integer-literal.ts';
-import { matchWasmExportSymbol, type AbiExport, type LibraryInvokeSchema, type WasmAbiType } from '../adapters/valkyrie-node/abi.ts';
+import type { AbiExport, LibraryInvokeSchema, WasmAbiType } from '../adapters/valkyrie-node/abi.ts';
 
 export type AbiLookup = {
     exportSymbol: string;
     exportSchema: AbiExport;
 };
 
-/** 从 ABI schema 中找到 invoke 入口对应的 export 声明；找不到即结构化失败。 */
+/**
+ * 从 ABI schema 中找到 invoke 入口对应的 export 声明；找不到即结构化失败。
+ *
+ * 身份映射只来自正式导出 schema 的精确键：判题侧不做大小写猜测。方法名与
+ * 导出公开名不一致时，修复属于 V 解的 `[export(name: ...)]` 声明或 metadata
+ * 的 `invoke`，不在 harness 里靠 casefold 把缺合同伪装成兼容。
+ */
 export function lookupAbiExport(schema: LibraryInvokeSchema, entry: string, exportSymbol: string): AbiLookup {
     const available = Object.keys(schema.exports);
-    const match = matchWasmExportSymbol(exportSymbol, available);
-    const exportSchema = match ? schema.exports[match.symbol] : undefined;
-    if (!match || !exportSchema) {
+    const exportSchema = Object.hasOwn(schema.exports, exportSymbol) ? schema.exports[exportSymbol] : undefined;
+    if (!exportSchema) {
         throw new Error(
             `ABI schema 里找不到 export "${exportSymbol}"（来自 entry "${entry}"）。` +
-                `schema 里已注册的 export: ${available.join(', ') || '(none)'}`,
+                `schema 里已注册的 export: ${available.join(', ') || '(none)'}；` +
+                `导出身份必须精确匹配，V 解需要时用 [export(name: "...")] 显式声明公开名`,
         );
     }
-    return { exportSymbol: match.symbol, exportSchema };
+    return { exportSymbol, exportSchema };
 }
 
 /**

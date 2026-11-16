@@ -22,7 +22,6 @@ import {
     makeExcludedRecord,
 } from '../src/observation/solver-records.ts';
 import {
-    matchWasmExportSymbol,
     type AbiExport,
     type AbiParameter,
     type LibraryInvokeSchema,
@@ -66,19 +65,22 @@ type AbiLookup = {
 /**
  * 从 ABI schema 中找到 entry 对应的 export 声明。
  * entry 形如 `Solution().twoSum`，先剥出 export symbol 再查 schema.exports。
+ *
+ * 身份映射只来自正式导出 schema 的精确键；判题侧不做大小写猜测，不一致的
+ * 修复属于 V 解 `[export(name: ...)]` 声明或 metadata `invoke`。
  */
 function lookupAbiExport(schema: LibraryInvokeSchema, entry: string): AbiLookup {
     const expected = resolveWasmExportSymbol(entry);
     const available = Object.keys(schema.exports);
-    const match = matchWasmExportSymbol(expected, available);
-    const exportSchema = match ? schema.exports[match.symbol] : undefined;
-    if (!match || !exportSchema) {
+    const exportSchema = Object.hasOwn(schema.exports, expected) ? schema.exports[expected] : undefined;
+    if (!exportSchema) {
         throw new Error(
             `ABI schema 里找不到 export "${expected}"（来自 entry "${entry}"）。` +
-                `schema 里已注册的 export: ${available.join(', ') || '(none)'}`,
+                `schema 里已注册的 export: ${available.join(', ') || '(none)'}；` +
+                `导出身份必须精确匹配，V 解需要时用 [export(name: "...")] 显式声明公开名`,
         );
     }
-    return { exportSymbol: match.symbol, exportSchema };
+    return { exportSymbol: expected, exportSchema };
 }
 
 /**
