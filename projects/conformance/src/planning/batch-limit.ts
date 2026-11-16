@@ -1,6 +1,6 @@
-/** Óë `scripts/batch-limit.mjs` ¶ÔÆë£º²âÊÔ/»ù×¼Ä¬ÈÏÖ»ÅÜÇ° N Ìâ¡£ */
+/** ä¸ `scripts/batch-limit.mjs` å¯¹é½ï¼šæµ‹è¯•/åŸºå‡†é»˜è®¤åªè·‘å‰ N é¢˜ã€‚ */
 
-export const DEFAULT_BATCH_LIMIT = 50;
+export const DEFAULT_BATCH_LIMIT = 100;
 
 const ALL_TOKENS = new Set(['all', '0', 'infinity', 'inf', '*']);
 
@@ -14,7 +14,7 @@ function firstEnv(...keys: string[]): { key: string; value: string } | null {
     return null;
 }
 
-/** `null` = ²»ÏŞÖÆ£¨È«Á¿£©¡£ */
+/** `null` = ä¸é™åˆ¶ï¼ˆå…¨é‡ï¼‰ã€‚ */
 export function parseBatchLimit(options: { defaultLimit?: number; fallbackKeys?: string[] } = {}): number | null {
     const { defaultLimit = DEFAULT_BATCH_LIMIT, fallbackKeys = [] } = options;
 
@@ -34,7 +34,7 @@ export function parseBatchLimit(options: { defaultLimit?: number; fallbackKeys?:
 
     const parsed = Number(hit.value);
     if (!Number.isFinite(parsed) || parsed < 0) {
-        throw new Error(`ÎŞĞ§µÄÅúÁ¿ÏŞÖÆ ${hit.key}=${hit.value}`);
+        throw new Error(`æ— æ•ˆçš„æ‰¹é‡é™åˆ¶ ${hit.key}=${hit.value}`);
     }
     if (parsed === 0) {
         return null;

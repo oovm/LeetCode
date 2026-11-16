@@ -50,10 +50,10 @@
 
 ## 题目元数据
 
-- `metadata.json`：`id`（仓内键）、`questionId`（LeetCode 题号）、`difficulty`、`tags`、`tests[]`、`invoke`（如 `Solution().twoSum`、
-  `wolframSxo` / `matlabSxo` 函数名）。目录名 = **slug**（与 `id` 同值）。
+- `metadata.json`：`id`（仓内键）、`questionId`（LeetCode 题号）、`difficulty`、`tags`、`invoke`（如 `Solution().twoSum`、
+  `wolframSxo` / `matlabSxo` 函数名）。判题用例唯一真源为 `<slug>.cases.ts`（JSON 判题已全量清退）。目录名 = **slug**（与 `id` 同值）。
 - `projects/conformance/src/catalog/generated.ts` 为目录索引， **勿手改**。
-- 大批量跑测默认限 **50** 题（`scripts/batch-limit.mjs`）；全量需 `LEETCODE_BATCH_ALL=1`。
+- 大批量跑测默认限 **100** 题（`scripts/batch-limit.mjs`）；全量需 `LEETCODE_BATCH_ALL=1`。
 - 单题基准：`pnpm bench --id two-sum`（或 `LEETCODE_BENCH_ID=two-sum pnpm bench`）。
 
 ## 题解文档（`readme.md`）

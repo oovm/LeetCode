@@ -1,14 +1,14 @@
 /**
  * 批量脚本默认限流（几万题规模下避免误触全量 IO）。
  *
- * 默认：50 题。
+ * 默认：100 题。
  * 全量：LEETCODE_BATCH_ALL=1  或  LEETCODE_BATCH_LIMIT=all|0
  * 指定：LEETCODE_BATCH_LIMIT=200
  *
  * 兼容别名：LCD_IMPORT_LIMIT / REGENERATE_LIMIT / LEETCODE_TEST_LIMIT / LEETCODE_BENCH_LIMIT
  */
 
-export const DEFAULT_BATCH_LIMIT = 50;
+export const DEFAULT_BATCH_LIMIT = 100;
 
 const ALL_TOKENS = new Set(['all', '0', 'infinity', 'inf', '*']);
 

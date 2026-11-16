@@ -169,7 +169,7 @@ function summarizeTs(rows: TsRow[], total: number): Record<string, unknown> {
 /** V 失败归类：只按已记录证据分桶，不把载荷/测试数据缺陷算成编译器缺陷。 */
 function vFailureCategory(reason: string | null): string {
     const text = reason ?? '';
-    if (/AbiSchemaError|metadata\.tests|用例模块不存在|cases 模块校验失败/.test(text)) return 'test-data';
+    if (/AbiSchemaError|用例模块不存在|cases 模块校验失败/.test(text)) return 'test-data';
     if (/parse args-json|serialize result|type mismatch/.test(text)) return 'abi-contract';
     if (/legion build --target \S+ failed|compile pipeline rejected/.test(text)) return 'build-failure';
     if (/FATAL ERROR|heap out of memory|panicked at/.test(text)) return 'runtime-crash';
