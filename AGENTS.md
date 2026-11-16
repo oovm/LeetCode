@@ -52,7 +52,7 @@
 
 - `metadata.json`：`id`（仓内键）、`questionId`（LeetCode 题号）、`difficulty`、`tags`、`tests[]`、`invoke`（如 `Solution().twoSum`、
   `wolframSxo` / `matlabSxo` 函数名）。目录名 = **slug**（与 `id` 同值）。
-- `projects/conformance/src/catalog.generated.ts` 为目录索引， **勿手改**。
+- `projects/conformance/src/catalog/generated.ts` 为目录索引， **勿手改**。
 - 大批量跑测默认限 **50** 题（`scripts/batch-limit.mjs`）；全量需 `LEETCODE_BATCH_ALL=1`。
 - 单题基准：`pnpm bench --id two-sum`（或 `LEETCODE_BENCH_ID=two-sum pnpm bench`）。
 
@@ -186,7 +186,7 @@ node scripts/reword.mjs --file reword.pending.txt --base origin/dev
 - **禁止**对工作区做 `**/*` 或无界全量 glob（`node_modules`、数万 `metadata.json` 会拖垮会话）。
 - 已知 slug → 直读 `projects/problems/<slug>/`（`LEETCODE_BENCH_ID` 等环境变量填 **id**，现与 slug 同字符串）。
 - 搜代码 → 限定目录（如 `projects/conformance/src`）并带 `head_limit`。
-- 列题目 → 读 `catalog.generated.ts` 或 `metadata.json`，不要递归枚举整个 `problems/`。
+- 列题目 → 读 `catalog/generated.ts` 或 `metadata.json`，不要递归枚举整个 `problems/`。
 
 ## 维护者陷阱（常见误区）
 
