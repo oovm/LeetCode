@@ -1,12 +1,12 @@
 namespace leetcode.zigzag_conversion;
 
 [export(case: "camelCase")]
-micro convert(s: utf8, num_rows: i64) -> utf8 {
-    if num_rows <= 1 {
+micro convert(s: utf8, numRows: i64) -> utf8 {
+    if numRows <= 1 {
         return s
     }
     let n: usize = s.length()
-    let rows: i64 = num_rows
+    let rows: i64 = numRows
     let cycle: i64 = 2 * (rows - 1)
     let mut builder: Utf8Builder = Utf8Builder::new(n)
     let mut r: i64 = 0

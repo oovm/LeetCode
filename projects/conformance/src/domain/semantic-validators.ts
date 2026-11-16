@@ -729,6 +729,49 @@ const validateAnagramMappings: SemanticValidator = (actual, _expected, args) => 
     return null;
 };
 
+function longestPalindromicLength(s: string): number {
+    // 独立最优性判据：中心扩展求 s 的最长回文子串长度，不依赖 expected 的具体答案。
+    let best = 0;
+    const expand = (left: number, right: number): number => {
+        let l = left;
+        let r = right;
+        while (l >= 0 && r < s.length && s[l] === s[r]) {
+            l -= 1;
+            r += 1;
+        }
+        return r - l - 1;
+    };
+    for (let center = 0; center < s.length; center += 1) {
+        best = Math.max(best, expand(center, center), expand(center, center + 1));
+    }
+    return best;
+}
+
+const validateLongestPalindromicSubstring: SemanticValidator = (actual, _expected, args) => {
+    const s = typeof args.s === 'string' ? args.s : null;
+    if (s === null) {
+        return '入参 s 不是字符串';
+    }
+    if (typeof actual !== 'string') {
+        return '答案不是字符串';
+    }
+    // LC 5：最长回文子串可有多个合法答案。答案必须是回文、必须是 s 的子串、
+    // 长度必须等于独立中心扩展求出的最长长度（最优性判据不来自 expected）。
+    const best = longestPalindromicLength(s);
+    if (actual.length !== best) {
+        return `答案长度 ${actual.length}，题面要求最长回文子串长度 ${best}`;
+    }
+    if (actual.length > 0 && !s.includes(actual)) {
+        return '答案不是输入串的子串';
+    }
+    for (let index = 0; index < Math.floor(actual.length / 2); index += 1) {
+        if (actual[index] !== actual[actual.length - 1 - index]) {
+            return '答案不是回文串';
+        }
+    }
+    return null;
+};
+
 const VALIDATORS: Record<string, SemanticValidator> = {
     'advantage-shuffle': validateAdvantageShuffle,
     'find-anagram-mappings': validateAnagramMappings,
@@ -743,6 +786,7 @@ const VALIDATORS: Record<string, SemanticValidator> = {
     'find-n-unique-integers-sum-up-to-zero': validateUniqueSumZero,
     'find-unique-binary-string': validateUniqueBinaryString,
     'gray-code': validateGrayCode,
+    'longest-palindromic-substring': validateLongestPalindromicSubstring,
     'matrix-cells-in-distance-order': validateMatrixDistanceOrder,
     'restore-the-array-from-adjacent-pairs': validateRestoreTheArray,
     'smallest-sufficient-team': validateSmallestSufficientTeam,

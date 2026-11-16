@@ -557,6 +557,36 @@ def _validate_anagram_mappings(actual: Any, _expected: Any, args: dict[str, Any]
     return None
 
 
+def _longest_palindromic_length(s: str) -> int:
+    # 独立最优性判据：中心扩展求 s 的最长回文子串长度，不依赖 expected 的具体答案。
+    def expand(left: int, right: int) -> int:
+        l, r = left, right
+        while l >= 0 and r < len(s) and s[l] == s[r]:
+            l -= 1
+            r += 1
+        return r - l - 1
+
+    return max((max(expand(c, c), expand(c, c + 1)) for c in range(len(s))), default=0)
+
+
+def _validate_longest_palindromic_substring(actual: Any, _expected: Any, args: dict[str, Any]) -> str | None:
+    s = args.get("s")
+    if not isinstance(s, str):
+        return "入参 s 不是字符串"
+    if not isinstance(actual, str):
+        return "答案不是字符串"
+    # LC 5：最长回文子串可有多个合法答案。答案必须是回文、必须是 s 的子串、
+    # 长度必须等于独立中心扩展求出的最长长度（最优性判据不来自 expected）。
+    best = _longest_palindromic_length(s)
+    if len(actual) != best:
+        return f"答案长度 {len(actual)}，题面要求最长回文子串长度 {best}"
+    if actual and actual not in s:
+        return "答案不是输入串的子串"
+    if actual != actual[::-1]:
+        return "答案不是回文串"
+    return None
+
+
 _VALIDATORS = {
     "advantage-shuffle": _validate_advantage_shuffle,
     "find-anagram-mappings": _validate_anagram_mappings,
@@ -571,6 +601,7 @@ _VALIDATORS = {
     "find-n-unique-integers-sum-up-to-zero": _validate_unique_sum_zero,
     "find-unique-binary-string": _validate_unique_binary_string,
     "gray-code": _validate_gray_code,
+    "longest-palindromic-substring": _validate_longest_palindromic_substring,
     "matrix-cells-in-distance-order": _validate_matrix_distance_order,
     "restore-the-array-from-adjacent-pairs": _validate_restore_the_array,
     "smallest-sufficient-team": _validate_smallest_sufficient_team,

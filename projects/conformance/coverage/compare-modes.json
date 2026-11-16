@@ -314,6 +314,10 @@
             "mode": "strict",
             "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"
         },
+        "longest-palindromic-substring": {
+            "mode": "validator-required",
+            "evidence": "If there are multiple solutions, return any of them. (LC 5 最长回文子串合法多解，strict 会把 `aba`/`bab` 判失败)"
+        },
         "longest-strictly-increasing-or-strictly-decreasing-subarray": {
             "mode": "strict",
             "evidence": "输出为标量/布尔/唯一序列，JSON 精确相等即题面语义"

@@ -29,6 +29,22 @@ export interface AbiInstanceHandleType {
     module_path: string;
 }
 
+/** `Sum` 单个变体身份：`tag` 是冻结布局的判别值；载荷与 payload accessor 成对出现。 */
+export interface AbiSumVariant {
+    name: string;
+    tag: number;
+    payload?: WasmAbiType;
+    payload_accessor?: string;
+}
+
+/** `Sum`：unite 的变体身份合同（`[tag, payload]` GC struct，经 tag accessor 判别）。 */
+export interface AbiSumType {
+    kind: 'Sum';
+    name: string;
+    variants: AbiSumVariant[];
+    tag_accessor: string;
+}
+
 /** 结构化 ABI 类型判别联合，对应 emitter 的 `WasmAbiType`。 */
 export type WasmAbiType =
     | { kind: 'Unit' }
@@ -45,6 +61,7 @@ export type WasmAbiType =
     | { kind: 'Tuple'; fields: WasmAbiType[] }
     | AbiNamedAggregateType
     | AbiInstanceHandleType
+    | AbiSumType
     | { kind: 'Unsupported'; reason: string };
 
 /** 单个参数的 ABI 身份：`index` 决定位置，`name` 供 metadata 按名供货。 */
@@ -387,6 +404,43 @@ function validateType(path: string, raw: unknown): WasmAbiType {
                 throw new AbiSchemaError('invalid_type', `${path}.module_path`, 'InstanceHandle 缺少字符串 module_path');
             }
             return { kind: 'InstanceHandle', name: obj.name, module_path: obj.module_path };
+        }
+        case 'Sum': {
+            if (typeof obj.name !== 'string' || obj.name.length === 0) {
+                throw new AbiSchemaError('invalid_type', `${path}.name`, 'Sum 缺少非空 name');
+            }
+            if (typeof obj.tag_accessor !== 'string' || obj.tag_accessor.length === 0) {
+                throw new AbiSchemaError('invalid_type', `${path}.tag_accessor`, 'Sum 缺少非空 tag_accessor');
+            }
+            if (!Array.isArray(obj.variants) || obj.variants.length === 0) {
+                throw new AbiSchemaError('invalid_type', `${path}.variants`, 'Sum 缺少非空 variants 数组');
+            }
+            const seenTags = new Set<number>();
+            const variants: AbiSumVariant[] = obj.variants.map((variant: Record<string, unknown>, index: number) => {
+                const variantPath = `${path}.variants[${index}]`;
+                if (typeof variant.name !== 'string' || variant.name.length === 0) {
+                    throw new AbiSchemaError('invalid_type', `${variantPath}.name`, 'Sum 变体缺少非空 name');
+                }
+                if (typeof variant.tag !== 'number' || !Number.isInteger(variant.tag)) {
+                    throw new AbiSchemaError('invalid_type', `${variantPath}.tag`, 'Sum 变体缺少整数 tag');
+                }
+                if (seenTags.has(variant.tag)) {
+                    throw new AbiSchemaError('invalid_type', `${variantPath}.tag`, `Sum 变体 tag ${variant.tag} 重复`);
+                }
+                seenTags.add(variant.tag);
+                const hasPayload = variant.payload !== undefined && variant.payload !== null;
+                const hasAccessor = variant.payload_accessor !== undefined && variant.payload_accessor !== null;
+                if (hasPayload !== hasAccessor) {
+                    throw new AbiSchemaError('invalid_type', variantPath, 'Sum 变体的 payload 与 payload_accessor 必须成对出现');
+                }
+                return {
+                    name: variant.name,
+                    tag: variant.tag,
+                    ...(hasPayload ? { payload: validateType(`${variantPath}.payload`, variant.payload) } : {}),
+                    ...(hasAccessor ? { payload_accessor: variant.payload_accessor as string } : {}),
+                };
+            });
+            return { kind: 'Sum', name: obj.name, variants, tag_accessor: obj.tag_accessor };
         }
         case 'Unsupported': {
             if (typeof obj.reason !== 'string') {
