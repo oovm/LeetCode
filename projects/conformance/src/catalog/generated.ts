@@ -1,4 +1,5 @@
-/** ÌâÄ¿Ä¿Â¼Ë÷Òý£¬ÎðÊÖ¸Ä¡£ */
+/** é¢˜ç›®ç›®å½•ç´¢å¼•ï¼Œå‹¿æ‰‹æ”¹ã€‚ */
+
 export type ProblemDefinition = {
     id: string;
     title: string;
@@ -59,7 +60,7 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: 'string-to-integer-atoi',
-        title: 'String To Integer Atoi',
+        title: 'String to Integer (atoi)',
         questionId: 8,
         difficulty: 'Medium',
         tags: ['String'],
@@ -87,14 +88,14 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: 'integer-to-roman',
-        title: 'Integer To Roman',
+        title: 'Integer to Roman',
         questionId: 12,
         difficulty: 'Medium',
         tags: ['Hash Table', 'Math', 'String'],
     },
     {
         id: 'roman-to-integer',
-        title: 'Roman To Integer',
+        title: 'Roman to Integer',
         questionId: 13,
         difficulty: 'Easy',
         tags: ['Hash Table', 'Math', 'String'],
@@ -108,7 +109,7 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: '3sum',
-        title: '3sum',
+        title: '3Sum',
         questionId: 15,
         difficulty: 'Medium',
         tags: ['Array', 'Two Pointers', 'Sorting'],
@@ -122,7 +123,7 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: 'letter-combinations-of-a-phone-number',
-        title: 'Letter Combinations Of A Phone Number',
+        title: 'Letter Combinations of a Phone Number',
         questionId: 17,
         difficulty: 'Medium',
         tags: ['Hash Table', 'String', 'Backtracking'],
@@ -185,7 +186,7 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: 'remove-duplicates-from-sorted-array',
-        title: 'Remove Duplicates From Sorted Array',
+        title: 'Remove Duplicates from Sorted Array',
         questionId: 26,
         difficulty: 'Easy',
         tags: ['Array', 'Two Pointers'],
@@ -829,14 +830,14 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: 'best-time-to-buy-and-sell-stock',
-        title: 'Best Time To Buy And Sell Stock',
+        title: 'Best Time to Buy and Sell Stock',
         questionId: 121,
         difficulty: 'Easy',
         tags: ['Array', 'Dynamic Programming'],
     },
     {
         id: 'best-time-to-buy-and-sell-stock-ii',
-        title: 'Best Time To Buy And Sell Stock Ii',
+        title: 'Best Time to Buy and Sell Stock II',
         questionId: 122,
         difficulty: 'Medium',
         tags: ['Greedy', 'Array', 'Dynamic Programming'],
@@ -975,6 +976,13 @@ export const PROBLEMS: ProblemDefinition[] = [
         tags: ['Stack', 'Tree', 'Depth-First Search', 'Binary Tree'],
     },
     {
+        id: 'lru-cache',
+        title: 'LRU Cache',
+        questionId: 146,
+        difficulty: 'Medium',
+        tags: ['Hash Table', 'Linked List', 'Design', 'Doubly-Linked List'],
+    },
+    {
         id: 'insertion-sort-list',
         title: 'Insertion Sort List',
         questionId: 147,
@@ -1029,6 +1037,13 @@ export const PROBLEMS: ProblemDefinition[] = [
         questionId: 154,
         difficulty: 'Hard',
         tags: ['Array', 'Binary Search'],
+    },
+    {
+        id: 'min-stack',
+        title: 'Min Stack',
+        questionId: 155,
+        difficulty: 'Medium',
+        tags: ['Stack', 'Design'],
     },
     {
         id: 'binary-tree-upside-down',
@@ -1255,6 +1270,13 @@ export const PROBLEMS: ProblemDefinition[] = [
         tags: ['Depth-First Search', 'Breadth-First Search', 'Graph', 'Topological Sort'],
     },
     {
+        id: 'implement-trie-prefix-tree',
+        title: 'Implement Trie (Prefix Tree)',
+        questionId: 208,
+        difficulty: 'Medium',
+        tags: ['Hash Table', 'String', 'Design', 'Trie'],
+    },
+    {
         id: 'minimum-size-subarray-sum',
         title: 'Minimum Size Subarray Sum',
         questionId: 209,
@@ -1319,7 +1341,7 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: 'contains-duplicate-ii',
-        title: 'Contains Duplicate Ii',
+        title: 'Contains Duplicate II',
         questionId: 219,
         difficulty: 'Easy',
         tags: ['Array', 'Hash Table', 'Sliding Window'],
@@ -1711,7 +1733,7 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: 'find-the-duplicate-number',
-        title: 'Find The Duplicate Number',
+        title: 'Find the Duplicate Number',
         questionId: 287,
         difficulty: 'Medium',
         tags: ['Bit Manipulation', 'Array', 'Two Pointers', 'Binary Search'],
@@ -1952,16 +1974,7 @@ export const PROBLEMS: ProblemDefinition[] = [
         title: 'Longest Increasing Path In A Matrix',
         questionId: 329,
         difficulty: 'Hard',
-        tags: [
-            'Depth-First Search',
-            'Breadth-First Search',
-            'Graph',
-            'Topological Sort',
-            'Memoization',
-            'Array',
-            'Dynamic Programming',
-            'Matrix',
-        ],
+        tags: ['Depth-First Search', 'Breadth-First Search', 'Graph', 'Topological Sort', 'Memoization', 'Array', 'Dynamic Programming', 'Matrix'],
     },
     {
         id: 'patching-array',
@@ -2056,7 +2069,7 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: 'reverse-vowels-of-a-string',
-        title: 'Reverse Vowels Of A String',
+        title: 'Reverse Vowels of a String',
         questionId: 345,
         difficulty: 'Easy',
         tags: ['Two Pointers', 'String'],
@@ -2077,7 +2090,7 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: 'intersection-of-two-arrays-ii',
-        title: 'Intersection Of Two Arrays Ii',
+        title: 'Intersection of Two Arrays II',
         questionId: 350,
         difficulty: 'Easy',
         tags: ['Array', 'Hash Table', 'Two Pointers', 'Binary Search', 'Sorting'],
@@ -2609,7 +2622,7 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: 'find-all-numbers-disappeared-in-an-array',
-        title: 'Find All Numbers Disappeared In An Array',
+        title: 'Find All Numbers Disappeared in an Array',
         questionId: 448,
         difficulty: 'Easy',
         tags: ['Array', 'Hash Table'],
@@ -2683,6 +2696,13 @@ export const PROBLEMS: ProblemDefinition[] = [
         questionId: 459,
         difficulty: 'Easy',
         tags: ['String', 'String Matching'],
+    },
+    {
+        id: 'lfu-cache',
+        title: 'LFU Cache',
+        questionId: 460,
+        difficulty: 'Hard',
+        tags: ['Hash Table', 'Linked List', 'Design', 'Doubly-Linked List'],
     },
     {
         id: 'hamming-distance',
@@ -3851,16 +3871,7 @@ export const PROBLEMS: ProblemDefinition[] = [
         title: 'K Empty Slots',
         questionId: 683,
         difficulty: 'Hard',
-        tags: [
-            'Binary Indexed Tree',
-            'Segment Tree',
-            'Queue',
-            'Array',
-            'Ordered Set',
-            'Sliding Window',
-            'Monotonic Queue',
-            'Heap (Priority Queue)',
-        ],
+        tags: ['Binary Indexed Tree', 'Segment Tree', 'Queue', 'Array', 'Ordered Set', 'Sliding Window', 'Monotonic Queue', 'Heap (Priority Queue)'],
     },
     {
         id: 'redundant-connection',
@@ -3973,6 +3984,20 @@ export const PROBLEMS: ProblemDefinition[] = [
         questionId: 701,
         difficulty: 'Medium',
         tags: ['Tree', 'Binary Search Tree', 'Binary Tree'],
+    },
+    {
+        id: 'design-hashset',
+        title: 'Design HashSet',
+        questionId: 705,
+        difficulty: 'Easy',
+        tags: ['Array', 'Hash Table', 'Design', 'Linked List', 'Hash Function'],
+    },
+    {
+        id: 'design-hashmap',
+        title: 'Design HashMap',
+        questionId: 706,
+        difficulty: 'Easy',
+        tags: ['Array', 'Hash Table', 'Design', 'Linked List', 'Hash Function'],
     },
     {
         id: 'to-lower-case',
@@ -4659,6 +4684,13 @@ export const PROBLEMS: ProblemDefinition[] = [
         questionId: 818,
         difficulty: 'Hard',
         tags: ['Dynamic Programming'],
+    },
+    {
+        id: 'most-common-word',
+        title: 'Most Common Word',
+        questionId: 819,
+        difficulty: 'Easy',
+        tags: ['Hash Table', 'String', 'Counting'],
     },
     {
         id: 'short-encoding-of-words',
@@ -5684,7 +5716,7 @@ export const PROBLEMS: ProblemDefinition[] = [
     },
     {
         id: 'squares-of-a-sorted-array',
-        title: 'Squares Of A Sorted Array',
+        title: 'Squares of a Sorted Array',
         questionId: 977,
         difficulty: 'Easy',
         tags: ['Array', 'Two Pointers', 'Sorting'],
@@ -8935,18 +8967,7 @@ export const PROBLEMS: ProblemDefinition[] = [
         title: 'Number Of Ways To Reorder Array To Get Same Bst',
         questionId: 1569,
         difficulty: 'Hard',
-        tags: [
-            'Tree',
-            'Union Find',
-            'Binary Search Tree',
-            'Memoization',
-            'Array',
-            'Math',
-            'Divide and Conquer',
-            'Dynamic Programming',
-            'Binary Tree',
-            'Combinatorics',
-        ],
+        tags: ['Tree', 'Union Find', 'Binary Search Tree', 'Memoization', 'Array', 'Math', 'Divide and Conquer', 'Dynamic Programming', 'Binary Tree', 'Combinatorics'],
     },
     {
         id: 'matrix-diagonal-sum',
@@ -13321,16 +13342,7 @@ export const PROBLEMS: ProblemDefinition[] = [
         title: 'Number Of Increasing Paths In A Grid',
         questionId: 2328,
         difficulty: 'Hard',
-        tags: [
-            'Depth-First Search',
-            'Breadth-First Search',
-            'Graph',
-            'Topological Sort',
-            'Memoization',
-            'Array',
-            'Dynamic Programming',
-            'Matrix',
-        ],
+        tags: ['Depth-First Search', 'Breadth-First Search', 'Graph', 'Topological Sort', 'Memoization', 'Array', 'Dynamic Programming', 'Matrix'],
     },
     {
         id: 'valid-palindrome-iv',
@@ -15122,16 +15134,7 @@ export const PROBLEMS: ProblemDefinition[] = [
         title: 'Minimum Number Of Visited Cells In A Grid',
         questionId: 2617,
         difficulty: 'Hard',
-        tags: [
-            'Stack',
-            'Breadth-First Search',
-            'Union Find',
-            'Array',
-            'Dynamic Programming',
-            'Matrix',
-            'Monotonic Stack',
-            'Heap (Priority Queue)',
-        ],
+        tags: ['Stack', 'Breadth-First Search', 'Union Find', 'Array', 'Dynamic Programming', 'Matrix', 'Monotonic Stack', 'Heap (Priority Queue)'],
     },
     {
         id: 'count-the-number-of-k-free-subsets',
@@ -18652,17 +18655,7 @@ export const PROBLEMS: ProblemDefinition[] = [
         title: 'Minimum Number Of Valid Strings To Form Target I',
         questionId: 3291,
         difficulty: 'Medium',
-        tags: [
-            'Trie',
-            'Segment Tree',
-            'Array',
-            'String',
-            'Binary Search',
-            'Dynamic Programming',
-            'String Matching',
-            'Hash Function',
-            'Rolling Hash',
-        ],
+        tags: ['Trie', 'Segment Tree', 'Array', 'String', 'Binary Search', 'Dynamic Programming', 'String Matching', 'Hash Function', 'Rolling Hash'],
     },
     {
         id: 'minimum-number-of-valid-strings-to-form-target-ii',
