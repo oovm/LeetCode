@@ -1,5 +1,15 @@
 namespace leetcode.day_of_the_week;
 
+# 严格构造：下述字面量均为 ASCII，`from_bytes` 不会失败；Fail 分支保持类型完备。
+micro text_of(bytes: [u8]) -> utf8 {
+    match Utf8Text::from_bytes(bytes) {
+        case Fine(text):
+            return text
+        case Fail(_):
+            return Utf8Builder::new(0).build()
+    }
+}
+
 micro is_leap(y: i64) -> bool {
     if y % 400 == 0 {
         return true
@@ -26,14 +36,26 @@ micro month_days(m: i64, y: i64) -> i64 {
 [export(case: "camelCase")]
 micro day_of_the_week(day: i64, month: i64, year: i64) -> utf8 {
     let mut days: i64 = 0
+    # 基准日是 1971-01-01（Friday）。年份可早于或晚于基准年，按方向累加整年天数。
     let mut y: i64 = 1971
-    while y < year {
-        if is_leap(y) {
-            days = days + 366
-        } else {
-            days = days + 365
+    if year >= 1971 {
+        while y < year {
+            if is_leap(y) {
+                days = days + 366
+            } else {
+                days = days + 365
+            }
+            y = y + 1
         }
-        y = y + 1
+    } else {
+        while y > year {
+            y = y - 1
+            if is_leap(y) {
+                days = days - 366
+            } else {
+                days = days - 365
+            }
+        }
     }
     let mut m: i64 = 1
     while m < month {
@@ -41,26 +63,29 @@ micro day_of_the_week(day: i64, month: i64, year: i64) -> utf8 {
         m = m + 1
     }
     days = days + day - 1
-    let dow: i64 = (days + 5) % 7
+    let mut dow: i64 = (days + 5) % 7
+    if dow < 0 {
+        dow = dow + 7
+    }
     if dow == 0 {
-        return Utf8Text::from_bytes([83, 117, 110, 100, 97, 121])
+        return text_of([83, 117, 110, 100, 97, 121])
     }
     if dow == 1 {
-        return Utf8Text::from_bytes([77, 111, 110, 100, 97, 121])
+        return text_of([77, 111, 110, 100, 97, 121])
     }
     if dow == 2 {
-        return Utf8Text::from_bytes([84, 117, 101, 115, 100, 97, 121])
+        return text_of([84, 117, 101, 115, 100, 97, 121])
     }
     if dow == 3 {
-        return Utf8Text::from_bytes([87, 101, 100, 110, 101, 115, 100, 97, 121])
+        return text_of([87, 101, 100, 110, 101, 115, 100, 97, 121])
     }
     if dow == 4 {
-        return Utf8Text::from_bytes([84, 104, 117, 114, 115, 100, 97, 121])
+        return text_of([84, 104, 117, 114, 115, 100, 97, 121])
     }
     if dow == 5 {
-        return Utf8Text::from_bytes([70, 114, 105, 100, 97, 121])
+        return text_of([70, 114, 105, 100, 97, 121])
     }
-    return Utf8Text::from_bytes([83, 97, 116, 117, 114, 100, 97, 121])
+    return text_of([83, 97, 116, 117, 114, 100, 97, 121])
 }
 
 class Solution {

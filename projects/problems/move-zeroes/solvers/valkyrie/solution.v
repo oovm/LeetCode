@@ -1,7 +1,11 @@
 namespace leetcode.move_zeroes;
 
+using std.collection
+
+# 题目要求原地移动零：`[i64]` 直接表达宿主数组，错位交换只经 `Array.length`
+# 与 `Cardinal` 读写合同，不依赖聚合/容器布局。
 [export(case: "camelCase")]
-micro move_zeroes(mut nums: ArrayList<i64>) -> unit {
+micro move_zeroes(mut nums: [i64]) -> unit {
     let mut k: usize = 0
     let mut i: usize = 0
     while i < nums.length() {
@@ -17,7 +21,7 @@ micro move_zeroes(mut nums: ArrayList<i64>) -> unit {
 }
 
 class Solution {
-    micro moveZeroes(mut self, nums: ArrayList<i64>): unit {
+    micro moveZeroes(mut self, nums: [i64]): unit {
         move_zeroes(nums)
     }
 }

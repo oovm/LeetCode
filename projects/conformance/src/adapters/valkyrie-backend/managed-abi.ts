@@ -116,11 +116,20 @@ export function readManagedAbiContract(
     lane: ManagedContrastLane,
     artifactFileName: string,
 ): ManagedAbiContract {
-    let source: string;
-    try {
-        source = readFileSync(join(outputDirectory, MANAGED_ABI_FILE_NAME), 'utf8');
-    } catch {
-        throw new ManagedAbiError(`缺少 \`${MANAGED_ABI_FILE_NAME}\`（managed 执行合同）`);
+    // 新构建按产物名落盘 `<artifact>.managed-abi.json`（多分区不互相覆盖）；
+    // 旧构建落 `managed-abi.json`。两者都接受，优先产物专属侧车，避免同目录多产物串号。
+    const candidates = [`${artifactFileName}.${MANAGED_ABI_FILE_NAME}`, MANAGED_ABI_FILE_NAME];
+    let source: string | null = null;
+    for (const fileName of candidates) {
+        try {
+            source = readFileSync(join(outputDirectory, fileName), 'utf8');
+            break;
+        } catch {
+            /* 尝试下一个候选 */
+        }
+    }
+    if (source === null) {
+        throw new ManagedAbiError(`缺少 \`${artifactFileName}.${MANAGED_ABI_FILE_NAME}\`（managed 执行合同）`);
     }
 
     let parsed: unknown;

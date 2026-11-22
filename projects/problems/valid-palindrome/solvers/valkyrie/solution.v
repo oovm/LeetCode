@@ -15,7 +15,7 @@ micro is_palindrome(s: utf8) -> bool {
             i = i + 1
         } else if !right.is_ascii_alphanumeric() {
             j = j - 1
-        } else if left.ascii_alnum_key().unwrap() != right.ascii_alnum_key().unwrap() {
+        } else if left.to_ascii_lowercase() != right.to_ascii_lowercase() {
             return false
         } else {
             i = i + 1

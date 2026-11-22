@@ -158,12 +158,24 @@ function blockedContrast(id: string, lane: 'jvm' | 'clr'): ValkyrieBackendMatrix
     });
 }
 
-function entry(id: string, overrides: Partial<Record<'wasm' | 'ovm' | 'jvm' | 'clr', ValkyrieMatrixRow | ValkyrieBackendMatrixRow>> = {}) {
+/** 机器码 lane 的计划 target 固定为 x86-64 triple（声明原文 `node`）。 */
+function blockedNative(id: string): ValkyrieBackendMatrixRow {
+    return backendRow(id, {
+        target: 'x86_64-pc-windows-msvc',
+        declaredTarget: 'node',
+    });
+}
+
+function entry(
+    id: string,
+    overrides: Partial<Record<'wasm' | 'ovm' | 'native' | 'jvm' | 'clr', ValkyrieMatrixRow | ValkyrieBackendMatrixRow>> = {},
+) {
     return {
         id,
         rows: {
             wasm: overrides.wasm ?? greenWasm(id),
             ovm: overrides.ovm ?? greenOvm(id),
+            native: overrides.native ?? blockedNative(id),
             jvm: overrides.jvm ?? blockedContrast(id, 'jvm'),
             clr: overrides.clr ?? blockedContrast(id, 'clr'),
         },
@@ -171,11 +183,12 @@ function entry(id: string, overrides: Partial<Record<'wasm' | 'ovm' | 'jvm' | 'c
 }
 
 describe('valkyrie lane matrix report', () => {
-    it('declares exactly the four lanes with distinct roles', () => {
-        expect(MATRIX_LANES.map((lane) => lane.id)).toEqual(['wasm', 'ovm', 'jvm', 'clr']);
+    it('declares exactly the five lanes with distinct roles', () => {
+        expect(MATRIX_LANES.map((lane) => lane.id)).toEqual(['wasm', 'ovm', 'native', 'jvm', 'clr']);
         const byId = new Map(MATRIX_LANES.map((lane) => [lane.id, lane]));
         expect(byId.get('wasm')?.role).toBe('delivery');
         expect(byId.get('ovm')?.role).toBe('execution');
+        expect(byId.get('native')?.role).toBe('contrast');
         expect(byId.get('jvm')?.role).toBe('contrast');
         expect(byId.get('clr')?.role).toBe('contrast');
     });
@@ -184,9 +197,10 @@ describe('valkyrie lane matrix report', () => {
         const report = buildValkyrieLaneMatrixReport([entry('two-sum'), entry('three-sum')], { corpusIds: ['two-sum', 'three-sum'] });
         expect(report.denominator).toBe(2);
         expect(report.deliveryLane).toBe('wasm');
-        expect(Object.keys(report.summary).sort()).toEqual(['clr', 'jvm', 'ovm', 'wasm']);
+        expect(Object.keys(report.summary).sort()).toEqual(['clr', 'jvm', 'native', 'ovm', 'wasm']);
         expect(report.summary.wasm.green).toBe(2);
         expect(report.summary.ovm.green).toBe(2);
+        expect(report.summary.native.green).toBe(0);
         expect(report.summary.jvm.green).toBe(0);
         expect(report.summary.clr.green).toBe(0);
         expect(report.summary.wasm.greenRate).toBe(1);
@@ -408,7 +422,13 @@ describe('valkyrie lane matrix report', () => {
         expect(() => buildValkyrieLaneMatrixReport([missingClr as never], { corpusIds: ['two-sum'] })).toThrow();
         const mismatchedId = {
             id: 'two-sum',
-            rows: { wasm: greenWasm('three-sum'), ovm: greenOvm('two-sum'), jvm: blockedContrast('two-sum', 'jvm'), clr: blockedContrast('two-sum', 'clr') },
+            rows: {
+                wasm: greenWasm('three-sum'),
+                ovm: greenOvm('two-sum'),
+                native: blockedNative('two-sum'),
+                jvm: blockedContrast('two-sum', 'jvm'),
+                clr: blockedContrast('two-sum', 'clr'),
+            },
         };
         expect(() => buildValkyrieLaneMatrixReport([mismatchedId], { corpusIds: ['two-sum'] })).toThrow();
     });

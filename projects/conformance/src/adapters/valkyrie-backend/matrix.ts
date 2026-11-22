@@ -26,6 +26,7 @@ import {
 } from './managed-abi.ts';
 import { readManagedCompileEvidence, resolveManagedArtifact } from './managed-evidence.ts';
 import { runManagedReference } from './managed-runner.ts';
+import { resolveNativeArtifact, runNativeReference } from './native-runner.ts';
 import { readMatrixManifestAudit } from '../shared/matrix-manifest-audit.ts';
 import { isMatrixRowGreen } from '../shared/matrix-green.ts';
 import {
@@ -179,6 +180,11 @@ function baseRow(problem: ProblemDefinition): ValkyrieBackendMatrixRowNoGreen {
     };
 }
 
+/** 本次报告未选择该 lane：如实留空并带原因，不用其他 lane 的结果顶替。 */
+export function skippedBackendLaneRow(problem: ProblemDefinition, reason: string): ValkyrieBackendMatrixRow {
+    return blockedBackendRow(problem, reason);
+}
+
 /** 无法进入 build 的行（题解缺失 / lane 计划失败）：所有证据如实留空并带原因。 */
 function blockedBackendRow(problem: ProblemDefinition, solverNote: string, targetError: string | null = null): ValkyrieBackendMatrixRow {
     return withCaseStats(
@@ -325,6 +331,105 @@ export async function probeValkyrieBackendProblem(
             managedContractDigest,
             managedInvokeCommand,
             managedInvokeExitStatus,
+        },
+        caseStats,
+    );
+    row.green = isMatrixRowGreen(row);
+    row.outcome = classifyMatrixOutcome(row);
+    row.unverifiedReasons = collectUnverifiedReasons(row);
+    return row;
+}
+
+/** 原生 lane 的构建 target：`node` 产出 Node-API 原生 addon（x86-64 冻结集）。 */
+export const NATIVE_LANE_TARGET = 'node';
+
+/** 原生 lane 的独立输出目录，与其他 lane 的证据互不覆盖。 */
+export function nativeBuildDir(problem: ProblemDefinition): string {
+    return join(LEETCODE_ROOT_FROM_PACKAGE, '.cache', `${problem.id}-bench-native`);
+}
+
+/**
+ * 探测单个题目的原生（x86-64 机器码）lane。
+ *
+ * 流程与 `probeValkyrieBackendProblem` 相同，但产物是 `--target node` 的 Node-API
+ * 原生 addon，验收由 {@link runNativeReference} 逐用例 `require` 调用完成；
+ * 不使用 managed runner，也不复制其他 lane 的结果。
+ */
+export async function probeValkyrieNativeProblem(
+    problem: ProblemDefinition,
+    projectPath: string,
+): Promise<ValkyrieBackendMatrixRow> {
+    const problemRoot = join(projectPath, '..', '..');
+    const solverNote = valkyrieSolverBlockedReason(problemRoot);
+    if (solverNote) {
+        return blockedBackendRow(problem, solverNote);
+    }
+
+    let plan: CompileTargetPlan;
+    try {
+        plan = resolveLaneTargetPlan(projectPath, NATIVE_LANE_TARGET);
+    }
+    catch (error) {
+        const detail = error instanceof CompileTargetPlanError ? `${error.code}: ${error.message}` : String(error);
+        return blockedBackendRow(problem, detail, detail);
+    }
+
+    const outDir = nativeBuildDir(problem);
+    mkdirSync(outDir, { recursive: true });
+    const build = legionBuildProject(plan.solverDir, NATIVE_LANE_TARGET, outDir);
+    // `node` 目标没有测试运行器宿主装载链，且 `legion test` 不参与绿门禁；
+    // 本 lane 的验收完全由 `runNativeReference` 逐用例真实调用承担，不伪造 test 通过。
+    const testStatus = 0;
+    const testRoute = 'native-cases';
+
+    const artifactDir = resolveArtifactDir(outDir, plan.canonicalTarget);
+    const evidence = readArtifactEvidence(artifactDir, plan);
+    const nativeArtifact = resolveNativeArtifact(artifactDir);
+    const verdict = deriveArtifactRuntimeStatus({
+        buildOk: build.status === 0,
+        artifactsPresent: nativeArtifact !== null,
+        evidence,
+        invokeBlocker: nativeArtifact === null
+            ? '执行清单缺少可用的 `library_exports`（模块/导出无法从产物身份确定）'
+            : null,
+    });
+
+    let runtimeOk = false;
+    let runtimeError: string | null = null;
+    let caseStats = emptySolverCaseStats(verdict.reason);
+    if (verdict.status === 'ready' && nativeArtifact !== null) {
+        const native = runNativeReference(problemRoot, nativeArtifact);
+        runtimeOk = native.ok;
+        runtimeError = native.error;
+        caseStats = native.caseStats;
+    }
+
+    const manifestAudit = readMatrixManifestAudit(evidence.manifest);
+    const row: ValkyrieBackendMatrixRow = withCaseStats(
+        {
+            ...baseRow(problem),
+            target: plan.canonicalTarget,
+            declaredTarget: plan.declaredTarget,
+            targetSource: plan.source,
+            manifestTarget: evidence.manifestTarget,
+            buildStatus: build.status,
+            testStatus,
+            buildRoute: build.route,
+            testRoute,
+            buildError: build.status === 0
+                ? null
+                : formatLegionCliError(`legion build --target ${NATIVE_LANE_TARGET}`, build),
+            testError: null,
+            manifestFresh: evidence.fresh,
+            manifestError: evidence.reason,
+            manifestSchemaVersion: manifestAudit.manifestSchemaVersion,
+            semanticClosureHash: manifestAudit.semanticClosureHash,
+            canonicalSurfaceHash: manifestAudit.canonicalSurfaceHash,
+            hostProviderBindingHash: manifestAudit.hostProviderBindingHash,
+            runtimeStatus: verdict.status,
+            runtimeReason: verdict.reason,
+            runtimeOk,
+            runtimeError,
         },
         caseStats,
     );

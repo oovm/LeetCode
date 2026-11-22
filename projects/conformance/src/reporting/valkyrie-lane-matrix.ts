@@ -8,15 +8,16 @@ import { quarantineCaseStats } from './corpus-quarantine.ts';
 
 export type ValkyrieLaneRow = ValkyrieMatrixRow | ValkyrieBackendMatrixRow;
 
-export type MatrixLaneId = 'wasm' | 'ovm' | 'jvm' | 'clr';
+export type MatrixLaneId = 'wasm' | 'ovm' | 'native' | 'jvm' | 'clr';
 
 /**
  * 矩阵 lane 的身份描述。
  *
  * `wasm` 是 `0.0.x` 的交付 lane（target 由各题 `legion.von` 的 `build[].target` 声明）；
  * `ovm` 是执行 lane（lane 显式指定 `ovm`，legion 内置 OVM 跑参考）；
+ * `native` 是机器码 lane（lane 显式指定 `node`，产出 Node-API 原生 addon 并逐例真实调用）；
  * `jvm` / `clr` 是对照 lane（lane 显式指定 target，外部 runner 执行，用于防止单一 target 过拟合）。
- * 三条非交付 lane 的结果都不计入交付完成度，且彼此独立推导、互不顶替。
+ * 四条非交付 lane 的结果都不计入交付完成度，且彼此独立推导、互不顶替。
  */
 export type MatrixLaneDescriptor = {
     id: MatrixLaneId;
@@ -40,6 +41,13 @@ export const MATRIX_LANES: readonly MatrixLaneDescriptor[] = [
         targetSource: 'lane-explicit',
         countsTowardDelivery: false,
         description: '执行 lane：compile target 由 lane 显式指定 ovm，legion 内置 OVM 跑参考，不计入交付完成度',
+    },
+    {
+        id: 'native',
+        role: 'contrast',
+        targetSource: 'lane-explicit',
+        countsTowardDelivery: false,
+        description: '机器码 lane：compile target 由 lane 显式指定 node（x86-64 冻结集原生 addon），逐用例真实调用，不计入交付完成度',
     },
     {
         id: 'jvm',
@@ -234,6 +242,7 @@ export function buildValkyrieLaneMatrixReport(
                 rows: {
                     wasm: adjust(entry.rows.wasm),
                     ovm: adjust(entry.rows.ovm),
+                    native: adjust(entry.rows.native),
                     jvm: adjust(entry.rows.jvm),
                     clr: adjust(entry.rows.clr),
                 },

@@ -14,11 +14,11 @@ import { fileURLToPath } from 'node:url';
 import { PROBLEMS, legionProjectDir, problemDir } from '../catalog/index.ts';
 import { hasValkyrieSolver } from '../adapters/valkyrie-node/valkyrie.ts';
 import { probeValkyrieProblem } from '../adapters/valkyrie-node/matrix.ts';
-import { probeValkyrieBackendProblem } from '../adapters/valkyrie-backend/matrix.ts';
+import { probeValkyrieBackendProblem, probeValkyrieNativeProblem, skippedBackendLaneRow } from '../adapters/valkyrie-backend/matrix.ts';
 import { valkyrieNativeRunnerReady, valkyrieNativeSkipReason } from '../adapters/valkyrie-node/valkyrie.ts';
 import { valkyrieNyarRunnerReady, valkyrieNyarSkipReason } from '../adapters/valkyrie-nyar/valkyrie.ts';
 import { parseBatchLimit, problemsForBatch } from '../planning/batch-limit.ts';
-import { buildValkyrieLaneMatrixReport, type LaneQuarantine, type MatrixInputIdentity } from '../reporting/valkyrie-lane-matrix.ts';
+import { buildValkyrieLaneMatrixReport, MATRIX_LANE_IDS, type LaneQuarantine, type MatrixInputIdentity, type MatrixLaneId } from '../reporting/valkyrie-lane-matrix.ts';
 import { loadCorpusQuarantine } from '../reporting/corpus-quarantine.ts';
 import { resolveAddonIdentity, resolveCompilerBuildIdentity } from '../observation/toolchain-identity.ts';
 
@@ -71,9 +71,20 @@ function resolveInputIdentity(): MatrixInputIdentity {
     };
 }
 
-function parseArgs(argv: string[]): { outPath: string; idFilter: string | null } {
+function parseArgs(argv: string[]): { outPath: string; ids: Set<string> | null; lane: MatrixLaneId | null } {
     let outPath = DEFAULT_REPORT_PATH;
-    let idFilter: string | null = null;
+    let ids: Set<string> | null = null;
+    let lane: MatrixLaneId | null = null;
+    const addIds = (raw: string) => {
+        const values = raw.split(',').map((value) => value.trim()).filter((value) => value.length > 0);
+        if (values.length === 0) {
+            return;
+        }
+        ids ??= new Set<string>();
+        for (const value of values) {
+            ids.add(value);
+        }
+    };
     for (let index = 0; index < argv.length; index += 1) {
         const arg = argv[index];
         if (arg === '--out' && argv[index + 1]) {
@@ -82,15 +93,24 @@ function parseArgs(argv: string[]): { outPath: string; idFilter: string | null }
             continue;
         }
         if ((arg === '--id' || arg === '-i') && argv[index + 1]) {
-            idFilter = argv[index + 1];
+            addIds(argv[index + 1]);
+            index += 1;
+            continue;
+        }
+        if (arg === '--lane' && argv[index + 1]) {
+            const value = argv[index + 1].trim();
+            if (!(MATRIX_LANE_IDS as readonly string[]).includes(value)) {
+                throw new Error(`未知 lane \`${value}\`；可用 lane: ${MATRIX_LANE_IDS.join(', ')}`);
+            }
+            lane = value as MatrixLaneId;
             index += 1;
         }
     }
-    return { outPath, idFilter };
+    return { outPath, ids, lane };
 }
 
 async function main(): Promise<number> {
-    const { outPath, idFilter } = parseArgs(process.argv.slice(2));
+    const { outPath, ids, lane } = parseArgs(process.argv.slice(2));
     if (!valkyrieNativeRunnerReady()) {
         console.error(valkyrieNativeSkipReason() ?? 'Valkyrie wasm runner 未就绪');
         return 2;
@@ -98,6 +118,10 @@ async function main(): Promise<number> {
     if (!valkyrieNyarRunnerReady()) {
         console.error(valkyrieNyarSkipReason() ?? 'Valkyrie nyar runner 未就绪');
         return 2;
+    }
+    const selectedLanes = new Set<MatrixLaneId>(lane === null ? MATRIX_LANE_IDS : [lane]);
+    if (lane !== null) {
+        console.log(`lane 过滤：本次只运行 ${lane}；其余 lane 如实记未运行，不用其他 lane 顶替`);
     }
 
     // 输入身份在矩阵开始前采集：长跑期间 V checkout 可能前进，报告必须绑定实际起跑 rev。
@@ -107,8 +131,8 @@ async function main(): Promise<number> {
     const batchLimit = parseBatchLimit({ fallbackKeys: ['LEETCODE_MATRIX_LIMIT', 'LEETCODE_BENCH_LIMIT'] });
     const corpus = PROBLEMS.filter((problem) => hasValkyrieSolver(problemDir(LEETCODE_ROOT, problem)));
     let candidates = corpus;
-    if (idFilter) {
-        candidates = candidates.filter((problem) => problem.id === idFilter);
+    if (ids) {
+        candidates = candidates.filter((problem) => ids.has(problem.id));
     }
     candidates = problemsForBatch(candidates, {
         fallbackKeys: ['LEETCODE_MATRIX_LIMIT', 'LEETCODE_BENCH_LIMIT'],
@@ -117,15 +141,23 @@ async function main(): Promise<number> {
     const entries = [];
     for (const problem of candidates) {
         const projectPath = legionProjectDir(LEETCODE_ROOT, problem);
-        process.stderr.write(`matrix ${problem.id} lane wasm…\n`);
-        const wasm = await probeValkyrieProblem(problem, projectPath);
-        process.stderr.write(`matrix ${problem.id} lane ovm…\n`);
-        const ovm = await probeValkyrieBackendProblem(problem, projectPath, 'ovm');
-        process.stderr.write(`matrix ${problem.id} lane jvm…\n`);
-        const jvm = await probeValkyrieBackendProblem(problem, projectPath, 'jvm');
-        process.stderr.write(`matrix ${problem.id} lane clr…\n`);
-        const clr = await probeValkyrieBackendProblem(problem, projectPath, 'clr');
-        entries.push({ id: problem.id, rows: { wasm, ovm, jvm, clr } });
+        const skipLane = (id: MatrixLaneId) => skippedBackendLaneRow(problem, `本报告未运行 ${id} lane（--lane 过滤）`);
+        const logLane = (id: MatrixLaneId) => {
+            if (selectedLanes.has(id)) {
+                process.stderr.write(`matrix ${problem.id} lane ${id}…\n`);
+            }
+        };
+        logLane('wasm');
+        const wasm = selectedLanes.has('wasm') ? await probeValkyrieProblem(problem, projectPath) : skipLane('wasm');
+        logLane('ovm');
+        const ovm = selectedLanes.has('ovm') ? await probeValkyrieBackendProblem(problem, projectPath, 'ovm') : skipLane('ovm');
+        logLane('native');
+        const native = selectedLanes.has('native') ? await probeValkyrieNativeProblem(problem, projectPath) : skipLane('native');
+        logLane('jvm');
+        const jvm = selectedLanes.has('jvm') ? await probeValkyrieBackendProblem(problem, projectPath, 'jvm') : skipLane('jvm');
+        logLane('clr');
+        const clr = selectedLanes.has('clr') ? await probeValkyrieBackendProblem(problem, projectPath, 'clr') : skipLane('clr');
+        entries.push({ id: problem.id, rows: { wasm, ovm, native, jvm, clr } });
     }
 
     const report = buildValkyrieLaneMatrixReport(entries, {
@@ -156,6 +188,7 @@ async function main(): Promise<number> {
     const laneNotes: Record<string, string> = {
         wasm: '(delivery, target=manifest-declared)',
         ovm: '(execution, target=lane-explicit ovm, 不计入完成度)',
+        native: '(machine-code, target=lane-explicit node/x86-64, 逐用例真实调用, 不计入完成度)',
         jvm: '(contrast, target=lane-explicit jvm, 不计入完成度)',
         clr: '(contrast, target=lane-explicit clr, 不计入完成度)',
     };

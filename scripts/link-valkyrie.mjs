@@ -9,9 +9,9 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { assertValkyrieVPresent, leetcodeLegionsVon } from './valkyrie-v-deps.mjs';
-import { assertNyarValkyriePresent, LEETCODE_ROOT } from './valkyrie-paths.mjs';
+import { assertValkyrieRsPresent, LEETCODE_ROOT } from './valkyrie-paths.mjs';
 
-assertNyarValkyriePresent();
+assertValkyrieRsPresent();
 assertValkyrieVPresent();
 
 writeFileSync(join(LEETCODE_ROOT, 'legions.von'), leetcodeLegionsVon(), 'utf8');

@@ -15,22 +15,22 @@ micro bit_count(x: i64) -> i64 {
 }
 
 # 主键按 1 的位数升序，次键按数值升序。
-micro compare_bits(left: i64, right: i64) -> i32 {
+micro compare_bits(left: i64, right: i64) -> std::operator::Ordering {
     let left_bits: i64 = bit_count(left)
     let right_bits: i64 = bit_count(right)
     if left_bits < right_bits {
-        return -1
+        return std::operator::Ordering.Less
     }
     if left_bits > right_bits {
-        return 1
+        return std::operator::Ordering.Greater
     }
     if left < right {
-        return -1
+        return std::operator::Ordering.Less
     }
     if left > right {
-        return 1
+        return std::operator::Ordering.Greater
     }
-    return 0
+    return std::operator::Ordering.Equal
 }
 
 [export(case: "camelCase")]

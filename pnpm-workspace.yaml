@@ -1,8 +1,7 @@
-# leetcode 侧 workspace：把同级 nyar-vm.rs 里的 @nyar/* 当作成员（nyar-vm CI 不依赖本文件）。
-# 目录约定：…/nyar-vm.rs 与 …/leetcode.v 同级；在 leetcode.v 根执行 pnpm install。
+# leetcode 侧 workspace：把同级 valkyrie.rs 里的 @nyar/valkyrie 工具链当作成员（valkyrie.rs CI 不依赖本文件）。
+# 目录约定：…/valkyrie.rs 与 …/leetcode.v 同级；在 leetcode.v 根执行 pnpm install。
 packages:
   - 'projects/conformance'
   - 'projects/dashboard'
-  - '../nyar-vm.rs/projects/nyar.ts/packages/*'
-  - '../nyar-vm.rs/projects/nyar.ts/platforms/*'
-  - '../nyar-vm.rs/projects/nyar.ts/emulators/*'
+  - '../valkyrie.rs/projects/ts/emulators/*'
+  - '../valkyrie.rs/projects/ts/platforms/*'
