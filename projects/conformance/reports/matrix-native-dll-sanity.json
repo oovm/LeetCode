@@ -1,0 +1,434 @@
+{
+  "generatedAt": "2026-11-23T11:58:46.292Z",
+  "lane": "native-dll",
+  "target": "x86_64-pc-windows-msvc",
+  "selection": {
+    "mode": "corpus",
+    "batchLimit": 10,
+    "ids": [
+      "two-sum",
+      "add-two-numbers",
+      "longest-substring-without-repeating-characters",
+      "median-of-two-sorted-arrays",
+      "longest-palindromic-substring",
+      "zigzag-conversion",
+      "reverse-integer",
+      "string-to-integer-atoi",
+      "palindrome-number",
+      "regular-expression-matching"
+    ]
+  },
+  "identity": {
+    "addon": {
+      "state": "resolved",
+      "sha256": "c08fb5091d843d1b7c4557cf0fa83dab04659c157b2d1bd63c548f3905c2a16e"
+    },
+    "compilerBuild": {
+      "state": "resolved",
+      "identity": "29b62823ae700535ae15ab38222bfc73f341ec84",
+      "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=29b62823ae700535ae15ab38222bfc73f341ec84"
+    },
+    "valkyrieV": {
+      "state": "resolved",
+      "rev": "1d7ec28b07a9f366a01944e7ef2d07188ff86421"
+    },
+    "dllConsumer": {
+      "state": "resolved",
+      "sha256": "550a24bfe1bffcbc40dd152065de289563d966c3c74f4e5dac01b3141b5e27a8"
+    }
+  },
+  "summary": {
+    "denominator": 10,
+    "buildPass": 6,
+    "loadPass": 1,
+    "executePass": 1,
+    "strictPass": 1,
+    "testCaseTotal": 165,
+    "executed_pass": 61,
+    "executed_fail": 0,
+    "blocked": 1,
+    "not_run": 103,
+    "skipped": 0
+  },
+  "problems": [
+    {
+      "id": "two-sum",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": null,
+      "manifestFresh": false,
+      "manifestError": "缺少 execution manifest",
+      "buildStatus": 1,
+      "buildError": "legion build --target x86_64-pc-windows-msvc failed (napi:legionBuild): x86_64 lowering：SSA 值 ValueRef(13) 的类型 `std::collection::SwissTableEntry` 没有 x86_64 槽载体: function=std::get",
+      "artifact": null,
+      "resolutionStage": "load",
+      "resolutionBlocker": "缺少执行清单（run-contracts.txt）",
+      "loadOk": false,
+      "executeOk": false,
+      "strictPass": false,
+      "firstFailureStage": "build",
+      "error": "legion build --target x86_64-pc-windows-msvc failed (napi:legionBuild): x86_64 lowering：SSA 值 ValueRef(13) 的类型 `std::collection::SwissTableEntry` 没有 x86_64 槽载体: function=std::get",
+      "command": null,
+      "exitStatus": null,
+      "caseStats": {
+        "ok": false,
+        "testCaseTotal": 0,
+        "executed_pass": 0,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_integer_argument": 0,
+        "firstFailureIndex": null,
+        "firstFailure": "legion build --target x86_64-pc-windows-msvc failed (napi:legionBuild): x86_64 lowering：SSA 值 ValueRef(13) 的类型 `std::collection::SwissTableEntry` 没有 x86_64 槽载体: function=std::get"
+      }
+    },
+    {
+      "id": "add-two-numbers",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": "x86_64-pc-windows-msvc",
+      "manifestFresh": true,
+      "manifestError": null,
+      "buildStatus": 0,
+      "buildError": null,
+      "artifact": {
+        "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\add-two-numbers-bench-native-dll\\leetcode-add-two-numbers.dll",
+        "exports": [
+          {
+            "sourceName": "add_two_numbers",
+            "logicalName": "add_two_numbers",
+            "abi": "c-abi"
+          }
+        ]
+      },
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": false,
+      "executeOk": false,
+      "strictPass": false,
+      "firstFailureStage": "identity",
+      "error": "身份：入口 addTwoNumbers 与 C ABI 公开名不一致（清单导出 add_two_numbers→add_two_numbers）",
+      "command": null,
+      "exitStatus": null,
+      "caseStats": {
+        "ok": false,
+        "testCaseTotal": 0,
+        "executed_pass": 0,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_integer_argument": 0,
+        "firstFailureIndex": null,
+        "firstFailure": "身份：入口 addTwoNumbers 与 C ABI 公开名不一致（清单导出 add_two_numbers→add_two_numbers）"
+      }
+    },
+    {
+      "id": "longest-substring-without-repeating-characters",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": null,
+      "manifestFresh": false,
+      "manifestError": "缺少 execution manifest",
+      "buildStatus": 1,
+      "buildError": "legion build --target x86_64-pc-windows-msvc failed (napi:legionBuild): x86_64 lowering：SSA 值 ValueRef(13) 的类型 `std::collection::SwissTableEntry` 没有 x86_64 槽载体: function=std::get",
+      "artifact": null,
+      "resolutionStage": "load",
+      "resolutionBlocker": "缺少执行清单（run-contracts.txt）",
+      "loadOk": false,
+      "executeOk": false,
+      "strictPass": false,
+      "firstFailureStage": "build",
+      "error": "legion build --target x86_64-pc-windows-msvc failed (napi:legionBuild): x86_64 lowering：SSA 值 ValueRef(13) 的类型 `std::collection::SwissTableEntry` 没有 x86_64 槽载体: function=std::get",
+      "command": null,
+      "exitStatus": null,
+      "caseStats": {
+        "ok": false,
+        "testCaseTotal": 0,
+        "executed_pass": 0,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_integer_argument": 0,
+        "firstFailureIndex": null,
+        "firstFailure": "legion build --target x86_64-pc-windows-msvc failed (napi:legionBuild): x86_64 lowering：SSA 值 ValueRef(13) 的类型 `std::collection::SwissTableEntry` 没有 x86_64 槽载体: function=std::get"
+      }
+    },
+    {
+      "id": "median-of-two-sorted-arrays",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": null,
+      "manifestFresh": false,
+      "manifestError": "solution.v 为空",
+      "buildStatus": 1,
+      "buildError": "solution.v 为空",
+      "artifact": null,
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": false,
+      "executeOk": false,
+      "strictPass": false,
+      "firstFailureStage": "build",
+      "error": "solution.v 为空",
+      "command": null,
+      "exitStatus": null,
+      "caseStats": {
+        "ok": false,
+        "testCaseTotal": 0,
+        "executed_pass": 0,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_integer_argument": 0,
+        "firstFailureIndex": null,
+        "firstFailure": "solution.v 为空"
+      }
+    },
+    {
+      "id": "longest-palindromic-substring",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": "x86_64-pc-windows-msvc",
+      "manifestFresh": true,
+      "manifestError": null,
+      "buildStatus": 0,
+      "buildError": null,
+      "artifact": {
+        "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\longest-palindromic-substring-bench-native-dll\\leetcode-longest-palindromic-substring.dll",
+        "exports": [
+          {
+            "sourceName": "longest_palindrome",
+            "logicalName": "longest_palindrome",
+            "abi": "c-abi"
+          }
+        ]
+      },
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": false,
+      "executeOk": false,
+      "strictPass": false,
+      "firstFailureStage": "identity",
+      "error": "身份：入口 longestPalindrome 与 C ABI 公开名不一致（清单导出 longest_palindrome→longest_palindrome）",
+      "command": null,
+      "exitStatus": null,
+      "caseStats": {
+        "ok": false,
+        "testCaseTotal": 0,
+        "executed_pass": 0,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_integer_argument": 0,
+        "firstFailureIndex": null,
+        "firstFailure": "身份：入口 longestPalindrome 与 C ABI 公开名不一致（清单导出 longest_palindrome→longest_palindrome）"
+      }
+    },
+    {
+      "id": "zigzag-conversion",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": "x86_64-pc-windows-msvc",
+      "manifestFresh": true,
+      "manifestError": null,
+      "buildStatus": 0,
+      "buildError": null,
+      "artifact": {
+        "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\zigzag-conversion-bench-native-dll\\leetcode-zigzag-conversion.dll",
+        "exports": [
+          {
+            "sourceName": "convert",
+            "logicalName": "convert",
+            "abi": "c-abi"
+          }
+        ]
+      },
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": false,
+      "executeOk": false,
+      "strictPass": false,
+      "firstFailureStage": "abi",
+      "error": "tests[0]: ABI：C ABI 实参[0] 文本载体未定案（target=x86_64-pc-windows-msvc）",
+      "command": null,
+      "exitStatus": null,
+      "caseStats": {
+        "ok": false,
+        "testCaseTotal": 104,
+        "executed_pass": 0,
+        "executed_fail": 0,
+        "blocked": 1,
+        "not_run": 103,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_integer_argument": 0,
+        "firstFailureIndex": 0,
+        "firstFailure": "tests[0]: ABI：C ABI 实参[0] 文本载体未定案（target=x86_64-pc-windows-msvc）",
+        "skipped_corpus_defect": 0,
+        "casesSource": "E:\\victory 胜利女神\\leetcode.v\\projects\\problems\\zigzag-conversion\\zigzag-conversion.cases.ts",
+        "casesDigest": "e8c80df7903deaf3e2a0848aa74ac85cc84141094912f5f632a30a28d4c89658"
+      }
+    },
+    {
+      "id": "reverse-integer",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": "x86_64-pc-windows-msvc",
+      "manifestFresh": true,
+      "manifestError": null,
+      "buildStatus": 0,
+      "buildError": null,
+      "artifact": {
+        "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\reverse-integer-bench-native-dll\\leetcode-reverse-integer.dll",
+        "exports": [
+          {
+            "sourceName": "reverse",
+            "logicalName": "reverse",
+            "abi": "c-abi"
+          }
+        ]
+      },
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": true,
+      "executeOk": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "error": null,
+      "command": "\"E:\\victory 胜利女神\\leetcode.v\\projects\\conformance\\node_modules\\bun\\bin\\bun.exe\" \"E:\\victory 胜利女神\\leetcode.v\\projects\\conformance\\tools\\dll-consumer.ts\" \"{\"dllPath\":\"E:\\\\victory 胜利女神\\\\leetcode.v\\\\.cache\\\\reverse-integer-bench-native-dll\\\\leetcode-reverse-integer.dll\",\"symbol\":\"reverse\",\"args\":[-2147483412],\"returns\":\"i64\"}\"",
+      "exitStatus": 0,
+      "caseStats": {
+        "ok": true,
+        "testCaseTotal": 61,
+        "executed_pass": 61,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_corpus_defect": 0,
+        "casesSource": "E:\\victory 胜利女神\\leetcode.v\\projects\\problems\\reverse-integer\\reverse-integer.cases.ts",
+        "casesDigest": "3b9ad0e2c9a3b1aecbcb0d4ff2a93ab74c330ea2d49dadd3d38945e710fe5479",
+        "firstFailureIndex": null,
+        "firstFailure": null
+      }
+    },
+    {
+      "id": "string-to-integer-atoi",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": "x86_64-pc-windows-msvc",
+      "manifestFresh": true,
+      "manifestError": null,
+      "buildStatus": 0,
+      "buildError": null,
+      "artifact": {
+        "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\string-to-integer-atoi-bench-native-dll\\leetcode-string-to-integer-atoi.dll",
+        "exports": [
+          {
+            "sourceName": "my_atoi",
+            "logicalName": "my_atoi",
+            "abi": "c-abi"
+          }
+        ]
+      },
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": false,
+      "executeOk": false,
+      "strictPass": false,
+      "firstFailureStage": "identity",
+      "error": "身份：入口 myAtoi 与 C ABI 公开名不一致（清单导出 my_atoi→my_atoi）",
+      "command": null,
+      "exitStatus": null,
+      "caseStats": {
+        "ok": false,
+        "testCaseTotal": 0,
+        "executed_pass": 0,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_integer_argument": 0,
+        "firstFailureIndex": null,
+        "firstFailure": "身份：入口 myAtoi 与 C ABI 公开名不一致（清单导出 my_atoi→my_atoi）"
+      }
+    },
+    {
+      "id": "palindrome-number",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": "x86_64-pc-windows-msvc",
+      "manifestFresh": true,
+      "manifestError": null,
+      "buildStatus": 0,
+      "buildError": null,
+      "artifact": {
+        "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\palindrome-number-bench-native-dll\\leetcode-palindrome-number.dll",
+        "exports": [
+          {
+            "sourceName": "is_palindrome",
+            "logicalName": "is_palindrome",
+            "abi": "c-abi"
+          }
+        ]
+      },
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": false,
+      "executeOk": false,
+      "strictPass": false,
+      "firstFailureStage": "identity",
+      "error": "身份：入口 isPalindrome 与 C ABI 公开名不一致（清单导出 is_palindrome→is_palindrome）",
+      "command": null,
+      "exitStatus": null,
+      "caseStats": {
+        "ok": false,
+        "testCaseTotal": 0,
+        "executed_pass": 0,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_integer_argument": 0,
+        "firstFailureIndex": null,
+        "firstFailure": "身份：入口 isPalindrome 与 C ABI 公开名不一致（清单导出 is_palindrome→is_palindrome）"
+      }
+    },
+    {
+      "id": "regular-expression-matching",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": null,
+      "manifestFresh": false,
+      "manifestError": "solution.v 仅占位",
+      "buildStatus": 1,
+      "buildError": "solution.v 仅占位",
+      "artifact": null,
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": false,
+      "executeOk": false,
+      "strictPass": false,
+      "firstFailureStage": "build",
+      "error": "solution.v 仅占位",
+      "command": null,
+      "exitStatus": null,
+      "caseStats": {
+        "ok": false,
+        "testCaseTotal": 0,
+        "executed_pass": 0,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_integer_argument": 0,
+        "firstFailureIndex": null,
+        "firstFailure": "solution.v 仅占位"
+      }
+    }
+  ]
+}

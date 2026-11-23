@@ -1,0 +1,221 @@
+{
+  "generatedAt": "2026-11-23T11:57:25.728Z",
+  "lane": "native-dll",
+  "target": "x86_64-pc-windows-msvc",
+  "selection": {
+    "mode": "representative",
+    "batchLimit": null,
+    "ids": [
+      "reverse-integer",
+      "divide-two-integers",
+      "ugly-number-ii",
+      "android-unlock-patterns"
+    ]
+  },
+  "identity": {
+    "addon": {
+      "state": "resolved",
+      "sha256": "c08fb5091d843d1b7c4557cf0fa83dab04659c157b2d1bd63c548f3905c2a16e"
+    },
+    "compilerBuild": {
+      "state": "resolved",
+      "identity": "29b62823ae700535ae15ab38222bfc73f341ec84",
+      "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=29b62823ae700535ae15ab38222bfc73f341ec84"
+    },
+    "valkyrieV": {
+      "state": "resolved",
+      "rev": "1d7ec28b07a9f366a01944e7ef2d07188ff86421"
+    },
+    "dllConsumer": {
+      "state": "resolved",
+      "sha256": "550a24bfe1bffcbc40dd152065de289563d966c3c74f4e5dac01b3141b5e27a8"
+    }
+  },
+  "summary": {
+    "denominator": 4,
+    "buildPass": 4,
+    "loadPass": 4,
+    "executePass": 4,
+    "strictPass": 4,
+    "testCaseTotal": 272,
+    "executed_pass": 272,
+    "executed_fail": 0,
+    "blocked": 0,
+    "not_run": 0,
+    "skipped": 0
+  },
+  "problems": [
+    {
+      "id": "reverse-integer",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": "x86_64-pc-windows-msvc",
+      "manifestFresh": true,
+      "manifestError": null,
+      "buildStatus": 0,
+      "buildError": null,
+      "artifact": {
+        "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\reverse-integer-bench-native-dll\\leetcode-reverse-integer.dll",
+        "exports": [
+          {
+            "sourceName": "reverse",
+            "logicalName": "reverse",
+            "abi": "c-abi"
+          }
+        ]
+      },
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": true,
+      "executeOk": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "error": null,
+      "command": "\"E:\\victory 胜利女神\\leetcode.v\\projects\\conformance\\node_modules\\bun\\bin\\bun.exe\" \"E:\\victory 胜利女神\\leetcode.v\\projects\\conformance\\tools\\dll-consumer.ts\" \"{\"dllPath\":\"E:\\\\victory 胜利女神\\\\leetcode.v\\\\.cache\\\\reverse-integer-bench-native-dll\\\\leetcode-reverse-integer.dll\",\"symbol\":\"reverse\",\"args\":[-2147483412],\"returns\":\"i64\"}\"",
+      "exitStatus": 0,
+      "caseStats": {
+        "ok": true,
+        "testCaseTotal": 61,
+        "executed_pass": 61,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_corpus_defect": 0,
+        "casesSource": "E:\\victory 胜利女神\\leetcode.v\\projects\\problems\\reverse-integer\\reverse-integer.cases.ts",
+        "casesDigest": "3b9ad0e2c9a3b1aecbcb0d4ff2a93ab74c330ea2d49dadd3d38945e710fe5479",
+        "firstFailureIndex": null,
+        "firstFailure": null
+      }
+    },
+    {
+      "id": "divide-two-integers",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": "x86_64-pc-windows-msvc",
+      "manifestFresh": true,
+      "manifestError": null,
+      "buildStatus": 0,
+      "buildError": null,
+      "artifact": {
+        "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\divide-two-integers-bench-native-dll\\leetcode-divide-two-integers.dll",
+        "exports": [
+          {
+            "sourceName": "divide",
+            "logicalName": "divide",
+            "abi": "c-abi"
+          }
+        ]
+      },
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": true,
+      "executeOk": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "error": null,
+      "command": "\"E:\\victory 胜利女神\\leetcode.v\\projects\\conformance\\node_modules\\bun\\bin\\bun.exe\" \"E:\\victory 胜利女神\\leetcode.v\\projects\\conformance\\tools\\dll-consumer.ts\" \"{\"dllPath\":\"E:\\\\victory 胜利女神\\\\leetcode.v\\\\.cache\\\\divide-two-integers-bench-native-dll\\\\leetcode-divide-two-integers.dll\",\"symbol\":\"divide\",\"args\":[10,3],\"returns\":\"i64\"}\"",
+      "exitStatus": 0,
+      "caseStats": {
+        "ok": true,
+        "testCaseTotal": 135,
+        "executed_pass": 135,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_corpus_defect": 0,
+        "casesSource": "E:\\victory 胜利女神\\leetcode.v\\projects\\problems\\divide-two-integers\\divide-two-integers.cases.ts",
+        "casesDigest": "284f45a88a9fe0028981a02dd5fec1489f9a1cf78cc0893c7737355f19a45ef1",
+        "firstFailureIndex": null,
+        "firstFailure": null
+      }
+    },
+    {
+      "id": "ugly-number-ii",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": "x86_64-pc-windows-msvc",
+      "manifestFresh": true,
+      "manifestError": null,
+      "buildStatus": 0,
+      "buildError": null,
+      "artifact": {
+        "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\ugly-number-ii-bench-native-dll\\leetcode-ugly-number-ii.dll",
+        "exports": [
+          {
+            "sourceName": "nthUglyNumber",
+            "logicalName": "nthUglyNumber",
+            "abi": "c-abi"
+          }
+        ]
+      },
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": true,
+      "executeOk": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "error": null,
+      "command": "\"E:\\victory 胜利女神\\leetcode.v\\projects\\conformance\\node_modules\\bun\\bin\\bun.exe\" \"E:\\victory 胜利女神\\leetcode.v\\projects\\conformance\\tools\\dll-consumer.ts\" \"{\"dllPath\":\"E:\\\\victory 胜利女神\\\\leetcode.v\\\\.cache\\\\ugly-number-ii-bench-native-dll\\\\leetcode-ugly-number-ii.dll\",\"symbol\":\"nthUglyNumber\",\"args\":[15],\"returns\":\"i64\"}\"",
+      "exitStatus": 0,
+      "caseStats": {
+        "ok": true,
+        "testCaseTotal": 38,
+        "executed_pass": 38,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_corpus_defect": 0,
+        "casesSource": "E:\\victory 胜利女神\\leetcode.v\\projects\\problems\\ugly-number-ii\\ugly-number-ii.cases.ts",
+        "casesDigest": "2c28da034061cd74506102e121d01ef6e5a54ab207d9a84c1a13a73a748a2799",
+        "firstFailureIndex": null,
+        "firstFailure": null
+      }
+    },
+    {
+      "id": "android-unlock-patterns",
+      "target": "x86_64-pc-windows-msvc",
+      "manifestTarget": "x86_64-pc-windows-msvc",
+      "manifestFresh": true,
+      "manifestError": null,
+      "buildStatus": 0,
+      "buildError": null,
+      "artifact": {
+        "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\android-unlock-patterns-bench-native-dll\\leetcode-android-unlock-patterns.dll",
+        "exports": [
+          {
+            "sourceName": "numberOfPatterns",
+            "logicalName": "numberOfPatterns",
+            "abi": "c-abi"
+          }
+        ]
+      },
+      "resolutionStage": null,
+      "resolutionBlocker": null,
+      "loadOk": true,
+      "executeOk": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "error": null,
+      "command": "\"E:\\victory 胜利女神\\leetcode.v\\projects\\conformance\\node_modules\\bun\\bin\\bun.exe\" \"E:\\victory 胜利女神\\leetcode.v\\projects\\conformance\\tools\\dll-consumer.ts\" \"{\"dllPath\":\"E:\\\\victory 胜利女神\\\\leetcode.v\\\\.cache\\\\android-unlock-patterns-bench-native-dll\\\\leetcode-android-unlock-patterns.dll\",\"symbol\":\"numberOfPatterns\",\"args\":[4,4],\"returns\":\"i64\"}\"",
+      "exitStatus": 0,
+      "caseStats": {
+        "ok": true,
+        "testCaseTotal": 38,
+        "executed_pass": 38,
+        "executed_fail": 0,
+        "blocked": 0,
+        "not_run": 0,
+        "skipped": 0,
+        "skipped_timeout": 0,
+        "skipped_corpus_defect": 0,
+        "casesSource": "E:\\victory 胜利女神\\leetcode.v\\projects\\problems\\android-unlock-patterns\\android-unlock-patterns.cases.ts",
+        "casesDigest": "153e859df6681d3bc2a657db7bd296935519b0206a81968dd892f417bcb78e20",
+        "firstFailureIndex": null,
+        "firstFailure": null
+      }
+    }
+  ]
+}
