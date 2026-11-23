@@ -53,7 +53,7 @@ export type DllMatrixProblemRow = {
     buildStatus: number;
     buildError: string | null;
     /** 清单声明的单一 `.dll` 与 `c-abi` 导出面；不可用时为 null。 */
-    artifact: { dll: string; exports: { sourceName: string; logicalName: string; abi: string }[] } | null;
+    artifact: { dll: string; sha256: string; exports: { sourceName: string; logicalName: string; abi: string }[] } | null;
     /** 产物解析（清单/身份/物理产物）阶段与原因。 */
     resolutionStage: 'load' | 'identity' | null;
     resolutionBlocker: string | null;
@@ -78,6 +78,10 @@ export type DllMatrixReport = {
     identity: {
         addon: { state: 'resolved'; sha256: string } | { state: 'unresolved'; reason: string };
         compilerBuild: { state: 'resolved'; identity: string; fingerprint: string } | { state: 'unresolved'; reason: string };
+        /** 本次矩阵的题库提交（报告必须能回指到产生这些结论的源码）。 */
+        leetcodeV: { state: 'resolved'; rev: string } | { state: 'unresolved'; reason: string };
+        /** 编译器源码仓库提交；未提供 `BOOST_RS_ROOT` 时如实 unresolved。 */
+        boost: { state: 'resolved'; rev: string } | { state: 'unresolved'; reason: string };
         valkyrieV: { state: 'resolved'; rev: string } | { state: 'unresolved'; reason: string };
         dllConsumer: { state: 'resolved'; sha256: string } | { state: 'unresolved'; reason: string };
     };
@@ -134,21 +138,34 @@ function parseArgs(argv: string[]): { outPath: string; ids: Set<string> | null; 
     return { outPath, ids, mode, limit };
 }
 
-function probeIdentity(): DllMatrixReport['identity'] {
-    const addon = resolveAddonIdentity();
-    const compilerBuild = resolveCompilerBuildIdentity();
-    const valkyrieVRoot = process.env.VALKYRIE_V_ROOT?.trim() || join(LEETCODE_ROOT_FROM_PACKAGE, '..', 'valkyrie.v');
-    let valkyrieV: DllMatrixReport['identity']['valkyrieV'];
+function gitRevision(root: string): { state: 'resolved'; rev: string } | { state: 'unresolved'; reason: string } {
     try {
-        const probe = spawnSync('git', ['-C', valkyrieVRoot, 'rev-parse', 'HEAD'], { encoding: 'utf8' });
+        const probe = spawnSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' });
         const rev = probe.status === 0 ? probe.stdout.trim() : '';
-        valkyrieV = rev.length > 0
+        return rev.length > 0
             ? { state: 'resolved', rev }
             : { state: 'unresolved', reason: `git rev-parse HEAD 失败：${probe.stderr?.trim() || `status=${probe.status}`}` };
     }
     catch (error) {
-        valkyrieV = { state: 'unresolved', reason: `valkyrie.v rev 读取失败：${String(error)}` };
+        return { state: 'unresolved', reason: `git rev 读取失败：${String(error)}` };
     }
+}
+
+/** 产物摘要：报告绑定实际写出并装载的 DLL 字节，不是构建日志里的路径。 */
+function fileSha256(path: string): string {
+    return createHash('sha256').update(readFileSync(path)).digest('hex');
+}
+
+function probeIdentity(): DllMatrixReport['identity'] {
+    const addon = resolveAddonIdentity();
+    const compilerBuild = resolveCompilerBuildIdentity();
+    const valkyrieVRoot = process.env.VALKYRIE_V_ROOT?.trim() || join(LEETCODE_ROOT_FROM_PACKAGE, '..', 'valkyrie.v');
+    const boostRoot = process.env.BOOST_RS_ROOT?.trim();
+    const valkyrieV = gitRevision(valkyrieVRoot);
+    const leetcodeV = gitRevision(LEETCODE_ROOT_FROM_PACKAGE);
+    const boost = boostRoot === undefined || boostRoot.length === 0
+        ? { state: 'unresolved' as const, reason: '未提供 BOOST_RS_ROOT：编译器源码提交无法从题库侧探测' }
+        : gitRevision(boostRoot);
     const runtime = resolveDllConsumerRuntime();
     let dllConsumer: DllMatrixReport['identity']['dllConsumer'];
     if (runtime === null) {
@@ -172,6 +189,8 @@ function probeIdentity(): DllMatrixReport['identity'] {
         compilerBuild: compilerBuild.state === 'resolved'
             ? { state: 'resolved', identity: compilerBuild.identity, fingerprint: compilerBuild.fingerprint }
             : { state: 'unresolved', reason: compilerBuild.reason },
+        leetcodeV,
+        boost,
         valkyrieV,
         dllConsumer,
     };
@@ -239,6 +258,7 @@ async function probeProblem(problem: ProblemDefinition): Promise<DllMatrixProble
             ? null
             : {
                 dll: resolution.artifact.dllPath,
+                sha256: fileSha256(resolution.artifact.dllPath),
                 exports: resolution.artifact.exports.map((entry) => ({
                     sourceName: entry.sourceName,
                     logicalName: entry.logicalName,
@@ -326,6 +346,8 @@ async function main(): Promise<number> {
     console.log(
         `identity addon=${identity.addon.state === 'resolved' ? identity.addon.sha256 : `UNRESOLVED(${identity.addon.reason})`} ` +
             `compiler-build=${identity.compilerBuild.state === 'resolved' ? identity.compilerBuild.identity : `UNRESOLVED(${identity.compilerBuild.reason})`} ` +
+            `leetcode.v=${identity.leetcodeV.state === 'resolved' ? identity.leetcodeV.rev : `UNRESOLVED(${identity.leetcodeV.reason})`} ` +
+            `boost.rs=${identity.boost.state === 'resolved' ? identity.boost.rev : `UNRESOLVED(${identity.boost.reason})`} ` +
             `consumer=${identity.dllConsumer.state === 'resolved' ? identity.dllConsumer.sha256 : `UNRESOLVED(${identity.dllConsumer.reason})`} ` +
             `valkyrie.v=${identity.valkyrieV.state === 'resolved' ? identity.valkyrieV.rev : `UNRESOLVED(${identity.valkyrieV.reason})`}`,
     );

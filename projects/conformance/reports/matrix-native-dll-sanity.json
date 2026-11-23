@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T11:58:46.292Z",
+  "generatedAt": "2026-11-23T12:30:24.097Z",
   "lane": "native-dll",
   "target": "x86_64-pc-windows-msvc",
   "selection": {
@@ -27,6 +27,14 @@
       "state": "resolved",
       "identity": "29b62823ae700535ae15ab38222bfc73f341ec84",
       "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=29b62823ae700535ae15ab38222bfc73f341ec84"
+    },
+    "leetcodeV": {
+      "state": "resolved",
+      "rev": "9d3dc76625905971a773ed643fc4832cc3c66513"
+    },
+    "boost": {
+      "state": "resolved",
+      "rev": "29b62823ae700535ae15ab38222bfc73f341ec84"
     },
     "valkyrieV": {
       "state": "resolved",
@@ -93,6 +101,7 @@
       "buildError": null,
       "artifact": {
         "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\add-two-numbers-bench-native-dll\\leetcode-add-two-numbers.dll",
+        "sha256": "765b1e148b8d43f849ca5056ace8d492dc6f7800573d7a0ceea06989f2eca926",
         "exports": [
           {
             "sourceName": "add_two_numbers",
@@ -198,6 +207,7 @@
       "buildError": null,
       "artifact": {
         "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\longest-palindromic-substring-bench-native-dll\\leetcode-longest-palindromic-substring.dll",
+        "sha256": "fd28f8b4ad96a6afbdca42b73e1fb55097f6535e049df56e7855a80b8ba55781",
         "exports": [
           {
             "sourceName": "longest_palindrome",
@@ -239,6 +249,7 @@
       "buildError": null,
       "artifact": {
         "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\zigzag-conversion-bench-native-dll\\leetcode-zigzag-conversion.dll",
+        "sha256": "6b527e28d0e4ddeac78d395677c6bcff0d670898cc3dec060c1c101bd1151f76",
         "exports": [
           {
             "sourceName": "convert",
@@ -283,6 +294,7 @@
       "buildError": null,
       "artifact": {
         "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\reverse-integer-bench-native-dll\\leetcode-reverse-integer.dll",
+        "sha256": "b4e10e07804fd3d34318ec4de2873a599c877c1b5adf2b424409aa9554abbfb8",
         "exports": [
           {
             "sourceName": "reverse",
@@ -326,6 +338,7 @@
       "buildError": null,
       "artifact": {
         "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\string-to-integer-atoi-bench-native-dll\\leetcode-string-to-integer-atoi.dll",
+        "sha256": "516f6e1d705bda7670b624cdea760cdd9c3a0350125e42fe846c54a28346f58c",
         "exports": [
           {
             "sourceName": "my_atoi",
@@ -367,6 +380,7 @@
       "buildError": null,
       "artifact": {
         "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\palindrome-number-bench-native-dll\\leetcode-palindrome-number.dll",
+        "sha256": "1abab0a1b97607c6b9330e6112493a6a99dc120b22dd1dd963df504ab1bed3d4",
         "exports": [
           {
             "sourceName": "is_palindrome",

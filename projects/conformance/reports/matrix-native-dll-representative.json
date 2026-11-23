@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T11:57:25.728Z",
+  "generatedAt": "2026-11-23T12:29:46.168Z",
   "lane": "native-dll",
   "target": "x86_64-pc-windows-msvc",
   "selection": {
@@ -21,6 +21,14 @@
       "state": "resolved",
       "identity": "29b62823ae700535ae15ab38222bfc73f341ec84",
       "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=29b62823ae700535ae15ab38222bfc73f341ec84"
+    },
+    "leetcodeV": {
+      "state": "resolved",
+      "rev": "9d3dc76625905971a773ed643fc4832cc3c66513"
+    },
+    "boost": {
+      "state": "resolved",
+      "rev": "29b62823ae700535ae15ab38222bfc73f341ec84"
     },
     "valkyrieV": {
       "state": "resolved",
@@ -55,6 +63,7 @@
       "buildError": null,
       "artifact": {
         "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\reverse-integer-bench-native-dll\\leetcode-reverse-integer.dll",
+        "sha256": "b4e10e07804fd3d34318ec4de2873a599c877c1b5adf2b424409aa9554abbfb8",
         "exports": [
           {
             "sourceName": "reverse",
@@ -98,6 +107,7 @@
       "buildError": null,
       "artifact": {
         "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\divide-two-integers-bench-native-dll\\leetcode-divide-two-integers.dll",
+        "sha256": "1a57c3850d59113905dd956506ff6966c9c23eb29afc2397044f434a03d5947c",
         "exports": [
           {
             "sourceName": "divide",
@@ -141,6 +151,7 @@
       "buildError": null,
       "artifact": {
         "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\ugly-number-ii-bench-native-dll\\leetcode-ugly-number-ii.dll",
+        "sha256": "99d9411f9d7103045dac9f8ba88ec48169769e9ea8ddcbd667186c3ae12f532c",
         "exports": [
           {
             "sourceName": "nthUglyNumber",
@@ -184,6 +195,7 @@
       "buildError": null,
       "artifact": {
         "dll": "E:\\victory 胜利女神\\leetcode.v\\.cache\\android-unlock-patterns-bench-native-dll\\leetcode-android-unlock-patterns.dll",
+        "sha256": "1d730c284098feee8d12864174d3af020f67ae4fbacd76639f93cdfe04d4d636",
         "exports": [
           {
             "sourceName": "numberOfPatterns",
