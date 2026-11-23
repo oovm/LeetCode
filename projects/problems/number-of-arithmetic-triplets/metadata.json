@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().arithmeticTriplets",
         "typescript": "Solution().arithmeticTriplets",
-        "valkyrie": "Solution().arithmeticTriplets"
+        "valkyrie": "arithmeticTriplets"
     }
 }

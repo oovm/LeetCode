@@ -9,6 +9,6 @@
     "invoke": {
         "python": "Solution().reverseBits",
         "typescript": "Solution().reverseBits",
-        "valkyrie": "Solution().reverseBits"
+        "valkyrie": "reverseBits"
     }
 }

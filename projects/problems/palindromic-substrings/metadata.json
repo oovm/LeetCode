@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().countSubstrings",
         "typescript": "Solution().countSubstrings",
-        "valkyrie": "Solution().countSubstrings"
+        "valkyrie": "countSubstrings"
     }
 }

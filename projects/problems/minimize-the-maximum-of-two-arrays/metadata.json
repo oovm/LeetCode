@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().minimizeSet",
         "typescript": "Solution().minimizeSet",
-        "valkyrie": "Solution().minimizeSet"
+        "valkyrie": "minimizeSet"
     }
 }

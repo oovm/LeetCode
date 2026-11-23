@@ -8,6 +8,6 @@
     "invoke": {
         "python": "Solution().dayOfTheWeek",
         "typescript": "Solution().dayOfTheWeek",
-        "valkyrie": "Solution().dayOfTheWeek"
+        "valkyrie": "dayOfTheWeek"
     }
 }

@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().hammingWeight",
         "typescript": "Solution().hammingWeight",
-        "valkyrie": "Solution().hammingWeight"
+        "valkyrie": "hammingWeight"
     }
 }

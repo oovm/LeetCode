@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().imageSmoother",
         "typescript": "Solution().imageSmoother",
-        "valkyrie": "Solution().imageSmoother"
+        "valkyrie": "imageSmoother"
     }
 }

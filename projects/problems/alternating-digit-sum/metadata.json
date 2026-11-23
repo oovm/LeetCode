@@ -8,6 +8,6 @@
     "invoke": {
         "python": "Solution().alternateDigitSum",
         "typescript": "Solution().alternateDigitSum",
-        "valkyrie": "Solution().alternateDigitSum"
+        "valkyrie": "alternateDigitSum"
     }
 }

@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().maxSizedArray",
         "typescript": "Solution().maxSizedArray",
-        "valkyrie": "Solution().maxSizedArray"
+        "valkyrie": "maxSizedArray"
     }
 }

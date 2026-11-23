@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().findNonMinOrMax",
         "typescript": "Solution().findNonMinOrMax",
-        "valkyrie": "Solution().findNonMinOrMax"
+        "valkyrie": "findNonMinOrMax"
     }
 }

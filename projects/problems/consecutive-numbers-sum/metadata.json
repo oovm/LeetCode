@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().consecutiveNumbersSum",
         "typescript": "Solution().consecutiveNumbersSum",
-        "valkyrie": "Solution().consecutiveNumbersSum"
+        "valkyrie": "consecutiveNumbersSum"
     }
 }

@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().maximumScore",
         "typescript": "Solution().maximumScore",
-        "valkyrie": "Solution().maximumScore"
+        "valkyrie": "maximumScore"
     }
 }

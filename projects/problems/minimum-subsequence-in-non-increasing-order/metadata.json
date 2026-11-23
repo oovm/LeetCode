@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().minSubsequence",
         "typescript": "Solution().minSubsequence",
-        "valkyrie": "Solution().minSubsequence"
+        "valkyrie": "minSubsequence"
     }
 }

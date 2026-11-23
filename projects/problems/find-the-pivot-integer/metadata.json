@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().pivotInteger",
         "typescript": "Solution().pivotInteger",
-        "valkyrie": "Solution().pivotInteger"
+        "valkyrie": "pivotInteger"
     }
 }

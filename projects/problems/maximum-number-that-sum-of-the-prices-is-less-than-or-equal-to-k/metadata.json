@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().findMaximumNumber",
         "typescript": "Solution().findMaximumNumber",
-        "valkyrie": "Solution().findMaximumNumber"
+        "valkyrie": "findMaximumNumber"
     }
 }

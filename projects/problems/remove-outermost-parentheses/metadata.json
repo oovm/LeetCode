@@ -9,6 +9,6 @@
     "invoke": {
         "python": "Solution().removeOuterParentheses",
         "typescript": "Solution().removeOuterParentheses",
-        "valkyrie": "Solution().removeOuterParentheses"
+        "valkyrie": "removeOuterParentheses"
     }
 }

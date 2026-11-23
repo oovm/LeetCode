@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().backspaceCompare",
         "typescript": "Solution().backspaceCompare",
-        "valkyrie": "Solution().backspaceCompare"
+        "valkyrie": "backspaceCompare"
     }
 }

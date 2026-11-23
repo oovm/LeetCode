@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().maximumSwap",
         "typescript": "Solution().maximumSwap",
-        "valkyrie": "Solution().maximumSwap"
+        "valkyrie": "maximumSwap"
     }
 }

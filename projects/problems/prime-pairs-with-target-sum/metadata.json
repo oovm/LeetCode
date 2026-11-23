@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().findPrimePairs",
         "typescript": "Solution().findPrimePairs",
-        "valkyrie": "Solution().findPrimePairs"
+        "valkyrie": "findPrimePairs"
     }
 }

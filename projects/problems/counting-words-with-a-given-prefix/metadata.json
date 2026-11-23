@@ -10,6 +10,6 @@
     "invoke": {
         "python": "Solution().prefixCount",
         "typescript": "Solution().prefixCount",
-        "valkyrie": "Solution().prefixCount"
+        "valkyrie": "prefixCount"
     }
 }

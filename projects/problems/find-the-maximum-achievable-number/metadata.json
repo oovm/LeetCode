@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().theMaximumAchievableX",
         "typescript": "Solution().theMaximumAchievableX",
-        "valkyrie": "Solution().theMaximumAchievableX"
+        "valkyrie": "theMaximumAchievableX"
     }
 }

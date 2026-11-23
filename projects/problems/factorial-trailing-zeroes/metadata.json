@@ -8,6 +8,6 @@
     "invoke": {
         "python": "Solution().trailingZeroes",
         "typescript": "Solution().trailingZeroes",
-        "valkyrie": "Solution().trailingZeroes"
+        "valkyrie": "trailingZeroes"
     }
 }

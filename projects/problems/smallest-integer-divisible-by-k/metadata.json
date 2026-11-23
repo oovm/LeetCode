@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().smallestRepunitDivByK",
         "typescript": "Solution().smallestRepunitDivByK",
-        "valkyrie": "Solution().smallestRepunitDivByK"
+        "valkyrie": "smallestRepunitDivByK"
     }
 }

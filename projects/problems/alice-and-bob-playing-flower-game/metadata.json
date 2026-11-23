@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().flowerGame",
         "typescript": "Solution().flowerGame",
-        "valkyrie": "Solution().flowerGame"
+        "valkyrie": "flowerGame"
     }
 }

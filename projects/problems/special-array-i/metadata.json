@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().isArraySpecial",
         "typescript": "Solution().isArraySpecial",
-        "valkyrie": "Solution().isArraySpecial"
+        "valkyrie": "isArraySpecial"
     }
 }

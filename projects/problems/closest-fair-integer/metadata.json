@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().closestFair",
         "typescript": "Solution().closestFair",
-        "valkyrie": "Solution().closestFair"
+        "valkyrie": "closestFair"
     }
 }

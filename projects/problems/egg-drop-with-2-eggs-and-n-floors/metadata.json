@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().twoEggDrop",
         "typescript": "Solution().twoEggDrop",
-        "valkyrie": "Solution().twoEggDrop"
+        "valkyrie": "twoEggDrop"
     }
 }

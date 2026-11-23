@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().isBoomerang",
         "typescript": "Solution().isBoomerang",
-        "valkyrie": "Solution().isBoomerang"
+        "valkyrie": "isBoomerang"
     }
 }

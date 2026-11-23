@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().smallestEvenMultiple",
         "typescript": "Solution().smallestEvenMultiple",
-        "valkyrie": "Solution().smallestEvenMultiple"
+        "valkyrie": "smallestEvenMultiple"
     }
 }

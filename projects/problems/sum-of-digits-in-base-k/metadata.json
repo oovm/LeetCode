@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().sumBase",
         "typescript": "Solution().sumBase",
-        "valkyrie": "Solution().sumBase"
+        "valkyrie": "sumBase"
     }
 }

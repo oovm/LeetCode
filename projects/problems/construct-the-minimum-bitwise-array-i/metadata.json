@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().minBitwiseArray",
         "typescript": "Solution().minBitwiseArray",
-        "valkyrie": "Solution().minBitwiseArray"
+        "valkyrie": "minBitwiseArray"
     }
 }

@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().numsSameConsecDiff",
         "typescript": "Solution().numsSameConsecDiff",
-        "valkyrie": "Solution().numsSameConsecDiff"
+        "valkyrie": "numsSameConsecDiff"
     }
 }

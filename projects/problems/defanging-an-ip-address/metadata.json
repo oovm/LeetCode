@@ -8,6 +8,6 @@
     "invoke": {
         "python": "Solution().defangIPaddr",
         "typescript": "Solution().defangIPaddr",
-        "valkyrie": "Solution().defangIPaddr"
+        "valkyrie": "defangIPaddr"
     }
 }

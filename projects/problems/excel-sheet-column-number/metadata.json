@@ -9,6 +9,6 @@
     "invoke": {
         "python": "Solution().titleToNumber",
         "typescript": "Solution().titleToNumber",
-        "valkyrie": "Solution().titleToNumber"
+        "valkyrie": "titleToNumber"
     }
 }

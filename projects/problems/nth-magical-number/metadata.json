@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().nthMagicalNumber",
         "typescript": "Solution().nthMagicalNumber",
-        "valkyrie": "Solution().nthMagicalNumber"
+        "valkyrie": "nthMagicalNumber"
     }
 }

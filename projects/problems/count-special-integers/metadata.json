@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().countSpecialNumbers",
         "typescript": "Solution().countSpecialNumbers",
-        "valkyrie": "Solution().countSpecialNumbers"
+        "valkyrie": "countSpecialNumbers"
     }
 }

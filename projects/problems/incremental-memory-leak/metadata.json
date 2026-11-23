@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().memLeak",
         "typescript": "Solution().memLeak",
-        "valkyrie": "Solution().memLeak"
+        "valkyrie": "memLeak"
     }
 }

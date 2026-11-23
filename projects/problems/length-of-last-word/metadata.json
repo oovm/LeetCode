@@ -8,6 +8,6 @@
     "invoke": {
         "python": "Solution().lengthOfLastWord",
         "typescript": "Solution().lengthOfLastWord",
-        "valkyrie": "Solution().lengthOfLastWord"
+        "valkyrie": "lengthOfLastWord"
     }
 }

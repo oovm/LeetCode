@@ -9,6 +9,6 @@
     "invoke": {
         "python": "Solution().largestInteger",
         "typescript": "Solution().largestInteger",
-        "valkyrie": "Solution().largestInteger"
+        "valkyrie": "largestInteger"
     }
 }

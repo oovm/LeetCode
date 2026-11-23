@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().kthFactor",
         "typescript": "Solution().kthFactor",
-        "valkyrie": "Solution().kthFactor"
+        "valkyrie": "kthFactor"
     }
 }

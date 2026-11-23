@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().waysToDistribute",
         "typescript": "Solution().waysToDistribute",
-        "valkyrie": "Solution().waysToDistribute"
+        "valkyrie": "waysToDistribute"
     }
 }

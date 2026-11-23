@@ -11,6 +11,6 @@
         "typescript": "Solution().divide",
         "wolframSxo": "divide",
         "matlabSxo": "divide",
-        "valkyrie": "Solution().divide"
+        "valkyrie": "divide"
     }
 }

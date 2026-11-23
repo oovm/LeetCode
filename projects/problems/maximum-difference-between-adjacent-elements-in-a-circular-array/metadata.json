@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().maxAdjacentDistance",
         "typescript": "Solution().maxAdjacentDistance",
-        "valkyrie": "Solution().maxAdjacentDistance"
+        "valkyrie": "maxAdjacentDistance"
     }
 }

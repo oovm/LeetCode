@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().primePalindrome",
         "typescript": "Solution().primePalindrome",
-        "valkyrie": "Solution().primePalindrome"
+        "valkyrie": "primePalindrome"
     }
 }

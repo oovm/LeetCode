@@ -8,6 +8,6 @@
     "invoke": {
         "python": "Solution().interpret",
         "typescript": "Solution().interpret",
-        "valkyrie": "Solution().interpret"
+        "valkyrie": "interpret"
     }
 }

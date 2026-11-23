@@ -9,6 +9,6 @@
     "invoke": {
         "python": "Solution().numSteps",
         "typescript": "Solution().numSteps",
-        "valkyrie": "Solution().numSteps"
+        "valkyrie": "numSteps"
     }
 }

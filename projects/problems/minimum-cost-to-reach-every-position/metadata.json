@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().minCosts",
         "typescript": "Solution().minCosts",
-        "valkyrie": "Solution().minCosts"
+        "valkyrie": "minCosts"
     }
 }

@@ -10,6 +10,6 @@
     "invoke": {
         "python": "Solution().fizzBuzz",
         "typescript": "Solution().fizzBuzz",
-        "valkyrie": "Solution().fizzBuzz"
+        "valkyrie": "fizzBuzz"
     }
 }

@@ -9,6 +9,6 @@
     "invoke": {
         "python": "Solution().countPrimeSetBits",
         "typescript": "Solution().countPrimeSetBits",
-        "valkyrie": "Solution().countPrimeSetBits"
+        "valkyrie": "countPrimeSetBits"
     }
 }

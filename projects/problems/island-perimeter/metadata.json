@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().islandPerimeter",
         "typescript": "Solution().islandPerimeter",
-        "valkyrie": "Solution().islandPerimeter"
+        "valkyrie": "islandPerimeter"
     }
 }

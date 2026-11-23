@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().numDupDigitsAtMostN",
         "typescript": "Solution().numDupDigitsAtMostN",
-        "valkyrie": "Solution().numDupDigitsAtMostN"
+        "valkyrie": "numDupDigitsAtMostN"
     }
 }

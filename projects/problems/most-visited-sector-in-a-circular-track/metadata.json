@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().mostVisited",
         "typescript": "Solution().mostVisited",
-        "valkyrie": "Solution().mostVisited"
+        "valkyrie": "mostVisited"
     }
 }

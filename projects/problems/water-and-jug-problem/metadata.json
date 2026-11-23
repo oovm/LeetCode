@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().canMeasureWater",
         "typescript": "Solution().canMeasureWater",
-        "valkyrie": "Solution().canMeasureWater"
+        "valkyrie": "canMeasureWater"
     }
 }

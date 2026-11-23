@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().stableMountains",
         "typescript": "Solution().stableMountains",
-        "valkyrie": "Solution().stableMountains"
+        "valkyrie": "stableMountains"
     }
 }

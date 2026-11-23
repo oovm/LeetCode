@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().minMaxDifference",
         "typescript": "Solution().minMaxDifference",
-        "valkyrie": "Solution().minMaxDifference"
+        "valkyrie": "minMaxDifference"
     }
 }

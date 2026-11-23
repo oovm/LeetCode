@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().numSubmat",
         "typescript": "Solution().numSubmat",
-        "valkyrie": "Solution().numSubmat"
+        "valkyrie": "numSubmat"
     }
 }

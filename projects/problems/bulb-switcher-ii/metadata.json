@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().flipLights",
         "typescript": "Solution().flipLights",
-        "valkyrie": "Solution().flipLights"
+        "valkyrie": "flipLights"
     }
 }

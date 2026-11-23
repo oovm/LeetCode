@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().distanceTraveled",
         "typescript": "Solution().distanceTraveled",
-        "valkyrie": "Solution().distanceTraveled"
+        "valkyrie": "distanceTraveled"
     }
 }

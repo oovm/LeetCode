@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().sortMatrix",
         "typescript": "Solution().sortMatrix",
-        "valkyrie": "Solution().sortMatrix"
+        "valkyrie": "sortMatrix"
     }
 }

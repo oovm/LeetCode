@@ -8,6 +8,6 @@
     "invoke": {
         "python": "Solution().countDigits",
         "typescript": "Solution().countDigits",
-        "valkyrie": "Solution().countDigits"
+        "valkyrie": "countDigits"
     }
 }

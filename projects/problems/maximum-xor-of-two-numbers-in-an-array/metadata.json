@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().findMaximumXOR",
         "typescript": "Solution().findMaximumXOR",
-        "valkyrie": "Solution().findMaximumXOR"
+        "valkyrie": "findMaximumXOR"
     }
 }

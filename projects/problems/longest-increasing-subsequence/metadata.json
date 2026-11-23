@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().lengthOfLIS",
         "typescript": "Solution().lengthOfLIS",
-        "valkyrie": "Solution().lengthOfLIS"
+        "valkyrie": "lengthOfLIS"
     }
 }

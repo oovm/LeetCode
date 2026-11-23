@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().numIdenticalPairs",
         "typescript": "Solution().numIdenticalPairs",
-        "valkyrie": "Solution().numIdenticalPairs"
+        "valkyrie": "numIdenticalPairs"
     }
 }

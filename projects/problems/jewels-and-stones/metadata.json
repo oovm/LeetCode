@@ -9,6 +9,6 @@
     "invoke": {
         "python": "Solution().numJewelsInStones",
         "typescript": "Solution().numJewelsInStones",
-        "valkyrie": "Solution().numJewelsInStones"
+        "valkyrie": "numJewelsInStones"
     }
 }

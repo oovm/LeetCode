@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().smallestValue",
         "typescript": "Solution().smallestValue",
-        "valkyrie": "Solution().smallestValue"
+        "valkyrie": "smallestValue"
     }
 }

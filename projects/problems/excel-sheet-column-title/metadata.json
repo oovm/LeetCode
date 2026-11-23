@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().convertToTitle",
         "typescript": "Solution().convertToTitle",
-        "valkyrie": "Solution().convertToTitle"
+        "valkyrie": "convertToTitle"
     }
 }

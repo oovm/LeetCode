@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().countEven",
         "typescript": "Solution().countEven",
-        "valkyrie": "Solution().countEven"
+        "valkyrie": "countEven"
     }
 }

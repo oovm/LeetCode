@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().nonSpecialCount",
         "typescript": "Solution().nonSpecialCount",
-        "valkyrie": "Solution().nonSpecialCount"
+        "valkyrie": "nonSpecialCount"
     }
 }

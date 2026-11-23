@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().findEvenNumbers",
         "typescript": "Solution().findEvenNumbers",
-        "valkyrie": "Solution().findEvenNumbers"
+        "valkyrie": "findEvenNumbers"
     }
 }

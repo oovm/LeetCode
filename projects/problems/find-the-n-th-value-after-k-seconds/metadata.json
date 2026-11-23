@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().valueAfterKSeconds",
         "typescript": "Solution().valueAfterKSeconds",
-        "valkyrie": "Solution().valueAfterKSeconds"
+        "valkyrie": "valueAfterKSeconds"
     }
 }

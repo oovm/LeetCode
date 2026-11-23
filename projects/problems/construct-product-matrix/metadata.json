@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().constructProductMatrix",
         "typescript": "Solution().constructProductMatrix",
-        "valkyrie": "Solution().constructProductMatrix"
+        "valkyrie": "constructProductMatrix"
     }
 }

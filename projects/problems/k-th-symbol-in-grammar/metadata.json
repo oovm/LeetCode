@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().kthGrammar",
         "typescript": "Solution().kthGrammar",
-        "valkyrie": "Solution().kthGrammar"
+        "valkyrie": "kthGrammar"
     }
 }

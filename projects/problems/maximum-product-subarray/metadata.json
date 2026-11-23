@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().maxProduct",
         "typescript": "Solution().maxProduct",
-        "valkyrie": "Solution().maxProduct"
+        "valkyrie": "maxProduct"
     }
 }

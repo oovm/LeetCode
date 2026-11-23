@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().smallestFactorization",
         "typescript": "Solution().smallestFactorization",
-        "valkyrie": "Solution().smallestFactorization"
+        "valkyrie": "smallestFactorization"
     }
 }

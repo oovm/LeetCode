@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().sumOfTheDigitsOfHarshadNumber",
         "typescript": "Solution().sumOfTheDigitsOfHarshadNumber",
-        "valkyrie": "Solution().sumOfTheDigitsOfHarshadNumber"
+        "valkyrie": "sumOfTheDigitsOfHarshadNumber"
     }
 }

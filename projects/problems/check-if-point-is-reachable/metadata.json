@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().isReachable",
         "typescript": "Solution().isReachable",
-        "valkyrie": "Solution().isReachable"
+        "valkyrie": "isReachable"
     }
 }

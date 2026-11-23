@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().findPeaks",
         "typescript": "Solution().findPeaks",
-        "valkyrie": "Solution().findPeaks"
+        "valkyrie": "findPeaks"
     }
 }

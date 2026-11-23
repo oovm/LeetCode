@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().arraysIntersection",
         "typescript": "Solution().arraysIntersection",
-        "valkyrie": "Solution().arraysIntersection"
+        "valkyrie": "arraysIntersection"
     }
 }

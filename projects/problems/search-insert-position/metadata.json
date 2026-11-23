@@ -6,7 +6,7 @@
     "invoke": {
         "python": "Solution().searchInsert",
         "typescript": "Solution().searchInsert",
-        "valkyrie": "Solution().searchInsert",
+        "valkyrie": "searchInsert",
         "wolframSxo": "searchInsert",
         "matlabSxo": "searchInsert"
     }

@@ -8,6 +8,6 @@
     "invoke": {
         "python": "Solution().detectCapitalUse",
         "typescript": "Solution().detectCapitalUse",
-        "valkyrie": "Solution().detectCapitalUse"
+        "valkyrie": "detectCapitalUse"
     }
 }

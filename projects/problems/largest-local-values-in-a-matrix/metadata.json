@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().largestLocal",
         "typescript": "Solution().largestLocal",
-        "valkyrie": "Solution().largestLocal"
+        "valkyrie": "largestLocal"
     }
 }

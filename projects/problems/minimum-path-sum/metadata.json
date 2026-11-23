@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().minPathSum",
         "typescript": "Solution().minPathSum",
-        "valkyrie": "Solution().minPathSum"
+        "valkyrie": "minPathSum"
     }
 }

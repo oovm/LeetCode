@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().differenceOfSums",
         "typescript": "Solution().differenceOfSums",
-        "valkyrie": "Solution().differenceOfSums"
+        "valkyrie": "differenceOfSums"
     }
 }

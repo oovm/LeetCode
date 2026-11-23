@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().maxOperations",
         "typescript": "Solution().maxOperations",
-        "valkyrie": "Solution().maxOperations"
+        "valkyrie": "maxOperations"
     }
 }

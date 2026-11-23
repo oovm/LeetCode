@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().deleteGreatestValue",
         "typescript": "Solution().deleteGreatestValue",
-        "valkyrie": "Solution().deleteGreatestValue"
+        "valkyrie": "deleteGreatestValue"
     }
 }

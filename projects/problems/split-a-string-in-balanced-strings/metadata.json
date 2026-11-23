@@ -10,6 +10,6 @@
     "invoke": {
         "python": "Solution().balancedStringSplit",
         "typescript": "Solution().balancedStringSplit",
-        "valkyrie": "Solution().balancedStringSplit"
+        "valkyrie": "balancedStringSplit"
     }
 }

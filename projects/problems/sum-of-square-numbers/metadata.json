@@ -10,6 +10,6 @@
     "invoke": {
         "python": "Solution().judgeSquareSum",
         "typescript": "Solution().judgeSquareSum",
-        "valkyrie": "Solution().judgeSquareSum"
+        "valkyrie": "judgeSquareSum"
     }
 }

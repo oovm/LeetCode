@@ -9,6 +9,6 @@
     "invoke": {
         "python": "Solution().getSum",
         "typescript": "Solution().getSum",
-        "valkyrie": "Solution().getSum"
+        "valkyrie": "getSum"
     }
 }

@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().countOrders",
         "typescript": "Solution().countOrders",
-        "valkyrie": "Solution().countOrders"
+        "valkyrie": "countOrders"
     }
 }

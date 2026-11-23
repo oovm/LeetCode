@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().longestString",
         "typescript": "Solution().longestString",
-        "valkyrie": "Solution().longestString"
+        "valkyrie": "longestString"
     }
 }

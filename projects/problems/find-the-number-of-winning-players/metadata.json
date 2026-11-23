@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().winningPlayerCount",
         "typescript": "Solution().winningPlayerCount",
-        "valkyrie": "Solution().winningPlayerCount"
+        "valkyrie": "winningPlayerCount"
     }
 }

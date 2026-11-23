@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().validPalindrome",
         "typescript": "Solution().validPalindrome",
-        "valkyrie": "Solution().validPalindrome"
+        "valkyrie": "validPalindrome"
     }
 }

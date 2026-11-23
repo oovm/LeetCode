@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().findTheWinner",
         "typescript": "Solution().findTheWinner",
-        "valkyrie": "Solution().findTheWinner"
+        "valkyrie": "findTheWinner"
     }
 }

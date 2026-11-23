@@ -9,6 +9,6 @@
     "invoke": {
         "python": "Solution().monotoneIncreasingDigits",
         "typescript": "Solution().monotoneIncreasingDigits",
-        "valkyrie": "Solution().monotoneIncreasingDigits"
+        "valkyrie": "monotoneIncreasingDigits"
     }
 }

@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().bitwiseComplement",
         "typescript": "Solution().bitwiseComplement",
-        "valkyrie": "Solution().bitwiseComplement"
+        "valkyrie": "bitwiseComplement"
     }
 }

@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().xorBeauty",
         "typescript": "Solution().xorBeauty",
-        "valkyrie": "Solution().xorBeauty"
+        "valkyrie": "xorBeauty"
     }
 }

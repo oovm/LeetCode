@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().sequentialDigits",
         "typescript": "Solution().sequentialDigits",
-        "valkyrie": "Solution().sequentialDigits"
+        "valkyrie": "sequentialDigits"
     }
 }

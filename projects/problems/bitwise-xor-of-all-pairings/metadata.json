@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().xorAllNums",
         "typescript": "Solution().xorAllNums",
-        "valkyrie": "Solution().xorAllNums"
+        "valkyrie": "xorAllNums"
     }
 }

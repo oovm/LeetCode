@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().leftRightDifference",
         "typescript": "Solution().leftRightDifference",
-        "valkyrie": "Solution().leftRightDifference"
+        "valkyrie": "leftRightDifference"
     }
 }

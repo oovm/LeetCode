@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().countKDifference",
         "typescript": "Solution().countKDifference",
-        "valkyrie": "Solution().countKDifference"
+        "valkyrie": "countKDifference"
     }
 }

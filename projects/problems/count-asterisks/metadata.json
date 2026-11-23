@@ -8,6 +8,6 @@
     "invoke": {
         "python": "Solution().countAsterisks",
         "typescript": "Solution().countAsterisks",
-        "valkyrie": "Solution().countAsterisks"
+        "valkyrie": "countAsterisks"
     }
 }

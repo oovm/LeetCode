@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().findKthBit",
         "typescript": "Solution().findKthBit",
-        "valkyrie": "Solution().findKthBit"
+        "valkyrie": "findKthBit"
     }
 }

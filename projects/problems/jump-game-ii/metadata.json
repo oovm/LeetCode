@@ -8,6 +8,6 @@
         "typescript": "Solution().jump",
         "wolframSxo": "jump",
         "matlabSxo": "jump",
-        "valkyrie": "Solution().jump"
+        "valkyrie": "jump"
     }
 }

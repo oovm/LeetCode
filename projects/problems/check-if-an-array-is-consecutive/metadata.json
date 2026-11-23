@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().isConsecutive",
         "typescript": "Solution().isConsecutive",
-        "valkyrie": "Solution().isConsecutive"
+        "valkyrie": "isConsecutive"
     }
 }

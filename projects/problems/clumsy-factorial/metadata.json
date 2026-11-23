@@ -10,6 +10,6 @@
     "invoke": {
         "python": "Solution().clumsy",
         "typescript": "Solution().clumsy",
-        "valkyrie": "Solution().clumsy"
+        "valkyrie": "clumsy"
     }
 }

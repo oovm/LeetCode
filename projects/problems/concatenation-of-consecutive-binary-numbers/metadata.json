@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().concatenatedBinary",
         "typescript": "Solution().concatenatedBinary",
-        "valkyrie": "Solution().concatenatedBinary"
+        "valkyrie": "concatenatedBinary"
     }
 }

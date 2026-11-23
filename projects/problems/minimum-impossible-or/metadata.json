@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().minImpossibleOR",
         "typescript": "Solution().minImpossibleOR",
-        "valkyrie": "Solution().minImpossibleOR"
+        "valkyrie": "minImpossibleOR"
     }
 }

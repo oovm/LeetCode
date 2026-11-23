@@ -8,6 +8,6 @@
     "invoke": {
         "python": "Solution().rangeBitwiseAnd",
         "typescript": "Solution().rangeBitwiseAnd",
-        "valkyrie": "Solution().rangeBitwiseAnd"
+        "valkyrie": "rangeBitwiseAnd"
     }
 }

@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().findKthNumber",
         "typescript": "Solution().findKthNumber",
-        "valkyrie": "Solution().findKthNumber"
+        "valkyrie": "findKthNumber"
     }
 }

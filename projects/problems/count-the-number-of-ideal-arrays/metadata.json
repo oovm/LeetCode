@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().idealArrays",
         "typescript": "Solution().idealArrays",
-        "valkyrie": "Solution().idealArrays"
+        "valkyrie": "idealArrays"
     }
 }

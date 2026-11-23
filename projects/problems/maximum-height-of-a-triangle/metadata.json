@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().maxHeightOfTriangle",
         "typescript": "Solution().maxHeightOfTriangle",
-        "valkyrie": "Solution().maxHeightOfTriangle"
+        "valkyrie": "maxHeightOfTriangle"
     }
 }

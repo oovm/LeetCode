@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().commonFactors",
         "typescript": "Solution().commonFactors",
-        "valkyrie": "Solution().commonFactors"
+        "valkyrie": "commonFactors"
     }
 }

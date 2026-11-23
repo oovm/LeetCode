@@ -10,6 +10,6 @@
     "invoke": {
         "python": "Solution().mirrorReflection",
         "typescript": "Solution().mirrorReflection",
-        "valkyrie": "Solution().mirrorReflection"
+        "valkyrie": "mirrorReflection"
     }
 }

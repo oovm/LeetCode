@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().nextBeautifulNumber",
         "typescript": "Solution().nextBeautifulNumber",
-        "valkyrie": "Solution().nextBeautifulNumber"
+        "valkyrie": "nextBeautifulNumber"
     }
 }

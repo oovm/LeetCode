@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().divisorGame",
         "typescript": "Solution().divisorGame",
-        "valkyrie": "Solution().divisorGame"
+        "valkyrie": "divisorGame"
     }
 }

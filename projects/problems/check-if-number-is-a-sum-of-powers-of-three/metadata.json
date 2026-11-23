@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().checkPowersOfThree",
         "typescript": "Solution().checkPowersOfThree",
-        "valkyrie": "Solution().checkPowersOfThree"
+        "valkyrie": "checkPowersOfThree"
     }
 }

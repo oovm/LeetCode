@@ -8,6 +8,6 @@
     "invoke": {
         "python": "Solution().confusingNumber",
         "typescript": "Solution().confusingNumber",
-        "valkyrie": "Solution().confusingNumber"
+        "valkyrie": "confusingNumber"
     }
 }

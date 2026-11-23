@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().hasTrailingZeros",
         "typescript": "Solution().hasTrailingZeros",
-        "valkyrie": "Solution().hasTrailingZeros"
+        "valkyrie": "hasTrailingZeros"
     }
 }

@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().newInteger",
         "typescript": "Solution().newInteger",
-        "valkyrie": "Solution().newInteger"
+        "valkyrie": "newInteger"
     }
 }

@@ -9,6 +9,6 @@
     "invoke": {
         "python": "Solution().toHex",
         "typescript": "Solution().toHex",
-        "valkyrie": "Solution().toHex"
+        "valkyrie": "toHex"
     }
 }

@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().reachNumber",
         "typescript": "Solution().reachNumber",
-        "valkyrie": "Solution().reachNumber"
+        "valkyrie": "reachNumber"
     }
 }

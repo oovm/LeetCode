@@ -6,6 +6,6 @@
     "invoke": {
         "python": "Solution().waysToReachStair",
         "typescript": "Solution().waysToReachStair",
-        "valkyrie": "Solution().waysToReachStair"
+        "valkyrie": "waysToReachStair"
     }
 }
