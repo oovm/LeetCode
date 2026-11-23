@@ -45,7 +45,6 @@ import {
     loadMetadata,
     loadTestCases,
     requireValkyrieInvokeEntry,
-    resolveWasmExportSymbol,
     type TestCase,
 } from '../valkyrie-node/ref.ts';
 
@@ -129,20 +128,25 @@ export function resolveNativeArtifact(artifactDir: string): NativeArtifact | nul
 }
 
 /**
- * 按清单导出表确定本次调用的导出名。
+ * 按清单导出表确定本次调用的导出名（严格消费）。
  *
- * 清单只有一个导出时直接使用它；多个导出时用元数据 invoke 入口（经既有的
- * camelCase 归一）在清单内定位，绝不接受清单外的名字。
+ * 题目声明的逻辑入口（`metadata.invoke.valkyrie`）必须与清单 `logical_name`
+ * （目标公开名，由编译器的目标命名合同投影）**逐字精确匹配且唯一**：
+ * - 不做任何大小写/符号启发式换算；
+ * - 没有「清单只有一个导出就直接调用」的回退——单导出但入口写错同样失败，
+ *   防止把错误的导出跑绿（假绿）；
+ * - 清单内重复声明同一公开名也视为合同破坏。
+ *
+ * 导出供测试直接验证反例。
  */
-function resolveManifestExportName(available: string[], invoke: unknown): string {
-    const preferred = resolveWasmExportSymbol(requireValkyrieInvokeEntry(invoke));
-    if (available.includes(preferred)) {
-        return preferred;
+export function resolveManifestExportName(available: string[], invoke: unknown): string {
+    const entry = requireValkyrieInvokeEntry(invoke);
+    const matched = available.filter((name) => name === entry);
+    if (matched.length === 1) {
+        return matched[0]!;
     }
-    if (available.length === 1) {
-        return available[0]!;
-    }
-    throw new Error(`产物清单导出声明的导出 (${available.join(', ')}) 与 invoke 入口 ${preferred} 不匹配`);
+    const reason = matched.length === 0 ? '没有导出与逻辑入口匹配' : '清单重复声明同一公开名';
+    throw new Error(`产物清单导出表 (${available.join(', ') || '空'}) 与逻辑入口 ${entry} 不满足唯一匹配：${reason}`);
 }
 
 const CASE_TIMEOUT_MILLISECONDS = 30_000;
