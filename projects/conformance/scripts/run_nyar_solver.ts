@@ -28,12 +28,12 @@ import {
     loadMetadata,
     loadTestCases,
     resolveNyarBuildArtifacts,
+    resolveNyarExport,
     nyarInvokeBlockedReason,
     type NyarVmArtifacts,
 } from '../src/adapters/valkyrie-nyar/ref.ts';
 import { resolveLaneTargetPlan } from '../src/adapters/shared/compile-target-plan.ts';
 import { NYAR_BUILD_TARGET } from '../src/adapters/valkyrie-nyar/valkyrie.ts';
-import { resolveWasmExportSymbol } from '../src/adapters/valkyrie-node/ref.ts';
 
 type OvmNativeAddon = {
     legionInvokeOvmExport: (module: string, entry: string, argsJson: string) => string;
@@ -180,8 +180,13 @@ async function main(): Promise<number> {
     if (!entry) {
         throw new Error('metadata.invoke 缺失');
     }
-    const exportName = resolveWasmExportSymbol(entry);
-    const blocked = nyarInvokeBlockedReason(artifacts.nyarPath, entry);
+    // 导出名来自执行清单的声明身份，不按入口字符串做大小写投影。
+    const resolution = resolveNyarExport(artifacts.outDir, entry);
+    if (resolution.state === 'blocked') {
+        throw new Error(resolution.reason);
+    }
+    const exportName = resolution.exportName;
+    const blocked = nyarInvokeBlockedReason(artifacts.nyarPath, exportName);
     if (blocked) {
         throw new Error(blocked);
     }

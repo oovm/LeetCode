@@ -264,7 +264,7 @@ export async function probeValkyrieBackendProblem(
         }
     }
     const invokeBlocker = artifacts
-        ? resolveNyarInvokeBlocker(problemRoot, artifacts.nyarPath)
+        ? resolveNyarInvokeBlocker(problemRoot, artifacts.outDir, artifacts.nyarPath)
         : managedBlocker;
 
     const verdict = deriveArtifactRuntimeStatus({

@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import {
     legionInvokeOvmExport,
     legionListOvmExports,
+    readExecutionManifest,
     resolveArtifactDir,
     resolveNyarEntry,
 } from '@nyar/valkyrie';
@@ -16,7 +17,7 @@ import { readArtifactEvidence } from '../shared/artifact-evidence.ts';
 import { resolveLaneTargetPlan, type CompileTargetPlan } from '../shared/compile-target-plan.ts';
 import { encodeNyarExecutionPin } from '../shared/execution-pin.ts';
 import { emptySolverCaseStats, parseSolverResultLine, type SolverCaseStats } from '../shared/solver-case-stats.ts';
-import { loadMetadata, loadTestCases, resolveWasmExportSymbol } from '../valkyrie-node/ref.ts';
+import { loadMetadata, loadTestCases } from '../valkyrie-node/ref.ts';
 import { formatLegionError, legionBuildNyar, NYAR_BUILD_TARGET, nyarBuildDir, valkyrieNyarRunnerReady } from './valkyrie.ts';
 
 const RUN_NYAR_SOLVER = join(LEETCODE_ROOT_FROM_PACKAGE, 'projects', 'conformance', 'scripts', 'run_nyar_solver.ts');
@@ -70,7 +71,47 @@ export function listNyarExports(nyarPath: string): string[] {
     }
 }
 
-export function nyarInvokeBlockedReason(nyarPath: string, invokeEntry?: string): string | null {
+export type NyarExportResolution =
+    | { state: 'resolved'; exportName: string }
+    | { state: 'blocked'; reason: string };
+
+/**
+ * 从执行清单取 OVM 实际公开符号。
+ *
+ * 入口按清单冻结的声明身份（`source_name` 或 `logical_name`）逐字精确匹配且全表
+ * 唯一；返回清单记录的 `logical_name`（OVM 的调用符号）。runner 不做大小写投影，
+ * 也不从入口字符串自造名字；无法唯一匹配时给出清单里实际声明的身份。
+ */
+export function resolveNyarExport(artifactDir: string, invokeEntry: string): NyarExportResolution {
+    let manifest: ReturnType<typeof readExecutionManifest>;
+    try {
+        manifest = readExecutionManifest(artifactDir);
+    }
+    catch (error) {
+        return { state: 'blocked', reason: `执行清单读取失败：${String(error)}` };
+    }
+    if (manifest === null || manifest.artifact_kind !== 'library') {
+        return { state: 'blocked', reason: '执行清单缺失或不是 library 产物' };
+    }
+    const entries = (manifest.library_exports ?? []) as { logical_name?: string; source_name?: string }[];
+    const matched = entries.filter(
+        (entry) => entry.logical_name === invokeEntry || entry.source_name === invokeEntry,
+    );
+    if (matched.length === 1 && matched[0]?.logical_name) {
+        return { state: 'resolved', exportName: matched[0].logical_name };
+    }
+    const declared = entries
+        .map((entry) => `${entry.source_name ?? '?'}→${entry.logical_name ?? '?'}`)
+        .join(', ') || '空';
+    return {
+        state: 'blocked',
+        reason: matched.length > 1
+            ? `清单重复声明入口 ${invokeEntry}`
+            : `入口 ${invokeEntry} 与清单声明身份不一致（清单导出 ${declared}）`,
+    };
+}
+
+export function nyarInvokeBlockedReason(nyarPath: string, exportName?: string): string | null {
     if (!valkyrieNyarRunnerReady()) {
         return 'Legion / @nyar/valkyrie N-API 未就绪';
     }
@@ -78,10 +119,9 @@ export function nyarInvokeBlockedReason(nyarPath: string, invokeEntry?: string):
     if (exports.length === 0) {
         return 'OVM 产物没有可导出符号，确认 legion build --target ovm 是否成功';
     }
-    if (invokeEntry) {
-        const expected = resolveWasmExportSymbol(invokeEntry);
-        if (!exports.includes(expected)) {
-            return `OVM 产物里找不到 metadata.invoke 对应的 export "${expected}"（已有: ${exports.join(', ') || '(none)'}）`;
+    if (exportName) {
+        if (!exports.includes(exportName)) {
+            return `OVM 产物里找不到清单声明的 export "${exportName}"（已有: ${exports.join(', ') || '(none)'}）`;
         }
     }
     return null;
@@ -90,14 +130,18 @@ export function nyarInvokeBlockedReason(nyarPath: string, invokeEntry?: string):
 /**
  * 读取 metadata 入口后判定 `.nyar` invoke 是否被阻塞；返回 `null` 表示可 invoke。
  */
-export function resolveNyarInvokeBlocker(problemRoot: string, nyarPath: string): string | null {
+export function resolveNyarInvokeBlocker(problemRoot: string, artifactDir: string, nyarPath: string): string | null {
     try {
         const { invoke } = loadMetadata(problemRoot);
         const entry = invoke.valkyrie ?? invoke.typescript;
         if (!entry) {
             return 'metadata.invoke 缺失';
         }
-        return nyarInvokeBlockedReason(nyarPath, entry);
+        const resolution = resolveNyarExport(artifactDir, entry);
+        if (resolution.state === 'blocked') {
+            return resolution.reason;
+        }
+        return nyarInvokeBlockedReason(nyarPath, resolution.exportName);
     } catch (error) {
         return String(error);
     }
@@ -172,7 +216,7 @@ export async function runNyarSolverOnce(problemRoot: string, pin?: NyarReference
                 return 'metadata.invoke 缺失';
             }
             loadTestCases(problemRoot);
-            return nyarInvokeBlockedReason(artifacts.nyarPath, entry);
+            return resolveNyarInvokeBlocker(problemRoot, artifacts.outDir, artifacts.nyarPath);
         } catch (err) {
             return String(err);
         }

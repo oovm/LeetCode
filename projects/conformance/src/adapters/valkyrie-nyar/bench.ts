@@ -114,7 +114,7 @@ export async function benchValkyrieNyarProblem(
         } else if (!evidence.fresh) {
             runtimeError = evidence.reason ?? 'legion build 产物与 lane 计划不一致';
         } else {
-            const blocked = resolveNyarInvokeBlocker(problemRoot, artifacts.nyarPath);
+            const blocked = resolveNyarInvokeBlocker(problemRoot, artifacts.outDir, artifacts.nyarPath);
             if (blocked) {
                 runtimeError = blocked;
             } else {
