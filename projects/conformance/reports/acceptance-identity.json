@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-11-24T05:36:35.954Z",
+  "scope": "Node-API（native）与 C ABI（native-dll）批量矩阵、CPython（python）代表组的消费侧验收身份",
+  "repositories": {
+    "boost.rs": {
+      "path": "E:\\vmz 全栈开发\\boost.rs",
+      "rev": "d39deee3406b4f3b8c74841f43108470992bf71f"
+    },
+    "valkyrie.rs": {
+      "path": "E:\\victory 胜利女神\\valkyrie.rs",
+      "rev": "05820ecf890cd3f43f3b24d571d6b848dea1c2c3"
+    },
+    "leetcode.v": {
+      "path": "E:\\victory 胜利女神\\leetcode.v",
+      "rev": "f5013991adc41c23ddf4008c6145f6433d8c02aa",
+      "note": "签收身份采集时的 HEAD；各报告另记自身 generationRev"
+    }
+  },
+  "addon": {
+    "path": "E:\\victory 胜利女神\\valkyrie.rs\\projects\\ts\\platforms\\valkyrie-win32-x64\\lib\\valkyrie.win32-x64-msvc.node",
+    "sha256": "e28e6150c837b11c67248056e04308feb0cad60f49be1c68692bf6db7d8b8ab2",
+    "mtimeIso": "2026-11-24T04:15:11.332Z"
+  },
+  "compilerBuild": {
+    "identity": "d39deee3406b4f3b8c74841f43108470992bf71f",
+    "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=d39deee3406b4f3b8c74841f43108470992bf71f"
+  },
+  "runners": {
+    "src/adapters/valkyrie-backend/native-runner.ts": "e479bddd79c42348ba4f787ecffb32c05d3c7b55186f8c55706dd76856928c1e",
+    "src/adapters/valkyrie-backend/native-dll-runner.ts": "8a4eabf683eb58a7ed4cc27abfcd460eafc49ae3eba3dbb71567cf3c38a2a09b",
+    "src/adapters/valkyrie-python/runner.ts": "3bde4f2b5fed324eae0948a534fcab84f1e330d8c1bfd40d779aa2fce9867b41",
+    "src/cli/valkyrie-matrix.ts": "acc36bec0d7c9d1f45ce75cf917a90c223a1010c95c9d290762b274daad3f9a3",
+    "src/cli/valkyrie-dll-matrix.ts": "d82538053b38ee8942bb9d44b02e0e8262de51920c20285ac9ed0d1138e1a7ad",
+    "src/cli/valkyrie-python-matrix.ts": "1f98774524cf4d17ba589ab2097afbc14b4f877de79f9e5cc62198b3748a11cc",
+    "tools/dll-consumer.ts": "208fec1c76a013ec7cbf9d31cb4bd702a7bc54a448edc20e19ebd4eb58cad223",
+    "tools/python-consumer.py": "f1cc5b415006f1348227b755543004642a8fe3068f9a08b2c1d43cb23b4f046f"
+  },
+  "python": {
+    "runtime": "3.12.10",
+    "consumerSha256": "f1cc5b415006f1348227b755543004642a8fe3068f9a08b2c1d43cb23b4f046f"
+  },
+  "reports": {
+    "matrix-native-50-carriers.json": {
+      "sha256": "cff7f41a5959025c93db48a61815d6fd5bd5707966df32b0d515abe63dab1f54",
+      "generatedAt": "2026-11-24T05:23:58.502Z",
+      "generationRev": "f5013991adc41c23ddf4008c6145f6433d8c02aa"
+    },
+    "matrix-native-100-carriers.json": {
+      "sha256": "dfa321f62cf3da2333598d2998df5ff4c08a7f9f35c8c1fe7fd4309b1eab843f",
+      "generatedAt": "2026-11-24T05:30:49.799Z",
+      "generationRev": "f5013991adc41c23ddf4008c6145f6433d8c02aa"
+    },
+    "matrix-native-300-carriers.json": {
+      "sha256": "5d16bb57d7e17006021b4dd8bdf7486f1157d94c1d69cf6c556da7de1f41c8fd",
+      "generatedAt": "2026-11-24T05:14:41.142Z",
+      "generationRev": "5aaa67bb8602a04063f1497c0a932b34f2f394c8"
+    },
+    "matrix-native-dll-50-carriers.json": {
+      "sha256": "a1b9aeba3efb05d464bc4d0ca6cdb752dc41ff264bf79b7a487d4961dca2206d",
+      "generatedAt": "2026-11-24T05:01:54.503Z",
+      "generationRev": "f5013991adc41c23ddf4008c6145f6433d8c02aa"
+    },
+    "matrix-python-representative.json": {
+      "sha256": "6fa51fba3fd55600045f780d6b10fdaae766c72bd8edd0f97e3959fd63d96fbd",
+      "generatedAt": "2026-11-24T05:36:27.255Z",
+      "generationRev": "f5013991adc41c23ddf4008c6145f6433d8c02aa"
+    }
+  }
+}
