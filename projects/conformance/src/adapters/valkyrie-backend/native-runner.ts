@@ -5,10 +5,17 @@
  * 每个 `<slug>.cases.ts` 用例在独立 Node 子进程里 `require` addon、调用
  * `metadata.invoke.valkyrie` 对应的导出，取 JSON 返回值并比对。
  *
- * 原生 ABI 承载 `i64`（JS `bigint`）、布尔与 `[i64]` 整数数组：数组按元素编组、
- * 调用后写回，因此原地修改语义可以如实比对。`i64` 实参与返回值共用 bigint 载体，
- * 53 位以上整数不经过 JS `number`，可以与精确十进制期望逐位比较。字符串、对象
- * 仍无法送进 addon，逐例记 `skipped`（不进 pass/fail 分母），绝不猜值或伪造通过。
+ * 原生 ABI 承载 `i64`（JS `bigint`）、布尔、`utf8` 文本与 `[i64]` 整数数组：数组按
+ * 元素编组、调用后写回，因此原地修改语义可以如实比对。实参与返回的载体口径由
+ * 执行清单的导出签名决定（`i64` 数字字符串按 bigint 送、`utf8` 数字字符串按文本送），
+ * 不凭值形状猜测。`i64` 实参与返回值共用 bigint 载体，53 位以上整数不经过 JS
+ * `number`，可以与精确十进制期望逐位比较。
+ *
+ * 执行前先校验产物、ABI、签名完整性、形参名与实参数量：缺签名 / 非 `node-api` /
+ * 形参名与载体不等长 / 找不到声明产物时整体阻塞（不是跳例）；签名完整但某条用例
+ * 的载体或字段绑定不匹配时该例记 `skipped`，绝不猜值或伪造通过。子进程还会在
+ * 投影返回值前断言实际宿主类型（`i64` 必须 bigint、`utf8` 必须 string 等），
+ * 不符按 runner-error 结构化记录，而不是断言失败。
  *
  * 模块与导出身份取自执行清单的正式读取接口（`@nyar/valkyrie` 的
  * `readExecutionManifest`，Rust 侧 `execution::read_manifest`），不扫描目录、
@@ -30,9 +37,7 @@ import { compareModeForExecution, resultsMatch } from '../../domain/compare-mode
 import {
     I64_MAX,
     I64_MIN,
-    compareIntegerResult,
     isIntegerLiteralString,
-    isUnsafeIntegerLiteralString,
     parseIntegerLiteral,
 } from '../../domain/integer-literal.ts';
 import { problemIdFromDir } from '../../domain/metadata.ts';
@@ -77,9 +82,94 @@ export type NativeArtifact = {
     exports: string[];
     /** 执行清单的产物种类（本 lane 只接受 `library`）。 */
     artifactKind: string;
+    /**
+     * 每个公开名的载体签名（来自执行清单）。`parameters` 按形参顺序给出
+     * `i64` / `i64[]` / `utf8`，`parameterNames` 给出可绑定的声明名，`returns`
+     * 给出返回载体；签名不完整的产物已被 `resolveNativeArtifact` 阻塞，
+     * 消费侧不凭值形状猜测（数字字符串属于文本还是整数由这里决定）。
+     */
+    signatures: Record<string, NativeExportSignature>;
 };
 
-type ManifestLibraryExportEntry = { logical_name: string; physical_artifact: string };
+/**
+ * 清单声明的一条导出载体签名。
+ *
+ * 签名必须完整：`parameters` 与 `parameterNames` 等长，`returns` 非空。
+ * 用例实参按 `parameterNames` 绑定，不依赖 JSON 对象键序；未冻结签名的产物
+ * 一律阻塞，不按值形状猜测。
+ */
+export type NativeExportSignature = {
+    parameters: string[];
+    parameterNames: string[];
+    returns: string;
+};
+
+type ManifestLibraryExportEntry = {
+    logical_name: string;
+    physical_artifact: string;
+    abi?: string;
+    signature_available?: boolean;
+    parameters?: string[];
+    parameter_names?: string[];
+    returns?: string;
+};
+
+/**
+ * 校验并投影清单导出表：本 lane 只接受完整的载体合同。
+ *
+ * 任一条目不满足以下事实即整体阻塞（返回 `null`），不做部分降级：
+ * - ABI 必须是 `node-api`；
+ * - `signature_available` 必须为真，`returns` 非空；
+ * - `parameters` 与 `parameter_names` 等长、名字非空且唯一；
+ * - 所有导出指向同一个 `.node` 物理产物，公开名不重复。
+ *
+ * 导出供测试直接验证反例（缺签名 / 未知载体 / 参数名缺失）。
+ */
+export function parseNativeManifestExports(
+    entries: ManifestLibraryExportEntry[],
+): { exports: string[]; signatures: Record<string, NativeExportSignature>; physicalArtifact: string } | null {
+    if (!Array.isArray(entries) || entries.length === 0) {
+        return null;
+    }
+    const signatures: Record<string, NativeExportSignature> = {};
+    const names: string[] = [];
+    let physicalArtifact: string | null = null;
+    for (const entry of entries) {
+        if (entry.abi !== 'node-api' || entry.signature_available !== true) {
+            return null;
+        }
+        const logicalName = typeof entry.logical_name === 'string' ? entry.logical_name : '';
+        const artifact = typeof entry.physical_artifact === 'string' ? entry.physical_artifact : '';
+        const parameters = Array.isArray(entry.parameters) ? entry.parameters : [];
+        const parameterNames = Array.isArray(entry.parameter_names) ? entry.parameter_names : [];
+        const returns = typeof entry.returns === 'string' ? entry.returns : '';
+        if (logicalName.length === 0 || artifact.length === 0 || returns.length === 0) {
+            return null;
+        }
+        if (parameters.length !== parameterNames.length) {
+            return null;
+        }
+        if (parameterNames.some((name) => typeof name !== 'string' || name.length === 0)) {
+            return null;
+        }
+        if (new Set(parameterNames).size !== parameterNames.length) {
+            return null;
+        }
+        if (Object.prototype.hasOwnProperty.call(signatures, logicalName)) {
+            return null;
+        }
+        if (physicalArtifact !== null && physicalArtifact !== artifact) {
+            return null;
+        }
+        physicalArtifact = artifact;
+        signatures[logicalName] = { parameters, parameterNames, returns };
+        names.push(logicalName);
+    }
+    if (physicalArtifact === null || !physicalArtifact.endsWith('.node')) {
+        return null;
+    }
+    return { exports: names, signatures, physicalArtifact };
+}
 
 /**
  * 从执行清单读取模块与导出。
@@ -89,8 +179,8 @@ type ManifestLibraryExportEntry = { logical_name: string; physical_artifact: str
  * `physical_artifact` 指定。读取走 `@nyar/valkyrie` 的类型化接口
  * （Rust `execution::read_manifest` 的权威投影），不在 TS 侧重写清单格式。
  *
- * 清单缺失、产物种类不是 `library`、导出表为空、导出指向多个物理产物或声明的
- * 模块不存在，一律返回 `null`（结构化阻塞）。
+ * 清单缺失、产物种类不是 `library`、导出表不满足完整载体合同（ABI / 签名 /
+ * 形参名 / 物理产物）或声明的模块不存在，一律返回 `null`（结构化阻塞）。
  */
 export function resolveNativeArtifact(artifactDir: string): NativeArtifact | null {
     let manifest: ReturnType<typeof readExecutionManifest>;
@@ -103,28 +193,46 @@ export function resolveNativeArtifact(artifactDir: string): NativeArtifact | nul
     if (manifest === null || manifest.artifact_kind !== 'library') {
         return null;
     }
-    const exports = (manifest.library_exports as ManifestLibraryExportEntry[])
-        .map((entry: ManifestLibraryExportEntry) => ({
-            logicalName: entry.logical_name,
-            physicalArtifact: entry.physical_artifact,
-        }))
-        .filter((entry) => entry.logicalName.length > 0 && entry.physicalArtifact.length > 0);
-    if (exports.length === 0) {
+    const parsed = parseNativeManifestExports(manifest.library_exports as ManifestLibraryExportEntry[]);
+    if (parsed === null) {
         return null;
     }
-    const artifacts = [...new Set(exports.map((entry) => entry.physicalArtifact))];
-    if (artifacts.length !== 1) {
-        return null;
-    }
-    const [physicalArtifact] = artifacts as [string];
-    if (!physicalArtifact.endsWith('.node')) {
-        return null;
-    }
-    const addonPath = join(artifactDir, physicalArtifact);
+    const addonPath = join(artifactDir, parsed.physicalArtifact);
     if (!existsSync(addonPath)) {
         return null;
     }
-    return { addonPath, exports: exports.map((entry) => entry.logicalName), artifactKind: manifest.artifact_kind };
+    return {
+        addonPath,
+        exports: parsed.exports,
+        artifactKind: manifest.artifact_kind,
+        signatures: parsed.signatures,
+    };
+}
+
+/**
+ * 按清单冻结的形参声明名绑定用例实参。
+ *
+ * 要求键集合与声明名集合完全一致（数量相等、每个声明名都存在），返回按
+ * 声明顺序排列的实参。返回 `null` 表示用例字段与签名不匹配，调用方必须
+ * 阻塞而不是退回对象键序。
+ */
+export function bindNativeArguments(args: unknown, parameterNames: string[]): unknown[] | null {
+    if (args === null || typeof args !== 'object' || Array.isArray(args)) {
+        return null;
+    }
+    const record = args as Record<string, unknown>;
+    const keys = Object.keys(record);
+    if (keys.length !== parameterNames.length) {
+        return null;
+    }
+    const bound: unknown[] = [];
+    for (const name of parameterNames) {
+        if (!Object.prototype.hasOwnProperty.call(record, name)) {
+            return null;
+        }
+        bound.push(record[name]);
+    }
+    return bound;
 }
 
 /**
@@ -150,22 +258,27 @@ export function resolveManifestExportName(available: string[], invoke: unknown):
 }
 
 const CASE_TIMEOUT_MILLISECONDS = 30_000;
+/** 单例子进程 stdout 上限：大数组返回（如 `gray-code` n=16）的 JSON 会远超默认 1 MiB。 */
+const CASE_MAX_BUFFER_BYTES = 64 * 1024 * 1024;
 
 /** 没有可执行期望的哨兵语料。 */
 const NO_EXECUTABLE_EXPECTATION = 'Execution timed out';
 
 /**
- * 子进程脚本：加载 addon、按导出名调用、把返回值编码成 `{ value }`。
+ * 子进程脚本：加载 addon、按导出名调用、先断言返回载体、再把返回值编码成
+ * `{ value }`。
  *
- * 退出码约定：3 = 缺少导出（runner-error）；4 = 调用抛错。抛错时 stdout 输出
- * `{ __nativeError: { kind, name, message } }`：`TypeError` / `RangeError` 归为
- * `host-argument-error`（addon 编组阶段拒绝实参），其余归为 `guest-failure`
+ * 退出码约定：3 = 缺少导出（runner-error）；4 = 调用抛错；5 = 返回值不符合
+ * 清单冻结的返回载体（runner-error，载体合同破坏而不是断言失败）。抛错时 stdout
+ * 输出 `{ __nativeError: { kind, name, message } }`：`TypeError` / `RangeError`
+ * 归为 `host-argument-error`（addon 编组阶段拒绝实参），其余归为 `guest-failure`
  * （guest 抛错经 glue 变成 Node 异常）。`bigint` 用 `{ __bigint }` 编码，
  * 避免 JSON 丢精度。
  */
 const NATIVE_CASE_SCRIPT = `
 const addon = process.argv[1];
 const exportName = process.argv[2];
+const returnKind = process.argv[4];
 const module = require(addon);
 const fn = module[exportName];
 if (typeof fn !== 'function') {
@@ -189,6 +302,18 @@ catch (error) {
     }));
     process.exit(4);
 }
+const actualType = (value) => value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value;
+const returnTypeError = (expected, actual) => {
+    process.stdout.write(JSON.stringify({ __nativeReturnTypeError: { expected, actual } }));
+    process.exit(5);
+};
+if (returnKind === 'i64' && typeof result !== 'bigint') returnTypeError('bigint', actualType(result));
+if (returnKind === 'utf8' && typeof result !== 'string') returnTypeError('string', actualType(result));
+if (returnKind === 'bool' && typeof result !== 'boolean') returnTypeError('boolean', actualType(result));
+if (returnKind === 'i64[]' && !(Array.isArray(result) && result.every((element) => typeof element === 'bigint'))) {
+    returnTypeError('bigint[]', actualType(result));
+}
+if (returnKind === 'unit' && result !== undefined) returnTypeError('undefined', actualType(result));
 // 原生导出以 unit 表示「原地修改实参」：单个数组实参时把调用后的数组作为结果，
 // 让题库能比较原地修改的语义，而不是把 undefined 当成返回值。
 const value = result === undefined
@@ -200,66 +325,149 @@ process.stdout.write(JSON.stringify({ value }, (_key, value) =>
 
 /** 实参的 JSON 编码：`i64` 统一走 `{ __bigint }`，子进程按 reviver 还原成 BigInt。 */
 type NativeBigIntArgument = { __bigint: string };
-type NativeArgument = NativeBigIntArgument | boolean | NativeBigIntArgument[];
+type NativeArgument = NativeBigIntArgument | boolean | string | NativeBigIntArgument[];
 
 /**
- * 能被当前 Node-API 原生 addon 承载的实参。
+ * 能被当前 Node-API 原生 addon 承载的实参，按清单冻结的形参载体编组。
  *
- * 生成的参数桥只接受 JS `bigint`（`napi_get_value_bigint_int64` + `lossless`）、
- * 布尔与整数数组（`[i64]` 按元素编组并写回）；字符串、对象、`null` 与浮点都逐例
- * 跳过，不把宿主类型错误伪装成断言失败。题库把越过 2^53 的整数写成十进制字符串，
- * 这里按 i64 域解析成 BigInt 后送入，保证 >2^53 的实参同样逐位精确。
+ * 生成的参数桥接受 JS `bigint`（`napi_get_value_bigint_int64` + `lossless`）、
+ * 布尔、`utf8` 文本（UTF-8 字节复制）与整数数组（`[i64]` 按元素编组并写回）。
+ * **数字字符串的归属由清单签名决定**：`i64` 形参按十进制解析成 BigInt（>2^53
+ * 也逐位精确），`utf8` 形参原样作为文本；未知载体一律拒绝，绝不凭值形状猜测。
  */
-function nativeArgument(value: unknown): NativeArgument | null {
-    const scalar = nativeBigInt(value);
-    if (scalar !== null) {
-        return scalar;
+function nativeArgument(value: unknown, kind: string): NativeArgument | null {
+    if (kind === 'utf8') {
+        return typeof value === 'string' ? value : null;
     }
-    if (typeof value === 'boolean') {
-        return value;
+    if (kind === 'i64') {
+        return nativeInteger(value);
     }
-    if (Array.isArray(value)) {
-        const elements: NativeBigIntArgument[] = [];
-        for (const element of value) {
-            const encoded = nativeBigInt(element);
-            if (encoded === null) {
-                return null;
-            }
-            elements.push(encoded);
-        }
-        return elements;
+    if (kind === 'bool') {
+        return typeof value === 'boolean' ? value : null;
+    }
+    if (kind === 'i64[]') {
+        return nativeIntegerArray(value);
     }
     return null;
 }
 
-/** 把整数形态（number / bigint / 越界十进制字面量）编码成 BigInt 实参；非整数返回 `null`。 */
-function nativeBigInt(value: unknown): NativeBigIntArgument | null {
+/** 整数数组实参：逐元素按 i64 域编码；任一元素不是整数即整例跳过。 */
+function nativeIntegerArray(value: unknown): NativeBigIntArgument[] | null {
+    if (!Array.isArray(value)) {
+        return null;
+    }
+    const elements: NativeBigIntArgument[] = [];
+    for (const element of value) {
+        const encoded = nativeInteger(element);
+        if (encoded === null) {
+            return null;
+        }
+        elements.push(encoded);
+    }
+    return elements;
+}
+
+/** 按冻结的整数载体编码实参：安全整数、bigint 或十进制整数字面量；其他返回 `null`。 */
+function nativeInteger(value: unknown): NativeBigIntArgument | null {
     if (typeof value === 'number') {
         return Number.isSafeInteger(value) ? { __bigint: String(value) } : null;
     }
     if (typeof value === 'bigint') {
         return value >= I64_MIN && value <= I64_MAX ? { __bigint: value.toString() } : null;
     }
-    // 生成器只把越过 2^53 的整数写成字符串；安全范围内的数字字符串按普通字符串处理。
-    if (isUnsafeIntegerLiteralString(value)) {
+    if (typeof value === 'string') {
         const parsed = parseIntegerLiteral(value);
         return parsed !== null && parsed >= I64_MIN && parsed <= I64_MAX ? { __bigint: parsed.toString() } : null;
     }
     return null;
 }
 
-/** 可比较的期望：标量，或（原地修改语义下的）整数数组；bigint 返回不再有 53 位上限。 */
-function isExecutableExpectation(expected: unknown): boolean {
-    if (Array.isArray(expected)) {
-        return expected.every((element) => typeof element === 'number' && Number.isSafeInteger(element));
+/** 可作为整数结果比较的期望形态：数值、bigint 或十进制整数字面量。 */
+function isIntegerExpectation(value: unknown): boolean {
+    return typeof value === 'number' || typeof value === 'bigint' || isIntegerLiteralString(value);
+}
+
+/** 把期望侧的整数形态解析为 `bigint`；非整数或越界返回 `null`（不静默截断）。 */
+function expectedInteger(value: unknown): bigint | null {
+    if (typeof value === 'bigint') {
+        return value;
     }
-    return (
-        expected === null
-        || typeof expected === 'number'
-        || typeof expected === 'boolean'
-        || typeof expected === 'bigint'
-        || isIntegerLiteralString(expected)
-    );
+    if (typeof value === 'number') {
+        return Number.isSafeInteger(value) ? BigInt(value) : null;
+    }
+    if (typeof value === 'string') {
+        return parseIntegerLiteral(value);
+    }
+    return null;
+}
+
+/** 可比较的期望：严格按冻结返回载体判定，未知载体不设可执行期望。 */
+function isExecutableExpectation(expected: unknown, returnKind: string): boolean {
+    if (returnKind === 'utf8') {
+        return typeof expected === 'string';
+    }
+    if (returnKind === 'bool') {
+        return typeof expected === 'boolean';
+    }
+    if (returnKind === 'i64') {
+        return isIntegerExpectation(expected);
+    }
+    if (returnKind === 'unit') {
+        return expected === null;
+    }
+    if (returnKind === 'i64[]') {
+        return Array.isArray(expected) && expected.every(isIntegerExpectation);
+    }
+    return false;
+}
+
+/**
+ * 严格模式的返回值比对，按清单返回载体选择口径。
+ *
+ * - `utf8`：宿主字符串逐字相等（`"00123"` 与 `"123"` 不同）；
+ * - `i64`：实际值必须是 `bigint`，期望按十进制解析后逐位相等；
+ * - `bool`：原生布尔严格相等；
+ * - `i64[]`：元素必须是 `bigint`，长度一致且逐元素整数相等；
+ * - `unit`：`null`。
+ */
+export function strictNativeMatch(actual: unknown, expected: unknown, returnKind: string): boolean {
+    if (returnKind === 'utf8') {
+        return typeof actual === 'string' && actual === expected;
+    }
+    if (returnKind === 'bool') {
+        return actual === expected;
+    }
+    if (returnKind === 'i64') {
+        if (typeof actual !== 'bigint') {
+            return false;
+        }
+        const expectedValue = expectedInteger(expected);
+        return expectedValue !== null && actual === expectedValue;
+    }
+    if (returnKind === 'unit') {
+        return actual === null;
+    }
+    if (returnKind === 'i64[]') {
+        return integerArraysMatch(actual, expected);
+    }
+    return false;
+}
+
+/** 整数序列比对：两侧都是数组、长度一致且逐元素按整数口径相等。 */
+function integerArraysMatch(actual: unknown, expected: unknown): boolean {
+    if (!Array.isArray(actual) || !Array.isArray(expected) || actual.length !== expected.length) {
+        return false;
+    }
+    for (let index = 0; index < actual.length; index += 1) {
+        if (typeof actual[index] !== 'bigint') {
+            return false;
+        }
+        const expectedValue = expectedInteger(expected[index]);
+        if (expectedValue === null || actual[index] !== expectedValue) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**
@@ -342,6 +550,12 @@ export function runNativeReference(problemRoot: string, artifact: NativeArtifact
         const problemId = problemIdFromDir(problemRoot);
         const compareMode = compareModeForExecution(problemId);
         const exportName = resolveManifestExportName(artifact.exports, invoke);
+        // 清单冻结的载体签名：实参与期望的编组口径只由它决定，不凭值形状猜测。
+        // `resolveNativeArtifact` 已保证签名完整；这里缺失属于合同破坏。
+        const signature = artifact.signatures[exportName];
+        if (signature === undefined) {
+            throw new Error(`执行清单未提供导出 ${exportName} 的冻结载体签名`);
+        }
 
         let pass = 0;
         let skippedTimeout = 0;
@@ -360,7 +574,14 @@ export function runNativeReference(problemRoot: string, artifact: NativeArtifact
             const expectedErrorText = expectsGuestError
                 ? (testCase.expected as string).slice('Error:'.length).trim()
                 : null;
-            const rawValues = Object.values(testCase.args);
+            // 用例字段按清单冻结的形参声明名绑定；键集合与数量不符即合同破坏，
+            // 不能退回对象键序去猜。
+            const rawValues = bindNativeArguments(testCase.args, signature.parameterNames);
+            if (rawValues === null) {
+                throw new Error(
+                    `tests[${index}] 实参字段 ${JSON.stringify(Object.keys(testCase.args))} 与冻结形参 ${JSON.stringify(signature.parameterNames)} 不匹配`,
+                );
+            }
             // 原地修改题（unit 返回、数组实参）在当前语料里只把 `expected` 记为 null。
             // 有题面契约 oracle 的题真实调用并按契约核对写回结果；无契约的题如实跳过，
             // 不用 null 去否定真实的原地结果。
@@ -375,15 +596,15 @@ export function runNativeReference(problemRoot: string, artifact: NativeArtifact
             }
             const argumentsList: NativeArgument[] = [];
             let unsupported = false;
-            for (const rawValue of rawValues) {
-                const argument = nativeArgument(rawValue);
+            for (const [parameterIndex, rawValue] of rawValues.entries()) {
+                const argument = nativeArgument(rawValue, signature.parameters[parameterIndex] ?? '');
                 if (argument === null) {
                     unsupported = true;
                     break;
                 }
                 argumentsList.push(argument);
             }
-            if (unsupported || (!expectsGuestError && !isExecutableExpectation(testCase.expected))) {
+            if (unsupported || (!expectsGuestError && !isExecutableExpectation(testCase.expected, signature.returns))) {
                 skippedArgument += 1;
                 continue;
             }
@@ -397,8 +618,8 @@ export function runNativeReference(problemRoot: string, artifact: NativeArtifact
             }
             const spawned = spawnSync(
                 process.execPath,
-                ['-e', NATIVE_CASE_SCRIPT, addonPath, exportName, argumentsJson],
-                { encoding: 'utf8', timeout: CASE_TIMEOUT_MILLISECONDS, windowsHide: true },
+                ['-e', NATIVE_CASE_SCRIPT, addonPath, exportName, argumentsJson, signature.returns],
+                { encoding: 'utf8', timeout: CASE_TIMEOUT_MILLISECONDS, maxBuffer: CASE_MAX_BUFFER_BYTES, windowsHide: true },
             );
             const remaining = executable.length - position - 1;
             if (spawned.error) {
@@ -500,7 +721,7 @@ export function runNativeReference(problemRoot: string, artifact: NativeArtifact
             const matches =
                 compareMode !== 'strict'
                     ? resultsMatch(actual, expected, compareMode, { problemId, args: testCase.args })
-                    : compareIntegerResult(actual, expected) ?? JSON.stringify(actual) === JSON.stringify(expected);
+                    : strictNativeMatch(actual, expected, signature.returns);
             if (!matches) {
                 const message = `tests[${index}]: expected ${JSON.stringify(expected, (_key, value) => typeof value === 'bigint' ? value.toString() : value)}, got ${JSON.stringify(actual, (_key, value) => typeof value === 'bigint' ? value.toString() : value)}（${command}）`;
                 return {
@@ -616,10 +837,38 @@ export function classifyNativeFailure(
         }
         return { kind: 'guest-failure', message: `guest 调用抛出未分类异常（stderr: ${stderr.trim() || '(empty)'}）` };
     }
+    if (status === 5) {
+        const mismatch = parseReturnTypeError(stdout);
+        if (mismatch !== null) {
+            return {
+                kind: 'runner-error',
+                message: `返回值不是清单冻结的返回载体 ${mismatch.expected}（实际 ${mismatch.actual}）`,
+            };
+        }
+        return { kind: 'runner-error', message: `返回值载体断言失败（stderr: ${stderr.trim() || '(empty)'}）` };
+    }
     if (status < 0 || status >= 0x80000000) {
         return { kind: 'process-crash', message: `NTSTATUS 崩溃退出码 0x${(status >>> 0).toString(16)}` };
     }
     return { kind: 'runner-error', message: `未预期的原生子进程退出码 ${status}（stderr: ${stderr.trim() || '(empty)'}）` };
+}
+
+/**
+ * 子进程 stdout 里的返回载体不符信封：实际返回值不是清单冻结的返回类型。
+ * 这是载体合同破坏（runner-error），不是断言失败。
+ */
+function parseReturnTypeError(stdout: string): { expected: string; actual: string } | null {
+    try {
+        const parsed = JSON.parse(stdout) as { __nativeReturnTypeError?: { expected?: unknown; actual?: unknown } };
+        const envelope = parsed.__nativeReturnTypeError;
+        if (envelope === undefined || typeof envelope.expected !== 'string' || typeof envelope.actual !== 'string') {
+            return null;
+        }
+        return { expected: envelope.expected, actual: envelope.actual };
+    }
+    catch {
+        return null;
+    }
 }
 
 /** 预期 guest 异常与结构化消息按空白归一后互相包含即匹配。 */

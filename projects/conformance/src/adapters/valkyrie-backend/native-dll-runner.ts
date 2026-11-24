@@ -15,9 +15,10 @@
  * 编译器的 C ABI 命名合同规定公开名等于源码名，因此清单里两者不一致本身就是合同破坏；
  * 本模块不做大小写换算、不做「只有一个导出就调用」的回退，防止错误导出跑成假绿。
  *
- * 未定案的载体在写出前识别并如实记录首个失败阶段：数组/文本/布尔/浮点实参与返回、
- * guest 异常通道，在 C ABI 合同冻结之前一律记 `ABI：C ABI …载体未定案`，
- * 不猜值、不把宿主承载限制伪装成断言失败。
+ * 调用面**由清单冻结签名驱动**：实参与返回都按 `i64` / `bool` / `f64` 标量载体编组，
+ * 不按用例值形状筛选，也不固定构造 `i64` 返回。数组、文本与对象载体尚未冻结数据
+ * 地址、长度与所有权，未实现的签名组合在进入 FFI 前结构化拒绝；guest 异常通道同样
+ * 记 `ABI：C ABI …未定案`，不猜值、不把宿主承载限制伪装成断言失败。
  */
 
 import { spawnSync } from 'node:child_process';
@@ -30,10 +31,10 @@ import { CONFORMANCE_ROOT } from '../../domain/paths.ts';
 import {
     I64_MAX,
     I64_MIN,
-    compareIntegerResult,
     isIntegerLiteralString,
     parseIntegerLiteral,
 } from '../../domain/integer-literal.ts';
+import { bindNativeArguments } from './native-runner.ts';
 import {
     emptySolverCaseStats,
     extractTestFailureIndex,
@@ -73,6 +74,14 @@ export type DllExportDeclaration = {
     logicalName: string;
     physicalArtifact: string;
     abi: string;
+    /** 清单是否给出已冻结的载体签名。 */
+    signatureAvailable: boolean;
+    /** 形参载体标签（按形参顺序）。 */
+    parameters: string[];
+    /** 形参声明名（按形参顺序，与 `parameters` 等长），供按名绑定用例字段。 */
+    parameterNames: string[];
+    /** 返回载体标签。 */
+    returns: string;
 };
 
 /** 本 lane 的产物：单一 `.dll` 与清单声明的导出面。 */
@@ -141,6 +150,10 @@ export function resolveDllArtifact(artifactDir: string): DllResolution {
             logicalName: entry.logical_name,
             physicalArtifact: entry.physical_artifact,
             abi: entry.abi,
+            signatureAvailable: entry.signature_available,
+            parameters: entry.parameters,
+            parameterNames: entry.parameter_names,
+            returns: entry.returns,
         }))
         .filter((entry) => entry.logicalName.length > 0 && entry.physicalArtifact.length > 0);
     if (entries.length === 0) {
@@ -178,75 +191,131 @@ export function resolveDllArtifact(artifactDir: string): DllResolution {
 }
 
 /**
- * 按清单导出表确定本次调用符号（严格消费）。
+ * 按清单导出表确定本次调用的导出（严格消费）。
  *
  * 逻辑入口按清单记录的**稳定导出身份**（`source_name`）或**目标公开名**
  * （`logical_name`）逐字精确匹配，且全表只能命中一条；没有大小写/符号启发式
  * 换算，也没有「只有一个导出就调用」的回退。多条命中视为清单破坏，
  * 零命中给出入口与公开名不一致的结构化身份诊断。
  */
-export function resolveDllExportName(exports: readonly DllExportDeclaration[], invoke: unknown): string {
+export function resolveDllExport(exports: readonly DllExportDeclaration[], invoke: unknown): DllExportDeclaration {
     const entry = requireValkyrieInvokeEntry(invoke);
     const matched = exports.filter((candidate) => candidate.logicalName === entry || candidate.sourceName === entry);
     if (matched.length > 1) {
         throw new DllIdentityError(`产物清单重复声明同一导出身份 ${entry}`);
     }
     if (matched.length === 1) {
-        return matched[0]!.logicalName;
+        return matched[0]!;
     }
     throw new DllIdentityError(
         `身份：入口 ${entry} 与 C ABI 公开名不一致（清单导出 ${exports.map((candidate) => `${candidate.sourceName}→${candidate.logicalName}`).join(', ') || '空'}）`,
     );
 }
 
+/** 入口身份 → 符号名（保留既有调用面）。 */
+export function resolveDllExportName(exports: readonly DllExportDeclaration[], invoke: unknown): string {
+    return resolveDllExport(exports, invoke).logicalName;
+}
+
+/** 本消费者已实现的 C ABI 标量载体；其余签名在进入 FFI 前拒绝。 */
+const SUPPORTED_DLL_SCALARS = new Set(['i64', 'bool', 'f64']);
+
 /**
- * 判断一条用例能否进入当前 C ABI 合同；不能时给出载体缺口原因。
+ * 冻结签名可用性检查：签名不可用、长度不一致或载体未实现时给出结构化原因。
  *
- * 已定案的只有 `i64` 标量实参与 `i64` 标量返回。其余载体（数组、文本、布尔、
- * 浮点、对象、原地写回的空期望、guest 异常通道）一律返回结构化原因。
+ * 零形参是合法签名（`parameters` 与 `parameterNames` 都为空），与「签名不可用」
+ * 由 `signatureAvailable` 区分，不能压平成同一种状态。
  */
-export function dllCarrierBlocker(rawValues: readonly unknown[], expected: unknown, expectsGuestError: boolean): string | null {
+export function dllSignatureBlocker(declaration: DllExportDeclaration): string | null {
+    if (!declaration.signatureAvailable) {
+        return `清单导出 ${declaration.logicalName} 没有冻结的 C ABI 签名`;
+    }
+    if (declaration.parameters.length !== declaration.parameterNames.length) {
+        return `清单导出 ${declaration.logicalName} 的形参载体 (${String(declaration.parameters.length)}) 与声明名 (${String(declaration.parameterNames.length)}) 数量不一致`;
+    }
+    if (declaration.returns.length === 0 || !SUPPORTED_DLL_SCALARS.has(declaration.returns)) {
+        return `返回载体 ${JSON.stringify(declaration.returns)} 不在已实现的 C ABI 标量集合内`;
+    }
+    for (const [position, kind] of declaration.parameters.entries()) {
+        if (!SUPPORTED_DLL_SCALARS.has(kind)) {
+            return `形参[${String(position)}] 载体 ${JSON.stringify(kind)} 不在已实现的 C ABI 标量集合内`;
+        }
+    }
+    return null;
+}
+
+/**
+ * 判断一条用例能否进入当前冻结的 C ABI 签名；不能时给出载体缺口原因。
+ *
+ * 由签名决定实参载体（`i64` / `bool` / `f64`），不按用例值形状筛选；数组、文本、
+ * 对象载体与 guest 异常通道仍返回结构化原因。
+ */
+export function dllCarrierBlocker(
+    declaration: DllExportDeclaration,
+    rawValues: readonly unknown[],
+    expected: unknown,
+    expectsGuestError: boolean,
+): string | null {
     if (expectsGuestError) {
         return 'C ABI 异常通道';
     }
+    if (rawValues.length !== declaration.parameters.length) {
+        return `实参数量 ${String(rawValues.length)} 与冻结形参 ${String(declaration.parameters.length)} 不一致`;
+    }
     for (const [position, value] of rawValues.entries()) {
-        const reason = dllScalarBlocker(value);
+        const reason = dllCarrierValueBlocker(declaration.parameters[position]!, value);
         if (reason !== null) {
-            return `实参[${position}] ${reason}`;
+            return `实参[${position}] (${declaration.parameters[position]}) ${reason}`;
         }
     }
     if (expected === null) {
-        return '原地写回（空期望）';
+        return declaration.returns === 'unit' ? null : '原地写回（空期望）';
     }
-    const expectedBlocker = dllScalarBlocker(expected);
-    return expectedBlocker === null ? null : `返回${expectedBlocker}`;
+    const expectedBlocker = dllCarrierValueBlocker(declaration.returns, expected);
+    return expectedBlocker === null ? null : `返回 (${declaration.returns}) ${expectedBlocker}`;
 }
 
-function dllScalarBlocker(value: unknown): string | null {
-    if (typeof value === 'number') {
-        return Number.isSafeInteger(value) ? null : '浮点载体（C ABI 只定案 i64 标量）';
-    }
-    if (typeof value === 'bigint') {
-        return value >= I64_MIN && value <= I64_MAX ? null : '整数超出 i64 域';
-    }
-    if (typeof value === 'boolean') {
-        return '布尔载体';
-    }
-    if (typeof value === 'string') {
-        if (!isIntegerLiteralString(value)) {
-            return '文本载体';
+/** 单个值是否符合冻结的标量载体。 */
+function dllCarrierValueBlocker(kind: string, value: unknown): string | null {
+    if (kind === 'i64') {
+        if (typeof value === 'number') {
+            return Number.isSafeInteger(value) ? null : '数值超出安全整数范围，无法无损进入 i64';
         }
-        const parsed = parseIntegerLiteral(value);
-        return parsed !== null && parsed >= I64_MIN && parsed <= I64_MAX ? null : '整数超出 i64 域';
+        if (typeof value === 'bigint') {
+            return value >= I64_MIN && value <= I64_MAX ? null : '整数超出 i64 域';
+        }
+        if (typeof value === 'string') {
+            if (!isIntegerLiteralString(value)) {
+                return '文本载体';
+            }
+            const parsed = parseIntegerLiteral(value);
+            return parsed !== null && parsed >= I64_MIN && parsed <= I64_MAX ? null : '整数超出 i64 域';
+        }
+        return '不是整数载体';
     }
-    if (Array.isArray(value)) {
-        return '数组载体';
+    if (kind === 'bool') {
+        return typeof value === 'boolean' ? null : '不是布尔载体';
     }
-    return '对象载体';
+    if (kind === 'f64') {
+        return typeof value === 'number' && Number.isFinite(value) ? null : '不是浮点载体';
+    }
+    return '载体未定案';
 }
 
-/** 把标量实参编码成消费者信封里的形态：安全整数用 number，其余用十进制字符串。 */
-function encodeDllScalar(value: unknown): number | string {
+/** 把标量实参编码成消费者信封里的形态：整数用十进制字符串，其余保留原生标量。 */
+function encodeDllScalar(kind: string, value: unknown): number | string | boolean {
+    if (kind === 'bool') {
+        if (typeof value === 'boolean') {
+            return value;
+        }
+        throw new Error(`内部错误：${JSON.stringify(value)} 未通过 C ABI bool 检查`);
+    }
+    if (kind === 'f64') {
+        if (typeof value === 'number') {
+            return value;
+        }
+        throw new Error(`内部错误：${JSON.stringify(value)} 未通过 C ABI f64 检查`);
+    }
     if (typeof value === 'number') {
         return value;
     }
@@ -256,7 +325,40 @@ function encodeDllScalar(value: unknown): number | string {
     if (isIntegerLiteralString(value)) {
         return value;
     }
-    throw new Error(`内部错误：${JSON.stringify(value)} 未通过 C ABI 标量检查`);
+    throw new Error(`内部错误：${JSON.stringify(value)} 未通过 C ABI i64 检查`);
+}
+
+/** 期望侧的整数形态解析（number / bigint / 十进制字面量）；非整数返回 `null`。 */
+function expectedDllInteger(value: unknown): bigint | null {
+    if (typeof value === 'bigint') {
+        return value;
+    }
+    if (typeof value === 'number') {
+        return Number.isSafeInteger(value) ? BigInt(value) : null;
+    }
+    if (typeof value === 'string') {
+        return parseIntegerLiteral(value);
+    }
+    return null;
+}
+
+/** 按冻结返回载体比较消费者结果：`i64` 按十进制整数、`bool` / `f64` 严格相等。 */
+function dllResultMatches(kind: string, actual: unknown, expected: unknown): boolean {
+    if (kind === 'i64') {
+        if (typeof actual !== 'string') {
+            return false;
+        }
+        const actualInteger = parseIntegerLiteral(actual);
+        const expectedInteger = expectedDllInteger(expected);
+        return actualInteger !== null && expectedInteger !== null && actualInteger === expectedInteger;
+    }
+    if (kind === 'bool') {
+        return typeof actual === 'boolean' && actual === expected;
+    }
+    if (kind === 'f64') {
+        return typeof actual === 'number' && typeof expected === 'number' && Object.is(actual, expected);
+    }
+    return false;
 }
 
 function quoteForCommand(argument: string): string {
@@ -322,7 +424,24 @@ export function runDllReference(
     try {
         const snapshot = loadTestCases(problemRoot);
         const { invoke } = loadMetadata(problemRoot);
-        const symbol = resolveDllExportName(artifact.exports, invoke);
+        // 先按清单冻结签名确定导出与可调用面；签名不可用或载体未实现时在进入 FFI 前阻塞。
+        const declaration = resolveDllExport(artifact.exports, invoke);
+        const signatureBlocker = dllSignatureBlocker(declaration);
+        if (signatureBlocker !== null) {
+            return blockedDllOutcome(
+                `ABI：${signatureBlocker}（target=${target}）`,
+                'abi',
+                snapshot,
+                0,
+                0,
+                snapshot.executableEntries.length,
+                null,
+                null,
+                false,
+                false,
+            );
+        }
+        const symbol = declaration.logicalName;
 
         let pass = 0;
         let skippedTimeout = 0;
@@ -335,9 +454,24 @@ export function runDllReference(
                 continue;
             }
             const expectsGuestError = typeof testCase.expected === 'string' && testCase.expected.startsWith('Error:');
-            const rawValues = Object.values(testCase.args);
-            const blocker = dllCarrierBlocker(rawValues, testCase.expected, expectsGuestError);
+            // 用例字段按清单冻结的形参声明名绑定；键集合与数量不符即合同破坏。
+            const rawValues = bindNativeArguments(testCase.args, declaration.parameterNames);
             const remaining = executable.length - position - 1;
+            if (rawValues === null) {
+                return blockedDllOutcome(
+                    `tests[${index}] 实参字段 ${JSON.stringify(Object.keys(testCase.args))} 与冻结形参 ${JSON.stringify(declaration.parameterNames)} 不匹配（target=${target}）`,
+                    'abi',
+                    snapshot,
+                    pass,
+                    skippedTimeout,
+                    remaining,
+                    firstCommand,
+                    null,
+                    loaded,
+                    executed,
+                );
+            }
+            const blocker = dllCarrierBlocker(declaration, rawValues, testCase.expected, expectsGuestError);
             if (blocker !== null) {
                 const message = `tests[${index}]: ABI：C ABI ${blocker}未定案（target=${target}）`;
                 return blockedDllOutcome(message, 'abi', snapshot, pass, skippedTimeout, remaining, firstCommand, null, loaded, executed);
@@ -346,8 +480,9 @@ export function runDllReference(
             const payload = {
                 dllPath: artifact.dllPath,
                 symbol,
-                args: rawValues.map(encodeDllScalar),
-                returns: 'i64',
+                parameters: declaration.parameters,
+                returns: declaration.returns,
+                args: rawValues.map((value, parameterIndex) => encodeDllScalar(declaration.parameters[parameterIndex]!, value)),
             };
             const payloadJson = JSON.stringify(payload);
             const command = [runtime.bunPath, runtime.consumerPath, payloadJson].map(quoteForCommand).join(' ');
@@ -417,7 +552,7 @@ export function runDllReference(
             }
             loaded = true;
             executed = true;
-            const matches = compareIntegerResult(envelope.result, testCase.expected) ?? JSON.stringify(envelope.result) === JSON.stringify(testCase.expected);
+            const matches = dllResultMatches(envelope.kind, envelope.result, testCase.expected);
             if (!matches) {
                 const message = `tests[${index}]: expected ${JSON.stringify(testCase.expected)}, got ${envelope.result}（${command}）`;
                 return {
@@ -489,15 +624,19 @@ export function runDllReference(
 }
 
 type ConsumerEnvelope =
-    | { ok: true; result: string }
+    | { ok: true; kind: 'i64' | 'bool' | 'f64'; result: string | boolean | number }
     | { ok: false; stage: 'abi' | 'load' | 'symbol' | 'call'; error: string };
 
 /** 解析消费者 JSON 信封；缺失或形状不符返回 `null`（按进程崩溃/消费者错误处理）。 */
 function parseConsumerEnvelope(stdout: string): ConsumerEnvelope | null {
     try {
         const parsed = JSON.parse(stdout) as Record<string, unknown>;
-        if (parsed.ok === true && typeof parsed.result === 'string') {
-            return { ok: true, result: parsed.result };
+        if (
+            parsed.ok === true
+            && (parsed.kind === 'i64' || parsed.kind === 'bool' || parsed.kind === 'f64')
+            && (typeof parsed.result === 'string' || typeof parsed.result === 'boolean' || typeof parsed.result === 'number')
+        ) {
+            return { ok: true, kind: parsed.kind, result: parsed.result };
         }
         if (
             parsed.ok === false
