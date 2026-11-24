@@ -70,6 +70,14 @@ export type DllMatrixProblemRow = {
     caseStats: SolverCaseStats;
 };
 
+/** 未通过题的缺口分类：编译、载体（身份/ABI）、装载、算法、运行环境、题解缺失。 */
+export type DllGapCategory = 'compile' | 'carrier' | 'load' | 'algorithm' | 'runtime' | 'solver';
+
+export type DllGapSummary = {
+    counts: Record<DllGapCategory, number>;
+    ids: Record<DllGapCategory, string[]>;
+};
+
 export type DllMatrixReport = {
     generatedAt: string;
     lane: 'native-dll';
@@ -98,6 +106,7 @@ export type DllMatrixReport = {
         not_run: number;
         skipped: number;
     };
+    gaps: DllGapSummary;
     problems: DllMatrixProblemRow[];
 };
 
@@ -196,8 +205,50 @@ function probeIdentity(): DllMatrixReport['identity'] {
     };
 }
 
-function blockedRow(problem: ProblemDefinition, stage: DllFailureStage, reason: string): DllMatrixProblemRow {
+/** 按首个失败阶段归类；题解缺失与编译错误分开计数，避免把空解算进编译缺口。 */
+function classifyDllGap(problem: DllMatrixProblemRow): DllGapCategory | null {
+    if (problem.strictPass) {
+        return null;
+    }
+    const stage = problem.firstFailureStage;
+    if (stage === 'build') {
+        return /solution\.v (为空|仅占位)/.test(problem.error ?? '') ? 'solver' : 'compile';
+    }
+    if (stage === 'identity' || stage === 'abi') {
+        return 'carrier';
+    }
+    if (stage === 'load' || stage === 'symbol') {
+        return 'load';
+    }
+    if (stage === 'assert') {
+        return 'algorithm';
+    }
+    if (stage === 'execute') {
+        return problem.executeOk ? 'algorithm' : 'runtime';
+    }
+    return 'load';
+}
+
+function emptyGapSummary(): DllGapSummary {
     return {
+        counts: { compile: 0, carrier: 0, load: 0, algorithm: 0, runtime: 0, solver: 0 },
+        ids: { compile: [], carrier: [], load: [], algorithm: [], runtime: [], solver: [] },
+    };
+}
+
+function summarizeDllGaps(problems: DllMatrixProblemRow[]): DllGapSummary {
+    const summary = emptyGapSummary();
+    for (const problem of problems) {
+        const category = classifyDllGap(problem);
+        if (category !== null) {
+            summary.counts[category] += 1;
+            summary.ids[category].push(problem.id);
+        }
+    }
+    return summary;
+}
+
+function blockedRow(problem: ProblemDefinition, stage: DllFailureStage, reason: string): DllMatrixProblemRow {    return {
         id: problem.id,
         target: DLL_LANE_TARGET,
         manifestTarget: null,
@@ -377,6 +428,7 @@ async function main(): Promise<number> {
             not_run: problems.reduce((sum, problem) => sum + problem.caseStats.not_run, 0),
             skipped: problems.reduce((sum, problem) => sum + (problem.caseStats.skipped ?? 0), 0),
         },
+        gaps: summarizeDllGaps(problems),
         problems,
     };
     mkdirSync(dirname(outPath), { recursive: true });
@@ -390,6 +442,9 @@ async function main(): Promise<number> {
             `execute ${summary.executePass}/${summary.denominator} strict ${summary.strictPass}/${summary.denominator}\n` +
             `cases pass ${summary.executed_pass}/${summary.testCaseTotal} fail ${summary.executed_fail} ` +
             `blocked ${summary.blocked} not_run ${summary.not_run} skipped ${summary.skipped}\n` +
+            `gaps compile=${report.gaps.counts.compile} carrier=${report.gaps.counts.carrier} ` +
+            `load=${report.gaps.counts.load} algorithm=${report.gaps.counts.algorithm} ` +
+            `runtime=${report.gaps.counts.runtime} solver=${report.gaps.counts.solver}\n` +
             problems
                 .filter((problem) => !problem.strictPass)
                 .map((problem) => `stage ${problem.id}: ${problem.firstFailureStage ?? '?'} — ${problem.error ?? '(no error)'}`)
