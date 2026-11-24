@@ -1,8 +1,8 @@
 namespace leetcode.excel_sheet_column_title;
 
 [export(case: "camelCase")]
-micro convert_to_title(column_number: i64) -> utf8 {
-    let mut n: i64 = column_number
+micro convert_to_title(columnNumber: i64) -> utf8 {
+    let mut n: i64 = columnNumber
     let mut builder: Utf8Builder = Utf8Builder::new(8)
     while n > 0 {
         n = n - 1
