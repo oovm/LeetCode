@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T05:36:35.954Z",
+  "generatedAt": "2026-11-24T05:39:45.848Z",
   "scope": "Node-API（native）与 C ABI（native-dll）批量矩阵、CPython（python）代表组的消费侧验收身份",
   "repositories": {
     "boost.rs": {
@@ -64,6 +64,11 @@
       "sha256": "6fa51fba3fd55600045f780d6b10fdaae766c72bd8edd0f97e3959fd63d96fbd",
       "generatedAt": "2026-11-24T05:36:27.255Z",
       "generationRev": "f5013991adc41c23ddf4008c6145f6433d8c02aa"
+    },
+    "dll-abi-probes.json": {
+      "sha256": "60791a92aee62cc37fe980e3652177f23d620bb58fbaac76df651bec15ee17ff",
+      "generatedAt": "2026-11-24T14:02:00Z",
+      "generationRev": "4c9dcdc98907a924741aa301b7704470d0f8098e"
     }
   }
 }

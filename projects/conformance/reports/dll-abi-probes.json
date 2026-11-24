@@ -1,0 +1,64 @@
+{
+  "generatedAt": "2026-11-24T14:02:00.000Z",
+  "scope": "DLL runner 按清单冻结 C ABI 签名独立调用的抽验证据；fixture 只写 [export]，用于验证 i64、bool、混合浮点三种已实现签名与一种未实现签名的拒绝行为",
+  "fixture": {
+    "project": "projects/conformance/.cache/dll-abi-fixture",
+    "source": "namespace dll_abi_fixture;\n\n[export]\nmicro add(a: i64, b: i64) -> i64 {\n    return a + b\n}\n\n[export]\nmicro is_even(x: i64) -> bool {\n    return x % 2 == 0\n}\n\n[export]\nmicro mix(a: i64, b: f64) -> f64 {\n    return a as f64 + b\n}\n\n[export]\nmicro sum_all(xs: [i64]) -> i64 {\n    let mut total: i64 = 0\n    let mut index: usize = 0\n    while index < xs.length() {\n        total = total + xs⁅index⁆\n        index = index + 1\n    }\n    return total\n}\n",
+    "sourceSha256": "4d15a181108fa173d3e199840fe798562e563ca01173b93e0d89c91bdc042dc5",
+    "target": "x86_64-pc-windows-msvc",
+    "artifact": "dist/dll-abi-fixture.dll",
+    "artifactSha256": "5573544a11bbea934329c57a6617450006774da8b9c582ccc161994ec8df0308",
+    "manifest": "dist/run-contracts.txt",
+    "manifestSchemaVersion": 4,
+    "exports": [
+      { "logical_name": "add", "source_name": "add", "parameters": ["i64", "i64"], "parameter_names": ["a", "b"], "returns": "i64" },
+      { "logical_name": "is_even", "source_name": "is_even", "parameters": ["i64"], "parameter_names": ["x"], "returns": "bool" },
+      { "logical_name": "mix", "source_name": "mix", "parameters": ["i64", "f64"], "parameter_names": ["a", "b"], "returns": "f64" },
+      { "logical_name": "sum_all", "source_name": "sum_all", "parameters": ["i64[]"], "parameter_names": ["xs"], "returns": "i64" }
+    ]
+  },
+  "consumer": {
+    "runtime": "bun (node_modules/bun/bin/bun.exe)",
+    "entry": "projects/conformance/tools/dll-consumer.ts",
+    "mechanism": "真实 dlopen 后按 payload 的 parameters/returns 组合生成 FFI 描述符"
+  },
+  "probes": [
+    {
+      "name": "i64",
+      "symbol": "add",
+      "parameters": ["i64", "i64"],
+      "returns": "i64",
+      "args": [19, 23],
+      "envelope": { "ok": true, "kind": "i64", "result": "42" }
+    },
+    {
+      "name": "bool",
+      "symbol": "is_even",
+      "parameters": ["i64"],
+      "returns": "bool",
+      "args": [4],
+      "envelope": { "ok": true, "kind": "bool", "result": true }
+    },
+    {
+      "name": "mixed-f64",
+      "symbol": "mix",
+      "parameters": ["i64", "f64"],
+      "returns": "f64",
+      "args": [7, 3.5],
+      "envelope": { "ok": true, "kind": "f64", "result": 10.5 }
+    },
+    {
+      "name": "unsupported-i64-array",
+      "symbol": "sum_all",
+      "parameters": ["i64[]"],
+      "returns": "i64",
+      "args": [[1, 2, 3]],
+      "envelope": {
+        "ok": false,
+        "stage": "abi",
+        "error": "形参[0] 载体 \"i64[]\" 不在已实现的 C ABI 标量集合内"
+      },
+      "note": "在 dlopen 之前拒绝；error 为实际错误文本"
+    }
+  ]
+}
