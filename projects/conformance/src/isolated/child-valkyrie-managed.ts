@@ -18,6 +18,7 @@ import {
     type ManagedAbiEntry,
     type ManagedContrastLane,
 } from '../adapters/valkyrie-backend/managed-abi.ts';
+import { bindNativeArguments } from '../adapters/valkyrie-backend/native-runner.ts';
 import { resolveWasmExportSymbol } from '../adapters/valkyrie-node/ref.ts';
 import { coerceIntegerArgument, I64_MAX, I64_MIN } from '../domain/integer-literal.ts';
 import { executeRun } from './child-loops.ts';
@@ -122,11 +123,11 @@ serveChild(
     },
 );
 
-/** managed ABI 没有形参名，按协议 args 键序供货，个数与类型必须完全匹配。 */
+/** 按合同冻结的形参声明名绑定实参并转 argv；键集合与声明名不一致即失败，不退回对象键序。 */
 function invokeManaged(lane: ManagedContrastLane, artifactPath: string, entry: ManagedAbiEntry, args: Record<string, unknown>): unknown {
-    const values = Object.values(args);
-    if (values.length !== entry.parameter_types.length) {
-        throw new Error(`传参 ${values.length} 个，managed 入口 \`${entry.logical_entry}\` 需要 ${entry.parameter_types.length} 个`);
+    const values = bindNativeArguments(args, entry.parameter_names);
+    if (values === null) {
+        throw new Error(`实参字段 ${JSON.stringify(Object.keys(args))} 与冻结形参 ${JSON.stringify(entry.parameter_names)} 不匹配`);
     }
     const argumentsList = entry.parameter_types.map((parameterType, position) => {
         if (!SUPPORTED_PARAMETER_TYPES.has(parameterType)) {
@@ -135,9 +136,13 @@ function invokeManaged(lane: ManagedContrastLane, artifactPath: string, entry: M
         return formatArgument(values[position], parameterType, `形参 #${position}`);
     });
     const binary = lane === 'jvm' ? 'java' : 'dotnet';
+    const launcherClass = entry.launcher_class;
+    if (launcherClass === null) {
+        throw new Error(`managed 入口 \`${entry.logical_entry}\` 的签名不可由 argv 无损编组（launcher 为 null），拒绝按位置猜测实参`);
+    }
     const launchArguments =
         lane === 'jvm'
-            ? ['-cp', artifactPath, entry.launcher_class.replaceAll('/', '.'), ...argumentsList]
+            ? ['-cp', artifactPath, launcherClass.replaceAll('/', '.'), ...argumentsList]
             : ['exec', artifactPath, entry.logical_entry, ...argumentsList];
     const result = spawnSync(binary, launchArguments, {
         encoding: 'utf8',

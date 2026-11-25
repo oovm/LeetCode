@@ -72,15 +72,18 @@ export function listNyarExports(nyarPath: string): string[] {
 }
 
 export type NyarExportResolution =
-    | { state: 'resolved'; exportName: string }
+    | { state: 'resolved'; exportName: string; parameterNames: string[] }
     | { state: 'blocked'; reason: string };
 
 /**
- * 从执行清单取 OVM 实际公开符号。
+ * 从执行清单取 OVM 实际公开符号与冻结形参名。
  *
  * 入口按清单冻结的声明身份（`source_name` 或 `logical_name`）逐字精确匹配且全表
- * 唯一；返回清单记录的 `logical_name`（OVM 的调用符号）。runner 不做大小写投影，
- * 也不从入口字符串自造名字；无法唯一匹配时给出清单里实际声明的身份。
+ * 唯一；返回清单记录的 `logical_name`（OVM 的调用符号）与 `parameter_names`
+ * （消费侧按名绑定用例字段，禁止按对象键序编组）。签名不完整
+ * （`signature_available` 为假、形参名与载体不等长、名字为空或重复）即阻塞。
+ * runner 不做大小写投影，也不从入口字符串自造名字；无法唯一匹配时给出清单里
+ * 实际声明的身份。
  */
 export function resolveNyarExport(artifactDir: string, invokeEntry: string): NyarExportResolution {
     let manifest: ReturnType<typeof readExecutionManifest>;
@@ -93,12 +96,25 @@ export function resolveNyarExport(artifactDir: string, invokeEntry: string): Nya
     if (manifest === null || manifest.artifact_kind !== 'library') {
         return { state: 'blocked', reason: '执行清单缺失或不是 library 产物' };
     }
-    const entries = (manifest.library_exports ?? []) as { logical_name?: string; source_name?: string }[];
+    const entries = manifest.library_exports ?? [];
     const matched = entries.filter(
         (entry) => entry.logical_name === invokeEntry || entry.source_name === invokeEntry,
     );
     if (matched.length === 1 && matched[0]?.logical_name) {
-        return { state: 'resolved', exportName: matched[0].logical_name };
+        const exportEntry = matched[0];
+        const parameterNames = exportEntry.parameter_names;
+        if (
+            exportEntry.signature_available !== true
+            || parameterNames.length !== exportEntry.parameters.length
+            || parameterNames.some((name) => name.length === 0)
+            || new Set(parameterNames).size !== parameterNames.length
+        ) {
+            return {
+                state: 'blocked',
+                reason: `清单导出 ${exportEntry.logical_name} 缺少完整的冻结签名（形参名与载体必须等长、非空且唯一）`,
+            };
+        }
+        return { state: 'resolved', exportName: exportEntry.logical_name, parameterNames };
     }
     const declared = entries
         .map((entry) => `${entry.source_name ?? '?'}→${entry.logical_name ?? '?'}`)

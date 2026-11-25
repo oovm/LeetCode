@@ -17,6 +17,7 @@ import { coerceIntegerArgument, compareIntegerResult, I64_MAX, I64_MIN } from '.
 import { problemIdFromDir } from '../../domain/metadata.ts';
 import { emptySolverCaseStats, extractTestFailureIndex, type SolverCaseStats } from '../shared/solver-case-stats.ts';
 import { loadMetadata, loadTestCases, requireValkyrieInvokeEntry, resolveWasmExportSymbol, type TestCase } from '../valkyrie-node/ref.ts';
+import { bindNativeArguments } from './native-runner.ts';
 import { findManagedAbiEntry, ManagedAbiError, type ManagedAbiContract, type ManagedAbiEntry, type ManagedContrastLane } from './managed-abi.ts';
 
 export type ManagedRunOutcome = {
@@ -112,14 +113,19 @@ function isUnrepresentableIntegerValue(value: unknown, type: string): boolean {
     return (type === 'i64' || type === 'i32') && typeof value === 'number' && !Number.isInteger(value);
 }
 
-/** 每个用例的 argv：managed ABI 没有形参名，按 metadata 键序供货，个数与类型必须完全匹配。 */
-function buildCaseArguments(testCase: TestCase, entry: ManagedAbiEntry, index: number): string[] {
-    const values = Object.values(testCase.args);
-    if (values.length !== entry.parameter_types.length) {
+/** 按合同冻结的形参声明名绑定用例实参；键集合与声明名不一致即失败，绝不退回对象键序。 */
+function bindCaseArguments(testCase: TestCase, entry: ManagedAbiEntry, index: number): unknown[] {
+    const values = bindNativeArguments(testCase.args, entry.parameter_names);
+    if (values === null) {
         throw new ManagedAbiError(
-            `tests[${index}] 传参 ${values.length} 个，managed 入口 \`${entry.logical_entry}\` 需要 ${entry.parameter_types.length} 个`,
+            `tests[${index}] 实参字段 ${JSON.stringify(Object.keys(testCase.args as object))} 与冻结形参 ${JSON.stringify(entry.parameter_names)} 不匹配`,
         );
     }
+    return values;
+}
+
+/** 把已按声明名绑定的实参逐个转成 launcher argv；载体类型必须是冻结的 managed 标量。 */
+function formatCaseArguments(values: unknown[], entry: ManagedAbiEntry, index: number): string[] {
     return entry.parameter_types.map((parameterType, position) => {
         if (!SUPPORTED_PARAMETER_TYPES.has(parameterType)) {
             throw new ManagedAbiError(`tests[${index}] 形参 #${position} 类型 \`${parameterType}\` 不受支持`);
@@ -135,9 +141,14 @@ function launchManagedEntry(
     argumentsList: string[],
 ): { status: number | null; stdout: string; stderr: string; command: string; launchError: string | null } {
     const binary = lane === 'jvm' ? 'java' : 'dotnet';
+    // `runManagedReference` 已拒绝 launcher 为 null 的入口；这里再断言一次，不静默拼 `null`。
+    const launcherClass = entry.launcher_class;
+    if (launcherClass === null) {
+        throw new ManagedAbiError(`managed 入口 \`${entry.logical_entry}\` 没有 argv launcher，无法启动`);
+    }
     const launchArguments =
         lane === 'jvm'
-            ? ['-cp', artifactPath, entry.launcher_class.replaceAll('/', '.'), ...argumentsList]
+            ? ['-cp', artifactPath, launcherClass.replaceAll('/', '.'), ...argumentsList]
             : ['exec', artifactPath, entry.logical_entry, ...argumentsList];
     const command = formatCommand(binary, launchArguments);
     const result = spawnSync(binary, launchArguments, {
@@ -176,6 +187,11 @@ export function runManagedReference(
         if (!SUPPORTED_PARAMETER_TYPES.has(entry.return_type) && entry.return_type !== 'void') {
             throw new ManagedAbiError(`managed 入口 \`${entry.logical_entry}\` 返回类型 \`${entry.return_type}\` 不受支持`);
         }
+        if (entry.launcher_class === null) {
+            throw new ManagedAbiError(
+                `managed 入口 \`${entry.logical_entry}\` 的签名不可由 argv 无损编组（launcher 为 null），本 lane 拒绝按位置猜测实参`,
+            );
+        }
 
         let pass = 0;
         let skippedTimeout = 0;
@@ -189,9 +205,9 @@ export function runManagedReference(
                 skippedTimeout += 1;
                 continue;
             }
-            const values = Object.values(testCase.args);
+            const boundValues = bindCaseArguments(testCase, entry, index);
             if (
-                entry.parameter_types.some((type, position) => isUnrepresentableIntegerValue(values[position], type))
+                entry.parameter_types.some((type, position) => isUnrepresentableIntegerValue(boundValues[position], type))
             ) {
                 skippedIntegerArgument += 1;
                 continue;
@@ -199,7 +215,7 @@ export function runManagedReference(
             if (typeof testCase.expected === 'string' && testCase.expected.startsWith('Error:')) {
                 throw new ManagedAbiError(`tests[${index}] 期待抛出异常，managed 标量 launcher 不支持该断言`);
             }
-            const argumentsList = buildCaseArguments(testCase, entry, index);
+            const argumentsList = formatCaseArguments(boundValues, entry, index);
             const launched = launchManagedEntry(lane, artifactPath, entry, argumentsList);
             if (firstCommand === null) {
                 firstCommand = launched.command;

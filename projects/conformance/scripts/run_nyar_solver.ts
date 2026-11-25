@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 import { isArtifactCacheFresh, legionInvokeOvmExport } from '@nyar/valkyrie';
 
+import { bindNativeArguments } from '../src/adapters/valkyrie-backend/native-runner.ts';
 import { readNyarExecutionPin } from '../src/adapters/shared/execution-pin.ts';
 import { compareIntegerResult, isUnsafeIntegerLiteralString } from '../src/domain/integer-literal.ts';
 import {
@@ -97,10 +98,20 @@ function serializeOvmArg(value: unknown): string {
 
 let cachedNative: OvmNativeAddon | null | undefined;
 
-function runNyarExport(nyarPath: string, exportName: string, args: Record<string, unknown>): unknown {
-    const hasUnsafeInteger = Object.values(args).some((value) => isUnsafeIntegerLiteralString(value));
+function runNyarExport(nyarPath: string, exportName: string, parameterNames: string[], args: Record<string, unknown>): unknown {
+    // 实参按清单冻结的形参声明名绑定；键集合不一致即失败，绝不按对象键序供货。
+    const bound = bindNativeArguments(args, parameterNames);
+    if (bound === null) {
+        throw new Error(`实参字段 ${JSON.stringify(Object.keys(args))} 与冻结形参 ${JSON.stringify(parameterNames)} 不匹配`);
+    }
+    const hasUnsafeInteger = bound.some((value) => isUnsafeIntegerLiteralString(value));
     if (!hasUnsafeInteger) {
-        return legionInvokeOvmExport(nyarPath, exportName, args);
+        // 包装层按 `Object.values(args)`  positional 注入；给出按声明名重建的对象即声明顺序。
+        const ordered: Record<string, unknown> = {};
+        parameterNames.forEach((name, position) => {
+            ordered[name] = bound[position];
+        });
+        return legionInvokeOvmExport(nyarPath, exportName, ordered);
     }
     // 含超安全整数：绕过包装层，直接把裸数字文本注入 argsJson，serde 按 as_i64 精确还原。
     if (cachedNative === undefined) {
@@ -109,7 +120,7 @@ function runNyarExport(nyarPath: string, exportName: string, args: Record<string
     if (!cachedNative) {
         throw new Error('ovm 实参含超安全整数的十进制字符串，但平台 valkyrie-napi 绑定不可用，无法精确注入');
     }
-    const argsJson = `[${Object.values(args).map(serializeOvmArg).join(',')}]`;
+    const argsJson = `[${bound.map(serializeOvmArg).join(',')}]`;
     return JSON.parse(cachedNative.legionInvokeOvmExport(nyarPath, exportName, argsJson)) as unknown;
 }
 
@@ -186,6 +197,7 @@ async function main(): Promise<number> {
         throw new Error(resolution.reason);
     }
     const exportName = resolution.exportName;
+    const parameterNames = resolution.parameterNames;
     const blocked = nyarInvokeBlockedReason(artifacts.nyarPath, exportName);
     if (blocked) {
         throw new Error(blocked);
@@ -208,10 +220,10 @@ async function main(): Promise<number> {
         try {
             if (typeof case_.expected === 'string' && case_.expected.startsWith('Error:')) {
                 assertTestCase(index, case_.expected, () => {
-                    void runNyarExport(artifacts.nyarPath, exportName, case_.args);
+                    void runNyarExport(artifacts.nyarPath, exportName, parameterNames, case_.args);
                 });
             } else {
-                const actual = normalizeTsTestResult(runNyarExport(artifacts.nyarPath, exportName, case_.args));
+                const actual = normalizeTsTestResult(runNyarExport(artifacts.nyarPath, exportName, parameterNames, case_.args));
                 const expected = normalizeTsTestResult(case_.expected);
                 // 题面允许任意顺序/集合比较时，按规范化形态比较；否则保持精确比较（含整数文本特判）。
                 if (compareMode !== 'strict') {

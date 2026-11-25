@@ -5,6 +5,10 @@
  * 这里只消费已经冻结的入口事实：lane、产物文件名、调用约定、入口签名与 digest。
  * 任何缺字段、artifact 与落盘文件名不一致、lane 不符、digest 不能复算的合同
  * 一律结构化失败，不猜默认值。
+ *
+ * schema 4 起入口携带 `source_name`（语言侧冻结声明名）与 `parameter_names`
+ * （按声明顺序的形参名，消费侧按名绑定实参），`launcher_class` 可为 `null`
+ * （签名不可由 argv 无损编组是显式事实）。旧 schema 一律拒绝，不兼容读取。
  */
 
 import { createHash } from 'node:crypto';
@@ -14,8 +18,10 @@ import { basename, join } from 'node:path';
 export type ManagedContrastLane = 'jvm' | 'clr';
 
 export type ManagedAbiEntry = {
-    /** 逻辑入口名（wasm export 同名，例如 `reverse`）。 */
+    /** 逻辑入口名（目标公开名，声明身份；例如 `reverse`）。 */
     logical_entry: string;
+    /** 语言侧冻结的源码声明名；与 `logical_entry` 是两个独立事实轴。 */
+    source_name: string;
     /** 主类内部名（JVM 形态带 `/`）。 */
     owner: string;
     /** 主类中的静态方法名。 */
@@ -24,10 +30,12 @@ export type ManagedAbiEntry = {
     signature: string;
     /** 形参的 managed 标量类型名。 */
     parameter_types: string[];
+    /** 形参声明名，按声明顺序且与 `parameter_types` 等长；实参按此绑定。 */
+    parameter_names: string[];
     /** 返回值 managed 标量类型名。 */
     return_type: string;
-    /** launcher 类内部名；JVM 用于 `java -cp` 的 main 类，CLR 为 `managed_entry`。 */
-    launcher_class: string;
+    /** launcher 类内部名；`null` 是「签名不可由 argv 无损编组」的显式事实。 */
+    launcher_class: string | null;
 };
 
 export type ManagedAbiContract = {
@@ -50,8 +58,9 @@ export class ManagedAbiError extends Error {
 }
 
 const MANAGED_ABI_FILE_NAME = 'managed-abi.json';
-const MANAGED_ABI_SCHEMA_VERSION = 1;
-const MANAGED_CALLING_CONVENTION = 'static-argv-launcher';
+const MANAGED_ABI_SCHEMA_VERSION = 4;
+/** 合同声明的能力：argv launcher 编组，或只能按静态方法绑定实参。 */
+const SUPPORTED_CALLING_CONVENTIONS = new Set(['static-argv-launcher', 'static-method']);
 
 /** 按 Rust `ManagedAbiContract::canonical_digest_input` 的规范文本复算 sha256。 */
 export function computeManagedContractDigest(contract: Omit<ManagedAbiContract, 'contract_digest'>): string {
@@ -64,12 +73,15 @@ export function computeManagedContractDigest(contract: Omit<ManagedAbiContract, 
             .map((entry) =>
                 [
                     entry.logical_entry,
+                    entry.source_name,
                     entry.owner,
                     entry.method,
                     entry.signature,
                     entry.parameter_types.join(','),
+                    entry.parameter_names.join(','),
                     entry.return_type,
-                    entry.launcher_class,
+                    // 无 launcher 是已冻结事实；用显式哨兵参与摘要，禁止与空名字混淆。
+                    entry.launcher_class ?? '-',
                 ].join('|'),
             ),
     ];
@@ -95,14 +107,31 @@ function parseManagedEntry(raw: unknown, path: string): ManagedAbiEntry {
         throw new ManagedAbiError(`managed-abi ${path} 必须是 object`);
     }
     const record = raw as Record<string, unknown>;
+    const parameterTypes = asStringArray(record.parameter_types, `${path}.parameter_types`);
+    const parameterNames = asStringArray(record.parameter_names, `${path}.parameter_names`);
+    if (parameterNames.length !== parameterTypes.length) {
+        throw new ManagedAbiError(
+            `managed-abi ${path} 的形参名 (${parameterNames.length}) 与形参类型 (${parameterTypes.length}) 数量不一致`,
+        );
+    }
+    if (parameterNames.some((name) => name.length === 0) || new Set(parameterNames).size !== parameterNames.length) {
+        throw new ManagedAbiError(`managed-abi ${path} 的形参名必须非空且唯一`);
+    }
+    // `null` 是「不经 argv 编组」的显式事实；空字符串不是合法 launcher 名。
+    const launcherClass =
+        record.launcher_class === null
+            ? null
+            : asString(record.launcher_class, `${path}.launcher_class`);
     return {
         logical_entry: asString(record.logical_entry, `${path}.logical_entry`),
+        source_name: asString(record.source_name, `${path}.source_name`),
         owner: asString(record.owner, `${path}.owner`),
         method: asString(record.method, `${path}.method`),
         signature: asString(record.signature, `${path}.signature`),
-        parameter_types: asStringArray(record.parameter_types, `${path}.parameter_types`),
+        parameter_types: parameterTypes,
+        parameter_names: parameterNames,
         return_type: asString(record.return_type, `${path}.return_type`),
-        launcher_class: asString(record.launcher_class, `${path}.launcher_class`),
+        launcher_class: launcherClass,
     };
 }
 
@@ -157,8 +186,10 @@ export function readManagedAbiContract(
         throw new ManagedAbiError(`managed-abi artifact 为 \`${artifact}\`，与落盘产物 \`${artifactFileName}\` 不一致`);
     }
     const callingConvention = asString(record.calling_convention, 'calling_convention');
-    if (callingConvention !== MANAGED_CALLING_CONVENTION) {
-        throw new ManagedAbiError(`managed-abi calling_convention 必须为 \`${MANAGED_CALLING_CONVENTION}\`（实际 \`${callingConvention}\`）`);
+    if (!SUPPORTED_CALLING_CONVENTIONS.has(callingConvention)) {
+        throw new ManagedAbiError(
+            `managed-abi calling_convention 必须是 ${[...SUPPORTED_CALLING_CONVENTIONS].join(' / ')}（实际 \`${callingConvention}\`）`,
+        );
     }
     if (!Array.isArray(record.entries) || record.entries.length === 0) {
         throw new ManagedAbiError('managed-abi entries 必须是非空数组');

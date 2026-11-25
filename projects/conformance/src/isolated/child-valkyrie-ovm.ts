@@ -10,6 +10,8 @@ import { createRequire } from 'node:module';
 import { arch, platform } from 'node:os';
 import { join } from 'node:path';
 
+import { bindNativeArguments } from '../adapters/valkyrie-backend/native-runner.ts';
+import { resolveNyarExport } from '../adapters/valkyrie-nyar/ref.ts';
 import { resolveWasmExportSymbol } from '../adapters/valkyrie-node/ref.ts';
 import { CONFORMANCE_ROOT } from '../domain/paths.ts';
 import { executeRun } from './child-loops.ts';
@@ -76,10 +78,21 @@ serveChild(
         }
         const nyarPath = join(message.artifactDir, nyarFile);
         void readFileSync(nyarPath); // 入口存在性校验，内容交给 napi 解析
-        const exportName = resolveWasmExportSymbol(message.invoke);
+        // 入口身份与冻结形参名都取自执行清单；清单缺失、签名不完整即失败。
+        const resolution = resolveNyarExport(message.artifactDir, resolveWasmExportSymbol(message.invoke));
+        if (resolution.state === 'blocked') {
+            throw new Error(`OVM 执行清单合同不满足：${resolution.reason}`);
+        }
+        const exportName = resolution.exportName;
+        const parameterNames = resolution.parameterNames;
         const native = loadOvmNative();
         candidate = (args) => {
-            const argsJson = `[${Object.values(args).map(serializeOvmArg).join(',')}]`;
+            // 实参按声明名绑定为声明顺序；键集合不一致即失败，绝不按对象键序供货。
+            const bound = bindNativeArguments(args, parameterNames);
+            if (bound === null) {
+                throw new Error(`实参字段 ${JSON.stringify(Object.keys(args))} 与冻结形参 ${JSON.stringify(parameterNames)} 不匹配`);
+            }
+            const argsJson = `[${bound.map(serializeOvmArg).join(',')}]`;
             return JSON.parse(native.legionInvokeOvmExport(nyarPath, exportName, argsJson)) as unknown;
         };
     },
