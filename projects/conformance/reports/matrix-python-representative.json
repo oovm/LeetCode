@@ -1,35 +1,33 @@
 {
-  "generatedAt": "2026-11-24T05:36:27.255Z",
+  "generatedAt": "2026-11-26T04:57:04.894Z",
   "lane": "python",
   "target": "python",
   "selection": {
-    "mode": "ids",
+    "mode": "representative",
     "batchLimit": null,
     "ids": [
-      "two-sum",
       "reverse-integer",
       "multiply-strings",
-      "move-zeroes",
       "add-two-integers"
     ]
   },
   "identity": {
     "addon": {
       "state": "resolved",
-      "sha256": "e28e6150c837b11c67248056e04308feb0cad60f49be1c68692bf6db7d8b8ab2"
+      "sha256": "045b2b0231976194d29ec3af11a9b6a528df7e8f776d556917e4a14fb101e1dd"
     },
     "compilerBuild": {
       "state": "resolved",
-      "identity": "d39deee3406b4f3b8c74841f43108470992bf71f",
-      "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=d39deee3406b4f3b8c74841f43108470992bf71f"
+      "identity": "08b77a39e67b5a074a05f0a8ee5269670f336f4a",
+      "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=08b77a39e67b5a074a05f0a8ee5269670f336f4a"
     },
     "leetcodeV": {
       "state": "resolved",
-      "rev": "f5013991adc41c23ddf4008c6145f6433d8c02aa"
+      "rev": "400071501647285ff4398c9bb475db46dc87672c"
     },
     "boost": {
-      "state": "resolved",
-      "rev": "d39deee3406b4f3b8c74841f43108470992bf71f"
+      "state": "unresolved",
+      "reason": "未提供 BOOST_RS_ROOT：编译器源码提交无法从题库侧探测"
     },
     "valkyrieV": {
       "state": "resolved",
@@ -42,7 +40,7 @@
     }
   },
   "summary": {
-    "denominator": 5,
+    "denominator": 3,
     "buildPass": 3,
     "loadPass": 3,
     "executePass": 3,
@@ -56,38 +54,6 @@
   },
   "problems": [
     {
-      "id": "two-sum",
-      "target": "x86_64-pc-windows-msvc",
-      "manifestTarget": null,
-      "manifestFresh": false,
-      "manifestError": "缺少 execution manifest",
-      "buildStatus": 1,
-      "buildError": "legion build --target python failed (napi:legionBuild): 宿主边界只闭合完整 `i64`、`[i64]` 与 `utf8` 实参：`two_sum` 的形参类型 `std::collection::ArrayList` 没有无损宿主载体，拒绝写出",
-      "artifact": null,
-      "resolutionStage": null,
-      "resolutionBlocker": null,
-      "loadOk": false,
-      "executeOk": false,
-      "strictPass": false,
-      "firstFailureStage": "build",
-      "error": "legion build --target python failed (napi:legionBuild): 宿主边界只闭合完整 `i64`、`[i64]` 与 `utf8` 实参：`two_sum` 的形参类型 `std::collection::ArrayList` 没有无损宿主载体，拒绝写出",
-      "command": null,
-      "exitStatus": null,
-      "caseStats": {
-        "ok": false,
-        "testCaseTotal": 0,
-        "executed_pass": 0,
-        "executed_fail": 0,
-        "blocked": 0,
-        "not_run": 0,
-        "skipped": 0,
-        "skipped_timeout": 0,
-        "skipped_integer_argument": 0,
-        "firstFailureIndex": null,
-        "firstFailure": "legion build --target python failed (napi:legionBuild): 宿主边界只闭合完整 `i64`、`[i64]` 与 `utf8` 实参：`two_sum` 的形参类型 `std::collection::ArrayList` 没有无损宿主载体，拒绝写出"
-      }
-    },
-    {
       "id": "reverse-integer",
       "target": "x86_64-pc-windows-msvc",
       "manifestTarget": "x86_64-pc-windows-msvc",
@@ -97,7 +63,7 @@
       "buildError": null,
       "artifact": {
         "extension": "E:\\victory 胜利女神\\leetcode.v\\.cache\\reverse-integer-bench-python\\leetcode_reverse_integer.cp312-win_amd64.pyd",
-        "sha256": "8e05fe1ce04681a37c7210fb755632b2e30ebb31d8269994508fb9dbf726f125",
+        "sha256": "aeb8e328c390a8db8efd6974561fb77fff3b5c2b07cd5f4172261f70272f3718",
         "moduleName": "leetcode_reverse_integer",
         "exports": [
           {
@@ -144,7 +110,7 @@
       "buildError": null,
       "artifact": {
         "extension": "E:\\victory 胜利女神\\leetcode.v\\.cache\\multiply-strings-bench-python\\leetcode_multiply_strings.cp312-win_amd64.pyd",
-        "sha256": "83b6ddd7be8d1805365eece3587563e77dc6e60fb9ae77d986b794d773fb7459",
+        "sha256": "4b1df4bb564431928563696747a00a545b3692a717f263aa3d4288a535e7ac08",
         "moduleName": "leetcode_multiply_strings",
         "exports": [
           {
@@ -179,38 +145,6 @@
         "casesDigest": "6ef4b5604d6b0bcb023bbfcc4c7dba3b20d2ada22393267bdc51706c58b511d3",
         "firstFailureIndex": null,
         "firstFailure": null
-      }
-    },
-    {
-      "id": "move-zeroes",
-      "target": "x86_64-pc-windows-msvc",
-      "manifestTarget": "x86_64-pc-windows-msvc",
-      "manifestFresh": true,
-      "manifestError": null,
-      "buildStatus": 1,
-      "buildError": "legion build --target python failed (napi:legionBuild): CPython 宿主边界只闭合 `i64` 与 `utf8` 实参：`move_zeroes` 的导出面需要 Node-API 序列编组，拒绝写出",
-      "artifact": null,
-      "resolutionStage": null,
-      "resolutionBlocker": null,
-      "loadOk": false,
-      "executeOk": false,
-      "strictPass": false,
-      "firstFailureStage": "build",
-      "error": "legion build --target python failed (napi:legionBuild): CPython 宿主边界只闭合 `i64` 与 `utf8` 实参：`move_zeroes` 的导出面需要 Node-API 序列编组，拒绝写出",
-      "command": null,
-      "exitStatus": null,
-      "caseStats": {
-        "ok": false,
-        "testCaseTotal": 0,
-        "executed_pass": 0,
-        "executed_fail": 0,
-        "blocked": 0,
-        "not_run": 0,
-        "skipped": 0,
-        "skipped_timeout": 0,
-        "skipped_integer_argument": 0,
-        "firstFailureIndex": null,
-        "firstFailure": "legion build --target python failed (napi:legionBuild): CPython 宿主边界只闭合 `i64` 与 `utf8` 实参：`move_zeroes` 的导出面需要 Node-API 序列编组，拒绝写出"
       }
     },
     {

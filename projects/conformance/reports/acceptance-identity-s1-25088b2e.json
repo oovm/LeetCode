@@ -1,0 +1,71 @@
+{
+  "generatedAt": "2026-11-25T05:10:00.000Z",
+  "scope": "S1 冻结基线：消费者追到 Boost 25088b2e 同一代后的 native（Node-API）验收身份；上一代 d39deee3 验收见 acceptance-identity.json，保持不动",
+  "repositories": {
+    "boost.rs": {
+      "path": "E:\\vmz 全栈开发\\boost.rs",
+      "rev": "25088b2e40225a75768757ef5bc16bb79e653e71",
+      "note": "origin/dev HEAD；晚于 d39deee3，含 schema 7（2ee8ff22）、Wasm 浮点 rem、CLR/OVM f32 冻结"
+    },
+    "valkyrie.rs": {
+      "path": "E:\\victory 胜利女神\\valkyrie.rs",
+      "rev": "05820ecf890cd3f43f3b24d571d6b848dea1c2c3",
+      "note": "pin 改动（Cargo.toml/Cargo.lock legion+asgard d39deee3→25088b2e）随本代提交"
+    },
+    "leetcode.v": {
+      "path": "E:\\victory 胜利女神\\leetcode.v",
+      "rev": "0ff4a70acde2eca302ad0aa79cb6b4a5a5c6cbc0"
+    },
+    "std valkyrie.v": {
+      "rev": "1d7ec28b07a9f366a01944e7ef2d07188ff86421",
+      "note": "矩阵 identity 采集实测值"
+    }
+  },
+  "pinVerification": {
+    "napiProductChain": "valkyrie-napi 仅依赖 package-manager-legion/asgard，二者均 pin 25088b2e；构建日志确认全部 rust-boost 产品 crate 以 rev=25088b2e 编译",
+    "legacyPins": "data-text/data-binary 组仍 pin 71db8fa5（71db8fa5 与 d39deee3 均为 25088b2e 祖先），仅供 fixtures 白盒测试，不进入 addon 产品链",
+    "cacheInvalidation": "scripts/build.mjs 按 Cargo.lock rev 注入 NYAR_COMPILER_BUILD_ID 并 clean legion，旧缓存按版本失效已满足"
+  },
+  "addon": {
+    "path": "E:\\victory 胜利女神\\valkyrie.rs\\projects\\ts\\platforms\\valkyrie-win32-x64\\lib\\valkyrie.win32-x64-msvc.node",
+    "sha256": "e5a75100e480dacf792fb0e4bca5002459da5a07d3f382a81698b0c745234d16",
+    "mtimeIso": "2026-11-25T05:03:12.9259604Z"
+  },
+  "compilerBuild": {
+    "identity": "25088b2e40225a75768757ef5bc16bb79e653e71",
+    "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=25088b2e40225a75768757ef5bc16bb79e653e71",
+    "dirty": false
+  },
+  "sameGenerationVerification": {
+    "report": "matrix-native-s1-verify.json",
+    "problems": ["two-sum", "add-two-numbers", "longest-substring-without-repeating-characters", "median-of-two-sorted-arrays", "zigzag-conversion"],
+    "nativeGreen": 2,
+    "casesPass": "163/163",
+    "manifestSchemaVersion": 7,
+    "reader": "native-runner.ts fail-closed（要求 abi=node-api、signature_available、parameter_names 齐）通过，carrier 合同字段齐全",
+    "failureStageDistribution": {
+      "编译": ["two-sum（ArrayList 无无损宿主载体）", "longest-substring-without-repeating-characters（SwissTableEntry 无 x86_64 槽载体）"],
+      "语料缺陷": ["median-of-two-sorted-arrays（solution.v 为空）"],
+      "合同": [],
+      "装载": [],
+      "执行": []
+    }
+  },
+  "runners": {
+    "src/adapters/valkyrie-backend/native-runner.ts": "e479bddd79c42348ba4f787ecffb32c05d3c7b55186f8c55706dd76856928c1e",
+    "src/adapters/valkyrie-backend/native-dll-runner.ts": "8a4eabf683eb58a7ed4cc27abfcd460eafc49ae3eba3dbb71567cf3c38a2a09b",
+    "src/adapters/valkyrie-python/runner.ts": "3bde4f2b5fed324eae0948a534fcab84f1e330d8c1bfd40d779aa2fce9867b41",
+    "src/cli/valkyrie-matrix.ts": "acc36bec0d7c9d1f45ce75cf917a90c223a1010c95c9d290762b274daad3f9a3",
+    "src/cli/valkyrie-dll-matrix.ts": "d82538053b38ee8942bb9d44b02e0e8262de51920c20285ac9ed0d1138e1a7ad",
+    "src/cli/valkyrie-python-matrix.ts": "1f98774524cf4d17ba589ab2097afbc14b4f877de79f9e5cc62198b3748a11cc",
+    "tools/dll-consumer.ts": "208fec1c76a013ec7cbf9d31cb4bd702a7bc54a448edc20e19ebd4eb58cad223",
+    "tools/python-consumer.py": "f1cc5b415006f1348227b755543004642a8fe3068f9a08b2c1d43cb23b4f046f"
+  },
+  "reports": {
+    "matrix-native-s1-verify.json": {
+      "sha256": "c75fbb3671478b230a2689cf8cdb1df0946d6aebbc9cd56e7b346ac78fba20d5",
+      "generatedAt": "2026-11-25T05:08:00.000Z",
+      "generationRev": "0ff4a70acde2eca302ad0aa79cb6b4a5a5c6cbc0"
+    }
+  }
+}

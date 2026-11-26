@@ -1,29 +1,29 @@
 {
-  "generatedAt": "2026-11-24T05:39:45.848Z",
+  "generatedAt": "2026-11-26T05:25:36.697Z",
   "scope": "Node-API（native）与 C ABI（native-dll）批量矩阵、CPython（python）代表组的消费侧验收身份",
   "repositories": {
     "boost.rs": {
       "path": "E:\\vmz 全栈开发\\boost.rs",
-      "rev": "d39deee3406b4f3b8c74841f43108470992bf71f"
+      "rev": "08b77a39e67b5a074a05f0a8ee5269670f336f4a"
     },
     "valkyrie.rs": {
       "path": "E:\\victory 胜利女神\\valkyrie.rs",
-      "rev": "05820ecf890cd3f43f3b24d571d6b848dea1c2c3"
+      "rev": "9c8202f5af6bf6935d2ed63688a4e9899d4a36b2"
     },
     "leetcode.v": {
       "path": "E:\\victory 胜利女神\\leetcode.v",
-      "rev": "f5013991adc41c23ddf4008c6145f6433d8c02aa",
+      "rev": "400071501647285ff4398c9bb475db46dc87672c",
       "note": "签收身份采集时的 HEAD；各报告另记自身 generationRev"
     }
   },
   "addon": {
     "path": "E:\\victory 胜利女神\\valkyrie.rs\\projects\\ts\\platforms\\valkyrie-win32-x64\\lib\\valkyrie.win32-x64-msvc.node",
-    "sha256": "e28e6150c837b11c67248056e04308feb0cad60f49be1c68692bf6db7d8b8ab2",
-    "mtimeIso": "2026-11-24T04:15:11.332Z"
+    "sha256": "045b2b0231976194d29ec3af11a9b6a528df7e8f776d556917e4a14fb101e1dd",
+    "mtimeIso": "2026-11-26T04:08:23.338Z"
   },
   "compilerBuild": {
-    "identity": "d39deee3406b4f3b8c74841f43108470992bf71f",
-    "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=d39deee3406b4f3b8c74841f43108470992bf71f"
+    "identity": "08b77a39e67b5a074a05f0a8ee5269670f336f4a",
+    "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=08b77a39e67b5a074a05f0a8ee5269670f336f4a"
   },
   "runners": {
     "src/adapters/valkyrie-backend/native-runner.ts": "e479bddd79c42348ba4f787ecffb32c05d3c7b55186f8c55706dd76856928c1e",
@@ -41,34 +41,29 @@
   },
   "reports": {
     "matrix-native-50-carriers.json": {
-      "sha256": "cff7f41a5959025c93db48a61815d6fd5bd5707966df32b0d515abe63dab1f54",
-      "generatedAt": "2026-11-24T05:23:58.502Z",
-      "generationRev": "f5013991adc41c23ddf4008c6145f6433d8c02aa"
+      "sha256": "6bb9e561afd72ad14a0e4c0817b8f1d448dff3715739cd9e8225fd1943ff59ff",
+      "generatedAt": "2026-11-26T04:40:41.367Z",
+      "generationRev": "400071501647285ff4398c9bb475db46dc87672c"
     },
     "matrix-native-100-carriers.json": {
-      "sha256": "dfa321f62cf3da2333598d2998df5ff4c08a7f9f35c8c1fe7fd4309b1eab843f",
-      "generatedAt": "2026-11-24T05:30:49.799Z",
-      "generationRev": "f5013991adc41c23ddf4008c6145f6433d8c02aa"
+      "sha256": "ca93c09a323e2b1d5103466de9e539932ede6a9149dede83a971a2ae454bb77f",
+      "generatedAt": "2026-11-26T04:53:02.945Z",
+      "generationRev": "400071501647285ff4398c9bb475db46dc87672c"
     },
     "matrix-native-300-carriers.json": {
-      "sha256": "5d16bb57d7e17006021b4dd8bdf7486f1157d94c1d69cf6c556da7de1f41c8fd",
-      "generatedAt": "2026-11-24T05:14:41.142Z",
-      "generationRev": "5aaa67bb8602a04063f1497c0a932b34f2f394c8"
+      "sha256": "ae1bb97843b5931966f7f28e739b8a854b44fad55cf389b55afa4842b083f7a6",
+      "generatedAt": "2026-11-26T05:24:29.660Z",
+      "generationRev": "400071501647285ff4398c9bb475db46dc87672c"
     },
     "matrix-native-dll-50-carriers.json": {
-      "sha256": "a1b9aeba3efb05d464bc4d0ca6cdb752dc41ff264bf79b7a487d4961dca2206d",
-      "generatedAt": "2026-11-24T05:01:54.503Z",
-      "generationRev": "f5013991adc41c23ddf4008c6145f6433d8c02aa"
+      "sha256": "c9506465a51d476fd64a72aa963e1ddf97a6f682a9f6fd1a02fb40654de7d180",
+      "generatedAt": "2026-11-26T04:58:42.605Z",
+      "generationRev": "400071501647285ff4398c9bb475db46dc87672c"
     },
     "matrix-python-representative.json": {
-      "sha256": "6fa51fba3fd55600045f780d6b10fdaae766c72bd8edd0f97e3959fd63d96fbd",
-      "generatedAt": "2026-11-24T05:36:27.255Z",
-      "generationRev": "f5013991adc41c23ddf4008c6145f6433d8c02aa"
-    },
-    "dll-abi-probes.json": {
-      "sha256": "60791a92aee62cc37fe980e3652177f23d620bb58fbaac76df651bec15ee17ff",
-      "generatedAt": "2026-11-24T14:02:00Z",
-      "generationRev": "4c9dcdc98907a924741aa301b7704470d0f8098e"
+      "sha256": "643e3ea33ae02c6de6199c6ad366be25a40f32df5492022eccaab1042fb9ee6e",
+      "generatedAt": "2026-11-26T04:57:04.894Z",
+      "generationRev": "400071501647285ff4398c9bb475db46dc87672c"
     }
   }
 }
