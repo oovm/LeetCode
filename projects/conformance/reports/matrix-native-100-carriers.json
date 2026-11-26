@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T04:53:02.945Z",
+  "generatedAt": "2026-11-26T06:44:05.979Z",
   "batchLimit": 100,
   "denominator": 2849,
   "corpusIds": [
@@ -27417,13 +27417,13 @@
   "identity": {
     "addon": {
       "state": "resolved",
-      "sha256": "045b2b0231976194d29ec3af11a9b6a528df7e8f776d556917e4a14fb101e1dd",
-      "mtimeIso": "2026-11-26T04:08:23.338Z"
+      "sha256": "a415d40bf4543f345ec0cbb46e1c8d586977e27c9a34af4d7a735c28ce4576f1",
+      "mtimeIso": "2026-11-26T06:25:35.675Z"
     },
     "compilerBuild": {
       "state": "resolved",
-      "identity": "08b77a39e67b5a074a05f0a8ee5269670f336f4a",
-      "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=08b77a39e67b5a074a05f0a8ee5269670f336f4a"
+      "identity": "2e758de6cd3d796b82d6657533734833310d3c43",
+      "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=2e758de6cd3d796b82d6657533734833310d3c43"
     },
     "valkyrieV": {
       "state": "resolved",

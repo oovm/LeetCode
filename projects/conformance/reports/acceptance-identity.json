@@ -1,29 +1,29 @@
 {
-  "generatedAt": "2026-11-26T05:25:36.697Z",
+  "generatedAt": "2026-11-26T07:09:17.639Z",
   "scope": "Node-API（native）与 C ABI（native-dll）批量矩阵、CPython（python）代表组的消费侧验收身份",
   "repositories": {
     "boost.rs": {
       "path": "E:\\vmz 全栈开发\\boost.rs",
-      "rev": "08b77a39e67b5a074a05f0a8ee5269670f336f4a"
+      "rev": "2e758de6cd3d796b82d6657533734833310d3c43"
     },
     "valkyrie.rs": {
       "path": "E:\\victory 胜利女神\\valkyrie.rs",
-      "rev": "9c8202f5af6bf6935d2ed63688a4e9899d4a36b2"
+      "rev": "a22ad91bcec6f735ad3a5fcc8557c9d912f5457b"
     },
     "leetcode.v": {
       "path": "E:\\victory 胜利女神\\leetcode.v",
-      "rev": "400071501647285ff4398c9bb475db46dc87672c",
+      "rev": "832637f09c0c466c7ee4224f32850f1b20e960b8",
       "note": "签收身份采集时的 HEAD；各报告另记自身 generationRev"
     }
   },
   "addon": {
     "path": "E:\\victory 胜利女神\\valkyrie.rs\\projects\\ts\\platforms\\valkyrie-win32-x64\\lib\\valkyrie.win32-x64-msvc.node",
-    "sha256": "045b2b0231976194d29ec3af11a9b6a528df7e8f776d556917e4a14fb101e1dd",
-    "mtimeIso": "2026-11-26T04:08:23.338Z"
+    "sha256": "a415d40bf4543f345ec0cbb46e1c8d586977e27c9a34af4d7a735c28ce4576f1",
+    "mtimeIso": "2026-11-26T06:25:35.675Z"
   },
   "compilerBuild": {
-    "identity": "08b77a39e67b5a074a05f0a8ee5269670f336f4a",
-    "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=08b77a39e67b5a074a05f0a8ee5269670f336f4a"
+    "identity": "2e758de6cd3d796b82d6657533734833310d3c43",
+    "fingerprint": "legion=0.1.0;identity=1;mir=1;layout=0;bytecode=7;compiler=2e758de6cd3d796b82d6657533734833310d3c43"
   },
   "runners": {
     "src/adapters/valkyrie-backend/native-runner.ts": "e479bddd79c42348ba4f787ecffb32c05d3c7b55186f8c55706dd76856928c1e",
@@ -41,29 +41,29 @@
   },
   "reports": {
     "matrix-native-50-carriers.json": {
-      "sha256": "6bb9e561afd72ad14a0e4c0817b8f1d448dff3715739cd9e8225fd1943ff59ff",
-      "generatedAt": "2026-11-26T04:40:41.367Z",
-      "generationRev": "400071501647285ff4398c9bb475db46dc87672c"
+      "sha256": "900e73db92c102b7988a1994842fab6869600de3ffd4aacbe5996d15e1c44f5a",
+      "generatedAt": "2026-11-26T06:35:47.104Z",
+      "generationRev": "832637f09c0c466c7ee4224f32850f1b20e960b8"
     },
     "matrix-native-100-carriers.json": {
-      "sha256": "ca93c09a323e2b1d5103466de9e539932ede6a9149dede83a971a2ae454bb77f",
-      "generatedAt": "2026-11-26T04:53:02.945Z",
-      "generationRev": "400071501647285ff4398c9bb475db46dc87672c"
+      "sha256": "2f1db843f06ba059585516c53a32ebbc8b9085c0c2976a7675d59779c65bc91c",
+      "generatedAt": "2026-11-26T06:44:05.979Z",
+      "generationRev": "832637f09c0c466c7ee4224f32850f1b20e960b8"
     },
     "matrix-native-300-carriers.json": {
-      "sha256": "ae1bb97843b5931966f7f28e739b8a854b44fad55cf389b55afa4842b083f7a6",
-      "generatedAt": "2026-11-26T05:24:29.660Z",
-      "generationRev": "400071501647285ff4398c9bb475db46dc87672c"
+      "sha256": "ffad6af93cf72c47164c2e04acafe85f7e965a00fb973936f05c1629b9eb3110",
+      "generatedAt": "2026-11-26T07:06:55.196Z",
+      "generationRev": "832637f09c0c466c7ee4224f32850f1b20e960b8"
     },
     "matrix-native-dll-50-carriers.json": {
-      "sha256": "c9506465a51d476fd64a72aa963e1ddf97a6f682a9f6fd1a02fb40654de7d180",
-      "generatedAt": "2026-11-26T04:58:42.605Z",
-      "generationRev": "400071501647285ff4398c9bb475db46dc87672c"
+      "sha256": "12ae9c8318ab7f2e5254775a4d7d6f3f02bce5a7e7e50536a21930afb8c0b9a6",
+      "generatedAt": "2026-11-26T07:07:35.007Z",
+      "generationRev": "832637f09c0c466c7ee4224f32850f1b20e960b8"
     },
     "matrix-python-representative.json": {
-      "sha256": "643e3ea33ae02c6de6199c6ad366be25a40f32df5492022eccaab1042fb9ee6e",
-      "generatedAt": "2026-11-26T04:57:04.894Z",
-      "generationRev": "400071501647285ff4398c9bb475db46dc87672c"
+      "sha256": "05ef79769de5de7ae25d7bcc734cafa25940b8fb580492bfd841f5521de51700",
+      "generatedAt": "2026-11-26T07:08:13.051Z",
+      "generationRev": "832637f09c0c466c7ee4224f32850f1b20e960b8"
     }
   }
 }
